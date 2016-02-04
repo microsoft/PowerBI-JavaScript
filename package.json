@@ -2,7 +2,7 @@
   "name": "powerbi-javascript",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/powerbi.js",
   "directories": {
     "test": "test"
   },
