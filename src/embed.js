@@ -1,6 +1,8 @@
 (function (powerbi) {
     'use strict';
-
+    
+    powerbi.Embed = Embed;
+    
     function Embed() { }
 
     Embed.prototype = {

@@ -1,33 +1,37 @@
 (function (powerbi) {
     'use strict';
-    
+
     var embeds = [];
+    var componentTypes = [];
 
     powerbi.get = get;
-    powerbi.embed = embed;    
+    powerbi.embed = embed;
+    powerbi.init = init;
 
     activate();
     
-    //////////////////////////////////
+    //////////////////////////////////    
     
     function activate() {
-        window.addEventListener('DOMContentLoaded', onLoad, false);
+        window.addEventListener('DOMContentLoaded', init, false);
         window.addEventListener('message', onReceiveMessage, false);
-    }
 
-    var componentTypes = [
-        { type: 'powerbi-tile', component: powerbi.Tile },
-        { type: 'powerbi-report', component: powerbi.Report }
-    ];
+        componentTypes = [
+            { type: 'powerbi-tile', component: powerbi.Tile },
+            { type: 'powerbi-report', component: powerbi.Report }
+        ];
+    }
 
     var EmbedEventMap = {
         'tileClicked': 'tile-click',
         'tileLoaded': 'tile-load',
         'reportPageLoaded': 'report-load'
     };
-    
-    function onLoad() {
-        var components = document.querySelectorAll('[powerbi-embed]');
+
+    function init(container) {
+        container = container || document.body;
+        
+        var components = container.querySelectorAll('[powerbi-embed]');
         for (var i = 0; i < components.length; i++) {
             embed(components[i]);
         }
@@ -39,6 +43,10 @@
 
     function embed(element) {
         var instance;
+
+        if (element.powerBIEmbed) {
+            return element.powerBIEmbed;
+        }
 
         for (var j = 0; j < componentTypes.length; j++) {
             var componentType = componentTypes[j];

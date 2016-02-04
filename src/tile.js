@@ -2,7 +2,7 @@
     'use strict';
     
     powerbi.Tile = Tile;
-    powerbi.Tile.prototype = powerbi.Embed.prototyp;
+    powerbi.Tile.prototype = powerbi.Embed.prototype;
     
     function Tile(element, options) {
         var me = this;
