@@ -29,7 +29,7 @@
     };
 
     function init(container) {
-        container = container || document.body;
+        container = (container && container instanceof HTMLElement) ? container : document.body;
         
         var components = container.querySelectorAll('[powerbi-embed]');
         for (var i = 0; i < components.length; i++) {

@@ -1,8 +1,8 @@
 (function (powerbi) {
     'use strict';
-    
+
     powerbi.Embed = Embed;
-    
+
     function Embed() { }
 
     Embed.prototype = {
@@ -60,7 +60,14 @@
             }
         },
         isFullscreen: function () {
-            return document.fullscreenElement === this.iframe || document.webkitFullscreenElement === this.iframe || document.mozFullscreenScreenElement === this.iframe || document.msFullscreenElement === this.iframe;
+            var options = ['fullscreenElement', 'webkitFullscreenElement', 'mozFullscreenScreenElement', 'msFullscreenElement'];
+            for (var i = 0; i < options.length; i++) {
+                if (document[options[i]] === this.iframe) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     };
 } (window.powerbi = window.powerbi || {}));
