@@ -14,11 +14,11 @@ Go to [Power BI Dev Center](https://dev.powerbi.com/apps) to get your key
 Get your Power BI access token using ADAL library for JavaScript
 
 ## Setup Power BI for embedding
-Add the Power BI CSS link within your apps `head` tag.
+Add the Power BI CSS link within your apps `<head>` tag.
 
 `<link href="/content/powerbi.css" rel="stylesheet"/>`
 
-Add the Power BI script include before your apps closing `body` tag
+Add the Power BI script include before your apps closing `</body>` tag
 
 `<script src="/scripts/powerbi.js"></script>`
 
