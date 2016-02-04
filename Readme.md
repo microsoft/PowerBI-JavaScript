@@ -4,6 +4,8 @@
 - Name: **Power BI Private Nuget** *(For internal use only)*
 - Source: https://www.myget.org/F/powerbi/auth/19dee0e1-a453-4d39-bcae-9b5f3d7469f3/api/v3/index.json
 
+*Make sure to check the "Include prerelease" checkbox within the Nuget Package Manager*
+
 ## Install Nuget Packages
 `Install-Package Microsoft.PowerBI.JavaScripot -Version 1.0.0-preview`
 
