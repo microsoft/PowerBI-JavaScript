@@ -35,6 +35,7 @@ Add your access token to your app so it can be accessed.
 Power BI will automatically search your apps DOM for Power BI embed components on page load.  
 If your app is dyanamically adding new embed components after page load you will need to manually initialize them via JavaScript.
 
+## Setting the size of embedded components
 The tile & report embed will automatically be embedded based on the size of the embed container.  
 To override the default size of the embeds simply add a CSS class attribute or inline styles for width & height.
 
