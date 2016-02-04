@@ -7,7 +7,7 @@
 *Make sure to check the "Include prerelease" checkbox within the Nuget Package Manager*
 
 ## Install Nuget Packages
-`Install-Package Microsoft.PowerBI.JavaScripot -Version 1.0.0-preview`
+`Install-Package Microsoft.PowerBI.JavaScript -Version 1.0.0-preview`
 
 ## Get Power BI Client ID & Secret
 Go to [Power BI Dev Center](https://dev.powerbi.com/apps) to get your key
