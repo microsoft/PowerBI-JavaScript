@@ -14,6 +14,8 @@ gulp.task('watch', 'Watches for changes', ['lint'], function () {
 
 gulp.task('lint', 'Lints all files', ['lint:js', 'lint:spec']);
 gulp.task('test', 'Runs all tests', ['test:js']);
+gulp.task('build', 'Runs a full build', ['build:release']);
+
 gulp.task('build:debug', 'Runs a debug build', ['clean', 'lint', 'concat:js']);
 gulp.task('build:release', 'Runs a release build', ['clean', 'lint', 'concat:js', 'min:js']);
 
