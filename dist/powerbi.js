@@ -1,8 +1,8 @@
 (function (powerbi) {
     'use strict';
-    
+
     powerbi.Embed = Embed;
-    
+
     function Embed() { }
 
     Embed.prototype = {
@@ -14,14 +14,14 @@
             this.iframe.addEventListener('load', this.load.bind(this), false);
         },
         load: function () {
-            var computedStle = window.getComputedStyle(this.element);
+            var computedStyle = window.getComputedStyle(this.element);
 
             var initEventArgs = {
                 message: {
                     action: this.options.loadAction,
                     accessToken: powerbi.accessToken,
-                    width: computedStle.width,
-                    height: computedStle.height
+                    width: computedStyle.width,
+                    height: computedStyle.height
                 }
             };
 
@@ -60,7 +60,14 @@
             }
         },
         isFullscreen: function () {
-            return document.fullscreenElement === this.iframe || document.webkitFullscreenElement === this.iframe || document.mozFullscreenScreenElement === this.iframe || document.msFullscreenElement === this.iframe;
+            var options = ['fullscreenElement', 'webkitFullscreenElement', 'mozFullscreenScreenElement', 'msFullscreenElement'];
+            for (var i = 0; i < options.length; i++) {
+                if (document[options[i]] === this.iframe) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     };
 } (window.powerbi = window.powerbi || {}));
@@ -196,7 +203,7 @@
     };
 
     function init(container) {
-        container = container || document.body;
+        container = (container && container instanceof HTMLElement) ? container : document.body;
         
         var components = container.querySelectorAll('[powerbi-embed]');
         for (var i = 0; i < components.length; i++) {

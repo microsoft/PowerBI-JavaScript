@@ -14,14 +14,14 @@
             this.iframe.addEventListener('load', this.load.bind(this), false);
         },
         load: function () {
-            var computedStle = window.getComputedStyle(this.element);
+            var computedStyle = window.getComputedStyle(this.element);
 
             var initEventArgs = {
                 message: {
                     action: this.options.loadAction,
                     accessToken: powerbi.accessToken,
-                    width: computedStle.width,
-                    height: computedStle.height
+                    width: computedStyle.width,
+                    height: computedStyle.height
                 }
             };
 
