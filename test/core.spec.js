@@ -60,6 +60,47 @@
         });
 
         describe('embed', function () {
+            
+            it("looks for a token first from attribute 'powerbi-access-token'", function () {
+                // Arrange
+                var embedUrl = 'https://app.powerbi.com/reportEmbed?reportId=ABC123';
+                var testToken = "fakeToken1";
+                var report = $('<div powerbi-embed="' + embedUrl + '" powerbi-report powerbi-access-token="' + testToken + '"></div>')
+                    .appendTo('#powerbi-fixture');
+
+                // Act
+                window.powerbi.embed(report[0]);
+
+                // Assert
+                var reportInstance = window.powerbi.get(report[0]);
+                var accessToken = reportInstance.getAccessToken();
+                
+                expect(accessToken).toEqual(testToken); 
+            });
+            
+            it("if token is not found by attribute 'powerbi-access-token', fallback to using global", function () {
+                // Arrange
+                var embedUrl = 'https://app.powerbi.com/reportEmbed?reportId=ABC123';
+                var testToken = "fakeToken1";
+                var report = $('<div powerbi-embed="' + embedUrl + '" powerbi-report></div>')
+                    .appendTo('#powerbi-fixture');
+
+                var originalToken = window.powerbi.accessToken;
+                window.powerbi.accessToken = testToken;
+
+                // Act
+                window.powerbi.embed(report[0]);
+
+                // Assert
+                var reportInstance = window.powerbi.get(report[0]);
+                var accessToken = reportInstance.getAccessToken();
+                
+                expect(accessToken).toEqual(testToken);
+                
+                // Cleanup
+                window.powerbi.accessToken = originalToken;
+            });
+            
             describe('reports', function () {
                 it('creates report iframe from embedUrl', function () {
                     var embedUrl = 'https://app.powerbi.com/reportEmbed?reportId=ABC123';

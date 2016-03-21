@@ -15,11 +15,12 @@
         },
         load: function () {
             var computedStyle = window.getComputedStyle(this.element);
-
+            var accessToken = this.getAccessToken();
+            
             var initEventArgs = {
                 message: {
                     action: this.options.loadAction,
-                    accessToken: powerbi.accessToken,
+                    accessToken: accessToken,
                     width: computedStyle.width,
                     height: computedStyle.height
                 }
@@ -27,6 +28,19 @@
 
             powerbi.utils.raiseCustomEvent(this.element, 'embed-init', initEventArgs);
             this.iframe.contentWindow.postMessage(JSON.stringify(initEventArgs.message), '*');
+        },
+        getAccessToken: function () {
+            var accessToken = this.element.getAttribute('powerbi-access-token');
+
+            if (!accessToken) {
+                accessToken = powerbi.accessToken;
+                
+                if (!accessToken) {
+                    throw new Error("No access token was found for element. You must specify an access token directly on the element using attribute 'powerbi-access-token' or specify a global token at: powerbi.accessToken.");
+                }
+            }
+
+            return accessToken;
         },
         getEmbedUrl: function () {
             return this.element.getAttribute('powerbi-embed');
