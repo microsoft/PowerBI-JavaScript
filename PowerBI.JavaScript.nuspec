@@ -16,7 +16,7 @@
     <tags>Microsoft Power BI JavaScript JS</tags>
   </metadata>
   <files>
-    <file src="dist\powerb.js" target="content\scripts" />
+    <file src="dist\powerbi.js" target="content\scripts" />
     <file src="dist\powerbi.min.js" target="content\scripts" />
   </files>
 </package>
