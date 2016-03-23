@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Microsoft.PowerBI.JavaScript</id>
+    <version>$version$</version>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>https://raw.githubusercontent.com/Microsoft/dotnet/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Microsoft/PowerBI-CSharp</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <summary>JavaScript web components for Power BI</summary>
+    <description>A suite of JavaScript web components for integrating Power BI</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright (c) Microsoft Corporation</copyright>
+    <tags>Microsoft Power BI JavaScript JS</tags>
+  </metadata>
+  <files>
+    <file src="dist\powerb.js" target="content\scripts" />
+    <file src="dist\powerbi.min.js" target="content\scripts" />
+  </files>
+</package>
