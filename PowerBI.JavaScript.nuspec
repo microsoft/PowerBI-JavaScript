@@ -4,7 +4,7 @@
     <id>Microsoft.PowerBI.JavaScript</id>
     <version>$version$</version>
     <authors>Microsoft</authors>
-    <owners>Microsoft</owners>
+    <owners>microsoft,powerbi</owners>
     <licenseUrl>https://raw.githubusercontent.com/Microsoft/dotnet/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/Microsoft/PowerBI-CSharp</projectUrl>
     <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</iconUrl>
