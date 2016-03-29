@@ -25,7 +25,7 @@
                     throw new Error('reportId is required');
                 }
 
-                embedUrl = 'https://app.powerbi.com/reportEmbed?reportId=' + reportId;
+                embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=' + reportId;
             }
 
             return embedUrl;

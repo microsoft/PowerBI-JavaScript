@@ -22,7 +22,7 @@
         describe('init', function () {
             it('embeds all components found in the DOM', function () {
                 var elements = [
-                    '<div powerbi-embed="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-report></div>',
+                    '<div powerbi-embed="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-report></div>',
                     '<div powerbi-embed="https://app.powerbi.com/embed?dashboardId=D1&tileId=T1" powerbi-tile></div>'
                 ];
 
@@ -39,7 +39,7 @@
 
         describe('get', function () {
             it('gets an instance of an already embedded component', function () {
-                var component = $('<div powerbi-embed="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-report></div>')
+                var component = $('<div powerbi-embed="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-report></div>')
                     .appendTo('#powerbi-fixture');
 
                 window.powerbi.embed(component[0]);
@@ -50,7 +50,7 @@
             });
 
             it('creates and instance and returns it when it was note previously created', function () {
-                var component = $('<div powerbi-embed="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-report></div>')
+                var component = $('<div powerbi-embed="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-report></div>')
                     .appendTo('#powerbi-fixture');
 
                 var instance = window.powerbi.get(component[0]);
@@ -63,7 +63,7 @@
             
             it("looks for a token first from attribute 'powerbi-access-token'", function () {
                 // Arrange
-                var embedUrl = 'https://app.powerbi.com/reportEmbed?reportId=ABC123';
+                var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
                 var testToken = "fakeToken1";
                 var report = $('<div powerbi-embed="' + embedUrl + '" powerbi-report powerbi-access-token="' + testToken + '"></div>')
                     .appendTo('#powerbi-fixture');
@@ -80,7 +80,7 @@
             
             it("if token is not found by attribute 'powerbi-access-token', fallback to using global", function () {
                 // Arrange
-                var embedUrl = 'https://app.powerbi.com/reportEmbed?reportId=ABC123';
+                var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
                 var testToken = "fakeToken1";
                 var report = $('<div powerbi-embed="' + embedUrl + '" powerbi-report></div>')
                     .appendTo('#powerbi-fixture');
@@ -103,7 +103,7 @@
             
             describe('reports', function () {
                 it('creates report iframe from embedUrl', function () {
-                    var embedUrl = 'https://app.powerbi.com/reportEmbed?reportId=ABC123';
+                    var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
                     var report = $('<div powerbi-embed="' + embedUrl + '" powerbi-report></div>')
                         .appendTo('#powerbi-fixture');
 
@@ -116,7 +116,7 @@
 
                 it('creates report iframe from report id', function () {
                     var reportId = 'ABC123';
-                    var expectedEmbedUrl = 'https://app.powerbi.com/reportEmbed?reportId=' + reportId;
+                    var expectedEmbedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=' + reportId;
                     var report = $('<div powerbi-embed powerbi-report="' + reportId + '"></div>')
                         .appendTo('#powerbi-fixture');
 
