@@ -10,13 +10,9 @@
 `bower install powerbi-client`
 
 ## Setup Power BI for embedding
-Add the Power BI CSS link within your apps `<head>` tag.
-
-`<link href="/content/powerbi.css" rel="stylesheet"/>`
-
 Add the Power BI script include before your apps closing `</body>` tag
 
-`<script src="/lib/powerbi.js"></script>`
+`<script src="/bower_components/powerbi-client/dist/powerbi.js"></script>`
 
 Add your access token to your app so it can be accessed.  
 *This can be set statically or dynamically via JavaScript.*
