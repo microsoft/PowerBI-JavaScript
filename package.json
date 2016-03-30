@@ -1,5 +1,5 @@
 {
-  "name": "powerbi-javascript",
+  "name": "powerbi-client",
   "version": "1.0.12",
   "description": "",
   "main": "dist/powerbi.js",
