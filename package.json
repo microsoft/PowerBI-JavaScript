@@ -1,6 +1,6 @@
 {
   "name": "powerbi-javascript",
-  "version": "1.0.0",
+  "version": "1.0.12",
   "description": "",
   "main": "dist/powerbi.js",
   "directories": {
@@ -16,7 +16,7 @@
   "author": "Microsoft",
   "license": "MIT",
   "publishConfig": {
-      "registry": "https://www.myget.org/F/powerbi/auth/19dee0e1-a453-4d39-bcae-9b5f3d7469f3/npm/"
+    "registry": "https://www.myget.org/F/powerbi/auth/19dee0e1-a453-4d39-bcae-9b5f3d7469f3/npm/"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
