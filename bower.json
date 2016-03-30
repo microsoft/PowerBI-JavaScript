@@ -1,5 +1,5 @@
 {
-  "name": "powerbi-javascript",
+  "name": "powerbi-client",
   "description": "",
   "main": "./dist/powerbi.min.js",
   "authors": [
@@ -8,7 +8,7 @@
   "license": "MIT",
   "moduleType": [],
   "homepage": "https://dev.powerbi.com",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
