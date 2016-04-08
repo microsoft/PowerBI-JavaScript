@@ -7,7 +7,7 @@ export interface IPowerBiConfiguration {
     onError?: (error: any) => any;
 }
 
-export default class PowerBi {
+export class PowerBi {
     /**
      * List of components this service can embed.
      */
