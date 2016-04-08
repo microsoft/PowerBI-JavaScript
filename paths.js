@@ -7,8 +7,8 @@ var paths = {
 };
 
 paths.vendorSource = ['./bower_components/jquery/dist/jquery.js'];
-paths.karmaFiles = paths.jsSource
-    .concat(paths.vendorSource)
+paths.karmaFiles = paths.vendorSource
+    .concat(['./dist/powerbi.js'])
     .concat(paths.specSource);
 
 module.exports = paths;

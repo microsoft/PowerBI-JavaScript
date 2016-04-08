@@ -43,7 +43,7 @@
 
         describe('fullscreen', function () {
             it('sets the iframe as the fullscreen element', function () {
-                var report = window.powerbi.get(container[0]);
+                var report = window.powerbi.embed(container[0]);
                 report.fullscreen();
 
                 expect(document.webkitFullscreenElement === iframe);
@@ -52,7 +52,7 @@
 
         describe('exitFullscreen', function () {
             it('clears the iframe fullscreen element', function () {
-                var report = window.powerbi.get(container[0]);
+                var report = window.powerbi.embed(container[0]);
                 report.fullscreen();
                 report.exitFullscreen();
 

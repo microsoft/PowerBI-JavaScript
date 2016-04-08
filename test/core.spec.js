@@ -37,29 +37,49 @@
             });
         });
 
-        describe('get', function () {
-            it('gets an instance of an already embedded component', function () {
-                var component = $('<div powerbi-embed="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-report></div>')
-                    .appendTo('#powerbi-fixture');
-
-                window.powerbi.embed(component[0]);
-
-                var instance = window.powerbi.get(component[0]);
-                expect(instance).toBeDefined();
-                expect(instance instanceof window.powerbi.Report).toBe(true);
-            });
-
-            it('creates and instance and returns it when it was note previously created', function () {
-                var component = $('<div powerbi-embed="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-report></div>')
-                    .appendTo('#powerbi-fixture');
-
-                var instance = window.powerbi.get(component[0]);
-                expect(instance).toBeDefined();
-                expect(instance instanceof window.powerbi.Report).toBe(true);
-            });
-        });
-
         describe('embed', function () {
+            
+            it('if component is already embedded in element and overwrite is FALSE, return the existing component', function () {
+                // Arrange
+                var component = $('<div powerbi-embed="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-report></div>')
+                    .appendTo('#powerbi-fixture');
+
+                var newInstance = powerbi.embed(component[0]);
+
+                // Act
+                var instance = powerbi.embed(component[0]);
+                
+                // Assert
+                expect(instance).toBe(newInstance);
+            });
+            
+            it('if component is already embedded in element and overwrite is TRUE, remove the old component and create new component within the elemnt', function () {
+                // Arrange
+                var component = $('<div powerbi-embed="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-report></div>')
+                    .appendTo('#powerbi-fixture');
+
+                var newInstance = powerbi.embed(component[0]);
+
+                // Act
+                var instance = powerbi.embed(component[0], { overwrite: true });
+                
+                // Assert
+                expect(instance).not.toBe(newInstance);
+                // TODO: Also need to find way to test that newInstance is not still in the private embeds list but we don't have access to it.
+                // E.g. expect(powerbi.find(newInstance.options.id)).toBe(undefined);
+            });
+
+            it('if component was not previously created, creates an instance and return it', function () {
+                // Arrange
+                var component = $('<div powerbi-embed="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-report></div>')
+                    .appendTo('#powerbi-fixture');
+
+                // Act
+                var instance = window.powerbi.embed(component[0]);
+                
+                // Assert
+                expect(instance).toBeDefined();
+            });
             
             it("looks for a token first from attribute 'powerbi-access-token'", function () {
                 // Arrange
@@ -72,7 +92,7 @@
                 window.powerbi.embed(report[0]);
 
                 // Assert
-                var reportInstance = window.powerbi.get(report[0]);
+                var reportInstance = window.powerbi.embed(report[0]);
                 var accessToken = reportInstance.getAccessToken();
                 
                 expect(accessToken).toEqual(testToken); 
@@ -92,7 +112,7 @@
                 window.powerbi.embed(report[0]);
 
                 // Assert
-                var reportInstance = window.powerbi.get(report[0]);
+                var reportInstance = window.powerbi.embed(report[0]);
                 var accessToken = reportInstance.getAccessToken();
                 
                 expect(accessToken).toEqual(testToken);
