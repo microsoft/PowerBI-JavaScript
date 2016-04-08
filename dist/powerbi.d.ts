@@ -118,3 +118,4 @@ export class Tile extends Embed {
     constructor(element: HTMLElement, options: IEmbedOptions);
     getEmbedUrl(): string;
 }
+

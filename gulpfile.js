@@ -11,7 +11,8 @@ var rename = require('gulp-rename'),
     karma = require('karma'),
     paths = require('./paths'),
     webpack = require('webpack-stream'),
-    webpackConfig = require('./webpack.config')
+    webpackConfig = require('./webpack.config'),
+    runSequence = require('run-sequence')
     ;
 
 gulp.task('watch', 'Watches for changes', ['lint'], function () {
@@ -19,12 +20,44 @@ gulp.task('watch', 'Watches for changes', ['lint'], function () {
     gulp.watch(paths.specSource, ['lint:spec', 'test']);
 });
 
-gulp.task('lint', 'Lints all files', ['lint:ts', 'lint:spec']);
-gulp.task('test', 'Runs all tests', ['test:js', 'copy']);
-gulp.task('build', 'Runs a full build', ['build:release']);
+gulp.task('lint', 'Lints all files', function (done) {
+    runSequence(
+        ['lint:ts', 'lint:spec'],
+        done
+    );
+});
+gulp.task('test', 'Runs all tests', function (done) {
+    runSequence(
+        'clean',
+        'compile:ts',
+        ['test:js', 'copy', 'min:js'],
+        done
+    );
+});
+gulp.task('build', 'Runs a full build', function (done) {
+    runSequence(
+        'build:release',
+        done
+    );
+});
 
-gulp.task('build:debug', 'Runs a debug build', ['lint', 'compile:ts', 'copy']);
-gulp.task('build:release', 'Runs a release build', ['lint', 'compile:ts', 'copy', 'min:js']);
+gulp.task('build:debug', 'Runs a debug build', function (done) {
+    runSequence(
+        'lint',
+        'clean',
+        ['compile:ts', 'copy'],
+        done
+    );
+});
+gulp.task('build:release', 'Runs a release build', function (done) {
+    runSequence(
+        'lint',
+        'clean',
+        ['compile:ts', 'copy'],
+        'min:js',
+        done
+    )
+});
 
 gulp.task('clean', 'Cleans destination folder', function(done) {
     rimraf(paths.jsDest, done);
@@ -58,14 +91,14 @@ gulp.task('min:js', 'Creates minified JavaScript file', function() {
         .pipe(gulp.dest(paths.jsDest));
 });
 
-gulp.task('test:js', 'Runs unit tests', ['compile:ts'], function(done) {
+gulp.task('test:js', 'Runs unit tests', function(done) {
     new karma.Server({
         configFile: __dirname + '/karma.conf.js',
         singleRun: process.env.DEBUG ? false : true
     }, done).start();
 });
 
-gulp.task('compile:ts', 'Compile typescript for powerbi library', ['clean'], function() {
+gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
     var webpackBundle = gulp.src(['./src/powerbi.ts'])
         .pipe(webpack(webpackConfig))
         .pipe(gulp.dest('dist/'));
