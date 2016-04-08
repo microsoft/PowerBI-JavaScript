@@ -1,6 +1,6 @@
 {
   "name": "powerbi-client",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "",
   "main": "dist/powerbi.js",
   "typings": "dist/powerbi.d.ts",
