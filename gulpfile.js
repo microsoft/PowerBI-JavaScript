@@ -12,7 +12,8 @@ var rename = require('gulp-rename'),
     paths = require('./paths'),
     webpack = require('webpack-stream'),
     webpackConfig = require('./webpack.config'),
-    runSequence = require('run-sequence')
+    runSequence = require('run-sequence'),
+    argv = require('yargs').argv;
     ;
 
 gulp.task('watch', 'Watches for changes', ['lint'], function () {
@@ -29,7 +30,7 @@ gulp.task('lint', 'Lints all files', function (done) {
 gulp.task('test', 'Runs all tests', function (done) {
     runSequence(
         'clean',
-        'compile:ts',
+        ['compile:ts', 'compile:spec'],
         ['test:js', 'copy', 'min:js'],
         done
     );
@@ -63,7 +64,7 @@ gulp.task('clean', 'Cleans destination folder', function(done) {
     rimraf(paths.jsDest, done);
 });
 
-gulp.task('copy', 'Copy .d.ts from src to dest', function() {
+gulp.task('copy', 'Copy .d.ts from src to dist', function() {
     return gulp.src('./src/**/*.d.ts')
         .pipe(gulp.dest('dist/'));
 });
@@ -94,7 +95,7 @@ gulp.task('min:js', 'Creates minified JavaScript file', function() {
 gulp.task('test:js', 'Runs unit tests', function(done) {
     new karma.Server({
         configFile: __dirname + '/karma.conf.js',
-        singleRun: process.env.DEBUG ? false : true
+        singleRun: argv.debug ? false : true
     }, done).start();
 });
 
@@ -119,4 +120,14 @@ gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
     // ]);
     
     return webpackBundle;
+});
+
+gulp.task('compile:spec', 'Compile typescript for tests', function () {
+    var tsProject = ts.createProject('tsconfig.json');
+    
+    var tsResult = gulp.src(['./test/**/*.ts'])
+        .pipe(ts(tsProject))
+        ;
+        
+    return tsResult.js.pipe(gulp.dest('./test'));
 });

@@ -1,14 +1,7 @@
-import { default as Embed, IEmbedOptions } from './embed';
+import { default as Embed, IEmbedConstructor, IEmbedOptions } from './embed';
 import Report from './report';
 import Tile from './tile';
 import Utils from './util';
-
-declare type Component = (typeof Report | typeof Tile)
-
-interface IComponentType {
-    type: string;
-    component: Component
-}
 
 export interface IPowerBiElement extends HTMLElement {
     powerBiEmbed: Embed;
@@ -23,9 +16,7 @@ export default class PowerBi {
     /**
      * List of components this service can embed.
      */
-    // TODO: Find out how to use interface here instead of concrete type so we don't have to 
-    // use union types which are maintenance problem
-    private static components: Component[] = [
+    private static components: IEmbedConstructor[] = [
         Tile,
         Report
     ];
@@ -50,7 +41,6 @@ export default class PowerBi {
         onError: (...args) => console.log(args[0], args.slice(1))
     };
 
-    // TODO: Should be private but need to be public for backwards compatibility.
     /** Save access token as fallback/global token to use when local token for report/tile is not provided. */
     accessToken: string;
     
@@ -68,7 +58,7 @@ export default class PowerBi {
         this.config = Utils.assign({}, PowerBi.defaultConfig, config);
         
         if (this.config.autoEmbedOnContentLoaded) {
-            window.addEventListener('DOMContentLoaded', (event: Event) => this.init(document.body), false);
+            this.enableAutoEmbed();
         }
     }
     
@@ -77,34 +67,35 @@ export default class PowerBi {
      * and automatically attempts to embed a powerbi component based on information from the attributes.
      * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
      */
-    init(container: HTMLElement): void {
+    init(container?: HTMLElement): void {
         container = (container && container instanceof HTMLElement) ? container : document.body;
         
         const elements = Array.prototype.slice.call(container.querySelectorAll('[powerbi-embed]'));
-        elements.forEach(element => this.embed(element, { getGlobalAccessToken: () => this.accessToken }));
+        elements.forEach(element => this.embed(element));
     }
     
     /**
      * Given an html element embed component based on configuration.
      * If component has already been created and attached to eleemnt simply return it to prevent creating duplicate components for same element.
      */
-    embed(element: IPowerBiElement, config: IEmbedOptions = {}): Embed {
+    embed(element: HTMLElement, config: IEmbedOptions = {}): Embed {
         let instance: Embed;
+        let powerBiElement = <IPowerBiElement>element;
         
-        if (element.powerBiEmbed && !config.overwrite) {
-            instance = element.powerBiEmbed;
+        if (powerBiElement.powerBiEmbed && !config.overwrite) {
+            instance = powerBiElement.powerBiEmbed;
             return instance;
         }
         
         /** If component is already registered on this element, but we are supposed to overwrite, remove existing component from registry */
-        if (element.powerBiEmbed && config.overwrite) {
-            this.remove(element.powerBiEmbed);
+        if (powerBiElement.powerBiEmbed && config.overwrite) {
+            this.remove(powerBiElement.powerBiEmbed);
         }
         
-        const Component = Utils.find(component => config.type === component.attribute || element.getAttribute(component.attribute) !== null, PowerBi.components);
+        const Component = Utils.find(component => config.type === component.type || element.getAttribute('powerbi-type') === component.type, PowerBi.components);
         
         if (!Component) {
-            throw new Error(`Attempted to embed using config ${config} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as 'powerbi-report'.`);
+            throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as 'powerbi-type="report"'.`);
         }
         
         // TODO: Consider removing in favor of passing reference to `this` in constructor
@@ -113,17 +104,20 @@ export default class PowerBi {
         config.getGlobalAccessToken = () => this.accessToken;
         
         instance = new Component(element, config);
-        element.powerBiEmbed = instance;
+        powerBiElement.powerBiEmbed = instance;
         this.embeds.push(instance);
         
         return instance;
     }
     
     /**
-     * Deprecated alias for embed.
-     * This performed the same function as embed. Embed is more semantic to the operation performed so we conslidated to a single method.
+     * Adds event handler for DOMContentLoaded which finds all elements in DOM with attribute powerbi-embed-url
+     * then attempts to initiate the embed process based on data from other powerbi-* attributes.
+     * (This is usually only useful for applications rendered on by the server since all the data needed will be available by the time the handler is called.)
      */
-    get = this.embed
+    enableAutoEmbed() {
+        window.addEventListener('DOMContentLoaded', (event: Event) => this.init(document.body), false);
+    }
     
     /**
      * Remove component from the list of embedded components.
@@ -139,22 +133,18 @@ export default class PowerBi {
      * 
      * If an error occurs when parsing event.data call error handler provided during configuration.
      */
-    onReceiveMessage(event: MessageEvent): void {
+    private onReceiveMessage(event: MessageEvent): void {
         if (!event) {
             return;
         }
 
         try {
-            var messageData = JSON.parse(event.data);
-            this.embeds.some(embed => {
-                // Only raise the event on the embed that matches the post message origin
-                if (event.source === embed.iframe.contentWindow) {
-                    Utils.raiseCustomEvent(embed.element, PowerBi.eventMap[messageData.event], messageData);
-                    return true;
-                }
-                
-                return false;
-            });
+            // Only raise the event on the embed that matches the post message origin
+            const embed = Utils.find(embed => event.source === embed.iframe.contentWindow, this.embeds);
+            if(embed) {
+                let messageData = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                Utils.raiseCustomEvent(embed.element, PowerBi.eventMap[messageData.event], messageData);
+            }
         }
         catch (e) {
             if (typeof this.config.onError === 'function') {

@@ -31,12 +31,22 @@ export interface IEmbedOptions {
     overwrite?: boolean;
 }
 
+export interface IEmbedConstructor {
+    new(...args: any[]): Embed;
+}
+
 abstract class Embed {
+    /**
+     * Attribute used to specify type of visual.
+     * Example: `<div powerbi-type="report"></div>`
+     */
+    public static name: string;
     /**
      * Default options for embeddable component.
      */
     private static defaultOptions: IEmbedOptions = {
-        filterPaneEnabled: true
+        filterPaneEnabled: true,
+        overwrite: true
     };
     
     element: HTMLElement;
@@ -97,6 +107,10 @@ abstract class Embed {
      */
     protected getEmbedUrl(): string {
         const embedUrl = this.options.embedUrl || this.element.getAttribute('powerbi-embed');
+        
+        if(typeof embedUrl !== 'string' || embedUrl.length === 0) {
+            throw new Error(`Embed Url is required, but it was not found. You must provide an embed url either as part of embed configuration or as attribute 'powerbi-embed'.`);
+        }
         
         return embedUrl; 
     }

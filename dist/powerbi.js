@@ -65,19 +65,13 @@
 	var util_1 = __webpack_require__(4);
 	var PowerBi = (function () {
 	    function PowerBi(config) {
-	        var _this = this;
 	        if (config === void 0) { config = {}; }
-	        /**
-	         * Deprecated alias for embed.
-	         * This performed the same function as embed. Embed is more semantic to the operation performed so we conslidated to a single method.
-	         */
-	        this.get = this.embed;
 	        this.embeds = [];
 	        window.addEventListener('message', this.onReceiveMessage.bind(this), false);
 	        // TODO: Change when Object.assign is available.
 	        this.config = util_1.default.assign({}, PowerBi.defaultConfig, config);
 	        if (this.config.autoEmbedOnContentLoaded) {
-	            window.addEventListener('DOMContentLoaded', function (event) { return _this.init(document.body); }, false);
+	            this.enableAutoEmbed();
 	        }
 	    }
 	    /**
@@ -89,7 +83,7 @@
 	        var _this = this;
 	        container = (container && container instanceof HTMLElement) ? container : document.body;
 	        var elements = Array.prototype.slice.call(container.querySelectorAll('[powerbi-embed]'));
-	        elements.forEach(function (element) { return _this.embed(element, { getGlobalAccessToken: function () { return _this.accessToken; } }); });
+	        elements.forEach(function (element) { return _this.embed(element); });
 	    };
 	    /**
 	     * Given an html element embed component based on configuration.
@@ -99,26 +93,36 @@
 	        var _this = this;
 	        if (config === void 0) { config = {}; }
 	        var instance;
-	        if (element.powerBiEmbed && !config.overwrite) {
-	            instance = element.powerBiEmbed;
+	        var powerBiElement = element;
+	        if (powerBiElement.powerBiEmbed && !config.overwrite) {
+	            instance = powerBiElement.powerBiEmbed;
 	            return instance;
 	        }
 	        /** If component is already registered on this element, but we are supposed to overwrite, remove existing component from registry */
-	        if (element.powerBiEmbed && config.overwrite) {
-	            this.remove(element.powerBiEmbed);
+	        if (powerBiElement.powerBiEmbed && config.overwrite) {
+	            this.remove(powerBiElement.powerBiEmbed);
 	        }
-	        var Component = util_1.default.find(function (component) { return config.type === component.attribute || element.getAttribute(component.attribute) !== null; }, PowerBi.components);
+	        var Component = util_1.default.find(function (component) { return config.type === component.type || element.getAttribute('powerbi-type') === component.type; }, PowerBi.components);
 	        if (!Component) {
-	            throw new Error("Attempted to embed using config " + config + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as 'powerbi-report'.");
+	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as 'powerbi-type=\"report\"'.");
 	        }
 	        // TODO: Consider removing in favor of passing reference to `this` in constructor
 	        // The getGlobalAccessToken function is only here so that the components (Tile | Report) can get the global access token without needing reference
 	        // to the service that they are registered within becaues it creates circular dependencies
 	        config.getGlobalAccessToken = function () { return _this.accessToken; };
 	        instance = new Component(element, config);
-	        element.powerBiEmbed = instance;
+	        powerBiElement.powerBiEmbed = instance;
 	        this.embeds.push(instance);
 	        return instance;
+	    };
+	    /**
+	     * Adds event handler for DOMContentLoaded which finds all elements in DOM with attribute powerbi-embed-url
+	     * then attempts to initiate the embed process based on data from other powerbi-* attributes.
+	     * (This is usually only useful for applications rendered on by the server since all the data needed will be available by the time the handler is called.)
+	     */
+	    PowerBi.prototype.enableAutoEmbed = function () {
+	        var _this = this;
+	        window.addEventListener('DOMContentLoaded', function (event) { return _this.init(document.body); }, false);
 	    };
 	    /**
 	     * Remove component from the list of embedded components.
@@ -138,15 +142,12 @@
 	            return;
 	        }
 	        try {
-	            var messageData = JSON.parse(event.data);
-	            this.embeds.some(function (embed) {
-	                // Only raise the event on the embed that matches the post message origin
-	                if (event.source === embed.iframe.contentWindow) {
-	                    util_1.default.raiseCustomEvent(embed.element, PowerBi.eventMap[messageData.event], messageData);
-	                    return true;
-	                }
-	                return false;
-	            });
+	            // Only raise the event on the embed that matches the post message origin
+	            var embed = util_1.default.find(function (embed) { return event.source === embed.iframe.contentWindow; }, this.embeds);
+	            if (embed) {
+	                var messageData = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+	                util_1.default.raiseCustomEvent(embed.element, PowerBi.eventMap[messageData.event], messageData);
+	            }
 	        }
 	        catch (e) {
 	            if (typeof this.config.onError === 'function') {
@@ -160,8 +161,6 @@
 	    /**
 	     * List of components this service can embed.
 	     */
-	    // TODO: Find out how to use interface here instead of concrete type so we don't have to 
-	    // use union types which are maintenance problem
 	    PowerBi.components = [
 	        tile_1.default,
 	        report_1.default
@@ -217,24 +216,15 @@
 	    }
 	    Report.prototype.getEmbedUrl = function () {
 	        var embedUrl = _super.prototype.getEmbedUrl.call(this);
-	        if (!embedUrl) {
-	            var reportId = this.options.id;
-	            if (!reportId) {
-	                reportId = this.element.getAttribute('powerbi-report');
-	            }
-	            if (!reportId) {
-	                throw new Error("Embed url cannot be constructed. 'powerbi-embed' attribute was not specified and the fallback to 'powerbi-report' were not specified either.");
-	            }
-	            embedUrl = "https://embedded.powerbi.com/appTokenReportEmbed?reportId=" + reportId;
-	        }
 	        // TODO: Need safe way to add url parameters.
+	        // We are assuming embedUrls use query parameters to supply id of visual
+	        // so must prefix with '&'.
 	        if (!this.options.filterPaneEnabled) {
 	            embedUrl += "&filterPaneEnabled=false";
 	        }
 	        return embedUrl;
 	    };
-	    // Attribute used to specify id for report and simultaneously used to know which type of object the id is for.
-	    Report.attribute = 'powerbi-report';
+	    Report.type = 'report';
 	    return Report;
 	}(embed_1.default));
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -292,6 +282,9 @@
 	     */
 	    Embed.prototype.getEmbedUrl = function () {
 	        var embedUrl = this.options.embedUrl || this.element.getAttribute('powerbi-embed');
+	        if (typeof embedUrl !== 'string' || embedUrl.length === 0) {
+	            throw new Error("Embed Url is required, but it was not found. You must provide an embed url either as part of embed configuration or as attribute 'powerbi-embed'.");
+	        }
 	        return embedUrl;
 	    };
 	    /**
@@ -323,7 +316,8 @@
 	     * Default options for embeddable component.
 	     */
 	    Embed.defaultOptions = {
-	        filterPaneEnabled: true
+	        filterPaneEnabled: true,
+	        overwrite: true
 	    };
 	    return Embed;
 	}());
@@ -434,17 +428,9 @@
 	    }
 	    Tile.prototype.getEmbedUrl = function () {
 	        var embedUrl = _super.prototype.getEmbedUrl.call(this);
-	        if (!embedUrl) {
-	            var dashboardId = this.element.getAttribute('powerbi-dashboard');
-	            var tileId = this.element.getAttribute('powerbi-tile');
-	            if (!(dashboardId && tileId)) {
-	                throw new Error("Embed url cannot be constructed. 'powerbi-embed' attribute was not specified and the fallback to 'powerbi-dashboard' and 'powerbi-tile' were not specified either.");
-	            }
-	            embedUrl = "https://app.powerbi.com/embed?dashboardId=" + dashboardId + "&tileId=" + tileId;
-	        }
 	        return embedUrl;
 	    };
-	    Tile.attribute = 'powerbi-tile';
+	    Tile.type = 'tile';
 	    return Tile;
 	}(embed_1.default));
 	Object.defineProperty(exports, "__esModule", { value: true });

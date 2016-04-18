@@ -1,13 +1,14 @@
 var paths = require('./paths');
+var argv = require('yargs').argv;
 
 module.exports = function (config) {
     config.set({
         frameworks: ['jasmine'],
         files: paths.karmaFiles,
         exclude: [],
-        reporters: process.env.DEBUG ? ['spec'] : ['spec', 'coverage'],
+        reporters: argv.debug ? ['spec'] : ['spec', 'coverage'],
         autoWatch: true,
-        browsers: [process.env.DEBUG ? 'Chrome' : 'PhantomJS'],
+        browsers: [argv.debug ? 'Chrome' : 'PhantomJS'],
         plugins: [
             'karma-chrome-launcher',
             'karma-jasmine',
@@ -22,6 +23,6 @@ module.exports = function (config) {
                 { type: 'text-summary' }
             ]
         },
-        logLevel: config.LOG_INFO
+        logLevel: argv.debug ? config.LOG_DEBUG : config.LOG_INFO
     });
 };
