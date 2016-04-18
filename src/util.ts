@@ -26,7 +26,7 @@ export default class Utils {
     
     static findIndex<T>(predicate: (T) => boolean, xs: T[]): number {
         if(!Array.isArray(xs)) {
-            throw new Error(`You attempted to call find with second that was not an array. You passed: ${xs}`);
+            throw new Error(`You attempted to call find with second parameter that was not an array. You passed: ${xs}`);
         }
         
         let index;

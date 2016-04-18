@@ -7,6 +7,12 @@ export interface IPowerBiConfiguration {
     onError?: (error: any) => any;
 }
 
+declare global {
+    interface Window {
+        Powerbi: typeof PowerBi;
+    }
+}
+
 export class PowerBi {
     /**
      * List of components this service can embed.
@@ -43,6 +49,12 @@ export class PowerBi {
      */
     embed(element: IPowerBiElement, config?: IEmbedOptions): Embed;
     /**
+     * Adds event handler for DOMContentLoaded which finds all elements in DOM with attribute powerbi-embed-url
+     * then attempts to initiate the embed process based on data from other powerbi-* attributes.
+     * (This is usually only useful for applications rendered on by the server since all the data needed will be available by the time the handler is called.)
+     */
+    enableAutoEmbed(): void;
+    /**
      * Remove component from the list of embedded components.
      */
     remove(component: Embed): void;
@@ -53,7 +65,7 @@ export class PowerBi {
      *
      * If an error occurs when parsing event.data call error handler provided during configuration.
      */
-    onReceiveMessage(event: MessageEvent): void;
+    private onReceiveMessage(event: MessageEvent): void;
 }
 
 
@@ -65,11 +77,15 @@ export interface IEmbedOptions {
     embedUrl?: string;
     webUrl?: string;
     name?: string;
+    filter?: any;
     filterPaneEnabled?: boolean;
     getGlobalAccessToken?: () => string;
     overwrite?: boolean;
 }
 declare abstract class Embed {
+    public static embedUrlAttribute: string;
+    public static accessTokenAttribute: string;
+    public static typeAttribute: string;
     /**
      * Default options for embeddable component.
      */

@@ -6,7 +6,7 @@ var paths = {
     jsDest: './dist/'
 };
 
-paths.vendorSource = ['./bower_components/jquery/dist/jquery.js'];
+paths.vendorSource = ['./node_modules/jquery/dist/jquery.js'];
 paths.karmaFiles = paths.vendorSource
     .concat(['./dist/powerbi.js'])
     .concat(paths.specSource);
