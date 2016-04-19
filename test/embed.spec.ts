@@ -7,7 +7,7 @@ describe('embed', function () {
     var iframe = null;
 
     beforeEach(function () {
-        container = $('<div powerbi-embed="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+        container = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
             .appendTo('#powerbi-fixture');
 
         powerbi.embed(container[0]);

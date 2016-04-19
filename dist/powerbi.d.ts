@@ -83,6 +83,9 @@ export interface IEmbedOptions {
     overwrite?: boolean;
 }
 declare abstract class Embed {
+    public static embedUrlAttribute: string;
+    public static accessTokenAttribute: string;
+    public static typeAttribute: string;
     /**
      * Default options for embeddable component.
      */

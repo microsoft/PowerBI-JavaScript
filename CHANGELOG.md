@@ -43,7 +43,7 @@
       
       2. Using embed url:
       
-      `<div powerbi-embed="https://embedded.powerbi.com/reports/5dac7a4a-4452-46b3-99f6-a25915e0fe55" powerbi-access-token="..."></div>`
+      `<div powerbi-embed-url="https://embedded.powerbi.com/reports/5dac7a4a-4452-46b3-99f6-a25915e0fe55" powerbi-access-token="..."></div>`
       
       Now only the latter options (#2) is supported.
       

@@ -29,8 +29,8 @@ describe('powerbi', function () {
     describe('init', function () {
         it('embeds all components found in the DOM', function () {
             const elements = [
-                '<div powerbi-embed="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
-                '<div powerbi-embed="https://app.powerbi.com/embed?dashboardId=D1&tileId=T1" powerbi-type="tile"></div>'
+                '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
+                '<div powerbi-embed-url="https://app.powerbi.com/embed?dashboardId=D1&tileId=T1" powerbi-type="tile"></div>'
             ];
 
             elements.forEach(element => {
@@ -39,16 +39,64 @@ describe('powerbi', function () {
 
             powerbi.init();
 
-            var iframes = document.querySelectorAll('[powerbi-embed] iframe');
+            var iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
             expect(iframes.length).toEqual(2);
         });
     });
 
     describe('embed', function () {
         
+        it('if attempting to embed without specifying a type, throw error', function () {
+            // Arrange
+            const component = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123"></div>')
+                .appendTo('#powerbi-fixture');
+            
+            // Act
+            const attemptEmbed = () => {
+                powerbi.embed(component[0]);
+            };
+            
+            // Assert
+            expect(attemptEmbed).toThrowError(Error);
+        });
+        
+        it('if attempting to embed without specifying an embed url, throw error', function () {
+            // Arrange
+            const component = $('<div></div>')
+                .appendTo('#powerbi-fixture');
+            
+            // Act
+            const attemptEmbed = () => {
+                powerbi.embed(component[0], { type: "report" });
+            };
+            
+            // Assert
+            expect(attemptEmbed).toThrowError(Error);
+        });
+        
+        it('if attempting to embed without specifying an access token, throw error', function () {
+            // Arrange
+            const component = $('<div></div>')
+                .appendTo('#powerbi-fixture');
+            
+            const originalToken = powerbi.accessToken;
+            powerbi.accessToken = undefined;
+            
+            // Act
+            const attemptEmbed = () => {
+                powerbi.embed(component[0], { type: "report", embedUrl: "embedUrl" });
+            };
+            
+            // Assert
+            expect(attemptEmbed).toThrowError(Error);
+            
+            // Cleanup
+            powerbi.accessToken = originalToken;
+        });
+        
         it('if component is already embedded in element and overwrite is FALSE, return the existing component', function () {
             // Arrange
-            var component = $('<div powerbi-embed="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+            var component = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
                 .appendTo('#powerbi-fixture');
 
             var newInstance = window.powerbi.embed(component[0]);
@@ -62,7 +110,7 @@ describe('powerbi', function () {
         
         it('if component is already embedded in element and overwrite is TRUE, remove the old component and create new component within the elemnt', function () {
             // Arrange
-            var component = $('<div powerbi-embed="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+            var component = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
                 .appendTo('#powerbi-fixture');
 
             var newInstance = window.powerbi.embed(component[0]);
@@ -75,10 +123,10 @@ describe('powerbi', function () {
             // TODO: Also need to find way to test that newInstance is not still in the private embeds list but we don't have access to it.
             // E.g. expect(powerbi.find(newInstance.options.id)).toBe(undefined);
         });
-
+        
         it('if component was not previously created, creates an instance and return it', function () {
             // Arrange
-            var component = $('<div powerbi-embed="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+            var component = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
                 .appendTo('#powerbi-fixture');
 
             // Act
@@ -92,7 +140,7 @@ describe('powerbi', function () {
             // Arrange
             var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
             var testToken = "fakeToken1";
-            var report = $(`<div powerbi-embed="${embedUrl}" powerbi-type="report" powerbi-access-token="${testToken}"></div>`)
+            var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-access-token="${testToken}"></div>`)
                 .appendTo('#powerbi-fixture');
 
             // Act
@@ -111,7 +159,7 @@ describe('powerbi', function () {
             // Arrange
             var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
             var testToken = "fakeToken1";
-            var report = $(`<div powerbi-embed="${embedUrl}" powerbi-type="report"></div>`)
+            var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
                 .appendTo('#powerbi-fixture');
 
             var originalToken = window.powerbi.accessToken;
@@ -135,7 +183,7 @@ describe('powerbi', function () {
         describe('reports', function () {
             it('creates report iframe from embedUrl', function () {
                 var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
-                var report = $(`<div powerbi-embed="${embedUrl}" powerbi-type="report"></div>`)
+                var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
                     .appendTo('#powerbi-fixture');
 
                 window.powerbi.embed(report[0]);
@@ -149,7 +197,7 @@ describe('powerbi', function () {
         describe('tiles', function () {
             it('creates tile iframe from embedUrl', function () {
                 var embedUrl = 'https://app.powerbi.com/embed?dashboardId=D1&tileId=T1';
-                var tile = $('<div powerbi-embed="' + embedUrl + '" powerbi-type="tile"></div>')
+                var tile = $('<div powerbi-embed-url="' + embedUrl + '" powerbi-type="tile"></div>')
                     .appendTo('#powerbi-fixture');
 
                 window.powerbi.embed(tile[0]);

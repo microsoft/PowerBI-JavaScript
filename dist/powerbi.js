@@ -60,9 +60,10 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var report_1 = __webpack_require__(2);
+	var embed_1 = __webpack_require__(2);
+	var report_1 = __webpack_require__(4);
 	var tile_1 = __webpack_require__(5);
-	var util_1 = __webpack_require__(4);
+	var util_1 = __webpack_require__(3);
 	var PowerBi = (function () {
 	    function PowerBi(config) {
 	        if (config === void 0) { config = {}; }
@@ -75,14 +76,14 @@
 	        }
 	    }
 	    /**
-	     * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed' attribute
+	     * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed-url' attribute
 	     * and automatically attempts to embed a powerbi component based on information from the attributes.
 	     * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
 	     */
 	    PowerBi.prototype.init = function (container) {
 	        var _this = this;
 	        container = (container && container instanceof HTMLElement) ? container : document.body;
-	        var elements = Array.prototype.slice.call(container.querySelectorAll('[powerbi-embed]'));
+	        var elements = Array.prototype.slice.call(container.querySelectorAll("[" + embed_1.default.embedUrlAttribute + "]"));
 	        elements.forEach(function (element) { return _this.embed(element); });
 	    };
 	    /**
@@ -102,9 +103,9 @@
 	        if (powerBiElement.powerBiEmbed && config.overwrite) {
 	            this.remove(powerBiElement.powerBiEmbed);
 	        }
-	        var Component = util_1.default.find(function (component) { return config.type === component.type || element.getAttribute('powerbi-type') === component.type; }, PowerBi.components);
+	        var Component = util_1.default.find(function (component) { return config.type === component.type || element.getAttribute(embed_1.default.typeAttribute) === component.type; }, PowerBi.components);
 	        if (!Component) {
-	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as 'powerbi-type=\"report\"'.");
+	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed_1.default.typeAttribute + "=\"" + report_1.default.name + "\"'.");
 	        }
 	        // TODO: Consider removing in favor of passing reference to `this` in constructor
 	        // The getGlobalAccessToken function is only here so that the components (Tile | Report) can get the global access token without needing reference
@@ -201,47 +202,13 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var embed_1 = __webpack_require__(3);
-	var Report = (function (_super) {
-	    __extends(Report, _super);
-	    function Report(element, options) {
-	        /** Force loadAction on options to match the type of component. This is required to bootstrap iframe. */
-	        options.loadAction = 'loadReport';
-	        _super.call(this, element, options);
-	    }
-	    Report.prototype.getEmbedUrl = function () {
-	        var embedUrl = _super.prototype.getEmbedUrl.call(this);
-	        // TODO: Need safe way to add url parameters.
-	        // We are assuming embedUrls use query parameters to supply id of visual
-	        // so must prefix with '&'.
-	        if (!this.options.filterPaneEnabled) {
-	            embedUrl += "&filterPaneEnabled=false";
-	        }
-	        return embedUrl;
-	    };
-	    Report.type = 'report';
-	    return Report;
-	}(embed_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = Report;
-
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var util_1 = __webpack_require__(4);
+	var util_1 = __webpack_require__(3);
 	var Embed = (function () {
 	    function Embed(element, options) {
 	        this.element = element;
 	        // TODO: Change when Object.assign is available.
 	        this.options = util_1.default.assign({}, Embed.defaultOptions, options);
+	        this.options.accessToken = this.getAccessToken();
 	        var embedUrl = this.getEmbedUrl();
 	        var iframeHtml = "<iframe style=\"width:100%;height:100%;\" src=\"" + embedUrl + "\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>";
 	        this.element.innerHTML = iframeHtml;
@@ -255,11 +222,10 @@
 	     */
 	    Embed.prototype.load = function () {
 	        var computedStyle = window.getComputedStyle(this.element);
-	        var accessToken = this.getAccessToken();
 	        var initEventArgs = {
 	            message: {
 	                action: this.options.loadAction,
-	                accessToken: accessToken,
+	                accessToken: this.options.accessToken,
 	                width: computedStyle.width,
 	                height: computedStyle.height
 	            }
@@ -271,9 +237,9 @@
 	     * Get access token from first available location: options, attribute, global.
 	     */
 	    Embed.prototype.getAccessToken = function () {
-	        var accessToken = this.options.accessToken || this.element.getAttribute('powerbi-access-token') || this.options.getGlobalAccessToken();
+	        var accessToken = this.options.accessToken || this.element.getAttribute(Embed.accessTokenAttribute) || this.options.getGlobalAccessToken();
 	        if (!accessToken) {
-	            throw new Error("No access token was found for element. You must specify an access token directly on the element using attribute 'powerbi-access-token' or specify a global token at: powerbi.accessToken.");
+	            throw new Error("No access token was found for element. You must specify an access token directly on the element using attribute '" + Embed.accessTokenAttribute + "' or specify a global token at: powerbi.accessToken.");
 	        }
 	        return accessToken;
 	    };
@@ -281,9 +247,9 @@
 	     * Get embed url from first available location: options, attribute.
 	     */
 	    Embed.prototype.getEmbedUrl = function () {
-	        var embedUrl = this.options.embedUrl || this.element.getAttribute('powerbi-embed');
+	        var embedUrl = this.options.embedUrl || this.element.getAttribute(Embed.embedUrlAttribute);
 	        if (typeof embedUrl !== 'string' || embedUrl.length === 0) {
-	            throw new Error("Embed Url is required, but it was not found. You must provide an embed url either as part of embed configuration or as attribute 'powerbi-embed'.");
+	            throw new Error("Embed Url is required, but it was not found. You must provide an embed url either as part of embed configuration or as attribute '" + Embed.embedUrlAttribute + "'.");
 	        }
 	        return embedUrl;
 	    };
@@ -312,6 +278,9 @@
 	        var options = ['fullscreenElement', 'webkitFullscreenElement', 'mozFullscreenScreenElement', 'msFullscreenElement'];
 	        return options.some(function (option) { return document[option] === iframe; });
 	    };
+	    Embed.embedUrlAttribute = 'powerbi-embed-url';
+	    Embed.accessTokenAttribute = 'powerbi-access-token';
+	    Embed.typeAttribute = 'powerbi-type';
 	    /**
 	     * Default options for embeddable component.
 	     */
@@ -326,7 +295,7 @@
 
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -358,7 +327,7 @@
 	    };
 	    Utils.findIndex = function (predicate, xs) {
 	        if (!Array.isArray(xs)) {
-	            throw new Error("You attempted to call find with second that was not an array. You passed: " + xs);
+	            throw new Error("You attempted to call find with second parameter that was not an array. You passed: " + xs);
 	        }
 	        var index;
 	        xs.some(function (x, i) {
@@ -409,6 +378,41 @@
 
 
 /***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var embed_1 = __webpack_require__(2);
+	var Report = (function (_super) {
+	    __extends(Report, _super);
+	    function Report(element, options) {
+	        /** Force loadAction on options to match the type of component. This is required to bootstrap iframe. */
+	        options.loadAction = 'loadReport';
+	        _super.call(this, element, options);
+	    }
+	    Report.prototype.getEmbedUrl = function () {
+	        var embedUrl = _super.prototype.getEmbedUrl.call(this);
+	        // TODO: Need safe way to add url parameters.
+	        // We are assuming embedUrls use query parameters to supply id of visual
+	        // so must prefix with '&'.
+	        if (!this.options.filterPaneEnabled) {
+	            embedUrl += "&filterPaneEnabled=false";
+	        }
+	        return embedUrl;
+	    };
+	    Report.type = 'report';
+	    return Report;
+	}(embed_1.default));
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = Report;
+
+
+/***/ },
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -418,7 +422,7 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var embed_1 = __webpack_require__(3);
+	var embed_1 = __webpack_require__(2);
 	var Tile = (function (_super) {
 	    __extends(Tile, _super);
 	    function Tile(element, options) {

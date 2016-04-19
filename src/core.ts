@@ -63,14 +63,14 @@ export default class PowerBi {
     }
     
     /**
-     * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed' attribute
+     * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed-url' attribute
      * and automatically attempts to embed a powerbi component based on information from the attributes.
      * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
      */
     init(container?: HTMLElement): void {
         container = (container && container instanceof HTMLElement) ? container : document.body;
         
-        const elements = Array.prototype.slice.call(container.querySelectorAll('[powerbi-embed]'));
+        const elements = Array.prototype.slice.call(container.querySelectorAll(`[${Embed.embedUrlAttribute}]`));
         elements.forEach(element => this.embed(element));
     }
     
@@ -92,10 +92,10 @@ export default class PowerBi {
             this.remove(powerBiElement.powerBiEmbed);
         }
         
-        const Component = Utils.find(component => config.type === component.type || element.getAttribute('powerbi-type') === component.type, PowerBi.components);
+        const Component = Utils.find(component => config.type === component.type || element.getAttribute(Embed.typeAttribute) === component.type, PowerBi.components);
         
         if (!Component) {
-            throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as 'powerbi-type="report"'.`);
+            throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.name}"'.`);
         }
         
         // TODO: Consider removing in favor of passing reference to `this` in constructor
