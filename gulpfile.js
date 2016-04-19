@@ -125,7 +125,7 @@ gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
 gulp.task('compile:spec', 'Compile typescript for tests', function () {
     var tsProject = ts.createProject('tsconfig.json');
     
-    var tsResult = gulp.src(['./test/**/*.ts'])
+    var tsResult = gulp.src(['./test/**/*.ts', './typings/browser/**/*.d.ts'])
         .pipe(ts(tsProject))
         ;
         
