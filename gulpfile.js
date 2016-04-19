@@ -17,13 +17,13 @@ var rename = require('gulp-rename'),
     ;
 
 gulp.task('watch', 'Watches for changes', ['lint'], function () {
-    gulp.watch(paths.jsSource, ['lint:ts']);
-    gulp.watch(paths.specSource, ['lint:spec', 'test']);
+    gulp.watch(['./src/**/*.ts', './test/**/*.ts'], ['lint:ts']);
+    gulp.watch(['./test/**/*.ts'], ['test']);
 });
 
 gulp.task('lint', 'Lints all files', function (done) {
     runSequence(
-        ['lint:ts', 'lint:spec'],
+        'lint:ts',
         done
     );
 });
@@ -70,17 +70,9 @@ gulp.task('copy', 'Copy .d.ts from src to dist', function() {
 });
 
 gulp.task('lint:ts', 'Lints all TypeScript', function() {
-    return gulp.src(['./src/**/*.ts'])
+    return gulp.src(['./src/**/*.ts', './test/**/*.ts'])
         .pipe(tslint())
         .pipe(tslint.report("verbose"));
-});
-
-gulp.task('lint:spec', 'Lints all specs', function() {
-    return gulp.src(paths.specSource)
-        .pipe(jshint({
-            predef: ['$', 'expect', 'beforeAll', 'afterAll', 'powerbi']
-        }))
-        .pipe(jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('min:js', 'Creates minified JavaScript file', function() {
