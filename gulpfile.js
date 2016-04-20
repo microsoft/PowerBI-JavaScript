@@ -12,24 +12,25 @@ var rename = require('gulp-rename'),
     paths = require('./paths'),
     webpack = require('webpack-stream'),
     webpackConfig = require('./webpack.config'),
-    runSequence = require('run-sequence')
+    runSequence = require('run-sequence'),
+    argv = require('yargs').argv;
     ;
 
 gulp.task('watch', 'Watches for changes', ['lint'], function () {
-    gulp.watch(paths.jsSource, ['lint:ts']);
-    gulp.watch(paths.specSource, ['lint:spec', 'test']);
+    gulp.watch(['./src/**/*.ts', './test/**/*.ts'], ['lint:ts']);
+    gulp.watch(['./test/**/*.ts'], ['test']);
 });
 
 gulp.task('lint', 'Lints all files', function (done) {
     runSequence(
-        ['lint:ts', 'lint:spec'],
+        'lint:ts',
         done
     );
 });
 gulp.task('test', 'Runs all tests', function (done) {
     runSequence(
         'clean',
-        'compile:ts',
+        ['compile:ts', 'compile:spec'],
         ['test:js', 'copy', 'min:js'],
         done
     );
@@ -63,23 +64,15 @@ gulp.task('clean', 'Cleans destination folder', function(done) {
     rimraf(paths.jsDest, done);
 });
 
-gulp.task('copy', 'Copy .d.ts from src to dest', function() {
+gulp.task('copy', 'Copy .d.ts from src to dist', function() {
     return gulp.src('./src/**/*.d.ts')
         .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('lint:ts', 'Lints all TypeScript', function() {
-    return gulp.src(['./src/**/*.ts'])
+    return gulp.src(['./src/**/*.ts', './test/**/*.ts'])
         .pipe(tslint())
         .pipe(tslint.report("verbose"));
-});
-
-gulp.task('lint:spec', 'Lints all specs', function() {
-    return gulp.src(paths.specSource)
-        .pipe(jshint({
-            predef: ['$', 'expect', 'beforeAll', 'afterAll', 'powerbi']
-        }))
-        .pipe(jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('min:js', 'Creates minified JavaScript file', function() {
@@ -92,10 +85,11 @@ gulp.task('min:js', 'Creates minified JavaScript file', function() {
 });
 
 gulp.task('test:js', 'Runs unit tests', function(done) {
-    new karma.Server({
+    new karma.Server.start({
         configFile: __dirname + '/karma.conf.js',
-        singleRun: process.env.DEBUG ? false : true
-    }, done).start();
+        singleRun: argv.debug ? false : true,
+        captureTimeout: argv.timeout || 60000
+    }, done);
 });
 
 gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
@@ -119,4 +113,14 @@ gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
     // ]);
     
     return webpackBundle;
+});
+
+gulp.task('compile:spec', 'Compile typescript for tests', function () {
+    var tsProject = ts.createProject('tsconfig.json');
+    
+    var tsResult = gulp.src(['./test/**/*.ts', './typings/browser/**/*.d.ts'])
+        .pipe(ts(tsProject))
+        ;
+        
+    return tsResult.js.pipe(gulp.dest('./test'));
 });
