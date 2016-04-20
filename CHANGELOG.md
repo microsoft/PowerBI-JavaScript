@@ -23,9 +23,10 @@
       ```
       var powerbiService = new Powerbi({ autoEmbedOnContentLoaded: true });
       ```
-- `powerbi.get(element: HTMLElement)` is removed. Use `powerbi.embed(element: HTMLElement, config: IEmbedOptions = {})`.
+- `powerbi.get(element: HTMLElement)` now only returns the instance of powerbi component associated with the element and does not implicitly emebed. Use `powerbi.embed(element: HTMLElement, config: IEmbedOptions = {})`.
   - Reasons:
     - powerbi.embed performed the same function and is more semantic.
+    - Now that overwrite: true is the default behavior for .embed having a separate method (get) for only retrieving compnents is good separation of intents.
 - Embed urls must be provided by the server and will not be constructed by the components. This implies that the attributes `powerbi-report` will no longer be used.
   - Reasons:
   

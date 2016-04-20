@@ -1,8 +1,6 @@
 import { default as Embed, IEmbedOptions } from './embed';
 
 export default class Report extends Embed {
-    static type = 'report';
-    
     constructor(element: HTMLElement, options: IEmbedOptions) {
         /** Force loadAction on options to match the type of component. This is required to bootstrap iframe. */
         options.loadAction = 'loadReport';

@@ -103,9 +103,13 @@
 	        if (powerBiElement.powerBiEmbed && config.overwrite) {
 	            this.remove(powerBiElement.powerBiEmbed);
 	        }
-	        var Component = util_1.default.find(function (component) { return config.type === component.type || element.getAttribute(embed_1.default.typeAttribute) === component.type; }, PowerBi.components);
+	        var componentType = config.type || element.getAttribute(embed_1.default.typeAttribute);
+	        if (!componentType) {
+	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed_1.default.typeAttribute + "=\"" + report_1.default.name.toLowerCase() + "\"'.");
+	        }
+	        var Component = util_1.default.find(function (component) { return componentType === component.name.toLowerCase(); }, PowerBi.components);
 	        if (!Component) {
-	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed_1.default.typeAttribute + "=\"" + report_1.default.name + "\"'.");
+	            throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
 	        }
 	        // TODO: Consider removing in favor of passing reference to `this` in constructor
 	        // The getGlobalAccessToken function is only here so that the components (Tile | Report) can get the global access token without needing reference
@@ -124,6 +128,16 @@
 	    PowerBi.prototype.enableAutoEmbed = function () {
 	        var _this = this;
 	        window.addEventListener('DOMContentLoaded', function (event) { return _this.init(document.body); }, false);
+	    };
+	    /**
+	     * Returns instance of component associated with element.
+	     */
+	    PowerBi.prototype.get = function (element) {
+	        var powerBiElement = element;
+	        if (!powerBiElement.powerBiEmbed) {
+	            throw new Error("You attempted to get an instance of powerbi component associated with element: " + element.outerHTML + " but there was no associated instance.");
+	        }
+	        return powerBiElement.powerBiEmbed;
 	    };
 	    /**
 	     * Remove component from the list of embedded components.
@@ -209,8 +223,8 @@
 	        // TODO: Change when Object.assign is available.
 	        this.options = util_1.default.assign({}, Embed.defaultOptions, options);
 	        this.options.accessToken = this.getAccessToken();
-	        var embedUrl = this.getEmbedUrl();
-	        var iframeHtml = "<iframe style=\"width:100%;height:100%;\" src=\"" + embedUrl + "\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>";
+	        this.options.embedUrl = this.getEmbedUrl();
+	        var iframeHtml = "<iframe style=\"width:100%;height:100%;\" src=\"" + this.options.embedUrl + "\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>";
 	        this.element.innerHTML = iframeHtml;
 	        this.iframe = this.element.childNodes[0];
 	        this.iframe.addEventListener('load', this.load.bind(this), false);
@@ -405,7 +419,6 @@
 	        }
 	        return embedUrl;
 	    };
-	    Report.type = 'report';
 	    return Report;
 	}(embed_1.default));
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -434,7 +447,6 @@
 	        var embedUrl = _super.prototype.getEmbedUrl.call(this);
 	        return embedUrl;
 	    };
-	    Tile.type = 'tile';
 	    return Tile;
 	}(embed_1.default));
 	Object.defineProperty(exports, "__esModule", { value: true });

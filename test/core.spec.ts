@@ -43,12 +43,54 @@ describe('powerbi', function () {
             expect(iframes.length).toEqual(2);
         });
     });
+    
+    describe('get', function () {
+        it('if attempting to get a powerbi component on an element which was not embedded, throw an error', function () {
+            // Arrange
+            const component = $('<div></div>');
+            
+            // Act
+            const attemptGet = () => {
+                powerbi.get(component[0]);
+            };
+            
+            // Assert
+            expect(attemptGet).toThrowError(Error);
+        });
+        
+        it('calling get on element with embeded component returns the instance', function () {
+            // Arrange
+            const $element = $('<div powerbi-type="report" powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123"></div>')
+                .appendTo('#powerbi-fixture');
+            
+            const componentInstance = powerbi.embed($element[0]);
+            
+            // Act
+            const componentInstance2 = powerbi.get($element[0]);
+            
+            // Assert
+            expect(componentInstance).toEqual(componentInstance2);
+        })
+    });
 
     describe('embed', function () {
-        
         it('if attempting to embed without specifying a type, throw error', function () {
             // Arrange
-            const component = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123"></div>')
+            const component = $('<div></div>')
+                .appendTo('#powerbi-fixture');
+            
+            // Act
+            const attemptEmbed = () => {
+                powerbi.embed(component[0]);
+            };
+            
+            // Assert
+            expect(attemptEmbed).toThrowError(Error);
+        });
+        
+        it('if attempting to embed with an unknown type, throw error', function () {
+            // Arrange
+            const component = $('<div powerbi-type="unknownType"></div>')
                 .appendTo('#powerbi-fixture');
             
             // Act

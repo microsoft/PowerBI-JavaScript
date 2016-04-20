@@ -63,9 +63,9 @@ abstract class Embed {
         // TODO: Change when Object.assign is available.
         this.options = Utils.assign({}, Embed.defaultOptions, options);
         this.options.accessToken = this.getAccessToken();
+        this.options.embedUrl = this.getEmbedUrl();
         
-        const embedUrl = this.getEmbedUrl();
-        const iframeHtml = `<iframe style="width:100%;height:100%;" src="${embedUrl}" scrolling="no" allowfullscreen="true"></iframe>`;
+        const iframeHtml = `<iframe style="width:100%;height:100%;" src="${this.options.embedUrl}" scrolling="no" allowfullscreen="true"></iframe>`;
         
         this.element.innerHTML = iframeHtml;
         this.iframe = <HTMLIFrameElement>this.element.childNodes[0];

@@ -92,10 +92,14 @@ export default class PowerBi {
             this.remove(powerBiElement.powerBiEmbed);
         }
         
-        const Component = Utils.find(component => config.type === component.type || element.getAttribute(Embed.typeAttribute) === component.type, PowerBi.components);
+        const componentType = config.type || element.getAttribute(Embed.typeAttribute);
+        if (!componentType) {
+            throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.name.toLowerCase()}"'.`);
+        }
         
+        const Component = Utils.find(component => componentType === component.name.toLowerCase(), PowerBi.components);
         if (!Component) {
-            throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.name}"'.`);
+            throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
         }
         
         // TODO: Consider removing in favor of passing reference to `this` in constructor
@@ -117,6 +121,19 @@ export default class PowerBi {
      */
     enableAutoEmbed() {
         window.addEventListener('DOMContentLoaded', (event: Event) => this.init(document.body), false);
+    }
+    
+    /**
+     * Returns instance of component associated with element.
+     */
+    get(element: HTMLElement) {
+        const powerBiElement = <IPowerBiElement>element;
+        
+        if (!powerBiElement.powerBiEmbed) {
+            throw new Error(`You attempted to get an instance of powerbi component associated with element: ${element.outerHTML} but there was no associated instance.`);
+        }
+        
+        return powerBiElement.powerBiEmbed;
     }
     
     /**
