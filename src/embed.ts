@@ -31,12 +31,26 @@ export interface IEmbedOptions {
     overwrite?: boolean;
 }
 
+export interface IEmbedConstructor {
+    new(...args: any[]): Embed;
+}
+
 abstract class Embed {
+    public static embedUrlAttribute = 'powerbi-embed-url';
+    public static accessTokenAttribute = 'powerbi-access-token';
+    public static typeAttribute = 'powerbi-type';
+    
+    /**
+     * Attribute used to specify type of visual.
+     * Example: `<div powerbi-type="report"></div>`
+     */
+    public static name: string;
     /**
      * Default options for embeddable component.
      */
     private static defaultOptions: IEmbedOptions = {
-        filterPaneEnabled: true
+        filterPaneEnabled: true,
+        overwrite: true
     };
     
     element: HTMLElement;
@@ -48,6 +62,7 @@ abstract class Embed {
         
         // TODO: Change when Object.assign is available.
         this.options = Utils.assign({}, Embed.defaultOptions, options);
+        this.options.accessToken = this.getAccessToken();
         
         const embedUrl = this.getEmbedUrl();
         const iframeHtml = `<iframe style="width:100%;height:100%;" src="${embedUrl}" scrolling="no" allowfullscreen="true"></iframe>`;
@@ -64,12 +79,10 @@ abstract class Embed {
      */
     private load(): void {
         const computedStyle = window.getComputedStyle(this.element);
-        const accessToken = this.getAccessToken();
-        
         const initEventArgs = {
             message: {
                 action: this.options.loadAction,
-                accessToken,
+                accessToken: this.options.accessToken,
                 width: computedStyle.width,
                 height: computedStyle.height
             }
@@ -83,10 +96,10 @@ abstract class Embed {
      * Get access token from first available location: options, attribute, global.
      */
     private getAccessToken(): string {
-        const accessToken = this.options.accessToken || this.element.getAttribute('powerbi-access-token') || this.options.getGlobalAccessToken();
+        const accessToken = this.options.accessToken || this.element.getAttribute(Embed.accessTokenAttribute) || this.options.getGlobalAccessToken();
         
         if (!accessToken) {
-            throw new Error(`No access token was found for element. You must specify an access token directly on the element using attribute 'powerbi-access-token' or specify a global token at: powerbi.accessToken.`);
+            throw new Error(`No access token was found for element. You must specify an access token directly on the element using attribute '${Embed.accessTokenAttribute}' or specify a global token at: powerbi.accessToken.`);
         }
         
         return accessToken;
@@ -96,7 +109,11 @@ abstract class Embed {
      * Get embed url from first available location: options, attribute.
      */
     protected getEmbedUrl(): string {
-        const embedUrl = this.options.embedUrl || this.element.getAttribute('powerbi-embed');
+        const embedUrl = this.options.embedUrl || this.element.getAttribute(Embed.embedUrlAttribute);
+        
+        if(typeof embedUrl !== 'string' || embedUrl.length === 0) {
+            throw new Error(`Embed Url is required, but it was not found. You must provide an embed url either as part of embed configuration or as attribute '${Embed.embedUrlAttribute}'.`);
+        }
         
         return embedUrl; 
     }

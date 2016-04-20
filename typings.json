@@ -1,0 +1,7 @@
+{
+  "ambientDependencies": {
+    "jasmine": "registry:dt/jasmine#2.2.0+20160317120654",
+    "jquery": "registry:dt/jquery#1.10.0+20160316155526",
+    "karma-jasmine": "registry:dt/karma-jasmine#0.0.0+20160316155526"
+  }
+}
