@@ -85,10 +85,11 @@ gulp.task('min:js', 'Creates minified JavaScript file', function() {
 });
 
 gulp.task('test:js', 'Runs unit tests', function(done) {
-    new karma.Server({
+    new karma.Server.start({
         configFile: __dirname + '/karma.conf.js',
-        singleRun: argv.debug ? false : true
-    }, done).start();
+        singleRun: argv.debug ? false : true,
+        captureTimeout: argv.timeout || 60000
+    }, done);
 });
 
 gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
