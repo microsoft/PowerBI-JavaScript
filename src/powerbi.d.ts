@@ -124,13 +124,11 @@ declare abstract class Embed {
 }
 
 export class Report extends Embed {
-    static attribute: string;
     constructor(element: HTMLElement, options: IEmbedOptions);
     getEmbedUrl(): string;
 }
 
 export class Tile extends Embed {
-    static attribute: string;
     constructor(element: HTMLElement, options: IEmbedOptions);
     getEmbedUrl(): string;
 }
