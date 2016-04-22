@@ -1,7 +1,7 @@
 export default class Utils {
     static raiseCustomEvent(element: HTMLElement, eventName: string, eventData: any) {
         let customEvent;
-        if (typeof (<any>window).CustomEvent === 'function') {
+        if (typeof CustomEvent === 'function') {
             customEvent = new CustomEvent(eventName, {
                 detail: eventData,
                 bubbles: true,
@@ -17,6 +17,8 @@ export default class Utils {
             return;
         }
 
+        // TODO: Remove this? Should be better way to handle events than using eval?
+        // What is use case? <div powerbi-type="report" onload="alert('loaded');"></div>
         const inlineEventAttr = 'on' + eventName.replace('-', '');
         const inlineScript = element.getAttribute(inlineEventAttr);
         if (inlineScript) {
