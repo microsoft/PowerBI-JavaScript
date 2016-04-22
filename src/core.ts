@@ -76,26 +76,35 @@ export default class PowerBi {
     
     /**
      * Given an html element embed component based on configuration.
-     * If component has already been created and attached to eleemnt simply return it to prevent creating duplicate components for same element.
+     * If component has already been created and attached to element re-use component instance and existing iframe,
+     * otherwise create a new component instance
      */
     embed(element: HTMLElement, config: IEmbedOptions = {}): Embed {
-        let instance: Embed;
+        let component: Embed;
         let powerBiElement = <IPowerBiElement>element;
         
-        if (powerBiElement.powerBiEmbed && !config.overwrite) {
-            instance = powerBiElement.powerBiEmbed;
-            return instance;
+        if (powerBiElement.powerBiEmbed) {
+            component = this.embedExisting(powerBiElement, config);
+        }
+        else {
+            component = this.embedNew(powerBiElement, config);
         }
         
-        /** If component is already registered on this element, but we are supposed to overwrite, remove existing component from registry */
-        if (powerBiElement.powerBiEmbed && config.overwrite) {
-            this.remove(powerBiElement.powerBiEmbed);
-        }
-        
+        return component;
+    }
+    
+    /**
+     * Given an html element embed component base configuration.
+     * Save component instance on element for later lookup. 
+     */
+    private embedNew(element: IPowerBiElement, config: IEmbedOptions): Embed {
         const componentType = config.type || element.getAttribute(Embed.typeAttribute);
         if (!componentType) {
             throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.name.toLowerCase()}"'.`);
         }
+        
+        // Save type on configuration so it can be referenced later at known location
+        config.type = componentType;
         
         const Component = Utils.find(component => componentType === component.name.toLowerCase(), PowerBi.components);
         if (!Component) {
@@ -107,11 +116,22 @@ export default class PowerBi {
         // to the service that they are registered within becaues it creates circular dependencies
         config.getGlobalAccessToken = () => this.accessToken;
         
-        instance = new Component(element, config);
-        powerBiElement.powerBiEmbed = instance;
-        this.embeds.push(instance);
+        const component = new Component(element, config);
+        element.powerBiEmbed = component;
+        this.embeds.push(component);
         
-        return instance;
+        return component;
+    }
+    
+    private embedExisting(element: IPowerBiElement, config: IEmbedOptions): Embed {
+        const component = Utils.find(x => x.element === element, this.embeds);
+        if (!component) {
+            throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
+        }
+        
+        component.load(config, true);
+        
+        return component;
     }
     
     /**
