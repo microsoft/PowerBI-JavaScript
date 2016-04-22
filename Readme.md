@@ -29,8 +29,8 @@ This exposes two globals `Powerbi` which is the service class and `powerbi` whic
 
 # Embedding
 
-## PaaS
-### When using PaaS model the tokens issued are for a specific report or tile and the token should be associated with the embed url on the same element to ensure each has a unique token allows embeding multiple reports using the same service instance.
+## PaaS (Platform as a Service)
+When using PaaS model the tokens issued are for a specific report or tile and the token should be associated with the embed url on the same element to ensure each has a unique token allows embeding multiple reports using the same service instance.
 
 ```
 <div
@@ -40,8 +40,9 @@ This exposes two globals `Powerbi` which is the service class and `powerbi` whic
 ></div>
 ```
 
-## SaaS
-### When using SaaS model the tokens issued are for a specific user who can view many types of visuals. This means you can add this as a global token reused for all embeded visuals as shown below:
+## SaaS (Software as a Service)
+When using SaaS model the tokens issued are for a specific user who can view many types of visuals. This means you can add this as a global token reused for all embeded visuals as shown below:
+
 ```
 <script>
 	window.powerbi.accessToken = '{{AccessToken}}';
