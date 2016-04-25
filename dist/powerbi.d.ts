@@ -10,6 +10,7 @@ export interface IPowerBiConfiguration {
 declare global {
     interface Window {
         Powerbi: typeof PowerBi;
+        powerbi: PowerBi;
     }
 }
 
@@ -47,7 +48,7 @@ export class PowerBi {
      * Given an html element embed component based on configuration.
      * If component has already been created and attached to eleemnt simply return it to prevent creating duplicate components for same element.
      */
-    embed(element: IPowerBiElement, config?: IEmbedOptions): Embed;
+    embed(element: HTMLElement, config?: IEmbedOptions): Embed;
     /**
      * Adds event handler for DOMContentLoaded which finds all elements in DOM with attribute powerbi-embed-url
      * then attempts to initiate the embed process based on data from other powerbi-* attributes.

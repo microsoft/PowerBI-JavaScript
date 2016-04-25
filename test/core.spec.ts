@@ -1,11 +1,5 @@
 import PowerBi from '../src/core';
 
-declare global {
-    interface Window {
-        powerbi: PowerBi;
-    }
-}
-
 declare var powerbi: PowerBi;
 
 describe('powerbi', function () {
@@ -163,7 +157,7 @@ describe('powerbi', function () {
                 .appendTo('#powerbi-fixture');
 
             // Act
-            var instance = window.powerbi.embed(component[0]);
+            var instance = powerbi.embed(component[0]);
             
             // Assert
             expect(instance).toBeDefined();
@@ -177,10 +171,10 @@ describe('powerbi', function () {
                 .appendTo('#powerbi-fixture');
 
             // Act
-            window.powerbi.embed(report[0]);
+            powerbi.embed(report[0]);
 
             // Assert
-            var reportInstance = window.powerbi.get(report[0]);
+            var reportInstance = powerbi.get(report[0]);
             // TODO: Find way to prevent using private method getAccessToken.
             // Need to know what token the report used, but don't have another option?
             // To properly only test public methods but still confirm this we would need to create special iframe which echoed all
@@ -197,14 +191,14 @@ describe('powerbi', function () {
             var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
                 .appendTo('#powerbi-fixture');
 
-            var originalToken = window.powerbi.accessToken;
-            window.powerbi.accessToken = testToken;
+            var originalToken = powerbi.accessToken;
+            powerbi.accessToken = testToken;
 
             // Act
-            window.powerbi.embed(report[0]);
+            powerbi.embed(report[0]);
 
             // Assert
-            var reportInstance = window.powerbi.get(report[0]);
+            var reportInstance = powerbi.get(report[0]);
             // TODO: Find way to prevent using private method getAccessToken.
             // Need to know what token the report used, but don't have another option?
             var accessToken = (<any>reportInstance).getAccessToken();
@@ -212,7 +206,7 @@ describe('powerbi', function () {
             expect(accessToken).toEqual(testToken);
             
             // Cleanup
-            window.powerbi.accessToken = originalToken;
+            powerbi.accessToken = originalToken;
         });
         
         describe('reports', function () {
@@ -221,7 +215,7 @@ describe('powerbi', function () {
                 var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
                     .appendTo('#powerbi-fixture');
 
-                window.powerbi.embed(report[0]);
+                powerbi.embed(report[0]);
 
                 var iframe = report.find('iframe');
                 expect(iframe.length).toEqual(1);
@@ -235,7 +229,7 @@ describe('powerbi', function () {
                 var tile = $('<div powerbi-embed-url="' + embedUrl + '" powerbi-type="tile"></div>')
                     .appendTo('#powerbi-fixture');
 
-                window.powerbi.embed(tile[0]);
+                powerbi.embed(tile[0]);
 
                 var iframe = tile.find('iframe');
                 expect(iframe.length).toEqual(1);
