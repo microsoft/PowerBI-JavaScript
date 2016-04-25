@@ -12,7 +12,7 @@ export interface IPowerBiConfiguration {
     onError?: (error: any) => any;
 }
 
-export default class PowerBi {
+export class PowerBi {
     /**
      * List of components this service can embed.
      */
@@ -157,10 +157,25 @@ export default class PowerBi {
     }
     
     /**
-     * Remove component from the list of embedded components.
+     * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
      */
-    remove(component: Embed): void {
-        Utils.remove(x => x === component, this.embeds);
+    reset(element: HTMLElement) {
+        const powerBiElement = <IPowerBiElement>element;
+        
+        if (!powerBiElement.powerBiEmbed) {
+            throw new Error(`You attempted to get an instance of powerbi component associated with element: ${element.outerHTML} but there was no associated instance.`);
+        }
+        
+        /** Remove component from internal list */
+        Utils.remove(x => x === powerBiElement.powerBiEmbed, this.embeds);
+        /** Delete property from html element */
+        delete powerBiElement.powerBiEmbed;
+        /** Remove iframe from element by clearing innerHTML */
+        
+        const iframe = element.querySelector('iframe');
+        if(iframe) {
+            iframe.remove();
+        }
     }
     
     /**
@@ -194,4 +209,4 @@ export default class PowerBi {
     }
 }
 
-
+export default PowerBi;

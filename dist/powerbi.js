@@ -156,10 +156,22 @@
 	        return powerBiElement.powerBiEmbed;
 	    };
 	    /**
-	     * Remove component from the list of embedded components.
+	     * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
 	     */
-	    PowerBi.prototype.remove = function (component) {
-	        util_1.default.remove(function (x) { return x === component; }, this.embeds);
+	    PowerBi.prototype.reset = function (element) {
+	        var powerBiElement = element;
+	        if (!powerBiElement.powerBiEmbed) {
+	            throw new Error("You attempted to get an instance of powerbi component associated with element: " + element.outerHTML + " but there was no associated instance.");
+	        }
+	        /** Remove component from internal list */
+	        util_1.default.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
+	        /** Delete property from html element */
+	        delete powerBiElement.powerBiEmbed;
+	        /** Remove iframe from element by clearing innerHTML */
+	        var iframe = element.querySelector('iframe');
+	        if (iframe) {
+	            iframe.remove();
+	        }
 	    };
 	    /**
 	     * Handler for window message event.
@@ -223,6 +235,7 @@
 	    };
 	    return PowerBi;
 	}());
+	exports.PowerBi = PowerBi;
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = PowerBi;
 
