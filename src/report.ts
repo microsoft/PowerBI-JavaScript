@@ -1,12 +1,10 @@
-import { default as Embed, IEmbedOptions } from './embed';
+import { default as Embed, IEmbedOptions, ILoadMessage } from './embed';
+
+export interface IReportLoadMessage extends ILoadMessage {
+    reportId: string
+}
 
 export default class Report extends Embed {
-    constructor(element: HTMLElement, options: IEmbedOptions) {
-        /** Force loadAction on options to match the type of component. This is required to bootstrap iframe. */
-        options.loadAction = 'loadReport';
-        super(element, options);
-    }
-    
     getEmbedUrl(): string {
         let embedUrl = super.getEmbedUrl();
         
@@ -18,5 +16,19 @@ export default class Report extends Embed {
         }
 
         return embedUrl;
+    }
+
+    load(options: IEmbedOptions, requireId: boolean = false) {
+        if(requireId && typeof options.id !== 'string') {
+            throw new Error(`id must be specified when loading reports on existing elements.`);
+        }
+        
+        const message: IReportLoadMessage = {
+            action: 'loadReport',
+            reportId: options.id,
+            accessToken: null
+        };
+        
+        super.load(options, requireId, message);
     }
 }

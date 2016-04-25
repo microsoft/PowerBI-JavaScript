@@ -136,34 +136,25 @@ describe('powerbi', function () {
             powerbi.accessToken = originalToken;
         });
         
-        it('if component is already embedded in element and overwrite is FALSE, return the existing component', function () {
+        it('if component is already embedded in element re-use the existing component by calling load with the new information', function () {
             // Arrange
-            var component = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+            const $element = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
                 .appendTo('#powerbi-fixture');
 
-            var newInstance = window.powerbi.embed(component[0]);
-
+            const component = powerbi.embed($element[0]);
+            spyOn(component, "load");
+            
+            const testConfiguration = {
+                embedUrl: 'fakeUrl',
+                id: 'report2'
+            };
+            
             // Act
-            var instance = window.powerbi.embed(component[0]);
+            const component2 = powerbi.embed($element[0], testConfiguration);
             
             // Assert
-            expect(instance).toBe(newInstance);
-        });
-        
-        it('if component is already embedded in element and overwrite is TRUE, remove the old component and create new component within the elemnt', function () {
-            // Arrange
-            var component = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
-                .appendTo('#powerbi-fixture');
-
-            var newInstance = window.powerbi.embed(component[0]);
-
-            // Act
-            var instance = window.powerbi.embed(component[0], { overwrite: true });
-            
-            // Assert
-            expect(instance).not.toBe(newInstance);
-            // TODO: Also need to find way to test that newInstance is not still in the private embeds list but we don't have access to it.
-            // E.g. expect(powerbi.find(newInstance.options.id)).toBe(undefined);
+            expect(component.load).toHaveBeenCalledWith(testConfiguration, true);
+            expect(component2).toBe(component);
         });
         
         it('if component was not previously created, creates an instance and return it', function () {
@@ -189,12 +180,14 @@ describe('powerbi', function () {
             window.powerbi.embed(report[0]);
 
             // Assert
-            var reportInstance = window.powerbi.embed(report[0]);
+            var reportInstance = window.powerbi.get(report[0]);
             // TODO: Find way to prevent using private method getAccessToken.
             // Need to know what token the report used, but don't have another option?
+            // To properly only test public methods but still confirm this we would need to create special iframe which echoed all
+            // messages and then we could test what it received
             var accessToken = (<any>reportInstance).getAccessToken();
             
-            expect(accessToken).toEqual(testToken); 
+            expect(accessToken).toEqual(testToken);
         });
         
         it("if token is not found by attribute 'powerbi-access-token', fallback to using global", function () {
@@ -211,7 +204,7 @@ describe('powerbi', function () {
             window.powerbi.embed(report[0]);
 
             // Assert
-            var reportInstance = window.powerbi.embed(report[0]);
+            var reportInstance = window.powerbi.get(report[0]);
             // TODO: Find way to prevent using private method getAccessToken.
             // Need to know what token the report used, but don't have another option?
             var accessToken = (<any>reportInstance).getAccessToken();

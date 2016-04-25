@@ -88,25 +88,33 @@
 	    };
 	    /**
 	     * Given an html element embed component based on configuration.
-	     * If component has already been created and attached to eleemnt simply return it to prevent creating duplicate components for same element.
+	     * If component has already been created and attached to element re-use component instance and existing iframe,
+	     * otherwise create a new component instance
 	     */
 	    PowerBi.prototype.embed = function (element, config) {
-	        var _this = this;
 	        if (config === void 0) { config = {}; }
-	        var instance;
+	        var component;
 	        var powerBiElement = element;
-	        if (powerBiElement.powerBiEmbed && !config.overwrite) {
-	            instance = powerBiElement.powerBiEmbed;
-	            return instance;
+	        if (powerBiElement.powerBiEmbed) {
+	            component = this.embedExisting(powerBiElement, config);
 	        }
-	        /** If component is already registered on this element, but we are supposed to overwrite, remove existing component from registry */
-	        if (powerBiElement.powerBiEmbed && config.overwrite) {
-	            this.remove(powerBiElement.powerBiEmbed);
+	        else {
+	            component = this.embedNew(powerBiElement, config);
 	        }
+	        return component;
+	    };
+	    /**
+	     * Given an html element embed component base configuration.
+	     * Save component instance on element for later lookup.
+	     */
+	    PowerBi.prototype.embedNew = function (element, config) {
+	        var _this = this;
 	        var componentType = config.type || element.getAttribute(embed_1.default.typeAttribute);
 	        if (!componentType) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed_1.default.typeAttribute + "=\"" + report_1.default.name.toLowerCase() + "\"'.");
 	        }
+	        // Save type on configuration so it can be referenced later at known location
+	        config.type = componentType;
 	        var Component = util_1.default.find(function (component) { return componentType === component.name.toLowerCase(); }, PowerBi.components);
 	        if (!Component) {
 	            throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
@@ -115,10 +123,18 @@
 	        // The getGlobalAccessToken function is only here so that the components (Tile | Report) can get the global access token without needing reference
 	        // to the service that they are registered within becaues it creates circular dependencies
 	        config.getGlobalAccessToken = function () { return _this.accessToken; };
-	        instance = new Component(element, config);
-	        powerBiElement.powerBiEmbed = instance;
-	        this.embeds.push(instance);
-	        return instance;
+	        var component = new Component(element, config);
+	        element.powerBiEmbed = component;
+	        this.embeds.push(component);
+	        return component;
+	    };
+	    PowerBi.prototype.embedExisting = function (element, config) {
+	        var component = util_1.default.find(function (x) { return x.element === element; }, this.embeds);
+	        if (!component) {
+	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
+	        }
+	        component.load(config, true);
+	        return component;
 	    };
 	    /**
 	     * Adds event handler for DOMContentLoaded which finds all elements in DOM with attribute powerbi-embed-url
@@ -219,6 +235,7 @@
 	var util_1 = __webpack_require__(3);
 	var Embed = (function () {
 	    function Embed(element, options) {
+	        var _this = this;
 	        this.element = element;
 	        // TODO: Change when Object.assign is available.
 	        this.options = util_1.default.assign({}, Embed.defaultOptions, options);
@@ -227,25 +244,28 @@
 	        var iframeHtml = "<iframe style=\"width:100%;height:100%;\" src=\"" + this.options.embedUrl + "\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>";
 	        this.element.innerHTML = iframeHtml;
 	        this.iframe = this.element.childNodes[0];
-	        this.iframe.addEventListener('load', this.load.bind(this), false);
+	        this.iframe.addEventListener('load', function () { return _this.load(_this.options, false); }, false);
 	    }
 	    /**
 	     * Handler for when the iframe has finished loading the powerbi placeholder page.
 	     * This is used to inject configuration options such as access token, loadAction, etc
 	     * which allow iframe to load the actual report with authentication.
 	     */
-	    Embed.prototype.load = function () {
-	        var computedStyle = window.getComputedStyle(this.element);
-	        var initEventArgs = {
-	            message: {
-	                action: this.options.loadAction,
-	                accessToken: this.options.accessToken,
-	                width: computedStyle.width,
-	                height: computedStyle.height
-	            }
+	    Embed.prototype.load = function (options, requireId, message) {
+	        if (requireId === void 0) { requireId = false; }
+	        if (message === void 0) { message = null; }
+	        if (!message) {
+	            throw new Error("You called load without providing message properties from the concrete embeddable class.");
+	        }
+	        var baseMessage = {
+	            accessToken: options.accessToken
 	        };
-	        util_1.default.raiseCustomEvent(this.element, 'embed-init', initEventArgs);
-	        this.iframe.contentWindow.postMessage(JSON.stringify(initEventArgs.message), '*');
+	        util_1.default.assign(message, baseMessage);
+	        var event = {
+	            message: message
+	        };
+	        util_1.default.raiseCustomEvent(this.element, event.message.action, event);
+	        this.iframe.contentWindow.postMessage(JSON.stringify(event.message), '*');
 	    };
 	    /**
 	     * Get access token from first available location: options, attribute, global.
@@ -299,8 +319,7 @@
 	     * Default options for embeddable component.
 	     */
 	    Embed.defaultOptions = {
-	        filterPaneEnabled: true,
-	        overwrite: true
+	        filterPaneEnabled: true
 	    };
 	    return Embed;
 	}());
@@ -318,7 +337,7 @@
 	    }
 	    Utils.raiseCustomEvent = function (element, eventName, eventData) {
 	        var customEvent;
-	        if (typeof window.CustomEvent === 'function') {
+	        if (typeof CustomEvent === 'function') {
 	            customEvent = new CustomEvent(eventName, {
 	                detail: eventData,
 	                bubbles: true,
@@ -333,6 +352,8 @@
 	        if (customEvent.defaultPrevented || !customEvent.returnValue) {
 	            return;
 	        }
+	        // TODO: Remove this? Should be better way to handle events than using eval?
+	        // What is use case? <div powerbi-type="report" onload="alert('loaded');"></div>
 	        var inlineEventAttr = 'on' + eventName.replace('-', '');
 	        var inlineScript = element.getAttribute(inlineEventAttr);
 	        if (inlineScript) {
@@ -404,10 +425,8 @@
 	var embed_1 = __webpack_require__(2);
 	var Report = (function (_super) {
 	    __extends(Report, _super);
-	    function Report(element, options) {
-	        /** Force loadAction on options to match the type of component. This is required to bootstrap iframe. */
-	        options.loadAction = 'loadReport';
-	        _super.call(this, element, options);
+	    function Report() {
+	        _super.apply(this, arguments);
 	    }
 	    Report.prototype.getEmbedUrl = function () {
 	        var embedUrl = _super.prototype.getEmbedUrl.call(this);
@@ -418,6 +437,18 @@
 	            embedUrl += "&filterPaneEnabled=false";
 	        }
 	        return embedUrl;
+	    };
+	    Report.prototype.load = function (options, requireId) {
+	        if (requireId === void 0) { requireId = false; }
+	        if (requireId && typeof options.id !== 'string') {
+	            throw new Error("id must be specified when loading reports on existing elements.");
+	        }
+	        var message = {
+	            action: 'loadReport',
+	            reportId: options.id,
+	            accessToken: null
+	        };
+	        _super.prototype.load.call(this, options, requireId, message);
 	    };
 	    return Report;
 	}(embed_1.default));
@@ -438,14 +469,24 @@
 	var embed_1 = __webpack_require__(2);
 	var Tile = (function (_super) {
 	    __extends(Tile, _super);
-	    function Tile(element, options) {
-	        /** Force loadAction on options to match the type of component. This is required to bootstrap iframe. */
-	        options.loadAction = 'loadTile';
-	        _super.call(this, element, options);
+	    function Tile() {
+	        _super.apply(this, arguments);
 	    }
 	    Tile.prototype.getEmbedUrl = function () {
 	        var embedUrl = _super.prototype.getEmbedUrl.call(this);
 	        return embedUrl;
+	    };
+	    Tile.prototype.load = function (options, requireId) {
+	        if (requireId === void 0) { requireId = false; }
+	        if (requireId && typeof options.id !== 'string') {
+	            throw new Error("id must be specified when loading reports on existing elements.");
+	        }
+	        var message = {
+	            action: 'loadTile',
+	            tileId: options.id,
+	            accessToken: null
+	        };
+	        _super.prototype.load.call(this, options, requireId, message);
 	    };
 	    return Tile;
 	}(embed_1.default));

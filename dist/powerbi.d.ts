@@ -68,20 +68,18 @@ export class PowerBi {
     private onReceiveMessage(event: MessageEvent): void;
 }
 
-
 export interface IEmbedOptions {
     type?: string;
     id?: string;
     accessToken?: string;
-    loadAction?: string;
     embedUrl?: string;
     webUrl?: string;
     name?: string;
     filter?: any;
     filterPaneEnabled?: boolean;
     getGlobalAccessToken?: () => string;
-    overwrite?: boolean;
 }
+
 declare abstract class Embed {
     public static embedUrlAttribute: string;
     public static accessTokenAttribute: string;
@@ -96,10 +94,10 @@ declare abstract class Embed {
     constructor(element: HTMLElement, options: IEmbedOptions);
     /**
      * Handler for when the iframe has finished loading the powerbi placeholder page.
-     * This is used to inject configuration options such as access token, loadAction, etc
+     * This is used to inject configuration options such as access token, action, etc
      * which allow iframe to load the actual report with authentication.
      */
-    private load();
+    load(options: IEmbedOptions, requireId: boolean, message: IEmbedOptions);
     /**
      * Get access token from first available location: options, attribute, global.
      */

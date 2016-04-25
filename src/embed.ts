@@ -18,17 +18,20 @@ declare global {
     }
 }
 
+export interface ILoadMessage {
+    action: string;
+    accessToken: string;
+}
+
 export interface IEmbedOptions {
     type?: string;
     id?: string;
     accessToken?: string;
-    loadAction?: string;
     embedUrl?: string;
     webUrl?: string;
     name?: string;
     filterPaneEnabled?: boolean;
     getGlobalAccessToken?: () => string;
-    overwrite?: boolean;
 }
 
 export interface IEmbedConstructor {
@@ -49,8 +52,7 @@ abstract class Embed {
      * Default options for embeddable component.
      */
     private static defaultOptions: IEmbedOptions = {
-        filterPaneEnabled: true,
-        overwrite: true
+        filterPaneEnabled: true
     };
     
     element: HTMLElement;
@@ -69,7 +71,7 @@ abstract class Embed {
         
         this.element.innerHTML = iframeHtml;
         this.iframe = <HTMLIFrameElement>this.element.childNodes[0];
-        this.iframe.addEventListener('load', this.load.bind(this), false);
+        this.iframe.addEventListener('load', () => this.load(this.options, false), false);
     }
     
     /**
@@ -77,19 +79,23 @@ abstract class Embed {
      * This is used to inject configuration options such as access token, loadAction, etc
      * which allow iframe to load the actual report with authentication.
      */
-    private load(): void {
-        const computedStyle = window.getComputedStyle(this.element);
-        const initEventArgs = {
-            message: {
-                action: this.options.loadAction,
-                accessToken: this.options.accessToken,
-                width: computedStyle.width,
-                height: computedStyle.height
-            }
+    load(options: IEmbedOptions, requireId: boolean = false, message: ILoadMessage = null) {
+        if(!message) {
+            throw new Error(`You called load without providing message properties from the concrete embeddable class.`);
+        }
+        
+        const baseMessage = <ILoadMessage>{
+            accessToken: options.accessToken
         };
         
-        Utils.raiseCustomEvent(this.element, 'embed-init', initEventArgs);
-        this.iframe.contentWindow.postMessage(JSON.stringify(initEventArgs.message), '*');
+        Utils.assign(message, baseMessage);
+        
+        const event = {
+            message
+        };
+        
+        Utils.raiseCustomEvent(this.element, event.message.action, event);
+        this.iframe.contentWindow.postMessage(JSON.stringify(event.message), '*');
     }
     
     /**
@@ -117,7 +123,7 @@ abstract class Embed {
         
         return embedUrl; 
     }
-    
+
     /**
      * Request the browser to make the components iframe fullscreen.
      */

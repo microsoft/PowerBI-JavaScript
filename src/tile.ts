@@ -1,15 +1,27 @@
-import { default as Embed, IEmbedOptions } from './embed';
+import { default as Embed, IEmbedOptions, ILoadMessage } from './embed';
+
+export interface ITileLoadMessage extends ILoadMessage {
+    tileId: string
+}
 
 export default class Tile extends Embed {
-    constructor(element: HTMLElement, options: IEmbedOptions) {
-        /** Force loadAction on options to match the type of component. This is required to bootstrap iframe. */
-        options.loadAction = 'loadTile';
-        super(element, options);
-    }
-    
     getEmbedUrl(): string {
         const embedUrl = super.getEmbedUrl();
 
         return embedUrl;
+    }
+    
+    load(options: IEmbedOptions, requireId: boolean = false) {
+        if(requireId && typeof options.id !== 'string') {
+            throw new Error(`id must be specified when loading reports on existing elements.`);
+        }
+        
+        const message = {
+            action: 'loadTile',
+            tileId: options.id,
+            accessToken: null
+        };
+        
+        super.load(options, requireId, message);
     }
 }
