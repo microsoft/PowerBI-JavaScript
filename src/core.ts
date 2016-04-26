@@ -170,8 +170,7 @@ export class PowerBi {
         Utils.remove(x => x === powerBiElement.powerBiEmbed, this.embeds);
         /** Delete property from html element */
         delete powerBiElement.powerBiEmbed;
-        /** Remove iframe from element by clearing innerHTML */
-        
+        /** Remove iframe from element */
         const iframe = element.querySelector('iframe');
         if(iframe) {
             iframe.remove();
