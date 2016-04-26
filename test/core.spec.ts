@@ -1,6 +1,6 @@
-import PowerBi from '../src/core';
+import * as pbi from '../src/core';
 
-declare var powerbi: PowerBi;
+declare var powerbi: pbi.PowerBi;
 
 describe('powerbi', function () {
     beforeAll(function () {
@@ -235,6 +235,56 @@ describe('powerbi', function () {
                 expect(iframe.length).toEqual(1);
                 expect(iframe.attr('src')).toEqual(embedUrl);
             });
+        });
+    });
+    
+    describe('reset', function () {
+        it('throws an error if the element being reset does not have embedded component associated with it', function () {
+            // Arrange
+            const $element = $('<div></div>');
+            
+            // Act
+            const attemptToReset = () => {
+                powerbi.reset($element.get(0));
+            };
+            
+            // Assert
+            expect(attemptToReset).toThrowError();
+        });
+        
+        it('deletes the powerBiEmbed property on the element', function () {
+            // Arrange
+            const $element = $('<div></div>');
+            powerbi.embed($element.get(0), {
+                type: 'report',
+                embedUrl: 'fakeUrl',
+                accessToken: 'fakeToken'
+            });
+            
+            // Act
+            expect((<pbi.IPowerBiElement>$element.get(0)).powerBiEmbed).toBeDefined();
+            powerbi.reset($element.get(0));
+            
+            // Assert
+            expect((<pbi.IPowerBiElement>$element.get(0)).powerBiEmbed).toBeUndefined();
+        });
+        
+        it('clears the innerHTML of the element', function () {
+            // Arrange
+            const $element = $('<div></div>');
+            powerbi.embed($element.get(0), {
+                type: 'report',
+                embedUrl: 'fakeUrl',
+                accessToken: 'fakeToken'
+            });
+            
+            // Act
+            var iframe = $element.find('iframe');
+            expect(iframe.length).toEqual(1);
+            powerbi.reset($element.get(0));
+            
+            // Assert
+            expect($element.html()).toEqual('');
         });
     });
     
