@@ -58,7 +58,7 @@ export class PowerBi {
     /**
      * Remove component from the list of embedded components.
      */
-    remove(component: Embed): void;
+    reset(element: HTMLElement): void;
     /**
      * Handler for window message event.
      * Parses event data as json and if it came from an iframe that matches one from an existing embeded component re-dispatches the event on the iframe's parent element

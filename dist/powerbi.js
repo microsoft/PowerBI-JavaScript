@@ -167,7 +167,7 @@
 	        util_1.default.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
 	        /** Delete property from html element */
 	        delete powerBiElement.powerBiEmbed;
-	        /** Remove iframe from element by clearing innerHTML */
+	        /** Remove iframe from element */
 	        var iframe = element.querySelector('iframe');
 	        if (iframe) {
 	            iframe.remove();
