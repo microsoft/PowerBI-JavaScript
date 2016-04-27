@@ -161,7 +161,7 @@
 	    PowerBi.prototype.reset = function (element) {
 	        var powerBiElement = element;
 	        if (!powerBiElement.powerBiEmbed) {
-	            throw new Error("You attempted to get an instance of powerbi component associated with element: " + element.outerHTML + " but there was no associated instance.");
+	            return;
 	        }
 	        /** Remove component from internal list */
 	        util_1.default.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);

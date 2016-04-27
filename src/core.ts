@@ -163,7 +163,7 @@ export class PowerBi {
         const powerBiElement = <IPowerBiElement>element;
         
         if (!powerBiElement.powerBiEmbed) {
-            throw new Error(`You attempted to get an instance of powerbi component associated with element: ${element.outerHTML} but there was no associated instance.`);
+            return;
         }
         
         /** Remove component from internal list */

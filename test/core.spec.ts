@@ -239,19 +239,6 @@ describe('powerbi', function () {
     });
     
     describe('reset', function () {
-        it('throws an error if the element being reset does not have embedded component associated with it', function () {
-            // Arrange
-            const $element = $('<div></div>');
-            
-            // Act
-            const attemptToReset = () => {
-                powerbi.reset($element.get(0));
-            };
-            
-            // Assert
-            expect(attemptToReset).toThrowError();
-        });
-        
         it('deletes the powerBiEmbed property on the element', function () {
             // Arrange
             const $element = $('<div></div>');
