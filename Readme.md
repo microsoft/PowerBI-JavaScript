@@ -30,7 +30,7 @@ This exposes two globals `Powerbi` which is the service class and `powerbi` whic
 # Embedding
 
 ## PaaS (Platform as a Service)
-When using PaaS model the tokens issued are for a specific report or tile and the token should be associated with the embed url on the same element to ensure each has a unique token allows embeding multiple reports using the same service instance.
+When using PaaS model the tokens issued are for a specific report or tile and the token should be associated with the embed url on the same element to ensure each has a unique token allows embedding multiple reports using the same service instance.
 
 ```
 <div
@@ -41,7 +41,7 @@ When using PaaS model the tokens issued are for a specific report or tile and th
 ```
 
 ## SaaS (Software as a Service)
-When using SaaS model the tokens issued are for a specific user who can view many types of visuals. This means you can add this as a global token reused for all embeded visuals as shown below:
+When using SaaS model the tokens issued are for a specific user who can view many types of visuals. This means you can add this as a global token reused for all embedded visuals as shown below:
 
 ```
 <script>
@@ -65,7 +65,7 @@ powerbi.enableAutoEmbed();
 ```
 See: CHANGELOG.md for more details
 
-If your app is dyanamically adding new embed components after page load you will need to manually initialize them via JavaScript.
+If your app is dynamically adding new embed components after page load you will need to manually initialize them via JavaScript.
 
 # Embed configuration and other options
 
@@ -97,7 +97,7 @@ To override the default size of the embeds simply add a CSS class attribute or i
 ### Find all new Power BI components and initialize them.
 `powerbi.init();`
 
-By default this will look for elements within the `document.body`; however you can pass optional DOM element to scope the intialization to smaller subset.
+By default this will look for elements within the `document.body`; however you can pass optional DOM element to scope the initialization to smaller subset.
 
 ```
 var pageContainer = document.getElementsById('#pageContainer');
