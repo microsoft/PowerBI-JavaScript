@@ -2,7 +2,8 @@
     "compilerOptions": {
         "target": "es5",
         "noImplicitAny": false,
-        "sourceMap": true
+        "sourceMap": true,
+        "noImplicitUseStrict": true
     },
     "exclude": [
         "bower_components",

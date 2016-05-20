@@ -44,7 +44,6 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
 	var core_1 = __webpack_require__(1);
 	/**
 	 * Make PowerBi available on global object for use in apps without module loading support.
@@ -59,7 +58,6 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
 	var embed_1 = __webpack_require__(2);
 	var report_1 = __webpack_require__(4);
 	var tile_1 = __webpack_require__(5);
@@ -244,7 +242,6 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
 	var util_1 = __webpack_require__(3);
 	var Embed = (function () {
 	    function Embed(element, options) {
@@ -344,7 +341,6 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	"use strict";
 	var Utils = (function () {
 	    function Utils() {
 	    }
@@ -429,7 +425,6 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
@@ -474,7 +469,6 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
