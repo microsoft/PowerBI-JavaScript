@@ -463,6 +463,7 @@
 	        };
 	        _super.prototype.load.call(this, options, requireId, message);
 	    };
+	    Report.name = "Report";
 	    return Report;
 	}(embed_1.default));
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -501,6 +502,7 @@
 	        };
 	        _super.prototype.load.call(this, options, requireId, message);
 	    };
+	    Tile.name = "Tile";
 	    return Tile;
 	}(embed_1.default));
 	Object.defineProperty(exports, "__esModule", { value: true });

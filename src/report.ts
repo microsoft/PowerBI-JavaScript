@@ -5,6 +5,8 @@ export interface IReportLoadMessage extends ILoadMessage {
 }
 
 export default class Report extends Embed {
+    static name = "Report";
+    
     getEmbedUrl(): string {
         let embedUrl = super.getEmbedUrl();
         
