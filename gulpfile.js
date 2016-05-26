@@ -28,6 +28,7 @@ gulp.task('lint', 'Lints all files', function (done) {
         done
     );
 });
+
 gulp.task('test', 'Runs all tests', function (done) {
     runSequence(
         'clean',
@@ -36,11 +37,12 @@ gulp.task('test', 'Runs all tests', function (done) {
         done
     );
 });
+
 gulp.task('build', 'Runs a full build', function (done) {
     runSequence(
         'lint',
         'clean',
-        ['compile:ts', 'dts'],
+        ['compile:ts', 'compile:dts'],
         'min:js',
         done
     );
@@ -48,24 +50,6 @@ gulp.task('build', 'Runs a full build', function (done) {
 
 gulp.task('clean', 'Cleans destination folder', function(done) {
     rimraf(paths.jsDest, done);
-});
-
-gulp.task('dts', 'Generate single dts file from modules', function (done) {
-    var tsResult = gulp.src(['./src/**/*.ts'])
-        .pipe(ts({
-            outDir: 'dts',
-            declaration: true
-        }));
-    
-    return tsResult.dts
-        .pipe(replace(/import[^;]+;/, ''))
-        .pipe(concat('powerbi.d.ts'))
-        .pipe(gulp.dest('dist/'));
-});
-
-gulp.task('copy', 'Copy .d.ts from src to dist', function() {
-    return gulp.src('./src/**/*.d.ts')
-        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('lint:ts', 'Lints all TypeScript', function() {
@@ -92,26 +76,22 @@ gulp.task('test:js', 'Runs unit tests', function(done) {
 });
 
 gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
-    var webpackBundle = gulp.src(['./src/powerbi.ts'])
+    return gulp.src(['./src/powerbi.ts'])
         .pipe(webpack(webpackConfig))
         .pipe(gulp.dest('dist/'));
+});
 
-    // TODO: No easy way to generate single declaration (.d.ts) files from multiple es6 modules
-    // Current process is to produce individual .d.ts files with tsc -d and then manually concatenate
-    // and remove invalid import statements 
-    // See: https://github.com/Microsoft/TypeScript/issues/2568
-
-    // var tsResult = gulp.src(['./src/**/*.ts'])
-    //     .pipe(ts({
-    //         declaration: true
-    //     }));
-
-    // return merge([
-    //     webpackBundle,
-    //     tsResult.dts.pipe(gulp.dest('dist/'))
-    // ]);
+gulp.task('compile:dts', 'Generate single dts file from modules', function (done) {
+    var tsResult = gulp.src(['./src/**/*.ts'])
+        .pipe(ts({
+            outDir: 'dts',
+            declaration: true
+        }));
     
-    return webpackBundle;
+    return tsResult.dts
+        .pipe(replace(/import[^;]+;/, ''))
+        .pipe(concat('powerbi.d.ts'))
+        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('compile:spec', 'Compile typescript for tests', function () {
