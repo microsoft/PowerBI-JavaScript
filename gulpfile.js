@@ -3,6 +3,7 @@ var rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
     jshint = require('gulp-jshint'),
+    replace = require('gulp-replace'),
     sourcemaps = require('gulp-sourcemaps'),
     tslint = require("gulp-tslint"),
     ts = require('gulp-typescript'),
@@ -37,31 +38,29 @@ gulp.task('test', 'Runs all tests', function (done) {
 });
 gulp.task('build', 'Runs a full build', function (done) {
     runSequence(
-        'build:release',
-        done
-    );
-});
-
-gulp.task('build:debug', 'Runs a debug build', function (done) {
-    runSequence(
         'lint',
         'clean',
-        ['compile:ts', 'copy'],
-        done
-    );
-});
-gulp.task('build:release', 'Runs a release build', function (done) {
-    runSequence(
-        'lint',
-        'clean',
-        ['compile:ts', 'copy'],
+        ['compile:ts', 'dts'],
         'min:js',
         done
-    )
+    );
 });
 
 gulp.task('clean', 'Cleans destination folder', function(done) {
     rimraf(paths.jsDest, done);
+});
+
+gulp.task('dts', 'Generate single dts file from modules', function (done) {
+    var tsResult = gulp.src(['./src/**/*.ts'])
+        .pipe(ts({
+            outDir: 'dts',
+            declaration: true
+        }));
+    
+    return tsResult.dts
+        .pipe(replace(/import[^;]+;/, ''))
+        .pipe(concat('powerbi.d.ts'))
+        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('copy', 'Copy .d.ts from src to dist', function() {

@@ -1,4 +1,4 @@
-export default class Utils {
+export class Utils {
     static raiseCustomEvent(element: HTMLElement, eventName: string, eventData: any) {
         let customEvent;
         if (typeof CustomEvent === 'function') {

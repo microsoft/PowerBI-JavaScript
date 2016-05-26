@@ -1,4 +1,4 @@
-import PowerBi from '../src/core';
+import { PowerBi } from '../src/core';
 
 declare var powerbi: PowerBi;
 

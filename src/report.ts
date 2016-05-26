@@ -1,10 +1,10 @@
-import { default as Embed, IEmbedOptions, ILoadMessage } from './embed';
+import { Embed, IEmbedOptions, ILoadMessage } from './embed';
 
 export interface IReportLoadMessage extends ILoadMessage {
     reportId: string
 }
 
-export default class Report extends Embed {
+export class Report extends Embed {
     static name = "Report";
     
     getEmbedUrl(): string {

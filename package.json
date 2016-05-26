@@ -28,6 +28,7 @@
     "gulp-help": "^1.6.1",
     "gulp-jshint": "^2.0.0",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-tslint": "^4.3.4",
     "gulp-typescript": "^2.12.1",
