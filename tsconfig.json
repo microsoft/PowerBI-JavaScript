@@ -10,6 +10,9 @@
         "node_modules",
         "typings/main",
         "typings/main.d.ts",
+        "typings/browser",
+        "typings/browser.d.ts",
+        "typings/index.d.ts",
         "dist"
     ]
 }
