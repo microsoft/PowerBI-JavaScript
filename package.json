@@ -25,6 +25,7 @@
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
+    "gulp-flatten": "^0.2.0",
     "gulp-help": "^1.6.1",
     "gulp-jshint": "^2.0.0",
     "gulp-rename": "^1.2.2",
@@ -54,7 +55,11 @@
     "webpack-stream": "^3.1.0",
     "yargs": "^4.4.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "http-post-message": "file:///C:\\Users\\mattm\\Source\\Repos\\http-post-message",
+    "powerbi-router": "file:///C:\\Users\\mattm\\Source\\Repos\\powerbi-router",
+    "window-post-message-proxy": "file:///C:\\Users\\mattm\\Source\\Repos\\window-post-message-proxy"
+  },
   "publishConfig": {
     "tag": "beta"
   }

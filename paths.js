@@ -9,6 +9,6 @@ var paths = {
 paths.vendorSource = ['./node_modules/jquery/dist/jquery.js'];
 paths.karmaFiles = paths.vendorSource
     .concat(['./dist/powerbi.js'])
-    .concat(paths.specSource);
+    .concat(['./tmp/**/*.spec.js']);
 
 module.exports = paths;

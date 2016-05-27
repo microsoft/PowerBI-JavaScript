@@ -7,12 +7,14 @@ var rename = require('gulp-rename'),
     sourcemaps = require('gulp-sourcemaps'),
     tslint = require("gulp-tslint"),
     ts = require('gulp-typescript'),
+    flatten = require('gulp-flatten'),
     rimraf = require('rimraf'),
     merge = require('merge2'),
     karma = require('karma'),
     paths = require('./paths'),
     webpack = require('webpack-stream'),
     webpackConfig = require('./webpack.config'),
+    webpackConfigE2E = require('./webpack.e2e.config'),
     runSequence = require('run-sequence'),
     argv = require('yargs').argv;
     ;
@@ -33,7 +35,16 @@ gulp.task('test', 'Runs all tests', function (done) {
     runSequence(
         'clean',
         ['compile:ts', 'compile:spec'],
-        ['test:js', 'copy', 'min:js'],
+        ['copy', 'min:js'],
+        'test:js',
+        done
+    );
+});
+
+gulp.task('teste2e', 'Runs e2e tests', function (done) {
+    runSequence(
+        'compile:e2e',
+        'test:e2e',
         done
     );
 });
@@ -97,9 +108,25 @@ gulp.task('compile:dts', 'Generate single dts file from modules', function (done
 gulp.task('compile:spec', 'Compile typescript for tests', function () {
     var tsProject = ts.createProject('tsconfig.json');
     
-    var tsResult = gulp.src(['./test/**/*.ts', './typings/browser/**/*.d.ts'])
+    var tsResult = gulp.src(['./typings/global/**/*.d.ts', './test/core.spec.ts', './test/embed.spec.ts'])
         .pipe(ts(tsProject))
         ;
         
-    return tsResult.js.pipe(gulp.dest('./test'));
+    return tsResult.js
+        .pipe(flatten())
+        .pipe(gulp.dest('./tmp'));
+});
+
+gulp.task('compile:e2e', 'Compile End-to-End tests', function () {
+    return gulp.src(['./e2e/protocol.e2e.spec.ts'])
+        .pipe(webpack(webpackConfigE2E))
+        .pipe(gulp.dest('./tmpe2e'));
+});
+
+gulp.task('test:e2e', 'Run End-to-End tests', function (done) {
+    new karma.Server.start({
+        configFile: __dirname + '/karma.e2e.conf.js',
+        singleRun: argv.debug ? false : true,
+        captureTimeout: argv.timeout || 60000
+    }, done);
 });
