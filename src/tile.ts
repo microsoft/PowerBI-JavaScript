@@ -1,10 +1,10 @@
-import { default as Embed, IEmbedOptions, ILoadMessage } from './embed';
+import { Embed, IEmbedOptions, ILoadMessage } from './embed';
 
 export interface ITileLoadMessage extends ILoadMessage {
     tileId: string
 }
 
-export default class Tile extends Embed {
+export class Tile extends Embed {
     static name = "Tile";
     
     getEmbedUrl(): string {

@@ -1,3 +1,105 @@
+export declare class Utils {
+    static raiseCustomEvent(element: HTMLElement, eventName: string, eventData: any): void;
+    static findIndex<T>(predicate: (T) => boolean, xs: T[]): number;
+    static find<T>(predicate: (T) => boolean, xs: T[]): T;
+    static remove<T>(predicate: (T) => boolean, xs: T[]): void;
+    static assign: (...args: any[]) => any;
+}
+
+declare global  {
+    interface Document {
+        mozCancelFullScreen: Function;
+        msExitFullscreen: Function;
+    }
+    interface HTMLIFrameElement {
+        mozRequestFullScreen: Function;
+        msRequestFullscreen: Function;
+    }
+}
+export interface ILoadMessage {
+    action: string;
+    accessToken: string;
+}
+export interface IEmbedOptions {
+    type?: string;
+    id?: string;
+    accessToken?: string;
+    embedUrl?: string;
+    webUrl?: string;
+    name?: string;
+    filterPaneEnabled?: boolean;
+    getGlobalAccessToken?: () => string;
+}
+export interface IEmbedConstructor {
+    new (...args: any[]): Embed;
+}
+export declare abstract class Embed {
+    static embedUrlAttribute: string;
+    static accessTokenAttribute: string;
+    static typeAttribute: string;
+    /**
+     * Attribute used to specify type of visual.
+     * Example: `<div powerbi-type="report"></div>`
+     */
+    static name: string;
+    /**
+     * Default options for embeddable component.
+     */
+    private static defaultOptions;
+    element: HTMLElement;
+    iframe: HTMLIFrameElement;
+    options: IEmbedOptions;
+    constructor(element: HTMLElement, options: IEmbedOptions);
+    /**
+     * Handler for when the iframe has finished loading the powerbi placeholder page.
+     * This is used to inject configuration options such as access token, loadAction, etc
+     * which allow iframe to load the actual report with authentication.
+     */
+    load(options: IEmbedOptions, requireId?: boolean, message?: ILoadMessage): void;
+    /**
+     * Get access token from first available location: options, attribute, global.
+     */
+    private getAccessToken();
+    /**
+     * Get embed url from first available location: options, attribute.
+     */
+    protected getEmbedUrl(): string;
+    /**
+     * Request the browser to make the components iframe fullscreen.
+     */
+    fullscreen(): void;
+    /**
+     * Exit fullscreen.
+     */
+    exitFullscreen(): void;
+    /**
+     * Return true if iframe is fullscreen,
+     * otherwise return false
+     */
+    private isFullscreen(iframe);
+}
+export {};
+
+
+export interface IReportLoadMessage extends ILoadMessage {
+    reportId: string;
+}
+export declare class Report extends Embed {
+    static name: string;
+    getEmbedUrl(): string;
+    load(options: IEmbedOptions, requireId?: boolean): void;
+}
+
+
+export interface ITileLoadMessage extends ILoadMessage {
+    tileId: string;
+}
+export declare class Tile extends Embed {
+    static name: string;
+    getEmbedUrl(): string;
+    load(options: IEmbedOptions, requireId?: boolean): void;
+}
+
 
 export interface IPowerBiElement extends HTMLElement {
     powerBiEmbed: Embed;
@@ -6,15 +108,7 @@ export interface IPowerBiConfiguration {
     autoEmbedOnContentLoaded?: boolean;
     onError?: (error: any) => any;
 }
-
-declare global {
-    interface Window {
-        Powerbi: typeof PowerBi;
-        powerbi: PowerBi;
-    }
-}
-
-export class PowerBi {
+export declare class PowerBi {
     /**
      * List of components this service can embed.
      */
@@ -39,16 +133,23 @@ export class PowerBi {
     private embeds;
     constructor(config?: IPowerBiConfiguration);
     /**
-     * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed' attribute
+     * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed-url' attribute
      * and automatically attempts to embed a powerbi component based on information from the attributes.
      * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
      */
-    init(container: HTMLElement): void;
+    init(container?: HTMLElement): void;
     /**
      * Given an html element embed component based on configuration.
-     * If component has already been created and attached to eleemnt simply return it to prevent creating duplicate components for same element.
+     * If component has already been created and attached to element re-use component instance and existing iframe,
+     * otherwise create a new component instance
      */
     embed(element: HTMLElement, config?: IEmbedOptions): Embed;
+    /**
+     * Given an html element embed component base configuration.
+     * Save component instance on element for later lookup.
+     */
+    private embedNew(element, config);
+    private embedExisting(element, config);
     /**
      * Adds event handler for DOMContentLoaded which finds all elements in DOM with attribute powerbi-embed-url
      * then attempts to initiate the embed process based on data from other powerbi-* attributes.
@@ -56,7 +157,11 @@ export class PowerBi {
      */
     enableAutoEmbed(): void;
     /**
-     * Remove component from the list of embedded components.
+     * Returns instance of component associated with element.
+     */
+    get(element: HTMLElement): Embed;
+    /**
+     * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
      */
     reset(element: HTMLElement): void;
     /**
@@ -66,69 +171,13 @@ export class PowerBi {
      *
      * If an error occurs when parsing event.data call error handler provided during configuration.
      */
-    private onReceiveMessage(event: MessageEvent): void;
+    private onReceiveMessage(event);
 }
 
-export interface IEmbedOptions {
-    type?: string;
-    id?: string;
-    accessToken?: string;
-    embedUrl?: string;
-    webUrl?: string;
-    name?: string;
-    filter?: any;
-    filterPaneEnabled?: boolean;
-    getGlobalAccessToken?: () => string;
-}
 
-declare abstract class Embed {
-    public static embedUrlAttribute: string;
-    public static accessTokenAttribute: string;
-    public static typeAttribute: string;
-    /**
-     * Default options for embeddable component.
-     */
-    private static defaultOptions;
-    element: HTMLElement;
-    iframe: HTMLIFrameElement;
-    options: IEmbedOptions;
-    constructor(element: HTMLElement, options: IEmbedOptions);
-    /**
-     * Handler for when the iframe has finished loading the powerbi placeholder page.
-     * This is used to inject configuration options such as access token, action, etc
-     * which allow iframe to load the actual report with authentication.
-     */
-    load(options: IEmbedOptions, requireId: boolean, message: IEmbedOptions);
-    /**
-     * Get access token from first available location: options, attribute, global.
-     */
-    private getAccessToken();
-    /**
-     * Get embed url from first available location: options, attribute.
-     */
-    protected getEmbedUrl(): string;
-    /**
-     * Request the browser to make the components iframe fullscreen.
-     */
-    fullscreen(): void;
-    /**
-     * Exit fullscreen.
-     */
-    exitFullscreen(): void;
-    /**
-     * Return true if iframe is fullscreen,
-     * otherwise return false
-     */
-    private isFullscreen(iframe);
+declare global  {
+    interface Window {
+        Powerbi: typeof PowerBi;
+        powerbi: PowerBi;
+    }
 }
-
-export class Report extends Embed {
-    constructor(element: HTMLElement, options: IEmbedOptions);
-    getEmbedUrl(): string;
-}
-
-export class Tile extends Embed {
-    constructor(element: HTMLElement, options: IEmbedOptions);
-    getEmbedUrl(): string;
-}
-

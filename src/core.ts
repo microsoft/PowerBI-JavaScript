@@ -1,7 +1,7 @@
-import { default as Embed, IEmbedConstructor, IEmbedOptions } from './embed';
-import Report from './report';
-import Tile from './tile';
-import Utils from './util';
+import { Embed, IEmbedConstructor, IEmbedOptions } from './embed';
+import { Report } from './report';
+import { Tile } from './tile';
+import { Utils } from './util';
 
 export interface IPowerBiElement extends HTMLElement {
     powerBiEmbed: Embed;
@@ -208,4 +208,4 @@ export class PowerBi {
     }
 }
 
-export default PowerBi;
+// export default PowerBi;

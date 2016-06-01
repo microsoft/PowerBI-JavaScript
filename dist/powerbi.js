@@ -50,8 +50,8 @@
 	 * Save class to allow creating an instance of the service.
 	 * Create instance of class with default config for normal usage.
 	 */
-	window.Powerbi = core_1.default;
-	window.powerbi = new core_1.default();
+	window.Powerbi = core_1.PowerBi;
+	window.powerbi = new core_1.PowerBi();
 
 
 /***/ },
@@ -68,7 +68,7 @@
 	        this.embeds = [];
 	        window.addEventListener('message', this.onReceiveMessage.bind(this), false);
 	        // TODO: Change when Object.assign is available.
-	        this.config = util_1.default.assign({}, PowerBi.defaultConfig, config);
+	        this.config = util_1.Utils.assign({}, PowerBi.defaultConfig, config);
 	        if (this.config.autoEmbedOnContentLoaded) {
 	            this.enableAutoEmbed();
 	        }
@@ -81,7 +81,7 @@
 	    PowerBi.prototype.init = function (container) {
 	        var _this = this;
 	        container = (container && container instanceof HTMLElement) ? container : document.body;
-	        var elements = Array.prototype.slice.call(container.querySelectorAll("[" + embed_1.default.embedUrlAttribute + "]"));
+	        var elements = Array.prototype.slice.call(container.querySelectorAll("[" + embed_1.Embed.embedUrlAttribute + "]"));
 	        elements.forEach(function (element) { return _this.embed(element); });
 	    };
 	    /**
@@ -107,13 +107,13 @@
 	     */
 	    PowerBi.prototype.embedNew = function (element, config) {
 	        var _this = this;
-	        var componentType = config.type || element.getAttribute(embed_1.default.typeAttribute);
+	        var componentType = config.type || element.getAttribute(embed_1.Embed.typeAttribute);
 	        if (!componentType) {
-	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed_1.default.typeAttribute + "=\"" + report_1.default.name.toLowerCase() + "\"'.");
+	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed_1.Embed.typeAttribute + "=\"" + report_1.Report.name.toLowerCase() + "\"'.");
 	        }
 	        // Save type on configuration so it can be referenced later at known location
 	        config.type = componentType;
-	        var Component = util_1.default.find(function (component) { return componentType === component.name.toLowerCase(); }, PowerBi.components);
+	        var Component = util_1.Utils.find(function (component) { return componentType === component.name.toLowerCase(); }, PowerBi.components);
 	        if (!Component) {
 	            throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
 	        }
@@ -127,7 +127,7 @@
 	        return component;
 	    };
 	    PowerBi.prototype.embedExisting = function (element, config) {
-	        var component = util_1.default.find(function (x) { return x.element === element; }, this.embeds);
+	        var component = util_1.Utils.find(function (x) { return x.element === element; }, this.embeds);
 	        if (!component) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
 	        }
@@ -162,7 +162,7 @@
 	            return;
 	        }
 	        /** Remove component from internal list */
-	        util_1.default.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
+	        util_1.Utils.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
 	        /** Delete property from html element */
 	        delete powerBiElement.powerBiEmbed;
 	        /** Remove iframe from element */
@@ -184,10 +184,10 @@
 	        }
 	        try {
 	            // Only raise the event on the embed that matches the post message origin
-	            var embed = util_1.default.find(function (embed) { return event.source === embed.iframe.contentWindow; }, this.embeds);
+	            var embed = util_1.Utils.find(function (embed) { return event.source === embed.iframe.contentWindow; }, this.embeds);
 	            if (embed) {
 	                var messageData = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-	                util_1.default.raiseCustomEvent(embed.element, PowerBi.eventMap[messageData.event], messageData);
+	                util_1.Utils.raiseCustomEvent(embed.element, PowerBi.eventMap[messageData.event], messageData);
 	            }
 	        }
 	        catch (e) {
@@ -203,8 +203,8 @@
 	     * List of components this service can embed.
 	     */
 	    PowerBi.components = [
-	        tile_1.default,
-	        report_1.default
+	        tile_1.Tile,
+	        report_1.Report
 	    ];
 	    /**
 	     * Mapping of event names from iframe postMessage to their name percieved by parent DOM.
@@ -234,8 +234,7 @@
 	    return PowerBi;
 	}());
 	exports.PowerBi = PowerBi;
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = PowerBi;
+	// export default PowerBi; 
 
 
 /***/ },
@@ -248,7 +247,7 @@
 	        var _this = this;
 	        this.element = element;
 	        // TODO: Change when Object.assign is available.
-	        this.options = util_1.default.assign({}, Embed.defaultOptions, options);
+	        this.options = util_1.Utils.assign({}, Embed.defaultOptions, options);
 	        this.options.accessToken = this.getAccessToken();
 	        this.options.embedUrl = this.getEmbedUrl();
 	        var iframeHtml = "<iframe style=\"width:100%;height:100%;\" src=\"" + this.options.embedUrl + "\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>";
@@ -270,11 +269,11 @@
 	        var baseMessage = {
 	            accessToken: options.accessToken
 	        };
-	        util_1.default.assign(message, baseMessage);
+	        util_1.Utils.assign(message, baseMessage);
 	        var event = {
 	            message: message
 	        };
-	        util_1.default.raiseCustomEvent(this.element, event.message.action, event);
+	        util_1.Utils.raiseCustomEvent(this.element, event.message.action, event);
 	        this.iframe.contentWindow.postMessage(JSON.stringify(event.message), '*');
 	    };
 	    /**
@@ -333,8 +332,7 @@
 	    };
 	    return Embed;
 	}());
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = Embed;
+	exports.Embed = Embed;
 
 
 /***/ },
@@ -417,8 +415,7 @@
 	    };
 	    return Utils;
 	}());
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = Utils;
+	exports.Utils = Utils;
 
 
 /***/ },
@@ -460,9 +457,8 @@
 	    };
 	    Report.name = "Report";
 	    return Report;
-	}(embed_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = Report;
+	}(embed_1.Embed));
+	exports.Report = Report;
 
 
 /***/ },
@@ -498,9 +494,8 @@
 	    };
 	    Tile.name = "Tile";
 	    return Tile;
-	}(embed_1.default));
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = Tile;
+	}(embed_1.Embed));
+	exports.Tile = Tile;
 
 
 /***/ }

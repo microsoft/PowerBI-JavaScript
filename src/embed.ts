@@ -1,4 +1,4 @@
-import Utils from './util';
+import { Utils } from './util';
 
 declare global {
     interface Document {
@@ -38,7 +38,7 @@ export interface IEmbedConstructor {
     new(...args: any[]): Embed;
 }
 
-abstract class Embed {
+export abstract class Embed {
     public static embedUrlAttribute = 'powerbi-embed-url';
     public static accessTokenAttribute = 'powerbi-access-token';
     public static typeAttribute = 'powerbi-type';
@@ -154,5 +154,3 @@ abstract class Embed {
         return options.some(option => document[option] === iframe);
     }
 }
-
-export default Embed;
