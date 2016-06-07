@@ -33,9 +33,8 @@ gulp.task('lint', 'Lints all files', function (done) {
 
 gulp.task('test', 'Runs all tests', function (done) {
     runSequence(
-        'clean',
         ['compile:ts', 'compile:spec'],
-        ['copy', 'min:js'],
+        ['min:js'],
         'test:js',
         done
     );
