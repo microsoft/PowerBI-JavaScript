@@ -169,7 +169,8 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
       name: pageName
     };
     
-    return app.validateFilter(filter)
+    return app.validateTarget(target)
+      .then(() => app.validateFilter(filter))
       .then(() => {
         app.addFilter(filter, target)
           .then(filter => {
@@ -196,7 +197,8 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
       name: pageName
     };
     
-    return app.validateFilter(filter)
+    return app.validateTarget(target)
+      .then(() => app.validateFilter(filter))
       .then(() => {
         app.updateFilter(filter, target)
           .then(filter => {
@@ -214,16 +216,119 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         res.send(400, errors);
       });
   });
-  
-  router.put('/report/filters', (req, res) => {
+
+  router.delete('/report/pages/:pageName/filters', (req, res) => {
     const filter = req.body;
-    
-    return app.validateFilter(filter)
+    const pageName = req.params.pageName;
+    const target = {
+      type: "page",
+      name: pageName
+    };
+
+    return app.validateTarget(target)
+      .then(() => app.validateFilter(filter))
       .then(() => {
-        app.updateFilter(filter)
+        app.removeFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/report/events/filterUpdated`, {
+            hpm.post(`/report/pages/${pageName}/events/filterRemoved`, {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post('/report/events/error', error);
+          });
+        
+        res.send(202);
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+
+  router.get('/report/visuals/:pageName/filters', (req, res) => {
+    const pageName = req.params.pageName;
+    const target = {
+      type: "page",
+      name: pageName
+    };
+    
+    return app.getFilters(target)
+      .then(filters => {
+        res.send(200, filters);
+      });
+  });
+  
+  router.post('/report/visuals/:pageName/filters', (req, res) => {
+    const filter = req.body;
+    const pageName = req.params.pageName;
+    const target = {
+      type: "page",
+      name: pageName
+    };
+    
+    return app.validateTarget(target)
+      .then(() => app.validateFilter(filter))
+      .then(() => {
+        app.addFilter(filter, target)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post(`/report/visuals/${pageName}/events/filterAdded`, {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post('/report/events/error', error);
+          });
+        
+        res.send(202);
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+  
+  router.put('/report/visuals/:pageName/filters', (req, res) => {
+    const filter = req.body;
+    const pageName = req.params.pageName;
+    const target = {
+      type: "page",
+      name: pageName
+    };
+    
+    return app.validateTarget(target)
+      .then(() => app.validateFilter(filter))
+      .then(() => {
+        app.updateFilter(filter, target)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post(`/report/visuals/${pageName}/events/filterUpdated`, {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post('/report/events/error', error);
+          });
+        
+        res.send(202);
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+
+  router.delete('/report/visuals/:pageName/filters', (req, res) => {
+    const filter = req.body;
+    const pageName = req.params.pageName;
+    const target = {
+      type: "page",
+      name: pageName
+    };
+
+    return app.validateTarget(target)
+      .then(() => app.validateFilter(filter))
+      .then(() => {
+        app.removeFilter(filter, target)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post(`/report/visuals/${pageName}/events/filterRemoved`, {
               initiator,
               filter
             });

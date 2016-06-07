@@ -606,6 +606,894 @@ describe('Protocol', function () {
           });
       });
     });
+
+    describe('filters (page level)', function () {
+      it('GET /report/pages/xyz/filters returns 200 with body as array of filters', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filters: [
+            {
+              name: "fakeFilter1"
+            },
+            {
+              name: "fakeFilter2"
+            }
+          ]
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
+            
+        // Act
+            hpm.get('/report/pages/xyz/filters')
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.getFilters).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(response.statusCode).toEqual(200);
+                expect(response.body).toEqual(testData.filters);
+        // Cleanup
+                spyApp.getFilters.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('POST /report/pages/xyz/filters returns 400 if page name is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedErrors: [
+            {
+              message: "Page does not exist"
+            }
+          ],
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
+            spyApp.validateFilter.and.returnValue(Promise.reject(null));
+
+        // Act
+            hpm.post('/report/pages/xyz/filters', testData.filter)
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.addFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedErrors);
+        // Cleanup
+                spyApp.validateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('POST /report/pages/xyz/filters returns 400 if filter is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          expectedFilterError: {
+            message: "filter is invalid"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
+
+        // Act
+            hpm.post('/report/pages/xyz/filters', testData.filter)
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.addFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedFilterError);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('POST /report/pages/xyz/filters returns 202 if request is valid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.post('/report/pages/xyz/filters', testData.filter)
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
+                expect(response.statusCode).toEqual(202);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                spyApp.addFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('POST /report/pages/xyz/filters will cause POST /report/pages/xyz/events/filterAdded', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          },
+          expectedEvent: {
+            method: 'POST',
+            url: '/report/pages/xyz/events/filterAdded'
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.post('/report/pages/xyz/filters', testData.filter)
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
+                expect(response.statusCode).toEqual(202);
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                spyApp.addFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('PUT /report/pages/xyz/filters returns 400 if page name is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          expectedErrors: [
+            {
+              message: "Page does not exist"
+            }
+          ],
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
+
+        // Act
+            hpm.put('/report/pages/xyz/filters', testData.filter)
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.updateFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedErrors);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('PUT /report/pages/xyz/filters returns 400 if filter is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          expectedFilterError: {
+            message: "Filter is invalid"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
+
+        // Act
+            hpm.put('/report/pages/xyz/filters', testData.filter)
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.updateFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedFilterError);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+      
+      it('PUT /report/pages/xyz/filters returns 202 if request is valid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.put('/report/pages/xyz/filters', testData.filter)
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
+                expect(response.statusCode).toEqual(202);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                spyApp.updateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+      
+      it('PUT /report/pages/xyz/filters will cause POST /report/pages/xyz/events/filterUpdated', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          },
+          expectedEvent: {
+            method: 'POST',
+            url: '/report/pages/xyz/events/filterUpdated'
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.put('/report/pages/xyz/filters', testData.filter)
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
+                expect(response.statusCode).toEqual(202);
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+        // Cleanup
+                spyApp.validateFilter.calls.reset();
+                spyApp.updateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      /**
+       * TODO: Sending targeted removal of filter should use DELETE as http method, but if conforming to REST
+       * design DELETE reqeusts should specify filter identity within URL which cannot be done with current filter spec unless they each have unique id.
+       * 
+       * The workaround is to either allow a body to be specified with DELETE requests, or to change to a PUT/POST request
+       */
+      xit('DELETE /report/pages/xyz/filters returns 400 if target is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          expectedErrors: [
+            {
+              message: "Page does not exist"
+            }
+          ],
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
+
+        // Act
+            hpm.delete('/report/pages/xyz/filters')
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.removeFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedErrors);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                done();
+              });
+          });
+      });
+
+      xit('DELETE /report/pages/xyz/filters returns 400 if filter is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          expectedFilterError: {
+            message: "Filter is invalid"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
+
+        // Act
+            hpm.delete('/report/pages/xyz/filters')
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedFilterError);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+      
+      xit('DELETE /report/pages/xyz/filters returns 202 if request is valid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.delete('/report/pages/xyz/filters')
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
+                expect(response.statusCode).toEqual(202);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                spyApp.removeFilter.calls.reset();
+                done();
+              });
+          });
+      });
+    });
+
+    describe('filters (visual level)', function () {
+      it('GET /report/visuals/xyz/filters returns 200 with body as array of filters', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filters: [
+            {
+              name: "fakeFilter1"
+            },
+            {
+              name: "fakeFilter2"
+            }
+          ]
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
+            
+        // Act
+            hpm.get('/report/visuals/xyz/filters')
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.getFilters).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(response.statusCode).toEqual(200);
+                expect(response.body).toEqual(testData.filters);
+        // Cleanup
+                spyApp.getFilters.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('POST /report/visuals/xyz/filters returns 400 if page name is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedErrors: [
+            {
+              message: "Page does not exist"
+            }
+          ],
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
+            spyApp.validateFilter.and.returnValue(Promise.reject(null));
+
+        // Act
+            hpm.post('/report/visuals/xyz/filters', testData.filter)
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.addFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedErrors);
+        // Cleanup
+                spyApp.validateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('POST /report/visuals/xyz/filters returns 400 if filter is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          expectedFilterError: {
+            message: "filter is invalid"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
+
+        // Act
+            hpm.post('/report/visuals/xyz/filters', testData.filter)
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.addFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedFilterError);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('POST /report/visuals/xyz/filters returns 202 if request is valid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.post('/report/visuals/xyz/filters', testData.filter)
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
+                expect(response.statusCode).toEqual(202);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                spyApp.addFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('POST /report/visuals/xyz/filters will cause POST /report/visuals/xyz/events/filterAdded', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          },
+          expectedEvent: {
+            method: 'POST',
+            url: '/report/visuals/xyz/events/filterAdded'
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.post('/report/visuals/xyz/filters', testData.filter)
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
+                expect(response.statusCode).toEqual(202);
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                spyApp.addFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('PUT /report/visuals/xyz/filters returns 400 if page name is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          expectedErrors: [
+            {
+              message: "Page does not exist"
+            }
+          ],
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
+
+        // Act
+            hpm.put('/report/visuals/xyz/filters', testData.filter)
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.updateFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedErrors);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('PUT /report/visuals/xyz/filters returns 400 if filter is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          expectedFilterError: {
+            message: "Filter is invalid"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
+
+        // Act
+            hpm.put('/report/visuals/xyz/filters', testData.filter)
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.updateFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedFilterError);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+      
+      it('PUT /report/visuals/xyz/filters returns 202 if request is valid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.put('/report/visuals/xyz/filters', testData.filter)
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
+                expect(response.statusCode).toEqual(202);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                spyApp.updateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+      
+      it('PUT /report/visuals/xyz/filters will cause POST /report/visuals/xyz/events/filterUpdated', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          },
+          expectedEvent: {
+            method: 'POST',
+            url: '/report/visuals/xyz/events/filterUpdated'
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.put('/report/visuals/xyz/filters', testData.filter)
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
+                expect(response.statusCode).toEqual(202);
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+        // Cleanup
+                spyApp.validateFilter.calls.reset();
+                spyApp.updateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      /**
+       * TODO: Sending targeted removal of filter should use DELETE as http method, but if conforming to REST
+       * design DELETE reqeusts should specify filter identity within URL which cannot be done with current filter spec unless they each have unique id.
+       * 
+       * The workaround is to either allow a body to be specified with DELETE requests, or to change to a PUT/POST request
+       */
+      xit('DELETE /report/visuals/xyz/filters returns 400 if target is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          expectedErrors: [
+            {
+              message: "Page does not exist"
+            }
+          ],
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
+
+        // Act
+            hpm.delete('/report/visuals/xyz/filters')
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.removeFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedErrors);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                done();
+              });
+          });
+      });
+
+      xit('DELETE /report/visuals/xyz/filters returns 400 if filter is invalid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          expectedFilterError: {
+            message: "Filter is invalid"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
+
+        // Act
+            hpm.delete('/report/visuals/xyz/filters')
+              .catch((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedFilterError);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+      
+      xit('DELETE /report/visuals/xyz/filters returns 202 if request is valid', function (done) {
+        // Arrange
+        const testData = {
+          expectedTarget: {
+            type: "page",
+            name: "xyz"
+          },
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.delete('/report/visuals/xyz/filters')
+              .then((response: Hpm.IResponse) => {
+        // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
+                expect(response.statusCode).toEqual(202);
+        // Cleanup
+                spyApp.validateTarget.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                spyApp.removeFilter.calls.reset();
+                done();
+              });
+          });
+      });
+    });
     
     describe('settings', function () {
       
