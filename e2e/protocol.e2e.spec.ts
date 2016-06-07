@@ -3,23 +3,6 @@ import * as Hpm from 'http-post-message';
 import * as Router from 'powerbi-router';
 import { spyApp, setup } from './utility/mockReportEmbed';
 
-function createDeferred() {
-  const deferred:any = {
-    resolve: null,
-    reject: null,
-    promise: null
-  };
-  
-  const promise = new Promise((resolve: () => void, reject: () => void) => {
-    deferred.resolve = resolve;
-    deferred.reject = reject;
-  });
-  
-  deferred.promise = promise;
-  
-  return deferred;
-}
-
 declare global {
   interface Window {
     __karma__: any;
@@ -107,12 +90,12 @@ describe('Protocol', function () {
     
     spyHandler = <any>handler;
     wpmp.addHandler(handler);
-    
-    const iframeLoadedDeferred = createDeferred();
-    iframe.addEventListener('load', () => {
-      iframeLoadedDeferred.resolve();
+
+    iframeLoaded = new Promise<void>((resolve, reject) => {
+      iframe.addEventListener('load', () => {
+        resolve(null);
+      });
     });
-    iframeLoaded = iframeLoadedDeferred.promise;
   });
   
   afterAll(function () { 
