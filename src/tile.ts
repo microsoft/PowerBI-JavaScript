@@ -5,7 +5,7 @@ export interface ITileLoadMessage extends ILoadMessage {
 }
 
 export class Tile extends Embed {
-    static name = "Tile";
+    static type = "Tile";
     
     getEmbedUrl(): string {
         const embedUrl = super.getEmbedUrl();

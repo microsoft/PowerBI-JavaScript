@@ -100,13 +100,13 @@ export class PowerBi {
     private embedNew(element: IPowerBiElement, config: IEmbedOptions): Embed {
         const componentType = config.type || element.getAttribute(Embed.typeAttribute);
         if (!componentType) {
-            throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.name.toLowerCase()}"'.`);
+            throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
         }
         
         // Save type on configuration so it can be referenced later at known location
         config.type = componentType;
         
-        const Component = Utils.find(component => componentType === component.name.toLowerCase(), PowerBi.components);
+        const Component = Utils.find(component => componentType === component.type.toLowerCase(), PowerBi.components);
         if (!Component) {
             throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
         }

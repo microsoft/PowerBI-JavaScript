@@ -47,7 +47,7 @@ export abstract class Embed {
      * Attribute used to specify type of visual.
      * Example: `<div powerbi-type="report"></div>`
      */
-    public static name: string;
+    public static type: string;
     /**
      * Default options for embeddable component.
      */
