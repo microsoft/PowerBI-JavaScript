@@ -1,7 +1,9 @@
-import { Embed, IEmbedConstructor, IEmbedOptions } from './embed';
+import { Embed, IEmbedConstructor, IEmbedOptions, IHpmFactory, IWpmpFactory } from './embed';
 import { Report } from './report';
 import { Tile } from './tile';
 import { Utils } from './util';
+import * as wpmp from 'window-post-message-proxy';
+import * as hpm from 'http-post-message';
 
 export interface IPowerBiElement extends HTMLElement {
     powerBiEmbed: Embed;
@@ -13,8 +15,13 @@ export interface IPowerBiConfiguration {
 }
 
 export class PowerBi {
+
     /**
      * List of components this service can embed.
+     */
+    /**
+     * TODO: See if it's possible to remove need for this interface and just use Embed base object as common between Tile and Report
+     * This was only put it to allow both types of components to be in the same list
      */
     private static components: IEmbedConstructor[] = [
         Tile,
@@ -50,7 +57,13 @@ export class PowerBi {
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds: Embed[];
     
-    constructor(config: IPowerBiConfiguration = {}) {
+    private hpmFactory: IHpmFactory;
+    private wpmpFactory: IWpmpFactory;
+
+    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, config: IPowerBiConfiguration = {}) {
+        this.hpmFactory = hpmFactory;
+        this.wpmpFactory = wpmpFactory;
+
         this.embeds = [];
         window.addEventListener('message', this.onReceiveMessage.bind(this), false);
         
@@ -115,8 +128,8 @@ export class PowerBi {
         // The getGlobalAccessToken function is only here so that the components (Tile | Report) can get the global access token without needing reference
         // to the service that they are registered within becaues it creates circular dependencies
         config.getGlobalAccessToken = () => this.accessToken;
-        
-        const component = new Component(element, config);
+
+        const component = new Component(this.hpmFactory, this.wpmpFactory, element, config);
         element.powerBiEmbed = component;
         this.embeds.push(component);
         
@@ -207,5 +220,3 @@ export class PowerBi {
         }
     }
 }
-
-// export default PowerBi;

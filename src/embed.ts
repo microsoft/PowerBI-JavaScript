@@ -1,4 +1,8 @@
 import { Utils } from './util';
+import * as wpmp from 'window-post-message-proxy';
+import * as hpm from 'http-post-message';
+import * as router from 'powerbi-router';
+import * as filters from 'powerbi-filters';
 
 declare global {
     interface Document {
@@ -18,9 +22,16 @@ declare global {
     }
 }
 
+/**
+ * TODO: Consider adding type: "report" | "tile" property to indicate what type of object to embed
+ * 
+ * This would align with goal of having single embed page which adapts to the thing being embedded
+ * instead of having M x N embed pages where M is type of object (report, tile) and N is authorization
+ * type (PaaS, SaaS, Anonymous)
+ */
 export interface ILoadMessage {
-    action: string;
     accessToken: string;
+    id: string;
 }
 
 export interface IEmbedOptions {
@@ -35,7 +46,15 @@ export interface IEmbedOptions {
 }
 
 export interface IEmbedConstructor {
-    new(...args: any[]): Embed;
+    new(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, element: HTMLElement, options: IEmbedOptions): Embed;
+}
+
+export interface IHpmFactory {
+    (wpmp: wpmp.WindowPostMessageProxy): hpm.HttpPostMessage;
+}
+
+export interface IWpmpFactory {
+    (window: Window, name?: string, logMessages?: boolean): wpmp.WindowPostMessageProxy;
 }
 
 export abstract class Embed {
@@ -55,11 +74,14 @@ export abstract class Embed {
         filterPaneEnabled: true
     };
     
+    wpmp: wpmp.WindowPostMessageProxy;
+    hpm: hpm.HttpPostMessage;
+    router: router.Router;
     element: HTMLElement;
     iframe: HTMLIFrameElement;
     options: IEmbedOptions;
     
-    constructor(element: HTMLElement, options: IEmbedOptions) {
+    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, element: HTMLElement, options: IEmbedOptions) {
         this.element = element;
         
         // TODO: Change when Object.assign is available.
@@ -72,6 +94,10 @@ export abstract class Embed {
         this.element.innerHTML = iframeHtml;
         this.iframe = <HTMLIFrameElement>this.element.childNodes[0];
         this.iframe.addEventListener('load', () => this.load(this.options, false), false);
+
+        this.wpmp = wpmpFactory(this.iframe.contentWindow, 'SdkReportWpmp', true);
+        this.hpm = hpmFactory(this.wpmp);
+        this.router = new router.Router(this.wpmp);
     }
     
     /**
@@ -79,7 +105,7 @@ export abstract class Embed {
      * This is used to inject configuration options such as access token, loadAction, etc
      * which allow iframe to load the actual report with authentication.
      */
-    load(options: IEmbedOptions, requireId: boolean = false, message: ILoadMessage = null) {
+    load(options: IEmbedOptions, requireId: boolean = false, message: ILoadMessage = null): Promise<void> {
         if(!message) {
             throw new Error(`You called load without providing message properties from the concrete embeddable class.`);
         }
@@ -90,12 +116,10 @@ export abstract class Embed {
         
         Utils.assign(message, baseMessage);
         
-        const event = {
-            message
-        };
-        
-        Utils.raiseCustomEvent(this.element, event.message.action, event);
-        this.iframe.contentWindow.postMessage(JSON.stringify(event.message), '*');
+        return this.hpm.post('/report/load', message)
+            .catch((response: hpm.IResponse) => {
+                throw response.body;
+            });
     }
     
     /**

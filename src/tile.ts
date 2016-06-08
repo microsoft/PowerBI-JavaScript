@@ -18,12 +18,11 @@ export class Tile extends Embed {
             throw new Error(`id must be specified when loading reports on existing elements.`);
         }
         
-        const message = {
-            action: 'loadTile',
-            tileId: options.id,
+        const message: ILoadMessage = {
+            id: options.id,
             accessToken: null
         };
         
-        super.load(options, requireId, message);
+        return super.load(options, requireId, message);
     }
 }

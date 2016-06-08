@@ -1,7 +1,11 @@
+import * as core from '../src/core';
+import { Report } from '../src/report';
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
 import * as Router from 'powerbi-router';
 import { spyApp, setup } from './utility/mockReportEmbed';
+import * as factories from '../src/factories';
+import { spyHpm } from './utility/mockHpm';
 
 declare global {
   interface Window {
@@ -1786,4 +1790,155 @@ describe('Protocol', function () {
       });
     });
   });
+});
+
+describe('SDK-to-MockApp (UNIT tests)', function () {
+  let $element: JQuery;
+  let iframe: HTMLIFrameElement;
+  let iframeHpm: Hpm.HttpPostMessage;
+  let powerbi: core.PowerBi;
+  let report: Report;
+  let hpmSpy: jasmine.Spy;
+
+  beforeAll(function () {
+    const spyHpmFactory: factories.IHpmFactory = () => {
+      return <Hpm.HttpPostMessage><any>spyHpm;
+    };
+    const noop: factories.IWpmpFactory = () => {
+      return <Wpmp.WindowPostMessageProxy>null;
+    };
+
+    powerbi = new core.PowerBi(spyHpmFactory, noop);
+
+    $element = $(`<div class="powerbi-report-container"></div>`)
+      .appendTo(document.body);
+
+    const iframeSrc = "base/e2e/utility/noop.html";
+    const embedConfiguration = {
+      type: "report",
+      reportId: "fakeReportId",
+      accessToken: 'fakeToken',
+      embedUrl: iframeSrc
+    };
+    report = <Report>powerbi.embed($element[0], embedConfiguration);
+
+    iframe = <HTMLIFrameElement>$element.find('iframe')[0];
+
+    // Register Iframe side
+    iframeHpm = setup(iframe.contentWindow, window, true);
+
+    // Reset load handler
+    spyHpm.post.calls.reset();
+  });
+
+  afterAll(function () {
+    // TODO: Should call remove using the powerbi service first to clean up intenral references to DOM inside this element
+    $element.remove();
+  });
+
+  describe('SDK-to-HPM', function () {
+    afterEach(function () {
+      spyHpm.get.calls.reset();
+      spyHpm.post.calls.reset();
+      spyHpm.patch.calls.reset();
+      spyHpm.put.calls.reset();
+      spyHpm.delete.calls.reset();
+    });
+
+    describe('load', function () {
+      it('report.load() sends POST /report/load with configuration in body', function () {
+        // Arrange
+        const testData = {
+          embedConfiguration: {
+            id: 'fakeId',
+            accessToken: 'fakeToken'
+          }
+        };
+
+        spyHpm.post.and.returnValue(Promise.resolve(null));
+
+        // Act
+        report.load(testData.embedConfiguration);
+
+        // Assert
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.embedConfiguration);
+      });
+
+      it('report.load() returns promise that rejects with validation error if the load configuration is invalid', function (done) {
+        // Arrange
+        const testData = {
+          embedConfiguration: {
+            id: 'fakeId',
+            accessToken: 'fakeToken'
+          },
+          errorResponse: {
+            body: {
+              message: "invalid configuration object"
+            }
+          }
+        };
+
+        spyHpm.post.and.returnValue(Promise.reject(testData.errorResponse));
+
+        // Act
+        report.load(testData.embedConfiguration)
+          .catch(error => {
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.embedConfiguration);
+            expect(error).toEqual(testData.errorResponse.body);
+        // Assert
+            done();
+          });
+      });
+
+      it('report.load() returns promise that rejects with server error if there was an error loading the report', function (done) {
+        // Arrange
+        const testData = {
+          embedConfiguration: {
+            id: 'fakeId',
+            accessToken: 'fakeToken'
+          },
+          errorResponse: {
+            body: {
+              message: "Access Token is invalid"
+            }
+          }
+        };
+
+        spyHpm.post.and.returnValue(Promise.reject(testData.errorResponse));
+
+        // Act
+        report.load(testData.embedConfiguration)
+          .catch(error => {
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.embedConfiguration);
+            expect(error).toEqual(testData.errorResponse.body);
+        // Assert
+            done();
+          });
+      });
+    });
+
+    describe('pages', function () {
+      it('report.getPages() sends GET /report/pages', function () {
+        // Arrange
+        const testData = {
+          embedConfiguration: {
+            id: 'fakeId',
+            accessToken: 'fakeToken'
+          }
+        };
+
+        // Act
+        report.load(testData.embedConfiguration);
+
+        // Assert
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.embedConfiguration);
+      });
+    });
+  });
+
+  // describe('REPORT-to-SDK', function () {
+  //   it('should fail', function () {
+  //     expect(true).toBe(false);
+  //   });
+  // });
 });

@@ -18,7 +18,8 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
     logMessages: false
   });
   const hpm = new Hpm.HttpPostMessage(wpmp, {
-    origin: 'powerbi'
+    'origin': 'reportEmbedMock',
+    'x-version': '1.0.0'
   });
   const router = new Router.Router(wpmp);
   const app = mockApp;
