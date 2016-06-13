@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "gulp test",
+    "preinstall": "npm install -g typings",
     "postinstall": "typings install"
   },
   "keywords": [
