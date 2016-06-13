@@ -6,98 +6,14 @@ export declare class Utils {
     static assign: (...args: any[]) => any;
 }
 
-declare global  {
-    interface Document {
-        mozCancelFullScreen: Function;
-        msExitFullscreen: Function;
-    }
-    interface HTMLIFrameElement {
-        mozRequestFullScreen: Function;
-        msRequestFullscreen: Function;
-    }
-}
-export interface ILoadMessage {
-    action: string;
-    accessToken: string;
-}
-export interface IEmbedOptions {
-    type?: string;
-    id?: string;
-    accessToken?: string;
-    embedUrl?: string;
-    webUrl?: string;
-    name?: string;
-    filterPaneEnabled?: boolean;
-    getGlobalAccessToken?: () => string;
-}
-export interface IEmbedConstructor {
-    new (...args: any[]): Embed;
-}
-export declare abstract class Embed {
-    static embedUrlAttribute: string;
-    static accessTokenAttribute: string;
-    static typeAttribute: string;
-    /**
-     * Attribute used to specify type of visual.
-     * Example: `<div powerbi-type="report"></div>`
-     */
-    static name: string;
-    /**
-     * Default options for embeddable component.
-     */
-    private static defaultOptions;
-    element: HTMLElement;
-    iframe: HTMLIFrameElement;
-    options: IEmbedOptions;
-    constructor(element: HTMLElement, options: IEmbedOptions);
-    /**
-     * Handler for when the iframe has finished loading the powerbi placeholder page.
-     * This is used to inject configuration options such as access token, loadAction, etc
-     * which allow iframe to load the actual report with authentication.
-     */
-    load(options: IEmbedOptions, requireId?: boolean, message?: ILoadMessage): void;
-    /**
-     * Get access token from first available location: options, attribute, global.
-     */
-    private getAccessToken();
-    /**
-     * Get embed url from first available location: options, attribute.
-     */
-    protected getEmbedUrl(): string;
-    /**
-     * Request the browser to make the components iframe fullscreen.
-     */
-    fullscreen(): void;
-    /**
-     * Exit fullscreen.
-     */
-    exitFullscreen(): void;
-    /**
-     * Return true if iframe is fullscreen,
-     * otherwise return false
-     */
-    private isFullscreen(iframe);
-}
-export {};
-
-
-export interface IReportLoadMessage extends ILoadMessage {
-    reportId: string;
-}
-export declare class Report extends Embed {
-    static name: string;
-    getEmbedUrl(): string;
-    load(options: IEmbedOptions, requireId?: boolean): void;
-}
-
 
 export interface ITileLoadMessage extends ILoadMessage {
     tileId: string;
 }
 export declare class Tile extends Embed {
-    static name: string;
+    static type: string;
     getEmbedUrl(): string;
-    load(options: IEmbedOptions, requireId?: boolean): void;
+    load(options: IEmbedOptions, requireId?: boolean): any;
 }
 
 
@@ -111,6 +27,10 @@ export interface IPowerBiConfiguration {
 export declare class PowerBi {
     /**
      * List of components this service can embed.
+     */
+    /**
+     * TODO: See if it's possible to remove need for this interface and just use Embed base object as common between Tile and Report
+     * This was only put it to allow both types of components to be in the same list
      */
     private static components;
     /**
@@ -131,7 +51,10 @@ export declare class PowerBi {
     private config;
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds;
-    constructor(config?: IPowerBiConfiguration);
+    private hpmFactory;
+    private wpmpFactory;
+    private routerFactory;
+    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IPowerBiConfiguration);
     /**
      * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed-url' attribute
      * and automatically attempts to embed a powerbi component based on information from the attributes.
@@ -173,6 +96,16 @@ export declare class PowerBi {
      */
     private onReceiveMessage(event);
 }
+
+/**
+ * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
+ * Need to
+ */
+
+export { IHpmFactory, IWpmpFactory, IRouterFactory };
+export declare const hpmFactory: IHpmFactory;
+export declare const wpmpFactory: IWpmpFactory;
+export declare const routerFactory: IRouterFactory;
 
 
 declare global  {

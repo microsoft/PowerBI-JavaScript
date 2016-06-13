@@ -1,4 +1,4 @@
-import { Embed, IEmbedConstructor, IEmbedOptions, IHpmFactory, IWpmpFactory } from './embed';
+import { Embed, IEmbedConstructor, IEmbedOptions, IHpmFactory, IWpmpFactory, IRouterFactory } from './embed';
 import { Report } from './report';
 import { Tile } from './tile';
 import { Utils } from './util';
@@ -59,10 +59,12 @@ export class PowerBi {
     
     private hpmFactory: IHpmFactory;
     private wpmpFactory: IWpmpFactory;
+    private routerFactory: IRouterFactory;
 
-    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, config: IPowerBiConfiguration = {}) {
+    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config: IPowerBiConfiguration = {}) {
         this.hpmFactory = hpmFactory;
         this.wpmpFactory = wpmpFactory;
+        this.routerFactory = routerFactory;
 
         this.embeds = [];
         window.addEventListener('message', this.onReceiveMessage.bind(this), false);
@@ -129,7 +131,7 @@ export class PowerBi {
         // to the service that they are registered within becaues it creates circular dependencies
         config.getGlobalAccessToken = () => this.accessToken;
 
-        const component = new Component(this.hpmFactory, this.wpmpFactory, element, config);
+        const component = new Component(this.hpmFactory, this.wpmpFactory, this.routerFactory, element, config);
         element.powerBiEmbed = component;
         this.embeds.push(component);
         

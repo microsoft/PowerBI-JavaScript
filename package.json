@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "http-post-message": "file:///C:\\Users\\mattm\\Source\\Repos\\http-post-message",
-    "powerbi-filters": "file:///C:\\users\\mattm\\source\\repos\\powerbi-filters",
+    "powerbi-filters": "file:///C:\\Users\\mattm\\Source\\Repos\\powerbi-filters",
     "powerbi-router": "file:///C:\\Users\\mattm\\Source\\Repos\\powerbi-router",
     "window-post-message-proxy": "file:///C:\\Users\\mattm\\Source\\Repos\\window-post-message-proxy"
   },

@@ -22,8 +22,8 @@ export interface IEventHandler<T> {
 }
 
 export interface ISettings {
-    filterPaneEnabled: boolean;
-    pageNavigationEnabled: boolean;
+    filterPaneEnabled?: boolean;
+    pageNavigationEnabled?: boolean;
 }
 
 export interface IPage {
@@ -32,7 +32,7 @@ export interface IPage {
 }
 
 export class Report extends Embed {
-    static allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", ]
+    static allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
     static type = "Report";
     
     /**

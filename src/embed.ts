@@ -46,7 +46,7 @@ export interface IEmbedOptions {
 }
 
 export interface IEmbedConstructor {
-    new(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, element: HTMLElement, options: IEmbedOptions): Embed;
+    new(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, element: HTMLElement, options: IEmbedOptions): Embed;
 }
 
 export interface IHpmFactory {
@@ -55,6 +55,10 @@ export interface IHpmFactory {
 
 export interface IWpmpFactory {
     (window: Window, name?: string, logMessages?: boolean): wpmp.WindowPostMessageProxy;
+}
+
+export interface IRouterFactory {
+    (wpmp: wpmp.WindowPostMessageProxy): router.Router;
 }
 
 export abstract class Embed {
@@ -81,7 +85,7 @@ export abstract class Embed {
     iframe: HTMLIFrameElement;
     options: IEmbedOptions;
     
-    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, element: HTMLElement, options: IEmbedOptions) {
+    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, element: HTMLElement, options: IEmbedOptions) {
         this.element = element;
         
         // TODO: Change when Object.assign is available.
@@ -97,7 +101,7 @@ export abstract class Embed {
 
         this.wpmp = wpmpFactory(this.iframe.contentWindow, 'SdkReportWpmp', true);
         this.hpm = hpmFactory(this.wpmp);
-        this.router = new router.Router(this.wpmp);
+        this.router = routerFactory(this.wpmp);
     }
     
     /**

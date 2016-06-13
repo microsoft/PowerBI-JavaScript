@@ -1,5 +1,4 @@
 import { PowerBi } from './core';
-import { IHpmFactory, IWpmpFactory } from './embed';
 import * as factories from './factories';
 
 declare global {
@@ -15,4 +14,4 @@ declare global {
  * Create instance of class with default config for normal usage.
  */
 window.Powerbi = PowerBi;
-window.powerbi = new PowerBi(factories.hpmFactory, factories.wpmpFactory);
+window.powerbi = new PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);

@@ -92,7 +92,7 @@ gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
 });
 
 gulp.task('compile:dts', 'Generate single dts file from modules', function (done) {
-    var tsResult = gulp.src(['./src/**/*.ts'])
+    var tsResult = gulp.src(['./typings/global/**/*.d.ts', './src/**/*.ts'])
         .pipe(ts({
             outDir: 'dts',
             declaration: true
