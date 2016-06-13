@@ -6,6 +6,7 @@ import * as Router from 'powerbi-router';
 import * as filters from 'powerbi-filters';
 import { spyApp, setup } from './utility/mockReportEmbed';
 import * as factories from '../src/factories';
+import { spyWpmp } from './utility/mockWpmp';
 import { spyHpm } from './utility/mockHpm';
 import { spyRouter } from './utility/mockRouter';
 
@@ -1938,6 +1939,12 @@ describe('SDK-to-HPM', function () {
     spyHpm.patch.calls.reset();
     spyHpm.put.calls.reset();
     spyHpm.delete.calls.reset();
+
+    spyRouter.get.calls.reset();
+    spyRouter.post.calls.reset();
+    spyRouter.patch.calls.reset();
+    spyRouter.put.calls.reset();
+    spyRouter.delete.calls.reset();
   });
 
   describe('load', function () {
@@ -2748,8 +2755,89 @@ describe('SDK-to-HPM', function () {
       expect(spyRouter.post).toHaveBeenCalledWith(`/report/events/${testData.eventName}`, jasmine.any(Function));
     });
   });
-
-  
 });
 
+describe('SDK-to-WPMP', function () {
+  let $element: JQuery;
+  let iframe: HTMLIFrameElement;
+  let iframeHpm: Hpm.HttpPostMessage;
+  let powerbi: core.PowerBi;
+  let report: report.Report;
 
+  beforeAll(function () {
+    const spyWpmpFactory: factories.IWpmpFactory = (window, name?: string, logMessages?: boolean) => {
+      return <Wpmp.WindowPostMessageProxy><any>spyWpmp;
+    };
+
+    powerbi = new core.PowerBi(factories.hpmFactory, spyWpmpFactory, factories.routerFactory);
+
+    $element = $(`<div class="powerbi-report-container"></div>`)
+      .appendTo(document.body);
+
+    const iframeSrc = "base/e2e/utility/noop.html";
+    const embedConfiguration = {
+      type: "report",
+      reportId: "fakeReportId",
+      accessToken: 'fakeToken',
+      embedUrl: iframeSrc
+    };
+    report = <report.Report>powerbi.embed($element[0], embedConfiguration);
+
+    iframe = <HTMLIFrameElement>$element.find('iframe')[0];
+
+    // Register Iframe side
+    iframeHpm = setup(iframe.contentWindow, window, true);
+
+    // Reset load handler
+    spyHpm.post.calls.reset();
+  });
+
+  afterAll(function () {
+    // TODO: Should call remove using the powerbi service first to clean up intenral references to DOM inside this element
+    $element.remove();
+  });
+
+  afterEach(function () {
+    spyHpm.get.calls.reset();
+    spyHpm.post.calls.reset();
+    spyHpm.patch.calls.reset();
+    spyHpm.put.calls.reset();
+    spyHpm.delete.calls.reset();
+
+    spyRouter.get.calls.reset();
+    spyRouter.post.calls.reset();
+    spyRouter.patch.calls.reset();
+    spyRouter.put.calls.reset();
+    spyRouter.delete.calls.reset();
+  });
+
+  describe('Event handlers', function () {
+    it(`handler passed to report.on(eventName, handler) is called when POST /report/events/\${eventName} is received`, function (done) {
+      // Arrange
+      const testData = {
+        eventName: 'pageChanged',
+        handler: jasmine.createSpy('handler'),
+        pageChangedEvent: {
+          data: {
+            method: 'POST',
+            url: '/report/events/pageChanged',
+            body: {
+              name: "page1"
+            }
+          }
+        }
+      };
+      
+      report.on(testData.eventName, testData.handler);
+
+      // Act
+      spyWpmp.onMessageReceived(testData.pageChangedEvent);
+
+      // Assert
+      expect(spyWpmp.addHandler).toHaveBeenCalled();
+
+      expect(testData.handler).toHaveBeenCalledWith(testData.pageChangedEvent.data.body);
+      done();
+    });
+  });
+});
