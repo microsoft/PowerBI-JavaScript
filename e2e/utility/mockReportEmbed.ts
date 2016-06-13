@@ -128,6 +128,27 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
   
   router.delete('/report/filters', (req, res) => {
+    const filter = req.body;
+    return app.validateFilter(filter)
+      .then(() => {
+        app.removeFilter(filter)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post('/report/events/filterRemoved', {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post('/report/events/error', error);
+          });
+
+        res.send(202);
+      }, error => {
+        res.send(400, error);
+      });
+  });
+
+  router.delete('/report/allfilters', (req, res) => {
     app.clearFilters()
       .then(filter => {
         const initiator = "sdk";
@@ -139,7 +160,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         hpm.post('/report/events/error', error);
       });
     res.send(202);
-  })
+  });
   
   /**
    * Phase 3

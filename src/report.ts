@@ -31,6 +31,10 @@ export interface IPage {
     displayName: string;
 }
 
+export interface IError {
+    message: string;
+}
+
 export class Report extends Embed {
     static allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
     static type = "Report";
@@ -52,8 +56,8 @@ export class Report extends Embed {
      */
     addFilter(filter: filters.IFilter, target?: IPageTarget | IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.post(`${targetUrl}/filters`, filter)
-            .catch((response: hpm.IResponse) => {
+        return this.hpm.post<void>(`${targetUrl}/filters`, filter)
+            .catch(response => {
                 throw response.body;
             });
     }
@@ -81,11 +85,11 @@ export class Report extends Embed {
      *      });
      * ```
      */
-    getFilters(target?: IPageTarget | IVisualTarget): Promise<filters.IFilter> {
+    getFilters(target?: IPageTarget | IVisualTarget): Promise<filters.IFilter[]> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.get(`${targetUrl}/filters`)
-            .then((response: hpm.IResponse) => response.body,
-                (response: hpm.IResponse) => {
+        return this.hpm.get<filters.IFilter[]>(`${targetUrl}/filters`)
+            .then(response => response.body,
+                response => {
                     throw response.body;
                 });
     }
@@ -100,10 +104,10 @@ export class Report extends Embed {
      *  });
      * ```
      */
-    getPages(): Promise<IPage> {
-        return this.hpm.get('/report/pages')
-            .then((response: hpm.IResponse) => response.body,
-                (response: hpm.IResponse) => {
+    getPages(): Promise<IPage[]> {
+        return this.hpm.get<IPage[]>('/report/pages')
+            .then(response => response.body,
+                response => {
                     throw response.body;
                 });
     }
@@ -148,8 +152,8 @@ export class Report extends Embed {
      * Set the active page
      */
     setActivePage(page: IPage): Promise<void> {
-        return this.hpm.put('/report/pages/active', page)
-            .catch((response: hpm.IResponse) => {
+        return this.hpm.put<IError[]>('/report/pages/active', page)
+            .catch(response => {
                 throw response.body;
             });
     }
@@ -159,8 +163,8 @@ export class Report extends Embed {
      */
     removeFilter(filter: filters.IFilter, target?: IPageTarget | IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.delete(`${targetUrl}/filters`, filter)
-            .catch((response: hpm.IResponse) => {
+        return this.hpm.delete<IError[]>(`${targetUrl}/filters`, filter)
+            .catch(response => {
                 throw response.body;
             });
     }
@@ -173,8 +177,8 @@ export class Report extends Embed {
      * ```
      */
     removeAllFilters(): Promise<void> {
-        return this.hpm.delete('/report/filters')
-            .catch((response: hpm.IResponse) => {
+        return this.hpm.delete<IError[]>('/report/allfilters', null)
+            .catch(response => {
                 throw response.body;
             });
     }
@@ -186,8 +190,8 @@ export class Report extends Embed {
      */
     updateFilter(filter: filters.IFilter, target?: IPageTarget | IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.put(`${targetUrl}/filters`, filter)
-            .catch((response: hpm.IResponse) => {
+        return this.hpm.put<IError[]>(`${targetUrl}/filters`, filter)
+            .catch(response => {
                 throw response.body;
             });
     }
@@ -196,8 +200,8 @@ export class Report extends Embed {
      * Update settings of report (filter pane visibility, page navigation visibility)
      */
     updateSettings(settings: ISettings): Promise<void> {
-        return this.hpm.patch('/report/settings', settings)
-            .catch((response: hpm.IResponse) => {
+        return this.hpm.patch<IError[]>('/report/settings', settings)
+            .catch(response => {
                 throw response.body;
             });
     }

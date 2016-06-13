@@ -1,4 +1,5 @@
 import { Utils } from './util';
+import * as report from './report';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as router from 'powerbi-router';
@@ -120,8 +121,8 @@ export abstract class Embed {
         
         Utils.assign(message, baseMessage);
         
-        return this.hpm.post('/report/load', message)
-            .catch((response: hpm.IResponse) => {
+        return this.hpm.post<report.IError[]>('/report/load', message)
+            .catch(response => {
                 throw response.body;
             });
     }

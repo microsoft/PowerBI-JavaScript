@@ -1,5 +1,5 @@
 import * as core from '../src/core';
-import { Report, IPageTarget, IVisualTarget } from '../src/report';
+import * as report from '../src/report';
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
 import * as Router from 'powerbi-router';
@@ -135,13 +135,13 @@ describe('Protocol', function () {
             spyApp.validateLoad.and.returnValue(Promise.reject(null));
             
         // Act
-            hpm.post('/report/load', testData.load)
+            hpm.post<report.IError>('/report/load', testData.load)
               .then(() => {
                 expect(false).toBe(true);
                 spyApp.validateLoad.calls.reset();
                 done();
               })
-              .catch((response: Hpm.IResponse) => {
+              .catch(response => {
         // Assert
                 expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
                 expect(spyApp.load).not.toHaveBeenCalledWith(testData.load);
@@ -168,8 +168,8 @@ describe('Protocol', function () {
           .then(() => {
             spyApp.validateLoad.and.returnValue(Promise.resolve(null));
         // Act
-            hpm.post('/report/load', testData.load)
-              .then((response: Hpm.IResponse) => {
+            hpm.post<void>('/report/load', testData.load)
+              .then(response => {
         // Assert
                 expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
                 expect(spyApp.load).toHaveBeenCalledWith(testData.load);
@@ -206,8 +206,8 @@ describe('Protocol', function () {
             spyApp.load.and.returnValue(Promise.resolve(testData.load));
             
         // Act
-            hpm.post('/report/load', testData.load)
-              .then((response: Hpm.IResponse) => {
+            hpm.post<void>('/report/load', testData.load)
+              .then(response => {
                 setTimeout(() => {
         // Assert
                   expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
@@ -242,8 +242,8 @@ describe('Protocol', function () {
           .then(() => {
             spyApp.getPages.and.returnValue(Promise.resolve(testData.expectedPages));
         // Act
-            hpm.get('/report/pages')
-              .then((response: Hpm.IResponse) => {
+            hpm.get<report.IPage[]>('/report/pages')
+              .then(response => {
         // Assert
                 expect(spyApp.getPages).toHaveBeenCalled();
                 const pages = response.body;
@@ -268,8 +268,8 @@ describe('Protocol', function () {
           .then(() => {
             spyApp.validatePage.and.returnValue(Promise.reject(null));
         // Act
-            hpm.put('/report/pages/active', testData.page)
-              .catch((response: Hpm.IResponse) => {
+            hpm.put<void>('/report/pages/active', testData.page)
+              .catch(response => {
         // Assert
                 expect(spyApp.validatePage).toHaveBeenCalledWith(testData.page);
                 expect(spyApp.setActivePage).not.toHaveBeenCalled();
@@ -296,8 +296,8 @@ describe('Protocol', function () {
             spyApp.validatePage.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.put('/report/pages/active', testData.page)
-              .then((response: Hpm.IResponse) => {
+            hpm.put<void>('/report/pages/active', testData.page)
+              .then(response => {
         // Assert
                 expect(spyApp.validatePage).toHaveBeenCalledWith(testData.page);
                 expect(spyApp.setActivePage).toHaveBeenCalledWith(testData.page);
@@ -331,8 +331,8 @@ describe('Protocol', function () {
             spyApp.validatePage.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.put('/report/pages/active', testData.page)
-              .then((response: Hpm.IResponse) => {
+            hpm.put<void>('/report/pages/active', testData.page)
+              .then(response => {
         // Assert
                 expect(spyApp.validatePage).toHaveBeenCalledWith(testData.page);
                 expect(spyApp.setActivePage).toHaveBeenCalledWith(testData.page);
@@ -367,8 +367,8 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
             
         // Act
-            hpm.get('/report/filters')
-              .then((response: Hpm.IResponse) => {
+            hpm.get<filters.IFilter[]>('/report/filters')
+              .then(response => {
         // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
                 expect(response.statusCode).toEqual(200);
@@ -393,8 +393,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
         // Act
-            hpm.post('/report/filters', testData.filter)
-              .catch((response: Hpm.IResponse) => {
+            hpm.post<report.IError>('/report/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).not.toHaveBeenCalled();
@@ -419,8 +419,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.post('/report/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.post<void>('/report/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter);
@@ -450,8 +450,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.post('/report/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.post<void>('/report/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter);
@@ -478,8 +478,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
         // Act
-            hpm.put('/report/filters', testData.filter)
-              .catch((response: Hpm.IResponse) => {
+            hpm.put<report.IError>('/report/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).not.toHaveBeenCalled();
@@ -504,8 +504,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.put('/report/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.put<void>('/report/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter);
@@ -535,8 +535,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.put('/report/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.put<void>('/report/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter);
@@ -550,13 +550,13 @@ describe('Protocol', function () {
           });
       });
       
-      it('DELETE /report/filters returns 202 if request is valid', function (done) {
+      it('DELETE /report/allfilters returns 202 if request is valid', function (done) {
         // Arrange
         iframeLoaded
           .then(() => {
         // Act
-            hpm.delete('/report/filters')
-              .then((response: Hpm.IResponse) => {
+            hpm.delete<void>('/report/allfilters', null)
+              .then(response => {
         // Assert
                 expect(spyApp.clearFilters).toHaveBeenCalled();
                 expect(response.statusCode).toEqual(202);
@@ -567,7 +567,7 @@ describe('Protocol', function () {
           });
       });
       
-      it('DELETE /report/filters causes POST /report/events/filtersCleared', function (done) {
+      it('DELETE /report/allfilters causes POST /report/events/filtersCleared', function (done) {
         // Arrange
         const testData = {
           expectedEvent: {
@@ -580,8 +580,8 @@ describe('Protocol', function () {
           .then(() => {
             
         // Act
-            hpm.delete('/report/filters')
-              .then((response: Hpm.IResponse) => {
+            hpm.delete<void>('/report/allfilters', null)
+              .then(response => {
         // Assert
                 setTimeout(() => {
                   expect(spyApp.clearFilters).toHaveBeenCalled();
@@ -591,6 +591,97 @@ describe('Protocol', function () {
                   spyApp.clearFilters.calls.reset();
                   done();
                 })
+              });
+          });
+      });
+
+      it('DELETE /report/filters returns 400 if request is invalid', function (done) {
+        // Arrange
+        const testData = {
+          filter: {
+            name: "fakeFilter"
+          },
+          expectedErrors: [
+            {
+              message: 'invalid filter'
+            }
+          ]
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedErrors));
+
+        // Act
+            hpm.delete<report.IError[]>('/report/filters', testData.filter)
+              .catch(response => {
+        // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                expect(response.body).toEqual(testData.expectedErrors);
+        // Cleanup
+                spyApp.validateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+      
+      it('DELETE /report/filters returns 202 if request is valid', function (done) {
+        // Arrange
+        const testData = {
+          filter: {
+            name: "fakeFilter"
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.delete<void>('/report/filters', testData.filter)
+              .then(response => {
+        // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter);
+                expect(response.statusCode).toEqual(202);
+        // Cleanup
+                spyApp.validateFilter.calls.reset();
+                spyApp.removeFilter.calls.reset();
+                done();
+              });
+          });
+      });
+      
+      it('DELETE /report/filters will cause POST /report/events/filterRemoved', function (done) {
+        // Arrange
+        const testData = {
+          filter: {
+            name: "fakeFilter"
+          },
+          expectedEvent: {
+            method: 'POST',
+            url: '/report/events/filterRemoved'
+          }
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+        // Act
+            hpm.delete<void>('/report/filters', testData.filter)
+              .then(response => {
+        // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter);
+                expect(response.statusCode).toEqual(202);
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+        // Cleanup
+                spyApp.validateFilter.calls.reset();
+                spyApp.removeFilter.calls.reset();
+                done();
               });
           });
       });
@@ -619,8 +710,8 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
             
         // Act
-            hpm.get('/report/pages/xyz/filters')
-              .then((response: Hpm.IResponse) => {
+            hpm.get<filters.IFilter[]>('/report/pages/xyz/filters')
+              .then(response => {
         // Assert
                 expect(spyApp.getFilters).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(response.statusCode).toEqual(200);
@@ -655,8 +746,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
         // Act
-            hpm.post('/report/pages/xyz/filters', testData.filter)
-              .catch((response: Hpm.IResponse) => {
+            hpm.post<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
@@ -691,8 +782,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
         // Act
-            hpm.post('/report/pages/xyz/filters', testData.filter)
-              .catch((response: Hpm.IResponse) => {
+            hpm.post<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -725,8 +816,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.post('/report/pages/xyz/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.post<void>('/report/pages/xyz/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -763,8 +854,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.post('/report/pages/xyz/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.post<void>('/report/pages/xyz/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -802,8 +893,8 @@ describe('Protocol', function () {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
         // Act
-            hpm.put('/report/pages/xyz/filters', testData.filter)
-              .catch((response: Hpm.IResponse) => {
+            hpm.put<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
@@ -838,8 +929,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
         // Act
-            hpm.put('/report/pages/xyz/filters', testData.filter)
-              .catch((response: Hpm.IResponse) => {
+            hpm.put<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -872,8 +963,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.put('/report/pages/xyz/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.put<void>('/report/pages/xyz/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -909,8 +1000,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.put('/report/pages/xyz/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.put<void>('/report/pages/xyz/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -931,7 +1022,7 @@ describe('Protocol', function () {
        * 
        * The workaround is to either allow a body to be specified with DELETE requests, or to change to a PUT/POST request
        */
-      xit('DELETE /report/pages/xyz/filters returns 400 if target is invalid', function (done) {
+      it('DELETE /report/pages/xyz/filters returns 400 if target is invalid', function (done) {
         // Arrange
         const testData = {
           expectedTarget: {
@@ -953,8 +1044,8 @@ describe('Protocol', function () {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
         // Act
-            hpm.delete('/report/pages/xyz/filters')
-              .catch((response: Hpm.IResponse) => {
+            hpm.delete<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
@@ -968,7 +1059,7 @@ describe('Protocol', function () {
           });
       });
 
-      xit('DELETE /report/pages/xyz/filters returns 400 if filter is invalid', function (done) {
+      it('DELETE /report/pages/xyz/filters returns 400 if filter is invalid', function (done) {
         // Arrange
         const testData = {
           expectedTarget: {
@@ -989,8 +1080,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
         // Act
-            hpm.delete('/report/pages/xyz/filters')
-              .catch((response: Hpm.IResponse) => {
+            hpm.delete<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1005,7 +1096,7 @@ describe('Protocol', function () {
           });
       });
       
-      xit('DELETE /report/pages/xyz/filters returns 202 if request is valid', function (done) {
+      it('DELETE /report/pages/xyz/filters returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
           expectedTarget: {
@@ -1023,8 +1114,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.delete('/report/pages/xyz/filters')
-              .then((response: Hpm.IResponse) => {
+            hpm.delete<void>('/report/pages/xyz/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1064,7 +1155,7 @@ describe('Protocol', function () {
             
         // Act
             hpm.get('/report/visuals/xyz/filters')
-              .then((response: Hpm.IResponse) => {
+              .then(response => {
         // Assert
                 expect(spyApp.getFilters).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(response.statusCode).toEqual(200);
@@ -1099,8 +1190,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
         // Act
-            hpm.post('/report/visuals/xyz/filters', testData.filter)
-              .catch((response: Hpm.IResponse) => {
+            hpm.post<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
@@ -1135,8 +1226,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
         // Act
-            hpm.post('/report/visuals/xyz/filters', testData.filter)
-              .catch((response: Hpm.IResponse) => {
+            hpm.post<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1169,8 +1260,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.post('/report/visuals/xyz/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.post<void>('/report/visuals/xyz/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1207,8 +1298,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.post('/report/visuals/xyz/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.post<void>('/report/visuals/xyz/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1246,8 +1337,8 @@ describe('Protocol', function () {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
         // Act
-            hpm.put('/report/visuals/xyz/filters', testData.filter)
-              .catch((response: Hpm.IResponse) => {
+            hpm.put<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
@@ -1282,8 +1373,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
         // Act
-            hpm.put('/report/visuals/xyz/filters', testData.filter)
-              .catch((response: Hpm.IResponse) => {
+            hpm.put<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1316,8 +1407,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.put('/report/visuals/xyz/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.put<void>('/report/visuals/xyz/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1353,8 +1444,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.put('/report/visuals/xyz/filters', testData.filter)
-              .then((response: Hpm.IResponse) => {
+            hpm.put<void>('/report/visuals/xyz/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1375,7 +1466,7 @@ describe('Protocol', function () {
        * 
        * The workaround is to either allow a body to be specified with DELETE requests, or to change to a PUT/POST request
        */
-      xit('DELETE /report/visuals/xyz/filters returns 400 if target is invalid', function (done) {
+      it('DELETE /report/visuals/xyz/filters returns 400 if target is invalid', function (done) {
         // Arrange
         const testData = {
           expectedTarget: {
@@ -1397,8 +1488,8 @@ describe('Protocol', function () {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
         // Act
-            hpm.delete('/report/visuals/xyz/filters')
-              .catch((response: Hpm.IResponse) => {
+            hpm.delete<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
@@ -1412,7 +1503,7 @@ describe('Protocol', function () {
           });
       });
 
-      xit('DELETE /report/visuals/xyz/filters returns 400 if filter is invalid', function (done) {
+      it('DELETE /report/visuals/xyz/filters returns 400 if filter is invalid', function (done) {
         // Arrange
         const testData = {
           expectedTarget: {
@@ -1433,8 +1524,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
         // Act
-            hpm.delete('/report/visuals/xyz/filters')
-              .catch((response: Hpm.IResponse) => {
+            hpm.delete<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1449,7 +1540,7 @@ describe('Protocol', function () {
           });
       });
       
-      xit('DELETE /report/visuals/xyz/filters returns 202 if request is valid', function (done) {
+      it('DELETE /report/visuals/xyz/filters returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
           expectedTarget: {
@@ -1467,8 +1558,8 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
         // Act
-            hpm.delete('/report/visuals/xyz/filters')
-              .then((response: Hpm.IResponse) => {
+            hpm.delete<void>('/report/visuals/xyz/filters', testData.filter)
+              .then(response => {
         // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1500,8 +1591,8 @@ describe('Protocol', function () {
             spyApp.validateSettings.and.returnValue(Promise.reject(null));
             
         // Act
-            hpm.patch('/report/settings', testData.settings)
-              .catch((response: Hpm.IResponse) => {
+            hpm.patch<report.IError[]>('/report/settings', testData.settings)
+              .catch(response => {
         // Assert
                 expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
                 expect(spyApp.updateSettings).not.toHaveBeenCalled();
@@ -1527,8 +1618,8 @@ describe('Protocol', function () {
             spyApp.validateSettings.and.returnValue(Promise.resolve(null));
             
         // Act
-            hpm.patch('/report/settings', testData.settings)
-              .then((response: Hpm.IResponse) => {
+            hpm.patch<void>('/report/settings', testData.settings)
+              .then(response => {
         // Assert
                 expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
                 expect(spyApp.updateSettings).toHaveBeenCalledWith(testData.settings);
@@ -1566,8 +1657,8 @@ describe('Protocol', function () {
             spyApp.updateSettings.and.returnValue(Promise.resolve(testData.expectedEvent.body.settings));
             
         // Act
-            hpm.patch('/report/settings', testData.settings)
-              .then((response: Hpm.IResponse) => {
+            hpm.patch<void>('/report/settings', testData.settings)
+              .then(response => {
         // Assert
                 setTimeout(() => {
                   expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
@@ -1608,8 +1699,8 @@ describe('Protocol', function () {
           .then(() => {
             
         // Act
-            iframeHpm.post('/report/events/pageChanged', testData.event)
-              .then((response: Hpm.IResponse) => {
+            iframeHpm.post<void>('/report/events/pageChanged', testData.event)
+              .then(response => {
         // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
@@ -1644,7 +1735,7 @@ describe('Protocol', function () {
             
         // Act
             iframeHpm.post('/report/events/filterAdded', testData.event)
-              .then((response: Hpm.IResponse) => {
+              .then(response => {
         // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
@@ -1677,7 +1768,7 @@ describe('Protocol', function () {
             
         // Act
             iframeHpm.post('/report/events/filterUpdated', testData.event)
-              .then((response: Hpm.IResponse) => {
+              .then(response => {
         // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
@@ -1710,7 +1801,7 @@ describe('Protocol', function () {
             
         // Act
             iframeHpm.post('/report/events/filterRemoved', testData.event)
-              .then((response: Hpm.IResponse) => {
+              .then(response => {
         // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
@@ -1745,7 +1836,7 @@ describe('Protocol', function () {
             
         // Act
             iframeHpm.post('/report/events/settingsUpdated', testData.event)
-              .then((response: Hpm.IResponse) => {
+              .then(response => {
         // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
@@ -1780,7 +1871,7 @@ describe('Protocol', function () {
             
         // Act
             iframeHpm.post('/report/events/dataSelected', testData.event)
-              .then((response: Hpm.IResponse) => {
+              .then(response => {
         // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
@@ -1799,7 +1890,7 @@ describe('SDK-to-HPM', function () {
   let iframe: HTMLIFrameElement;
   let iframeHpm: Hpm.HttpPostMessage;
   let powerbi: core.PowerBi;
-  let report: Report;
+  let report: report.Report;
 
   beforeAll(function () {
     const spyHpmFactory: factories.IHpmFactory = () => {
@@ -1825,7 +1916,7 @@ describe('SDK-to-HPM', function () {
       accessToken: 'fakeToken',
       embedUrl: iframeSrc
     };
-    report = <Report>powerbi.embed($element[0], embedConfiguration);
+    report = <report.Report>powerbi.embed($element[0], embedConfiguration);
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
 
@@ -2151,7 +2242,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IPageTarget>{
+        target: <report.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2169,7 +2260,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IPageTarget>{
+        target: <report.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -2198,7 +2289,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IPageTarget>{
+        target: <report.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2220,7 +2311,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IPageTarget>{
+        target: <report.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2237,7 +2328,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IPageTarget>{
+        target: <report.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -2266,7 +2357,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IPageTarget>{
+        target: <report.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2288,7 +2379,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IPageTarget>{
+        target: <report.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2306,7 +2397,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IPageTarget>{
+        target: <report.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -2335,7 +2426,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IPageTarget>{
+        target: <report.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2359,7 +2450,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IVisualTarget>{
+        target: <report.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2376,7 +2467,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IVisualTarget>{
+        target: <report.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -2405,7 +2496,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IVisualTarget>{
+        target: <report.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2427,7 +2518,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IVisualTarget>{
+        target: <report.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2444,7 +2535,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IVisualTarget>{
+        target: <report.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -2473,7 +2564,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IVisualTarget>{
+        target: <report.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2495,7 +2586,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IVisualTarget>{
+        target: <report.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2512,7 +2603,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IVisualTarget>{
+        target: <report.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -2541,7 +2632,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <IVisualTarget>{
+        target: <report.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2660,3 +2751,5 @@ describe('SDK-to-HPM', function () {
 
   
 });
+
+
