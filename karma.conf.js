@@ -16,7 +16,6 @@ module.exports = function (config) {
             'karma-phantomjs-launcher',
             'karma-coverage'
         ],
-        usePolling: true,
         preprocessors: { './src/**/*.js': ['coverage'] },
         coverageReporter: {
             reporters: [
