@@ -60,7 +60,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
     const page = req.body;
     return app.validatePage(page)
       .then(() => {
-        app.setActivePage(page)
+        app.setPage(page)
           .then(page => {
             const initiator = "sdk";
             hpm.post('/report/events/pageChanged', {

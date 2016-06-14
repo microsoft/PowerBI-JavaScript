@@ -155,7 +155,12 @@ export class Report extends Embed {
     /**
      * Set the active page
      */
-    setActivePage(page: IPage): Promise<void> {
+    setPage(pageName: string): Promise<void> {
+        const page: IPage = {
+            name: pageName,
+            displayName: null
+        };
+
         return this.hpm.put<IError[]>('/report/pages/active', page)
             .catch(response => {
                 throw response.body;

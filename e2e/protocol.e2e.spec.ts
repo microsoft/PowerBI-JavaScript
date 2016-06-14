@@ -249,8 +249,7 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           page: {
-            name: "fakeName",
-            displayName: "fakeDisplayName"
+            name: "fakeName"
           }
         };
         
@@ -262,11 +261,11 @@ describe('Protocol', function () {
               .catch(response => {
         // Assert
                 expect(spyApp.validatePage).toHaveBeenCalledWith(testData.page);
-                expect(spyApp.setActivePage).not.toHaveBeenCalled();
+                expect(spyApp.setPage).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
         // Cleanup
                 spyApp.validatePage.calls.reset();
-                spyApp.setActivePage.calls.reset();
+                spyApp.setPage.calls.reset();
                 done();
               });
           });
@@ -276,8 +275,7 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           page: {
-            name: "fakeName",
-            displayName: "fakeDisplayName"
+            name: "fakeName"
           }
         };
         
@@ -290,11 +288,11 @@ describe('Protocol', function () {
               .then(response => {
         // Assert
                 expect(spyApp.validatePage).toHaveBeenCalledWith(testData.page);
-                expect(spyApp.setActivePage).toHaveBeenCalledWith(testData.page);
+                expect(spyApp.setPage).toHaveBeenCalledWith(testData.page);
                 expect(response.statusCode).toEqual(202);
         // Cleanup
                 spyApp.validatePage.calls.reset();
-                spyApp.setActivePage.calls.reset();
+                spyApp.setPage.calls.reset();
                 done();
               });
           });
@@ -304,8 +302,7 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           page: {
-            name: "fakeName",
-            displayName: "fakeDisplayName"
+            name: "fakeName"
           },
           expectedEvent: {
             method: 'POST',
@@ -325,12 +322,12 @@ describe('Protocol', function () {
               .then(response => {
         // Assert
                 expect(spyApp.validatePage).toHaveBeenCalledWith(testData.page);
-                expect(spyApp.setActivePage).toHaveBeenCalledWith(testData.page);
+                expect(spyApp.setPage).toHaveBeenCalledWith(testData.page);
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
         // Cleanup
                 spyApp.validateLoad.calls.reset();
-                spyApp.setActivePage.calls.reset();
+                spyApp.setPage.calls.reset();
                 done();
               });
           });
