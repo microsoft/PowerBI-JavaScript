@@ -269,11 +269,11 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
       });
   });
 
-  router.get('/report/visuals/:pageName/filters', (req, res) => {
-    const pageName = req.params.pageName;
+  router.get('/report/visuals/:visualId/filters', (req, res) => {
+    const visualId = req.params.visualId;
     const target = {
-      type: "page",
-      name: pageName
+      type: "visual",
+      id: visualId
     };
     
     return app.getFilters(target)
@@ -282,12 +282,12 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
       });
   });
   
-  router.post('/report/visuals/:pageName/filters', (req, res) => {
+  router.post('/report/visuals/:visualId/filters', (req, res) => {
     const filter = req.body;
-    const pageName = req.params.pageName;
+    const visualId = req.params.visualId;
     const target = {
-      type: "page",
-      name: pageName
+      type: "visual",
+      id: visualId
     };
     
     return app.validateTarget(target)
@@ -296,7 +296,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         app.addFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/report/visuals/${pageName}/events/filterAdded`, {
+            hpm.post(`/report/visuals/${visualId}/events/filterAdded`, {
               initiator,
               filter
             });
@@ -310,12 +310,12 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
       });
   });
   
-  router.put('/report/visuals/:pageName/filters', (req, res) => {
+  router.put('/report/visuals/:visualId/filters', (req, res) => {
     const filter = req.body;
-    const pageName = req.params.pageName;
+    const visualId = req.params.visualId;
     const target = {
-      type: "page",
-      name: pageName
+      type: "visual",
+      id: visualId
     };
     
     return app.validateTarget(target)
@@ -324,7 +324,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         app.updateFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/report/visuals/${pageName}/events/filterUpdated`, {
+            hpm.post(`/report/visuals/${visualId}/events/filterUpdated`, {
               initiator,
               filter
             });
@@ -338,12 +338,12 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
       });
   });
 
-  router.delete('/report/visuals/:pageName/filters', (req, res) => {
+  router.delete('/report/visuals/:visualId/filters', (req, res) => {
     const filter = req.body;
-    const pageName = req.params.pageName;
+    const visualId = req.params.visualId;
     const target = {
-      type: "page",
-      name: pageName
+      type: "visual",
+      id: visualId
     };
 
     return app.validateTarget(target)
@@ -352,7 +352,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         app.removeFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/report/visuals/${pageName}/events/filterRemoved`, {
+            hpm.post(`/report/visuals/${visualId}/events/filterRemoved`, {
               initiator,
               filter
             });

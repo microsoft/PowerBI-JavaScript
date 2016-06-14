@@ -1126,8 +1126,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           filters: [
             {
@@ -1166,8 +1166,8 @@ describe('Protocol', function () {
             }
           ],
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           filter: {
             name: "fakeFilter"
@@ -1199,8 +1199,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           expectedFilterError: {
             message: "filter is invalid"
@@ -1236,8 +1236,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           filter: {
             name: "fakeFilter"
@@ -1270,8 +1270,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           filter: {
             name: "fakeFilter"
@@ -1309,8 +1309,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           expectedErrors: [
             {
@@ -1346,8 +1346,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           expectedFilterError: {
             message: "Filter is invalid"
@@ -1383,8 +1383,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           filter: {
             name: "fakeFilter"
@@ -1417,8 +1417,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           filter: {
             name: "fakeFilter"
@@ -1460,8 +1460,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           expectedErrors: [
             {
@@ -1497,8 +1497,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           expectedFilterError: {
             message: "Filter is invalid"
@@ -1534,8 +1534,8 @@ describe('Protocol', function () {
         // Arrange
         const testData = {
           expectedTarget: {
-            type: "page",
-            name: "xyz"
+            type: "visual",
+            id: "xyz"
           },
           filter: {
             name: "fakeFilter"
@@ -2712,6 +2712,11 @@ describe('SDK-to-HPM', function () {
   });
 
   describe('SDK-to-Router (Event subscription)', function () {
+    /**
+     * This test should likely be moved to mock app section or removed since it is already covered.
+     * The validation of supported events should likely happen by powerbi instead of by the SDK
+     * since this is maitanence problem
+     */
     it(`report.on(eventName, handler) should throw error if eventName is not supported`, function () {
       // Arrange
       const testData = {
@@ -3198,102 +3203,386 @@ describe('SDK-to-MockApp', function () {
           });
     });
 
-    it('report.updateFilter(filter, target) sends PUT /report/pages/:pageName/filters with filter', function () {
-      expect(false).toBe(true);
-    });
-
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
-      expect(false).toBe(true);
-      done();
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IPageTarget>{
+          type: "page",
+          name: "page1"
+        },
+        expectedError: {
+          message: 'invalid target'
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+            report.updateFilter(testData.filter, testData.target)
+              .catch(error => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.updateFilter).not.toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
     });
 
     it('report.updateFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
-      expect(false).toBe(true);
-      done();
-    });
-
-    it('report.removeFilter(filter, target) sends DELETE /report/pages/:pageName/filters with filter', function () {
-      expect(false).toBe(true);
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IPageTarget>{
+          type: "page",
+          name: "page1"
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.updateFilter.and.returnValue(Promise.resolve(null));
+      // Act
+            report.updateFilter(testData.filter, testData.target)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+                done();
+              });
+          });
     });
 
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
-      expect(false).toBe(true);
-      done();
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IPageTarget>{
+          type: "page",
+          name: "page1"
+        },
+        expectedError: {
+          message: 'invalid target'
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+            report.removeFilter(testData.filter, testData.target)
+              .catch(error => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.removeFilter).not.toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
     });
 
     it('report.removeFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
-      expect(false).toBe(true);
-      done();
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IPageTarget>{
+          type: "page",
+          name: "page1"
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.removeFilter.and.returnValue(Promise.resolve(null));
+      // Act
+            report.removeFilter(testData.filter, testData.target)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+                done();
+              });
+          });
     });
   });
   
   describe('filters (visual level)', function () {
-    it('report.addFilter(filter, target) sends POST /report/visuals/:visualId/filters with filter', function () {
-      expect(false).toBe(true);
-    });
-
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
-      expect(false).toBe(true);
-      done();
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IVisualTarget>{
+          type: "visual",
+          id: "visualId"
+        },
+        expectedError: {
+          message: 'invalid target'
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+            report.addFilter(testData.filter, testData.target)
+              .catch(error => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.addFilter).not.toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
     });
 
     it('report.addFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
-      expect(false).toBe(true);
-      done();
-    });
-
-    it('report.updateFilter(filter, target) sends PUT /report/visuals/:visualId/filters with filter', function () {
-      expect(false).toBe(true);
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IVisualTarget>{
+          type: "visual",
+          id: "visualId"
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.addFilter.and.returnValue(Promise.resolve(null));
+      // Act
+            report.addFilter(testData.filter, testData.target)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+                done();
+              });
+          });
     });
 
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
-      expect(false).toBe(true);
-      done();
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IVisualTarget>{
+          type: "visual",
+          id: "visualId"
+        },
+        expectedError: {
+          message: 'invalid target'
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+            report.updateFilter(testData.filter, testData.target)
+              .catch(error => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.updateFilter).not.toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
     });
 
     it('report.updateFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
-      expect(false).toBe(true);
-      done();
-    });
-
-    it('report.removeFilter(filter, target) sends DELETE /report/visuals/:visualId/filters with filter', function () {
-      expect(false).toBe(true);
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IVisualTarget>{
+          type: "visual",
+          id: "visualId"
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.updateFilter.and.returnValue(Promise.resolve(null));
+      // Act
+            report.updateFilter(testData.filter, testData.target)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+                done();
+              });
+          });
     });
 
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
-      expect(false).toBe(true);
-      done();
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IVisualTarget>{
+          type: "visual",
+          id: "visualId"
+        },
+        expectedError: {
+          message: 'invalid target'
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+            report.removeFilter(testData.filter, testData.target)
+              .catch(error => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.removeFilter).not.toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
     });
 
     it('report.removeFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
-      expect(false).toBe(true);
-      done();
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IVisualTarget>{
+          type: "visual",
+          id: "visualId"
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.removeFilter.and.returnValue(Promise.resolve(null));
+      // Act
+            report.removeFilter(testData.filter, testData.target)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+                done();
+              });
+          });
     });
   });
 
   describe('settings', function () {
-    it('report.updateSettings(settings) sends PATCH /report/settings with settings object', function () {
-      expect(false).toBe(true);
-    });
-
     it('report.updateSettings(setting) returns promise that rejects with validation error if object is invalid', function (done) {
-      expect(false).toBe(true);
-      done();
+      // Arrange
+      const testData = {
+        settings: {
+          filterPaneEnabled: false
+        },
+        expectedErrors: [
+          {
+            message: 'invalid target'
+          }
+        ]
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateSettings.and.returnValue(Promise.reject(testData.expectedErrors));
+      // Act
+            report.updateSettings(testData.settings)
+              .catch(errors => {
+      // Assert
+                expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
+                expect(spyApp.updateSettings).not.toHaveBeenCalled();
+                expect(errors).toEqual(testData.expectedErrors);
+                done();
+              });
+          });
     });
 
     it('report.updateSettings(settings) returns promise that resolves with null if requst is valid and accepted', function (done) {
-      expect(false).toBe(true);
-      done();
+      // Arrange
+      const testData = {
+        settings: {
+          filterPaneEnabled: false
+        },
+        expectedErrors: [
+          {
+            message: 'invalid target'
+          }
+        ]
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateSettings.and.returnValue(Promise.resolve(null));
+            spyApp.updateSettings.and.returnValue(Promise.resolve(null));
+      // Act
+            report.updateSettings(testData.settings)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
+                expect(spyApp.updateSettings).toHaveBeenCalledWith(testData.settings);
+                done();
+              });
+          });
     });
   });
 
   describe('SDK-to-Router (Event subscription)', function () {
     it(`report.on(eventName, handler) should throw error if eventName is not supported`, function () {
-      expect(false).toBe(true);
+      // Arrange
+      const testData = {
+        eventName: 'xyz',
+        handler: jasmine.createSpy('handler')
+      };
+      
+      // Act
+      const attemptToSubscribeToEvent = () => {
+        report.on(testData.eventName, testData.handler);
+      };
+
+      // Assert
+      expect(attemptToSubscribeToEvent).toThrowError();
     });
 
-    it(`report.on(eventName, handler) should register handler with router.post('/report/events/\${eventName}', (req, res) => { handler(req.body) })`, function () {
-      expect(false).toBe(true);
+    it(`report.on(eventName, handler) should register handler and be called when POST /report/events/\${eventName} is received`, function () {
+      // Arrange
+      const testData = {
+        eventName: 'pageChanged',
+        handler: jasmine.createSpy('handler'),
+        simulatedPageChangeBody: {
+          initiator: 'sdk',
+          page: {
+            name: 'page1',
+            displayName: 'Page 1'
+          }
+        }
+      };
+      
+      report.on(testData.eventName, testData.handler);
+
+      // Act
+      iframeHpm.post('/report/events/pageChanged', testData.simulatedPageChangeBody)
+        .then(response => {
+      // Assert
+          expect(testData.handler).toHaveBeenCalledWith(testData.simulatedPageChangeBody);
+        });
     });
   });
 });
