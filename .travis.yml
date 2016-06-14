@@ -4,3 +4,9 @@ node_js:
 before_script:
     - npm install
 script: gulp test
+before_deploy:
+    - git config --global user.email "builds@travis-ci.com"
+    - git config --global user.name "Travis CI"
+    - git add dist/
+    - git commit -a "Generated dist files for build $TRAVIS_BUILD_NUMBER"
+    - git push
