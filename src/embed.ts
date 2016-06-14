@@ -44,6 +44,8 @@ export interface IEmbedOptions {
     name?: string;
     filterPaneEnabled?: boolean;
     getGlobalAccessToken?: () => string;
+    logMessages?: boolean;
+    wpmpName?: string;
 }
 
 export interface IEmbedConstructor {
@@ -51,7 +53,7 @@ export interface IEmbedConstructor {
 }
 
 export interface IHpmFactory {
-    (wpmp: wpmp.WindowPostMessageProxy): hpm.HttpPostMessage;
+    (wpmp: wpmp.WindowPostMessageProxy, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
 }
 
 export interface IWpmpFactory {
@@ -76,7 +78,9 @@ export abstract class Embed {
      * Default options for embeddable component.
      */
     private static defaultOptions: IEmbedOptions = {
-        filterPaneEnabled: true
+        filterPaneEnabled: true,
+        logMessages: false,
+        wpmpName: 'SdkReportWpmp'
     };
     
     wpmp: wpmp.WindowPostMessageProxy;
@@ -100,7 +104,7 @@ export abstract class Embed {
         this.iframe = <HTMLIFrameElement>this.element.childNodes[0];
         this.iframe.addEventListener('load', () => this.load(this.options, false), false);
 
-        this.wpmp = wpmpFactory(this.iframe.contentWindow, 'SdkReportWpmp', true);
+        this.wpmp = wpmpFactory(this.iframe.contentWindow, this.options.wpmpName, this.options.logMessages);
         this.hpm = hpmFactory(this.wpmp);
         this.router = routerFactory(this.wpmp);
     }

@@ -79,7 +79,26 @@ export const mockAppSpyObj = {
   clearFilters: jasmine.createSpy("clearFilters").and.returnValue(Promise.resolve(null)),
   toggleFilterPane: jasmine.createSpy("toggleFilterPane").and.returnValue(Promise.resolve(null)),
   // Other
-  exportData: jasmine.createSpy("exportData").and.returnValue(Promise.resolve(null))
+  exportData: jasmine.createSpy("exportData").and.returnValue(Promise.resolve(null)),
+
+  reset() {
+    mockAppSpyObj.load.calls.reset();
+    mockAppSpyObj.validateLoad.calls.reset();
+    mockAppSpyObj.updateSettings.calls.reset();
+    mockAppSpyObj.validateSettings.calls.reset();
+    mockAppSpyObj.getPages.calls.reset();
+    mockAppSpyObj.setActivePage.calls.reset();
+    mockAppSpyObj.togglePageNavigation.calls.reset();
+    mockAppSpyObj.validatePage.calls.reset();
+    mockAppSpyObj.validateFilter.calls.reset();
+    mockAppSpyObj.validateTarget.calls.reset();
+    mockAppSpyObj.getFilters.calls.reset();
+    mockAppSpyObj.addFilter.calls.reset();
+    mockAppSpyObj.updateFilter.calls.reset();
+    mockAppSpyObj.removeFilter.calls.reset();
+    mockAppSpyObj.clearFilters.calls.reset();
+    mockAppSpyObj.toggleFilterPane.calls.reset();
+  }
 };
 
 export const mockApp: IApp = mockAppSpyObj;

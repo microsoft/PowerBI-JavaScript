@@ -13,11 +13,11 @@ export {
   IRouterFactory
 };
 
-export const hpmFactory: IHpmFactory = (wpmp) => {
+export const hpmFactory: IHpmFactory = (wpmp, sdkVersion = '2.0.0', sdkType = 'js', origin = 'sdk') => {
     return new hpm.HttpPostMessage(wpmp, {
-        'origin': 'sdk',
-        'x-sdk-type': 'js',
-        'x-sdk-version': '2.0.0'
+        'origin': origin,
+        'x-sdk-type': sdkType,
+        'x-sdk-version': sdkVersion
     });
 };
 

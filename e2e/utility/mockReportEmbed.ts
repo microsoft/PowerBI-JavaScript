@@ -5,7 +5,7 @@ import { mockAppSpyObj, mockApp } from './mockApp';
 
 export const spyApp = mockAppSpyObj;
 
-export function setup(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean): Hpm.HttpPostMessage {
+export function setup(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean, name: string = 'MockAppWindowPostMessageProxy'): Hpm.HttpPostMessage {
   const parent = parentWindow || iframeContentWindow.parent;
   const wpmp = new Wpmp.WindowPostMessageProxy(parentWindow, {
     processTrackingProperties: {
@@ -14,8 +14,8 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
     },
     isErrorMessage: Hpm.HttpPostMessage.isErrorMessage,
     receiveWindow: iframeContentWindow,
-    name: 'MockAppWindowPostMessageProxy',
-    logMessages: false
+    name,
+    logMessages
   });
   const hpm = new Hpm.HttpPostMessage(wpmp, {
     'origin': 'reportEmbedMock',
@@ -51,6 +51,8 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
     return app.getPages()
       .then(pages => {
         res.send(200, pages);
+      }, error => {
+        res.send(500, error);
       });
   });
   

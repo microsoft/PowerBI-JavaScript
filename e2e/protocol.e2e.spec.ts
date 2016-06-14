@@ -36,24 +36,13 @@ describe('Protocol', function () {
     iframe = <HTMLIFrameElement>$iframe.get(0);
     
     // Register Iframe side
-    iframeHpm = setup(iframe.contentWindow, window, logMessages);
+    iframeHpm = setup(iframe.contentWindow, window, logMessages, 'ProtocolMockAppWpmp');
     
     // Register SDK side WPMP
-    wpmp = new Wpmp.WindowPostMessageProxy(iframe.contentWindow, {
-      processTrackingProperties: {
-          addTrackingProperties: Hpm.HttpPostMessage.addTrackingProperties,
-          getTrackingProperties: Hpm.HttpPostMessage.getTrackingProperties,
-      },
-      isErrorMessage: Hpm.HttpPostMessage.isErrorMessage,
-      name: 'HostProxyDefaultNoHandlers',
-      logMessages
-    });
-    hpm = new Hpm.HttpPostMessage(wpmp, {
-      origin: 'sdk',
-      'sdk-type': 'js',
-      'sdk-version': '2.0.0'
-    });
-    const router = new Router.Router(wpmp);
+    wpmp = factories.wpmpFactory(iframe.contentWindow, 'HostProxyDefaultNoHandlers', logMessages);
+    hpm = factories.hpmFactory(wpmp, 'testVersion');
+    const router = factories.routerFactory(wpmp);
+
     router.post('/report/events/loaded', (req, res) => {
       handler.handle(req);
       res.send(202);
@@ -1887,9 +1876,9 @@ describe('Protocol', function () {
 });
 
 describe('SDK-to-HPM', function () {
+  let logMessages = (window.__karma__.config.args[0] === 'logMessages');
   let $element: JQuery;
   let iframe: HTMLIFrameElement;
-  let iframeHpm: Hpm.HttpPostMessage;
   let powerbi: core.PowerBi;
   let report: report.Report;
 
@@ -1915,14 +1904,12 @@ describe('SDK-to-HPM', function () {
       type: "report",
       reportId: "fakeReportId",
       accessToken: 'fakeToken',
-      embedUrl: iframeSrc
+      embedUrl: iframeSrc,
+      wpmpName: 'SDK-to-HPM report wpmp'
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
-
-    // Register Iframe side
-    iframeHpm = setup(iframe.contentWindow, window, true);
 
     // Reset load handler
     spyHpm.post.calls.reset();
@@ -2760,7 +2747,6 @@ describe('SDK-to-HPM', function () {
 describe('SDK-to-WPMP', function () {
   let $element: JQuery;
   let iframe: HTMLIFrameElement;
-  let iframeHpm: Hpm.HttpPostMessage;
   let powerbi: core.PowerBi;
   let report: report.Report;
 
@@ -2779,14 +2765,12 @@ describe('SDK-to-WPMP', function () {
       type: "report",
       reportId: "fakeReportId",
       accessToken: 'fakeToken',
-      embedUrl: iframeSrc
+      embedUrl: iframeSrc,
+      wpmpName: 'SDK-to-WPMP report wpmp'
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
-
-    // Register Iframe side
-    iframeHpm = setup(iframe.contentWindow, window, true);
 
     // Reset load handler
     spyHpm.post.calls.reset();
@@ -2838,6 +2822,478 @@ describe('SDK-to-WPMP', function () {
 
       expect(testData.handler).toHaveBeenCalledWith(testData.pageChangedEvent.data.body);
       done();
+    });
+  });
+});
+
+describe('SDK-to-MockApp', function () {
+  let logMessages = (window.__karma__.config.args[0] === 'logMessages');
+  let $element: JQuery;
+  let iframe: HTMLIFrameElement;
+  let iframeHpm: Hpm.HttpPostMessage;
+  let iframeLoaded: Promise<void>;
+  let powerbi: core.PowerBi;
+  let report: report.Report;
+
+  beforeAll(function () {
+    powerbi = new core.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+
+    $element = $(`<div class="powerbi-report-container2"></div>`)
+      .appendTo(document.body);
+
+    const iframeSrc = "base/e2e/utility/noop.html";
+    const embedConfiguration = {
+      type: "report",
+      id: "fakeReportId",
+      accessToken: 'fakeToken',
+      embedUrl: iframeSrc,
+      wpmpName: 'SDK-to-MockApp report wpmp'
+    };
+    report = <report.Report>powerbi.embed($element[0], embedConfiguration);
+
+    iframe = <HTMLIFrameElement>$element.find('iframe')[0];
+
+    // Register Iframe side
+    iframeHpm = setup(iframe.contentWindow, window, logMessages, 'IntegrationMockAppWpmp');
+
+    // Reset load handler
+    spyApp.validateLoad.calls.reset();
+    spyApp.reset();
+
+    iframeLoaded = new Promise<void>((resolve, reject) => {
+      iframe.addEventListener('load', () => {
+        resolve(null);
+      });
+    });
+  });
+
+  afterAll(function () {
+    // TODO: Should call remove using the powerbi service first to clean up intenral references to DOM inside this element
+    $element.remove();
+  });
+
+  afterEach(function () {
+    spyApp.reset();
+  });
+
+  describe('load', function () {
+    it(`report.load() returns promise that rejects with validation errors if load configuration is invalid`, function (done) {
+      /**
+       * TODO: Add settings to load config
+       */
+
+      // Arrange
+      const testData = {
+        loadConfig: {
+          id: 'fakeReportId',
+          accessToken: 'fakeAccessToken'
+        },
+        expectedErrors: [
+          {
+            message: 'invalid load config'
+          }
+        ]
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateLoad.and.returnValue(Promise.reject(testData.expectedErrors));
+      // Act
+            report.load(testData.loadConfig)
+              .catch(errors => {
+      // Assert
+                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
+                expect(spyApp.load).not.toHaveBeenCalled();
+                expect(errors).toEqual(testData.expectedErrors);
+                done();
+              });
+          });
+    });
+
+    it('report.load() returns promise that resolves with null if the report load successful', function (done) {
+      // Arrange
+      const testData = {
+        loadConfig: {
+          id: 'fakeReportId',
+          accessToken: 'fakeAccessToken'
+        },
+        expectedErrors: [
+          {
+            message: 'invalid load config'
+          }
+        ]
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateLoad.and.returnValue(Promise.resolve(null));
+            spyApp.load.and.returnValue(Promise.resolve(null));
+      // Act
+            report.load(testData.loadConfig)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
+                expect(spyApp.load).toHaveBeenCalledWith(testData.loadConfig);
+                done();
+              });
+          });
+    });
+  });
+
+  describe('pages', function () {
+    it('report.getPages() return promise that rejects with server error if there was error getting pages', function (done) {
+      // Arrange
+      const testData = {
+        expectedError: {
+          message: 'internal server error'
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.getPages.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+            report.getPages()
+              .catch(error => {
+      // Assert
+                expect(spyApp.getPages).toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
+    });
+
+    it('report.getPages() returns promise that resolves with list of page names', function (done) {
+      // Arrange
+      const testData = {
+        pages: [
+          {
+            name: "page1",
+            displayName: "Page 1"
+          }
+        ]
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.getPages.and.returnValue(Promise.resolve(testData.pages));
+      // Act
+            report.getPages()
+              .then(pages => {
+      // Assert
+                expect(spyApp.getPages).toHaveBeenCalled();
+                expect(pages).toEqual(testData.pages);
+                done();
+              });
+          });
+    });
+  });
+
+  describe('filters (report level)', function () {
+    it('report.addFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        expectedError: {
+          message: 'invalid filter'
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+            report.addFilter(testData.filter)
+              .catch(error => {
+      // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.addFilter).not.toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
+    });
+
+    it('report.addFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.addFilter.and.returnValue(Promise.resolve(null));
+      // Act
+            report.addFilter(testData.filter)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter);
+                done();
+              });
+          });
+    });
+
+    it('report.updateFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        expectedError: {
+          message: 'invalid filter'
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+            report.updateFilter(testData.filter)
+              .catch(error => {
+      // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.updateFilter).not.toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
+    });
+
+    it('report.updateFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.updateFilter.and.returnValue(Promise.resolve(null));
+      // Act
+            report.updateFilter(testData.filter)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter);
+                done();
+              });
+          });
+    });
+
+    it('report.removeFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        expectedError: {
+          message: 'invalid filter'
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+            report.removeFilter(testData.filter)
+              .catch(error => {
+      // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).not.toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
+    });
+
+    it('report.removeFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.removeFilter.and.returnValue(Promise.resolve(null));
+      // Act
+            report.removeFilter(testData.filter)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter);
+                done();
+              });
+          });
+    });
+
+    it('report.removeAllFilters() returns promise that resolves with null if the request was accepted', function (done) {
+      // Arrange
+      iframeLoaded
+          .then(() => {
+            spyApp.clearFilters.and.returnValue(Promise.resolve(null));
+      // Act
+            report.removeAllFilters()
+              .then(response => {
+      // Assert
+                expect(spyApp.clearFilters).toHaveBeenCalled();
+                done();
+              });
+          });
+    });
+  });
+
+  describe('filters (page level)', function () {
+    it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IPageTarget>{
+          type: "page",
+          name: "page1"
+        },
+        expectedError: {
+          message: 'invalid target'
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+            report.addFilter(testData.filter, testData.target)
+              .catch(error => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).not.toHaveBeenCalled();
+                expect(spyApp.addFilter).not.toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
+    });
+
+    it('report.addFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
+      // Arrange
+      const testData = {
+        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        target: <report.IPageTarget>{
+          type: "page",
+          name: "page1"
+        }
+      };
+      
+      iframeLoaded
+          .then(() => {
+            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.addFilter.and.returnValue(Promise.resolve(null));
+      // Act
+            report.addFilter(testData.filter, testData.target)
+              .then(response => {
+      // Assert
+                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+                expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+                done();
+              });
+          });
+    });
+
+    it('report.updateFilter(filter, target) sends PUT /report/pages/:pageName/filters with filter', function () {
+      expect(false).toBe(true);
+    });
+
+    it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+
+    it('report.updateFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+
+    it('report.removeFilter(filter, target) sends DELETE /report/pages/:pageName/filters with filter', function () {
+      expect(false).toBe(true);
+    });
+
+    it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+
+    it('report.removeFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+  });
+  
+  describe('filters (visual level)', function () {
+    it('report.addFilter(filter, target) sends POST /report/visuals/:visualId/filters with filter', function () {
+      expect(false).toBe(true);
+    });
+
+    it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+
+    it('report.addFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+
+    it('report.updateFilter(filter, target) sends PUT /report/visuals/:visualId/filters with filter', function () {
+      expect(false).toBe(true);
+    });
+
+    it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+
+    it('report.updateFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+
+    it('report.removeFilter(filter, target) sends DELETE /report/visuals/:visualId/filters with filter', function () {
+      expect(false).toBe(true);
+    });
+
+    it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+
+    it('report.removeFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+  });
+
+  describe('settings', function () {
+    it('report.updateSettings(settings) sends PATCH /report/settings with settings object', function () {
+      expect(false).toBe(true);
+    });
+
+    it('report.updateSettings(setting) returns promise that rejects with validation error if object is invalid', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+
+    it('report.updateSettings(settings) returns promise that resolves with null if requst is valid and accepted', function (done) {
+      expect(false).toBe(true);
+      done();
+    });
+  });
+
+  describe('SDK-to-Router (Event subscription)', function () {
+    it(`report.on(eventName, handler) should throw error if eventName is not supported`, function () {
+      expect(false).toBe(true);
+    });
+
+    it(`report.on(eventName, handler) should register handler with router.post('/report/events/\${eventName}', (req, res) => { handler(req.body) })`, function () {
+      expect(false).toBe(true);
     });
   });
 });

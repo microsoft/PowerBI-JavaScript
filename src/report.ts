@@ -3,6 +3,10 @@ import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as filters from 'powerbi-filters';
 
+export interface IReportEmbedOptions extends IEmbedOptions {
+    settings: ISettings;
+}
+
 export interface IPageTarget {
     type: "page";
     name: string;
