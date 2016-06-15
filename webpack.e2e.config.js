@@ -10,7 +10,9 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.ts$/, loader: 'ts-loader' },
+      { test: /\.map$/, loader: 'ignore-loader' },
+      { test: /\.d.ts$/, loader: 'ignore-loader' },
+      { test: /\.ts$/, exclude: /\.d.ts$/, loader: 'ts-loader' },
       { test: /\.json$/, loader: 'json-loader' }
     ]
   },

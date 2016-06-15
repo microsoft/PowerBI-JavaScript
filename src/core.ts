@@ -1,4 +1,4 @@
-import { Embed, IEmbedConstructor, IHpmFactory, IWpmpFactory, IRouterFactory } from './embed';
+import * as embed from './embed';
 import * as protocol from './protocol';
 import { Report } from './report';
 import { Tile } from './tile';
@@ -7,7 +7,7 @@ import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 
 export interface IPowerBiElement extends HTMLElement {
-    powerBiEmbed: Embed;
+    powerBiEmbed: embed.Embed;
 }
 
 export interface IPowerBiConfiguration {
@@ -24,7 +24,7 @@ export class PowerBi {
      * TODO: See if it's possible to remove need for this interface and just use Embed base object as common between Tile and Report
      * This was only put it to allow both types of components to be in the same list
      */
-    private static components: IEmbedConstructor[] = [
+    private static components: embed.IEmbedConstructor[] = [
         Tile,
         Report
     ];
@@ -56,13 +56,13 @@ export class PowerBi {
     private config: IPowerBiConfiguration;
     
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
-    private embeds: Embed[];
+    private embeds: embed.Embed[];
     
-    private hpmFactory: IHpmFactory;
-    private wpmpFactory: IWpmpFactory;
-    private routerFactory: IRouterFactory;
+    private hpmFactory: embed.IHpmFactory;
+    private wpmpFactory: embed.IWpmpFactory;
+    private routerFactory: embed.IRouterFactory;
 
-    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config: IPowerBiConfiguration = {}) {
+    constructor(hpmFactory: embed.IHpmFactory, wpmpFactory: embed.IWpmpFactory, routerFactory: embed.IRouterFactory, config: IPowerBiConfiguration = {}) {
         this.hpmFactory = hpmFactory;
         this.wpmpFactory = wpmpFactory;
         this.routerFactory = routerFactory;
@@ -86,7 +86,7 @@ export class PowerBi {
     init(container?: HTMLElement): void {
         container = (container && container instanceof HTMLElement) ? container : document.body;
         
-        const elements = Array.prototype.slice.call(container.querySelectorAll(`[${Embed.embedUrlAttribute}]`));
+        const elements = Array.prototype.slice.call(container.querySelectorAll(`[${embed.Embed.embedUrlAttribute}]`));
         elements.forEach(element => this.embed(element));
     }
     
@@ -95,8 +95,8 @@ export class PowerBi {
      * If component has already been created and attached to element re-use component instance and existing iframe,
      * otherwise create a new component instance
      */
-    embed(element: HTMLElement, config: protocol.IEmbedOptions = {}): Embed {
-        let component: Embed;
+    embed(element: HTMLElement, config: embed.IEmbedConfiguration = {}): embed.Embed {
+        let component: embed.Embed;
         let powerBiElement = <IPowerBiElement>element;
         
         if (powerBiElement.powerBiEmbed) {
@@ -113,10 +113,10 @@ export class PowerBi {
      * Given an html element embed component base configuration.
      * Save component instance on element for later lookup. 
      */
-    private embedNew(element: IPowerBiElement, config: protocol.IEmbedOptions): Embed {
-        const componentType = config.type || element.getAttribute(Embed.typeAttribute);
+    private embedNew(element: IPowerBiElement, config: embed.IEmbedConfiguration): embed.Embed {
+        const componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
         if (!componentType) {
-            throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
+            throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${embed.Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
         }
         
         // Save type on configuration so it can be referenced later at known location
@@ -126,26 +126,21 @@ export class PowerBi {
         if (!Component) {
             throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
         }
-        
-        // TODO: Consider removing in favor of passing reference to `this` in constructor
-        // The getGlobalAccessToken function is only here so that the components (Tile | Report) can get the global access token without needing reference
-        // to the service that they are registered within becaues it creates circular dependencies
-        config.getGlobalAccessToken = () => this.accessToken;
 
-        const component = new Component(this.hpmFactory, this.wpmpFactory, this.routerFactory, element, config);
+        const component = new Component(this.hpmFactory, this.wpmpFactory, this.routerFactory, () => this.accessToken, element, config);
         element.powerBiEmbed = component;
         this.embeds.push(component);
         
         return component;
     }
     
-    private embedExisting(element: IPowerBiElement, config: protocol.IEmbedOptions): Embed {
+    private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfiguration): embed.Embed {
         const component = Utils.find(x => x.element === element, this.embeds);
         if (!component) {
             throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
         }
         
-        component.load(config, true);
+        component.load(<embed.IInternalEmbedConfiguration>config);
         
         return component;
     }

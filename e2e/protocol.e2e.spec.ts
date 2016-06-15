@@ -17,6 +17,373 @@ declare global {
   }
 }
 
+describe('powerbi', function () {
+  let powerbi: core.PowerBi;
+  let $element: JQuery;
+
+  beforeAll(function () {
+    powerbi = new core.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+    powerbi.accessToken = 'ABC123';
+    $element = $('<div id="powerbi-fixture"></div>').appendTo(document.body);
+  });
+
+  afterAll(function () {
+    $element.remove();
+  });
+
+  afterEach(function () {
+    $element.empty();
+  });
+
+  it('is defined', function () {
+    expect(powerbi).toBeDefined();
+  });
+
+  describe('init', function () {
+    it('embeds all components found in the DOM', function () {
+      // Arrange
+      const elements = [
+        '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
+        '<div powerbi-embed-url="https://app.powerbi.com/embed?dashboardId=D1&tileId=T1" powerbi-type="tile"></div>'
+      ];
+
+      elements.forEach(element => {
+        $(element).appendTo('#powerbi-fixture');
+      });
+
+      // Act
+      powerbi.init();
+
+      // Assert
+      // If embed element has iframe inside it, assume embed action occurred
+      const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
+      expect(iframes.length).toEqual(2);
+    });
+  });
+
+  describe('get', function () {
+    it('if attempting to get a powerbi component on an element which was not embedded, throw an error', function () {
+      // Arrange
+      const component = $('<div></div>');
+
+      // Act
+      const attemptGet = () => {
+        powerbi.get(component[0]);
+      };
+
+      // Assert
+      expect(attemptGet).toThrowError(Error);
+    });
+
+    it('calling get on element with embeded component returns the instance', function () {
+      // Arrange
+      const $element = $('<div powerbi-type="report" powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123"></div>')
+        .appendTo('#powerbi-fixture');
+
+      const componentInstance = powerbi.embed($element[0]);
+
+      // Act
+      const componentInstance2 = powerbi.get($element[0]);
+
+      // Assert
+      expect(componentInstance).toEqual(componentInstance2);
+    })
+  });
+
+  describe('embed', function () {
+    it('if attempting to embed without specifying a type, throw error', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const attemptEmbed = () => {
+        powerbi.embed(component[0]);
+      };
+
+      // Assert
+      expect(attemptEmbed).toThrowError(Error);
+    });
+
+    it('if attempting to embed with an unknown type, throw error', function () {
+      // Arrange
+      const component = $('<div powerbi-type="unknownType"></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const attemptEmbed = () => {
+        powerbi.embed(component[0]);
+      };
+
+      // Assert
+      expect(attemptEmbed).toThrowError(Error);
+    });
+
+    it('if attempting to embed without specifying an embed url, throw error', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const attemptEmbed = () => {
+        powerbi.embed(component[0], { type: "report", embedUrl: null, accessToken: null, id: null });
+      };
+
+      // Assert
+      expect(attemptEmbed).toThrowError(Error);
+    });
+
+    it('if attempting to embed without specifying an access token, throw error', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      const originalToken = powerbi.accessToken;
+      powerbi.accessToken = undefined;
+
+      // Act
+      const attemptEmbed = () => {
+        powerbi.embed(component[0], { type: "report", embedUrl: null, accessToken: null, id: null });
+      };
+
+      // Assert
+      expect(attemptEmbed).toThrowError(Error);
+
+      // Cleanup
+      powerbi.accessToken = originalToken;
+    });
+
+    it('if component is already embedded in element re-use the existing component by calling load with the new information', function () {
+      // Arrange
+      const $element = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+        .appendTo('#powerbi-fixture');
+
+      const component = powerbi.embed($element[0]);
+      spyOn(component, "load");
+
+      const testConfiguration = {
+        accessToken: undefined,
+        embedUrl: 'fakeUrl',
+        id: 'report2'
+      };
+
+      // Act
+      const component2 = powerbi.embed($element[0], testConfiguration);
+
+      // Assert
+      expect(component.load).toHaveBeenCalledWith(testConfiguration);
+      expect(component2).toBe(component);
+    });
+
+    it('if component was not previously created, creates an instance and return it', function () {
+      // Arrange
+      var component = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      var instance = powerbi.embed(component[0]);
+
+      // Assert
+      expect(instance).toBeDefined();
+    });
+
+    it("looks for a token first from attribute 'powerbi-access-token'", function () {
+      // Arrange
+      var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
+      var testToken = "fakeToken1";
+      var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-access-token="${testToken}"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      powerbi.embed(report[0]);
+
+      // Assert
+      var reportInstance = powerbi.get(report[0]);
+      // TODO: Find way to prevent using private method getAccessToken.
+      // Need to know what token the report used, but don't have another option?
+      // To properly only test public methods but still confirm this we would need to create special iframe which echoed all
+      // messages and then we could test what it received
+      var accessToken = (<any>reportInstance).getAccessToken();
+
+      expect(accessToken).toEqual(testToken);
+    });
+
+    it("if token is not found by attribute 'powerbi-access-token', fallback to using global", function () {
+      // Arrange
+      var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
+      var testToken = "fakeToken1";
+      var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      var originalToken = powerbi.accessToken;
+      powerbi.accessToken = testToken;
+
+      // Act
+      powerbi.embed(report[0]);
+
+      // Assert
+      var reportInstance = powerbi.get(report[0]);
+      // TODO: Find way to prevent using private method getAccessToken.
+      // Need to know what token the report used, but don't have another option?
+      var accessToken = (<any>reportInstance).getAccessToken();
+
+      expect(accessToken).toEqual(testToken);
+
+      // Cleanup
+      powerbi.accessToken = originalToken;
+    });
+
+    describe('reports', function () {
+      it('creates report iframe from embedUrl', function () {
+        var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
+        var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
+          .appendTo('#powerbi-fixture');
+
+        powerbi.embed(report[0]);
+
+        var iframe = report.find('iframe');
+        expect(iframe.length).toEqual(1);
+        expect(iframe.attr('src')).toEqual(embedUrl);
+      });
+    });
+
+    describe('tiles', function () {
+      it('creates tile iframe from embedUrl', function () {
+        var embedUrl = 'https://app.powerbi.com/embed?dashboardId=D1&tileId=T1';
+        var tile = $('<div powerbi-embed-url="' + embedUrl + '" powerbi-type="tile"></div>')
+          .appendTo('#powerbi-fixture');
+
+        powerbi.embed(tile[0]);
+
+        var iframe = tile.find('iframe');
+        expect(iframe.length).toEqual(1);
+        expect(iframe.attr('src')).toEqual(embedUrl);
+      });
+    });
+  });
+
+  describe('reset', function () {
+    it('deletes the powerBiEmbed property on the element', function () {
+      // Arrange
+      const $element = $('<div></div>');
+      powerbi.embed($element.get(0), {
+        type: 'report',
+        embedUrl: 'fakeUrl',
+        id: undefined,
+        accessToken: 'fakeToken'
+      });
+
+      // Act
+      expect((<core.IPowerBiElement>$element.get(0)).powerBiEmbed).toBeDefined();
+      powerbi.reset($element.get(0));
+
+      // Assert
+      expect((<core.IPowerBiElement>$element.get(0)).powerBiEmbed).toBeUndefined();
+    });
+
+    it('clears the innerHTML of the element', function () {
+      // Arrange
+      const $element = $('<div></div>');
+      powerbi.embed($element.get(0), {
+        type: 'report',
+        embedUrl: 'fakeUrl',
+        id: undefined,
+        accessToken: 'fakeToken'
+      });
+
+      // Act
+      var iframe = $element.find('iframe');
+      expect(iframe.length).toEqual(1);
+      powerbi.reset($element.get(0));
+
+      // Assert
+      expect($element.html()).toEqual('');
+    });
+  });
+
+  // TODO: Either find a way to fix the test or remove it.
+  // 1. onReceiveMessage is private so it's not supposed to be accessable for testing
+  // 2. the window.addEventListener('message', this.onReceiveMessage.bind(this)) prevents the method from being spied on. 
+  xdescribe('message handling', function () {
+    it('if message is sent to window from embedded iframe, it should be passed to onReceiveMessage', function (done) {
+      // Arrange
+      spyOn(powerbi, "onReceiveMessage");
+
+      // Act
+      window.postMessage({ event: 'fakeEvent' }, "*");
+
+      // Assert
+      setTimeout(() => {
+        expect(powerbi['onReceiveMessage']).toHaveBeenCalled();
+        done();
+      }, 0);
+    });
+  })
+});
+
+describe('embed', function () {
+  let powerbi: core.PowerBi;
+  let $element: JQuery;
+  let $container: JQuery;
+  let $iframe: JQuery;
+
+  beforeAll(function () {
+    powerbi = new core.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+    powerbi.accessToken = 'ABC123';
+    $element = $('<div id="powerbi-fixture"></div>').appendTo(document.body);
+  });
+
+  beforeEach(function () {
+    $container = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+      .appendTo('#powerbi-fixture');
+
+    powerbi.embed($container[0]);
+    $iframe = $container.find('iframe');
+  });
+
+  afterEach(function () {
+    $element.empty();
+  });
+
+  afterAll(function () {
+    $element.remove();
+  });
+
+  describe('iframe', function () {
+    it('has a src', function () {
+      expect($iframe.attr('src').length).toBeGreaterThan(0);
+    });
+
+    it('disables scrollbars by default', function () {
+      expect($iframe.attr('scrolling')).toEqual('no');
+    });
+
+    it('sets width/height to 100%', function () {
+      expect($iframe[0].style.width).toEqual('100%');
+      expect($iframe[0].style.height).toEqual('100%');
+    });
+  });
+
+  describe('fullscreen', function () {
+    it('sets the iframe as the fullscreen element', function () {
+      var report = powerbi.get($container[0]);
+      report.fullscreen();
+
+      expect(document.webkitFullscreenElement === $iframe[0]);
+    });
+  });
+
+  describe('exitFullscreen', function () {
+    it('clears the iframe fullscreen element', function () {
+      var report = powerbi.get($container[0]);
+      report.fullscreen();
+      report.exitFullscreen();
+
+      expect(document.webkitFullscreenElement !== $iframe[0]);
+    });
+  });
+});
+
 describe('Unit | Prococol Schema', function () {
   describe('validateLoad', function () {
     it(`validateLoad returns errors with one containing message 'accessToken is required' if accessToken is not defined`, function () {
@@ -2001,7 +2368,7 @@ describe('SDK-to-HPM', function () {
     const iframeSrc = "base/e2e/utility/noop.html";
     const embedConfiguration = {
       type: "report",
-      reportId: "fakeReportId",
+      id: "fakeReportId",
       accessToken: 'fakeToken',
       embedUrl: iframeSrc,
       wpmpName: 'SDK-to-HPM report wpmp'
@@ -2867,7 +3234,7 @@ describe('SDK-to-WPMP', function () {
     const iframeSrc = "base/e2e/utility/noop.html";
     const embedConfiguration = {
       type: "report",
-      reportId: "fakeReportId",
+      id: "fakeReportId",
       accessToken: 'fakeToken',
       embedUrl: iframeSrc,
       wpmpName: 'SDK-to-WPMP report wpmp'

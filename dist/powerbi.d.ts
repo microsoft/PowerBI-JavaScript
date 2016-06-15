@@ -6,19 +6,176 @@ export declare class Utils {
     static assign: (...args: any[]) => any;
 }
 
-
-export interface ITileLoadMessage extends ILoadMessage {
-    tileId: string;
+export interface IError {
+    message: string;
 }
+/**
+ * Takes in schema and returns function which can be used to validate the schema with better semantics around exposing errors
+ */
+export declare function validate(schema: any, options?: any): (x: any) => any[];
+export interface ISettings {
+    filter?: any;
+    filterPaneEnabled?: boolean;
+    pageName?: string;
+    pageNavigationEnabled?: boolean;
+}
+export declare const settingsSchema: {
+    "$schema": string;
+    "type": string;
+    "properties": {
+        "filter": {
+            "type": string;
+        };
+        "filterPaneEnabled": {
+            "type": string;
+            "messages": {
+                "type": string;
+            };
+        };
+        "pageName": {
+            "type": string;
+            "messages": {
+                "type": string;
+            };
+        };
+        "pageNavigationEnabled": {
+            "type": string;
+            "messages": {
+                "type": string;
+            };
+        };
+    };
+};
+export declare const validateSettings: (x: any) => any[];
+/**
+ * TODO: Consider adding type: "report" | "tile" property to indicate what type of object to embed
+ *
+ * This would align with goal of having single embed page which adapts to the thing being embedded
+ * instead of having M x N embed pages where M is type of object (report, tile) and N is authorization
+ * type (PaaS, SaaS, Anonymous)
+ */
+export interface ILoadConfiguration {
+    accessToken: string;
+    id: string;
+    settings?: ISettings;
+}
+export declare const loadSchema: {
+    "$schema": string;
+    "type": string;
+    "properties": {
+        "accessToken": {
+            "type": string;
+            "messages": {
+                "type": string;
+                "required": string;
+            };
+            "invalidMessage": string;
+        };
+        "id": {
+            "type": string;
+            "messages": {
+                "type": string;
+                "required": string;
+            };
+        };
+        "settings": {
+            "$ref": string;
+        };
+    };
+    "required": string[];
+};
+export declare const validateLoad: (x: any) => any[];
+export interface IPageTarget {
+    type: "page";
+    name: string;
+}
+export declare const pageTargetSchema: {
+    "$schema": string;
+    "type": string;
+    "properties": {
+        "type": {
+            "type": string;
+            "enum": string[];
+            "messages": {
+                "type": string;
+                "enum": string;
+                "required": string;
+            };
+        };
+        "name": {
+            "type": string;
+            "messages": {
+                "type": string;
+                "required": string;
+            };
+        };
+    };
+    "required": string[];
+};
+export declare const validatePageTarget: (x: any) => any[];
+export interface IVisualTarget {
+    type: "visual";
+    id: string;
+}
+export declare const visualTargetSchema: {
+    "$schema": string;
+    "type": string;
+    "properties": {
+        "type": {
+            "type": string;
+            "enum": string[];
+            "messages": {
+                "type": string;
+                "enum": string;
+                "required": string;
+            };
+        };
+        "id": {
+            "type": string;
+            "messages": {
+                "type": string;
+                "required": string;
+            };
+        };
+    };
+    "required": string[];
+};
+export declare const validateVisualTarget: (x: any) => any[];
+export interface IPage {
+    name: string;
+    displayName: string;
+}
+export declare const pageSchema: {
+    "$schema": string;
+    "type": string;
+    "properties": {
+        "name": {
+            "type": string;
+            "messages": {
+                "type": string;
+                "required": string;
+            };
+        };
+        "displayName": {
+            "type": string;
+            "messages": {
+                "type": string;
+                "required": string;
+            };
+        };
+    };
+    "required": string[];
+};
+export declare const validatePage: (x: any) => any[];
+
+
 export declare class Tile extends Embed {
     static type: string;
-    getEmbedUrl(): string;
-    load(options: IEmbedOptions, requireId?: boolean): any;
 }
 
 
 export interface IPowerBiElement extends HTMLElement {
-    powerBiEmbed: Embed;
+    powerBiEmbed: embed.Embed;
 }
 export interface IPowerBiConfiguration {
     autoEmbedOnContentLoaded?: boolean;
@@ -54,7 +211,7 @@ export declare class PowerBi {
     private hpmFactory;
     private wpmpFactory;
     private routerFactory;
-    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IPowerBiConfiguration);
+    constructor(hpmFactory: embed.IHpmFactory, wpmpFactory: embed.IWpmpFactory, routerFactory: embed.IRouterFactory, config?: IPowerBiConfiguration);
     /**
      * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed-url' attribute
      * and automatically attempts to embed a powerbi component based on information from the attributes.
@@ -66,7 +223,7 @@ export declare class PowerBi {
      * If component has already been created and attached to element re-use component instance and existing iframe,
      * otherwise create a new component instance
      */
-    embed(element: HTMLElement, config?: IEmbedOptions): Embed;
+    embed(element: HTMLElement, config?: embed.IEmbedConfiguration): embed.Embed;
     /**
      * Given an html element embed component base configuration.
      * Save component instance on element for later lookup.
@@ -82,7 +239,7 @@ export declare class PowerBi {
     /**
      * Returns instance of component associated with element.
      */
-    get(element: HTMLElement): Embed;
+    get(element: HTMLElement): embed.Embed;
     /**
      * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
      */

@@ -84,7 +84,7 @@ export const validateSettings = validate(settingsSchema);
  * instead of having M x N embed pages where M is type of object (report, tile) and N is authorization
  * type (PaaS, SaaS, Anonymous)
  */
-export interface ILoad {
+export interface ILoadConfiguration {
   accessToken: string;
   id: string;
   settings?: ISettings;
@@ -124,21 +124,6 @@ export const validateLoad = validate(loadSchema, {
     settings: settingsSchema
   }
 });
-
-export interface IEmbedOptions {
-  type?: string;
-  id?: string;
-  accessToken?: string;
-  embedUrl?: string;
-  filterPaneEnabled?: boolean;
-  getGlobalAccessToken?: () => string;
-  logMessages?: boolean;
-  wpmpName?: string;
-}
-
-export interface IReportEmbedOptions extends IEmbedOptions {
-  settings: ISettings;
-}
 
 export interface IPageTarget {
   type: "page";

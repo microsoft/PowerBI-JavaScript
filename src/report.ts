@@ -1,5 +1,5 @@
 import * as protocol from './protocol';
-import { Embed } from './embed';
+import * as embed from './embed';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as filters from 'powerbi-filters';
@@ -12,10 +12,10 @@ export interface IEventHandler<T> {
     (event: IEvent<T>): any;
 }
 
-export class Report extends Embed {
+export class Report extends embed.Embed {
     static allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
     static type = "Report";
-    
+
     /**
      * Add filter to report
      * An optional target may be passed to apply the filter to specific page or visual.
@@ -87,32 +87,6 @@ export class Report extends Embed {
                 response => {
                     throw response.body;
                 });
-    }
-
-    getEmbedUrl(): string {
-        let embedUrl = super.getEmbedUrl();
-        
-        // TODO: Need safe way to add url parameters.
-        // We are assuming embedUrls use query parameters to supply id of visual
-        // so must prefix with '&'.
-        if(!this.options.filterPaneEnabled) {
-            embedUrl += `&filterPaneEnabled=false`;
-        }
-
-        return embedUrl;
-    }
-
-    load(options: protocol.IEmbedOptions, requireId: boolean = false) {
-        if(requireId && typeof options.id !== 'string') {
-            throw new Error(`id must be specified when loading reports on existing elements.`);
-        }
-        
-        const message: protocol.ILoad = {
-            id: options.id,
-            accessToken: null
-        };
-        
-        return super.load(options, requireId, message);
     }
     
     on<T>(eventName: string, handler: IEventHandler<T>): void {
