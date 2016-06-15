@@ -1,8 +1,5 @@
-import { Embed, IEmbedOptions, ILoadMessage } from './embed';
-
-export interface ITileLoadMessage extends ILoadMessage {
-    tileId: string
-}
+import * as protocol from './protocol';
+import { Embed } from './embed';
 
 export class Tile extends Embed {
     static type = "Tile";
@@ -13,12 +10,12 @@ export class Tile extends Embed {
         return embedUrl;
     }
     
-    load(options: IEmbedOptions, requireId: boolean = false) {
+    load(options: protocol.IEmbedOptions, requireId: boolean = false) {
         if(requireId && typeof options.id !== 'string') {
             throw new Error(`id must be specified when loading reports on existing elements.`);
         }
         
-        const message: ILoadMessage = {
+        const message: protocol.ILoad = {
             id: options.id,
             accessToken: null
         };

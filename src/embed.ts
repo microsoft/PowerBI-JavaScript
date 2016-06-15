@@ -1,4 +1,5 @@
 import { Utils } from './util';
+import * as protocol from './protocol';
 import * as report from './report';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
@@ -23,33 +24,10 @@ declare global {
     }
 }
 
-/**
- * TODO: Consider adding type: "report" | "tile" property to indicate what type of object to embed
- * 
- * This would align with goal of having single embed page which adapts to the thing being embedded
- * instead of having M x N embed pages where M is type of object (report, tile) and N is authorization
- * type (PaaS, SaaS, Anonymous)
- */
-export interface ILoadMessage {
-    accessToken: string;
-    id: string;
-}
 
-export interface IEmbedOptions {
-    type?: string;
-    id?: string;
-    accessToken?: string;
-    embedUrl?: string;
-    webUrl?: string;
-    name?: string;
-    filterPaneEnabled?: boolean;
-    getGlobalAccessToken?: () => string;
-    logMessages?: boolean;
-    wpmpName?: string;
-}
 
 export interface IEmbedConstructor {
-    new(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, element: HTMLElement, options: IEmbedOptions): Embed;
+    new(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, element: HTMLElement, options: protocol.IEmbedOptions): Embed;
 }
 
 export interface IHpmFactory {
@@ -77,7 +55,7 @@ export abstract class Embed {
     /**
      * Default options for embeddable component.
      */
-    private static defaultOptions: IEmbedOptions = {
+    private static defaultOptions: protocol.IEmbedOptions = {
         filterPaneEnabled: true,
         logMessages: false,
         wpmpName: 'SdkReportWpmp'
@@ -88,9 +66,9 @@ export abstract class Embed {
     router: router.Router;
     element: HTMLElement;
     iframe: HTMLIFrameElement;
-    options: IEmbedOptions;
+    options: protocol.IEmbedOptions;
     
-    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, element: HTMLElement, options: IEmbedOptions) {
+    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, element: HTMLElement, options: protocol.IEmbedOptions) {
         this.element = element;
         
         // TODO: Change when Object.assign is available.
@@ -114,18 +92,18 @@ export abstract class Embed {
      * This is used to inject configuration options such as access token, loadAction, etc
      * which allow iframe to load the actual report with authentication.
      */
-    load(options: IEmbedOptions, requireId: boolean = false, message: ILoadMessage = null): Promise<void> {
+    load(options: protocol.IEmbedOptions, requireId: boolean = false, message: protocol.ILoad = null): Promise<void> {
         if(!message) {
             throw new Error(`You called load without providing message properties from the concrete embeddable class.`);
         }
         
-        const baseMessage = <ILoadMessage>{
+        const baseMessage = <protocol.ILoad>{
             accessToken: options.accessToken
         };
         
         Utils.assign(message, baseMessage);
         
-        return this.hpm.post<report.IError[]>('/report/load', message)
+        return this.hpm.post<protocol.IError[]>('/report/load', message)
             .catch(response => {
                 throw response.body;
             });

@@ -1,5 +1,6 @@
 import * as core from '../src/core';
 import * as report from '../src/report';
+import * as protocol from '../src/protocol';
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
 import * as Router from 'powerbi-router';
@@ -16,6 +17,107 @@ declare global {
   }
 }
 
+describe('Unit | Prococol Schema', function () {
+  describe('validateLoad', function () {
+    it(`validateLoad returns errors with one containing message 'accessToken is required' if accessToken is not defined`, function () {
+      // Arrange
+      const testData = {
+        load: {
+        }
+      };
+
+      // Act
+      const errors = protocol.validateLoad(testData.load);
+
+      // Assert
+      expect(errors).toBeDefined();
+      errors
+        .forEach(error => {
+          if (error.message === 'accessToken is required') {
+            expect(true).toBe(true);
+          }
+        });
+    });
+
+    it(`validateLoad returns errors with one containing message 'accessToken must be a string' if accessToken is not a string`, function () {
+      // Arrange
+      const testData = {
+        load: {
+          accessToken: 1
+        }
+      };
+
+      // Act
+      const errors = protocol.validateLoad(testData.load);
+
+      // Assert
+      expect(errors).toBeDefined();
+      errors
+        .forEach(error => {
+          if (error.message === 'accessToken must be a string') {
+            expect(true).toBe(true);
+          }
+        });
+    });
+
+    it(`validateLoad returns errors with one containing message 'id is required' if id is not defined`, function () {
+      // Arrange
+      const testData = {
+        load: {
+        }
+      };
+
+      // Act
+      const errors = protocol.validateLoad(testData.load);
+
+      // Assert
+      expect(errors).toBeDefined();
+      errors
+        .forEach(error => {
+          if (error.message === 'id is required') {
+            expect(true).toBe(true);
+          }
+        });
+    });
+
+    it(`validateLoad returns errors with one containing message 'id must be a string' if id is not a string`, function () {
+      // Arrange
+      const testData = {
+        load: {
+        }
+      };
+
+      // Act
+      const errors = protocol.validateLoad(testData.load);
+
+      // Assert
+      expect(errors).toBeDefined();
+      errors
+        .forEach(error => {
+          if (error.message === 'id is required') {
+            expect(true).toBe(true);
+          }
+        });
+    });
+
+    it(`validateLoad will return undefined if id and accessToken are provided`, function () {
+      // Arrange
+      const testData = {
+        load: {
+          id: 'fakeId',
+          accessToken: 'fakeAccessToken'
+        }
+      };
+
+      // Act
+      const errors = protocol.validateLoad(testData.load);
+
+      // Assert
+      expect(errors).toBeUndefined();
+    });
+  });
+});
+
 describe('Protocol', function () {
   let logMessages = (window.__karma__.config.args[0] === 'logMessages');
   let hpm: Hpm.HttpPostMessage;
@@ -23,21 +125,21 @@ describe('Protocol', function () {
   let iframe: HTMLIFrameElement;
   let iframeHpm: Hpm.HttpPostMessage;
   let iframeLoaded: Promise<void>;
-  
+
   let handler: Wpmp.IMessageHandler;
   let spyHandler: {
     test: jasmine.Spy,
     handle: jasmine.Spy
   };
-  
+
   beforeAll(function () {
     const iframeSrc = "base/e2e/utility/noop.html";
     const $iframe = $(`<iframe src="${iframeSrc}" id="testiframe"></iframe>`).appendTo(document.body);
     iframe = <HTMLIFrameElement>$iframe.get(0);
-    
+
     // Register Iframe side
     iframeHpm = setup(iframe.contentWindow, window, logMessages, 'ProtocolMockAppWpmp');
-    
+
     // Register SDK side WPMP
     wpmp = factories.wpmpFactory(iframe.contentWindow, 'HostProxyDefaultNoHandlers', logMessages);
     hpm = factories.hpmFactory(wpmp, 'testVersion');
@@ -75,7 +177,7 @@ describe('Protocol', function () {
       handler.handle(req);
       res.send(202);
     });
-    
+
     handler = {
       test: jasmine.createSpy("testSpy").and.returnValue(true),
       handle: jasmine.createSpy("handleSpy").and.callFake(function (message: any) {
@@ -83,7 +185,7 @@ describe('Protocol', function () {
         return message;
       })
     };
-    
+
     spyHandler = <any>handler;
     wpmp.addHandler(handler);
 
@@ -93,15 +195,15 @@ describe('Protocol', function () {
       });
     });
   });
-  
-  afterAll(function () { 
+
+  afterAll(function () {
     //wpmp.stop();
   });
-  
+
   beforeEach(() => {
     // empty
   });
-  
+
   afterEach(function () {
     spyHandler.test.calls.reset();
     spyHandler.handle.calls.reset();
@@ -119,30 +221,30 @@ describe('Protocol', function () {
             }
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateLoad.and.returnValue(Promise.reject(null));
-            
-        // Act
-            hpm.post<report.IError>('/report/load', testData.load)
+
+            // Act
+            hpm.post<protocol.IError>('/report/load', testData.load)
               .then(() => {
                 expect(false).toBe(true);
                 spyApp.validateLoad.calls.reset();
                 done();
               })
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
                 expect(spyApp.load).not.toHaveBeenCalledWith(testData.load);
                 expect(response.statusCode).toEqual(400);
-        // Cleanup
+                // Cleanup
                 spyApp.validateLoad.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('POST /report/load returns 202 if the request is valid', function (done) {
         // Arrange
         const testData = {
@@ -153,25 +255,25 @@ describe('Protocol', function () {
             }
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateLoad.and.returnValue(Promise.resolve(null));
-        // Act
+            // Act
             hpm.post<void>('/report/load', testData.load)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
                 expect(spyApp.load).toHaveBeenCalledWith(testData.load);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateLoad.calls.reset();
                 spyApp.load.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('POST /report/load causes POST /report/events/loaded', function (done) {
         // Arrange
         const testData = {
@@ -190,20 +292,20 @@ describe('Protocol', function () {
             }
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.load.and.returnValue(Promise.resolve(testData.load));
-            
-        // Act
+
+            // Act
             hpm.post<void>('/report/load', testData.load)
               .then(response => {
                 setTimeout(() => {
-        // Assert
+                  // Assert
                   expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
                   expect(spyApp.load).toHaveBeenCalledWith(testData.load);
                   expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                  // Cleanup
                   spyApp.validateLoad.calls.reset();
                   spyApp.load.calls.reset();
                   done();
@@ -212,9 +314,9 @@ describe('Protocol', function () {
           });
       });
     });
-    
+
     describe('pages', function () {
-      
+
       it('GET /report/pages returns 200 with body as array of pages', function (done) {
         // Arrange
         const testData = {
@@ -227,24 +329,24 @@ describe('Protocol', function () {
             }
           ]
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.getPages.and.returnValue(Promise.resolve(testData.expectedPages));
-        // Act
-            hpm.get<report.IPage[]>('/report/pages')
+            // Act
+            hpm.get<protocol.IPage[]>('/report/pages')
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.getPages).toHaveBeenCalled();
                 const pages = response.body;
                 expect(pages).toEqual(testData.expectedPages);
-        // Cleanup
+                // Cleanup
                 spyApp.getPages.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('PUT /report/pages/active returns 400 if request is invalid', function (done) {
         // Arrange
         const testData = {
@@ -252,25 +354,25 @@ describe('Protocol', function () {
             name: "fakeName"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validatePage.and.returnValue(Promise.reject(null));
-        // Act
+            // Act
             hpm.put<void>('/report/pages/active', testData.page)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validatePage).toHaveBeenCalledWith(testData.page);
                 expect(spyApp.setPage).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
-        // Cleanup
+                // Cleanup
                 spyApp.validatePage.calls.reset();
                 spyApp.setPage.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('PUT /report/pages/active returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
@@ -278,26 +380,26 @@ describe('Protocol', function () {
             name: "fakeName"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validatePage.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.put<void>('/report/pages/active', testData.page)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validatePage).toHaveBeenCalledWith(testData.page);
                 expect(spyApp.setPage).toHaveBeenCalledWith(testData.page);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validatePage.calls.reset();
                 spyApp.setPage.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('PUT /report/pages/active causes POST /report/events/pageChanged', function (done) {
         // Arrange
         const testData = {
@@ -312,20 +414,20 @@ describe('Protocol', function () {
             })
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validatePage.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.put<void>('/report/pages/active', testData.page)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validatePage).toHaveBeenCalledWith(testData.page);
                 expect(spyApp.setPage).toHaveBeenCalledWith(testData.page);
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                // Cleanup
                 spyApp.validateLoad.calls.reset();
                 spyApp.setPage.calls.reset();
                 done();
@@ -333,9 +435,9 @@ describe('Protocol', function () {
           });
       });
     });
-    
+
     describe('filters (report level)', function () {
-      
+
       it('GET /report/filters returns 200 with body as array of filters', function (done) {
         // Arrange
         const testData = {
@@ -348,25 +450,25 @@ describe('Protocol', function () {
             }
           ]
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
-            
-        // Act
+
+            // Act
             hpm.get<filters.IFilter[]>('/report/filters')
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
                 expect(response.statusCode).toEqual(200);
                 expect(response.body).toEqual(testData.filters);
-        // Cleanup
+                // Cleanup
                 spyApp.getFilters.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('POST /report/filters returns 400 if request is invalid', function (done) {
         // Arrange
         const testData = {
@@ -374,25 +476,25 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
-        // Act
-            hpm.post<report.IError>('/report/filters', testData.filter)
+            // Act
+            hpm.post<protocol.IError>('/report/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('POST /report/filters returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
@@ -400,26 +502,26 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.post<void>('/report/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.addFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('POST /report/filters will cause POST /report/events/filterAdded', function (done) {
         // Arrange
         const testData = {
@@ -431,27 +533,27 @@ describe('Protocol', function () {
             url: '/report/events/filterAdded'
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.post<void>('/report/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter);
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.addFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('PUT /report/filters returns 400 if request is invalid', function (done) {
         // Arrange
         const testData = {
@@ -459,25 +561,25 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
-        // Act
-            hpm.put<report.IError>('/report/filters', testData.filter)
+            // Act
+            hpm.put<protocol.IError>('/report/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('PUT /report/filters returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
@@ -485,26 +587,26 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.put<void>('/report/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.updateFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('PUT /report/filters will cause POST /report/events/filterUpdated', function (done) {
         // Arrange
         const testData = {
@@ -516,44 +618,44 @@ describe('Protocol', function () {
             url: '/report/events/filterUpdated'
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.put<void>('/report/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.updateFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('DELETE /report/allfilters returns 202 if request is valid', function (done) {
         // Arrange
         iframeLoaded
           .then(() => {
-        // Act
+            // Act
             hpm.delete<void>('/report/allfilters', null)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.clearFilters).toHaveBeenCalled();
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.clearFilters.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('DELETE /report/allfilters causes POST /report/events/filtersCleared', function (done) {
         // Arrange
         const testData = {
@@ -562,19 +664,19 @@ describe('Protocol', function () {
             url: '/report/events/filtersCleared'
           }
         };
-        
+
         iframeLoaded
           .then(() => {
-            
-        // Act
+
+            // Act
             hpm.delete<void>('/report/allfilters', null)
               .then(response => {
-        // Assert
+                // Assert
                 setTimeout(() => {
                   expect(spyApp.clearFilters).toHaveBeenCalled();
                   expect(response.statusCode).toEqual(202);
                   expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                  // Cleanup
                   spyApp.clearFilters.calls.reset();
                   done();
                 })
@@ -594,26 +696,26 @@ describe('Protocol', function () {
             }
           ]
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedErrors));
 
-        // Act
-            hpm.delete<report.IError[]>('/report/filters', testData.filter)
+            // Act
+            hpm.delete<protocol.IError[]>('/report/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.removeFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedErrors);
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('DELETE /report/filters returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
@@ -621,26 +723,26 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.delete<void>('/report/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.removeFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('DELETE /report/filters will cause POST /report/events/filterRemoved', function (done) {
         // Arrange
         const testData = {
@@ -652,20 +754,20 @@ describe('Protocol', function () {
             url: '/report/events/filterRemoved'
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.delete<void>('/report/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter);
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.removeFilter.calls.reset();
                 done();
@@ -691,19 +793,19 @@ describe('Protocol', function () {
             }
           ]
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
-            
-        // Act
+
+            // Act
             hpm.get<filters.IFilter[]>('/report/pages/xyz/filters')
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.getFilters).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(response.statusCode).toEqual(200);
                 expect(response.body).toEqual(testData.filters);
-        // Cleanup
+                // Cleanup
                 spyApp.getFilters.calls.reset();
                 done();
               });
@@ -726,22 +828,22 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
-        // Act
-            hpm.post<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+            // Act
+            hpm.post<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
                 expect(spyApp.addFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedErrors);
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 done();
               });
@@ -762,22 +864,22 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
-        // Act
-            hpm.post<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+            // Act
+            hpm.post<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedFilterError);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 done();
@@ -796,21 +898,21 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.post<void>('/report/pages/xyz/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 spyApp.addFilter.calls.reset();
@@ -834,22 +936,22 @@ describe('Protocol', function () {
             url: '/report/pages/xyz/events/filterAdded'
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.post<void>('/report/pages/xyz/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 spyApp.addFilter.calls.reset();
@@ -874,21 +976,21 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
-        // Act
-            hpm.put<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+            // Act
+            hpm.put<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
                 expect(spyApp.updateFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedErrors);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 done();
               });
@@ -909,29 +1011,29 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
-        // Act
-            hpm.put<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+            // Act
+            hpm.put<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedFilterError);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('PUT /report/pages/xyz/filters returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
@@ -943,21 +1045,21 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.put<void>('/report/pages/xyz/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 spyApp.updateFilter.calls.reset();
@@ -965,7 +1067,7 @@ describe('Protocol', function () {
               });
           });
       });
-      
+
       it('PUT /report/pages/xyz/filters will cause POST /report/pages/xyz/events/filterUpdated', function (done) {
         // Arrange
         const testData = {
@@ -981,21 +1083,21 @@ describe('Protocol', function () {
             url: '/report/pages/xyz/events/filterUpdated'
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.put<void>('/report/pages/xyz/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.updateFilter.calls.reset();
                 done();
@@ -1025,21 +1127,21 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
-        // Act
-            hpm.delete<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+            // Act
+            hpm.delete<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
                 expect(spyApp.removeFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedErrors);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 done();
               });
@@ -1060,29 +1162,29 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
-        // Act
-            hpm.delete<report.IError[]>('/report/pages/xyz/filters', testData.filter)
+            // Act
+            hpm.delete<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.removeFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedFilterError);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('DELETE /report/pages/xyz/filters returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
@@ -1094,21 +1196,21 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.delete<void>('/report/pages/xyz/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 spyApp.removeFilter.calls.reset();
@@ -1135,19 +1237,19 @@ describe('Protocol', function () {
             }
           ]
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
-            
-        // Act
+
+            // Act
             hpm.get('/report/visuals/xyz/filters')
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.getFilters).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(response.statusCode).toEqual(200);
                 expect(response.body).toEqual(testData.filters);
-        // Cleanup
+                // Cleanup
                 spyApp.getFilters.calls.reset();
                 done();
               });
@@ -1170,22 +1272,22 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
-        // Act
-            hpm.post<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            // Act
+            hpm.post<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
                 expect(spyApp.addFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedErrors);
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 done();
               });
@@ -1206,22 +1308,22 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
-        // Act
-            hpm.post<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            // Act
+            hpm.post<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedFilterError);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 done();
@@ -1240,21 +1342,21 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.post<void>('/report/visuals/xyz/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 spyApp.addFilter.calls.reset();
@@ -1278,22 +1380,22 @@ describe('Protocol', function () {
             url: '/report/visuals/xyz/events/filterAdded'
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.post<void>('/report/visuals/xyz/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 spyApp.addFilter.calls.reset();
@@ -1318,21 +1420,21 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
-        // Act
-            hpm.put<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            // Act
+            hpm.put<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
                 expect(spyApp.updateFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedErrors);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 done();
               });
@@ -1353,29 +1455,29 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
-        // Act
-            hpm.put<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            // Act
+            hpm.put<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedFilterError);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('PUT /report/visuals/xyz/filters returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
@@ -1387,21 +1489,21 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.put<void>('/report/visuals/xyz/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 spyApp.updateFilter.calls.reset();
@@ -1409,7 +1511,7 @@ describe('Protocol', function () {
               });
           });
       });
-      
+
       it('PUT /report/visuals/xyz/filters will cause POST /report/visuals/xyz/events/filterUpdated', function (done) {
         // Arrange
         const testData = {
@@ -1425,21 +1527,21 @@ describe('Protocol', function () {
             url: '/report/visuals/xyz/events/filterUpdated'
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.put<void>('/report/visuals/xyz/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.updateFilter.calls.reset();
                 done();
@@ -1469,21 +1571,21 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
-        // Act
-            hpm.delete<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            // Act
+            hpm.delete<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).not.toHaveBeenCalled();
                 expect(spyApp.removeFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedErrors);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 done();
               });
@@ -1504,29 +1606,29 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
-        // Act
-            hpm.delete<report.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            // Act
+            hpm.delete<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.removeFilter).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 expect(response.body).toEqual(testData.expectedFilterError);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('DELETE /report/visuals/xyz/filters returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
@@ -1538,21 +1640,21 @@ describe('Protocol', function () {
             name: "fakeFilter"
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateTarget.and.returnValue(Promise.resolve(null));
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
-        // Act
+            // Act
             hpm.delete<void>('/report/visuals/xyz/filters', testData.filter)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 spyApp.removeFilter.calls.reset();
@@ -1561,9 +1663,9 @@ describe('Protocol', function () {
           });
       });
     });
-    
+
     describe('settings', function () {
-      
+
       it('PATCH /report/settings returns 400 if request is invalid', function (done) {
         // Arrange
         const testData = {
@@ -1572,25 +1674,25 @@ describe('Protocol', function () {
             pageNavigationEnabled: false
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateSettings.and.returnValue(Promise.reject(null));
-            
-        // Act
-            hpm.patch<report.IError[]>('/report/settings', testData.settings)
+
+            // Act
+            hpm.patch<protocol.IError[]>('/report/settings', testData.settings)
               .catch(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
                 expect(spyApp.updateSettings).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
-        // Cleanup
+                // Cleanup
                 spyApp.validateSettings.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('PATCH /report/settings returns 202 if request is valid', function (done) {
         // Arrange
         const testData = {
@@ -1599,26 +1701,26 @@ describe('Protocol', function () {
             pageNavigationEnabled: false
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateSettings.and.returnValue(Promise.resolve(null));
-            
-        // Act
+
+            // Act
             hpm.patch<void>('/report/settings', testData.settings)
               .then(response => {
-        // Assert
+                // Assert
                 expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
                 expect(spyApp.updateSettings).toHaveBeenCalledWith(testData.settings);
                 expect(response.statusCode).toEqual(202);
-        // Cleanup
+                // Cleanup
                 spyApp.validateSettings.calls.reset();
                 spyApp.updateSettings.calls.reset();
                 done();
               });
           });
       });
-      
+
       it('PATCH /report/settings causes POST /report/events/settingsUpdated', function (done) {
         // Arrange
         const testData = {
@@ -1637,25 +1739,25 @@ describe('Protocol', function () {
             }
           }
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateSettings.and.returnValue(Promise.resolve(null));
             spyApp.updateSettings.and.returnValue(Promise.resolve(testData.expectedEvent.body.settings));
-            
-        // Act
+
+            // Act
             hpm.patch<void>('/report/settings', testData.settings)
               .then(response => {
-        // Assert
+                // Assert
                 setTimeout(() => {
                   expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
                   expect(spyApp.updateSettings).toHaveBeenCalledWith(testData.settings);
                   expect(response.statusCode).toEqual(202);
                   expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
-        // Cleanup
+                  // Cleanup
                   spyApp.validateSettings.calls.reset();
                   spyApp.updateSettings.calls.reset();
-                  
+
                   done();
                 });
               });
@@ -1663,7 +1765,7 @@ describe('Protocol', function () {
       });
     });
   });
-  
+
   describe('MockApp-to-HPM', function () {
     describe('pages', function () {
       it('POST /report/events/pageChanged when user changes page', function (done) {
@@ -1681,25 +1783,25 @@ describe('Protocol', function () {
           url: '/report/events/pageChanged',
           body: testData.event
         };
-        
+
         iframeLoaded
           .then(() => {
-            
-        // Act
+
+            // Act
             iframeHpm.post<void>('/report/events/pageChanged', testData.event)
               .then(response => {
-        // Assert
+                // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
-                
+
                 done();
               });
-        
-        // Cleanup
+
+            // Cleanup
           });
       });
     });
-    
+
     describe('filters (report level)', function () {
       it('POST /report/events/filterAdded when user adds filter', function (done) {
         // Arrange
@@ -1716,24 +1818,24 @@ describe('Protocol', function () {
           url: '/report/events/filterAdded',
           body: testData.event
         };
-        
+
         iframeLoaded
           .then(() => {
-            
-        // Act
+
+            // Act
             iframeHpm.post('/report/events/filterAdded', testData.event)
               .then(response => {
-        // Assert
+                // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
-                
+
                 done();
               });
-        
-        // Cleanup
+
+            // Cleanup
           });
       });
-      
+
       it('POST /report/events/filterUpdated when user changes filter', function (done) {
         // Arrange
         const testData = {
@@ -1749,24 +1851,24 @@ describe('Protocol', function () {
           url: '/report/events/filterUpdated',
           body: testData.event
         };
-        
+
         iframeLoaded
           .then(() => {
-            
-        // Act
+
+            // Act
             iframeHpm.post('/report/events/filterUpdated', testData.event)
               .then(response => {
-        // Assert
+                // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
-                
+
                 done();
               });
-        
-        // Cleanup
+
+            // Cleanup
           });
       });
-    
+
       it('POST /report/events/filterRemoved when user removes filter', function (done) {
         // Arrange
         const testData = {
@@ -1782,25 +1884,25 @@ describe('Protocol', function () {
           url: '/report/events/filterRemoved',
           body: testData.event
         };
-        
+
         iframeLoaded
           .then(() => {
-            
-        // Act
+
+            // Act
             iframeHpm.post('/report/events/filterRemoved', testData.event)
               .then(response => {
-        // Assert
+                // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
-                
+
                 done();
               });
-        
-        // Cleanup
+
+            // Cleanup
           });
       });
     });
-    
+
     describe('settings', function () {
       it('POST /report/events/settingsUpdated when user changes settings', function (done) {
         // Arrange
@@ -1817,25 +1919,25 @@ describe('Protocol', function () {
           url: '/report/events/settingsUpdated',
           body: testData.event
         };
-        
+
         iframeLoaded
           .then(() => {
-            
-        // Act
+
+            // Act
             iframeHpm.post('/report/events/settingsUpdated', testData.event)
               .then(response => {
-        // Assert
+                // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
-                
+
                 done();
               });
-        
-        // Cleanup
+
+            // Cleanup
           });
       });
     });
-    
+
     describe('data selection', function () {
       it('POST /report/events/dataSelected when user selects data', function (done) {
         // Arrange
@@ -1852,20 +1954,20 @@ describe('Protocol', function () {
           url: '/report/events/dataSelected',
           body: testData.event
         };
-        
+
         iframeLoaded
           .then(() => {
-            
-        // Act
+
+            // Act
             iframeHpm.post('/report/events/dataSelected', testData.event)
               .then(response => {
-        // Assert
+                // Assert
                 expect(response.statusCode).toBe(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
                 done();
               });
-        
-        // Cleanup
+
+            // Cleanup
           });
       });
     });
@@ -1971,7 +2073,7 @@ describe('SDK-to-HPM', function () {
         .catch(error => {
           expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.embedConfiguration);
           expect(error).toEqual(testData.errorResponse.body);
-      // Assert
+          // Assert
           done();
         });
     });
@@ -1992,7 +2094,7 @@ describe('SDK-to-HPM', function () {
         .then(response => {
           expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.embedConfiguration);
           expect(response).toEqual(null);
-      // Assert
+          // Assert
           done();
         });
     });
@@ -2024,7 +2126,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.getPages()
         .catch(error => {
-      // Assert
+          // Assert
           expect(spyHpm.get).toHaveBeenCalledWith('/report/pages');
           expect(error).toEqual(testData.expectedError.body);
           done();
@@ -2047,7 +2149,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.getPages()
         .then(pages => {
-      // Assert
+          // Assert
           expect(spyHpm.get).toHaveBeenCalledWith('/report/pages');
           expect(pages).toEqual(testData.expectedResponse.body);
           done();
@@ -2062,7 +2164,7 @@ describe('SDK-to-HPM', function () {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
-      
+
       // Act
       report.addFilter(testData.filter);
 
@@ -2088,7 +2190,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.addFilter(testData.filter)
         .catch(errors => {
-      // Assert
+          // Assert
           expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
@@ -2106,7 +2208,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.addFilter(testData.filter)
         .then(response => {
-      // Assert
+          // Assert
           expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter);
           expect(response).toEqual(null);
           done();
@@ -2119,7 +2221,7 @@ describe('SDK-to-HPM', function () {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
-      
+
       // Act
       report.updateFilter(testData.filter);
 
@@ -2145,7 +2247,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.updateFilter(testData.filter)
         .catch(errors => {
-      // Assert
+          // Assert
           expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
@@ -2163,7 +2265,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.updateFilter(testData.filter)
         .then(response => {
-      // Assert
+          // Assert
           expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter);
           expect(response).toEqual(null);
           done();
@@ -2176,7 +2278,7 @@ describe('SDK-to-HPM', function () {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
-      
+
       // Act
       report.removeFilter(testData.filter);
 
@@ -2202,7 +2304,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.removeFilter(testData.filter)
         .catch(errors => {
-      // Assert
+          // Assert
           expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
@@ -2220,7 +2322,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.removeFilter(testData.filter)
         .then(response => {
-      // Assert
+          // Assert
           expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter);
           expect(response).toEqual(null);
           done();
@@ -2233,13 +2335,13 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         }
       };
 
-      
+
       // Act
       report.addFilter(testData.filter, testData.target);
 
@@ -2251,7 +2353,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -2269,7 +2371,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.addFilter(testData.filter, testData.target)
         .catch(errors => {
-      // Assert
+          // Assert
           expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
@@ -2280,7 +2382,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2291,7 +2393,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.addFilter(testData.filter, testData.target)
         .then(response => {
-      // Assert
+          // Assert
           expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
           expect(response).toEqual(null);
           done();
@@ -2302,12 +2404,12 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         }
       };
-      
+
       // Act
       report.updateFilter(testData.filter, testData.target);
 
@@ -2319,7 +2421,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -2337,7 +2439,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.updateFilter(testData.filter, testData.target)
         .catch(errors => {
-      // Assert
+          // Assert
           expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
@@ -2348,7 +2450,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2359,7 +2461,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.updateFilter(testData.filter, testData.target)
         .then(response => {
-      // Assert
+          // Assert
           expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
           expect(response).toEqual(null);
           done();
@@ -2370,13 +2472,13 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         }
       };
 
-      
+
       // Act
       report.removeFilter(testData.filter, testData.target);
 
@@ -2388,7 +2490,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -2406,7 +2508,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.removeFilter(testData.filter, testData.target)
         .catch(errors => {
-      // Assert
+          // Assert
           expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
@@ -2417,7 +2519,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2428,25 +2530,25 @@ describe('SDK-to-HPM', function () {
       // Act
       report.removeFilter(testData.filter, testData.target)
         .then(response => {
-      // Assert
+          // Assert
           expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
           expect(response).toEqual(null);
           done();
         });
     });
   });
-  
+
   describe('filters (visual level)', function () {
     it('report.addFilter(filter, target) sends POST /report/visuals/:visualId/filters with filter', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
       };
-      
+
       // Act
       report.addFilter(testData.filter, testData.target);
 
@@ -2458,7 +2560,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -2476,7 +2578,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.addFilter(testData.filter, testData.target)
         .catch(errors => {
-      // Assert
+          // Assert
           expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
@@ -2487,7 +2589,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2498,7 +2600,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.addFilter(testData.filter, testData.target)
         .then(response => {
-      // Assert
+          // Assert
           expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
           expect(response).toEqual(null);
           done();
@@ -2509,12 +2611,12 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
       };
-      
+
       // Act
       report.updateFilter(testData.filter, testData.target);
 
@@ -2526,7 +2628,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -2544,7 +2646,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.updateFilter(testData.filter, testData.target)
         .catch(errors => {
-      // Assert
+          // Assert
           expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
@@ -2555,7 +2657,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2566,7 +2668,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.updateFilter(testData.filter, testData.target)
         .then(response => {
-      // Assert
+          // Assert
           expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
           expect(response).toEqual(null);
           done();
@@ -2577,12 +2679,12 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
       };
-      
+
       // Act
       report.removeFilter(testData.filter, testData.target);
 
@@ -2594,7 +2696,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -2612,7 +2714,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.removeFilter(testData.filter, testData.target)
         .catch(errors => {
-      // Assert
+          // Assert
           expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
@@ -2623,7 +2725,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2634,7 +2736,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.removeFilter(testData.filter, testData.target)
         .then(response => {
-      // Assert
+          // Assert
           expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
           expect(response).toEqual(null);
           done();
@@ -2679,7 +2781,7 @@ describe('SDK-to-HPM', function () {
       report.updateSettings(testData.settings)
         .catch(errors => {
 
-      // Assert
+          // Assert
           expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings);
           expect(errors).toEqual(testData.expectedError.body);
           done()
@@ -2700,7 +2802,7 @@ describe('SDK-to-HPM', function () {
       report.updateSettings(testData.settings)
         .then(response => {
 
-      // Assert
+          // Assert
           expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings);
           expect(response).toEqual(null);
           done()
@@ -2720,7 +2822,7 @@ describe('SDK-to-HPM', function () {
         eventName: 'xyz',
         handler: jasmine.createSpy('handler')
       };
-      
+
       // Act
       const attemptToSubscribeToEvent = () => {
         report.on(testData.eventName, testData.handler);
@@ -2736,7 +2838,7 @@ describe('SDK-to-HPM', function () {
         eventName: 'pageChanged',
         handler: jasmine.createSpy('handler')
       };
-      
+
       // Act
       report.on(testData.eventName, testData.handler);
 
@@ -2813,7 +2915,7 @@ describe('SDK-to-WPMP', function () {
           }
         }
       };
-      
+
       report.on(testData.eventName, testData.handler);
 
       // Act
@@ -2896,20 +2998,20 @@ describe('SDK-to-MockApp', function () {
           }
         ]
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateLoad.and.returnValue(Promise.reject(testData.expectedErrors));
-      // Act
-            report.load(testData.loadConfig)
-              .catch(errors => {
-      // Assert
-                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
-                expect(spyApp.load).not.toHaveBeenCalled();
-                expect(errors).toEqual(testData.expectedErrors);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateLoad.and.returnValue(Promise.reject(testData.expectedErrors));
+          // Act
+          report.load(testData.loadConfig)
+            .catch(errors => {
+              // Assert
+              expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
+              expect(spyApp.load).not.toHaveBeenCalled();
+              expect(errors).toEqual(testData.expectedErrors);
+              done();
+            });
+        });
     });
 
     it('report.load() returns promise that resolves with null if the report load successful', function (done) {
@@ -2925,20 +3027,20 @@ describe('SDK-to-MockApp', function () {
           }
         ]
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateLoad.and.returnValue(Promise.resolve(null));
-            spyApp.load.and.returnValue(Promise.resolve(null));
-      // Act
-            report.load(testData.loadConfig)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
-                expect(spyApp.load).toHaveBeenCalledWith(testData.loadConfig);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateLoad.and.returnValue(Promise.resolve(null));
+          spyApp.load.and.returnValue(Promise.resolve(null));
+          // Act
+          report.load(testData.loadConfig)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
+              expect(spyApp.load).toHaveBeenCalledWith(testData.loadConfig);
+              done();
+            });
+        });
     });
   });
 
@@ -2950,19 +3052,19 @@ describe('SDK-to-MockApp', function () {
           message: 'internal server error'
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.getPages.and.returnValue(Promise.reject(testData.expectedError));
-      // Act
-            report.getPages()
-              .catch(error => {
-      // Assert
-                expect(spyApp.getPages).toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.getPages.and.returnValue(Promise.reject(testData.expectedError));
+          // Act
+          report.getPages()
+            .catch(error => {
+              // Assert
+              expect(spyApp.getPages).toHaveBeenCalled();
+              expect(error).toEqual(testData.expectedError);
+              done();
+            });
+        });
     });
 
     it('report.getPages() returns promise that resolves with list of page names', function (done) {
@@ -2975,19 +3077,19 @@ describe('SDK-to-MockApp', function () {
           }
         ]
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.getPages.and.returnValue(Promise.resolve(testData.pages));
-      // Act
-            report.getPages()
-              .then(pages => {
-      // Assert
-                expect(spyApp.getPages).toHaveBeenCalled();
-                expect(pages).toEqual(testData.pages);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.getPages.and.returnValue(Promise.resolve(testData.pages));
+          // Act
+          report.getPages()
+            .then(pages => {
+              // Assert
+              expect(spyApp.getPages).toHaveBeenCalled();
+              expect(pages).toEqual(testData.pages);
+              done();
+            });
+        });
     });
   });
 
@@ -3000,20 +3102,20 @@ describe('SDK-to-MockApp', function () {
           message: 'invalid filter'
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedError));
-      // Act
-            report.addFilter(testData.filter)
-              .catch(error => {
-      // Assert
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.addFilter).not.toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedError));
+          // Act
+          report.addFilter(testData.filter)
+            .catch(error => {
+              // Assert
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.addFilter).not.toHaveBeenCalled();
+              expect(error).toEqual(testData.expectedError);
+              done();
+            });
+        });
     });
 
     it('report.addFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
@@ -3021,20 +3123,20 @@ describe('SDK-to-MockApp', function () {
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-            spyApp.addFilter.and.returnValue(Promise.resolve(null));
-      // Act
-            report.addFilter(testData.filter)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+          spyApp.addFilter.and.returnValue(Promise.resolve(null));
+          // Act
+          report.addFilter(testData.filter)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter);
+              done();
+            });
+        });
     });
 
     it('report.updateFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -3045,20 +3147,20 @@ describe('SDK-to-MockApp', function () {
           message: 'invalid filter'
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedError));
-      // Act
-            report.updateFilter(testData.filter)
-              .catch(error => {
-      // Assert
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.updateFilter).not.toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedError));
+          // Act
+          report.updateFilter(testData.filter)
+            .catch(error => {
+              // Assert
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.updateFilter).not.toHaveBeenCalled();
+              expect(error).toEqual(testData.expectedError);
+              done();
+            });
+        });
     });
 
     it('report.updateFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
@@ -3066,20 +3168,20 @@ describe('SDK-to-MockApp', function () {
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-            spyApp.updateFilter.and.returnValue(Promise.resolve(null));
-      // Act
-            report.updateFilter(testData.filter)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+          spyApp.updateFilter.and.returnValue(Promise.resolve(null));
+          // Act
+          report.updateFilter(testData.filter)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter);
+              done();
+            });
+        });
     });
 
     it('report.removeFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -3090,20 +3192,20 @@ describe('SDK-to-MockApp', function () {
           message: 'invalid filter'
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedError));
-      // Act
-            report.removeFilter(testData.filter)
-              .catch(error => {
-      // Assert
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.removeFilter).not.toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedError));
+          // Act
+          report.removeFilter(testData.filter)
+            .catch(error => {
+              // Assert
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.removeFilter).not.toHaveBeenCalled();
+              expect(error).toEqual(testData.expectedError);
+              done();
+            });
+        });
     });
 
     it('report.removeFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
@@ -3111,35 +3213,35 @@ describe('SDK-to-MockApp', function () {
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-            spyApp.removeFilter.and.returnValue(Promise.resolve(null));
-      // Act
-            report.removeFilter(testData.filter)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+          spyApp.removeFilter.and.returnValue(Promise.resolve(null));
+          // Act
+          report.removeFilter(testData.filter)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter);
+              done();
+            });
+        });
     });
 
     it('report.removeAllFilters() returns promise that resolves with null if the request was accepted', function (done) {
       // Arrange
       iframeLoaded
-          .then(() => {
-            spyApp.clearFilters.and.returnValue(Promise.resolve(null));
-      // Act
-            report.removeAllFilters()
-              .then(response => {
-      // Assert
-                expect(spyApp.clearFilters).toHaveBeenCalled();
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.clearFilters.and.returnValue(Promise.resolve(null));
+          // Act
+          report.removeAllFilters()
+            .then(response => {
+              // Assert
+              expect(spyApp.clearFilters).toHaveBeenCalled();
+              done();
+            });
+        });
     });
   });
 
@@ -3148,7 +3250,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -3156,55 +3258,55 @@ describe('SDK-to-MockApp', function () {
           message: 'invalid target'
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
-      // Act
-            report.addFilter(testData.filter, testData.target)
-              .catch(error => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).not.toHaveBeenCalled();
-                expect(spyApp.addFilter).not.toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+          // Act
+          report.addFilter(testData.filter, testData.target)
+            .catch(error => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).not.toHaveBeenCalled();
+              expect(spyApp.addFilter).not.toHaveBeenCalled();
+              expect(error).toEqual(testData.expectedError);
+              done();
+            });
+        });
     });
 
     it('report.addFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
-            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-            spyApp.addFilter.and.returnValue(Promise.resolve(null));
-      // Act
-            report.addFilter(testData.filter, testData.target)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.target);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+          spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+          spyApp.addFilter.and.returnValue(Promise.resolve(null));
+          // Act
+          report.addFilter(testData.filter, testData.target)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+              done();
+            });
+        });
     });
 
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -3212,55 +3314,55 @@ describe('SDK-to-MockApp', function () {
           message: 'invalid target'
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
-      // Act
-            report.updateFilter(testData.filter, testData.target)
-              .catch(error => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).not.toHaveBeenCalled();
-                expect(spyApp.updateFilter).not.toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+          // Act
+          report.updateFilter(testData.filter, testData.target)
+            .catch(error => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).not.toHaveBeenCalled();
+              expect(spyApp.updateFilter).not.toHaveBeenCalled();
+              expect(error).toEqual(testData.expectedError);
+              done();
+            });
+        });
     });
 
     it('report.updateFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
-            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-            spyApp.updateFilter.and.returnValue(Promise.resolve(null));
-      // Act
-            report.updateFilter(testData.filter, testData.target)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.target);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+          spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+          spyApp.updateFilter.and.returnValue(Promise.resolve(null));
+          // Act
+          report.updateFilter(testData.filter, testData.target)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+              done();
+            });
+        });
     });
 
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -3268,57 +3370,57 @@ describe('SDK-to-MockApp', function () {
           message: 'invalid target'
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
-      // Act
-            report.removeFilter(testData.filter, testData.target)
-              .catch(error => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).not.toHaveBeenCalled();
-                expect(spyApp.removeFilter).not.toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+          // Act
+          report.removeFilter(testData.filter, testData.target)
+            .catch(error => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).not.toHaveBeenCalled();
+              expect(spyApp.removeFilter).not.toHaveBeenCalled();
+              expect(error).toEqual(testData.expectedError);
+              done();
+            });
+        });
     });
 
     it('report.removeFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IPageTarget>{
+        target: <protocol.IPageTarget>{
           type: "page",
           name: "page1"
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
-            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-            spyApp.removeFilter.and.returnValue(Promise.resolve(null));
-      // Act
-            report.removeFilter(testData.filter, testData.target)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter, testData.target);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+          spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+          spyApp.removeFilter.and.returnValue(Promise.resolve(null));
+          // Act
+          report.removeFilter(testData.filter, testData.target)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+              done();
+            });
+        });
     });
   });
-  
+
   describe('filters (visual level)', function () {
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -3326,55 +3428,55 @@ describe('SDK-to-MockApp', function () {
           message: 'invalid target'
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
-      // Act
-            report.addFilter(testData.filter, testData.target)
-              .catch(error => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).not.toHaveBeenCalled();
-                expect(spyApp.addFilter).not.toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+          // Act
+          report.addFilter(testData.filter, testData.target)
+            .catch(error => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).not.toHaveBeenCalled();
+              expect(spyApp.addFilter).not.toHaveBeenCalled();
+              expect(error).toEqual(testData.expectedError);
+              done();
+            });
+        });
     });
 
     it('report.addFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
-            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-            spyApp.addFilter.and.returnValue(Promise.resolve(null));
-      // Act
-            report.addFilter(testData.filter, testData.target)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.target);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+          spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+          spyApp.addFilter.and.returnValue(Promise.resolve(null));
+          // Act
+          report.addFilter(testData.filter, testData.target)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+              done();
+            });
+        });
     });
 
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -3382,55 +3484,55 @@ describe('SDK-to-MockApp', function () {
           message: 'invalid target'
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
-      // Act
-            report.updateFilter(testData.filter, testData.target)
-              .catch(error => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).not.toHaveBeenCalled();
-                expect(spyApp.updateFilter).not.toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+          // Act
+          report.updateFilter(testData.filter, testData.target)
+            .catch(error => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).not.toHaveBeenCalled();
+              expect(spyApp.updateFilter).not.toHaveBeenCalled();
+              expect(error).toEqual(testData.expectedError);
+              done();
+            });
+        });
     });
 
     it('report.updateFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
-            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-            spyApp.updateFilter.and.returnValue(Promise.resolve(null));
-      // Act
-            report.updateFilter(testData.filter, testData.target)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.target);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+          spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+          spyApp.updateFilter.and.returnValue(Promise.resolve(null));
+          // Act
+          report.updateFilter(testData.filter, testData.target)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+              done();
+            });
+        });
     });
 
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -3438,48 +3540,48 @@ describe('SDK-to-MockApp', function () {
           message: 'invalid target'
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
-      // Act
-            report.removeFilter(testData.filter, testData.target)
-              .catch(error => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).not.toHaveBeenCalled();
-                expect(spyApp.removeFilter).not.toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedError));
+          // Act
+          report.removeFilter(testData.filter, testData.target)
+            .catch(error => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).not.toHaveBeenCalled();
+              expect(spyApp.removeFilter).not.toHaveBeenCalled();
+              expect(error).toEqual(testData.expectedError);
+              done();
+            });
+        });
     });
 
     it('report.removeFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <report.IVisualTarget>{
+        target: <protocol.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateTarget.and.returnValue(Promise.resolve(null));
-            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-            spyApp.removeFilter.and.returnValue(Promise.resolve(null));
-      // Act
-            report.removeFilter(testData.filter, testData.target)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
-                expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter, testData.target);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateTarget.and.returnValue(Promise.resolve(null));
+          spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+          spyApp.removeFilter.and.returnValue(Promise.resolve(null));
+          // Act
+          report.removeFilter(testData.filter, testData.target)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
+              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
+              expect(spyApp.removeFilter).toHaveBeenCalledWith(testData.filter, testData.target);
+              done();
+            });
+        });
     });
   });
 
@@ -3496,20 +3598,20 @@ describe('SDK-to-MockApp', function () {
           }
         ]
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateSettings.and.returnValue(Promise.reject(testData.expectedErrors));
-      // Act
-            report.updateSettings(testData.settings)
-              .catch(errors => {
-      // Assert
-                expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
-                expect(spyApp.updateSettings).not.toHaveBeenCalled();
-                expect(errors).toEqual(testData.expectedErrors);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateSettings.and.returnValue(Promise.reject(testData.expectedErrors));
+          // Act
+          report.updateSettings(testData.settings)
+            .catch(errors => {
+              // Assert
+              expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
+              expect(spyApp.updateSettings).not.toHaveBeenCalled();
+              expect(errors).toEqual(testData.expectedErrors);
+              done();
+            });
+        });
     });
 
     it('report.updateSettings(settings) returns promise that resolves with null if requst is valid and accepted', function (done) {
@@ -3524,20 +3626,20 @@ describe('SDK-to-MockApp', function () {
           }
         ]
       };
-      
+
       iframeLoaded
-          .then(() => {
-            spyApp.validateSettings.and.returnValue(Promise.resolve(null));
-            spyApp.updateSettings.and.returnValue(Promise.resolve(null));
-      // Act
-            report.updateSettings(testData.settings)
-              .then(response => {
-      // Assert
-                expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
-                expect(spyApp.updateSettings).toHaveBeenCalledWith(testData.settings);
-                done();
-              });
-          });
+        .then(() => {
+          spyApp.validateSettings.and.returnValue(Promise.resolve(null));
+          spyApp.updateSettings.and.returnValue(Promise.resolve(null));
+          // Act
+          report.updateSettings(testData.settings)
+            .then(response => {
+              // Assert
+              expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
+              expect(spyApp.updateSettings).toHaveBeenCalledWith(testData.settings);
+              done();
+            });
+        });
     });
   });
 
@@ -3548,7 +3650,7 @@ describe('SDK-to-MockApp', function () {
         eventName: 'xyz',
         handler: jasmine.createSpy('handler')
       };
-      
+
       // Act
       const attemptToSubscribeToEvent = () => {
         report.on(testData.eventName, testData.handler);
@@ -3571,13 +3673,13 @@ describe('SDK-to-MockApp', function () {
           }
         }
       };
-      
+
       report.on(testData.eventName, testData.handler);
 
       // Act
       iframeHpm.post('/report/events/pageChanged', testData.simulatedPageChangeBody)
         .then(response => {
-      // Assert
+          // Assert
           expect(testData.handler).toHaveBeenCalledWith(testData.simulatedPageChangeBody);
         });
     });

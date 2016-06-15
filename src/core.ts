@@ -1,4 +1,5 @@
-import { Embed, IEmbedConstructor, IEmbedOptions, IHpmFactory, IWpmpFactory, IRouterFactory } from './embed';
+import { Embed, IEmbedConstructor, IHpmFactory, IWpmpFactory, IRouterFactory } from './embed';
+import * as protocol from './protocol';
 import { Report } from './report';
 import { Tile } from './tile';
 import { Utils } from './util';
@@ -94,7 +95,7 @@ export class PowerBi {
      * If component has already been created and attached to element re-use component instance and existing iframe,
      * otherwise create a new component instance
      */
-    embed(element: HTMLElement, config: IEmbedOptions = {}): Embed {
+    embed(element: HTMLElement, config: protocol.IEmbedOptions = {}): Embed {
         let component: Embed;
         let powerBiElement = <IPowerBiElement>element;
         
@@ -112,7 +113,7 @@ export class PowerBi {
      * Given an html element embed component base configuration.
      * Save component instance on element for later lookup. 
      */
-    private embedNew(element: IPowerBiElement, config: IEmbedOptions): Embed {
+    private embedNew(element: IPowerBiElement, config: protocol.IEmbedOptions): Embed {
         const componentType = config.type || element.getAttribute(Embed.typeAttribute);
         if (!componentType) {
             throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
@@ -138,7 +139,7 @@ export class PowerBi {
         return component;
     }
     
-    private embedExisting(element: IPowerBiElement, config: IEmbedOptions): Embed {
+    private embedExisting(element: IPowerBiElement, config: protocol.IEmbedOptions): Embed {
         const component = Utils.find(x => x.element === element, this.embeds);
         if (!component) {
             throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);

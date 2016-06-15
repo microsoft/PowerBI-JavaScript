@@ -1,21 +1,8 @@
-import { Embed, IEmbedOptions, ILoadMessage } from './embed';
+import * as protocol from './protocol';
+import { Embed } from './embed';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as filters from 'powerbi-filters';
-
-export interface IReportEmbedOptions extends IEmbedOptions {
-    settings: ISettings;
-}
-
-export interface IPageTarget {
-    type: "page";
-    name: string;
-}
-
-export interface IVisualTarget {
-    type: "visual";
-    id: string;
-}
 
 export interface IEvent<T> {
     data: T
@@ -23,20 +10,6 @@ export interface IEvent<T> {
 
 export interface IEventHandler<T> {
     (event: IEvent<T>): any;
-}
-
-export interface ISettings {
-    filterPaneEnabled?: boolean;
-    pageNavigationEnabled?: boolean;
-}
-
-export interface IPage {
-    name: string;
-    displayName: string;
-}
-
-export interface IError {
-    message: string;
 }
 
 export class Report extends Embed {
@@ -58,7 +31,7 @@ export class Report extends Embed {
      * report.addFilter(filter, target);
      * ```
      */
-    addFilter(filter: filters.IFilter, target?: IPageTarget | IVisualTarget): Promise<void> {
+    addFilter(filter: filters.IFilter, target?: protocol.IPageTarget | protocol.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
         return this.hpm.post<void>(`${targetUrl}/filters`, filter)
             .catch(response => {
@@ -89,7 +62,7 @@ export class Report extends Embed {
      *      });
      * ```
      */
-    getFilters(target?: IPageTarget | IVisualTarget): Promise<filters.IFilter[]> {
+    getFilters(target?: protocol.IPageTarget | protocol.IVisualTarget): Promise<filters.IFilter[]> {
         const targetUrl = this.getTargetUrl(target);
         return this.hpm.get<filters.IFilter[]>(`${targetUrl}/filters`)
             .then(response => response.body,
@@ -108,8 +81,8 @@ export class Report extends Embed {
      *  });
      * ```
      */
-    getPages(): Promise<IPage[]> {
-        return this.hpm.get<IPage[]>('/report/pages')
+    getPages(): Promise<protocol.IPage[]> {
+        return this.hpm.get<protocol.IPage[]>('/report/pages')
             .then(response => response.body,
                 response => {
                     throw response.body;
@@ -129,12 +102,12 @@ export class Report extends Embed {
         return embedUrl;
     }
 
-    load(options: IEmbedOptions, requireId: boolean = false) {
+    load(options: protocol.IEmbedOptions, requireId: boolean = false) {
         if(requireId && typeof options.id !== 'string') {
             throw new Error(`id must be specified when loading reports on existing elements.`);
         }
         
-        const message: ILoadMessage = {
+        const message: protocol.ILoad = {
             id: options.id,
             accessToken: null
         };
@@ -156,12 +129,12 @@ export class Report extends Embed {
      * Set the active page
      */
     setPage(pageName: string): Promise<void> {
-        const page: IPage = {
+        const page: protocol.IPage = {
             name: pageName,
             displayName: null
         };
 
-        return this.hpm.put<IError[]>('/report/pages/active', page)
+        return this.hpm.put<protocol.IError[]>('/report/pages/active', page)
             .catch(response => {
                 throw response.body;
             });
@@ -170,9 +143,9 @@ export class Report extends Embed {
     /**
      * Remove specific filter from report, page, or visual
      */
-    removeFilter(filter: filters.IFilter, target?: IPageTarget | IVisualTarget): Promise<void> {
+    removeFilter(filter: filters.IFilter, target?: protocol.IPageTarget | protocol.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.delete<IError[]>(`${targetUrl}/filters`, filter)
+        return this.hpm.delete<protocol.IError[]>(`${targetUrl}/filters`, filter)
             .catch(response => {
                 throw response.body;
             });
@@ -186,7 +159,7 @@ export class Report extends Embed {
      * ```
      */
     removeAllFilters(): Promise<void> {
-        return this.hpm.delete<IError[]>('/report/allfilters', null)
+        return this.hpm.delete<protocol.IError[]>('/report/allfilters', null)
             .catch(response => {
                 throw response.body;
             });
@@ -197,9 +170,9 @@ export class Report extends Embed {
      * 
      * The existing filter will be replaced with the new filter.
      */
-    updateFilter(filter: filters.IFilter, target?: IPageTarget | IVisualTarget): Promise<void> {
+    updateFilter(filter: filters.IFilter, target?: protocol.IPageTarget | protocol.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.put<IError[]>(`${targetUrl}/filters`, filter)
+        return this.hpm.put<protocol.IError[]>(`${targetUrl}/filters`, filter)
             .catch(response => {
                 throw response.body;
             });
@@ -208,8 +181,8 @@ export class Report extends Embed {
     /**
      * Update settings of report (filter pane visibility, page navigation visibility)
      */
-    updateSettings(settings: ISettings): Promise<void> {
-        return this.hpm.patch<IError[]>('/report/settings', settings)
+    updateSettings(settings: protocol.ISettings): Promise<void> {
+        return this.hpm.patch<protocol.IError[]>('/report/settings', settings)
             .catch(response => {
                 throw response.body;
             });
@@ -219,7 +192,7 @@ export class Report extends Embed {
      * Translate target into url
      * Target may be to the whole report, speific page, or specific visual
      */
-    private getTargetUrl(target?: IPageTarget | IVisualTarget): string {
+    private getTargetUrl(target?: protocol.IPageTarget | protocol.IVisualTarget): string {
         let targetUrl;
 
         /**
@@ -232,10 +205,10 @@ export class Report extends Embed {
             targetUrl = '/report';
         }
         else if(target.type === "page") {
-            targetUrl = `/report/pages/${(<IPageTarget>target).name}`;
+            targetUrl = `/report/pages/${(<protocol.IPageTarget>target).name}`;
         }
         else if(target.type === "visual") {
-            targetUrl = `/report/visuals/${(<IVisualTarget>target).id}`;
+            targetUrl = `/report/visuals/${(<protocol.IVisualTarget>target).id}`;
         }
         else {
             throw new Error(`target.type must be either 'page' or 'visual'. You passed: ${target.type}`);
