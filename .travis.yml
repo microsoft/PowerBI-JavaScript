@@ -13,5 +13,6 @@ deploy:
     - 'dist/powerbi.d.ts'
     - 'dist/powerbi.js.map'
     - 'dist/powerbi.min.js'
+skip_cleanup: true
   on:
     tags: true
