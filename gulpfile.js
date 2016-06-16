@@ -33,7 +33,7 @@ gulp.task('test', 'Runs all tests', function (done) {
     runSequence(
         'clean',
         ['compile:ts', 'compile:spec'],
-        ['test:js', 'copy', 'min:js'],
+        ['test:js', 'min:js'],
         done
     );
 });
@@ -97,9 +97,8 @@ gulp.task('compile:dts', 'Generate single dts file from modules', function (done
 gulp.task('compile:spec', 'Compile typescript for tests', function () {
     var tsProject = ts.createProject('tsconfig.json');
     
-    var tsResult = gulp.src(['./test/**/*.ts', './typings/browser/**/*.d.ts'])
-        .pipe(ts(tsProject))
-        ;
+    var tsResult = gulp.src(['./test/**/*.ts', './typings/globals/**/*.d.ts'])
+        .pipe(ts(tsProject));
         
     return tsResult.js.pipe(gulp.dest('./test'));
 });
