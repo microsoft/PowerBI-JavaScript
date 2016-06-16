@@ -14,7 +14,7 @@ var rename = require('gulp-rename'),
     paths = require('./paths'),
     webpack = require('webpack-stream'),
     webpackConfig = require('./webpack.config'),
-    webpackConfigE2E = require('./webpack.e2e.config'),
+    webpackTestConfig = require('./webpack.test.config'),
     runSequence = require('run-sequence'),
     argv = require('yargs').argv;
     ;
@@ -33,17 +33,8 @@ gulp.task('lint', 'Lints all files', function (done) {
 
 gulp.task('test', 'Runs all tests', function (done) {
     runSequence(
-        ['compile:ts', 'compile:spec'],
-        ['min:js'],
+        'compile:spec',
         'test:js',
-        done
-    );
-});
-
-gulp.task('teste2e', 'Runs e2e tests', function (done) {
-    runSequence(
-        'compile:e2e',
-        'test:e2e',
         done
     );
 });
@@ -77,14 +68,6 @@ gulp.task('min:js', 'Creates minified JavaScript file', function() {
         .pipe(gulp.dest(paths.jsDest));
 });
 
-gulp.task('test:js', 'Runs unit tests', function(done) {
-    new karma.Server.start({
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: argv.debug ? false : true,
-        captureTimeout: argv.timeout || 60000
-    }, done);
-});
-
 gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
     return gulp.src(['./src/powerbi.ts'])
         .pipe(webpack(webpackConfig))
@@ -104,27 +87,15 @@ gulp.task('compile:dts', 'Generate single dts file from modules', function (done
         .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('compile:spec', 'Compile typescript for tests', function () {
-    var tsProject = ts.createProject('tsconfig.json');
-    
-    var tsResult = gulp.src(['./typings/global/**/*.d.ts', './test/core.spec.ts', './test/embed.spec.ts'])
-        .pipe(ts(tsProject))
-        ;
-        
-    return tsResult.js
-        .pipe(flatten())
+gulp.task('compile:spec', 'Compile spec tests', function () {
+    return gulp.src(['./test/test.spec.ts'])
+        .pipe(webpack(webpackTestConfig))
         .pipe(gulp.dest('./tmp'));
 });
 
-gulp.task('compile:e2e', 'Compile End-to-End tests', function () {
-    return gulp.src(['./e2e/protocol.e2e.spec.ts'])
-        .pipe(webpack(webpackConfigE2E))
-        .pipe(gulp.dest('./tmpe2e'));
-});
-
-gulp.task('test:e2e', 'Run End-to-End tests', function (done) {
+gulp.task('test:js', 'Run js tests', function (done) {
     new karma.Server.start({
-        configFile: __dirname + '/karma.e2e.conf.js',
+        configFile: __dirname + '/karma.conf.js',
         singleRun: argv.debug ? false : true,
         captureTimeout: argv.timeout || 60000
     }, done);

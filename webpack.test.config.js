@@ -1,8 +1,8 @@
 module.exports = {
-  entry: './e2e/protocol.e2e.spec.ts',
+  entry: './test/test.spec.ts',
   output: {
     path: __dirname + "/tmp",
-    filename: 'protocol.e2e.spec.js'
+    filename: 'test.spec.js'
   },
   devtool: 'source-map',
   resolve: {
@@ -17,6 +17,6 @@ module.exports = {
     ]
   },
   ts: {
-    configFileName: "webpack.e2e.tsconfig.json"
+    configFileName: "webpack.test.tsconfig.json"
   }
 }

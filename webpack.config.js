@@ -1,4 +1,4 @@
-module.exports = {  
+module.exports = {
   entry: './src/powerbi.ts',
   output: {
     path: __dirname + "/dist",
