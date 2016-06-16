@@ -1,4 +1,4 @@
-import { PowerBi } from './core';
+import { PowerBi } from './service';
 import * as factories from './factories';
 
 declare global {
