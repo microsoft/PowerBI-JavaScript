@@ -12,7 +12,7 @@ commit_dist_files() {
 }
 
 upload_files() {
-  git remote add origin-dist https://${GH_TOKEN}@github.com/Microsoft/PowerBI-JavaScript.git > /dev/null 2>&1
+  git remote add origin-dist https://$GITHUBKEY@github.com/Microsoft/PowerBI-JavaScript.git > /dev/null 2>&1
   git push --quiet --set-upstream origin-dist $TRAVIS_BRANCH
 }
 
