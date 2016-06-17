@@ -83,11 +83,11 @@ export class PowerBi {
      * and automatically attempts to embed a powerbi component based on information from the attributes.
      * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
      */
-    init(container?: HTMLElement): void {
+    init(container?: HTMLElement, config: embed.IEmbedConfiguration = undefined): embed.Embed[] {
         container = (container && container instanceof HTMLElement) ? container : document.body;
         
         const elements = Array.prototype.slice.call(container.querySelectorAll(`[${embed.Embed.embedUrlAttribute}]`));
-        elements.forEach(element => this.embed(element));
+        return elements.map(element => this.embed(element, config));
     }
     
     /**
