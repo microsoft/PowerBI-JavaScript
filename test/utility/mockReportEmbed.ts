@@ -5,9 +5,9 @@ import { mockAppSpyObj, mockApp } from './mockApp';
 
 export const spyApp = mockAppSpyObj;
 
-export function setup(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean, name: string = 'MockAppWindowPostMessageProxy'): Hpm.HttpPostMessage {
+export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean, name: string = 'MockAppWindowPostMessageProxy'): Hpm.HttpPostMessage {
   const parent = parentWindow || iframeContentWindow.parent;
-  const wpmp = new Wpmp.WindowPostMessageProxy(parentWindow, {
+  const wpmp = new Wpmp.WindowPostMessageProxy({
     processTrackingProperties: {
         addTrackingProperties: Hpm.HttpPostMessage.addTrackingProperties,
         getTrackingProperties: Hpm.HttpPostMessage.getTrackingProperties,
@@ -17,7 +17,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
     name,
     logMessages
   });
-  const hpm = new Hpm.HttpPostMessage(wpmp, {
+  const hpm = new Hpm.HttpPostMessage(parent, wpmp, {
     'origin': 'reportEmbedMock',
     'x-version': '1.0.0'
   });
@@ -28,17 +28,18 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
    * Phase 1
    */
   router.post('/report/load', (req, res) => {
+    const reportId = req.headers['report-id'];
     const loadConfig = req.body;
     return app.validateLoad(loadConfig)
       .then(() => {
         app.load(loadConfig)
           .then(() => {
             const initiator = "sdk";
-            hpm.post('/report/events/loaded', {
+            hpm.post(`/reports/${reportId}/events/loaded`, {
               initiator
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
           
         res.send(202);
@@ -57,18 +58,19 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
   
   router.put('/report/pages/active', (req, res) => {
+    const reportId = req.headers['report-id'];
     const page = req.body;
     return app.validatePage(page)
       .then(() => {
         app.setPage(page)
           .then(page => {
             const initiator = "sdk";
-            hpm.post('/report/events/pageChanged', {
+            hpm.post(`/reports/${reportId}/events/pageChanged`, {
               initiator,
               page
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
         
         res.send(202);
@@ -88,18 +90,19 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
   
   router.post('/report/filters', (req, res) => {
+    const reportId = req.headers['report-id'];
     const filter = req.body;
     return app.validateFilter(filter)
       .then(() => {
         app.addFilter(filter)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post('/report/events/filterAdded', {
+            hpm.post(`/reports/${reportId}/events/filterAdded`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
         
         res.send(202);
@@ -109,18 +112,19 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
   
   router.put('/report/filters', (req, res) => {
+    const reportId = req.headers['report-id'];
     const filter = req.body;
     return app.validateFilter(filter)
       .then(() => {
         app.updateFilter(filter)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post('/report/events/filterUpdated', {
+            hpm.post(`/reports/${reportId}/events/filterUpdated`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
         
         res.send(202);
@@ -130,18 +134,19 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
   
   router.delete('/report/filters', (req, res) => {
+    const reportId = req.headers['report-id'];
     const filter = req.body;
     return app.validateFilter(filter)
       .then(() => {
         app.removeFilter(filter)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post('/report/events/filterRemoved', {
+            hpm.post(`/reports/${reportId}/events/filterRemoved`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
 
         res.send(202);
@@ -151,15 +156,16 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
 
   router.delete('/report/allfilters', (req, res) => {
+    const reportId = req.headers['report-id'];
     app.clearFilters()
       .then(filter => {
         const initiator = "sdk";
-        hpm.post('/report/events/filtersCleared', {
+        hpm.post(`/reports/${reportId}/events/filtersCleared`, {
           initiator,
           filter
         });
       }, error => {
-        hpm.post('/report/events/error', error);
+        hpm.post(`/reports/${reportId}/events/error`, error);
       });
     res.send(202);
   });
@@ -186,6 +192,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
   
   router.post('/report/pages/:pageName/filters', (req, res) => {
+    const reportId = req.headers['report-id'];
     const filter = req.body;
     const pageName = req.params.pageName;
     const target = {
@@ -199,12 +206,12 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         app.addFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/report/pages/${pageName}/events/filterAdded`, {
+            hpm.post(`/reports/${reportId}/pages/${pageName}/events/filterAdded`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
         
         res.send(202);
@@ -214,6 +221,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
   
   router.put('/report/pages/:pageName/filters', (req, res) => {
+    const reportId = req.headers['report-id'];
     const filter = req.body;
     const pageName = req.params.pageName;
     const target = {
@@ -227,12 +235,12 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         app.updateFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/report/pages/${pageName}/events/filterUpdated`, {
+            hpm.post(`/reports/${reportId}/pages/${pageName}/events/filterUpdated`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
         
         res.send(202);
@@ -242,6 +250,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
 
   router.delete('/report/pages/:pageName/filters', (req, res) => {
+    const reportId = req.headers['report-id'];
     const filter = req.body;
     const pageName = req.params.pageName;
     const target = {
@@ -255,12 +264,12 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         app.removeFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/report/pages/${pageName}/events/filterRemoved`, {
+            hpm.post(`/reports/${reportId}/pages/${pageName}/events/filterRemoved`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
         
         res.send(202);
@@ -283,6 +292,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
   
   router.post('/report/visuals/:visualId/filters', (req, res) => {
+    const reportId = req.headers['report-id'];
     const filter = req.body;
     const visualId = req.params.visualId;
     const target = {
@@ -296,12 +306,12 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         app.addFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/report/visuals/${visualId}/events/filterAdded`, {
+            hpm.post(`/reports/${reportId}/visuals/${visualId}/events/filterAdded`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
         
         res.send(202);
@@ -311,6 +321,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
   
   router.put('/report/visuals/:visualId/filters', (req, res) => {
+    const reportId = req.headers['report-id'];
     const filter = req.body;
     const visualId = req.params.visualId;
     const target = {
@@ -324,12 +335,12 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         app.updateFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/report/visuals/${visualId}/events/filterUpdated`, {
+            hpm.post(`/reports/${reportId}/visuals/${visualId}/events/filterUpdated`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
         
         res.send(202);
@@ -339,6 +350,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
 
   router.delete('/report/visuals/:visualId/filters', (req, res) => {
+    const reportId = req.headers['report-id'];
     const filter = req.body;
     const visualId = req.params.visualId;
     const target = {
@@ -352,12 +364,12 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         app.removeFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/report/visuals/${visualId}/events/filterRemoved`, {
+            hpm.post(`/reports/${reportId}/visuals/${visualId}/events/filterRemoved`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
         
         res.send(202);
@@ -367,6 +379,7 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
   });
   
   router.patch('/report/settings', (req, res) => {
+    const reportId = req.headers['report-id'];
     const settings = req.body;
     
     return app.validateSettings(settings)
@@ -374,12 +387,12 @@ export function setup(iframeContentWindow: Window, parentWindow: Window, logMess
         app.updateSettings(settings)
           .then(updatedSettings => {
             const initiator = "sdk";
-            hpm.post(`/report/events/settingsUpdated`, {
+            hpm.post(`/reports/${reportId}/events/settingsUpdated`, {
               initiator,
               settings: updatedSettings
             });
           }, error => {
-            hpm.post('/report/events/error', error);
+            hpm.post(`/reports/${reportId}/events/error`, error);
           });
         
         res.send(202);

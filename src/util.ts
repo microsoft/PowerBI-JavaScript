@@ -26,7 +26,7 @@ export class Utils {
         }
     }
     
-    static findIndex<T>(predicate: (T) => boolean, xs: T[]): number {
+    static findIndex<T>(predicate: (x: T) => boolean, xs: T[]): number {
         if(!Array.isArray(xs)) {
             throw new Error(`You attempted to call find with second parameter that was not an array. You passed: ${xs}`);
         }
@@ -42,12 +42,12 @@ export class Utils {
         return index;
     }
     
-    static find<T>(predicate: (T) => boolean, xs: T[]): T {
+    static find<T>(predicate: (x: T) => boolean, xs: T[]): T {
         const index = Utils.findIndex(predicate, xs);
         return xs[index];
     }
     
-    static remove<T>(predicate: (T) => boolean, xs: T[]): void {
+    static remove<T>(predicate: (x: T) => boolean, xs: T[]): void {
         const index = Utils.findIndex(predicate, xs);
         xs.splice(index, 1);
     }

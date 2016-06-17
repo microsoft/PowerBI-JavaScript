@@ -1,10 +1,7 @@
 import { Utils } from './util';
+import * as service from './service';
 import * as protocol from './protocol';
-import * as report from './report';
-import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
-import * as router from 'powerbi-router';
-import * as filters from 'powerbi-filters';
 
 declare global {
     interface Document {
@@ -46,19 +43,8 @@ export interface IInternalEmbedConfiguration extends protocol.ILoadConfiguration
 }
 
 export interface IEmbedConstructor {
-    new (hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, getGlobalAccessToken: IGetGlobalAccessToken, element: HTMLElement, config: IEmbedConfiguration): Embed;
-}
-
-export interface IHpmFactory {
-    (wpmp: wpmp.WindowPostMessageProxy, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
-}
-
-export interface IWpmpFactory {
-    (window: Window, name?: string, logMessages?: boolean): wpmp.WindowPostMessageProxy;
-}
-
-export interface IRouterFactory {
-    (wpmp: wpmp.WindowPostMessageProxy): router.Router;
+    new (service: service.PowerBi, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration): Embed;
+    type: string;
 }
 
 export abstract class Embed {
@@ -70,25 +56,27 @@ export abstract class Embed {
     private static defaultSettings: protocol.ISettings = {
         filterPaneEnabled: true
     };
-    private static defaultDebugOptions: IDebugOptions = {
-        logMessages: false,
-        wpmpName: 'SdkReportWpmp'
-    };
 
-    wpmp: wpmp.WindowPostMessageProxy;
+    eventHandlers: any[];
     hpm: hpm.HttpPostMessage;
-    router: router.Router;
+    service: service.PowerBi;
     element: HTMLElement;
     iframe: HTMLIFrameElement;
     config: IInternalEmbedConfiguration;
 
-    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, getGlobalAccessToken: IGetGlobalAccessToken, element: HTMLElement, config: IEmbedConfiguration) {
+    /**
+     * Note: there is circular reference between embeds and service
+     * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
+     */
+    constructor(service: service.PowerBi, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration) {
+        this.eventHandlers = [];
+        this.service = service;
         this.element = element;
 
         // TODO: Change when Object.assign is available.
         config.settings = Utils.assign({}, Embed.defaultSettings, config.settings);
-        this.config = Utils.assign({}, Embed.defaultDebugOptions, config);
-        this.config.accessToken = this.getAccessToken(getGlobalAccessToken);
+        this.config = Utils.assign({}, config);
+        this.config.accessToken = this.getAccessToken(service.accessToken);
         this.config.embedUrl = this.getEmbedUrl();
 
         // TODO: The findIdFromEmbedUrl method is specific to Reports so it should be in the Report class, but it can't be called until
@@ -111,9 +99,11 @@ export abstract class Embed {
         this.iframe = <HTMLIFrameElement>this.element.childNodes[0];
         this.iframe.addEventListener('load', () => this.load(this.config), false);
 
-        this.wpmp = wpmpFactory(this.iframe.contentWindow, this.config.wpmpName, this.config.logMessages);
-        this.hpm = hpmFactory(this.wpmp);
-        this.router = routerFactory(this.wpmp);
+        this.hpm = hpmFactory(this.iframe.contentWindow, this.service.wpmp);
+    }
+
+    getConfig(): IInternalEmbedConfiguration {
+        return this.config;
     }
 
     /**
@@ -132,12 +122,27 @@ export abstract class Embed {
                 throw response.body;
             });
     }
+    
+    handleEvent(event: service.IEvent<any>): void {
+        const handler = Utils.find(handler => handler.test(event), this.eventHandlers);
+
+        if(handler) {
+            handler.handle(event.value);
+        }
+    }
+
+    on<T>(eventName: string, handler: service.IEventHandler<T>): void {
+        this.eventHandlers.push({
+            test: (event: service.IEvent<T>) => event.name === eventName,
+            handle: handler
+        });
+    }
 
     /**
      * Get access token from first available location: config, attribute, global.
      */
-    private getAccessToken(getGlobalAccessToken: IGetGlobalAccessToken): string {
-        const accessToken = this.config.accessToken || this.element.getAttribute(Embed.accessTokenAttribute) || getGlobalAccessToken();
+    private getAccessToken(globalAccessToken: string): string {
+        const accessToken = this.config.accessToken || this.element.getAttribute(Embed.accessTokenAttribute) || globalAccessToken;
 
         if (!accessToken) {
             throw new Error(`No access token was found for element. You must specify an access token directly on the element using attribute '${Embed.accessTokenAttribute}' or specify a global token at: powerbi.accessToken.`);

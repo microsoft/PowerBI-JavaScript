@@ -1,16 +1,9 @@
+import * as service from './service';
 import * as protocol from './protocol';
 import * as embed from './embed';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as filters from 'powerbi-filters';
-
-export interface IEvent<T> {
-    data: T
-}
-
-export interface IEventHandler<T> {
-    (event: IEvent<T>): any;
-}
 
 export class Report extends embed.Embed {
     static allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
@@ -89,15 +82,13 @@ export class Report extends embed.Embed {
                 });
     }
     
-    on<T>(eventName: string, handler: IEventHandler<T>): void {
+    on<T>(eventName: string, handler: service.IEventHandler<T>): void {
         if(Report.allowedEvents.indexOf(eventName) === -1) {
             throw new Error(`eventName is must be one of ${Report.allowedEvents}. You passed: ${eventName}`);
         }
         
-        this.router.post(`/report/events/${eventName}`, (res, req) => {
-            handler(res.body);
-        });
-    } 
+        super.on<T>(eventName, handler);
+    }
 
     /**
      * Set the active page

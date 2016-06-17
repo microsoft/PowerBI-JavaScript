@@ -5,6 +5,31 @@ import { Tile } from './tile';
 import { Utils } from './util';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
+import * as router from 'powerbi-router';
+import * as filters from 'powerbi-filters';
+
+export interface IEvent<T> {
+    type: string;
+    id: string;
+    name: string;
+    value: T;
+}
+
+export interface IEventHandler<T> {
+    (event: IEvent<T>): any;
+}
+
+export interface IHpmFactory {
+    (targetWindow: Window, wpmp: wpmp.WindowPostMessageProxy, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
+}
+
+export interface IWpmpFactory {
+    (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window): wpmp.WindowPostMessageProxy;
+}
+
+export interface IRouterFactory {
+    (wpmp: wpmp.WindowPostMessageProxy): router.Router;
+}
 
 export interface IPowerBiElement extends HTMLElement {
     powerBiEmbed: embed.Embed;
@@ -13,6 +38,8 @@ export interface IPowerBiElement extends HTMLElement {
 export interface IPowerBiConfiguration {
     autoEmbedOnContentLoaded?: boolean;
     onError?: (error: any) => any;
+    logMessages?: boolean;
+    wpmpName?: string;
 }
 
 export class PowerBi {
@@ -57,18 +84,30 @@ export class PowerBi {
     
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds: embed.Embed[];
-    
-    private hpmFactory: embed.IHpmFactory;
-    private wpmpFactory: embed.IWpmpFactory;
-    private routerFactory: embed.IRouterFactory;
+    private hpmFactory: IHpmFactory;
+    public wpmp: wpmp.WindowPostMessageProxy;
+    private router: router.Router;
 
-    constructor(hpmFactory: embed.IHpmFactory, wpmpFactory: embed.IWpmpFactory, routerFactory: embed.IRouterFactory, config: IPowerBiConfiguration = {}) {
+    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config: IPowerBiConfiguration = {}) {
         this.hpmFactory = hpmFactory;
-        this.wpmpFactory = wpmpFactory;
-        this.routerFactory = routerFactory;
+        this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
+        this.router = routerFactory(this.wpmp);
+
+        /**
+         * Add handler for report events
+         */
+        this.router.post(`/reports/:reportId/events/:eventName`, (req, res) => {
+            const event: IEvent<any> = {
+                type: 'report',
+                id: req.params.reportId,
+                name: req.params.eventName,
+                value: req.body
+            };
+
+            this.handleEvent(event);
+        });
 
         this.embeds = [];
-        window.addEventListener('message', this.onReceiveMessage.bind(this), false);
         
         // TODO: Change when Object.assign is available.
         this.config = Utils.assign({}, PowerBi.defaultConfig, config);
@@ -76,6 +115,7 @@ export class PowerBi {
         if (this.config.autoEmbedOnContentLoaded) {
             this.enableAutoEmbed();
         }
+
     }
     
     /**
@@ -127,7 +167,7 @@ export class PowerBi {
             throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
         }
 
-        const component = new Component(this.hpmFactory, this.wpmpFactory, this.routerFactory, () => this.accessToken, element, config);
+        const component = new Component(this, this.hpmFactory, element, config);
         element.powerBiEmbed = component;
         this.embeds.push(component);
         
@@ -166,7 +206,7 @@ export class PowerBi {
         
         return powerBiElement.powerBiEmbed;
     }
-    
+
     /**
      * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
      */
@@ -186,6 +226,47 @@ export class PowerBi {
         if(iframe) {
             iframe.remove();
         }
+    }
+
+    handleEvent(event: IEvent<any>): void {
+        const embed = Utils.find(embed => {
+            const config = embed.getConfig();
+            return (config.type === event.type
+                && config.id === event.id);
+        }, this.embeds);
+
+        if(embed) {
+            embed.handleEvent(event);
+        }
+    }
+
+    /**
+     * Translate target into url
+     * Target may be to the whole report, speific page, or specific visual
+     */
+    private getTargetUrl(target?: protocol.IPageTarget | protocol.IVisualTarget): string {
+        let targetUrl;
+
+        /**
+         * TODO: I mentioned this issue in the protocol test, but we're tranlating targets from objects
+         * into parts of the url, and then back to objects. It is a trade off between complixity in this code vs semantic URIs
+         * 
+         * We could come up with a different idea which passed the target as part of the body
+         */
+        if(!target) {
+            targetUrl = '/report';
+        }
+        else if(target.type === "page") {
+            targetUrl = `/report/pages/${(<protocol.IPageTarget>target).name}`;
+        }
+        else if(target.type === "visual") {
+            targetUrl = `/report/visuals/${(<protocol.IVisualTarget>target).id}`;
+        }
+        else {
+            throw new Error(`target.type must be either 'page' or 'visual'. You passed: ${target.type}`);
+        }
+
+        return targetUrl;
     }
     
     /**

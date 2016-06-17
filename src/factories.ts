@@ -1,8 +1,7 @@
 /**
  * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
- * Need to 
  */
-import { IHpmFactory, IWpmpFactory, IRouterFactory } from './embed';
+import { IHpmFactory, IWpmpFactory, IRouterFactory } from './service';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as router from 'powerbi-router';
@@ -13,23 +12,27 @@ export {
   IRouterFactory
 };
 
-export const hpmFactory: IHpmFactory = (wpmp, sdkVersion = '2.0.0', sdkType = 'js', origin = 'sdk') => {
-    return new hpm.HttpPostMessage(wpmp, {
+/**
+ * TODO: Need to get sdk version and settings from package.json, Generate config file via gulp task?
+ */
+export const hpmFactory: IHpmFactory = (targetWindow, wpmp, sdkVersion = '2.0.0', sdkType = 'js', origin = 'sdk') => {
+    return new hpm.HttpPostMessage(targetWindow, wpmp, {
         'origin': origin,
         'x-sdk-type': sdkType,
         'x-sdk-version': sdkVersion
     });
 };
 
-export const wpmpFactory: IWpmpFactory = (window, name?: string, logMessages?: boolean) => {
-    return new wpmp.WindowPostMessageProxy(window, {
+export const wpmpFactory: IWpmpFactory = (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window) => {
+    return new wpmp.WindowPostMessageProxy({
         processTrackingProperties: {
             addTrackingProperties: hpm.HttpPostMessage.addTrackingProperties,
             getTrackingProperties: hpm.HttpPostMessage.getTrackingProperties,
         },
         isErrorMessage: hpm.HttpPostMessage.isErrorMessage,
         name,
-        logMessages
+        logMessages,
+        eventSourceOverrideWindow
     });
 };
 
