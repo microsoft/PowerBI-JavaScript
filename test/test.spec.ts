@@ -17,6 +17,8 @@ declare global {
   }
 }
 
+let logMessages = (window.__karma__.config.args[0] === 'logMessages');
+
 describe('powerbi', function () {
   let powerbi: service.PowerBi;
   let $element: JQuery;
@@ -64,11 +66,11 @@ describe('powerbi', function () {
   describe('get', function () {
     it('if attempting to get a powerbi component on an element which was not embedded, throw an error', function () {
       // Arrange
-      const component = $('<div></div>');
+      const $component = $('<div></div>');
 
       // Act
       const attemptGet = () => {
-        powerbi.get(component[0]);
+        powerbi.get($component[0]);
       };
 
       // Assert
@@ -181,29 +183,29 @@ describe('powerbi', function () {
         .appendTo('#powerbi-fixture');
 
       // Act
-      var instance = powerbi.embed(component[0]);
+      var report = powerbi.embed(component[0]);
 
       // Assert
-      expect(instance).toBeDefined();
+      expect(report).toBeDefined();
     });
 
     it("looks for a token first from attribute 'powerbi-access-token'", function () {
       // Arrange
       var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
       var testToken = "fakeToken1";
-      var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-access-token="${testToken}"></div>`)
+      var $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-access-token="${testToken}"></div>`)
         .appendTo('#powerbi-fixture');
 
       // Act
-      powerbi.embed(report[0]);
+      powerbi.embed($reportContainer[0]);
 
       // Assert
-      var reportInstance = powerbi.get(report[0]);
+      var report = powerbi.get($reportContainer[0]);
       // TODO: Find way to prevent using private method getAccessToken.
       // Need to know what token the report used, but don't have another option?
       // To properly only test public methods but still confirm this we would need to create special iframe which echoed all
       // messages and then we could test what it received
-      var accessToken = (<any>reportInstance).getAccessToken();
+      var accessToken = (<any>report).getAccessToken();
 
       expect(accessToken).toEqual(testToken);
     });
@@ -212,20 +214,20 @@ describe('powerbi', function () {
       // Arrange
       var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
       var testToken = "fakeToken1";
-      var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
+      var $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
         .appendTo('#powerbi-fixture');
 
       var originalToken = powerbi.accessToken;
       powerbi.accessToken = testToken;
 
       // Act
-      powerbi.embed(report[0]);
+      powerbi.embed($reportContainer[0]);
 
       // Assert
-      var reportInstance = powerbi.get(report[0]);
+      var report = powerbi.get($reportContainer[0]);
       // TODO: Find way to prevent using private method getAccessToken.
       // Need to know what token the report used, but don't have another option?
-      var accessToken = (<any>reportInstance).getAccessToken();
+      var accessToken = (<any>report).getAccessToken();
 
       expect(accessToken).toEqual(testToken);
 
@@ -235,13 +237,16 @@ describe('powerbi', function () {
 
     describe('reports', function () {
       it('creates report iframe from embedUrl', function () {
+        // Arrange
         var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123';
-        var report = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
+        var $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
           .appendTo('#powerbi-fixture');
 
-        powerbi.embed(report[0]);
+        // Act
+        let report = powerbi.embed($reportContainer[0]);
 
-        var iframe = report.find('iframe');
+        // Assert
+        var iframe = $reportContainer.find('iframe');
         expect(iframe.length).toEqual(1);
         expect(iframe.attr('src')).toEqual(embedUrl);
       });
@@ -249,13 +254,16 @@ describe('powerbi', function () {
 
     describe('tiles', function () {
       it('creates tile iframe from embedUrl', function () {
+        // Arrange
         var embedUrl = 'https://app.powerbi.com/embed?dashboardId=D1&tileId=T1';
-        var tile = $('<div powerbi-embed-url="' + embedUrl + '" powerbi-type="tile"></div>')
+        var $tileContainer = $('<div powerbi-embed-url="' + embedUrl + '" powerbi-type="tile"></div>')
           .appendTo('#powerbi-fixture');
 
-        powerbi.embed(tile[0]);
+        // Act
+        let tile = powerbi.embed($tileContainer[0]);
 
-        var iframe = tile.find('iframe');
+        // Assert
+        var iframe = $tileContainer.find('iframe');
         expect(iframe.length).toEqual(1);
         expect(iframe.attr('src')).toEqual(embedUrl);
       });
@@ -486,7 +494,6 @@ describe('Unit | Prococol Schema', function () {
 });
 
 describe('Protocol', function () {
-  let logMessages = (window.__karma__.config.args[0] === 'logMessages');
   let hpm: Hpm.HttpPostMessage;
   let wpmp: Wpmp.WindowPostMessageProxy;
   let iframe: HTMLIFrameElement;
@@ -500,8 +507,8 @@ describe('Protocol', function () {
   };
 
   beforeAll(function () {
-    const iframeSrc = "base/e2e/utility/noop.html";
-    const $iframe = $(`<iframe src="${iframeSrc}" id="testiframe"></iframe>`).appendTo(document.body);
+    const iframeSrc = "base/test/utility/noop.html";
+    const $iframe = $(`<iframe src="${iframeSrc}"></iframe>`).appendTo(document.body);
     iframe = <HTMLIFrameElement>$iframe.get(0);
 
     // Register Iframe side
@@ -554,7 +561,7 @@ describe('Protocol', function () {
     };
 
     spyHandler = <any>handler;
-    wpmp.addHandler(handler);
+    // wpmp.addHandler(handler);
 
     iframeLoaded = new Promise<void>((resolve, reject) => {
       iframe.addEventListener('load', () => {
@@ -564,7 +571,7 @@ describe('Protocol', function () {
   });
 
   afterAll(function () {
-    //wpmp.stop();
+    wpmp.stop();
   });
 
   beforeEach(() => {
@@ -2342,7 +2349,6 @@ describe('Protocol', function () {
 });
 
 describe('SDK-to-HPM', function () {
-  let logMessages = (window.__karma__.config.args[0] === 'logMessages');
   let $element: JQuery;
   let iframe: HTMLIFrameElement;
   let powerbi: service.PowerBi;
@@ -2365,7 +2371,7 @@ describe('SDK-to-HPM', function () {
     $element = $(`<div class="powerbi-report-container"></div>`)
       .appendTo(document.body);
 
-    const iframeSrc = "base/e2e/utility/noop.html";
+    const iframeSrc = "base/test/utility/noop.html";
     const embedConfiguration = {
       type: "report",
       id: "fakeReportId",
@@ -3231,7 +3237,7 @@ describe('SDK-to-WPMP', function () {
     $element = $(`<div class="powerbi-report-container"></div>`)
       .appendTo(document.body);
 
-    const iframeSrc = "base/e2e/utility/noop.html";
+    const iframeSrc = "base/test/utility/noop.html";
     const embedConfiguration = {
       type: "report",
       id: "fakeReportId",
@@ -3298,7 +3304,6 @@ describe('SDK-to-WPMP', function () {
 });
 
 describe('SDK-to-MockApp', function () {
-  let logMessages = (window.__karma__.config.args[0] === 'logMessages');
   let $element: JQuery;
   let iframe: HTMLIFrameElement;
   let iframeHpm: Hpm.HttpPostMessage;
@@ -3312,13 +3317,14 @@ describe('SDK-to-MockApp', function () {
     $element = $(`<div class="powerbi-report-container2"></div>`)
       .appendTo(document.body);
 
-    const iframeSrc = "base/e2e/utility/noop.html";
+    const iframeSrc = "base/test/utility/noop.html";
     const embedConfiguration = {
       type: "report",
-      id: "fakeReportId",
-      accessToken: 'fakeToken',
+      id: "fakeReportIdInitialEmbed",
+      accessToken: 'fakeTokenInitialEmbed',
       embedUrl: iframeSrc,
-      wpmpName: 'SDK-to-MockApp report wpmp'
+      wpmpName: 'SDK-to-MockApp report wpmp',
+      logMessages
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
 
