@@ -20,7 +20,6 @@ tag_release() {
   export GIT_TAG=build-$TRAVIS_BRANCH-$(date -u "+%Y-%m-%d")-$TRAVIS_BUILD_NUMBER
   echo -n $GIT_TAG
 
-  git commit -m "Set build VERSION number"
   git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
   git push --quiet origin $TRAVIS_BRANCH $GIT_TAG > /dev/null 2>&1
 }
