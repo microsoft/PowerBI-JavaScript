@@ -3215,6 +3215,7 @@ describe('SDK-to-WPMP', function () {
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
 
     // Reset load handler
+    spyWpmp.addHandler.calls.reset();
     spyHpm.post.calls.reset();
   });
 
