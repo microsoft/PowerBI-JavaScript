@@ -42,6 +42,11 @@ export interface IInternalEmbedConfiguration extends protocol.ILoadConfiguration
     getGlobalAccessToken: IGetGlobalAccessToken;
 }
 
+export interface IInternalEventHandler<T> {
+    test(event: service.IEvent<T>): boolean;
+    handle(event: service.IEvent<T>): void;
+}
+
 export interface IEmbedConstructor {
     new (service: service.PowerBi, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration): Embed;
     type: string;
@@ -57,7 +62,7 @@ export abstract class Embed {
         filterPaneEnabled: true
     };
 
-    eventHandlers: any[];
+    eventHandlers: IInternalEventHandler<any>[];
     hpm: hpm.HttpPostMessage;
     service: service.PowerBi;
     element: HTMLElement;
@@ -124,13 +129,56 @@ export abstract class Embed {
     }
     
     handleEvent(event: service.IEvent<any>): void {
-        const handler = Utils.find(handler => handler.test(event), this.eventHandlers);
+        this.eventHandlers
+            .filter(handler => handler.test(event))
+            .forEach(handler => {
+                handler.handle(event.value);
+            });
+    }
 
+    /**
+     * Removes event handler(s) from list of handlers.
+     * 
+     * If reference to existing handle function is specified remove specific handler.
+     * If handler is not specified, remove all handlers for the event name specified.
+     * 
+     * ```javascript
+     * report.off('pageChanged')
+     * 
+     * or 
+     * 
+     * const logHandler = function (event) {
+     *    console.log(event);
+     * };
+     * 
+     * report.off('pageChanged', logHandler);
+     * ```
+     */
+    off<T>(eventName: string, handler?: service.IEventHandler<T>): void {
+        const fakeEvent: service.IEvent<any> = { name: eventName, type: null, id: null, value: null };
         if(handler) {
-            handler.handle(event.value);
+            Utils.remove(eventHandler => eventHandler.test(fakeEvent) && (eventHandler.handle === handler), this.eventHandlers);
+        }
+        else {
+            const eventHandlersToRemove = this.eventHandlers
+                .filter(eventHandler => eventHandler.test(fakeEvent));
+                
+            eventHandlersToRemove
+                .forEach(eventHandlerToRemove => {
+                    Utils.remove(eventHandler => eventHandler === eventHandlerToRemove, this.eventHandlers);
+                })
         }
     }
 
+    /**
+     * Adds event handler for specific event.
+     * 
+     * ```javascript
+     * report.on('pageChanged', (event) => {
+     *   console.log('PageChanged: ', event.page.name);
+     * });
+     * ```
+     */
     on<T>(eventName: string, handler: service.IEventHandler<T>): void {
         this.eventHandlers.push({
             test: (event: service.IEvent<T>) => event.name === eventName,

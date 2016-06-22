@@ -3239,7 +3239,7 @@ describe('SDK-to-WPMP', function () {
   });
 
   describe('Event handlers', function () {
-    it(`handler passed to report.on(eventName, handler) is called when POST /report/:reportId/events/:eventName is received`, function (done) {
+    it(`handler passed to report.on(eventName, handler) is called when POST /report/:reportId/events/:eventName is received`, function () {
       // Arrange
       const testData = {
         eventName: 'pageChanged',
@@ -3249,7 +3249,11 @@ describe('SDK-to-WPMP', function () {
             method: 'POST',
             url: '/reports/fakeReportId/events/pageChanged',
             body: {
-              name: "page1"
+              initiator: 'sdk',
+              page: {
+                name: 'page1',
+                displayName: 'Page 1'
+              }
             }
           }
         }
@@ -3261,10 +3265,109 @@ describe('SDK-to-WPMP', function () {
       spyWpmp.onMessageReceived(testData.pageChangedEvent);
 
       // Assert
-      expect(spyWpmp.addHandler).toHaveBeenCalled();
-
       expect(testData.handler).toHaveBeenCalledWith(testData.pageChangedEvent.data.body);
-      done();
+    });
+
+    it(`off('eventName', handler) will remove single handler which matches function reference for that event`, function () {
+      // Arrange
+      const testData = {
+        eventName: 'filterAdded',
+        handler: jasmine.createSpy('handler1'),
+        simulatedEvent: {
+          data: {
+            method: 'POST',
+            url: '/reports/fakeReportId/events/filterAdded',
+            body: {
+              initiator: 'sdk',
+              filter: {
+                x: '1',
+                y: '2'
+              }
+            }
+          }
+        }
+      };
+
+      report.on(testData.eventName, testData.handler);
+      report.off(testData.eventName, testData.handler);
+
+      // Act
+      spyWpmp.onMessageReceived(testData.simulatedEvent);
+
+      // Assert
+      expect(testData.handler).not.toHaveBeenCalled();
+    });
+
+    it('if multiple handlers for the same event are registered they will all be called', function () {
+      // Arrange
+      const testData = {
+        eventName: 'filterAdded',
+        handler: jasmine.createSpy('handler1'),
+        handler2: jasmine.createSpy('handler2'),
+        handler3: jasmine.createSpy('handler3'),
+        simulatedEvent: {
+          data: {
+            method: 'POST',
+            url: '/reports/fakeReportId/events/filterAdded',
+            body: {
+              initiator: 'sdk',
+              filter: {
+                x: '1',
+                y: '2'
+              }
+            }
+          }
+        }
+      };
+
+      report.on(testData.eventName, testData.handler);
+      report.on(testData.eventName, testData.handler2);
+      report.on(testData.eventName, testData.handler3);
+
+      // Act
+      spyWpmp.onMessageReceived(testData.simulatedEvent);
+
+      // Assert
+      expect(testData.handler).toHaveBeenCalledWith(testData.simulatedEvent.data.body);
+      expect(testData.handler2).toHaveBeenCalledWith(testData.simulatedEvent.data.body);
+      expect(testData.handler3).toHaveBeenCalledWith(testData.simulatedEvent.data.body);
+    });
+
+
+    it(`off('eventName') will remove all handlers which matches event name`, function () {
+      // Arrange
+      const testData = {
+        eventName: 'filterUpdated',
+        handler: jasmine.createSpy('handler1'),
+        handler2: jasmine.createSpy('handler2'),
+        handler3: jasmine.createSpy('handler3'),
+        simulatedEvent: {
+          data: {
+            method: 'POST',
+            url: '/reports/fakeReportId/events/filterUpdated',
+            body: {
+              initiator: 'sdk',
+              filter: {
+                x: '1',
+                y: '2'
+              }
+            }
+          }
+        }
+      };
+
+      report.on(testData.eventName, testData.handler);
+      report.on(testData.eventName, testData.handler2);
+      report.on(testData.eventName, testData.handler3);
+      report.off(testData.eventName);
+
+      // Act
+      spyWpmp.onMessageReceived(testData.simulatedEvent);
+
+      // Assert
+      expect(testData.handler).not.toHaveBeenCalled();
+      expect(testData.handler2).not.toHaveBeenCalled();
+      expect(testData.handler3).not.toHaveBeenCalled();
     });
   });
 });
@@ -3999,7 +4102,7 @@ describe('SDK-to-MockApp', function () {
       expect(attemptToSubscribeToEvent).toThrowError();
     });
 
-    it(`report.on(eventName, handler) should register handler and be called when POST /report/events/\${eventName} is received`, function () {
+    it(`report.on(eventName, handler) should register handler and be called when POST /report/:reportId/events/:eventName is received`, function () {
       // Arrange
       const testData = {
         reportId: 'fakeReportId',
@@ -4017,7 +4120,7 @@ describe('SDK-to-MockApp', function () {
       report.on(testData.eventName, testData.handler);
 
       // Act
-      iframeHpm.post(`/reports/${testData.reportId}/events/pageChanged`, testData.simulatedPageChangeBody)
+      iframeHpm.post(`/reports/${testData.reportId}/events/${testData.eventName}`, testData.simulatedPageChangeBody)
         .then(response => {
           // Assert
           expect(testData.handler).toHaveBeenCalledWith(testData.simulatedPageChangeBody);
