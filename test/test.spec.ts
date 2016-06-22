@@ -564,7 +564,7 @@ describe('Protocol', function () {
             spyApp.validateLoad.and.returnValue(Promise.reject(null));
 
             // Act
-            hpm.post<protocol.IError>('/report/load', testData.load)
+            hpm.post<protocol.IError>('/report/load', testData.load, { ['report-id']: testData.load.reportId })
               .then(() => {
                 expect(false).toBe(true);
                 spyApp.validateLoad.calls.reset();
