@@ -89,6 +89,7 @@ export class PowerBi {
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds: embed.Embed[];
     private hpmFactory: IHpmFactory;
+    /** TODO: Look for way to make this private. This should be private but in embed constructor needs to pass the wpmp instance to the hpm factory. */
     public wpmp: wpmp.WindowPostMessageProxy;
     private router: router.Router;
 
