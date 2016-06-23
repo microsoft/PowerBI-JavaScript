@@ -1,4 +1,3 @@
-import * as protocol from './protocol';
 import { Embed } from './embed';
 
 export class Tile extends Embed {

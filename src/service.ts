@@ -1,5 +1,4 @@
 import * as embed from './embed';
-import * as protocol from './protocol';
 import { Report } from './report';
 import { Tile } from './tile';
 import { Utils } from './util';
@@ -7,6 +6,7 @@ import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as router from 'powerbi-router';
 import * as filters from 'powerbi-filters';
+import * as models from 'powerbi-models';
 
 export interface IEvent<T> {
     type: string;
@@ -244,7 +244,7 @@ export class PowerBi {
      * Translate target into url
      * Target may be to the whole report, speific page, or specific visual
      */
-    private getTargetUrl(target?: protocol.IPageTarget | protocol.IVisualTarget): string {
+    private getTargetUrl(target?: models.IPageTarget | models.IVisualTarget): string {
         let targetUrl;
 
         /**
@@ -257,10 +257,10 @@ export class PowerBi {
             targetUrl = '/report';
         }
         else if(target.type === "page") {
-            targetUrl = `/report/pages/${(<protocol.IPageTarget>target).name}`;
+            targetUrl = `/report/pages/${(<models.IPageTarget>target).name}`;
         }
         else if(target.type === "visual") {
-            targetUrl = `/report/visuals/${(<protocol.IVisualTarget>target).id}`;
+            targetUrl = `/report/visuals/${(<models.IVisualTarget>target).id}`;
         }
         else {
             throw new Error(`target.type must be either 'page' or 'visual'. You passed: ${target.type}`);

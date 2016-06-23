@@ -1,172 +1,10 @@
 export declare class Utils {
     static raiseCustomEvent(element: HTMLElement, eventName: string, eventData: any): void;
-    static findIndex<T>(predicate: (T) => boolean, xs: T[]): number;
-    static find<T>(predicate: (T) => boolean, xs: T[]): T;
-    static remove<T>(predicate: (T) => boolean, xs: T[]): void;
+    static findIndex<T>(predicate: (x: T) => boolean, xs: T[]): number;
+    static find<T>(predicate: (x: T) => boolean, xs: T[]): T;
+    static remove<T>(predicate: (x: T) => boolean, xs: T[]): void;
     static assign: (...args: any[]) => any;
 }
-
-export interface IError {
-    message: string;
-}
-/**
- * Takes in schema and returns function which can be used to validate the schema with better semantics around exposing errors
- */
-export declare function validate(schema: any, options?: any): (x: any) => any[];
-export interface ISettings {
-    filter?: any;
-    filterPaneEnabled?: boolean;
-    pageName?: string;
-    pageNavigationEnabled?: boolean;
-}
-export declare const settingsSchema: {
-    "$schema": string;
-    "type": string;
-    "properties": {
-        "filter": {
-            "type": string;
-        };
-        "filterPaneEnabled": {
-            "type": string;
-            "messages": {
-                "type": string;
-            };
-        };
-        "pageName": {
-            "type": string;
-            "messages": {
-                "type": string;
-            };
-        };
-        "pageNavigationEnabled": {
-            "type": string;
-            "messages": {
-                "type": string;
-            };
-        };
-    };
-};
-export declare const validateSettings: (x: any) => any[];
-/**
- * TODO: Consider adding type: "report" | "tile" property to indicate what type of object to embed
- *
- * This would align with goal of having single embed page which adapts to the thing being embedded
- * instead of having M x N embed pages where M is type of object (report, tile) and N is authorization
- * type (PaaS, SaaS, Anonymous)
- */
-export interface ILoadConfiguration {
-    accessToken: string;
-    id: string;
-    settings?: ISettings;
-}
-export declare const loadSchema: {
-    "$schema": string;
-    "type": string;
-    "properties": {
-        "accessToken": {
-            "type": string;
-            "messages": {
-                "type": string;
-                "required": string;
-            };
-            "invalidMessage": string;
-        };
-        "id": {
-            "type": string;
-            "messages": {
-                "type": string;
-                "required": string;
-            };
-        };
-        "settings": {
-            "$ref": string;
-        };
-    };
-    "required": string[];
-};
-export declare const validateLoad: (x: any) => any[];
-export interface IPageTarget {
-    type: "page";
-    name: string;
-}
-export declare const pageTargetSchema: {
-    "$schema": string;
-    "type": string;
-    "properties": {
-        "type": {
-            "type": string;
-            "enum": string[];
-            "messages": {
-                "type": string;
-                "enum": string;
-                "required": string;
-            };
-        };
-        "name": {
-            "type": string;
-            "messages": {
-                "type": string;
-                "required": string;
-            };
-        };
-    };
-    "required": string[];
-};
-export declare const validatePageTarget: (x: any) => any[];
-export interface IVisualTarget {
-    type: "visual";
-    id: string;
-}
-export declare const visualTargetSchema: {
-    "$schema": string;
-    "type": string;
-    "properties": {
-        "type": {
-            "type": string;
-            "enum": string[];
-            "messages": {
-                "type": string;
-                "enum": string;
-                "required": string;
-            };
-        };
-        "id": {
-            "type": string;
-            "messages": {
-                "type": string;
-                "required": string;
-            };
-        };
-    };
-    "required": string[];
-};
-export declare const validateVisualTarget: (x: any) => any[];
-export interface IPage {
-    name: string;
-    displayName: string;
-}
-export declare const pageSchema: {
-    "$schema": string;
-    "type": string;
-    "properties": {
-        "name": {
-            "type": string;
-            "messages": {
-                "type": string;
-                "required": string;
-            };
-        };
-        "displayName": {
-            "type": string;
-            "messages": {
-                "type": string;
-                "required": string;
-            };
-        };
-    };
-    "required": string[];
-};
-export declare const validatePage: (x: any) => any[];
 
 
 export declare class Tile extends Embed {
@@ -174,12 +12,35 @@ export declare class Tile extends Embed {
 }
 
 
+import * as wpmp from 'window-post-message-proxy';
+import * as hpm from 'http-post-message';
+import * as router from 'powerbi-router';
+export interface IEvent<T> {
+    type: string;
+    id: string;
+    name: string;
+    value: T;
+}
+export interface IEventHandler<T> {
+    (event: IEvent<T>): any;
+}
+export interface IHpmFactory {
+    (targetWindow: Window, wpmp: wpmp.WindowPostMessageProxy, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
+}
+export interface IWpmpFactory {
+    (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window): wpmp.WindowPostMessageProxy;
+}
+export interface IRouterFactory {
+    (wpmp: wpmp.WindowPostMessageProxy): router.Router;
+}
 export interface IPowerBiElement extends HTMLElement {
     powerBiEmbed: embed.Embed;
 }
 export interface IPowerBiConfiguration {
     autoEmbedOnContentLoaded?: boolean;
     onError?: (error: any) => any;
+    logMessages?: boolean;
+    wpmpName?: string;
 }
 export declare class PowerBi {
     /**
@@ -209,15 +70,15 @@ export declare class PowerBi {
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds;
     private hpmFactory;
-    private wpmpFactory;
-    private routerFactory;
-    constructor(hpmFactory: embed.IHpmFactory, wpmpFactory: embed.IWpmpFactory, routerFactory: embed.IRouterFactory, config?: IPowerBiConfiguration);
+    wpmp: wpmp.WindowPostMessageProxy;
+    private router;
+    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IPowerBiConfiguration);
     /**
      * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed-url' attribute
      * and automatically attempts to embed a powerbi component based on information from the attributes.
      * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
      */
-    init(container?: HTMLElement): void;
+    init(container?: HTMLElement, config?: embed.IEmbedConfiguration): embed.Embed[];
     /**
      * Given an html element embed component based on configuration.
      * If component has already been created and attached to element re-use component instance and existing iframe,
@@ -244,6 +105,12 @@ export declare class PowerBi {
      * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
      */
     reset(element: HTMLElement): void;
+    handleEvent(event: IEvent<any>): void;
+    /**
+     * Translate target into url
+     * Target may be to the whole report, speific page, or specific visual
+     */
+    private getTargetUrl(target?);
     /**
      * Handler for window message event.
      * Parses event data as json and if it came from an iframe that matches one from an existing embeded component re-dispatches the event on the iframe's parent element
@@ -256,10 +123,12 @@ export declare class PowerBi {
 
 /**
  * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
- * Need to
  */
 
 export { IHpmFactory, IWpmpFactory, IRouterFactory };
+/**
+ * TODO: Need to get sdk version and settings from package.json, Generate config file via gulp task?
+ */
 export declare const hpmFactory: IHpmFactory;
 export declare const wpmpFactory: IWpmpFactory;
 export declare const routerFactory: IRouterFactory;

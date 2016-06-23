@@ -1,10 +1,10 @@
 import * as service from '../src/service';
 import * as report from '../src/report';
-import * as protocol from '../src/protocol';
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
 import * as Router from 'powerbi-router';
 import * as filters from 'powerbi-filters';
+import * as models from 'powerbi-models';
 import { spyApp, setupMockApp } from './utility/mockReportEmbed';
 import * as factories from '../src/factories';
 import { spyWpmp } from './utility/mockWpmp';
@@ -373,7 +373,7 @@ describe('embed', function () {
   });
 });
 
-describe('Unit | Prococol Schema', function () {
+describe('Unit | Protocol Schema', function () {
   describe('validateLoad', function () {
     it(`validateLoad returns errors with one containing message 'accessToken is required' if accessToken is not defined`, function () {
       // Arrange
@@ -383,7 +383,7 @@ describe('Unit | Prococol Schema', function () {
       };
 
       // Act
-      const errors = protocol.validateLoad(testData.load);
+      const errors = models.validateLoad(testData.load);
 
       // Assert
       expect(errors).toBeDefined();
@@ -404,7 +404,7 @@ describe('Unit | Prococol Schema', function () {
       };
 
       // Act
-      const errors = protocol.validateLoad(testData.load);
+      const errors = models.validateLoad(testData.load);
 
       // Assert
       expect(errors).toBeDefined();
@@ -424,7 +424,7 @@ describe('Unit | Prococol Schema', function () {
       };
 
       // Act
-      const errors = protocol.validateLoad(testData.load);
+      const errors = models.validateLoad(testData.load);
 
       // Assert
       expect(errors).toBeDefined();
@@ -444,7 +444,7 @@ describe('Unit | Prococol Schema', function () {
       };
 
       // Act
-      const errors = protocol.validateLoad(testData.load);
+      const errors = models.validateLoad(testData.load);
 
       // Assert
       expect(errors).toBeDefined();
@@ -466,7 +466,7 @@ describe('Unit | Prococol Schema', function () {
       };
 
       // Act
-      const errors = protocol.validateLoad(testData.load);
+      const errors = models.validateLoad(testData.load);
 
       // Assert
       expect(errors).toBeUndefined();
@@ -564,7 +564,7 @@ describe('Protocol', function () {
             spyApp.validateLoad.and.returnValue(Promise.reject(null));
 
             // Act
-            hpm.post<protocol.IError>('/report/load', testData.load, { ['report-id']: testData.load.reportId })
+            hpm.post<models.IError>('/report/load', testData.load, { ['report-id']: testData.load.reportId })
               .then(() => {
                 expect(false).toBe(true);
                 spyApp.validateLoad.calls.reset();
@@ -671,7 +671,7 @@ describe('Protocol', function () {
           .then(() => {
             spyApp.getPages.and.returnValue(Promise.resolve(testData.expectedPages));
             // Act
-            hpm.get<protocol.IPage[]>('/report/pages')
+            hpm.get<models.IPage[]>('/report/pages')
               .then(response => {
                 // Assert
                 expect(spyApp.getPages).toHaveBeenCalled();
@@ -820,7 +820,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
             // Act
-            hpm.post<protocol.IError>('/report/filters', testData.filter)
+            hpm.post<models.IError>('/report/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -906,7 +906,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
             // Act
-            hpm.put<protocol.IError>('/report/filters', testData.filter)
+            hpm.put<models.IError>('/report/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1043,7 +1043,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedErrors));
 
             // Act
-            hpm.delete<protocol.IError[]>('/report/filters', testData.filter)
+            hpm.delete<models.IError[]>('/report/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1177,7 +1177,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
             // Act
-            hpm.post<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
+            hpm.post<models.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1213,7 +1213,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
             // Act
-            hpm.post<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
+            hpm.post<models.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1325,7 +1325,7 @@ describe('Protocol', function () {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
             // Act
-            hpm.put<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
+            hpm.put<models.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1361,7 +1361,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
             // Act
-            hpm.put<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
+            hpm.put<models.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1477,7 +1477,7 @@ describe('Protocol', function () {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
             // Act
-            hpm.delete<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
+            hpm.delete<models.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1513,7 +1513,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
             // Act
-            hpm.delete<protocol.IError[]>('/report/pages/xyz/filters', testData.filter)
+            hpm.delete<models.IError[]>('/report/pages/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1623,7 +1623,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(null));
 
             // Act
-            hpm.post<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            hpm.post<models.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1659,7 +1659,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
             // Act
-            hpm.post<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            hpm.post<models.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1771,7 +1771,7 @@ describe('Protocol', function () {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
             // Act
-            hpm.put<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            hpm.put<models.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1807,7 +1807,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
             // Act
-            hpm.put<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            hpm.put<models.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1923,7 +1923,7 @@ describe('Protocol', function () {
             spyApp.validateTarget.and.returnValue(Promise.reject(testData.expectedErrors));
 
             // Act
-            hpm.delete<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            hpm.delete<models.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -1959,7 +1959,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedFilterError));
 
             // Act
-            hpm.delete<protocol.IError[]>('/report/visuals/xyz/filters', testData.filter)
+            hpm.delete<models.IError[]>('/report/visuals/xyz/filters', testData.filter)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
@@ -2026,7 +2026,7 @@ describe('Protocol', function () {
             spyApp.validateSettings.and.returnValue(Promise.reject(null));
 
             // Act
-            hpm.patch<protocol.IError[]>('/report/settings', testData.settings)
+            hpm.patch<models.IError[]>('/report/settings', testData.settings)
               .catch(response => {
                 // Assert
                 expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
@@ -2687,7 +2687,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2705,7 +2705,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -2734,7 +2734,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2756,7 +2756,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2773,7 +2773,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -2802,7 +2802,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2824,7 +2824,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2842,7 +2842,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -2871,7 +2871,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -2895,7 +2895,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2912,7 +2912,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -2941,7 +2941,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2963,7 +2963,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -2980,7 +2980,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -3009,7 +3009,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -3031,7 +3031,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -3048,7 +3048,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -3077,7 +3077,7 @@ describe('SDK-to-HPM', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -3692,7 +3692,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -3721,7 +3721,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -3748,7 +3748,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -3777,7 +3777,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -3804,7 +3804,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         },
@@ -3833,7 +3833,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IPageTarget>{
+        target: <models.IPageTarget>{
           type: "page",
           name: "page1"
         }
@@ -3862,7 +3862,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -3891,7 +3891,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -3918,7 +3918,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -3947,7 +3947,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }
@@ -3974,7 +3974,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         },
@@ -4003,7 +4003,7 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
-        target: <protocol.IVisualTarget>{
+        target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
         }

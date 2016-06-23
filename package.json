@@ -61,6 +61,7 @@
     "http-post-message": "file:///C:\\Users\\mattm\\Source\\Repos\\http-post-message",
     "jsen": "^0.6.1",
     "powerbi-filters": "file:///C:\\Users\\mattm\\Source\\Repos\\powerbi-filters",
+    "powerbi-models": "file:///C:\\Users\\mattm\\Source\\Repos\\powerbi-models",
     "powerbi-router": "file:///C:\\Users\\mattm\\Source\\Repos\\powerbi-router",
     "window-post-message-proxy": "file:///C:\\Users\\mattm\\Source\\Repos\\window-post-message-proxy"
   },

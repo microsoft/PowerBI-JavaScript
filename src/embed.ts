@@ -1,6 +1,6 @@
 import { Utils } from './util';
 import * as service from './service';
-import * as protocol from './protocol';
+import * as models from 'powerbi-models';
 import * as hpm from 'http-post-message';
 
 declare global {
@@ -31,12 +31,12 @@ export interface IEmbedConfiguration extends IDebugOptions {
     id?: string;
     embedUrl?: string;
     accessToken?: string;
-    settings?: protocol.ISettings;
+    settings?: models.ISettings;
 }
 
 export type IGetGlobalAccessToken = () => string;
 
-export interface IInternalEmbedConfiguration extends protocol.ILoadConfiguration, IDebugOptions {
+export interface IInternalEmbedConfiguration extends models.ILoadConfiguration, IDebugOptions {
     type: string;
     embedUrl: string;
     getGlobalAccessToken: IGetGlobalAccessToken;
@@ -58,7 +58,7 @@ export abstract class Embed {
     public static typeAttribute = 'powerbi-type';
     public static type: string;
 
-    private static defaultSettings: protocol.ISettings = {
+    private static defaultSettings: models.ISettings = {
         filterPaneEnabled: true
     };
 
@@ -116,8 +116,8 @@ export abstract class Embed {
      * This is used to inject configuration data such as id, access token, and settings etc
      * which allow iframe to load the actual report with authentication.
      */
-    load(config: protocol.ILoadConfiguration): Promise<void> {
-        const errors = protocol.validateLoad(config);
+    load(config: models.ILoadConfiguration): Promise<void> {
+        const errors = models.validateLoad(config);
         if(errors) {
             throw errors;
         }

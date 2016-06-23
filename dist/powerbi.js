@@ -44,15 +44,15 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var core_1 = __webpack_require__(1);
-	var factories = __webpack_require__(16);
+	var service_1 = __webpack_require__(1);
+	var factories = __webpack_require__(7);
 	/**
 	 * Make PowerBi available on global object for use in apps without module loading support.
 	 * Save class to allow creating an instance of the service.
 	 * Create instance of class with default config for normal usage.
 	 */
-	window.Powerbi = core_1.PowerBi;
-	window.powerbi = new core_1.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+	window.Powerbi = service_1.PowerBi;
+	window.powerbi = new service_1.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
 
 
 /***/ },
@@ -60,17 +60,29 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var embed = __webpack_require__(2);
-	var report_1 = __webpack_require__(14);
-	var tile_1 = __webpack_require__(15);
+	var report_1 = __webpack_require__(5);
+	var tile_1 = __webpack_require__(6);
 	var util_1 = __webpack_require__(3);
 	var PowerBi = (function () {
 	    function PowerBi(hpmFactory, wpmpFactory, routerFactory, config) {
+	        var _this = this;
 	        if (config === void 0) { config = {}; }
 	        this.hpmFactory = hpmFactory;
-	        this.wpmpFactory = wpmpFactory;
-	        this.routerFactory = routerFactory;
+	        this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
+	        this.router = routerFactory(this.wpmp);
+	        /**
+	         * Add handler for report events
+	         */
+	        this.router.post("/reports/:reportId/events/:eventName", function (req, res) {
+	            var event = {
+	                type: 'report',
+	                id: req.params.reportId,
+	                name: req.params.eventName,
+	                value: req.body
+	            };
+	            _this.handleEvent(event);
+	        });
 	        this.embeds = [];
-	        window.addEventListener('message', this.onReceiveMessage.bind(this), false);
 	        // TODO: Change when Object.assign is available.
 	        this.config = util_1.Utils.assign({}, PowerBi.defaultConfig, config);
 	        if (this.config.autoEmbedOnContentLoaded) {
@@ -82,11 +94,12 @@
 	     * and automatically attempts to embed a powerbi component based on information from the attributes.
 	     * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
 	     */
-	    PowerBi.prototype.init = function (container) {
+	    PowerBi.prototype.init = function (container, config) {
 	        var _this = this;
+	        if (config === void 0) { config = undefined; }
 	        container = (container && container instanceof HTMLElement) ? container : document.body;
 	        var elements = Array.prototype.slice.call(container.querySelectorAll("[" + embed.Embed.embedUrlAttribute + "]"));
-	        elements.forEach(function (element) { return _this.embed(element); });
+	        return elements.map(function (element) { return _this.embed(element, config); });
 	    };
 	    /**
 	     * Given an html element embed component based on configuration.
@@ -110,7 +123,6 @@
 	     * Save component instance on element for later lookup.
 	     */
 	    PowerBi.prototype.embedNew = function (element, config) {
-	        var _this = this;
 	        var componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
 	        if (!componentType) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed.Embed.typeAttribute + "=\"" + report_1.Report.type.toLowerCase() + "\"'.");
@@ -121,7 +133,7 @@
 	        if (!Component) {
 	            throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
 	        }
-	        var component = new Component(this.hpmFactory, this.wpmpFactory, this.routerFactory, function () { return _this.accessToken; }, element, config);
+	        var component = new Component(this, this.hpmFactory, element, config);
 	        element.powerBiEmbed = component;
 	        this.embeds.push(component);
 	        return component;
@@ -170,6 +182,42 @@
 	        if (iframe) {
 	            iframe.remove();
 	        }
+	    };
+	    PowerBi.prototype.handleEvent = function (event) {
+	        var embed = util_1.Utils.find(function (embed) {
+	            var config = embed.getConfig();
+	            return (config.type === event.type
+	                && config.id === event.id);
+	        }, this.embeds);
+	        if (embed) {
+	            embed.handleEvent(event);
+	        }
+	    };
+	    /**
+	     * Translate target into url
+	     * Target may be to the whole report, speific page, or specific visual
+	     */
+	    PowerBi.prototype.getTargetUrl = function (target) {
+	        var targetUrl;
+	        /**
+	         * TODO: I mentioned this issue in the protocol test, but we're tranlating targets from objects
+	         * into parts of the url, and then back to objects. It is a trade off between complixity in this code vs semantic URIs
+	         *
+	         * We could come up with a different idea which passed the target as part of the body
+	         */
+	        if (!target) {
+	            targetUrl = '/report';
+	        }
+	        else if (target.type === "page") {
+	            targetUrl = "/report/pages/" + target.name;
+	        }
+	        else if (target.type === "visual") {
+	            targetUrl = "/report/visuals/" + target.id;
+	        }
+	        else {
+	            throw new Error("target.type must be either 'page' or 'visual'. You passed: " + target.type);
+	        }
+	        return targetUrl;
 	    };
 	    /**
 	     * Handler for window message event.
@@ -245,15 +293,21 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var util_1 = __webpack_require__(3);
-	var protocol = __webpack_require__(4);
+	var models = __webpack_require__(4);
 	var Embed = (function () {
-	    function Embed(hpmFactory, wpmpFactory, routerFactory, getGlobalAccessToken, element, config) {
+	    /**
+	     * Note: there is circular reference between embeds and service
+	     * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
+	     */
+	    function Embed(service, hpmFactory, element, config) {
 	        var _this = this;
+	        this.eventHandlers = [];
+	        this.service = service;
 	        this.element = element;
 	        // TODO: Change when Object.assign is available.
 	        config.settings = util_1.Utils.assign({}, Embed.defaultSettings, config.settings);
-	        this.config = util_1.Utils.assign({}, Embed.defaultDebugOptions, config);
-	        this.config.accessToken = this.getAccessToken(getGlobalAccessToken);
+	        this.config = util_1.Utils.assign({}, config);
+	        this.config.accessToken = this.getAccessToken(service.accessToken);
 	        this.config.embedUrl = this.getEmbedUrl();
 	        // TODO: The findIdFromEmbedUrl method is specific to Reports so it should be in the Report class, but it can't be called until
 	        // after we have fetched the embedUrl from the attributes
@@ -271,17 +325,18 @@
 	        this.element.innerHTML = iframeHtml;
 	        this.iframe = this.element.childNodes[0];
 	        this.iframe.addEventListener('load', function () { return _this.load(_this.config); }, false);
-	        this.wpmp = wpmpFactory(this.iframe.contentWindow, this.config.wpmpName, this.config.logMessages);
-	        this.hpm = hpmFactory(this.wpmp);
-	        this.router = routerFactory(this.wpmp);
+	        this.hpm = hpmFactory(this.iframe.contentWindow, this.service.wpmp);
 	    }
+	    Embed.prototype.getConfig = function () {
+	        return this.config;
+	    };
 	    /**
 	     * Handler for when the iframe has finished loading the powerbi placeholder page.
 	     * This is used to inject configuration data such as id, access token, and settings etc
 	     * which allow iframe to load the actual report with authentication.
 	     */
 	    Embed.prototype.load = function (config) {
-	        var errors = protocol.validateLoad(config);
+	        var errors = models.validateLoad(config);
 	        if (errors) {
 	            throw errors;
 	        }
@@ -290,11 +345,66 @@
 	            throw response.body;
 	        });
 	    };
+	    Embed.prototype.handleEvent = function (event) {
+	        this.eventHandlers
+	            .filter(function (handler) { return handler.test(event); })
+	            .forEach(function (handler) {
+	            handler.handle(event.value);
+	        });
+	    };
+	    /**
+	     * Removes event handler(s) from list of handlers.
+	     *
+	     * If reference to existing handle function is specified remove specific handler.
+	     * If handler is not specified, remove all handlers for the event name specified.
+	     *
+	     * ```javascript
+	     * report.off('pageChanged')
+	     *
+	     * or
+	     *
+	     * const logHandler = function (event) {
+	     *    console.log(event);
+	     * };
+	     *
+	     * report.off('pageChanged', logHandler);
+	     * ```
+	     */
+	    Embed.prototype.off = function (eventName, handler) {
+	        var _this = this;
+	        var fakeEvent = { name: eventName, type: null, id: null, value: null };
+	        if (handler) {
+	            util_1.Utils.remove(function (eventHandler) { return eventHandler.test(fakeEvent) && (eventHandler.handle === handler); }, this.eventHandlers);
+	        }
+	        else {
+	            var eventHandlersToRemove = this.eventHandlers
+	                .filter(function (eventHandler) { return eventHandler.test(fakeEvent); });
+	            eventHandlersToRemove
+	                .forEach(function (eventHandlerToRemove) {
+	                util_1.Utils.remove(function (eventHandler) { return eventHandler === eventHandlerToRemove; }, _this.eventHandlers);
+	            });
+	        }
+	    };
+	    /**
+	     * Adds event handler for specific event.
+	     *
+	     * ```javascript
+	     * report.on('pageChanged', (event) => {
+	     *   console.log('PageChanged: ', event.page.name);
+	     * });
+	     * ```
+	     */
+	    Embed.prototype.on = function (eventName, handler) {
+	        this.eventHandlers.push({
+	            test: function (event) { return event.name === eventName; },
+	            handle: handler
+	        });
+	    };
 	    /**
 	     * Get access token from first available location: config, attribute, global.
 	     */
-	    Embed.prototype.getAccessToken = function (getGlobalAccessToken) {
-	        var accessToken = this.config.accessToken || this.element.getAttribute(Embed.accessTokenAttribute) || getGlobalAccessToken();
+	    Embed.prototype.getAccessToken = function (globalAccessToken) {
+	        var accessToken = this.config.accessToken || this.element.getAttribute(Embed.accessTokenAttribute) || globalAccessToken;
 	        if (!accessToken) {
 	            throw new Error("No access token was found for element. You must specify an access token directly on the element using attribute '" + Embed.accessTokenAttribute + "' or specify a global token at: powerbi.accessToken.");
 	        }
@@ -349,10 +459,6 @@
 	    Embed.typeAttribute = 'powerbi-type';
 	    Embed.defaultSettings = {
 	        filterPaneEnabled: true
-	    };
-	    Embed.defaultDebugOptions = {
-	        logMessages: false,
-	        wpmpName: 'SdkReportWpmp'
 	    };
 	    return Embed;
 	}());
@@ -446,1904 +552,2024 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var jsen = __webpack_require__(5);
-	function normalizeError(error) {
-	    if (!error.message) {
-	        error.message = error.path + " is invalid. Not meeting " + error.keyword + " constraint";
-	    }
-	    delete error.path;
-	    delete error.keyword;
-	    return error;
-	}
-	/**
-	 * Takes in schema and returns function which can be used to validate the schema with better semantics around exposing errors
-	 */
-	function validate(schema, options) {
-	    return function (x) {
-	        var validate = jsen(schema, options);
-	        var isValid = validate(x);
-	        if (isValid) {
-	            return undefined;
-	        }
-	        else {
-	            return validate.errors
-	                .map(normalizeError);
-	        }
-	    };
-	}
-	exports.validate = validate;
-	exports.settingsSchema = {
-	    "$schema": "http://json-schema.org/draft-04/schema#",
-	    "type": "object",
-	    "properties": {
-	        "filter": {
-	            "type": "object"
-	        },
-	        "filterPaneEnabled": {
-	            "type": "boolean",
-	            "messages": {
-	                "type": "filterPaneEnabled must be a boolean"
-	            }
-	        },
-	        "pageName": {
-	            "type": "string",
-	            "messages": {
-	                "type": "pageName must be a string"
-	            }
-	        },
-	        "pageNavigationEnabled": {
-	            "type": "boolean",
-	            "messages": {
-	                "type": "pageNavigationEnabled must be a boolean"
-	            }
-	        }
-	    }
-	};
-	exports.validateSettings = validate(exports.settingsSchema);
-	exports.loadSchema = {
-	    "$schema": "http://json-schema.org/draft-04/schema#",
-	    "type": "object",
-	    "properties": {
-	        "accessToken": {
-	            "type": "string",
-	            "messages": {
-	                "type": "accessToken must be a string",
-	                "required": "accessToken is required"
-	            },
-	            "invalidMessage": "accessToken property is invalid"
-	        },
-	        "id": {
-	            "type": "string",
-	            "messages": {
-	                "type": "id must be a string",
-	                "required": "id is required"
-	            }
-	        },
-	        "settings": {
-	            "$ref": "#settings"
-	        }
-	    },
-	    "required": [
-	        "accessToken",
-	        "id"
-	    ]
-	};
-	exports.validateLoad = validate(exports.loadSchema, {
-	    schemas: {
-	        settings: exports.settingsSchema
-	    }
-	});
-	exports.pageTargetSchema = {
-	    "$schema": "http://json-schema.org/draft-04/schema#",
-	    "type": "object",
-	    "properties": {
-	        "type": {
-	            "type": "string",
-	            "enum": [
-	                "page"
-	            ],
-	            "messages": {
-	                "type": "type must be a string",
-	                "enum": "type must be 'page'",
-	                "required": "type is required"
-	            }
-	        },
-	        "name": {
-	            "type": "string",
-	            "messages": {
-	                "type": "name must be a string",
-	                "required": "name is required"
-	            }
-	        }
-	    },
-	    "required": [
-	        "type",
-	        "name"
-	    ]
-	};
-	exports.validatePageTarget = validate(exports.pageTargetSchema);
-	exports.visualTargetSchema = {
-	    "$schema": "http://json-schema.org/draft-04/schema#",
-	    "type": "object",
-	    "properties": {
-	        "type": {
-	            "type": "string",
-	            "enum": [
-	                "visual"
-	            ],
-	            "messages": {
-	                "type": "type must be a string",
-	                "enum": "type must be 'visual'",
-	                "required": "type is required"
-	            }
-	        },
-	        "id": {
-	            "type": "string",
-	            "messages": {
-	                "type": "id must be a string",
-	                "required": "id is required"
-	            }
-	        }
-	    },
-	    "required": [
-	        "type",
-	        "id"
-	    ]
-	};
-	exports.validateVisualTarget = validate(exports.visualTargetSchema);
-	exports.pageSchema = {
-	    "$schema": "http://json-schema.org/draft-04/schema#",
-	    "type": "object",
-	    "properties": {
-	        "name": {
-	            "type": "string",
-	            "messages": {
-	                "type": "name must be a string",
-	                "required": "name is required"
-	            }
-	        },
-	        "displayName": {
-	            "type": "string",
-	            "messages": {
-	                "type": "displayName must be a string",
-	                "required": "displayName is required"
-	            }
-	        }
-	    },
-	    "required": [
-	        "name",
-	        "displayName"
-	    ]
-	};
-	exports.validatePage = validate(exports.pageSchema);
-
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(6);
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
-	
-	var PATH_REPLACE_EXPR = /\[.+?\]/g,
-	    PATH_PROP_REPLACE_EXPR = /\[?(.*?)?\]/,
-	    REGEX_ESCAPE_EXPR = /[\/]/g,
-	    VALID_IDENTIFIER_EXPR = /^[a-z_$][0-9a-z]*$/gi,
-	    INVALID_SCHEMA = 'jsen: invalid schema object',
-	    browser = typeof window === 'object' && !!window.navigator,   // jshint ignore: line
-	    nodev0 = typeof process === 'object' && process.version.split('.')[0] === 'v0',
-	    func = __webpack_require__(8),
-	    equal = __webpack_require__(9),
-	    unique = __webpack_require__(10),
-	    SchemaResolver = __webpack_require__(11),
-	    formats = __webpack_require__(13),
-	    types = {},
-	    keywords = {};
-	
-	function inlineRegex(regex) {
-	    var str = regex instanceof RegExp ? regex.toString() : new RegExp(regex).toString();
-	
-	    if (!nodev0) {
-	        return str;
-	    }
-	
-	    str = str.substr(1, str.length - 2);
-	    str = '/' + str.replace(REGEX_ESCAPE_EXPR, '\\$&') + '/';
-	
-	    return str;
-	}
-	
-	function appendToPath(path, key) {
-	    VALID_IDENTIFIER_EXPR.lastIndex = 0;
-	
-	    return VALID_IDENTIFIER_EXPR.test(key) ?
-	        path + '.' + key :
-	        path + '["' + key + '"]';
-	}
-	
-	function type(obj) {
-	    var str = Object.prototype.toString.call(obj);
-	    return str.substr(8, str.length - 9).toLowerCase();
-	}
-	
-	function isInteger(obj) {
-	    return (obj | 0) === obj;   // jshint ignore: line
-	}
-	
-	types['null'] = function (path) {
-	    return path + ' === null';
-	};
-	
-	types.boolean = function (path) {
-	    return 'typeof ' + path + ' === "boolean"';
-	};
-	
-	types.string = function (path) {
-	    return 'typeof ' + path + ' === "string"';
-	};
-	
-	types.number = function (path) {
-	    return 'typeof ' + path + ' === "number"';
-	};
-	
-	types.integer = function (path) {
-	    return 'typeof ' + path + ' === "number" && !(' + path + ' % 1)';
-	};
-	
-	types.array = function (path) {
-	    return path + ' !== undefined && Array.isArray(' + path + ')';
-	};
-	
-	types.object = function (path) {
-	    return path + ' !== undefined && typeof ' + path + ' === "object" && ' + path + ' !== null && !Array.isArray(' + path + ')';
-	};
-	
-	types.date = function (path) {
-	    return path + ' !== undefined && ' + path + ' instanceof Date';
-	};
-	
-	keywords.type = function (context) {
-	    if (!context.schema.type) {
-	        return;
-	    }
-	
-	    var specified = Array.isArray(context.schema.type) ? context.schema.type : [context.schema.type],
-	        src = specified.map(function mapType(type) {
-	            return types[type] ? types[type](context.path) || 'true' : 'true';
-	        }).join(' || ');
-	
-	    if (src) {
-	        context.code('if (!(' + src + ')) {');
-	
-	        context.error('type');
-	
-	        context.code('}');
-	    }
-	};
-	
-	keywords['enum'] = function (context) {
-	    var arr = context.schema['enum'],
-	        clauses = [],
-	        value, enumType, i;
-	
-	    if (!Array.isArray(arr)) {
-	        return;
-	    }
-	
-	    for (i = 0; i < arr.length; i++) {
-	        value = arr[i];
-	        enumType = typeof value;
-	
-	        if (value === null || ['boolean', 'number', 'string'].indexOf(enumType) > -1) {
-	            // simple equality check for simple data types
-	            if (enumType === 'string') {
-	                clauses.push(context.path + ' === "' + value + '"');
-	            }
-	            else {
-	                clauses.push(context.path + ' === ' + value);
-	            }
-	        }
-	        else {
-	            // deep equality check for complex types or regexes
-	            clauses.push('equal(' + context.path + ', ' + JSON.stringify(value) + ')');
-	        }
-	    }
-	
-	    context.code('if (!(' + clauses.join(' || ') + ')) {');
-	    context.error('enum');
-	    context.code('}');
-	};
-	
-	keywords.minimum = function (context) {
-	    if (typeof context.schema.minimum === 'number') {
-	        context.code('if (' + context.path + ' < ' + context.schema.minimum + ') {');
-	        context.error('minimum');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.exclusiveMinimum = function (context) {
-	    if (context.schema.exclusiveMinimum === true && typeof context.schema.minimum === 'number') {
-	        context.code('if (' + context.path + ' === ' + context.schema.minimum + ') {');
-	        context.error('exclusiveMinimum');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.maximum = function (context) {
-	    if (typeof context.schema.maximum === 'number') {
-	        context.code('if (' + context.path + ' > ' + context.schema.maximum + ') {');
-	        context.error('maximum');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.exclusiveMaximum = function (context) {
-	    if (context.schema.exclusiveMaximum === true && typeof context.schema.maximum === 'number') {
-	        context.code('if (' + context.path + ' === ' + context.schema.maximum + ') {');
-	        context.error('exclusiveMaximum');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.multipleOf = function (context) {
-	    if (typeof context.schema.multipleOf === 'number') {
-	        var mul = context.schema.multipleOf,
-	            decimals = mul.toString().length - mul.toFixed(0).length - 1,
-	            pow = decimals > 0 ? Math.pow(10, decimals) : 1,
-	            path = context.path;
-	
-	        if (decimals > 0) {
-	            context.code('if (+(Math.round((' + path + ' * ' + pow + ') + "e+" + ' + decimals + ') + "e-" + ' + decimals + ') % ' + (mul * pow) + ' !== 0) {');
-	        } else {
-	            context.code('if (((' + path + ' * ' + pow + ') % ' + (mul * pow) + ') !== 0) {');
-	        }
-	
-	        context.error('multipleOf');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.minLength = function (context) {
-	    if (isInteger(context.schema.minLength)) {
-	        context.code('if (' + context.path + '.length < ' + context.schema.minLength + ') {');
-	        context.error('minLength');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.maxLength = function (context) {
-	    if (isInteger(context.schema.maxLength)) {
-	        context.code('if (' + context.path + '.length > ' + context.schema.maxLength + ') {');
-	        context.error('maxLength');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.pattern = function (context) {
-	    var regex = typeof context.schema.pattern === 'string' ?
-	        new RegExp(context.schema.pattern) :
-	        context.schema.pattern;
-	
-	    if (type(regex) === 'regexp') {
-	        context.code('if (!(' + inlineRegex(regex) + ').test(' + context.path + ')) {');
-	        context.error('pattern');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.format = function (context) {
-	    if (typeof context.schema.format !== 'string' || !formats[context.schema.format]) {
-	        return;
-	    }
-	
-	    context.code('if (!(' + formats[context.schema.format] + ').test(' + context.path + ')) {');
-	    context.error('format');
-	    context.code('}');
-	};
-	
-	keywords.minItems = function (context) {
-	    if (isInteger(context.schema.minItems)) {
-	        context.code('if (' + context.path + '.length < ' + context.schema.minItems + ') {');
-	        context.error('minItems');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.maxItems = function (context) {
-	    if (isInteger(context.schema.maxItems)) {
-	        context.code('if (' + context.path + '.length > ' + context.schema.maxItems + ') {');
-	        context.error('maxItems');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.additionalItems = function (context) {
-	    if (context.schema.additionalItems === false && Array.isArray(context.schema.items)) {
-	        context.code('if (' + context.path + '.length > ' + context.schema.items.length + ') {');
-	        context.error('additionalItems');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.uniqueItems = function (context) {
-	    if (context.schema.uniqueItems) {
-	        context.code('if (unique(' + context.path + ').length !== ' + context.path + '.length) {');
-	        context.error('uniqueItems');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.items = function (context) {
-	    var index = context.declare(0),
-	        i = 0;
-	
-	    if (type(context.schema.items) === 'object') {
-	        context.code('for (' + index + '; ' + index + ' < ' + context.path + '.length; ' + index + '++) {');
-	
-	        context.validate(context.path + '[' + index + ']', context.schema.items, context.noFailFast);
-	
-	        context.code('}');
-	    }
-	    else if (Array.isArray(context.schema.items)) {
-	        for (; i < context.schema.items.length; i++) {
-	            context.code('if (' + context.path + '.length - 1 >= ' + i + ') {');
-	
-	            context.validate(context.path + '[' + i + ']', context.schema.items[i], context.noFailFast);
-	
-	            context.code('}');
-	        }
-	
-	        if (type(context.schema.additionalItems) === 'object') {
-	            context.code('for (' + index + ' = ' + i + '; ' + index + ' < ' + context.path + '.length; ' + index + '++) {');
-	
-	            context.validate(context.path + '[' + index + ']', context.schema.additionalItems, context.noFailFast);
-	
-	            context.code('}');
-	        }
-	    }
-	};
-	
-	keywords.maxProperties = function (context) {
-	    if (isInteger(context.schema.maxProperties)) {
-	        context.code('if (Object.keys(' + context.path + ').length > ' + context.schema.maxProperties + ') {');
-	        context.error('maxProperties');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.minProperties = function (context) {
-	    if (isInteger(context.schema.minProperties)) {
-	        context.code('if (Object.keys(' + context.path + ').length < ' + context.schema.minProperties + ') {');
-	        context.error('minProperties');
-	        context.code('}');
-	    }
-	};
-	
-	keywords.required = function (context) {
-	    if (!Array.isArray(context.schema.required)) {
-	        return;
-	    }
-	
-	    for (var i = 0; i < context.schema.required.length; i++) {
-	        context.code('if (' + appendToPath(context.path, context.schema.required[i]) + ' === undefined) {');
-	        context.error('required', context.schema.required[i]);
-	        context.code('}');
-	    }
-	};
-	
-	keywords.properties = function (context) {
-	    if (context.validatedProperties) {
-	        // prevent multiple generations of property validation
-	        return;
-	    }
-	
-	    var props = context.schema.properties,
-	        propKeys = type(props) === 'object' ? Object.keys(props) : [],
-	        patProps = context.schema.patternProperties,
-	        patterns = type(patProps) === 'object' ? Object.keys(patProps) : [],
-	        addProps = context.schema.additionalProperties,
-	        addPropsCheck = addProps === false || type(addProps) === 'object',
-	        prop, i, nestedPath;
-	
-	    // do not use this generator if we have patternProperties or additionalProperties
-	    // instead, the generator below will be used for all three keywords
-	    if (!propKeys.length || patterns.length || addPropsCheck) {
-	        return;
-	    }
-	
-	    for (i = 0; i < propKeys.length; i++) {
-	        prop = propKeys[i];
-	        nestedPath = appendToPath(context.path, prop);
-	
-	        context.code('if (' + nestedPath + ' !== undefined) {');
-	
-	        context.validate(nestedPath, props[prop], context.noFailFast);
-	
-	        context.code('}');
-	    }
-	
-	    context.validatedProperties = true;
-	};
-	
-	keywords.patternProperties = keywords.additionalProperties = function (context) {
-	    if (context.validatedProperties) {
-	        // prevent multiple generations of this function
-	        return;
-	    }
-	
-	    var props = context.schema.properties,
-	        propKeys = type(props) === 'object' ? Object.keys(props) : [],
-	        patProps = context.schema.patternProperties,
-	        patterns = type(patProps) === 'object' ? Object.keys(patProps) : [],
-	        addProps = context.schema.additionalProperties,
-	        addPropsCheck = addProps === false || type(addProps) === 'object',
-	        keys, key, n, found,
-	        propKey, pattern, i;
-	
-	    if (!propKeys.length && !patterns.length && !addPropsCheck) {
-	        return;
-	    }
-	
-	    keys = context.declare('[]');
-	    key = context.declare('""');
-	    n = context.declare(0);
-	
-	    if (addPropsCheck) {
-	        found = context.declare(false);
-	    }
-	
-	    context.code(keys + ' = Object.keys(' + context.path + ')');
-	
-	    context.code('for (' + n + '; ' + n + ' < ' + keys + '.length; ' + n + '++) {')
-	        (key + ' = ' + keys + '[' + n + ']')
-	
-	        ('if (' + context.path + '[' + key + '] === undefined) {')
-	            ('continue')
-	        ('}');
-	
-	    if (addPropsCheck) {
-	        context.code(found + ' = false');
-	    }
-	
-	    // validate regular properties
-	    for (i = 0; i < propKeys.length; i++) {
-	        propKey = propKeys[i];
-	
-	        context.code((i ? 'else ' : '') + 'if (' + key + ' === "' + propKey + '") {');
-	
-	        if (addPropsCheck) {
-	            context.code(found + ' = true');
-	        }
-	
-	        context.validate(appendToPath(context.path, propKey), props[propKey], context.noFailFast);
-	
-	        context.code('}');
-	    }
-	
-	    // validate pattern properties
-	    for (i = 0; i < patterns.length; i++) {
-	        pattern = patterns[i];
-	
-	        context.code('if ((' + inlineRegex(pattern) + ').test(' + key + ')) {');
-	
-	        if (addPropsCheck) {
-	            context.code(found + ' = true');
-	        }
-	
-	        context.validate(context.path + '[' + key + ']', patProps[pattern], context.noFailFast);
-	
-	        context.code('}');
-	    }
-	
-	    // validate additional properties
-	    if (addPropsCheck) {
-	        context.code('if (!' + found + ') {');
-	
-	        if (addProps === false) {
-	            // do not allow additional properties
-	            context.error('additionalProperties');
-	        }
-	        else {
-	            // validate additional properties
-	            context.validate(context.path + '[' + key + ']', addProps, context.noFailFast);
-	        }
-	
-	        context.code('}');
-	    }
-	
-	    context.code('}');
-	
-	    context.validatedProperties = true;
-	};
-	
-	keywords.dependencies = function (context) {
-	    if (type(context.schema.dependencies) !== 'object') {
-	        return;
-	    }
-	
-	    var key, dep, i = 0;
-	
-	    for (key in context.schema.dependencies) {
-	        dep = context.schema.dependencies[key];
-	
-	        context.code('if (' + appendToPath(context.path, key) + ' !== undefined) {');
-	
-	        if (type(dep) === 'object') {
-	            //schema dependency
-	            context.validate(context.path, dep, context.noFailFast);
-	        }
-	        else {
-	            // property dependency
-	            for (i; i < dep.length; i++) {
-	                context.code('if (' + appendToPath(context.path, dep[i]) + ' === undefined) {');
-	                context.error('dependencies', dep[i]);
-	                context.code('}');
-	            }
-	        }
-	
-	        context.code('}');
-	    }
-	};
-	
-	keywords.allOf = function (context) {
-	    if (!Array.isArray(context.schema.allOf)) {
-	        return;
-	    }
-	
-	    for (var i = 0; i < context.schema.allOf.length; i++) {
-	        context.validate(context.path, context.schema.allOf[i], context.noFailFast);
-	    }
-	};
-	
-	keywords.anyOf = function (context) {
-	    if (!Array.isArray(context.schema.anyOf)) {
-	        return;
-	    }
-	
-	    var errCount = context.declare(0),
-	        initialCount = context.declare(0),
-	        found = context.declare(false),
-	        i = 0;
-	
-	    context.code(initialCount + ' = errors.length');
-	
-	    for (; i < context.schema.anyOf.length; i++) {
-	        context.code('if (!' + found + ') {');
-	
-	        context.code(errCount + ' = errors.length');
-	
-	        context.validate(context.path, context.schema.anyOf[i], true);
-	
-	        context.code(found + ' = errors.length === ' + errCount)
-	        ('}');
-	    }
-	
-	    context.code('if (!' + found + ') {');
-	
-	    context.error('anyOf');
-	
-	    context.code('} else {')
-	        ('errors.length = ' + initialCount)
-	    ('}');
-	};
-	
-	keywords.oneOf = function (context) {
-	    if (!Array.isArray(context.schema.oneOf)) {
-	        return;
-	    }
-	
-	    var matching = context.declare(0),
-	        initialCount = context.declare(0),
-	        errCount = context.declare(0),
-	        i = 0;
-	
-	    context.code(initialCount + ' = errors.length');
-	
-	    for (; i < context.schema.oneOf.length; i++) {
-	        context.code(errCount + ' = errors.length');
-	
-	        context.validate(context.path, context.schema.oneOf[i], true);
-	
-	        context.code('if (errors.length === ' + errCount + ') {')
-	            (matching + '++')
-	        ('}');
-	    }
-	
-	    context.code('if (' + matching + ' !== 1) {');
-	
-	    context.error('oneOf');
-	
-	    context.code('} else {')
-	        ('errors.length = ' + initialCount)
-	    ('}');
-	};
-	
-	keywords.not = function (context) {
-	    if (type(context.schema.not) !== 'object') {
-	        return;
-	    }
-	
-	    var errCount = context.declare(0);
-	
-	    context.code(errCount + ' = errors.length');
-	
-	    context.validate(context.path, context.schema.not, true);
-	
-	    context.code('if (errors.length === ' + errCount + ') {');
-	
-	    context.error('not');
-	
-	    context.code('} else {')
-	        ('errors.length = ' + errCount)
-	    ('}');
-	};
-	
-	['minimum', 'exclusiveMinimum', 'maximum', 'exclusiveMaximum', 'multipleOf']
-	    .forEach(function (keyword) { keywords[keyword].type = 'number'; });
-	
-	['minLength', 'maxLength', 'pattern', 'format']
-	    .forEach(function (keyword) { keywords[keyword].type = 'string'; });
-	
-	['minItems', 'maxItems', 'additionalItems', 'uniqueItems', 'items']
-	    .forEach(function (keyword) { keywords[keyword].type = 'array'; });
-	
-	['maxProperties', 'minProperties', 'required', 'properties', 'patternProperties', 'additionalProperties', 'dependencies']
-	    .forEach(function (keyword) { keywords[keyword].type = 'object'; });
-	
-	function getGenerators(schema) {
-	    var keys = Object.keys(schema),
-	        start = [],
-	        perType = {},
-	        gen, i;
-	
-	    for (i = 0; i < keys.length; i++) {
-	        gen = keywords[keys[i]];
-	
-	        if (!gen) {
-	            continue;
-	        }
-	
-	        if (gen.type) {
-	            if (!perType[gen.type]) {
-	                perType[gen.type] = [];
-	            }
-	
-	            perType[gen.type].push(gen);
-	        }
-	        else {
-	            start.push(gen);
-	        }
-	    }
-	
-	    return start.concat(Object.keys(perType).reduce(function (arr, key) {
-	        return arr.concat(perType[key]);
-	    }, []));
-	}
-	
-	function replaceIndexedProperty(match) {
-	    var index = match.replace(PATH_PROP_REPLACE_EXPR, '$1');
-	
-	    if (!isNaN(+index)) {
-	        // numeric index in array
-	        return '.' + index;
-	    }
-	    else if (index[0] === '"') {
-	        // string key for an object property
-	        return '[\\"' + index.substr(1, index.length - 2) + '\\"]';
-	    }
-	
-	    // variable containing the actual key
-	    return '." + ' + index + ' + "';
-	}
-	
-	function getPathExpression(path) {
-	    return '"' + path.replace(PATH_REPLACE_EXPR, replaceIndexedProperty).substr(5) + '"';
-	}
-	
-	function clone(obj) {
-	    var cloned = obj,
-	        objType = type(obj),
-	        key, i;
-	
-	    if (objType === 'object') {
-	        cloned = {};
-	
-	        for (key in obj) {
-	            cloned[key] = clone(obj[key]);
-	        }
-	    }
-	    else if (objType === 'array') {
-	        cloned = [];
-	
-	        for (i = 0; i < obj.length; i++) {
-	            cloned[i] = clone(obj[i]);
-	        }
-	    }
-	    else if (objType === 'regexp') {
-	        return new RegExp(obj);
-	    }
-	    else if (objType === 'date') {
-	        return new Date(obj.toJSON());
-	    }
-	
-	    return cloned;
-	}
-	
-	function PropertyMarker() {
-	    this.objects = [];
-	    this.properties = [];
-	}
-	
-	PropertyMarker.prototype.mark = function (obj, key) {
-	    var index = this.objects.indexOf(obj),
-	        prop;
-	
-	    if (index < 0) {
-	        this.objects.push(obj);
-	
-	        prop = {};
-	        prop[key] = 1;
-	
-	        this.properties.push(prop);
-	
-	        return;
-	    }
-	
-	    prop = this.properties[index];
-	
-	    prop[key] = prop[key] ? prop[key] + 1 : 1;
-	};
-	
-	PropertyMarker.prototype.deleteDuplicates = function () {
-	    var key, i;
-	
-	    for (i = 0; i < this.properties.length; i++) {
-	        for (key in this.properties[i]) {
-	            if (this.properties[i][key] > 1) {
-	                delete this.objects[i][key];
-	            }
-	        }
-	    }
-	};
-	
-	PropertyMarker.prototype.dispose = function () {
-	    this.objects.length = 0;
-	    this.properties.length = 0;
-	};
-	
-	function build(schema, def, additional, resolver, parentMarker) {
-	    var defType, defValue, key, i, propertyMarker;
-	
-	    if (type(schema) !== 'object') {
-	        return def;
-	    }
-	
-	    schema = resolver.resolve(schema);
-	
-	    if (def === undefined && schema.hasOwnProperty('default')) {
-	        def = clone(schema['default']);
-	    }
-	
-	    defType = type(def);
-	
-	    if (defType === 'object' && type(schema.properties) === 'object') {
-	        for (key in schema.properties) {
-	            defValue = build(schema.properties[key], def[key], additional, resolver);
-	
-	            if (defValue !== undefined) {
-	                def[key] = defValue;
-	            }
-	        }
-	
-	        for (key in def) {
-	            if (!(key in schema.properties) &&
-	                (schema.additionalProperties === false ||
-	                (additional === false && !schema.additionalProperties))) {
-	
-	                if (parentMarker) {
-	                    parentMarker.mark(def, key);
-	                }
-	                else {
-	                    delete def[key];
-	                }
-	            }
-	        }
-	    }
-	    else if (defType === 'array' && schema.items) {
-	        if (type(schema.items) === 'array') {
-	            for (i = 0; i < schema.items.length; i++) {
-	                defValue = build(schema.items[i], def[i], additional, resolver);
-	
-	                if (defValue !== undefined || i < def.length) {
-	                    def[i] = defValue;
-	                }
-	            }
-	        }
-	        else if (def.length) {
-	            for (i = 0; i < def.length; i++) {
-	                def[i] = build(schema.items, def[i], additional, resolver);
-	            }
-	        }
-	    }
-	    else if (type(schema.allOf) === 'array' && schema.allOf.length) {
-	        propertyMarker = new PropertyMarker();
-	
-	        for (i = 0; i < schema.allOf.length; i++) {
-	            def = build(schema.allOf[i], def, additional, resolver, propertyMarker);
-	        }
-	
-	        propertyMarker.deleteDuplicates();
-	        propertyMarker.dispose();
-	    }
-	
-	    return def;
-	}
-	
-	function jsen(schema, options) {
-	    if (type(schema) !== 'object') {
-	        throw new Error(INVALID_SCHEMA);
-	    }
-	
-	    options = options || {};
-	
-	    var missing$Ref = options.missing$Ref || false,
-	        resolver = new SchemaResolver(schema, options.schemas, missing$Ref),
-	        counter = 0,
-	        id = function () { return 'i' + (counter++); },
-	        funcache = {},
-	        compiled,
-	        refs = {
-	            errors: []
-	        },
-	        scope = {
-	            equal: equal,
-	            unique: unique,
-	            refs: refs
-	        };
-	
-	    function cache(schema) {
-	        var deref = resolver.resolve(schema),
-	            ref = schema.$ref,
-	            cached = funcache[ref],
-	            func;
-	
-	        if (!cached) {
-	            cached = funcache[ref] = {
-	                key: id(),
-	                func: function (data) {
-	                    return func(data);
-	                }
-	            };
-	
-	            func = compile(deref);
-	
-	            Object.defineProperty(cached.func, 'errors', {
-	                get: function () {
-	                    return func.errors;
-	                }
-	            });
-	
-	            refs[cached.key] = cached.func;
-	        }
-	
-	        return 'refs.' + cached.key;
-	    }
-	
-	    function compile(schema) {
-	        function declare(def) {
-	            var variname = id();
-	
-	            code.def(variname, def);
-	
-	            return variname;
-	        }
-	
-	        function validate(path, schema, noFailFast) {
-	            var context,
-	                cachedRef,
-	                pathExp,
-	                index,
-	                lastType,
-	                format,
-	                gens,
-	                gen,
-	                i;
-	
-	            function error(keyword, key) {
-	                var varid,
-	                    errorPath = path,
-	                    message = (key && schema.properties && schema.properties[key] && schema.properties[key].requiredMessage) ||
-	                        schema.invalidMessage;
-	
-	                if (!message) {
-	                    message = key && schema.properties && schema.properties[key] && schema.properties[key].messages &&
-	                        schema.properties[key].messages[keyword] ||
-	                        schema.messages && schema.messages[keyword];
-	                }
-	
-	                if (path.indexOf('[') > -1) {
-	                    // create error objects dynamically when path contains indexed property expressions
-	                    errorPath = getPathExpression(path);
-	
-	                    if (key) {
-	                        errorPath = errorPath ? errorPath + ' + ".' + key + '"' : key;
-	                    }
-	
-	                    code('errors.push({')
-	                        ('path: ' +  errorPath + ', ')
-	                        ('keyword: "' + keyword + '"' + (message ? ',' : ''));
-	
-	                    if (message) {
-	                        code('message: "' + message + '"');
-	                    }
-	
-	                    code('})');
-	                }
-	                else {
-	                    // generate faster code when no indexed properties in the path
-	                    varid = id();
-	
-	                    errorPath = errorPath.substr(5);
-	
-	                    if (key) {
-	                        errorPath = errorPath ? errorPath + '.' + key : key;
-	                    }
-	
-	                    refs[varid] = {
-	                        path: errorPath,
-	                        keyword: keyword
-	                    };
-	
-	                    if (message) {
-	                        refs[varid].message = message;
-	                    }
-	
-	                    code('errors.push(refs.' + varid + ')');
-	                }
-	
-	                if (!noFailFast && !options.greedy) {
-	                    code('return (validate.errors = errors) && false');
-	                }
-	            }
-	
-	            if (schema.$ref !== undefined) {
-	                cachedRef = cache(schema);
-	                pathExp = getPathExpression(path);
-	                index = declare(0);
-	
-	                code('if (!' + cachedRef + '(' + path + ')) {')
-	                    ('if (' + cachedRef + '.errors) {')
-	                        ('errors.push.apply(errors, ' + cachedRef + '.errors)')
-	                        ('for (' + index + ' = 0; ' + index + ' < ' + cachedRef + '.errors.length; ' + index + '++) {')
-	                            ('if (' + cachedRef + '.errors[' + index + '].path) {')
-	                                ('errors[errors.length - ' + cachedRef + '.errors.length + ' + index + '].path = ' + pathExp +
-	                                    ' + "." + ' + cachedRef + '.errors[' + index + '].path')
-	                            ('} else {')
-	                                ('errors[errors.length - ' + cachedRef + '.errors.length + ' + index + '].path = ' + pathExp)
-	                            ('}')
-	                        ('}')
-	                    ('}')
-	                ('}');
-	
-	                return;
-	            }
-	
-	            context = {
-	                path: path,
-	                schema: schema,
-	                code: code,
-	                declare: declare,
-	                validate: validate,
-	                error: error,
-	                noFailFast: noFailFast
-	            };
-	
-	            gens = getGenerators(schema);
-	
-	            for (i = 0; i < gens.length; i++) {
-	                gen = gens[i];
-	
-	                if (gen.type && lastType !== gen.type) {
-	                    if (lastType) {
-	                        code('}');
-	                    }
-	
-	                    lastType = gen.type;
-	
-	                    code('if (' + types[gen.type](path) + ') {');
-	                }
-	
-	                gen(context);
-	            }
-	
-	            if (lastType) {
-	                code('}');
-	            }
-	
-	            if (schema.format && options.formats) {
-	                format = options.formats[schema.format];
-	
-	                if (format) {
-	                    if (typeof format === 'string' || format instanceof RegExp) {
-	                        code('if (!(' + inlineRegex(format) + ').test(' + context.path + ')) {');
-	                        error('format');
-	                        code('}');
-	                    }
-	                    else if (typeof format === 'function') {
-	                        (scope.formats || (scope.formats = {}))[schema.format] = format;
-	                        (scope.schemas || (scope.schemas = {}))[schema.format] = schema;
-	
-	                        code('if (!formats["' + schema.format + '"](' + context.path + ', schemas["' + schema.format + '"])) {');
-	                        error('format');
-	                        code('}');
-	                    }
-	                }
-	            }
-	        }
-	
-	        var code = func('validate', 'data')
-	            ('var errors = []');
-	
-	        validate('data', schema);
-	
-	        code('return (validate.errors = errors) && errors.length === 0');
-	
-	        compiled = code.compile(scope);
-	
-	        compiled.errors = [];
-	
-	        compiled.build = function (initial, options) {
-	            return build(
-	                schema,
-	                (options && options.copy === false ? initial : clone(initial)),
-	                options && options.additionalProperties,
-	                resolver);
-	        };
-	
-	        return compiled;
-	    }
-	
-	    return compile(schema);
-	}
-	
-	jsen.browser = browser;
-	jsen.clone = clone;
-	jsen.equal = equal;
-	jsen.unique = unique;
-	jsen.resolve = SchemaResolver.resolvePointer;
-	
-	module.exports = jsen;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	// shim for using process in browser
-	
-	var process = module.exports = {};
-	var queue = [];
-	var draining = false;
-	var currentQueue;
-	var queueIndex = -1;
-	
-	function cleanUpNextTick() {
-	    draining = false;
-	    if (currentQueue.length) {
-	        queue = currentQueue.concat(queue);
-	    } else {
-	        queueIndex = -1;
-	    }
-	    if (queue.length) {
-	        drainQueue();
-	    }
-	}
-	
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    var timeout = setTimeout(cleanUpNextTick);
-	    draining = true;
-	
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        while (++queueIndex < len) {
-	            if (currentQueue) {
-	                currentQueue[queueIndex].run();
-	            }
-	        }
-	        queueIndex = -1;
-	        len = queue.length;
-	    }
-	    currentQueue = null;
-	    draining = false;
-	    clearTimeout(timeout);
-	}
-	
-	process.nextTick = function (fun) {
-	    var args = new Array(arguments.length - 1);
-	    if (arguments.length > 1) {
-	        for (var i = 1; i < arguments.length; i++) {
-	            args[i - 1] = arguments[i];
-	        }
-	    }
-	    queue.push(new Item(fun, args));
-	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
-	    }
-	};
-	
-	// v8 likes predictible objects
-	function Item(fun, array) {
-	    this.fun = fun;
-	    this.array = array;
-	}
-	Item.prototype.run = function () {
-	    this.fun.apply(null, this.array);
-	};
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-	
-	function noop() {}
-	
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-	
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-	
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	module.exports = function func() {
-	    var name = arguments[0] || '',
-	        args = [].join.call([].slice.call(arguments, 1), ', '),
-	        lines = '',
-	        vars = '',
-	        ind = 1,
-	        tab = '  ',
-	        bs = '{[',  // block start
-	        be = '}]',  // block end
-	        space = function () {
-	            return new Array(ind + 1).join(tab);
-	        },
-	        push = function (line) {
-	            lines += space() + line + '\n';
-	        },
-	        builder = function (line) {
-	            var first = line[0],
-	                last = line[line.length - 1];
-	
-	            if (be.indexOf(first) > -1 && bs.indexOf(last) > -1) {
-	                ind--;
-	                push(line);
-	                ind++;
-	            }
-	            else if (bs.indexOf(last) > -1) {
-	                push(line);
-	                ind++;
-	            }
-	            else if (be.indexOf(first) > -1) {
-	                ind--;
-	                push(line);
-	            }
-	            else {
-	                push(line);
-	            }
-	
-	            return builder;
-	        };
-	
-	    builder.def = function (id, def) {
-	        vars += space() + 'var ' + id + (def !== undefined ? ' = ' + def : '') + '\n';
-	
-	        return builder;
-	    };
-	
-	    builder.toSource = function () {
-	        return 'function ' + name + '(' + args + ') {\n' + vars + '\n' + lines + '\n}';
-	    };
-	
-	    builder.compile = function (scope) {
-	        var src = 'return (' + builder.toSource() + ')',
-	            scp = scope || {},
-	            keys = Object.keys(scp),
-	            vals = keys.map(function (key) { return scp[key]; });
-	
-	        return Function.apply(null, keys.concat(src)).apply(null, vals);
-	    };
-	
-	    return builder;
-	};
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	function type(obj) {
-	    var str = Object.prototype.toString.call(obj);
-	    return str.substr(8, str.length - 9).toLowerCase();
-	}
-	
-	function deepEqual(a, b) {
-	    var keysA = Object.keys(a).sort(),
-	        keysB = Object.keys(b).sort(),
-	        i, key;
-	
-	    if (!equal(keysA, keysB)) {
-	        return false;
-	    }
-	
-	    for (i = 0; i < keysA.length; i++) {
-	        key = keysA[i];
-	
-	        if (!equal(a[key], b[key])) {
-	            return false;
-	        }
-	    }
-	
-	    return true;
-	}
-	
-	function equal(a, b) {  // jshint ignore: line
-	    var typeA = typeof a,
-	        typeB = typeof b,
-	        i;
-	
-	    // get detailed object type
-	    if (typeA === 'object') {
-	        typeA = type(a);
-	    }
-	
-	    // get detailed object type
-	    if (typeB === 'object') {
-	        typeB = type(b);
-	    }
-	
-	    if (typeA !== typeB) {
-	        return false;
-	    }
-	
-	    if (typeA === 'object') {
-	        return deepEqual(a, b);
-	    }
-	
-	    if (typeA === 'regexp') {
-	        return a.toString() === b.toString();
-	    }
-	
-	    if (typeA === 'array') {
-	        if (a.length !== b.length) {
-	            return false;
-	        }
-	
-	        for (i = 0; i < a.length; i++) {
-	            if (!equal(a[i], b[i])) {
-	                return false;
-	            }
-	        }
-	
-	        return true;
-	    }
-	
-	    return a === b;
-	}
-	
-	module.exports = equal;
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var equal = __webpack_require__(9);
-	
-	function findIndex(arr, value, comparator) {
-	    for (var i = 0, len = arr.length; i < len; i++) {
-	        if (comparator(arr[i], value)) {
-	            return i;
-	        }
-	    }
-	
-	    return -1;
-	}
-	
-	module.exports = function unique(arr) {
-	    return arr.filter(function uniqueOnly(value, index, self) {
-	        return findIndex(self, value, equal) === index;
-	    });
-	};
-	
-	module.exports.findIndex = findIndex;
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var metaschema = __webpack_require__(12),
-	    INVALID_SCHEMA_REFERENCE = 'jsen: invalid schema reference';
-	
-	function get(obj, path) {
-	    if (!path.length) {
-	        return obj;
-	    }
-	
-	    var key = path.shift(),
-	        val;
-	
-	    if (obj && typeof obj === 'object' && obj.hasOwnProperty(key)) {
-	        val = obj[key];
-	    }
-	
-	    if (path.length) {
-	        if (val && typeof val === 'object') {
-	            return get(val, path);
-	        }
-	
-	        return undefined;
-	    }
-	
-	    return val;
-	}
-	
-	function refToPath(ref) {
-	    var index = ref.indexOf('#'),
-	        path;
-	
-	    if (index !== 0) {
-	        return [ref];
-	    }
-	
-	    ref = ref.substr(index + 1);
-	
-	    if (!ref) {
-	        return [];
-	    }
-	
-	    path = ref.split('/').map(function (segment) {
-	        // Reference: http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-08#section-3
-	        return decodeURIComponent(segment)
-	            .replace(/~1/g, '/')
-	            .replace(/~0/g, '~');
-	    });
-	
-	    if (ref[0] === '/') {
-	        path.shift();
-	    }
-	
-	    return path;
-	}
-	
-	function refFromId(obj, ref) {
-	    if (obj && typeof obj === 'object') {
-	        if (obj.id === ref) {
-	            return obj;
-	        }
-	
-	        return Object.keys(obj).reduce(function (resolved, key) {
-	            return resolved || refFromId(obj[key], ref);
-	        }, undefined);
-	    }
-	
-	    return undefined;
-	}
-	
-	function getResolvers(schemas) {
-	    var keys = Object.keys(schemas),
-	        resolvers = {},
-	        key, i;
-	
-	    for (i = 0; i < keys.length; i++) {
-	        key = keys[i];
-	        resolvers[key] = new SchemaResolver(schemas[key]);
-	    }
-	
-	    return resolvers;
-	}
-	
-	function SchemaResolver(rootSchema, external, missing$Ref) {  // jshint ignore: line
-	    this.rootSchema = rootSchema;
-	    this.resolvedRootSchema = null;
-	    this.cache = {};
-	    this.missing$Ref = missing$Ref;
-	
-	    this.resolvers = external && typeof external === 'object' ?
-	        getResolvers(external) :
-	        null;
-	}
-	
-	SchemaResolver.prototype.resolveRef = function (ref) {
-	    var err = new Error(INVALID_SCHEMA_REFERENCE + ' ' + ref),
-	        root = this.rootSchema,
-	        resolvedRoot = this.resolvedRootSchema,
-	        externalResolver,
-	        path,
-	        dest;
-	
-	    if (!ref || typeof ref !== 'string') {
-	        throw err;
-	    }
-	
-	    if (ref === metaschema.id) {
-	        dest = metaschema;
-	    }
-	
-	    if (dest === undefined && resolvedRoot) {
-	        dest = refFromId(resolvedRoot, ref);
-	    }
-	
-	    if (dest === undefined) {
-	        dest = refFromId(root, ref);
-	    }
-	
-	    if (dest === undefined) {
-	        path = refToPath(ref);
-	
-	        if (resolvedRoot) {
-	            dest = get(resolvedRoot, path.slice(0));
-	        }
-	
-	        if (dest === undefined) {
-	            dest = get(root, path.slice(0));
-	        }
-	    }
-	
-	    if (dest === undefined && path.length && this.resolvers) {
-	        externalResolver = get(this.resolvers, path);
-	
-	        if (externalResolver) {
-	            dest = externalResolver.resolve(externalResolver.rootSchema);
-	        }
-	    }
-	
-	    if (dest === undefined || typeof dest !== 'object') {
-	        if (this.missing$Ref) {
-	            dest = {};
-	        } else {
-	            throw err;
-	        }
-	    }
-	
-	    if (this.cache[ref] === dest) {
-	        return dest;
-	    }
-	
-	    this.cache[ref] = dest;
-	
-	    if (dest.$ref !== undefined) {
-	        dest = this.cache[ref] = this.resolveRef(dest.$ref);
-	    }
-	
-	    return dest;
-	};
-	
-	SchemaResolver.prototype.resolve = function (schema) {
-	    if (!schema || typeof schema !== 'object') {
-	        return schema;
-	    }
-	
-	    var ref = schema.$ref,
-	        resolved = this.cache[ref];
-	
-	    if (ref === undefined) {
-	        return schema;
-	    }
-	
-	    if (resolved !== undefined) {
-	        return resolved;
-	    }
-	
-	    resolved = this.resolveRef(ref);
-	
-	    if (schema === this.rootSchema && schema !== resolved) {
-	        // cache the resolved root schema
-	        this.resolvedRootSchema = resolved;
-	    }
-	
-	    return resolved;
-	};
-	
-	SchemaResolver.resolvePointer = function (obj, pointer) {
-	    return get(obj, refToPath(pointer));
-	};
-	
-	module.exports = SchemaResolver;
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	module.exports = {
-		"id": "http://json-schema.org/draft-04/schema#",
-		"$schema": "http://json-schema.org/draft-04/schema#",
-		"description": "Core schema meta-schema",
-		"definitions": {
-			"schemaArray": {
-				"type": "array",
-				"minItems": 1,
-				"items": {
-					"$ref": "#"
+	(function webpackUniversalModuleDefinition(root, factory) {
+		if(true)
+			module.exports = factory();
+		else if(typeof define === 'function' && define.amd)
+			define([], factory);
+		else if(typeof exports === 'object')
+			exports["powerbi-models"] = factory();
+		else
+			root["powerbi-models"] = factory();
+	})(this, function() {
+	return /******/ (function(modules) { // webpackBootstrap
+	/******/ 	// The module cache
+	/******/ 	var installedModules = {};
+	/******/
+	/******/ 	// The require function
+	/******/ 	function __webpack_require__(moduleId) {
+	/******/
+	/******/ 		// Check if module is in cache
+	/******/ 		if(installedModules[moduleId])
+	/******/ 			return installedModules[moduleId].exports;
+	/******/
+	/******/ 		// Create a new module (and put it into the cache)
+	/******/ 		var module = installedModules[moduleId] = {
+	/******/ 			exports: {},
+	/******/ 			id: moduleId,
+	/******/ 			loaded: false
+	/******/ 		};
+	/******/
+	/******/ 		// Execute the module function
+	/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+	/******/
+	/******/ 		// Flag the module as loaded
+	/******/ 		module.loaded = true;
+	/******/
+	/******/ 		// Return the exports of the module
+	/******/ 		return module.exports;
+	/******/ 	}
+	/******/
+	/******/
+	/******/ 	// expose the modules object (__webpack_modules__)
+	/******/ 	__webpack_require__.m = modules;
+	/******/
+	/******/ 	// expose the module cache
+	/******/ 	__webpack_require__.c = installedModules;
+	/******/
+	/******/ 	// __webpack_public_path__
+	/******/ 	__webpack_require__.p = "";
+	/******/
+	/******/ 	// Load entry module and return exports
+	/******/ 	return __webpack_require__(0);
+	/******/ })
+	/************************************************************************/
+	/******/ ([
+	/* 0 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		exports.settingsSchema = __webpack_require__(1);
+		exports.loadSchema = __webpack_require__(2);
+		exports.pageTargetSchema = __webpack_require__(3);
+		exports.visualTargetSchema = __webpack_require__(4);
+		exports.pageSchema = __webpack_require__(5);
+		var jsen = __webpack_require__(6);
+		function normalizeError(error) {
+		    if (!error.message) {
+		        error.message = error.path + " is invalid. Not meeting " + error.keyword + " constraint";
+		    }
+		    delete error.path;
+		    delete error.keyword;
+		    return error;
+		}
+		/**
+		 * Takes in schema and returns function which can be used to validate the schema with better semantics around exposing errors
+		 */
+		function validate(schema, options) {
+		    return function (x) {
+		        var validate = jsen(schema, options);
+		        var isValid = validate(x);
+		        if (isValid) {
+		            return undefined;
+		        }
+		        else {
+		            return validate.errors
+		                .map(normalizeError);
+		        }
+		    };
+		}
+		exports.validate = validate;
+		exports.validateSettings = validate(exports.settingsSchema);
+		exports.validateLoad = validate(exports.loadSchema, {
+		    schemas: {
+		        settings: exports.settingsSchema
+		    }
+		});
+		exports.validatePageTarget = validate(exports.pageTargetSchema);
+		exports.validateVisualTarget = validate(exports.visualTargetSchema);
+		exports.validatePage = validate(exports.pageSchema);
+	
+	
+	/***/ },
+	/* 1 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"filter": {
+					"type": "object"
+				},
+				"filterPaneEnabled": {
+					"type": "boolean",
+					"messages": {
+						"type": "filterPaneEnabled must be a boolean"
+					}
+				},
+				"pageName": {
+					"type": "string",
+					"messages": {
+						"type": "pageName must be a string"
+					}
+				},
+				"pageNavigationEnabled": {
+					"type": "boolean",
+					"messages": {
+						"type": "pageNavigationEnabled must be a boolean"
+					}
+				}
+			}
+		};
+	
+	/***/ },
+	/* 2 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"accessToken": {
+					"type": "string",
+					"messages": {
+						"type": "accessToken must be a string",
+						"required": "accessToken is required"
+					},
+					"invalidMessage": "accessToken property is invalid"
+				},
+				"id": {
+					"type": "string",
+					"messages": {
+						"type": "id must be a string",
+						"required": "id is required"
+					}
+				},
+				"settings": {
+					"$ref": "#settings"
 				}
 			},
-			"positiveInteger": {
-				"type": "integer",
-				"minimum": 0
-			},
-			"positiveIntegerDefault0": {
-				"allOf": [
-					{
-						"$ref": "#/definitions/positiveInteger"
-					},
-					{
-						"default": 0
+			"required": [
+				"accessToken",
+				"id"
+			]
+		};
+	
+	/***/ },
+	/* 3 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": [
+						"page"
+					],
+					"messages": {
+						"type": "type must be a string",
+						"enum": "type must be 'page'",
+						"required": "type is required"
 					}
-				]
+				},
+				"name": {
+					"type": "string",
+					"messages": {
+						"type": "name must be a string",
+						"required": "name is required"
+					}
+				}
 			},
-			"simpleTypes": {
-				"anyOf": [
-					{
-						"enum": [
-							"array",
-							"boolean",
-							"integer",
-							"null",
-							"number",
-							"object",
-							"string",
-							"any"
-						]
-					},
-					{
+			"required": [
+				"type",
+				"name"
+			]
+		};
+	
+	/***/ },
+	/* 4 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": [
+						"visual"
+					],
+					"messages": {
+						"type": "type must be a string",
+						"enum": "type must be 'visual'",
+						"required": "type is required"
+					}
+				},
+				"id": {
+					"type": "string",
+					"messages": {
+						"type": "id must be a string",
+						"required": "id is required"
+					}
+				}
+			},
+			"required": [
+				"type",
+				"id"
+			]
+		};
+	
+	/***/ },
+	/* 5 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"name": {
+					"type": "string",
+					"messages": {
+						"type": "name must be a string",
+						"required": "name is required"
+					}
+				},
+				"displayName": {
+					"type": "string",
+					"messages": {
+						"type": "displayName must be a string",
+						"required": "displayName is required"
+					}
+				}
+			},
+			"required": [
+				"name",
+				"displayName"
+			]
+		};
+	
+	/***/ },
+	/* 6 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		module.exports = __webpack_require__(7);
+	
+	/***/ },
+	/* 7 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+		
+		var PATH_REPLACE_EXPR = /\[.+?\]/g,
+		    PATH_PROP_REPLACE_EXPR = /\[?(.*?)?\]/,
+		    REGEX_ESCAPE_EXPR = /[\/]/g,
+		    VALID_IDENTIFIER_EXPR = /^[a-z_$][0-9a-z]*$/gi,
+		    INVALID_SCHEMA = 'jsen: invalid schema object',
+		    browser = typeof window === 'object' && !!window.navigator,   // jshint ignore: line
+		    nodev0 = typeof process === 'object' && process.version.split('.')[0] === 'v0',
+		    func = __webpack_require__(9),
+		    equal = __webpack_require__(10),
+		    unique = __webpack_require__(11),
+		    SchemaResolver = __webpack_require__(12),
+		    formats = __webpack_require__(14),
+		    types = {},
+		    keywords = {};
+		
+		function inlineRegex(regex) {
+		    var str = regex instanceof RegExp ? regex.toString() : new RegExp(regex).toString();
+		
+		    if (!nodev0) {
+		        return str;
+		    }
+		
+		    str = str.substr(1, str.length - 2);
+		    str = '/' + str.replace(REGEX_ESCAPE_EXPR, '\\$&') + '/';
+		
+		    return str;
+		}
+		
+		function appendToPath(path, key) {
+		    VALID_IDENTIFIER_EXPR.lastIndex = 0;
+		
+		    return VALID_IDENTIFIER_EXPR.test(key) ?
+		        path + '.' + key :
+		        path + '["' + key + '"]';
+		}
+		
+		function type(obj) {
+		    var str = Object.prototype.toString.call(obj);
+		    return str.substr(8, str.length - 9).toLowerCase();
+		}
+		
+		function isInteger(obj) {
+		    return (obj | 0) === obj;   // jshint ignore: line
+		}
+		
+		types['null'] = function (path) {
+		    return path + ' === null';
+		};
+		
+		types.boolean = function (path) {
+		    return 'typeof ' + path + ' === "boolean"';
+		};
+		
+		types.string = function (path) {
+		    return 'typeof ' + path + ' === "string"';
+		};
+		
+		types.number = function (path) {
+		    return 'typeof ' + path + ' === "number"';
+		};
+		
+		types.integer = function (path) {
+		    return 'typeof ' + path + ' === "number" && !(' + path + ' % 1)';
+		};
+		
+		types.array = function (path) {
+		    return path + ' !== undefined && Array.isArray(' + path + ')';
+		};
+		
+		types.object = function (path) {
+		    return path + ' !== undefined && typeof ' + path + ' === "object" && ' + path + ' !== null && !Array.isArray(' + path + ')';
+		};
+		
+		types.date = function (path) {
+		    return path + ' !== undefined && ' + path + ' instanceof Date';
+		};
+		
+		keywords.type = function (context) {
+		    if (!context.schema.type) {
+		        return;
+		    }
+		
+		    var specified = Array.isArray(context.schema.type) ? context.schema.type : [context.schema.type],
+		        src = specified.map(function mapType(type) {
+		            return types[type] ? types[type](context.path) || 'true' : 'true';
+		        }).join(' || ');
+		
+		    if (src) {
+		        context.code('if (!(' + src + ')) {');
+		
+		        context.error('type');
+		
+		        context.code('}');
+		    }
+		};
+		
+		keywords['enum'] = function (context) {
+		    var arr = context.schema['enum'],
+		        clauses = [],
+		        value, enumType, i;
+		
+		    if (!Array.isArray(arr)) {
+		        return;
+		    }
+		
+		    for (i = 0; i < arr.length; i++) {
+		        value = arr[i];
+		        enumType = typeof value;
+		
+		        if (value === null || ['boolean', 'number', 'string'].indexOf(enumType) > -1) {
+		            // simple equality check for simple data types
+		            if (enumType === 'string') {
+		                clauses.push(context.path + ' === "' + value + '"');
+		            }
+		            else {
+		                clauses.push(context.path + ' === ' + value);
+		            }
+		        }
+		        else {
+		            // deep equality check for complex types or regexes
+		            clauses.push('equal(' + context.path + ', ' + JSON.stringify(value) + ')');
+		        }
+		    }
+		
+		    context.code('if (!(' + clauses.join(' || ') + ')) {');
+		    context.error('enum');
+		    context.code('}');
+		};
+		
+		keywords.minimum = function (context) {
+		    if (typeof context.schema.minimum === 'number') {
+		        context.code('if (' + context.path + ' < ' + context.schema.minimum + ') {');
+		        context.error('minimum');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.exclusiveMinimum = function (context) {
+		    if (context.schema.exclusiveMinimum === true && typeof context.schema.minimum === 'number') {
+		        context.code('if (' + context.path + ' === ' + context.schema.minimum + ') {');
+		        context.error('exclusiveMinimum');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.maximum = function (context) {
+		    if (typeof context.schema.maximum === 'number') {
+		        context.code('if (' + context.path + ' > ' + context.schema.maximum + ') {');
+		        context.error('maximum');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.exclusiveMaximum = function (context) {
+		    if (context.schema.exclusiveMaximum === true && typeof context.schema.maximum === 'number') {
+		        context.code('if (' + context.path + ' === ' + context.schema.maximum + ') {');
+		        context.error('exclusiveMaximum');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.multipleOf = function (context) {
+		    if (typeof context.schema.multipleOf === 'number') {
+		        var mul = context.schema.multipleOf,
+		            decimals = mul.toString().length - mul.toFixed(0).length - 1,
+		            pow = decimals > 0 ? Math.pow(10, decimals) : 1,
+		            path = context.path;
+		
+		        if (decimals > 0) {
+		            context.code('if (+(Math.round((' + path + ' * ' + pow + ') + "e+" + ' + decimals + ') + "e-" + ' + decimals + ') % ' + (mul * pow) + ' !== 0) {');
+		        } else {
+		            context.code('if (((' + path + ' * ' + pow + ') % ' + (mul * pow) + ') !== 0) {');
+		        }
+		
+		        context.error('multipleOf');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.minLength = function (context) {
+		    if (isInteger(context.schema.minLength)) {
+		        context.code('if (' + context.path + '.length < ' + context.schema.minLength + ') {');
+		        context.error('minLength');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.maxLength = function (context) {
+		    if (isInteger(context.schema.maxLength)) {
+		        context.code('if (' + context.path + '.length > ' + context.schema.maxLength + ') {');
+		        context.error('maxLength');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.pattern = function (context) {
+		    var regex = typeof context.schema.pattern === 'string' ?
+		        new RegExp(context.schema.pattern) :
+		        context.schema.pattern;
+		
+		    if (type(regex) === 'regexp') {
+		        context.code('if (!(' + inlineRegex(regex) + ').test(' + context.path + ')) {');
+		        context.error('pattern');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.format = function (context) {
+		    if (typeof context.schema.format !== 'string' || !formats[context.schema.format]) {
+		        return;
+		    }
+		
+		    context.code('if (!(' + formats[context.schema.format] + ').test(' + context.path + ')) {');
+		    context.error('format');
+		    context.code('}');
+		};
+		
+		keywords.minItems = function (context) {
+		    if (isInteger(context.schema.minItems)) {
+		        context.code('if (' + context.path + '.length < ' + context.schema.minItems + ') {');
+		        context.error('minItems');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.maxItems = function (context) {
+		    if (isInteger(context.schema.maxItems)) {
+		        context.code('if (' + context.path + '.length > ' + context.schema.maxItems + ') {');
+		        context.error('maxItems');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.additionalItems = function (context) {
+		    if (context.schema.additionalItems === false && Array.isArray(context.schema.items)) {
+		        context.code('if (' + context.path + '.length > ' + context.schema.items.length + ') {');
+		        context.error('additionalItems');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.uniqueItems = function (context) {
+		    if (context.schema.uniqueItems) {
+		        context.code('if (unique(' + context.path + ').length !== ' + context.path + '.length) {');
+		        context.error('uniqueItems');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.items = function (context) {
+		    var index = context.declare(0),
+		        i = 0;
+		
+		    if (type(context.schema.items) === 'object') {
+		        context.code('for (' + index + '; ' + index + ' < ' + context.path + '.length; ' + index + '++) {');
+		
+		        context.validate(context.path + '[' + index + ']', context.schema.items, context.noFailFast);
+		
+		        context.code('}');
+		    }
+		    else if (Array.isArray(context.schema.items)) {
+		        for (; i < context.schema.items.length; i++) {
+		            context.code('if (' + context.path + '.length - 1 >= ' + i + ') {');
+		
+		            context.validate(context.path + '[' + i + ']', context.schema.items[i], context.noFailFast);
+		
+		            context.code('}');
+		        }
+		
+		        if (type(context.schema.additionalItems) === 'object') {
+		            context.code('for (' + index + ' = ' + i + '; ' + index + ' < ' + context.path + '.length; ' + index + '++) {');
+		
+		            context.validate(context.path + '[' + index + ']', context.schema.additionalItems, context.noFailFast);
+		
+		            context.code('}');
+		        }
+		    }
+		};
+		
+		keywords.maxProperties = function (context) {
+		    if (isInteger(context.schema.maxProperties)) {
+		        context.code('if (Object.keys(' + context.path + ').length > ' + context.schema.maxProperties + ') {');
+		        context.error('maxProperties');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.minProperties = function (context) {
+		    if (isInteger(context.schema.minProperties)) {
+		        context.code('if (Object.keys(' + context.path + ').length < ' + context.schema.minProperties + ') {');
+		        context.error('minProperties');
+		        context.code('}');
+		    }
+		};
+		
+		keywords.required = function (context) {
+		    if (!Array.isArray(context.schema.required)) {
+		        return;
+		    }
+		
+		    for (var i = 0; i < context.schema.required.length; i++) {
+		        context.code('if (' + appendToPath(context.path, context.schema.required[i]) + ' === undefined) {');
+		        context.error('required', context.schema.required[i]);
+		        context.code('}');
+		    }
+		};
+		
+		keywords.properties = function (context) {
+		    if (context.validatedProperties) {
+		        // prevent multiple generations of property validation
+		        return;
+		    }
+		
+		    var props = context.schema.properties,
+		        propKeys = type(props) === 'object' ? Object.keys(props) : [],
+		        patProps = context.schema.patternProperties,
+		        patterns = type(patProps) === 'object' ? Object.keys(patProps) : [],
+		        addProps = context.schema.additionalProperties,
+		        addPropsCheck = addProps === false || type(addProps) === 'object',
+		        prop, i, nestedPath;
+		
+		    // do not use this generator if we have patternProperties or additionalProperties
+		    // instead, the generator below will be used for all three keywords
+		    if (!propKeys.length || patterns.length || addPropsCheck) {
+		        return;
+		    }
+		
+		    for (i = 0; i < propKeys.length; i++) {
+		        prop = propKeys[i];
+		        nestedPath = appendToPath(context.path, prop);
+		
+		        context.code('if (' + nestedPath + ' !== undefined) {');
+		
+		        context.validate(nestedPath, props[prop], context.noFailFast);
+		
+		        context.code('}');
+		    }
+		
+		    context.validatedProperties = true;
+		};
+		
+		keywords.patternProperties = keywords.additionalProperties = function (context) {
+		    if (context.validatedProperties) {
+		        // prevent multiple generations of this function
+		        return;
+		    }
+		
+		    var props = context.schema.properties,
+		        propKeys = type(props) === 'object' ? Object.keys(props) : [],
+		        patProps = context.schema.patternProperties,
+		        patterns = type(patProps) === 'object' ? Object.keys(patProps) : [],
+		        addProps = context.schema.additionalProperties,
+		        addPropsCheck = addProps === false || type(addProps) === 'object',
+		        keys, key, n, found,
+		        propKey, pattern, i;
+		
+		    if (!propKeys.length && !patterns.length && !addPropsCheck) {
+		        return;
+		    }
+		
+		    keys = context.declare('[]');
+		    key = context.declare('""');
+		    n = context.declare(0);
+		
+		    if (addPropsCheck) {
+		        found = context.declare(false);
+		    }
+		
+		    context.code(keys + ' = Object.keys(' + context.path + ')');
+		
+		    context.code('for (' + n + '; ' + n + ' < ' + keys + '.length; ' + n + '++) {')
+		        (key + ' = ' + keys + '[' + n + ']')
+		
+		        ('if (' + context.path + '[' + key + '] === undefined) {')
+		            ('continue')
+		        ('}');
+		
+		    if (addPropsCheck) {
+		        context.code(found + ' = false');
+		    }
+		
+		    // validate regular properties
+		    for (i = 0; i < propKeys.length; i++) {
+		        propKey = propKeys[i];
+		
+		        context.code((i ? 'else ' : '') + 'if (' + key + ' === "' + propKey + '") {');
+		
+		        if (addPropsCheck) {
+		            context.code(found + ' = true');
+		        }
+		
+		        context.validate(appendToPath(context.path, propKey), props[propKey], context.noFailFast);
+		
+		        context.code('}');
+		    }
+		
+		    // validate pattern properties
+		    for (i = 0; i < patterns.length; i++) {
+		        pattern = patterns[i];
+		
+		        context.code('if ((' + inlineRegex(pattern) + ').test(' + key + ')) {');
+		
+		        if (addPropsCheck) {
+		            context.code(found + ' = true');
+		        }
+		
+		        context.validate(context.path + '[' + key + ']', patProps[pattern], context.noFailFast);
+		
+		        context.code('}');
+		    }
+		
+		    // validate additional properties
+		    if (addPropsCheck) {
+		        context.code('if (!' + found + ') {');
+		
+		        if (addProps === false) {
+		            // do not allow additional properties
+		            context.error('additionalProperties');
+		        }
+		        else {
+		            // validate additional properties
+		            context.validate(context.path + '[' + key + ']', addProps, context.noFailFast);
+		        }
+		
+		        context.code('}');
+		    }
+		
+		    context.code('}');
+		
+		    context.validatedProperties = true;
+		};
+		
+		keywords.dependencies = function (context) {
+		    if (type(context.schema.dependencies) !== 'object') {
+		        return;
+		    }
+		
+		    var key, dep, i = 0;
+		
+		    for (key in context.schema.dependencies) {
+		        dep = context.schema.dependencies[key];
+		
+		        context.code('if (' + appendToPath(context.path, key) + ' !== undefined) {');
+		
+		        if (type(dep) === 'object') {
+		            //schema dependency
+		            context.validate(context.path, dep, context.noFailFast);
+		        }
+		        else {
+		            // property dependency
+		            for (i; i < dep.length; i++) {
+		                context.code('if (' + appendToPath(context.path, dep[i]) + ' === undefined) {');
+		                context.error('dependencies', dep[i]);
+		                context.code('}');
+		            }
+		        }
+		
+		        context.code('}');
+		    }
+		};
+		
+		keywords.allOf = function (context) {
+		    if (!Array.isArray(context.schema.allOf)) {
+		        return;
+		    }
+		
+		    for (var i = 0; i < context.schema.allOf.length; i++) {
+		        context.validate(context.path, context.schema.allOf[i], context.noFailFast);
+		    }
+		};
+		
+		keywords.anyOf = function (context) {
+		    if (!Array.isArray(context.schema.anyOf)) {
+		        return;
+		    }
+		
+		    var errCount = context.declare(0),
+		        initialCount = context.declare(0),
+		        found = context.declare(false),
+		        i = 0;
+		
+		    context.code(initialCount + ' = errors.length');
+		
+		    for (; i < context.schema.anyOf.length; i++) {
+		        context.code('if (!' + found + ') {');
+		
+		        context.code(errCount + ' = errors.length');
+		
+		        context.validate(context.path, context.schema.anyOf[i], true);
+		
+		        context.code(found + ' = errors.length === ' + errCount)
+		        ('}');
+		    }
+		
+		    context.code('if (!' + found + ') {');
+		
+		    context.error('anyOf');
+		
+		    context.code('} else {')
+		        ('errors.length = ' + initialCount)
+		    ('}');
+		};
+		
+		keywords.oneOf = function (context) {
+		    if (!Array.isArray(context.schema.oneOf)) {
+		        return;
+		    }
+		
+		    var matching = context.declare(0),
+		        initialCount = context.declare(0),
+		        errCount = context.declare(0),
+		        i = 0;
+		
+		    context.code(initialCount + ' = errors.length');
+		
+		    for (; i < context.schema.oneOf.length; i++) {
+		        context.code(errCount + ' = errors.length');
+		
+		        context.validate(context.path, context.schema.oneOf[i], true);
+		
+		        context.code('if (errors.length === ' + errCount + ') {')
+		            (matching + '++')
+		        ('}');
+		    }
+		
+		    context.code('if (' + matching + ' !== 1) {');
+		
+		    context.error('oneOf');
+		
+		    context.code('} else {')
+		        ('errors.length = ' + initialCount)
+		    ('}');
+		};
+		
+		keywords.not = function (context) {
+		    if (type(context.schema.not) !== 'object') {
+		        return;
+		    }
+		
+		    var errCount = context.declare(0);
+		
+		    context.code(errCount + ' = errors.length');
+		
+		    context.validate(context.path, context.schema.not, true);
+		
+		    context.code('if (errors.length === ' + errCount + ') {');
+		
+		    context.error('not');
+		
+		    context.code('} else {')
+		        ('errors.length = ' + errCount)
+		    ('}');
+		};
+		
+		['minimum', 'exclusiveMinimum', 'maximum', 'exclusiveMaximum', 'multipleOf']
+		    .forEach(function (keyword) { keywords[keyword].type = 'number'; });
+		
+		['minLength', 'maxLength', 'pattern', 'format']
+		    .forEach(function (keyword) { keywords[keyword].type = 'string'; });
+		
+		['minItems', 'maxItems', 'additionalItems', 'uniqueItems', 'items']
+		    .forEach(function (keyword) { keywords[keyword].type = 'array'; });
+		
+		['maxProperties', 'minProperties', 'required', 'properties', 'patternProperties', 'additionalProperties', 'dependencies']
+		    .forEach(function (keyword) { keywords[keyword].type = 'object'; });
+		
+		function getGenerators(schema) {
+		    var keys = Object.keys(schema),
+		        start = [],
+		        perType = {},
+		        gen, i;
+		
+		    for (i = 0; i < keys.length; i++) {
+		        gen = keywords[keys[i]];
+		
+		        if (!gen) {
+		            continue;
+		        }
+		
+		        if (gen.type) {
+		            if (!perType[gen.type]) {
+		                perType[gen.type] = [];
+		            }
+		
+		            perType[gen.type].push(gen);
+		        }
+		        else {
+		            start.push(gen);
+		        }
+		    }
+		
+		    return start.concat(Object.keys(perType).reduce(function (arr, key) {
+		        return arr.concat(perType[key]);
+		    }, []));
+		}
+		
+		function replaceIndexedProperty(match) {
+		    var index = match.replace(PATH_PROP_REPLACE_EXPR, '$1');
+		
+		    if (!isNaN(+index)) {
+		        // numeric index in array
+		        return '.' + index;
+		    }
+		    else if (index[0] === '"') {
+		        // string key for an object property
+		        return '[\\"' + index.substr(1, index.length - 2) + '\\"]';
+		    }
+		
+		    // variable containing the actual key
+		    return '." + ' + index + ' + "';
+		}
+		
+		function getPathExpression(path) {
+		    return '"' + path.replace(PATH_REPLACE_EXPR, replaceIndexedProperty).substr(5) + '"';
+		}
+		
+		function clone(obj) {
+		    var cloned = obj,
+		        objType = type(obj),
+		        key, i;
+		
+		    if (objType === 'object') {
+		        cloned = {};
+		
+		        for (key in obj) {
+		            cloned[key] = clone(obj[key]);
+		        }
+		    }
+		    else if (objType === 'array') {
+		        cloned = [];
+		
+		        for (i = 0; i < obj.length; i++) {
+		            cloned[i] = clone(obj[i]);
+		        }
+		    }
+		    else if (objType === 'regexp') {
+		        return new RegExp(obj);
+		    }
+		    else if (objType === 'date') {
+		        return new Date(obj.toJSON());
+		    }
+		
+		    return cloned;
+		}
+		
+		function PropertyMarker() {
+		    this.objects = [];
+		    this.properties = [];
+		}
+		
+		PropertyMarker.prototype.mark = function (obj, key) {
+		    var index = this.objects.indexOf(obj),
+		        prop;
+		
+		    if (index < 0) {
+		        this.objects.push(obj);
+		
+		        prop = {};
+		        prop[key] = 1;
+		
+		        this.properties.push(prop);
+		
+		        return;
+		    }
+		
+		    prop = this.properties[index];
+		
+		    prop[key] = prop[key] ? prop[key] + 1 : 1;
+		};
+		
+		PropertyMarker.prototype.deleteDuplicates = function () {
+		    var key, i;
+		
+		    for (i = 0; i < this.properties.length; i++) {
+		        for (key in this.properties[i]) {
+		            if (this.properties[i][key] > 1) {
+		                delete this.objects[i][key];
+		            }
+		        }
+		    }
+		};
+		
+		PropertyMarker.prototype.dispose = function () {
+		    this.objects.length = 0;
+		    this.properties.length = 0;
+		};
+		
+		function build(schema, def, additional, resolver, parentMarker) {
+		    var defType, defValue, key, i, propertyMarker;
+		
+		    if (type(schema) !== 'object') {
+		        return def;
+		    }
+		
+		    schema = resolver.resolve(schema);
+		
+		    if (def === undefined && schema.hasOwnProperty('default')) {
+		        def = clone(schema['default']);
+		    }
+		
+		    defType = type(def);
+		
+		    if (defType === 'object' && type(schema.properties) === 'object') {
+		        for (key in schema.properties) {
+		            defValue = build(schema.properties[key], def[key], additional, resolver);
+		
+		            if (defValue !== undefined) {
+		                def[key] = defValue;
+		            }
+		        }
+		
+		        for (key in def) {
+		            if (!(key in schema.properties) &&
+		                (schema.additionalProperties === false ||
+		                (additional === false && !schema.additionalProperties))) {
+		
+		                if (parentMarker) {
+		                    parentMarker.mark(def, key);
+		                }
+		                else {
+		                    delete def[key];
+		                }
+		            }
+		        }
+		    }
+		    else if (defType === 'array' && schema.items) {
+		        if (type(schema.items) === 'array') {
+		            for (i = 0; i < schema.items.length; i++) {
+		                defValue = build(schema.items[i], def[i], additional, resolver);
+		
+		                if (defValue !== undefined || i < def.length) {
+		                    def[i] = defValue;
+		                }
+		            }
+		        }
+		        else if (def.length) {
+		            for (i = 0; i < def.length; i++) {
+		                def[i] = build(schema.items, def[i], additional, resolver);
+		            }
+		        }
+		    }
+		    else if (type(schema.allOf) === 'array' && schema.allOf.length) {
+		        propertyMarker = new PropertyMarker();
+		
+		        for (i = 0; i < schema.allOf.length; i++) {
+		            def = build(schema.allOf[i], def, additional, resolver, propertyMarker);
+		        }
+		
+		        propertyMarker.deleteDuplicates();
+		        propertyMarker.dispose();
+		    }
+		
+		    return def;
+		}
+		
+		function jsen(schema, options) {
+		    if (type(schema) !== 'object') {
+		        throw new Error(INVALID_SCHEMA);
+		    }
+		
+		    options = options || {};
+		
+		    var missing$Ref = options.missing$Ref || false,
+		        resolver = new SchemaResolver(schema, options.schemas, missing$Ref),
+		        counter = 0,
+		        id = function () { return 'i' + (counter++); },
+		        funcache = {},
+		        compiled,
+		        refs = {
+		            errors: []
+		        },
+		        scope = {
+		            equal: equal,
+		            unique: unique,
+		            refs: refs
+		        };
+		
+		    function cache(schema) {
+		        var deref = resolver.resolve(schema),
+		            ref = schema.$ref,
+		            cached = funcache[ref],
+		            func;
+		
+		        if (!cached) {
+		            cached = funcache[ref] = {
+		                key: id(),
+		                func: function (data) {
+		                    return func(data);
+		                }
+		            };
+		
+		            func = compile(deref);
+		
+		            Object.defineProperty(cached.func, 'errors', {
+		                get: function () {
+		                    return func.errors;
+		                }
+		            });
+		
+		            refs[cached.key] = cached.func;
+		        }
+		
+		        return 'refs.' + cached.key;
+		    }
+		
+		    function compile(schema) {
+		        function declare(def) {
+		            var variname = id();
+		
+		            code.def(variname, def);
+		
+		            return variname;
+		        }
+		
+		        function validate(path, schema, noFailFast) {
+		            var context,
+		                cachedRef,
+		                pathExp,
+		                index,
+		                lastType,
+		                format,
+		                gens,
+		                gen,
+		                i;
+		
+		            function error(keyword, key) {
+		                var varid,
+		                    errorPath = path,
+		                    message = (key && schema.properties && schema.properties[key] && schema.properties[key].requiredMessage) ||
+		                        schema.invalidMessage;
+		
+		                if (!message) {
+		                    message = key && schema.properties && schema.properties[key] && schema.properties[key].messages &&
+		                        schema.properties[key].messages[keyword] ||
+		                        schema.messages && schema.messages[keyword];
+		                }
+		
+		                if (path.indexOf('[') > -1) {
+		                    // create error objects dynamically when path contains indexed property expressions
+		                    errorPath = getPathExpression(path);
+		
+		                    if (key) {
+		                        errorPath = errorPath ? errorPath + ' + ".' + key + '"' : key;
+		                    }
+		
+		                    code('errors.push({')
+		                        ('path: ' +  errorPath + ', ')
+		                        ('keyword: "' + keyword + '"' + (message ? ',' : ''));
+		
+		                    if (message) {
+		                        code('message: "' + message + '"');
+		                    }
+		
+		                    code('})');
+		                }
+		                else {
+		                    // generate faster code when no indexed properties in the path
+		                    varid = id();
+		
+		                    errorPath = errorPath.substr(5);
+		
+		                    if (key) {
+		                        errorPath = errorPath ? errorPath + '.' + key : key;
+		                    }
+		
+		                    refs[varid] = {
+		                        path: errorPath,
+		                        keyword: keyword
+		                    };
+		
+		                    if (message) {
+		                        refs[varid].message = message;
+		                    }
+		
+		                    code('errors.push(refs.' + varid + ')');
+		                }
+		
+		                if (!noFailFast && !options.greedy) {
+		                    code('return (validate.errors = errors) && false');
+		                }
+		            }
+		
+		            if (schema.$ref !== undefined) {
+		                cachedRef = cache(schema);
+		                pathExp = getPathExpression(path);
+		                index = declare(0);
+		
+		                code('if (!' + cachedRef + '(' + path + ')) {')
+		                    ('if (' + cachedRef + '.errors) {')
+		                        ('errors.push.apply(errors, ' + cachedRef + '.errors)')
+		                        ('for (' + index + ' = 0; ' + index + ' < ' + cachedRef + '.errors.length; ' + index + '++) {')
+		                            ('if (' + cachedRef + '.errors[' + index + '].path) {')
+		                                ('errors[errors.length - ' + cachedRef + '.errors.length + ' + index + '].path = ' + pathExp +
+		                                    ' + "." + ' + cachedRef + '.errors[' + index + '].path')
+		                            ('} else {')
+		                                ('errors[errors.length - ' + cachedRef + '.errors.length + ' + index + '].path = ' + pathExp)
+		                            ('}')
+		                        ('}')
+		                    ('}')
+		                ('}');
+		
+		                return;
+		            }
+		
+		            context = {
+		                path: path,
+		                schema: schema,
+		                code: code,
+		                declare: declare,
+		                validate: validate,
+		                error: error,
+		                noFailFast: noFailFast
+		            };
+		
+		            gens = getGenerators(schema);
+		
+		            for (i = 0; i < gens.length; i++) {
+		                gen = gens[i];
+		
+		                if (gen.type && lastType !== gen.type) {
+		                    if (lastType) {
+		                        code('}');
+		                    }
+		
+		                    lastType = gen.type;
+		
+		                    code('if (' + types[gen.type](path) + ') {');
+		                }
+		
+		                gen(context);
+		            }
+		
+		            if (lastType) {
+		                code('}');
+		            }
+		
+		            if (schema.format && options.formats) {
+		                format = options.formats[schema.format];
+		
+		                if (format) {
+		                    if (typeof format === 'string' || format instanceof RegExp) {
+		                        code('if (!(' + inlineRegex(format) + ').test(' + context.path + ')) {');
+		                        error('format');
+		                        code('}');
+		                    }
+		                    else if (typeof format === 'function') {
+		                        (scope.formats || (scope.formats = {}))[schema.format] = format;
+		                        (scope.schemas || (scope.schemas = {}))[schema.format] = schema;
+		
+		                        code('if (!formats["' + schema.format + '"](' + context.path + ', schemas["' + schema.format + '"])) {');
+		                        error('format');
+		                        code('}');
+		                    }
+		                }
+		            }
+		        }
+		
+		        var code = func('validate', 'data')
+		            ('var errors = []');
+		
+		        validate('data', schema);
+		
+		        code('return (validate.errors = errors) && errors.length === 0');
+		
+		        compiled = code.compile(scope);
+		
+		        compiled.errors = [];
+		
+		        compiled.build = function (initial, options) {
+		            return build(
+		                schema,
+		                (options && options.copy === false ? initial : clone(initial)),
+		                options && options.additionalProperties,
+		                resolver);
+		        };
+		
+		        return compiled;
+		    }
+		
+		    return compile(schema);
+		}
+		
+		jsen.browser = browser;
+		jsen.clone = clone;
+		jsen.equal = equal;
+		jsen.unique = unique;
+		jsen.resolve = SchemaResolver.resolvePointer;
+		
+		module.exports = jsen;
+		
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
+	
+	/***/ },
+	/* 8 */
+	/***/ function(module, exports) {
+	
+		// shim for using process in browser
+		
+		var process = module.exports = {};
+		
+		// cached from whatever global is present so that test runners that stub it
+		// don't break things.  But we need to wrap it in a try catch in case it is
+		// wrapped in strict mode code which doesn't define any globals.  It's inside a
+		// function because try/catches deoptimize in certain engines.
+		
+		var cachedSetTimeout;
+		var cachedClearTimeout;
+		
+		(function () {
+		  try {
+		    cachedSetTimeout = setTimeout;
+		  } catch (e) {
+		    cachedSetTimeout = function () {
+		      throw new Error('setTimeout is not defined');
+		    }
+		  }
+		  try {
+		    cachedClearTimeout = clearTimeout;
+		  } catch (e) {
+		    cachedClearTimeout = function () {
+		      throw new Error('clearTimeout is not defined');
+		    }
+		  }
+		} ())
+		var queue = [];
+		var draining = false;
+		var currentQueue;
+		var queueIndex = -1;
+		
+		function cleanUpNextTick() {
+		    if (!draining || !currentQueue) {
+		        return;
+		    }
+		    draining = false;
+		    if (currentQueue.length) {
+		        queue = currentQueue.concat(queue);
+		    } else {
+		        queueIndex = -1;
+		    }
+		    if (queue.length) {
+		        drainQueue();
+		    }
+		}
+		
+		function drainQueue() {
+		    if (draining) {
+		        return;
+		    }
+		    var timeout = cachedSetTimeout(cleanUpNextTick);
+		    draining = true;
+		
+		    var len = queue.length;
+		    while(len) {
+		        currentQueue = queue;
+		        queue = [];
+		        while (++queueIndex < len) {
+		            if (currentQueue) {
+		                currentQueue[queueIndex].run();
+		            }
+		        }
+		        queueIndex = -1;
+		        len = queue.length;
+		    }
+		    currentQueue = null;
+		    draining = false;
+		    cachedClearTimeout(timeout);
+		}
+		
+		process.nextTick = function (fun) {
+		    var args = new Array(arguments.length - 1);
+		    if (arguments.length > 1) {
+		        for (var i = 1; i < arguments.length; i++) {
+		            args[i - 1] = arguments[i];
+		        }
+		    }
+		    queue.push(new Item(fun, args));
+		    if (queue.length === 1 && !draining) {
+		        cachedSetTimeout(drainQueue, 0);
+		    }
+		};
+		
+		// v8 likes predictible objects
+		function Item(fun, array) {
+		    this.fun = fun;
+		    this.array = array;
+		}
+		Item.prototype.run = function () {
+		    this.fun.apply(null, this.array);
+		};
+		process.title = 'browser';
+		process.browser = true;
+		process.env = {};
+		process.argv = [];
+		process.version = ''; // empty string to avoid regexp issues
+		process.versions = {};
+		
+		function noop() {}
+		
+		process.on = noop;
+		process.addListener = noop;
+		process.once = noop;
+		process.off = noop;
+		process.removeListener = noop;
+		process.removeAllListeners = noop;
+		process.emit = noop;
+		
+		process.binding = function (name) {
+		    throw new Error('process.binding is not supported');
+		};
+		
+		process.cwd = function () { return '/' };
+		process.chdir = function (dir) {
+		    throw new Error('process.chdir is not supported');
+		};
+		process.umask = function() { return 0; };
+	
+	
+	/***/ },
+	/* 9 */
+	/***/ function(module, exports) {
+	
+		'use strict';
+		
+		module.exports = function func() {
+		    var name = arguments[0] || '',
+		        args = [].join.call([].slice.call(arguments, 1), ', '),
+		        lines = '',
+		        vars = '',
+		        ind = 1,
+		        tab = '  ',
+		        bs = '{[',  // block start
+		        be = '}]',  // block end
+		        space = function () {
+		            return new Array(ind + 1).join(tab);
+		        },
+		        push = function (line) {
+		            lines += space() + line + '\n';
+		        },
+		        builder = function (line) {
+		            var first = line[0],
+		                last = line[line.length - 1];
+		
+		            if (be.indexOf(first) > -1 && bs.indexOf(last) > -1) {
+		                ind--;
+		                push(line);
+		                ind++;
+		            }
+		            else if (bs.indexOf(last) > -1) {
+		                push(line);
+		                ind++;
+		            }
+		            else if (be.indexOf(first) > -1) {
+		                ind--;
+		                push(line);
+		            }
+		            else {
+		                push(line);
+		            }
+		
+		            return builder;
+		        };
+		
+		    builder.def = function (id, def) {
+		        vars += space() + 'var ' + id + (def !== undefined ? ' = ' + def : '') + '\n';
+		
+		        return builder;
+		    };
+		
+		    builder.toSource = function () {
+		        return 'function ' + name + '(' + args + ') {\n' + vars + '\n' + lines + '\n}';
+		    };
+		
+		    builder.compile = function (scope) {
+		        var src = 'return (' + builder.toSource() + ')',
+		            scp = scope || {},
+		            keys = Object.keys(scp),
+		            vals = keys.map(function (key) { return scp[key]; });
+		
+		        return Function.apply(null, keys.concat(src)).apply(null, vals);
+		    };
+		
+		    return builder;
+		};
+	
+	/***/ },
+	/* 10 */
+	/***/ function(module, exports) {
+	
+		'use strict';
+		
+		function type(obj) {
+		    var str = Object.prototype.toString.call(obj);
+		    return str.substr(8, str.length - 9).toLowerCase();
+		}
+		
+		function deepEqual(a, b) {
+		    var keysA = Object.keys(a).sort(),
+		        keysB = Object.keys(b).sort(),
+		        i, key;
+		
+		    if (!equal(keysA, keysB)) {
+		        return false;
+		    }
+		
+		    for (i = 0; i < keysA.length; i++) {
+		        key = keysA[i];
+		
+		        if (!equal(a[key], b[key])) {
+		            return false;
+		        }
+		    }
+		
+		    return true;
+		}
+		
+		function equal(a, b) {  // jshint ignore: line
+		    var typeA = typeof a,
+		        typeB = typeof b,
+		        i;
+		
+		    // get detailed object type
+		    if (typeA === 'object') {
+		        typeA = type(a);
+		    }
+		
+		    // get detailed object type
+		    if (typeB === 'object') {
+		        typeB = type(b);
+		    }
+		
+		    if (typeA !== typeB) {
+		        return false;
+		    }
+		
+		    if (typeA === 'object') {
+		        return deepEqual(a, b);
+		    }
+		
+		    if (typeA === 'regexp') {
+		        return a.toString() === b.toString();
+		    }
+		
+		    if (typeA === 'array') {
+		        if (a.length !== b.length) {
+		            return false;
+		        }
+		
+		        for (i = 0; i < a.length; i++) {
+		            if (!equal(a[i], b[i])) {
+		                return false;
+		            }
+		        }
+		
+		        return true;
+		    }
+		
+		    return a === b;
+		}
+		
+		module.exports = equal;
+	
+	/***/ },
+	/* 11 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		'use strict';
+		
+		var equal = __webpack_require__(10);
+		
+		function findIndex(arr, value, comparator) {
+		    for (var i = 0, len = arr.length; i < len; i++) {
+		        if (comparator(arr[i], value)) {
+		            return i;
+		        }
+		    }
+		
+		    return -1;
+		}
+		
+		module.exports = function unique(arr) {
+		    return arr.filter(function uniqueOnly(value, index, self) {
+		        return findIndex(self, value, equal) === index;
+		    });
+		};
+		
+		module.exports.findIndex = findIndex;
+	
+	/***/ },
+	/* 12 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		'use strict';
+		
+		var metaschema = __webpack_require__(13),
+		    INVALID_SCHEMA_REFERENCE = 'jsen: invalid schema reference';
+		
+		function get(obj, path) {
+		    if (!path.length) {
+		        return obj;
+		    }
+		
+		    var key = path.shift(),
+		        val;
+		
+		    if (obj && typeof obj === 'object' && obj.hasOwnProperty(key)) {
+		        val = obj[key];
+		    }
+		
+		    if (path.length) {
+		        if (val && typeof val === 'object') {
+		            return get(val, path);
+		        }
+		
+		        return undefined;
+		    }
+		
+		    return val;
+		}
+		
+		function refToPath(ref) {
+		    var index = ref.indexOf('#'),
+		        path;
+		
+		    if (index !== 0) {
+		        return [ref];
+		    }
+		
+		    ref = ref.substr(index + 1);
+		
+		    if (!ref) {
+		        return [];
+		    }
+		
+		    path = ref.split('/').map(function (segment) {
+		        // Reference: http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-08#section-3
+		        return decodeURIComponent(segment)
+		            .replace(/~1/g, '/')
+		            .replace(/~0/g, '~');
+		    });
+		
+		    if (ref[0] === '/') {
+		        path.shift();
+		    }
+		
+		    return path;
+		}
+		
+		function refFromId(obj, ref) {
+		    if (obj && typeof obj === 'object') {
+		        if (obj.id === ref) {
+		            return obj;
+		        }
+		
+		        return Object.keys(obj).reduce(function (resolved, key) {
+		            return resolved || refFromId(obj[key], ref);
+		        }, undefined);
+		    }
+		
+		    return undefined;
+		}
+		
+		function getResolvers(schemas) {
+		    var keys = Object.keys(schemas),
+		        resolvers = {},
+		        key, i;
+		
+		    for (i = 0; i < keys.length; i++) {
+		        key = keys[i];
+		        resolvers[key] = new SchemaResolver(schemas[key]);
+		    }
+		
+		    return resolvers;
+		}
+		
+		function SchemaResolver(rootSchema, external, missing$Ref) {  // jshint ignore: line
+		    this.rootSchema = rootSchema;
+		    this.resolvedRootSchema = null;
+		    this.cache = {};
+		    this.missing$Ref = missing$Ref;
+		
+		    this.resolvers = external && typeof external === 'object' ?
+		        getResolvers(external) :
+		        null;
+		}
+		
+		SchemaResolver.prototype.resolveRef = function (ref) {
+		    var err = new Error(INVALID_SCHEMA_REFERENCE + ' ' + ref),
+		        root = this.rootSchema,
+		        resolvedRoot = this.resolvedRootSchema,
+		        externalResolver,
+		        path,
+		        dest;
+		
+		    if (!ref || typeof ref !== 'string') {
+		        throw err;
+		    }
+		
+		    if (ref === metaschema.id) {
+		        dest = metaschema;
+		    }
+		
+		    if (dest === undefined && resolvedRoot) {
+		        dest = refFromId(resolvedRoot, ref);
+		    }
+		
+		    if (dest === undefined) {
+		        dest = refFromId(root, ref);
+		    }
+		
+		    if (dest === undefined) {
+		        path = refToPath(ref);
+		
+		        if (resolvedRoot) {
+		            dest = get(resolvedRoot, path.slice(0));
+		        }
+		
+		        if (dest === undefined) {
+		            dest = get(root, path.slice(0));
+		        }
+		    }
+		
+		    if (dest === undefined && path.length && this.resolvers) {
+		        externalResolver = get(this.resolvers, path);
+		
+		        if (externalResolver) {
+		            dest = externalResolver.resolve(externalResolver.rootSchema);
+		        }
+		    }
+		
+		    if (dest === undefined || typeof dest !== 'object') {
+		        if (this.missing$Ref) {
+		            dest = {};
+		        } else {
+		            throw err;
+		        }
+		    }
+		
+		    if (this.cache[ref] === dest) {
+		        return dest;
+		    }
+		
+		    this.cache[ref] = dest;
+		
+		    if (dest.$ref !== undefined) {
+		        dest = this.cache[ref] = this.resolveRef(dest.$ref);
+		    }
+		
+		    return dest;
+		};
+		
+		SchemaResolver.prototype.resolve = function (schema) {
+		    if (!schema || typeof schema !== 'object') {
+		        return schema;
+		    }
+		
+		    var ref = schema.$ref,
+		        resolved = this.cache[ref];
+		
+		    if (ref === undefined) {
+		        return schema;
+		    }
+		
+		    if (resolved !== undefined) {
+		        return resolved;
+		    }
+		
+		    resolved = this.resolveRef(ref);
+		
+		    if (schema === this.rootSchema && schema !== resolved) {
+		        // cache the resolved root schema
+		        this.resolvedRootSchema = resolved;
+		    }
+		
+		    return resolved;
+		};
+		
+		SchemaResolver.resolvePointer = function (obj, pointer) {
+		    return get(obj, refToPath(pointer));
+		};
+		
+		module.exports = SchemaResolver;
+	
+	/***/ },
+	/* 13 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"id": "http://json-schema.org/draft-04/schema#",
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"description": "Core schema meta-schema",
+			"definitions": {
+				"schemaArray": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#"
+					}
+				},
+				"positiveInteger": {
+					"type": "integer",
+					"minimum": 0
+				},
+				"positiveIntegerDefault0": {
+					"allOf": [
+						{
+							"$ref": "#/definitions/positiveInteger"
+						},
+						{
+							"default": 0
+						}
+					]
+				},
+				"simpleTypes": {
+					"anyOf": [
+						{
+							"enum": [
+								"array",
+								"boolean",
+								"integer",
+								"null",
+								"number",
+								"object",
+								"string",
+								"any"
+							]
+						},
+						{
+							"type": "string"
+						}
+					]
+				},
+				"stringArray": {
+					"type": "array",
+					"items": {
 						"type": "string"
-					}
-				]
+					},
+					"minItems": 1,
+					"uniqueItems": true
+				}
 			},
-			"stringArray": {
-				"type": "array",
-				"items": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string",
+					"format": "uri"
+				},
+				"$schema": {
+					"type": "string",
+					"format": "uri"
+				},
+				"title": {
 					"type": "string"
 				},
-				"minItems": 1,
-				"uniqueItems": true
-			}
-		},
-		"type": "object",
-		"properties": {
-			"id": {
-				"type": "string",
-				"format": "uri"
-			},
-			"$schema": {
-				"type": "string",
-				"format": "uri"
-			},
-			"title": {
-				"type": "string"
-			},
-			"description": {
-				"type": "string"
-			},
-			"default": {},
-			"multipleOf": {
-				"type": "number",
-				"minimum": 0,
-				"exclusiveMinimum": true
-			},
-			"maximum": {
-				"type": "number"
-			},
-			"exclusiveMaximum": {
-				"type": "boolean",
-				"default": false
-			},
-			"minimum": {
-				"type": "number"
-			},
-			"exclusiveMinimum": {
-				"type": "boolean",
-				"default": false
-			},
-			"maxLength": {
-				"$ref": "#/definitions/positiveInteger"
-			},
-			"minLength": {
-				"$ref": "#/definitions/positiveIntegerDefault0"
-			},
-			"pattern": {
-				"type": "string",
-				"format": "regex"
-			},
-			"additionalItems": {
-				"anyOf": [
-					{
-						"type": "boolean"
-					},
-					{
-						"$ref": "#"
-					}
-				],
-				"default": {}
-			},
-			"items": {
-				"anyOf": [
-					{
-						"$ref": "#"
-					},
-					{
-						"$ref": "#/definitions/schemaArray"
-					}
-				],
-				"default": {}
-			},
-			"maxItems": {
-				"$ref": "#/definitions/positiveInteger"
-			},
-			"minItems": {
-				"$ref": "#/definitions/positiveIntegerDefault0"
-			},
-			"uniqueItems": {
-				"type": "boolean",
-				"default": false
-			},
-			"maxProperties": {
-				"$ref": "#/definitions/positiveInteger"
-			},
-			"minProperties": {
-				"$ref": "#/definitions/positiveIntegerDefault0"
-			},
-			"required": {
-				"$ref": "#/definitions/stringArray"
-			},
-			"additionalProperties": {
-				"anyOf": [
-					{
-						"type": "boolean"
-					},
-					{
-						"$ref": "#"
-					}
-				],
-				"default": {}
-			},
-			"definitions": {
-				"type": "object",
-				"additionalProperties": {
-					"$ref": "#"
+				"description": {
+					"type": "string"
 				},
-				"default": {}
-			},
-			"properties": {
-				"type": "object",
-				"additionalProperties": {
-					"$ref": "#"
+				"default": {},
+				"multipleOf": {
+					"type": "number",
+					"minimum": 0,
+					"exclusiveMinimum": true
 				},
-				"default": {}
-			},
-			"patternProperties": {
-				"type": "object",
-				"additionalProperties": {
-					"$ref": "#"
+				"maximum": {
+					"type": "number"
 				},
-				"default": {}
-			},
-			"dependencies": {
-				"type": "object",
-				"additionalProperties": {
+				"exclusiveMaximum": {
+					"type": "boolean",
+					"default": false
+				},
+				"minimum": {
+					"type": "number"
+				},
+				"exclusiveMinimum": {
+					"type": "boolean",
+					"default": false
+				},
+				"maxLength": {
+					"$ref": "#/definitions/positiveInteger"
+				},
+				"minLength": {
+					"$ref": "#/definitions/positiveIntegerDefault0"
+				},
+				"pattern": {
+					"type": "string",
+					"format": "regex"
+				},
+				"additionalItems": {
+					"anyOf": [
+						{
+							"type": "boolean"
+						},
+						{
+							"$ref": "#"
+						}
+					],
+					"default": {}
+				},
+				"items": {
 					"anyOf": [
 						{
 							"$ref": "#"
 						},
 						{
-							"$ref": "#/definitions/stringArray"
+							"$ref": "#/definitions/schemaArray"
 						}
-					]
-				}
-			},
-			"enum": {
-				"type": "array",
-				"minItems": 1,
-				"uniqueItems": true
-			},
-			"type": {
-				"anyOf": [
-					{
-						"$ref": "#/definitions/simpleTypes"
+					],
+					"default": {}
+				},
+				"maxItems": {
+					"$ref": "#/definitions/positiveInteger"
+				},
+				"minItems": {
+					"$ref": "#/definitions/positiveIntegerDefault0"
+				},
+				"uniqueItems": {
+					"type": "boolean",
+					"default": false
+				},
+				"maxProperties": {
+					"$ref": "#/definitions/positiveInteger"
+				},
+				"minProperties": {
+					"$ref": "#/definitions/positiveIntegerDefault0"
+				},
+				"required": {
+					"$ref": "#/definitions/stringArray"
+				},
+				"additionalProperties": {
+					"anyOf": [
+						{
+							"type": "boolean"
+						},
+						{
+							"$ref": "#"
+						}
+					],
+					"default": {}
+				},
+				"definitions": {
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "#"
 					},
-					{
-						"type": "array",
-						"items": {
+					"default": {}
+				},
+				"properties": {
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "#"
+					},
+					"default": {}
+				},
+				"patternProperties": {
+					"type": "object",
+					"additionalProperties": {
+						"$ref": "#"
+					},
+					"default": {}
+				},
+				"dependencies": {
+					"type": "object",
+					"additionalProperties": {
+						"anyOf": [
+							{
+								"$ref": "#"
+							},
+							{
+								"$ref": "#/definitions/stringArray"
+							}
+						]
+					}
+				},
+				"enum": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true
+				},
+				"type": {
+					"anyOf": [
+						{
 							"$ref": "#/definitions/simpleTypes"
 						},
-						"minItems": 1,
-						"uniqueItems": true
-					}
+						{
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/simpleTypes"
+							},
+							"minItems": 1,
+							"uniqueItems": true
+						}
+					]
+				},
+				"allOf": {
+					"$ref": "#/definitions/schemaArray"
+				},
+				"anyOf": {
+					"$ref": "#/definitions/schemaArray"
+				},
+				"oneOf": {
+					"$ref": "#/definitions/schemaArray"
+				},
+				"not": {
+					"$ref": "#"
+				}
+			},
+			"dependencies": {
+				"exclusiveMaximum": [
+					"maximum"
+				],
+				"exclusiveMinimum": [
+					"minimum"
 				]
 			},
-			"allOf": {
-				"$ref": "#/definitions/schemaArray"
-			},
-			"anyOf": {
-				"$ref": "#/definitions/schemaArray"
-			},
-			"oneOf": {
-				"$ref": "#/definitions/schemaArray"
-			},
-			"not": {
-				"$ref": "#"
-			}
-		},
-		"dependencies": {
-			"exclusiveMaximum": [
-				"maximum"
-			],
-			"exclusiveMinimum": [
-				"minimum"
-			]
-		},
-		"default": {}
-	};
+			"default": {}
+		};
+	
+	/***/ },
+	/* 14 */
+	/***/ function(module, exports) {
+	
+		'use strict';
+		
+		var formats = {};
+		
+		// reference: http://dansnetwork.com/javascript-iso8601rfc3339-date-parser/
+		formats['date-time'] = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T)?(\d\d)(:)?(\d\d)(:)?(\d\d)(\.\d+)?(Z|([+-])(\d\d)(:)?(\d\d))/;
+		// reference: https://github.com/mafintosh/is-my-json-valid/blob/master/formats.js#L7
+		formats.uri = /^([a-zA-Z][a-zA-Z0-9+-.]*:){0,1}\/\/[^\s]*$/;
+		// reference: http://stackoverflow.com/questions/201323/using-a-regular-expression-to-validate-an-email-address#answer-8829363
+		//            http://www.w3.org/TR/html5/forms.html#valid-e-mail-address (search for 'willful violation')
+		formats.email = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+		// reference: https://www.safaribooksonline.com/library/view/regular-expressions-cookbook/9780596802837/ch07s16.html
+		formats.ipv4 = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+		// reference: http://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses
+		formats.ipv6 = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|[fF][eE]80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::([fF]{4}(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
+		// reference: http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address#answer-3824105
+		formats.hostname = /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]))*$/;
+		
+		module.exports = formats;
+	
+	/***/ }
+	/******/ ])
+	});
+	;
+	//# sourceMappingURL=models.js.map
 
 /***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var formats = {};
-	
-	// reference: http://dansnetwork.com/javascript-iso8601rfc3339-date-parser/
-	formats['date-time'] = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T)?(\d\d)(:)?(\d\d)(:)?(\d\d)(\.\d+)?(Z|([+-])(\d\d)(:)?(\d\d))/;
-	// reference: https://github.com/mafintosh/is-my-json-valid/blob/master/formats.js#L7
-	formats.uri = /^([a-zA-Z][a-zA-Z0-9+-.]*:){0,1}\/\/[^\s]*$/;
-	// reference: http://stackoverflow.com/questions/201323/using-a-regular-expression-to-validate-an-email-address#answer-8829363
-	//            http://www.w3.org/TR/html5/forms.html#valid-e-mail-address (search for 'willful violation')
-	formats.email = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-	// reference: https://www.safaribooksonline.com/library/view/regular-expressions-cookbook/9780596802837/ch07s16.html
-	formats.ipv4 = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-	// reference: http://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses
-	formats.ipv6 = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|[fF][eE]80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::([fF]{4}(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
-	// reference: http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address#answer-3824105
-	formats.hostname = /^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]))*$/;
-	
-	module.exports = formats;
-
-/***/ },
-/* 14 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -2429,9 +2655,7 @@
 	        if (Report.allowedEvents.indexOf(eventName) === -1) {
 	            throw new Error("eventName is must be one of " + Report.allowedEvents + ". You passed: " + eventName);
 	        }
-	        this.router.post("/report/events/" + eventName, function (res, req) {
-	            handler(res.body);
-	        });
+	        _super.prototype.on.call(this, eventName, handler);
 	    };
 	    /**
 	     * Set the active page
@@ -2524,7 +2748,7 @@
 
 
 /***/ },
-/* 15 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -2545,31 +2769,35 @@
 
 
 /***/ },
-/* 16 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var wpmp = __webpack_require__(17);
-	var hpm = __webpack_require__(21);
-	var router = __webpack_require__(25);
-	exports.hpmFactory = function (wpmp, sdkVersion, sdkType, origin) {
+	var wpmp = __webpack_require__(8);
+	var hpm = __webpack_require__(9);
+	var router = __webpack_require__(10);
+	/**
+	 * TODO: Need to get sdk version and settings from package.json, Generate config file via gulp task?
+	 */
+	exports.hpmFactory = function (targetWindow, wpmp, sdkVersion, sdkType, origin) {
 	    if (sdkVersion === void 0) { sdkVersion = '2.0.0'; }
 	    if (sdkType === void 0) { sdkType = 'js'; }
 	    if (origin === void 0) { origin = 'sdk'; }
-	    return new hpm.HttpPostMessage(wpmp, {
+	    return new hpm.HttpPostMessage(targetWindow, wpmp, {
 	        'origin': origin,
 	        'x-sdk-type': sdkType,
 	        'x-sdk-version': sdkVersion
 	    });
 	};
-	exports.wpmpFactory = function (window, name, logMessages) {
-	    return new wpmp.WindowPostMessageProxy(window, {
+	exports.wpmpFactory = function (name, logMessages, eventSourceOverrideWindow) {
+	    return new wpmp.WindowPostMessageProxy({
 	        processTrackingProperties: {
 	            addTrackingProperties: hpm.HttpPostMessage.addTrackingProperties,
 	            getTrackingProperties: hpm.HttpPostMessage.getTrackingProperties,
 	        },
 	        isErrorMessage: hpm.HttpPostMessage.isErrorMessage,
 	        name: name,
-	        logMessages: logMessages
+	        logMessages: logMessages,
+	        eventSourceOverrideWindow: eventSourceOverrideWindow
 	    });
 	};
 	exports.routerFactory = function (wpmp) {
@@ -2578,387 +2806,424 @@
 
 
 /***/ },
-/* 17 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (factory) {
-	    if (typeof module === 'object' && typeof module.exports === 'object') {
-	        var v = factory(__webpack_require__(18), exports); if (v !== undefined) module.exports = v;
-	    }
-	    else if (true) {
-	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	    }
-	})(function (require, exports) {
-	    "use strict";
-	    var WindowPostMessageProxy = (function () {
-	        function WindowPostMessageProxy(contentWindow, options) {
-	            var _this = this;
-	            if (options === void 0) { options = {
-	                processTrackingProperties: {
-	                    addTrackingProperties: WindowPostMessageProxy.defaultAddTrackingProperties,
-	                    getTrackingProperties: WindowPostMessageProxy.defaultGetTrackingProperties
-	                },
-	                isErrorMessage: WindowPostMessageProxy.defaultIsErrorMessage,
-	                receiveWindow: window,
-	                name: WindowPostMessageProxy.createRandomString()
-	            }; }
-	            this.pendingRequestPromises = {};
-	            // save contentWindow
-	            this.contentWindow = contentWindow;
-	            // save options with defaults
-	            this.addTrackingProperties = (options.processTrackingProperties && options.processTrackingProperties.addTrackingProperties) || WindowPostMessageProxy.defaultAddTrackingProperties;
-	            this.getTrackingProperties = (options.processTrackingProperties && options.processTrackingProperties.getTrackingProperties) || WindowPostMessageProxy.defaultGetTrackingProperties;
-	            this.isErrorMessage = options.isErrorMessage || WindowPostMessageProxy.defaultIsErrorMessage;
-	            this.receiveWindow = options.receiveWindow || window;
-	            this.name = options.name || WindowPostMessageProxy.createRandomString();
-	            this.logMessages = options.logMessages || false;
-	            // Initialize
-	            this.handlers = [];
-	            this.windowMessageHandler = function (event) { return _this.onMessageReceived(event); };
-	            this.start();
-	        }
-	        // Static
-	        WindowPostMessageProxy.defaultAddTrackingProperties = function (message, trackingProperties) {
-	            message[WindowPostMessageProxy.messagePropertyName] = trackingProperties;
-	            return message;
-	        };
-	        WindowPostMessageProxy.defaultGetTrackingProperties = function (message) {
-	            return message[WindowPostMessageProxy.messagePropertyName];
-	        };
-	        WindowPostMessageProxy.defaultIsErrorMessage = function (message) {
-	            return !!message.error;
-	        };
-	        /**
-	         * Adds handler.
-	         * If the first handler whose test method returns true will handle the message and provide a response.
-	         */
-	        WindowPostMessageProxy.prototype.addHandler = function (handler) {
-	            this.handlers.push(handler);
-	        };
-	        /**
-	         * Removes handler.
-	         * The reference must match the original object that was provided when adding the handler.
-	         */
-	        WindowPostMessageProxy.prototype.removeHandler = function (handler) {
-	            var handlerIndex = this.handlers.indexOf(handler);
-	            if (handlerIndex == -1) {
-	                throw new Error("You attempted to remove a handler but no matching handler was found.");
-	            }
-	            this.handlers.splice(handlerIndex, 1);
-	        };
-	        /**
-	         * Start listening to message events.
-	         */
-	        WindowPostMessageProxy.prototype.start = function () {
-	            this.receiveWindow.addEventListener('message', this.windowMessageHandler);
-	        };
-	        /**
-	         * Stops listening to message events.
-	         */
-	        WindowPostMessageProxy.prototype.stop = function () {
-	            this.receiveWindow.removeEventListener('message', this.windowMessageHandler);
-	        };
-	        /**
-	         * Post message to target window with tracking properties added and save deferred object referenced by tracking id.
-	         */
-	        WindowPostMessageProxy.prototype.postMessage = function (message) {
-	            // Add tracking properties to indicate message came from this proxy
-	            var trackingProperties = { id: WindowPostMessageProxy.createRandomString() };
-	            this.addTrackingProperties(message, trackingProperties);
-	            if (this.logMessages) {
-	                console.log(this.name + " Posting message:");
-	                console.log(JSON.stringify(message, null, '  '));
-	            }
-	            this.contentWindow.postMessage(message, "*");
-	            var deferred = WindowPostMessageProxy.createDeferred();
-	            this.pendingRequestPromises[trackingProperties.id] = deferred;
-	            return deferred.promise;
-	        };
-	        /**
-	         * Send response message to target window.
-	         * Response messages re-use tracking properties from a previous request message.
-	         */
-	        WindowPostMessageProxy.prototype.sendResponse = function (message, trackingProperties) {
-	            this.addTrackingProperties(message, trackingProperties);
-	            if (this.logMessages) {
-	                console.log(this.name + " Sending response:");
-	                console.log(JSON.stringify(message, null, '  '));
-	            }
-	            this.contentWindow.postMessage(message, "*");
-	        };
-	        /**
-	         * Message handler.
-	         */
-	        WindowPostMessageProxy.prototype.onMessageReceived = function (event) {
-	            var _this = this;
-	            if (this.logMessages) {
-	                console.log(this.name + " Received message:");
-	                console.log("type: " + event.type);
-	                console.log(JSON.stringify(event.data, null, '  '));
-	            }
-	            var message = event.data;
-	            var trackingProperties = this.getTrackingProperties(message);
-	            // If this proxy instance could not find tracking properties then disregard message since we can't reliably respond
-	            if (!trackingProperties) {
-	                return;
-	            }
-	            var deferred = this.pendingRequestPromises[trackingProperties.id];
-	            // If message does not have a known ID, treat it as a request
-	            // Otherwise, treat message as response
-	            if (!deferred) {
-	                var handled = this.handlers.some(function (handler) {
-	                    if (handler.test(message)) {
-	                        Promise.resolve(handler.handle(message))
-	                            .then(function (responseMessage) {
-	                            _this.sendResponse(responseMessage, trackingProperties);
-	                        });
-	                        return true;
-	                    }
-	                });
-	                /**
-	                 * TODO: Consider returning an error message if nothing handled the message.
-	                 * In the case of the Report receiving messages all of them should be handled,
-	                 * however, in the case of the SDK receiving messages it's likely it won't register handlers
-	                 * for all events. Perhaps make this an option at construction time.
-	                 */
-	                if (!handled) {
-	                    console.warn("Proxy(" + this.name + ") did not handle message. Handlers: " + this.handlers.length + "  Message: " + JSON.stringify(message, null, '') + ".");
-	                }
-	            }
-	            else {
-	                /**
-	                 * If error message reject promise,
-	                 * Otherwise, resolve promise
-	                 */
-	                if (this.isErrorMessage(message)) {
-	                    deferred.reject(message);
-	                }
-	                else {
-	                    deferred.resolve(message);
-	                }
-	                // TODO: Move to .finally clause up where promise is created for better maitenance like original proxy code.
-	                delete this.pendingRequestPromises[trackingProperties.id];
-	            }
-	        };
-	        /**
-	         * Utility to create a deferred object.
-	         */
-	        // TODO: Look to use RSVP library instead of doing this manually.
-	        // From what I searched RSVP would work better because it has .finally and .deferred; however, it doesn't have Typings information. 
-	        WindowPostMessageProxy.createDeferred = function () {
-	            var deferred = {
-	                resolve: null,
-	                reject: null,
-	                promise: null
-	            };
-	            var promise = new Promise(function (resolve, reject) {
-	                deferred.resolve = resolve;
-	                deferred.reject = reject;
-	            });
-	            deferred.promise = promise;
-	            return deferred;
-	        };
-	        /**
-	         * Utility to generate random sequence of characters used as tracking id for promises.
-	         */
-	        WindowPostMessageProxy.createRandomString = function () {
-	            return (Math.random() + 1).toString(36).substring(7);
-	        };
-	        WindowPostMessageProxy.messagePropertyName = "windowPostMessageProxy";
-	        return WindowPostMessageProxy;
-	    }());
-	    exports.WindowPostMessageProxy = WindowPostMessageProxy;
+	(function webpackUniversalModuleDefinition(root, factory) {
+		if(true)
+			module.exports = factory();
+		else if(typeof define === 'function' && define.amd)
+			define([], factory);
+		else if(typeof exports === 'object')
+			exports["window-post-message-proxy"] = factory();
+		else
+			root["window-post-message-proxy"] = factory();
+	})(this, function() {
+	return /******/ (function(modules) { // webpackBootstrap
+	/******/ 	// The module cache
+	/******/ 	var installedModules = {};
+	/******/
+	/******/ 	// The require function
+	/******/ 	function __webpack_require__(moduleId) {
+	/******/
+	/******/ 		// Check if module is in cache
+	/******/ 		if(installedModules[moduleId])
+	/******/ 			return installedModules[moduleId].exports;
+	/******/
+	/******/ 		// Create a new module (and put it into the cache)
+	/******/ 		var module = installedModules[moduleId] = {
+	/******/ 			exports: {},
+	/******/ 			id: moduleId,
+	/******/ 			loaded: false
+	/******/ 		};
+	/******/
+	/******/ 		// Execute the module function
+	/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+	/******/
+	/******/ 		// Flag the module as loaded
+	/******/ 		module.loaded = true;
+	/******/
+	/******/ 		// Return the exports of the module
+	/******/ 		return module.exports;
+	/******/ 	}
+	/******/
+	/******/
+	/******/ 	// expose the modules object (__webpack_modules__)
+	/******/ 	__webpack_require__.m = modules;
+	/******/
+	/******/ 	// expose the module cache
+	/******/ 	__webpack_require__.c = installedModules;
+	/******/
+	/******/ 	// __webpack_public_path__
+	/******/ 	__webpack_require__.p = "";
+	/******/
+	/******/ 	// Load entry module and return exports
+	/******/ 	return __webpack_require__(0);
+	/******/ })
+	/************************************************************************/
+	/******/ ([
+	/* 0 */
+	/***/ function(module, exports) {
+	
+		"use strict";
+		var WindowPostMessageProxy = (function () {
+		    function WindowPostMessageProxy(options) {
+		        var _this = this;
+		        if (options === void 0) { options = {
+		            processTrackingProperties: {
+		                addTrackingProperties: WindowPostMessageProxy.defaultAddTrackingProperties,
+		                getTrackingProperties: WindowPostMessageProxy.defaultGetTrackingProperties
+		            },
+		            isErrorMessage: WindowPostMessageProxy.defaultIsErrorMessage,
+		            receiveWindow: window,
+		            name: WindowPostMessageProxy.createRandomString()
+		        }; }
+		        this.pendingRequestPromises = {};
+		        // save options with defaults
+		        this.addTrackingProperties = (options.processTrackingProperties && options.processTrackingProperties.addTrackingProperties) || WindowPostMessageProxy.defaultAddTrackingProperties;
+		        this.getTrackingProperties = (options.processTrackingProperties && options.processTrackingProperties.getTrackingProperties) || WindowPostMessageProxy.defaultGetTrackingProperties;
+		        this.isErrorMessage = options.isErrorMessage || WindowPostMessageProxy.defaultIsErrorMessage;
+		        this.receiveWindow = options.receiveWindow || window;
+		        this.name = options.name || WindowPostMessageProxy.createRandomString();
+		        this.logMessages = options.logMessages || false;
+		        this.eventSourceOverrideWindow = options.eventSourceOverrideWindow;
+		        if (this.logMessages) {
+		            console.log("new WindowPostMessageProxy created with name: " + this.name + " receiving on window: " + this.receiveWindow.document.title);
+		        }
+		        // Initialize
+		        this.handlers = [];
+		        this.windowMessageHandler = function (event) { return _this.onMessageReceived(event); };
+		        this.start();
+		    }
+		    // Static
+		    WindowPostMessageProxy.defaultAddTrackingProperties = function (message, trackingProperties) {
+		        message[WindowPostMessageProxy.messagePropertyName] = trackingProperties;
+		        return message;
+		    };
+		    WindowPostMessageProxy.defaultGetTrackingProperties = function (message) {
+		        return message[WindowPostMessageProxy.messagePropertyName];
+		    };
+		    WindowPostMessageProxy.defaultIsErrorMessage = function (message) {
+		        return !!message.error;
+		    };
+		    /**
+		     * Adds handler.
+		     * If the first handler whose test method returns true will handle the message and provide a response.
+		     */
+		    WindowPostMessageProxy.prototype.addHandler = function (handler) {
+		        this.handlers.push(handler);
+		    };
+		    /**
+		     * Removes handler.
+		     * The reference must match the original object that was provided when adding the handler.
+		     */
+		    WindowPostMessageProxy.prototype.removeHandler = function (handler) {
+		        var handlerIndex = this.handlers.indexOf(handler);
+		        if (handlerIndex == -1) {
+		            throw new Error("You attempted to remove a handler but no matching handler was found.");
+		        }
+		        this.handlers.splice(handlerIndex, 1);
+		    };
+		    /**
+		     * Start listening to message events.
+		     */
+		    WindowPostMessageProxy.prototype.start = function () {
+		        this.receiveWindow.addEventListener('message', this.windowMessageHandler);
+		    };
+		    /**
+		     * Stops listening to message events.
+		     */
+		    WindowPostMessageProxy.prototype.stop = function () {
+		        this.receiveWindow.removeEventListener('message', this.windowMessageHandler);
+		    };
+		    /**
+		     * Post message to target window with tracking properties added and save deferred object referenced by tracking id.
+		     */
+		    WindowPostMessageProxy.prototype.postMessage = function (targetWindow, message) {
+		        // Add tracking properties to indicate message came from this proxy
+		        var trackingProperties = { id: WindowPostMessageProxy.createRandomString() };
+		        this.addTrackingProperties(message, trackingProperties);
+		        if (this.logMessages) {
+		            console.log(this.name + " Posting message:");
+		            console.log(JSON.stringify(message, null, '  '));
+		        }
+		        targetWindow.postMessage(message, "*");
+		        var deferred = WindowPostMessageProxy.createDeferred();
+		        this.pendingRequestPromises[trackingProperties.id] = deferred;
+		        return deferred.promise;
+		    };
+		    /**
+		     * Send response message to target window.
+		     * Response messages re-use tracking properties from a previous request message.
+		     */
+		    WindowPostMessageProxy.prototype.sendResponse = function (targetWindow, message, trackingProperties) {
+		        this.addTrackingProperties(message, trackingProperties);
+		        if (this.logMessages) {
+		            console.log(this.name + " Sending response:");
+		            console.log(JSON.stringify(message, null, '  '));
+		        }
+		        targetWindow.postMessage(message, "*");
+		    };
+		    /**
+		     * Message handler.
+		     */
+		    WindowPostMessageProxy.prototype.onMessageReceived = function (event) {
+		        var _this = this;
+		        if (this.logMessages) {
+		            console.log(this.name + " Received message:");
+		            console.log("type: " + event.type);
+		            console.log(JSON.stringify(event.data, null, '  '));
+		        }
+		        var sendingWindow = this.eventSourceOverrideWindow || event.source;
+		        var message = event.data;
+		        var trackingProperties = this.getTrackingProperties(message);
+		        // If this proxy instance could not find tracking properties then disregard message since we can't reliably respond
+		        if (!trackingProperties) {
+		            return;
+		        }
+		        var deferred = this.pendingRequestPromises[trackingProperties.id];
+		        // If message does not have a known ID, treat it as a request
+		        // Otherwise, treat message as response
+		        if (!deferred) {
+		            var handled = this.handlers.some(function (handler) {
+		                if (handler.test(message)) {
+		                    Promise.resolve(handler.handle(message))
+		                        .then(function (responseMessage) {
+		                        _this.sendResponse(sendingWindow, responseMessage, trackingProperties);
+		                    });
+		                    return true;
+		                }
+		            });
+		            /**
+		             * TODO: Consider returning an error message if nothing handled the message.
+		             * In the case of the Report receiving messages all of them should be handled,
+		             * however, in the case of the SDK receiving messages it's likely it won't register handlers
+		             * for all events. Perhaps make this an option at construction time.
+		             */
+		            if (!handled) {
+		                console.warn("Proxy(" + this.name + ") did not handle message. Handlers: " + this.handlers.length + "  Message: " + JSON.stringify(message, null, '') + ".");
+		            }
+		        }
+		        else {
+		            /**
+		             * If error message reject promise,
+		             * Otherwise, resolve promise
+		             */
+		            if (this.isErrorMessage(message)) {
+		                deferred.reject(message);
+		            }
+		            else {
+		                deferred.resolve(message);
+		            }
+		            // TODO: Move to .finally clause up where promise is created for better maitenance like original proxy code.
+		            delete this.pendingRequestPromises[trackingProperties.id];
+		        }
+		    };
+		    /**
+		     * Utility to create a deferred object.
+		     */
+		    // TODO: Look to use RSVP library instead of doing this manually.
+		    // From what I searched RSVP would work better because it has .finally and .deferred; however, it doesn't have Typings information. 
+		    WindowPostMessageProxy.createDeferred = function () {
+		        var deferred = {
+		            resolve: null,
+		            reject: null,
+		            promise: null
+		        };
+		        var promise = new Promise(function (resolve, reject) {
+		            deferred.resolve = resolve;
+		            deferred.reject = reject;
+		        });
+		        deferred.promise = promise;
+		        return deferred;
+		    };
+		    /**
+		     * Utility to generate random sequence of characters used as tracking id for promises.
+		     */
+		    WindowPostMessageProxy.createRandomString = function () {
+		        return (Math.random() + 1).toString(36).substring(7);
+		    };
+		    WindowPostMessageProxy.messagePropertyName = "windowPostMessageProxy";
+		    return WindowPostMessageProxy;
+		}());
+		exports.WindowPostMessageProxy = WindowPostMessageProxy;
+	
+	
+	/***/ }
+	/******/ ])
 	});
+	;
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ },
-/* 18 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var map = {
-		"./windowPostMessageProxy": 17,
-		"./windowPostMessageProxy.d": 19,
-		"./windowPostMessageProxy.d.ts": 19,
-		"./windowPostMessageProxy.js": 17,
-		"./windowPostMessageProxy.js.map": 20
-	};
-	function webpackContext(req) {
-		return __webpack_require__(webpackContextResolve(req));
-	};
-	function webpackContextResolve(req) {
-		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
-	};
-	webpackContext.keys = function webpackContextKeys() {
-		return Object.keys(map);
-	};
-	webpackContext.resolve = webpackContextResolve;
-	module.exports = webpackContext;
-	webpackContext.id = 18;
-
-
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
-
-
-
-/***/ },
-/* 20 */
-/***/ function(module, exports) {
-
-
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (factory) {
-	    if (typeof module === 'object' && typeof module.exports === 'object') {
-	        var v = factory(__webpack_require__(22), exports); if (v !== undefined) module.exports = v;
-	    }
-	    else if (true) {
-	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	    }
-	})(function (require, exports) {
-	    "use strict";
-	    var HttpPostMessage = (function () {
-	        function HttpPostMessage(windowPostMessageProxy, defaultHeaders) {
-	            if (defaultHeaders === void 0) { defaultHeaders = {}; }
-	            this.defaultHeaders = defaultHeaders;
-	            this.windowPostMessageProxy = windowPostMessageProxy;
-	        }
-	        // TODO: I the responsibility of knowing how to configure windowPostMessageProxy should
-	        // live in this class, but then we have to have hard dependency for things like ITrackingProperties
-	        HttpPostMessage.addTrackingProperties = function (message, trackingProperties) {
-	            message.headers = message.headers || {};
-	            message.headers.id = trackingProperties.id;
-	            return message;
-	        };
-	        HttpPostMessage.getTrackingProperties = function (message) {
-	            return {
-	                id: message.headers.id
-	            };
-	        };
-	        HttpPostMessage.isErrorMessage = function (message) {
-	            return !(200 <= message.statusCode && message.statusCode < 300);
-	        };
-	        HttpPostMessage.prototype.get = function (url, headers) {
-	            if (headers === void 0) { headers = {}; }
-	            return this.send({
-	                method: "GET",
-	                url: url,
-	                headers: headers
-	            });
-	        };
-	        HttpPostMessage.prototype.post = function (url, body, headers) {
-	            if (headers === void 0) { headers = {}; }
-	            return this.send({
-	                method: "POST",
-	                url: url,
-	                headers: headers,
-	                body: body
-	            });
-	        };
-	        HttpPostMessage.prototype.put = function (url, body, headers) {
-	            if (headers === void 0) { headers = {}; }
-	            return this.send({
-	                method: "PUT",
-	                url: url,
-	                headers: headers,
-	                body: body
-	            });
-	        };
-	        HttpPostMessage.prototype.patch = function (url, body, headers) {
-	            if (headers === void 0) { headers = {}; }
-	            return this.send({
-	                method: "PATCH",
-	                url: url,
-	                headers: headers,
-	                body: body
-	            });
-	        };
-	        HttpPostMessage.prototype.delete = function (url, body, headers) {
-	            if (headers === void 0) { headers = {}; }
-	            return this.send({
-	                method: "DELETE",
-	                url: url,
-	                headers: headers,
-	                body: body
-	            });
-	        };
-	        HttpPostMessage.prototype.send = function (request) {
-	            this.assign(request.headers, this.defaultHeaders);
-	            return this.windowPostMessageProxy.postMessage(request);
-	        };
-	        /**
-	         * Object.assign() polyfill
-	         * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
-	         */
-	        HttpPostMessage.prototype.assign = function (target) {
-	            var sources = [];
-	            for (var _i = 1; _i < arguments.length; _i++) {
-	                sources[_i - 1] = arguments[_i];
-	            }
-	            if (target === undefined || target === null) {
-	                throw new TypeError('Cannot convert undefined or null to object');
-	            }
-	            var output = Object(target);
-	            sources.forEach(function (source) {
-	                if (source !== undefined && source !== null) {
-	                    for (var nextKey in source) {
-	                        if (Object.prototype.hasOwnProperty.call(source, nextKey)) {
-	                            output[nextKey] = source[nextKey];
-	                        }
-	                    }
-	                }
-	            });
-	            return output;
-	        };
-	        return HttpPostMessage;
-	    }());
-	    exports.HttpPostMessage = HttpPostMessage;
+	(function webpackUniversalModuleDefinition(root, factory) {
+		if(true)
+			module.exports = factory();
+		else if(typeof define === 'function' && define.amd)
+			define([], factory);
+		else if(typeof exports === 'object')
+			exports["http-post-message"] = factory();
+		else
+			root["http-post-message"] = factory();
+	})(this, function() {
+	return /******/ (function(modules) { // webpackBootstrap
+	/******/ 	// The module cache
+	/******/ 	var installedModules = {};
+	/******/
+	/******/ 	// The require function
+	/******/ 	function __webpack_require__(moduleId) {
+	/******/
+	/******/ 		// Check if module is in cache
+	/******/ 		if(installedModules[moduleId])
+	/******/ 			return installedModules[moduleId].exports;
+	/******/
+	/******/ 		// Create a new module (and put it into the cache)
+	/******/ 		var module = installedModules[moduleId] = {
+	/******/ 			exports: {},
+	/******/ 			id: moduleId,
+	/******/ 			loaded: false
+	/******/ 		};
+	/******/
+	/******/ 		// Execute the module function
+	/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+	/******/
+	/******/ 		// Flag the module as loaded
+	/******/ 		module.loaded = true;
+	/******/
+	/******/ 		// Return the exports of the module
+	/******/ 		return module.exports;
+	/******/ 	}
+	/******/
+	/******/
+	/******/ 	// expose the modules object (__webpack_modules__)
+	/******/ 	__webpack_require__.m = modules;
+	/******/
+	/******/ 	// expose the module cache
+	/******/ 	__webpack_require__.c = installedModules;
+	/******/
+	/******/ 	// __webpack_public_path__
+	/******/ 	__webpack_require__.p = "";
+	/******/
+	/******/ 	// Load entry module and return exports
+	/******/ 	return __webpack_require__(0);
+	/******/ })
+	/************************************************************************/
+	/******/ ([
+	/* 0 */
+	/***/ function(module, exports) {
+	
+		"use strict";
+		var HttpPostMessage = (function () {
+		    function HttpPostMessage(targetWindow, windowPostMessageProxy, defaultHeaders) {
+		        if (defaultHeaders === void 0) { defaultHeaders = {}; }
+		        this.defaultHeaders = defaultHeaders;
+		        this.targetWindow = targetWindow;
+		        this.windowPostMessageProxy = windowPostMessageProxy;
+		    }
+		    // TODO: I the responsibility of knowing how to configure windowPostMessageProxy should
+		    // live in this class, but then we have to have hard dependency for things like ITrackingProperties
+		    HttpPostMessage.addTrackingProperties = function (message, trackingProperties) {
+		        message.headers = message.headers || {};
+		        message.headers.id = trackingProperties.id;
+		        return message;
+		    };
+		    HttpPostMessage.getTrackingProperties = function (message) {
+		        return {
+		            id: message.headers.id
+		        };
+		    };
+		    HttpPostMessage.isErrorMessage = function (message) {
+		        return !(200 <= message.statusCode && message.statusCode < 300);
+		    };
+		    HttpPostMessage.prototype.get = function (url, headers) {
+		        if (headers === void 0) { headers = {}; }
+		        return this.send({
+		            method: "GET",
+		            url: url,
+		            headers: headers
+		        });
+		    };
+		    HttpPostMessage.prototype.post = function (url, body, headers) {
+		        if (headers === void 0) { headers = {}; }
+		        return this.send({
+		            method: "POST",
+		            url: url,
+		            headers: headers,
+		            body: body
+		        });
+		    };
+		    HttpPostMessage.prototype.put = function (url, body, headers) {
+		        if (headers === void 0) { headers = {}; }
+		        return this.send({
+		            method: "PUT",
+		            url: url,
+		            headers: headers,
+		            body: body
+		        });
+		    };
+		    HttpPostMessage.prototype.patch = function (url, body, headers) {
+		        if (headers === void 0) { headers = {}; }
+		        return this.send({
+		            method: "PATCH",
+		            url: url,
+		            headers: headers,
+		            body: body
+		        });
+		    };
+		    HttpPostMessage.prototype.delete = function (url, body, headers) {
+		        if (body === void 0) { body = null; }
+		        if (headers === void 0) { headers = {}; }
+		        return this.send({
+		            method: "DELETE",
+		            url: url,
+		            headers: headers,
+		            body: body
+		        });
+		    };
+		    HttpPostMessage.prototype.send = function (request) {
+		        this.assign(request.headers, this.defaultHeaders);
+		        return this.windowPostMessageProxy.postMessage(this.targetWindow, request);
+		    };
+		    /**
+		     * Object.assign() polyfill
+		     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+		     */
+		    HttpPostMessage.prototype.assign = function (target) {
+		        var sources = [];
+		        for (var _i = 1; _i < arguments.length; _i++) {
+		            sources[_i - 1] = arguments[_i];
+		        }
+		        if (target === undefined || target === null) {
+		            throw new TypeError('Cannot convert undefined or null to object');
+		        }
+		        var output = Object(target);
+		        sources.forEach(function (source) {
+		            if (source !== undefined && source !== null) {
+		                for (var nextKey in source) {
+		                    if (Object.prototype.hasOwnProperty.call(source, nextKey)) {
+		                        output[nextKey] = source[nextKey];
+		                    }
+		                }
+		            }
+		        });
+		        return output;
+		    };
+		    return HttpPostMessage;
+		}());
+		exports.HttpPostMessage = HttpPostMessage;
+	
+	
+	/***/ }
+	/******/ ])
 	});
+	;
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var map = {
-		"./httpPostMessage": 21,
-		"./httpPostMessage.d": 23,
-		"./httpPostMessage.d.ts": 23,
-		"./httpPostMessage.js": 21,
-		"./httpPostMessage.js.map": 24
-	};
-	function webpackContext(req) {
-		return __webpack_require__(webpackContextResolve(req));
-	};
-	function webpackContextResolve(req) {
-		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
-	};
-	webpackContext.keys = function webpackContextKeys() {
-		return Object.keys(map);
-	};
-	webpackContext.resolve = webpackContextResolve;
-	module.exports = webpackContext;
-	webpackContext.id = 22;
-
-
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
-
-
-
-/***/ },
-/* 24 */
-/***/ function(module, exports) {
-
-
-
-/***/ },
-/* 25 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function webpackUniversalModuleDefinition(root, factory) {

@@ -1,6 +1,6 @@
 import * as service from './service';
-import * as protocol from './protocol';
 import * as embed from './embed';
+import * as models from 'powerbi-models';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as filters from 'powerbi-filters';
@@ -24,7 +24,7 @@ export class Report extends embed.Embed {
      * report.addFilter(filter, target);
      * ```
      */
-    addFilter(filter: filters.IFilter, target?: protocol.IPageTarget | protocol.IVisualTarget): Promise<void> {
+    addFilter(filter: filters.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
         return this.hpm.post<void>(`${targetUrl}/filters`, filter)
             .catch(response => {
@@ -55,7 +55,7 @@ export class Report extends embed.Embed {
      *      });
      * ```
      */
-    getFilters(target?: protocol.IPageTarget | protocol.IVisualTarget): Promise<filters.IFilter[]> {
+    getFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<filters.IFilter[]> {
         const targetUrl = this.getTargetUrl(target);
         return this.hpm.get<filters.IFilter[]>(`${targetUrl}/filters`)
             .then(response => response.body,
@@ -74,8 +74,8 @@ export class Report extends embed.Embed {
      *  });
      * ```
      */
-    getPages(): Promise<protocol.IPage[]> {
-        return this.hpm.get<protocol.IPage[]>('/report/pages')
+    getPages(): Promise<models.IPage[]> {
+        return this.hpm.get<models.IPage[]>('/report/pages')
             .then(response => response.body,
                 response => {
                     throw response.body;
@@ -94,12 +94,12 @@ export class Report extends embed.Embed {
      * Set the active page
      */
     setPage(pageName: string): Promise<void> {
-        const page: protocol.IPage = {
+        const page: models.IPage = {
             name: pageName,
             displayName: null
         };
 
-        return this.hpm.put<protocol.IError[]>('/report/pages/active', page)
+        return this.hpm.put<models.IError[]>('/report/pages/active', page)
             .catch(response => {
                 throw response.body;
             });
@@ -108,9 +108,9 @@ export class Report extends embed.Embed {
     /**
      * Remove specific filter from report, page, or visual
      */
-    removeFilter(filter: filters.IFilter, target?: protocol.IPageTarget | protocol.IVisualTarget): Promise<void> {
+    removeFilter(filter: filters.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.delete<protocol.IError[]>(`${targetUrl}/filters`, filter)
+        return this.hpm.delete<models.IError[]>(`${targetUrl}/filters`, filter)
             .catch(response => {
                 throw response.body;
             });
@@ -124,7 +124,7 @@ export class Report extends embed.Embed {
      * ```
      */
     removeAllFilters(): Promise<void> {
-        return this.hpm.delete<protocol.IError[]>('/report/allfilters', null)
+        return this.hpm.delete<models.IError[]>('/report/allfilters', null)
             .catch(response => {
                 throw response.body;
             });
@@ -135,9 +135,9 @@ export class Report extends embed.Embed {
      * 
      * The existing filter will be replaced with the new filter.
      */
-    updateFilter(filter: filters.IFilter, target?: protocol.IPageTarget | protocol.IVisualTarget): Promise<void> {
+    updateFilter(filter: filters.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.put<protocol.IError[]>(`${targetUrl}/filters`, filter)
+        return this.hpm.put<models.IError[]>(`${targetUrl}/filters`, filter)
             .catch(response => {
                 throw response.body;
             });
@@ -146,8 +146,8 @@ export class Report extends embed.Embed {
     /**
      * Update settings of report (filter pane visibility, page navigation visibility)
      */
-    updateSettings(settings: protocol.ISettings): Promise<void> {
-        return this.hpm.patch<protocol.IError[]>('/report/settings', settings)
+    updateSettings(settings: models.ISettings): Promise<void> {
+        return this.hpm.patch<models.IError[]>('/report/settings', settings)
             .catch(response => {
                 throw response.body;
             });
@@ -157,7 +157,7 @@ export class Report extends embed.Embed {
      * Translate target into url
      * Target may be to the whole report, speific page, or specific visual
      */
-    private getTargetUrl(target?: protocol.IPageTarget | protocol.IVisualTarget): string {
+    private getTargetUrl(target?: models.IPageTarget | models.IVisualTarget): string {
         let targetUrl;
 
         /**
@@ -170,10 +170,10 @@ export class Report extends embed.Embed {
             targetUrl = '/report';
         }
         else if(target.type === "page") {
-            targetUrl = `/report/pages/${(<protocol.IPageTarget>target).name}`;
+            targetUrl = `/report/pages/${(<models.IPageTarget>target).name}`;
         }
         else if(target.type === "visual") {
-            targetUrl = `/report/visuals/${(<protocol.IVisualTarget>target).id}`;
+            targetUrl = `/report/visuals/${(<models.IVisualTarget>target).id}`;
         }
         else {
             throw new Error(`target.type must be either 'page' or 'visual'. You passed: ${target.type}`);
