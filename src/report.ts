@@ -26,7 +26,7 @@ export class Report extends embed.Embed {
      */
     addFilter(filter: filters.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.post<void>(`${targetUrl}/filters`, filter)
+        return this.hpm.post<void>(`${targetUrl}/filters`, filter, { "report-id": this.config.id })
             .catch(response => {
                 throw response.body;
             });
@@ -57,7 +57,7 @@ export class Report extends embed.Embed {
      */
     getFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<filters.IFilter[]> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.get<filters.IFilter[]>(`${targetUrl}/filters`)
+        return this.hpm.get<filters.IFilter[]>(`${targetUrl}/filters`, { "report-id": this.config.id })
             .then(response => response.body,
                 response => {
                     throw response.body;
@@ -75,7 +75,7 @@ export class Report extends embed.Embed {
      * ```
      */
     getPages(): Promise<models.IPage[]> {
-        return this.hpm.get<models.IPage[]>('/report/pages')
+        return this.hpm.get<models.IPage[]>('/report/pages', { "report-id": this.config.id })
             .then(response => response.body,
                 response => {
                     throw response.body;
@@ -99,7 +99,7 @@ export class Report extends embed.Embed {
             displayName: null
         };
 
-        return this.hpm.put<models.IError[]>('/report/pages/active', page)
+        return this.hpm.put<models.IError[]>('/report/pages/active', page, { "report-id": this.config.id })
             .catch(response => {
                 throw response.body;
             });
@@ -110,7 +110,7 @@ export class Report extends embed.Embed {
      */
     removeFilter(filter: filters.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.delete<models.IError[]>(`${targetUrl}/filters`, filter)
+        return this.hpm.delete<models.IError[]>(`${targetUrl}/filters`, filter, { "report-id": this.config.id })
             .catch(response => {
                 throw response.body;
             });
@@ -124,7 +124,7 @@ export class Report extends embed.Embed {
      * ```
      */
     removeAllFilters(): Promise<void> {
-        return this.hpm.delete<models.IError[]>('/report/allfilters', null)
+        return this.hpm.delete<models.IError[]>('/report/allfilters', null, { "report-id": this.config.id })
             .catch(response => {
                 throw response.body;
             });
@@ -137,7 +137,7 @@ export class Report extends embed.Embed {
      */
     updateFilter(filter: filters.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.put<models.IError[]>(`${targetUrl}/filters`, filter)
+        return this.hpm.put<models.IError[]>(`${targetUrl}/filters`, filter, { "report-id": this.config.id })
             .catch(response => {
                 throw response.body;
             });
@@ -147,7 +147,7 @@ export class Report extends embed.Embed {
      * Update settings of report (filter pane visibility, page navigation visibility)
      */
     updateSettings(settings: models.ISettings): Promise<void> {
-        return this.hpm.patch<models.IError[]>('/report/settings', settings)
+        return this.hpm.patch<models.IError[]>('/report/settings', settings, { "report-id": this.config.id })
             .catch(response => {
                 throw response.body;
             });

@@ -117,7 +117,7 @@ export abstract class Embed {
             throw errors;
         }
 
-        return this.hpm.post<void>('/report/load', config)
+        return this.hpm.post<void>('/report/load', config, { [`${this.config.type}-id`]: config.id })
             .catch(response => {
                 throw response.body;
             });
