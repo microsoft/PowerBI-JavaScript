@@ -111,6 +111,26 @@ export class PowerBi {
 
             this.handleEvent(event);
         });
+        this.router.post(`/reports/:reportId/pages/:pageName/events/:eventName`, (req, res) => {
+            const event: IEvent<any> = {
+                type: 'report',
+                id: req.params.reportId,
+                name: req.params.eventName,
+                value: req.body
+            };
+
+            this.handleEvent(event);
+        });
+        this.router.post(`/reports/:reportId/visuals/:pageName/events/:eventName`, (req, res) => {
+            const event: IEvent<any> = {
+                type: 'report',
+                id: req.params.reportId,
+                name: req.params.eventName,
+                value: req.body
+            };
+
+            this.handleEvent(event);
+        });
 
         this.embeds = [];
         
