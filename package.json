@@ -59,12 +59,11 @@
     "yargs": "^4.4.0"
   },
   "dependencies": {
-    "http-post-message": "file:///C:\\Users\\mattm\\Source\\Repos\\http-post-message",
+    "http-post-message": "^0.1.0",
     "jsen": "^0.6.1",
-    "powerbi-filters": "file:///C:\\Users\\mattm\\Source\\Repos\\powerbi-filters",
-    "powerbi-models": "file:///C:\\Users\\mattm\\Source\\Repos\\powerbi-models",
-    "powerbi-router": "file:///C:\\Users\\mattm\\Source\\Repos\\powerbi-router",
-    "window-post-message-proxy": "file:///C:\\Users\\mattm\\Source\\Repos\\window-post-message-proxy"
+    "powerbi-models": "^0.2.0",
+    "powerbi-router": "^0.1.0",
+    "window-post-message-proxy": "^0.1.0"
   },
   "publishConfig": {
     "tag": "beta"
