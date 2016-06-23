@@ -35,11 +35,15 @@ export interface IPowerBiElement extends HTMLElement {
     powerBiEmbed: embed.Embed;
 }
 
-export interface IPowerBiConfiguration {
-    autoEmbedOnContentLoaded?: boolean;
-    onError?: (error: any) => any;
+export interface IDebugOptions {
     logMessages?: boolean;
     wpmpName?: string;
+    eventSourceOverrideWindow?: Window;
+}
+
+export interface IServiceConfiguration extends IDebugOptions {
+    autoEmbedOnContentLoaded?: boolean;
+    onError?: (error: any) => any;
 }
 
 export class PowerBi {
@@ -71,7 +75,7 @@ export class PowerBi {
     /**
      * Default configuration for service.
      */
-    private static defaultConfig: IPowerBiConfiguration = {
+    private static defaultConfig: IServiceConfiguration = {
         autoEmbedOnContentLoaded: false,
         onError: (...args) => console.log(args[0], args.slice(1))
     };
@@ -80,7 +84,7 @@ export class PowerBi {
     accessToken: string;
     
     /** Configuration object */
-    private config: IPowerBiConfiguration;
+    private config: IServiceConfiguration;
     
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds: embed.Embed[];
@@ -88,7 +92,7 @@ export class PowerBi {
     public wpmp: wpmp.WindowPostMessageProxy;
     private router: router.Router;
 
-    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config: IPowerBiConfiguration = {}) {
+    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config: IServiceConfiguration = {}) {
         this.hpmFactory = hpmFactory;
         this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
         this.router = routerFactory(this.wpmp);

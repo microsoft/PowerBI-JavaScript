@@ -21,12 +21,7 @@ declare global {
     }
 }
 
-export interface IDebugOptions {
-    logMessages?: boolean;
-    wpmpName?: string;
-}
-
-export interface IEmbedConfiguration extends IDebugOptions {
+export interface IEmbedConfiguration {
     type?: string;
     id?: string;
     embedUrl?: string;
@@ -36,7 +31,7 @@ export interface IEmbedConfiguration extends IDebugOptions {
 
 export type IGetGlobalAccessToken = () => string;
 
-export interface IInternalEmbedConfiguration extends models.ILoadConfiguration, IDebugOptions {
+export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {
     type: string;
     embedUrl: string;
     getGlobalAccessToken: IGetGlobalAccessToken;
