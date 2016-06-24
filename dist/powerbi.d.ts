@@ -36,11 +36,14 @@ export interface IRouterFactory {
 export interface IPowerBiElement extends HTMLElement {
     powerBiEmbed: embed.Embed;
 }
-export interface IPowerBiConfiguration {
-    autoEmbedOnContentLoaded?: boolean;
-    onError?: (error: any) => any;
+export interface IDebugOptions {
     logMessages?: boolean;
     wpmpName?: string;
+    eventSourceOverrideWindow?: Window;
+}
+export interface IServiceConfiguration extends IDebugOptions {
+    autoEmbedOnContentLoaded?: boolean;
+    onError?: (error: any) => any;
 }
 export declare class PowerBi {
     /**
@@ -72,7 +75,7 @@ export declare class PowerBi {
     private hpmFactory;
     wpmp: wpmp.WindowPostMessageProxy;
     private router;
-    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IPowerBiConfiguration);
+    constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IServiceConfiguration);
     /**
      * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed-url' attribute
      * and automatically attempts to embed a powerbi component based on information from the attributes.

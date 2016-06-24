@@ -82,6 +82,24 @@
 	            };
 	            _this.handleEvent(event);
 	        });
+	        this.router.post("/reports/:reportId/pages/:pageName/events/:eventName", function (req, res) {
+	            var event = {
+	                type: 'report',
+	                id: req.params.reportId,
+	                name: req.params.eventName,
+	                value: req.body
+	            };
+	            _this.handleEvent(event);
+	        });
+	        this.router.post("/reports/:reportId/visuals/:pageName/events/:eventName", function (req, res) {
+	            var event = {
+	                type: 'report',
+	                id: req.params.reportId,
+	                name: req.params.eventName,
+	                value: req.body
+	            };
+	            _this.handleEvent(event);
+	        });
 	        this.embeds = [];
 	        // TODO: Change when Object.assign is available.
 	        this.config = util_1.Utils.assign({}, PowerBi.defaultConfig, config);
@@ -340,10 +358,11 @@
 	        if (errors) {
 	            throw errors;
 	        }
-	        return this.hpm.post('/report/load', config)
+	        return this.hpm.post('/report/load', config, (_a = {}, _a[this.config.type + "-id"] = config.id, _a))
 	            .catch(function (response) {
 	            throw response.body;
 	        });
+	        var _a;
 	    };
 	    Embed.prototype.handleEvent = function (event) {
 	        this.eventHandlers
@@ -608,12 +627,19 @@
 	/* 0 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		exports.settingsSchema = __webpack_require__(1);
+		var __extends = (this && this.__extends) || function (d, b) {
+		    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+		    function __() { this.constructor = d; }
+		    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+		};
+		exports.advancedFilterSchema = __webpack_require__(1);
 		exports.loadSchema = __webpack_require__(2);
-		exports.pageTargetSchema = __webpack_require__(3);
-		exports.visualTargetSchema = __webpack_require__(4);
-		exports.pageSchema = __webpack_require__(5);
-		var jsen = __webpack_require__(6);
+		exports.pageSchema = __webpack_require__(3);
+		exports.pageTargetSchema = __webpack_require__(4);
+		exports.settingsSchema = __webpack_require__(5);
+		exports.valueFilterSchema = __webpack_require__(6);
+		exports.visualTargetSchema = __webpack_require__(7);
+		var jsen = __webpack_require__(8);
 		function normalizeError(error) {
 		    if (!error.message) {
 		        error.message = error.path + " is invalid. Not meeting " + error.keyword + " constraint";
@@ -639,7 +665,12 @@
 		    };
 		}
 		exports.validate = validate;
-		exports.validateSettings = validate(exports.settingsSchema);
+		exports.validateSettings = validate(exports.settingsSchema, {
+		    schemas: {
+		        valueFilter: exports.valueFilterSchema,
+		        advancedFilter: exports.advancedFilterSchema
+		    }
+		});
 		exports.validateLoad = validate(exports.loadSchema, {
 		    schemas: {
 		        settings: exports.settingsSchema
@@ -648,6 +679,112 @@
 		exports.validatePageTarget = validate(exports.pageTargetSchema);
 		exports.validateVisualTarget = validate(exports.visualTargetSchema);
 		exports.validatePage = validate(exports.pageSchema);
+		exports.validateValueFilter = validate(exports.valueFilterSchema);
+		exports.validateAdvancedFilter = validate(exports.advancedFilterSchema);
+		function isMeasure(arg) {
+		    return arg.table !== undefined && arg.measure !== undefined;
+		}
+		exports.isMeasure = isMeasure;
+		function isColumn(arg) {
+		    return arg.table !== undefined && arg.column !== undefined;
+		}
+		exports.isColumn = isColumn;
+		function isHierarchy(arg) {
+		    return arg.table !== undefined && arg.hierarchy !== undefined && arg.hierarchyLevel !== undefined;
+		}
+		exports.isHierarchy = isHierarchy;
+		var Filter = (function () {
+		    function Filter(target) {
+		        this.target = target;
+		    }
+		    Filter.prototype.toJSON = function () {
+		        return {
+		            $schema: this.schemaUrl,
+		            target: this.target
+		        };
+		    };
+		    ;
+		    return Filter;
+		}());
+		exports.Filter = Filter;
+		var ValueFilter = (function (_super) {
+		    __extends(ValueFilter, _super);
+		    function ValueFilter(target, operator) {
+		        var values = [];
+		        for (var _i = 2; _i < arguments.length; _i++) {
+		            values[_i - 2] = arguments[_i];
+		        }
+		        _super.call(this, target);
+		        this.operator = operator;
+		        this.schemaUrl = ValueFilter.schemaUrl;
+		        if (values.length === 0) {
+		            throw new Error("values must be a non-empty array. You passed: " + values);
+		        }
+		        /**
+		         * Accept values as array instead of as individual arguments
+		         * new ValueFilter('a', 'b', 1, 2);
+		         * new valueFilter('a', 'b', [1,2]);
+		         */
+		        if (Array.isArray(values[0])) {
+		            this.values = values[0];
+		        }
+		        else {
+		            this.values = values;
+		        }
+		    }
+		    ValueFilter.prototype.toJSON = function () {
+		        var filter = _super.prototype.toJSON.call(this);
+		        filter.operator = this.operator;
+		        filter.values = this.values;
+		        return filter;
+		    };
+		    ValueFilter.schemaUrl = "http://powerbi.com/product/schema#basic";
+		    return ValueFilter;
+		}(Filter));
+		exports.ValueFilter = ValueFilter;
+		var AdvancedFilter = (function (_super) {
+		    __extends(AdvancedFilter, _super);
+		    function AdvancedFilter(target, logicalOperator) {
+		        var conditions = [];
+		        for (var _i = 2; _i < arguments.length; _i++) {
+		            conditions[_i - 2] = arguments[_i];
+		        }
+		        _super.call(this, target);
+		        this.schemaUrl = AdvancedFilter.schemaUrl;
+		        // Guard statements
+		        if (typeof logicalOperator !== "string" || logicalOperator.length === 0) {
+		            // TODO: It would be nicer to list out the possible logical operators.
+		            throw new Error("logicalOperator must be a valid operator, You passed: " + logicalOperator);
+		        }
+		        this.logicalOperator = logicalOperator;
+		        if (conditions.length === 0) {
+		            throw new Error("conditions must be a non-empty array. You passed: " + conditions);
+		        }
+		        if (conditions.length > 2) {
+		            throw new Error("AdvancedFilters may not have more than two conditions. You passed: " + conditions.length);
+		        }
+		        /**
+		         * Accept conditions as array instead of as individual arguments
+		         * new ValueFilter('a', 'b', "And", { value: 1, operator: "Equals" }, { value: 2, operator: "IsGreaterThan" });
+		         * new valueFilter('a', 'b', "And", [{ value: 1, operator: "Equals" }, { value: 2, operator: "IsGreaterThan" }]);
+		         */
+		        if (Array.isArray(conditions[0])) {
+		            this.conditions = conditions[0];
+		        }
+		        else {
+		            this.conditions = conditions;
+		        }
+		    }
+		    AdvancedFilter.prototype.toJSON = function () {
+		        var filter = _super.prototype.toJSON.call(this);
+		        filter.logicalOperator = this.logicalOperator;
+		        filter.conditions = this.conditions;
+		        return filter;
+		    };
+		    AdvancedFilter.schemaUrl = "http://powerbi.com/product/schema#advanced";
+		    return AdvancedFilter;
+		}(Filter));
+		exports.AdvancedFilter = AdvancedFilter;
 	
 	
 	/***/ },
@@ -658,28 +795,56 @@
 			"$schema": "http://json-schema.org/draft-04/schema#",
 			"type": "object",
 			"properties": {
-				"filter": {
-					"type": "object"
+				"target": {
+					"type": "object",
+					"properties": {
+						"table": {
+							"type": "string"
+						},
+						"column": {
+							"type": "string"
+						},
+						"hierarchy": {
+							"type": "string"
+						},
+						"hierarchyLevel": {
+							"type": "string"
+						},
+						"measure": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"table"
+					]
 				},
-				"filterPaneEnabled": {
-					"type": "boolean",
-					"messages": {
-						"type": "filterPaneEnabled must be a boolean"
-					}
+				"logicalOperator": {
+					"type": "string"
 				},
-				"pageName": {
-					"type": "string",
-					"messages": {
-						"type": "pageName must be a string"
-					}
-				},
-				"pageNavigationEnabled": {
-					"type": "boolean",
-					"messages": {
-						"type": "pageNavigationEnabled must be a boolean"
+				"conditions": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"value": {
+								"type": "string"
+							},
+							"operator": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"value",
+							"operator"
+						]
 					}
 				}
-			}
+			},
+			"required": [
+				"target",
+				"logicalOperator",
+				"conditions"
+			]
 		};
 	
 	/***/ },
@@ -703,7 +868,8 @@
 					"messages": {
 						"type": "id must be a string",
 						"required": "id is required"
-					}
+					},
+					"invalidMessage": "id property is invalid"
 				},
 				"settings": {
 					"$ref": "#settings"
@@ -717,6 +883,35 @@
 	
 	/***/ },
 	/* 3 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"name": {
+					"type": "string",
+					"messages": {
+						"type": "name must be a string",
+						"required": "name is required"
+					}
+				},
+				"displayName": {
+					"type": "string",
+					"messages": {
+						"type": "displayName must be a string",
+						"required": "displayName is required"
+					}
+				}
+			},
+			"required": [
+				"name",
+				"displayName"
+			]
+		};
+	
+	/***/ },
+	/* 4 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -749,7 +944,100 @@
 		};
 	
 	/***/ },
-	/* 4 */
+	/* 5 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"filter": {
+					"type": "object",
+					"oneOf": [
+						{
+							"valueFilter": {
+								"$ref": "#valueFilter"
+							}
+						},
+						{
+							"advancedFilter": {
+								"$ref": "#advancedFilter"
+							}
+						}
+					],
+					"invalidMessage": "filter property is invalid"
+				},
+				"filterPaneEnabled": {
+					"type": "boolean",
+					"messages": {
+						"type": "filterPaneEnabled must be a boolean"
+					}
+				},
+				"pageName": {
+					"type": "string",
+					"messages": {
+						"type": "pageName must be a string"
+					}
+				},
+				"pageNavigationEnabled": {
+					"type": "boolean",
+					"messages": {
+						"type": "pageNavigationEnabled must be a boolean"
+					}
+				}
+			}
+		};
+	
+	/***/ },
+	/* 6 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"target": {
+					"type": "object",
+					"properties": {
+						"table": {
+							"type": "string"
+						},
+						"column": {
+							"type": "string"
+						},
+						"hierarchy": {
+							"type": "string"
+						},
+						"hierarchyLevel": {
+							"type": "string"
+						},
+						"measure": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"table"
+					]
+				},
+				"operator": {
+					"type": "string"
+				},
+				"values": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"required": [
+				"target",
+				"operator",
+				"values"
+			]
+		};
+	
+	/***/ },
+	/* 7 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -782,42 +1070,13 @@
 		};
 	
 	/***/ },
-	/* 5 */
-	/***/ function(module, exports) {
-	
-		module.exports = {
-			"$schema": "http://json-schema.org/draft-04/schema#",
-			"type": "object",
-			"properties": {
-				"name": {
-					"type": "string",
-					"messages": {
-						"type": "name must be a string",
-						"required": "name is required"
-					}
-				},
-				"displayName": {
-					"type": "string",
-					"messages": {
-						"type": "displayName must be a string",
-						"required": "displayName is required"
-					}
-				}
-			},
-			"required": [
-				"name",
-				"displayName"
-			]
-		};
-	
-	/***/ },
-	/* 6 */
+	/* 8 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		module.exports = __webpack_require__(7);
+		module.exports = __webpack_require__(9);
 	
 	/***/ },
-	/* 7 */
+	/* 9 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -829,11 +1088,11 @@
 		    INVALID_SCHEMA = 'jsen: invalid schema object',
 		    browser = typeof window === 'object' && !!window.navigator,   // jshint ignore: line
 		    nodev0 = typeof process === 'object' && process.version.split('.')[0] === 'v0',
-		    func = __webpack_require__(9),
-		    equal = __webpack_require__(10),
-		    unique = __webpack_require__(11),
-		    SchemaResolver = __webpack_require__(12),
-		    formats = __webpack_require__(14),
+		    func = __webpack_require__(11),
+		    equal = __webpack_require__(12),
+		    unique = __webpack_require__(13),
+		    SchemaResolver = __webpack_require__(14),
+		    formats = __webpack_require__(16),
 		    types = {},
 		    keywords = {};
 		
@@ -1812,10 +2071,10 @@
 		
 		module.exports = jsen;
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 	
 	/***/ },
-	/* 8 */
+	/* 10 */
 	/***/ function(module, exports) {
 	
 		// shim for using process in browser
@@ -1940,7 +2199,7 @@
 	
 	
 	/***/ },
-	/* 9 */
+	/* 11 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2007,7 +2266,7 @@
 		};
 	
 	/***/ },
-	/* 10 */
+	/* 12 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2084,12 +2343,12 @@
 		module.exports = equal;
 	
 	/***/ },
-	/* 11 */
+	/* 13 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		'use strict';
 		
-		var equal = __webpack_require__(10);
+		var equal = __webpack_require__(12);
 		
 		function findIndex(arr, value, comparator) {
 		    for (var i = 0, len = arr.length; i < len; i++) {
@@ -2110,12 +2369,12 @@
 		module.exports.findIndex = findIndex;
 	
 	/***/ },
-	/* 12 */
+	/* 14 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		'use strict';
 		
-		var metaschema = __webpack_require__(13),
+		var metaschema = __webpack_require__(15),
 		    INVALID_SCHEMA_REFERENCE = 'jsen: invalid schema reference';
 		
 		function get(obj, path) {
@@ -2305,7 +2564,7 @@
 		module.exports = SchemaResolver;
 	
 	/***/ },
-	/* 13 */
+	/* 15 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -2539,7 +2798,7 @@
 		};
 	
 	/***/ },
-	/* 14 */
+	/* 16 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2600,7 +2859,7 @@
 	     */
 	    Report.prototype.addFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.post(targetUrl + "/filters", filter)
+	        return this.hpm.post(targetUrl + "/filters", filter, { "report-id": this.config.id })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2630,7 +2889,7 @@
 	     */
 	    Report.prototype.getFilters = function (target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.get(targetUrl + "/filters")
+	        return this.hpm.get(targetUrl + "/filters", { "report-id": this.config.id })
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
@@ -2646,7 +2905,7 @@
 	     * ```
 	     */
 	    Report.prototype.getPages = function () {
-	        return this.hpm.get('/report/pages')
+	        return this.hpm.get('/report/pages', { "report-id": this.config.id })
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
@@ -2665,7 +2924,7 @@
 	            name: pageName,
 	            displayName: null
 	        };
-	        return this.hpm.put('/report/pages/active', page)
+	        return this.hpm.put('/report/pages/active', page, { "report-id": this.config.id })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2675,7 +2934,7 @@
 	     */
 	    Report.prototype.removeFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.delete(targetUrl + "/filters", filter)
+	        return this.hpm.delete(targetUrl + "/filters", filter, { "report-id": this.config.id })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2688,7 +2947,7 @@
 	     * ```
 	     */
 	    Report.prototype.removeAllFilters = function () {
-	        return this.hpm.delete('/report/allfilters', null)
+	        return this.hpm.delete('/report/allfilters', null, { "report-id": this.config.id })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2700,7 +2959,7 @@
 	     */
 	    Report.prototype.updateFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.put(targetUrl + "/filters", filter)
+	        return this.hpm.put(targetUrl + "/filters", filter, { "report-id": this.config.id })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2709,7 +2968,7 @@
 	     * Update settings of report (filter pane visibility, page navigation visibility)
 	     */
 	    Report.prototype.updateSettings = function (settings) {
-	        return this.hpm.patch('/report/settings', settings)
+	        return this.hpm.patch('/report/settings', settings, { "report-id": this.config.id })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2887,6 +3146,7 @@
 		        this.name = options.name || WindowPostMessageProxy.createRandomString();
 		        this.logMessages = options.logMessages || false;
 		        this.eventSourceOverrideWindow = options.eventSourceOverrideWindow;
+		        this.suppressMessageNotHandledWarning = options.suppressMessageNotHandledWarning || false;
 		        if (this.logMessages) {
 		            console.log("new WindowPostMessageProxy created with name: " + this.name + " receiving on window: " + this.receiveWindow.document.title);
 		        }
@@ -2977,11 +3237,10 @@
 		        var sendingWindow = this.eventSourceOverrideWindow || event.source;
 		        var message = event.data;
 		        var trackingProperties = this.getTrackingProperties(message);
-		        // If this proxy instance could not find tracking properties then disregard message since we can't reliably respond
-		        if (!trackingProperties) {
-		            return;
+		        var deferred;
+		        if (trackingProperties) {
+		            deferred = this.pendingRequestPromises[trackingProperties.id];
 		        }
-		        var deferred = this.pendingRequestPromises[trackingProperties.id];
 		        // If message does not have a known ID, treat it as a request
 		        // Otherwise, treat message as response
 		        if (!deferred) {
@@ -3000,7 +3259,7 @@
 		             * however, in the case of the SDK receiving messages it's likely it won't register handlers
 		             * for all events. Perhaps make this an option at construction time.
 		             */
-		            if (!handled) {
+		            if (!handled && !this.suppressMessageNotHandledWarning) {
 		                console.warn("Proxy(" + this.name + ") did not handle message. Handlers: " + this.handlers.length + "  Message: " + JSON.stringify(message, null, '') + ".");
 		            }
 		        }
@@ -3127,7 +3386,9 @@
 		    // live in this class, but then we have to have hard dependency for things like ITrackingProperties
 		    HttpPostMessage.addTrackingProperties = function (message, trackingProperties) {
 		        message.headers = message.headers || {};
-		        message.headers.id = trackingProperties.id;
+		        if (trackingProperties && trackingProperties.id) {
+		            message.headers.id = trackingProperties.id;
+		        }
 		        return message;
 		    };
 		    HttpPostMessage.getTrackingProperties = function (message) {
