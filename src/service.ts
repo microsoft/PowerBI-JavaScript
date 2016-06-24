@@ -46,7 +46,7 @@ export interface IServiceConfiguration extends IDebugOptions {
     onError?: (error: any) => any;
 }
 
-export class PowerBi {
+export class Service {
 
     /**
      * List of components this service can embed.
@@ -135,7 +135,7 @@ export class PowerBi {
         this.embeds = [];
         
         // TODO: Change when Object.assign is available.
-        this.config = Utils.assign({}, PowerBi.defaultConfig, config);
+        this.config = Utils.assign({}, Service.defaultConfig, config);
         
         if (this.config.autoEmbedOnContentLoaded) {
             this.enableAutoEmbed();
@@ -187,7 +187,7 @@ export class PowerBi {
         // Save type on configuration so it can be referenced later at known location
         config.type = componentType;
         
-        const Component = Utils.find(component => componentType === component.type.toLowerCase(), PowerBi.components);
+        const Component = Utils.find(component => componentType === component.type.toLowerCase(), Service.components);
         if (!Component) {
             throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
         }

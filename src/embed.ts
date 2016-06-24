@@ -43,7 +43,7 @@ export interface IInternalEventHandler<T> {
 }
 
 export interface IEmbedConstructor {
-    new (service: service.PowerBi, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration): Embed;
+    new (service: service.Service, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration): Embed;
     type: string;
 }
 
@@ -59,7 +59,7 @@ export abstract class Embed {
 
     eventHandlers: IInternalEventHandler<any>[];
     hpm: hpm.HttpPostMessage;
-    service: service.PowerBi;
+    service: service.Service;
     element: HTMLElement;
     iframe: HTMLIFrameElement;
     config: IInternalEmbedConfiguration;
@@ -68,7 +68,7 @@ export abstract class Embed {
      * Note: there is circular reference between embeds and service
      * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
      */
-    constructor(service: service.PowerBi, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration) {
+    constructor(service: service.Service, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration) {
         this.eventHandlers = [];
         this.service = service;
         this.element = element;

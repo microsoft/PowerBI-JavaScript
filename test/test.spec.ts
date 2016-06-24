@@ -21,11 +21,11 @@ declare global {
 let logMessages = (window.__karma__.config.args[0] === 'logMessages');
 
 describe('powerbi', function () {
-  let powerbi: service.PowerBi;
+  let powerbi: service.Service;
   let $element: JQuery;
 
   beforeAll(function () {
-    powerbi = new service.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+    powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
     powerbi.accessToken = 'ABC123';
     $element = $('<div id="powerbi-fixture"></div>').appendTo(document.body);
   });
@@ -313,13 +313,13 @@ describe('powerbi', function () {
 });
 
 describe('embed', function () {
-  let powerbi: service.PowerBi;
+  let powerbi: service.Service;
   let $element: JQuery;
   let $container: JQuery;
   let $iframe: JQuery;
 
   beforeAll(function () {
-    powerbi = new service.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+    powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
     powerbi.accessToken = 'ABC123';
     $element = $('<div id="powerbi-fixture"></div>').appendTo(document.body);
   });
@@ -2289,7 +2289,7 @@ describe('Protocol', function () {
 describe('SDK-to-HPM', function () {
   let $element: JQuery;
   let iframe: HTMLIFrameElement;
-  let powerbi: service.PowerBi;
+  let powerbi: service.Service;
   let report: report.Report;
   let embedConfiguration: embed.IEmbedConfiguration;
 
@@ -2305,7 +2305,7 @@ describe('SDK-to-HPM', function () {
       return <Router.Router><any>spyRouter;
     };
 
-    powerbi = new service.PowerBi(spyHpmFactory, noop, spyRouterFactory, { wpmpName: 'SDK-to-HPM report wpmp' });
+    powerbi = new service.Service(spyHpmFactory, noop, spyRouterFactory, { wpmpName: 'SDK-to-HPM report wpmp' });
 
     $element = $(`<div class="powerbi-report-container"></div>`)
       .appendTo(document.body);
@@ -3149,7 +3149,7 @@ describe('SDK-to-HPM', function () {
 describe('SDK-to-WPMP', function () {
   let $element: JQuery;
   let iframe: HTMLIFrameElement;
-  let powerbi: service.PowerBi;
+  let powerbi: service.Service;
   let report: report.Report;
 
   beforeAll(function () {
@@ -3157,7 +3157,7 @@ describe('SDK-to-WPMP', function () {
       return <Wpmp.WindowPostMessageProxy><any>spyWpmp;
     };
 
-    powerbi = new service.PowerBi(factories.hpmFactory, spyWpmpFactory, factories.routerFactory);
+    powerbi = new service.Service(factories.hpmFactory, spyWpmpFactory, factories.routerFactory);
 
     $element = $(`<div class="powerbi-report-container"></div>`)
       .appendTo(document.body);
@@ -3338,13 +3338,13 @@ describe('SDK-to-MockApp', function () {
   let iframe: HTMLIFrameElement;
   let iframeHpm: Hpm.HttpPostMessage;
   let iframeLoaded: Promise<void>;
-  let powerbi: service.PowerBi;
-  let powerbi2: service.PowerBi;
+  let powerbi: service.Service;
+  let powerbi2: service.Service;
   let report: report.Report;
 
   beforeAll(function () {
     
-    powerbi = new service.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory, {
+    powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory, {
       wpmpName: 'SDK-to-MockApp HostWpmp',
       logMessages
     });
