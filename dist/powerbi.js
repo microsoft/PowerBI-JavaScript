@@ -52,8 +52,8 @@
 	 * Save class to allow creating an instance of the service.
 	 * Create instance of class with default config for normal usage.
 	 */
-	window.Powerbi = service_1.PowerBi;
-	window.powerbi = new service_1.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+	window.Powerbi = service_1.Service;
+	window.powerbi = new service_1.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
 
 
 /***/ },
@@ -64,8 +64,8 @@
 	var report_1 = __webpack_require__(5);
 	var tile_1 = __webpack_require__(6);
 	var util_1 = __webpack_require__(3);
-	var PowerBi = (function () {
-	    function PowerBi(hpmFactory, wpmpFactory, routerFactory, config) {
+	var Service = (function () {
+	    function Service(hpmFactory, wpmpFactory, routerFactory, config) {
 	        var _this = this;
 	        if (config === void 0) { config = {}; }
 	        this.hpmFactory = hpmFactory;
@@ -103,7 +103,7 @@
 	        });
 	        this.embeds = [];
 	        // TODO: Change when Object.assign is available.
-	        this.config = util_1.Utils.assign({}, PowerBi.defaultConfig, config);
+	        this.config = util_1.Utils.assign({}, Service.defaultConfig, config);
 	        if (this.config.autoEmbedOnContentLoaded) {
 	            this.enableAutoEmbed();
 	        }
@@ -113,7 +113,7 @@
 	     * and automatically attempts to embed a powerbi component based on information from the attributes.
 	     * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
 	     */
-	    PowerBi.prototype.init = function (container, config) {
+	    Service.prototype.init = function (container, config) {
 	        var _this = this;
 	        if (config === void 0) { config = undefined; }
 	        container = (container && container instanceof HTMLElement) ? container : document.body;
@@ -125,7 +125,7 @@
 	     * If component has already been created and attached to element re-use component instance and existing iframe,
 	     * otherwise create a new component instance
 	     */
-	    PowerBi.prototype.embed = function (element, config) {
+	    Service.prototype.embed = function (element, config) {
 	        if (config === void 0) { config = {}; }
 	        var component;
 	        var powerBiElement = element;
@@ -141,14 +141,14 @@
 	     * Given an html element embed component base configuration.
 	     * Save component instance on element for later lookup.
 	     */
-	    PowerBi.prototype.embedNew = function (element, config) {
+	    Service.prototype.embedNew = function (element, config) {
 	        var componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
 	        if (!componentType) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed.Embed.typeAttribute + "=\"" + report_1.Report.type.toLowerCase() + "\"'.");
 	        }
 	        // Save type on configuration so it can be referenced later at known location
 	        config.type = componentType;
-	        var Component = util_1.Utils.find(function (component) { return componentType === component.type.toLowerCase(); }, PowerBi.components);
+	        var Component = util_1.Utils.find(function (component) { return componentType === component.type.toLowerCase(); }, Service.components);
 	        if (!Component) {
 	            throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
 	        }
@@ -157,7 +157,7 @@
 	        this.embeds.push(component);
 	        return component;
 	    };
-	    PowerBi.prototype.embedExisting = function (element, config) {
+	    Service.prototype.embedExisting = function (element, config) {
 	        var component = util_1.Utils.find(function (x) { return x.element === element; }, this.embeds);
 	        if (!component) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
@@ -170,14 +170,14 @@
 	     * then attempts to initiate the embed process based on data from other powerbi-* attributes.
 	     * (This is usually only useful for applications rendered on by the server since all the data needed will be available by the time the handler is called.)
 	     */
-	    PowerBi.prototype.enableAutoEmbed = function () {
+	    Service.prototype.enableAutoEmbed = function () {
 	        var _this = this;
 	        window.addEventListener('DOMContentLoaded', function (event) { return _this.init(document.body); }, false);
 	    };
 	    /**
 	     * Returns instance of component associated with element.
 	     */
-	    PowerBi.prototype.get = function (element) {
+	    Service.prototype.get = function (element) {
 	        var powerBiElement = element;
 	        if (!powerBiElement.powerBiEmbed) {
 	            throw new Error("You attempted to get an instance of powerbi component associated with element: " + element.outerHTML + " but there was no associated instance.");
@@ -187,7 +187,7 @@
 	    /**
 	     * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
 	     */
-	    PowerBi.prototype.reset = function (element) {
+	    Service.prototype.reset = function (element) {
 	        var powerBiElement = element;
 	        if (!powerBiElement.powerBiEmbed) {
 	            return;
@@ -202,7 +202,7 @@
 	            iframe.remove();
 	        }
 	    };
-	    PowerBi.prototype.handleEvent = function (event) {
+	    Service.prototype.handleEvent = function (event) {
 	        var embed = util_1.Utils.find(function (embed) {
 	            var config = embed.getConfig();
 	            return (config.type === event.type
@@ -216,7 +216,7 @@
 	     * Translate target into url
 	     * Target may be to the whole report, speific page, or specific visual
 	     */
-	    PowerBi.prototype.getTargetUrl = function (target) {
+	    Service.prototype.getTargetUrl = function (target) {
 	        var targetUrl;
 	        /**
 	         * TODO: I mentioned this issue in the protocol test, but we're tranlating targets from objects
@@ -239,41 +239,13 @@
 	        return targetUrl;
 	    };
 	    /**
-	     * Handler for window message event.
-	     * Parses event data as json and if it came from an iframe that matches one from an existing embeded component re-dispatches the event on the iframe's parent element
-	     * to simulate the event bubbling through the two separate windows / DOMs.
-	     *
-	     * If an error occurs when parsing event.data call error handler provided during configuration.
-	     */
-	    PowerBi.prototype.onReceiveMessage = function (event) {
-	        if (!event) {
-	            return;
-	        }
-	        try {
-	            // Only raise the event on the embed that matches the post message origin
-	            var embed_1 = util_1.Utils.find(function (embed) { return event.source === embed.iframe.contentWindow; }, this.embeds);
-	            if (embed_1) {
-	                var messageData = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-	                util_1.Utils.raiseCustomEvent(embed_1.element, PowerBi.eventMap[messageData.event], messageData);
-	            }
-	        }
-	        catch (e) {
-	            if (typeof this.config.onError === 'function') {
-	                this.config.onError.call(window, e);
-	            }
-	            else {
-	                throw e;
-	            }
-	        }
-	    };
-	    /**
 	     * List of components this service can embed.
 	     */
 	    /**
 	     * TODO: See if it's possible to remove need for this interface and just use Embed base object as common between Tile and Report
 	     * This was only put it to allow both types of components to be in the same list
 	     */
-	    PowerBi.components = [
+	    Service.components = [
 	        tile_1.Tile,
 	        report_1.Report
 	    ];
@@ -284,7 +256,7 @@
 	     * name and dispatched from the parent element of the iframe to simulate the event bubbling through two
 	     * different windows / DOMs
 	     */
-	    PowerBi.eventMap = {
+	    Service.eventMap = {
 	        'tileClicked': 'tile-click',
 	        'tileLoaded': 'tile-load',
 	        'reportPageLoaded': 'report-load'
@@ -292,7 +264,7 @@
 	    /**
 	     * Default configuration for service.
 	     */
-	    PowerBi.defaultConfig = {
+	    Service.defaultConfig = {
 	        autoEmbedOnContentLoaded: false,
 	        onError: function () {
 	            var args = [];
@@ -302,9 +274,9 @@
 	            return console.log(args[0], args.slice(1));
 	        }
 	    };
-	    return PowerBi;
+	    return Service;
 	}());
-	exports.PowerBi = PowerBi;
+	exports.Service = Service;
 
 
 /***/ },
@@ -2915,12 +2887,12 @@
 	     *
 	     * ```javascript
 	     * // Add filter to report
-	     * const filter = new filters.BasicFilter(...);
+	     * const filter = new models.BasicFilter(...);
 	     * report.addFilter(filter);
 	     *
 	     * // Add advanced filter to specific visual;
 	     * const target = ...
-	     * const filter = new filters.AdvancedFilter(...);
+	     * const filter = new models.AdvancedFilter(...);
 	     * report.addFilter(filter, target);
 	     * ```
 	     */

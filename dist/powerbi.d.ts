@@ -46,7 +46,7 @@ export interface IServiceConfiguration extends IDebugOptions {
     autoEmbedOnContentLoaded?: boolean;
     onError?: (error: any) => any;
 }
-export declare class PowerBi {
+export declare class Service {
     /**
      * List of components this service can embed.
      */
@@ -116,14 +116,6 @@ export declare class PowerBi {
      * Target may be to the whole report, speific page, or specific visual
      */
     private getTargetUrl(target?);
-    /**
-     * Handler for window message event.
-     * Parses event data as json and if it came from an iframe that matches one from an existing embeded component re-dispatches the event on the iframe's parent element
-     * to simulate the event bubbling through the two separate windows / DOMs.
-     *
-     * If an error occurs when parsing event.data call error handler provided during configuration.
-     */
-    private onReceiveMessage(event);
 }
 
 /**
@@ -141,7 +133,7 @@ export declare const routerFactory: IRouterFactory;
 
 declare global  {
     interface Window {
-        Powerbi: typeof PowerBi;
-        powerbi: PowerBi;
+        Powerbi: typeof Service;
+        powerbi: Service;
     }
 }

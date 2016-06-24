@@ -58,18 +58,6 @@ export class Service {
         Tile,
         Report
     ];
-    /**
-     * Mapping of event names from iframe postMessage to their name percieved by parent DOM.
-     * Example: User clicks on embeded report which is inside iframe. The iframe code resends 
-     * event as postMessage with { event: 'reportClicked', ... } and this name is converted to hyphenated
-     * name and dispatched from the parent element of the iframe to simulate the event bubbling through two
-     * different windows / DOMs
-     */
-    private static eventMap = {
-        'tileClicked': 'tile-click',
-        'tileLoaded': 'tile-load',
-        'reportPageLoaded': 'report-load'
-    };
     
     /**
      * Default configuration for service.
@@ -291,35 +279,5 @@ export class Service {
         }
 
         return targetUrl;
-    }
-    
-    /**
-     * Handler for window message event.
-     * Parses event data as json and if it came from an iframe that matches one from an existing embeded component re-dispatches the event on the iframe's parent element
-     * to simulate the event bubbling through the two separate windows / DOMs.
-     * 
-     * If an error occurs when parsing event.data call error handler provided during configuration.
-     */
-    private onReceiveMessage(event: MessageEvent): void {
-        if (!event) {
-            return;
-        }
-
-        try {
-            // Only raise the event on the embed that matches the post message origin
-            const embed = Utils.find(embed => event.source === embed.iframe.contentWindow, this.embeds);
-            if(embed) {
-                let messageData = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-                Utils.raiseCustomEvent(embed.element, PowerBi.eventMap[messageData.event], messageData);
-            }
-        }
-        catch (e) {
-            if (typeof this.config.onError === 'function') {
-                this.config.onError.call(window, e);
-            }
-            else {
-                throw e;
-            }
-        }
     }
 }
