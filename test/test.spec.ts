@@ -1,4 +1,5 @@
 import * as service from '../src/service';
+import * as embed from '../src/embed';
 import * as report from '../src/report';
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
@@ -31,6 +32,7 @@ describe('powerbi', function () {
 
   afterAll(function () {
     $element.remove();
+    powerbi.wpmp.stop();
   });
 
   afterEach(function () {
@@ -336,6 +338,7 @@ describe('embed', function () {
 
   afterAll(function () {
     $element.remove();
+    powerbi.wpmp.stop();
   });
 
   describe('iframe', function () {
@@ -2231,6 +2234,7 @@ describe('SDK-to-HPM', function () {
   let iframe: HTMLIFrameElement;
   let powerbi: service.PowerBi;
   let report: report.Report;
+  let embedConfiguration: embed.IEmbedConfiguration;
 
   beforeAll(function () {
     const spyHpmFactory: factories.IHpmFactory = () => {
@@ -2244,18 +2248,17 @@ describe('SDK-to-HPM', function () {
       return <Router.Router><any>spyRouter;
     };
 
-    powerbi = new service.PowerBi(spyHpmFactory, noop, spyRouterFactory);
+    powerbi = new service.PowerBi(spyHpmFactory, noop, spyRouterFactory, { wpmpName: 'SDK-to-HPM report wpmp' });
 
     $element = $(`<div class="powerbi-report-container"></div>`)
       .appendTo(document.body);
 
     const iframeSrc = "base/test/utility/noop.html";
-    const embedConfiguration = {
+    embedConfiguration = {
       type: "report",
       id: "fakeReportId",
       accessToken: 'fakeToken',
-      embedUrl: iframeSrc,
-      wpmpName: 'SDK-to-HPM report wpmp'
+      embedUrl: iframeSrc
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
 
@@ -2268,6 +2271,7 @@ describe('SDK-to-HPM', function () {
   afterAll(function () {
     // TODO: Should call remove using the powerbi service first to clean up intenral references to DOM inside this element
     $element.remove();
+    powerbi.wpmp.stop();
   });
 
   afterEach(function () {
@@ -2288,7 +2292,7 @@ describe('SDK-to-HPM', function () {
     it('report.load() sends POST /report/load with configuration in body', function () {
       // Arrange
       const testData = {
-        embedConfiguration: {
+        loadConfiguration: {
           id: 'fakeId',
           accessToken: 'fakeToken'
         }
@@ -2297,16 +2301,16 @@ describe('SDK-to-HPM', function () {
       spyHpm.post.and.returnValue(Promise.resolve(null));
 
       // Act
-      report.load(testData.embedConfiguration);
+      report.load(testData.loadConfiguration);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.embedConfiguration);
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { 'report-id': testData.loadConfiguration.id });
     });
 
     it('report.load() returns promise that rejects with validation error if the load configuration is invalid', function (done) {
       // Arrange
       const testData = {
-        embedConfiguration: {
+        loadConfiguration: {
           id: 'fakeId',
           accessToken: 'fakeToken'
         },
@@ -2320,9 +2324,9 @@ describe('SDK-to-HPM', function () {
       spyHpm.post.and.returnValue(Promise.reject(testData.errorResponse));
 
       // Act
-      report.load(testData.embedConfiguration)
+      report.load(testData.loadConfiguration)
         .catch(error => {
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.embedConfiguration);
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { 'report-id': testData.loadConfiguration.id });
           expect(error).toEqual(testData.errorResponse.body);
           // Assert
           done();
@@ -2332,7 +2336,7 @@ describe('SDK-to-HPM', function () {
     it('report.load() returns promise that resolves with null if the report load successful', function (done) {
       // Arrange
       const testData = {
-        embedConfiguration: {
+        loadConfiguration: {
           id: 'fakeId',
           accessToken: 'fakeToken'
         }
@@ -2341,9 +2345,9 @@ describe('SDK-to-HPM', function () {
       spyHpm.post.and.returnValue(Promise.resolve(null));
 
       // Act
-      report.load(testData.embedConfiguration)
+      report.load(testData.loadConfiguration)
         .then(response => {
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.embedConfiguration);
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { 'report-id': testData.loadConfiguration.id });
           expect(response).toEqual(null);
           // Assert
           done();
@@ -2359,7 +2363,7 @@ describe('SDK-to-HPM', function () {
       report.getPages();
 
       // Assert
-      expect(spyHpm.get).toHaveBeenCalledWith('/report/pages');
+      expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { 'report-id': embedConfiguration.id });
     });
 
     it('report.getPages() return promise that rejects with server error if there was error getting pages', function (done) {
@@ -2378,7 +2382,7 @@ describe('SDK-to-HPM', function () {
       report.getPages()
         .catch(error => {
           // Assert
-          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages');
+          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { 'report-id': embedConfiguration.id });
           expect(error).toEqual(testData.expectedError.body);
           done();
         });
@@ -2401,7 +2405,7 @@ describe('SDK-to-HPM', function () {
       report.getPages()
         .then(pages => {
           // Assert
-          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages');
+          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { 'report-id': embedConfiguration.id });
           expect(pages).toEqual(testData.expectedResponse.body);
           done();
         });
@@ -2420,7 +2424,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter);
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
     });
 
     it('report.addFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -2442,7 +2446,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter)
         .catch(errors => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter);
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2460,7 +2464,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter)
         .then(response => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter);
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(response).toEqual(null);
           done();
         });
@@ -2477,7 +2481,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter);
 
       // Assert
-      expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter);
+      expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
     });
 
     it('report.updateFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -2499,7 +2503,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter)
         .catch(errors => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter);
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2517,7 +2521,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter)
         .then(response => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter);
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(response).toEqual(null);
           done();
         });
@@ -2534,7 +2538,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter);
 
       // Assert
-      expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter);
+      expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
     });
 
     it('report.removeFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -2556,7 +2560,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter)
         .catch(errors => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter);
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2574,7 +2578,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter)
         .then(response => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter);
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(response).toEqual(null);
           done();
         });
@@ -2597,7 +2601,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
     });
 
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2623,7 +2627,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2645,7 +2649,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(response).toEqual(null);
           done();
         });
@@ -2665,7 +2669,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
+      expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
     });
 
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2691,7 +2695,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2713,7 +2717,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(response).toEqual(null);
           done();
         });
@@ -2734,7 +2738,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
+      expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
     });
 
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2760,7 +2764,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2782,7 +2786,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter);
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(response).toEqual(null);
           done();
         });
@@ -2804,7 +2808,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
     });
 
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2830,7 +2834,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2852,7 +2856,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(response).toEqual(null);
           done();
         });
@@ -2872,7 +2876,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
+      expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
     });
 
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2898,7 +2902,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2920,7 +2924,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(response).toEqual(null);
           done();
         });
@@ -2940,7 +2944,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
+      expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
     });
 
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2966,7 +2970,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2988,7 +2992,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter);
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
           expect(response).toEqual(null);
           done();
         });
@@ -3008,7 +3012,7 @@ describe('SDK-to-HPM', function () {
       report.updateSettings(testData.settings);
 
       // Assert
-      expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings);
+      expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { 'report-id': embedConfiguration.id });
     });
 
     it('report.updateSettings(setting) returns promise that rejects with validation error if object is invalid', function (done) {
@@ -3033,7 +3037,7 @@ describe('SDK-to-HPM', function () {
         .catch(errors => {
 
           // Assert
-          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings);
+          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { 'report-id': embedConfiguration.id });
           expect(errors).toEqual(testData.expectedError.body);
           done()
         });
@@ -3054,7 +3058,7 @@ describe('SDK-to-HPM', function () {
         .then(response => {
 
           // Assert
-          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings);
+          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { 'report-id': embedConfiguration.id });
           expect(response).toEqual(null);
           done()
         });
@@ -3121,6 +3125,7 @@ describe('SDK-to-WPMP', function () {
   afterAll(function () {
     // TODO: Should call remove using the powerbi service first to clean up intenral references to DOM inside this element
     $element.remove();
+    powerbi.wpmp.stop();
   });
 
   afterEach(function () {
@@ -3277,29 +3282,40 @@ describe('SDK-to-MockApp', function () {
   let iframeHpm: Hpm.HttpPostMessage;
   let iframeLoaded: Promise<void>;
   let powerbi: service.PowerBi;
+  let powerbi2: service.PowerBi;
   let report: report.Report;
 
   beforeAll(function () {
-    powerbi = new service.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+    
+    powerbi = new service.PowerBi(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory, {
+      wpmpName: 'SDK-to-MockApp HostWpmp',
+      logMessages
+    });
 
     $element = $(`<div class="powerbi-report-container2"></div>`)
       .appendTo(document.body);
 
     const iframeSrc = "base/test/utility/noop.html";
-    const embedConfiguration = {
+    const embedConfiguration: embed.IEmbedConfiguration = {
       type: "report",
       id: "fakeReportIdInitialEmbed",
       accessToken: 'fakeTokenInitialEmbed',
-      embedUrl: iframeSrc,
-      wpmpName: 'SDK-to-MockApp report wpmp',
-      logMessages
+      embedUrl: iframeSrc
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
 
+    /**
+     * Note: For testing we need to configure the eventSourceOverrideWindow to allow the host to respond to
+     * the iframe window; however, the iframe window doesn't exist until the first embed is created.
+     * 
+     * To work around this we create a service for the initial embed, embed a report, then set the private variable
+     */
+    (<any>powerbi.wpmp).eventSourceOverrideWindow = iframe.contentWindow;
+
     // Register Iframe side
-    iframeHpm = setupMockApp(iframe.contentWindow, window, logMessages, 'IntegrationMockAppWpmp');
+    iframeHpm = setupMockApp(iframe.contentWindow, window, logMessages, 'SDK-to-MockApp IframeWpmp');
 
     // Reset load handler
     spyApp.validateLoad.calls.reset();
@@ -3315,6 +3331,7 @@ describe('SDK-to-MockApp', function () {
   afterAll(function () {
     // TODO: Should call remove using the powerbi service first to clean up intenral references to DOM inside this element
     $element.remove();
+    powerbi.wpmp.stop();
   });
 
   afterEach(function () {
