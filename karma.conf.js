@@ -1,4 +1,3 @@
-var paths = require('./paths');
 var argv = require('yargs').argv;
 
 module.exports = function (config) {

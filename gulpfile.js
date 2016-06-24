@@ -11,7 +11,6 @@ var rename = require('gulp-rename'),
     rimraf = require('rimraf'),
     merge = require('merge2'),
     karma = require('karma'),
-    paths = require('./paths'),
     webpack = require('webpack-stream'),
     webpackConfig = require('./webpack.config'),
     webpackTestConfig = require('./webpack.test.config'),
@@ -50,7 +49,7 @@ gulp.task('build', 'Runs a full build', function (done) {
 });
 
 gulp.task('clean', 'Cleans destination folder', function(done) {
-    rimraf(paths.jsDest, done);
+    rimraf('./dist/', done);
 });
 
 gulp.task('lint:ts', 'Lints all TypeScript', function() {
@@ -60,12 +59,12 @@ gulp.task('lint:ts', 'Lints all TypeScript', function() {
 });
 
 gulp.task('min:js', 'Creates minified JavaScript file', function() {
-    return gulp.src(paths.jsDest + paths.outFilename)
+    return gulp.src(['!./dist/*.min.js', './dist/*.js'])
         .pipe(sourcemaps.init({ debug: true }))
         .pipe(uglify())
         .pipe(sourcemaps.write())
         .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest(paths.jsDest));
+        .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
