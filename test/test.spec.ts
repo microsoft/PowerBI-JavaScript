@@ -4,7 +4,6 @@ import * as report from '../src/report';
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
 import * as Router from 'powerbi-router';
-import * as filters from 'powerbi-filters';
 import * as models from 'powerbi-models';
 import { spyApp, setupMockApp } from './utility/mockReportEmbed';
 import * as factories from '../src/factories';
@@ -753,7 +752,7 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
 
             // Act
-            hpm.get<filters.IFilter[]>('/report/filters')
+            hpm.get<models.IFilter[]>('/report/filters')
               .then(response => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
@@ -1100,7 +1099,7 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
 
             // Act
-            hpm.get<filters.IFilter[]>('/report/pages/xyz/filters')
+            hpm.get<models.IFilter[]>('/report/pages/xyz/filters')
               .then(response => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalledWith(testData.expectedTarget);
@@ -2473,7 +2472,7 @@ describe('SDK-to-HPM', function () {
     it('report.addFilter(filter) sends POST /report/filters with filter', function () {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
 
@@ -2487,7 +2486,7 @@ describe('SDK-to-HPM', function () {
     it('report.addFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         expectedErrors: {
           body: [
             {
@@ -2512,7 +2511,7 @@ describe('SDK-to-HPM', function () {
     it('report.addFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
       spyHpm.post.and.returnValue(Promise.resolve(null));
@@ -2530,7 +2529,7 @@ describe('SDK-to-HPM', function () {
     it('report.updateFilter(filter) sends PUT /report/filters with filter', function () {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
 
@@ -2544,7 +2543,7 @@ describe('SDK-to-HPM', function () {
     it('report.updateFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         expectedErrors: {
           body: [
             {
@@ -2569,7 +2568,7 @@ describe('SDK-to-HPM', function () {
     it('report.updateFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
       spyHpm.put.and.returnValue(Promise.resolve(null));
@@ -2587,7 +2586,7 @@ describe('SDK-to-HPM', function () {
     it('report.removeFilter(filter) sends DELETE /report/filters with filter', function () {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
 
@@ -2601,7 +2600,7 @@ describe('SDK-to-HPM', function () {
     it('report.removeFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         expectedErrors: {
           body: [
             {
@@ -2626,7 +2625,7 @@ describe('SDK-to-HPM', function () {
     it('report.removeFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
       spyHpm.delete.and.returnValue(Promise.resolve(null));
@@ -2646,7 +2645,7 @@ describe('SDK-to-HPM', function () {
     it('report.addFilter(filter, target) sends POST /report/pages/:pageName/filters with filter', function () {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -2664,7 +2663,7 @@ describe('SDK-to-HPM', function () {
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -2693,7 +2692,7 @@ describe('SDK-to-HPM', function () {
     it('report.addFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -2715,7 +2714,7 @@ describe('SDK-to-HPM', function () {
     it('report.updateFilter(filter, target) sends PUT /report/pages/:pageName/filters with filter', function () {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -2732,7 +2731,7 @@ describe('SDK-to-HPM', function () {
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -2761,7 +2760,7 @@ describe('SDK-to-HPM', function () {
     it('report.updateFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -2783,7 +2782,7 @@ describe('SDK-to-HPM', function () {
     it('report.removeFilter(filter, target) sends DELETE /report/pages/:pageName/filters with filter', function () {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -2801,7 +2800,7 @@ describe('SDK-to-HPM', function () {
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -2830,7 +2829,7 @@ describe('SDK-to-HPM', function () {
     it('report.removeFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -2854,7 +2853,7 @@ describe('SDK-to-HPM', function () {
     it('report.addFilter(filter, target) sends POST /report/visuals/:visualId/filters with filter', function () {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -2871,7 +2870,7 @@ describe('SDK-to-HPM', function () {
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -2900,7 +2899,7 @@ describe('SDK-to-HPM', function () {
     it('report.addFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -2922,7 +2921,7 @@ describe('SDK-to-HPM', function () {
     it('report.updateFilter(filter, target) sends PUT /report/visuals/:visualId/filters with filter', function () {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -2939,7 +2938,7 @@ describe('SDK-to-HPM', function () {
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -2968,7 +2967,7 @@ describe('SDK-to-HPM', function () {
     it('report.updateFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -2990,7 +2989,7 @@ describe('SDK-to-HPM', function () {
     it('report.removeFilter(filter, target) sends DELETE /report/visuals/:visualId/filters with filter', function () {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -3007,7 +3006,7 @@ describe('SDK-to-HPM', function () {
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -3036,7 +3035,7 @@ describe('SDK-to-HPM', function () {
     it('report.removeFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -3512,7 +3511,7 @@ describe('SDK-to-MockApp', function () {
     it('report.addFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         expectedError: {
           message: 'invalid filter'
         }
@@ -3536,7 +3535,7 @@ describe('SDK-to-MockApp', function () {
     it('report.addFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
       iframeLoaded
@@ -3557,7 +3556,7 @@ describe('SDK-to-MockApp', function () {
     it('report.updateFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         expectedError: {
           message: 'invalid filter'
         }
@@ -3581,7 +3580,7 @@ describe('SDK-to-MockApp', function () {
     it('report.updateFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
       iframeLoaded
@@ -3602,7 +3601,7 @@ describe('SDK-to-MockApp', function () {
     it('report.removeFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         expectedError: {
           message: 'invalid filter'
         }
@@ -3626,7 +3625,7 @@ describe('SDK-to-MockApp', function () {
     it('report.removeFilter(filter) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
       };
 
       iframeLoaded
@@ -3664,7 +3663,7 @@ describe('SDK-to-MockApp', function () {
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -3693,7 +3692,7 @@ describe('SDK-to-MockApp', function () {
     it('report.addFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -3720,7 +3719,7 @@ describe('SDK-to-MockApp', function () {
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -3749,7 +3748,7 @@ describe('SDK-to-MockApp', function () {
     it('report.updateFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -3776,7 +3775,7 @@ describe('SDK-to-MockApp', function () {
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -3805,7 +3804,7 @@ describe('SDK-to-MockApp', function () {
     it('report.removeFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IPageTarget>{
           type: "page",
           name: "page1"
@@ -3834,7 +3833,7 @@ describe('SDK-to-MockApp', function () {
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -3863,7 +3862,7 @@ describe('SDK-to-MockApp', function () {
     it('report.addFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -3890,7 +3889,7 @@ describe('SDK-to-MockApp', function () {
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -3919,7 +3918,7 @@ describe('SDK-to-MockApp', function () {
     it('report.updateFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -3946,7 +3945,7 @@ describe('SDK-to-MockApp', function () {
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"
@@ -3975,7 +3974,7 @@ describe('SDK-to-MockApp', function () {
     it('report.removeFilter(filter, target) returns promise that resolves with null if request is valid', function (done) {
       // Arrange
       const testData = {
-        filter: (new filters.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
+        filter: (new models.ValueFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON(),
         target: <models.IVisualTarget>{
           type: "visual",
           id: "visualId"

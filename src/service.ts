@@ -5,7 +5,6 @@ import { Utils } from './util';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as router from 'powerbi-router';
-import * as filters from 'powerbi-filters';
 import * as models from 'powerbi-models';
 
 export interface IEvent<T> {

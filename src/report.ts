@@ -3,7 +3,6 @@ import * as embed from './embed';
 import * as models from 'powerbi-models';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
-import * as filters from 'powerbi-filters';
 
 export class Report extends embed.Embed {
     static allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
@@ -15,16 +14,16 @@ export class Report extends embed.Embed {
      * 
      * ```javascript
      * // Add filter to report
-     * const filter = new filters.BasicFilter(...);
+     * const filter = new models.BasicFilter(...);
      * report.addFilter(filter);
      * 
      * // Add advanced filter to specific visual;
      * const target = ...
-     * const filter = new filters.AdvancedFilter(...);
+     * const filter = new models.AdvancedFilter(...);
      * report.addFilter(filter, target);
      * ```
      */
-    addFilter(filter: filters.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
+    addFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
         return this.hpm.post<void>(`${targetUrl}/filters`, filter, { "report-id": this.config.id })
             .catch(response => {
@@ -55,9 +54,9 @@ export class Report extends embed.Embed {
      *      });
      * ```
      */
-    getFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<filters.IFilter[]> {
+    getFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<models.IFilter[]> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.get<filters.IFilter[]>(`${targetUrl}/filters`, { "report-id": this.config.id })
+        return this.hpm.get<models.IFilter[]>(`${targetUrl}/filters`, { "report-id": this.config.id })
             .then(response => response.body,
                 response => {
                     throw response.body;
@@ -108,7 +107,7 @@ export class Report extends embed.Embed {
     /**
      * Remove specific filter from report, page, or visual
      */
-    removeFilter(filter: filters.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
+    removeFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
         return this.hpm.delete<models.IError[]>(`${targetUrl}/filters`, filter, { "report-id": this.config.id })
             .catch(response => {
@@ -135,7 +134,7 @@ export class Report extends embed.Embed {
      * 
      * The existing filter will be replaced with the new filter.
      */
-    updateFilter(filter: filters.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
+    updateFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
         return this.hpm.put<models.IError[]>(`${targetUrl}/filters`, filter, { "report-id": this.config.id })
             .catch(response => {
