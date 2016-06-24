@@ -1,3 +1,4 @@
+/*! powerbi-client v2.0.0-beta.6 | (c) 2016 Microsoft Corporation MIT */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -571,6 +572,7 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*! powerbi-models v0.2.2 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -633,13 +635,15 @@
 		    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 		};
 		exports.advancedFilterSchema = __webpack_require__(1);
-		exports.loadSchema = __webpack_require__(2);
-		exports.pageSchema = __webpack_require__(3);
-		exports.pageTargetSchema = __webpack_require__(4);
-		exports.settingsSchema = __webpack_require__(5);
-		exports.valueFilterSchema = __webpack_require__(6);
-		exports.visualTargetSchema = __webpack_require__(7);
-		var jsen = __webpack_require__(8);
+		exports.filterSchema = __webpack_require__(2);
+		exports.loadSchema = __webpack_require__(3);
+		exports.pageSchema = __webpack_require__(4);
+		exports.pageTargetSchema = __webpack_require__(5);
+		exports.settingsSchema = __webpack_require__(6);
+		exports.targetSchema = __webpack_require__(7);
+		exports.valueFilterSchema = __webpack_require__(8);
+		exports.visualTargetSchema = __webpack_require__(9);
+		var jsen = __webpack_require__(10);
 		function normalizeError(error) {
 		    if (!error.message) {
 		        error.message = error.path + " is invalid. Not meeting " + error.keyword + " constraint";
@@ -664,7 +668,6 @@
 		        }
 		    };
 		}
-		exports.validate = validate;
 		exports.validateSettings = validate(exports.settingsSchema, {
 		    schemas: {
 		        valueFilter: exports.valueFilterSchema,
@@ -673,14 +676,19 @@
 		});
 		exports.validateLoad = validate(exports.loadSchema, {
 		    schemas: {
-		        settings: exports.settingsSchema
+		        settings: exports.settingsSchema,
+		        valueFilter: exports.valueFilterSchema,
+		        advancedFilter: exports.advancedFilterSchema
 		    }
 		});
-		exports.validatePageTarget = validate(exports.pageTargetSchema);
-		exports.validateVisualTarget = validate(exports.visualTargetSchema);
+		exports.validateTarget = validate(exports.targetSchema);
 		exports.validatePage = validate(exports.pageSchema);
-		exports.validateValueFilter = validate(exports.valueFilterSchema);
-		exports.validateAdvancedFilter = validate(exports.advancedFilterSchema);
+		exports.validateFilter = validate(exports.filterSchema, {
+		    schemas: {
+		        valueFilter: exports.valueFilterSchema,
+		        advancedFilter: exports.advancedFilterSchema
+		    }
+		});
 		function isMeasure(arg) {
 		    return arg.table !== undefined && arg.measure !== undefined;
 		}
@@ -796,26 +804,56 @@
 			"type": "object",
 			"properties": {
 				"target": {
-					"type": "object",
-					"properties": {
-						"table": {
-							"type": "string"
+					"oneOf": [
+						{
+							"type": "object",
+							"properties": {
+								"table": {
+									"type": "string"
+								},
+								"column": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"table",
+								"column"
+							]
 						},
-						"column": {
-							"type": "string"
+						{
+							"type": "object",
+							"properties": {
+								"table": {
+									"type": "string"
+								},
+								"hierarchy": {
+									"type": "string"
+								},
+								"hierarchyLevel": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"table",
+								"hierarchy",
+								"hierarchyLevel"
+							]
 						},
-						"hierarchy": {
-							"type": "string"
-						},
-						"hierarchyLevel": {
-							"type": "string"
-						},
-						"measure": {
-							"type": "string"
+						{
+							"type": "object",
+							"properties": {
+								"table": {
+									"type": "string"
+								},
+								"measure": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"table",
+								"measure"
+							]
 						}
-					},
-					"required": [
-						"table"
 					]
 				},
 				"logicalOperator": {
@@ -853,6 +891,23 @@
 	
 		module.exports = {
 			"$schema": "http://json-schema.org/draft-04/schema#",
+			"oneOf": [
+				{
+					"$ref": "#valueFilter"
+				},
+				{
+					"$ref": "#advancedFilter"
+				}
+			],
+			"invalidMessage": "filter is invalid"
+		};
+	
+	/***/ },
+	/* 3 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
 			"type": "object",
 			"properties": {
 				"accessToken": {
@@ -882,7 +937,7 @@
 		};
 	
 	/***/ },
-	/* 3 */
+	/* 4 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -911,7 +966,7 @@
 		};
 	
 	/***/ },
-	/* 4 */
+	/* 5 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -944,7 +999,7 @@
 		};
 	
 	/***/ },
-	/* 5 */
+	/* 6 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -955,14 +1010,10 @@
 					"type": "object",
 					"oneOf": [
 						{
-							"valueFilter": {
-								"$ref": "#valueFilter"
-							}
+							"$ref": "#valueFilter"
 						},
 						{
-							"advancedFilter": {
-								"$ref": "#advancedFilter"
-							}
+							"$ref": "#advancedFilter"
 						}
 					],
 					"invalidMessage": "filter property is invalid"
@@ -989,7 +1040,23 @@
 		};
 	
 	/***/ },
-	/* 6 */
+	/* 7 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"oneOf": [
+				{
+					"$ref": "#pageTarget"
+				},
+				{
+					"$ref": "#visualTarget"
+				}
+			]
+		};
+	
+	/***/ },
+	/* 8 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -1037,7 +1104,7 @@
 		};
 	
 	/***/ },
-	/* 7 */
+	/* 9 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -1070,13 +1137,13 @@
 		};
 	
 	/***/ },
-	/* 8 */
+	/* 10 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		module.exports = __webpack_require__(9);
+		module.exports = __webpack_require__(11);
 	
 	/***/ },
-	/* 9 */
+	/* 11 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -1088,11 +1155,11 @@
 		    INVALID_SCHEMA = 'jsen: invalid schema object',
 		    browser = typeof window === 'object' && !!window.navigator,   // jshint ignore: line
 		    nodev0 = typeof process === 'object' && process.version.split('.')[0] === 'v0',
-		    func = __webpack_require__(11),
-		    equal = __webpack_require__(12),
-		    unique = __webpack_require__(13),
-		    SchemaResolver = __webpack_require__(14),
-		    formats = __webpack_require__(16),
+		    func = __webpack_require__(13),
+		    equal = __webpack_require__(14),
+		    unique = __webpack_require__(15),
+		    SchemaResolver = __webpack_require__(16),
+		    formats = __webpack_require__(18),
 		    types = {},
 		    keywords = {};
 		
@@ -2071,10 +2138,10 @@
 		
 		module.exports = jsen;
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 	
 	/***/ },
-	/* 10 */
+	/* 12 */
 	/***/ function(module, exports) {
 	
 		// shim for using process in browser
@@ -2199,7 +2266,7 @@
 	
 	
 	/***/ },
-	/* 11 */
+	/* 13 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2266,7 +2333,7 @@
 		};
 	
 	/***/ },
-	/* 12 */
+	/* 14 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2343,12 +2410,12 @@
 		module.exports = equal;
 	
 	/***/ },
-	/* 13 */
+	/* 15 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		'use strict';
 		
-		var equal = __webpack_require__(12);
+		var equal = __webpack_require__(14);
 		
 		function findIndex(arr, value, comparator) {
 		    for (var i = 0, len = arr.length; i < len; i++) {
@@ -2369,12 +2436,12 @@
 		module.exports.findIndex = findIndex;
 	
 	/***/ },
-	/* 14 */
+	/* 16 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		'use strict';
 		
-		var metaschema = __webpack_require__(15),
+		var metaschema = __webpack_require__(17),
 		    INVALID_SCHEMA_REFERENCE = 'jsen: invalid schema reference';
 		
 		function get(obj, path) {
@@ -2564,7 +2631,7 @@
 		module.exports = SchemaResolver;
 	
 	/***/ },
-	/* 15 */
+	/* 17 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -2798,7 +2865,7 @@
 		};
 	
 	/***/ },
-	/* 16 */
+	/* 18 */
 	/***/ function(module, exports) {
 	
 		'use strict';

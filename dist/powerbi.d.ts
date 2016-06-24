@@ -1,3 +1,4 @@
+/*! powerbi-client v2.0.0-beta.6 | (c) 2016 Microsoft Corporation MIT */
 export declare class Utils {
     static raiseCustomEvent(element: HTMLElement, eventName: string, eventData: any): void;
     static findIndex<T>(predicate: (x: T) => boolean, xs: T[]): number;
@@ -73,6 +74,7 @@ export declare class PowerBi {
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds;
     private hpmFactory;
+    /** TODO: Look for way to make this private. This should be private but in embed constructor needs to pass the wpmp instance to the hpm factory. */
     wpmp: wpmp.WindowPostMessageProxy;
     private router;
     constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IServiceConfiguration);
