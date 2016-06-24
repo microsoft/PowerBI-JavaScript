@@ -1,6 +1,7 @@
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
 import * as Router from 'powerbi-router';
+import * as models from 'powerbi-models';
 import { mockAppSpyObj, mockApp } from './mockApp';
 
 export const spyApp = mockAppSpyObj;
@@ -192,7 +193,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
    */
   router.get('/report/pages/:pageName/filters', (req, res) => {
     const pageName = req.params.pageName;
-    const target = {
+    const target: models.ITarget = {
       type: "page",
       name: pageName
     };
@@ -207,7 +208,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     const reportId = req.headers['report-id'];
     const filter = req.body;
     const pageName = req.params.pageName;
-    const target = {
+    const target: models.ITarget = {
       type: "page",
       name: pageName
     };
@@ -236,7 +237,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     const reportId = req.headers['report-id'];
     const filter = req.body;
     const pageName = req.params.pageName;
-    const target = {
+    const target: models.ITarget = {
       type: "page",
       name: pageName
     };
@@ -265,7 +266,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     const reportId = req.headers['report-id'];
     const filter = req.body;
     const pageName = req.params.pageName;
-    const target = {
+    const target: models.ITarget = {
       type: "page",
       name: pageName
     };
@@ -292,7 +293,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
 
   router.get('/report/visuals/:visualId/filters', (req, res) => {
     const visualId = req.params.visualId;
-    const target = {
+    const target: models.ITarget = {
       type: "visual",
       id: visualId
     };
@@ -307,7 +308,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     const reportId = req.headers['report-id'];
     const filter = req.body;
     const visualId = req.params.visualId;
-    const target = {
+    const target: models.ITarget = {
       type: "visual",
       id: visualId
     };
@@ -336,7 +337,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     const reportId = req.headers['report-id'];
     const filter = req.body;
     const visualId = req.params.visualId;
-    const target = {
+    const target: models.ITarget = {
       type: "visual",
       id: visualId
     };
@@ -365,7 +366,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     const reportId = req.headers['report-id'];
     const filter = req.body;
     const visualId = req.params.visualId;
-    const target = {
+    const target: models.ITarget = {
       type: "visual",
       id: visualId
     };
@@ -422,9 +423,9 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
    * Phase 5
    */
   router.get('/report/data', (req, res) => {
-    const target = {
+    const target: models.ITarget = {
       type: 'visual',
-      visual: "xyz?"
+      id: "xyz?"
     };
     
     return app.exportData(target)
