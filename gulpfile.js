@@ -1,5 +1,6 @@
 var gulp = require('gulp-help')(require('gulp'));
-var rename = require('gulp-rename'),
+var header = require('gulp-header'),
+    rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
     jshint = require('gulp-jshint'),
@@ -17,6 +18,9 @@ var rename = require('gulp-rename'),
     runSequence = require('run-sequence'),
     argv = require('yargs').argv;
     ;
+
+var package = require('./package.json');
+var banner = "/*! <%= package.name %> v<%= package.version %> | (c) 2016 Microsoft Corporation <%= package.license %> */\n";
 
 gulp.task('watch', 'Watches for changes', ['lint'], function () {
     gulp.watch(['./src/**/*.ts', './test/**/*.ts'], ['lint:ts']);
@@ -44,8 +48,15 @@ gulp.task('build', 'Runs a full build', function (done) {
         'clean',
         ['compile:ts', 'compile:dts'],
         'min:js',
+        'header',
         done
     );
+});
+
+gulp.task('header', 'Add header to distributed files', function () {
+    return gulp.src(['!./dist/*.map', './dist/*'])
+        .pipe(header(banner, { package : package }))
+        .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('clean', 'Cleans destination folder', function(done) {
