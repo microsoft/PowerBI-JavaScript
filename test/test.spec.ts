@@ -449,6 +449,63 @@ describe('Protocol', function () {
   });
 
   describe('HPM-to-MockApp', function () {
+    describe('notfound', function () {
+      it('GET request to uknown url returns 404 Not Found', function (done) {
+        iframeLoaded
+          .then(() => {
+            hpm.get<any>('route/that/does/not/exist')
+              .catch(response => {
+                expect(response.statusCode).toEqual(404);
+                done();
+              });
+          });
+      });
+
+      it('POST request to uknown url returns 404 Not Found', function (done) {
+        iframeLoaded
+          .then(() => {
+            hpm.post<any>('route/that/does/not/exist', null)
+              .catch(response => {
+                expect(response.statusCode).toEqual(404);
+                done();
+              });
+          });
+      });
+
+      it('PUT request to uknown url returns 404 Not Found', function (done) {
+        iframeLoaded
+          .then(() => {
+            hpm.put<any>('route/that/does/not/exist', null)
+              .catch(response => {
+                expect(response.statusCode).toEqual(404);
+                done();
+              });
+          });
+      });
+
+      it('PATCH request to uknown url returns 404 Not Found', function (done) {
+        iframeLoaded
+          .then(() => {
+            hpm.patch<any>('route/that/does/not/exist', null)
+              .catch(response => {
+                expect(response.statusCode).toEqual(404);
+                done();
+              });
+          });
+      });
+
+      it('DELETE request to uknown url returns 404 Not Found', function (done) {
+        iframeLoaded
+          .then(() => {
+            hpm.delete<any>('route/that/does/not/exist')
+              .catch(response => {
+                expect(response.statusCode).toEqual(404);
+                done();
+              });
+          });
+      });
+    });
+
     describe('load', function () {
       it('POST /report/load returns 400 if the request is invalid', function (done) {
         // Arrange

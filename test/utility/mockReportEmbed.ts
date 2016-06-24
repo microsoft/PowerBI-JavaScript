@@ -25,6 +25,18 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   const app = mockApp;
   
   /**
+   * Setup not found handlers.
+   */
+  function notFoundHandler(req, res) {
+    res.send(404, `Not Found. Url: ${req.params.notfound} was not found.`);
+  };
+  router.get('*notfound', notFoundHandler);
+  router.post('*notfound', notFoundHandler);
+  router.patch('*notfound', notFoundHandler);
+  router.put('*notfound', notFoundHandler);
+  router.delete('*notfound', notFoundHandler);
+
+  /**
    * Phase 1
    */
   router.post('/report/load', (req, res) => {
