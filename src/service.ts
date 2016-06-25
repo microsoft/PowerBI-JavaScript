@@ -88,30 +88,30 @@ export class Service {
         /**
          * Add handler for report events
          */
-        this.router.post(`/reports/:reportId/events/:eventName`, (req, res) => {
+        this.router.post(`/reports/:uniqueId/events/:eventName`, (req, res) => {
             const event: IEvent<any> = {
                 type: 'report',
-                id: req.params.reportId,
+                id: req.params.uniqueId,
                 name: req.params.eventName,
                 value: req.body
             };
 
             this.handleEvent(event);
         });
-        this.router.post(`/reports/:reportId/pages/:pageName/events/:eventName`, (req, res) => {
+        this.router.post(`/reports/:uniqueId/pages/:pageName/events/:eventName`, (req, res) => {
             const event: IEvent<any> = {
                 type: 'report',
-                id: req.params.reportId,
+                id: req.params.uniqueId,
                 name: req.params.eventName,
                 value: req.body
             };
 
             this.handleEvent(event);
         });
-        this.router.post(`/reports/:reportId/visuals/:pageName/events/:eventName`, (req, res) => {
+        this.router.post(`/reports/:uniqueId/visuals/:pageName/events/:eventName`, (req, res) => {
             const event: IEvent<any> = {
                 type: 'report',
-                id: req.params.reportId,
+                id: req.params.uniqueId,
                 name: req.params.eventName,
                 value: req.body
             };
@@ -244,7 +244,7 @@ export class Service {
         const embed = utils.find(embed => {
             const config = embed.getConfig();
             return (config.type === event.type
-                && config.id === event.id);
+                && config.uniqueId === event.id);
         }, this.embeds);
 
         if(embed) {

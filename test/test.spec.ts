@@ -401,17 +401,17 @@ describe('Protocol', function () {
     hpm = factories.hpmFactory(iframe.contentWindow, wpmp, 'testVersion');
     const router = factories.routerFactory(wpmp);
 
-    router.post('/reports/:reportId/events/:eventName', (req, res) => {
+    router.post('/reports/:uniqueId/events/:eventName', (req, res) => {
       handler.handle(req);
       res.send(202);
     });
 
-    router.post('/reports/:reportId/pages/:pageName/events/:eventName', (req, res) => {
+    router.post('/reports/:uniqueId/pages/:pageName/events/:eventName', (req, res) => {
       handler.handle(req);
       res.send(202);
     });
 
-    router.post('/reports/:reportId/visuals/:visualId/events/:eventName', (req, res) => {
+    router.post('/reports/:uniqueId/visuals/:visualId/events/:eventName', (req, res) => {
       handler.handle(req);
       res.send(202);
     });
@@ -509,6 +509,7 @@ describe('Protocol', function () {
       it('POST /report/load returns 400 if the request is invalid', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           load: {
             reportId: "fakeId",
             accessToken: "fakeToken",
@@ -522,7 +523,7 @@ describe('Protocol', function () {
             spyApp.validateLoad.and.returnValue(Promise.reject(null));
 
             // Act
-            hpm.post<models.IError>('/report/load', testData.load, { ['report-id']: testData.load.reportId })
+            hpm.post<models.IError>('/report/load', testData.load, { uid: testData.uniqueId })
               .then(() => {
                 expect(false).toBe(true);
                 spyApp.validateLoad.calls.reset();
@@ -569,9 +570,10 @@ describe('Protocol', function () {
           });
       });
 
-      it('POST /report/load causes POST /reports/:reportId/events/loaded', function (done) {
+      it('POST /report/load causes POST /reports/:uniqueId/events/loaded', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           load: {
             reportId: "fakeId",
             accessToken: "fakeToken",
@@ -582,7 +584,7 @@ describe('Protocol', function () {
         };
         const testExpectedEvent = {
           method: 'POST',
-          url: `/reports/${testData.load.reportId}/events/loaded`,
+          url: `/reports/${testData.uniqueId}/events/loaded`,
           body: {
             initiator: 'sdk'
           }
@@ -593,7 +595,7 @@ describe('Protocol', function () {
             spyApp.load.and.returnValue(Promise.resolve(testData.load));
 
             // Act
-            hpm.post<void>('/report/load', testData.load, { ['report-id']: testData.load.reportId })
+            hpm.post<void>('/report/load', testData.load, { uid: testData.uniqueId })
               .then(response => {
                 setTimeout(() => {
                   // Assert
@@ -695,20 +697,22 @@ describe('Protocol', function () {
           });
       });
 
-      it('PUT /report/pages/active causes POST /reports/:reportId/events/pageChanged', function (done) {
+      it('PUT /report/pages/active causes POST /reports/:uniqueId/events/pageChanged', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           page: {
             name: "fakeName"
           },
-          expectedEvent: {
-            method: 'POST',
-            url: '/reports/fakeReportId/events/pageChanged',
-            body: jasmine.objectContaining({
-              initiator: 'sdk'
-            })
-          }
+          
+        };
+        const expectedEvent = {
+          method: 'POST',
+          url: `/reports/${testData.uniqueId}/events/pageChanged`,
+          body: jasmine.objectContaining({
+            initiator: 'sdk'
+          })
         };
 
         iframeLoaded
@@ -716,13 +720,13 @@ describe('Protocol', function () {
             spyApp.validatePage.and.returnValue(Promise.resolve(null));
 
             // Act
-            hpm.put<void>('/report/pages/active', testData.page, { ['report-id']: testData.reportId })
+            hpm.put<void>('/report/pages/active', testData.page, { uid: testData.uniqueId })
               .then(response => {
                 // Assert
                 expect(spyApp.validatePage).toHaveBeenCalledWith(testData.page);
                 expect(spyApp.setPage).toHaveBeenCalledWith(testData.page);
                 expect(response.statusCode).toEqual(202);
-                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(expectedEvent));
                 // Cleanup
                 spyApp.validateLoad.calls.reset();
                 spyApp.setPage.calls.reset();
@@ -818,17 +822,18 @@ describe('Protocol', function () {
           });
       });
 
-      it('POST /report/filters will cause POST /reports/:reportId/events/filterAdded', function (done) {
+      it('POST /report/filters will cause POST /reports/:uniqueId/events/filterAdded', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           filter: {
             name: "fakeFilter"
-          },
-          expectedEvent: {
-            method: 'POST',
-            url: '/reports/fakeReportId/events/filterAdded'
           }
+        };
+        const expectedEvent = {
+          method: 'POST',
+          url: `/reports/${testData.uniqueId}/events/filterAdded`
         };
 
         iframeLoaded
@@ -836,13 +841,13 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
             // Act
-            hpm.post<void>('/report/filters', testData.filter, { ['report-id']: testData.reportId })
+            hpm.post<void>('/report/filters', testData.filter, { uid: testData.uniqueId })
               .then(response => {
                 // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter);
                 expect(response.statusCode).toEqual(202);
-                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(expectedEvent));
                 // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.addFilter.calls.reset();
@@ -904,9 +909,10 @@ describe('Protocol', function () {
           });
       });
 
-      it('PUT /report/filters will cause POST /reports/:reportId/events/filterUpdated', function (done) {
+      it('PUT /report/filters will cause POST /reports/:uniqueId/events/filterUpdated', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           filter: {
             name: "fakeFilter"
@@ -914,7 +920,7 @@ describe('Protocol', function () {
         };
         const testExpectedEvent = {
           method: 'POST',
-          url: `/reports/${testData.reportId}/events/filterUpdated`
+          url: `/reports/${testData.uniqueId}/events/filterUpdated`
         };
 
         iframeLoaded
@@ -922,7 +928,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
             // Act
-            hpm.put<void>('/report/filters', testData.filter, { ['report-id']: testData.reportId })
+            hpm.put<void>('/report/filters', testData.filter, { uid: testData.uniqueId })
               .then(response => {
                 // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -954,21 +960,22 @@ describe('Protocol', function () {
           });
       });
 
-      it('DELETE /report/allfilters causes POST /reports/:reportId/events/filtersCleared', function (done) {
+      it('DELETE /report/allfilters causes POST /reports/:uniqueId/events/filtersCleared', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
         };
         const testExpectedEvent = {
           method: 'POST',
-          url: `/reports/${testData.reportId}/events/filtersCleared`
+          url: `/reports/${testData.uniqueId}/events/filtersCleared`
         };
 
         iframeLoaded
           .then(() => {
 
             // Act
-            hpm.delete<void>('/report/allfilters', null, { ['report-id']: testData.reportId })
+            hpm.delete<void>('/report/allfilters', null, { uid: testData.uniqueId })
               .then(response => {
                 // Assert
                 setTimeout(() => {
@@ -1042,9 +1049,10 @@ describe('Protocol', function () {
           });
       });
 
-      it('DELETE /report/filters will cause POST /reports/:reportId/events/filterRemoved', function (done) {
+      it('DELETE /report/filters will cause POST /reports/:uniqueId/events/filterRemoved', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           filter: {
             name: "fakeFilter"
@@ -1052,7 +1060,7 @@ describe('Protocol', function () {
         };
         const testExpectedEvent = {
           method: 'POST',
-          url: `/reports/${testData.reportId}/events/filterRemoved`
+          url: `/reports/${testData.uniqueId}/events/filterRemoved`
         };
 
         iframeLoaded
@@ -1060,7 +1068,7 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
             // Act
-            hpm.delete<void>('/report/filters', testData.filter, { ['report-id']: testData.reportId })
+            hpm.delete<void>('/report/filters', testData.filter, { uid: testData.uniqueId })
               .then(response => {
                 // Assert
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
@@ -1221,9 +1229,10 @@ describe('Protocol', function () {
           });
       });
 
-      it('POST /report/pages/xyz/filters will cause POST /reports/:reportId/pages/xyz/events/filterAdded', function (done) {
+      it('POST /report/pages/xyz/filters will cause POST /reports/:uniqueId/pages/xyz/events/filterAdded', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           expectedTarget: {
             type: "page",
@@ -1231,11 +1240,11 @@ describe('Protocol', function () {
           },
           filter: {
             name: "fakeFilter"
-          },
-          expectedEvent: {
-            method: 'POST',
-            url: '/reports/fakeReportId/pages/xyz/events/filterAdded'
           }
+        };
+        const testExpectedEvent = {
+          method: 'POST',
+          url: `/reports/${testData.uniqueId}/pages/xyz/events/filterAdded`
         };
 
         iframeLoaded
@@ -1244,14 +1253,14 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
             // Act
-            hpm.post<void>('/report/pages/xyz/filters', testData.filter, { ['report-id']: testData.reportId })
+            hpm.post<void>('/report/pages/xyz/filters', testData.filter, { uid: testData.uniqueId })
               .then(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
-                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
                 // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
@@ -1369,9 +1378,10 @@ describe('Protocol', function () {
           });
       });
 
-      it('PUT /report/pages/xyz/filters will cause POST /reports/:reportId/pages/xyz/events/filterUpdated', function (done) {
+      it('PUT /report/pages/xyz/filters will cause POST /reports/:uniqueId/pages/xyz/events/filterUpdated', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           expectedTarget: {
             type: "page",
@@ -1379,11 +1389,11 @@ describe('Protocol', function () {
           },
           filter: {
             name: "fakeFilter"
-          },
-          expectedEvent: {
-            method: 'POST',
-            url: '/reports/fakeReportId/pages/xyz/events/filterUpdated'
           }
+        };
+        const testExpectedEvent = {
+          method: 'POST',
+          url: `/reports/${testData.uniqueId}/pages/xyz/events/filterUpdated`
         };
 
         iframeLoaded
@@ -1391,14 +1401,14 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
             // Act
-            hpm.put<void>('/report/pages/xyz/filters', testData.filter, { ['report-id']: testData.reportId })
+            hpm.put<void>('/report/pages/xyz/filters', testData.filter, { uid: testData.uniqueId })
               .then(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
-                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
                 // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.updateFilter.calls.reset();
@@ -1667,9 +1677,10 @@ describe('Protocol', function () {
           });
       });
 
-      it('POST /report/visuals/xyz/filters will cause POST /reports/:reportId/visuals/xyz/events/filterAdded', function (done) {
+      it('POST /report/visuals/xyz/filters will cause POST /reports/:uniqueId/visuals/xyz/events/filterAdded', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           expectedTarget: {
             type: "visual",
@@ -1677,11 +1688,11 @@ describe('Protocol', function () {
           },
           filter: {
             name: "fakeFilter"
-          },
-          expectedEvent: {
-            method: 'POST',
-            url: '/reports/fakeReportId/visuals/xyz/events/filterAdded'
           }
+        };
+        const testExpectedEvent = {
+          method: 'POST',
+          url: `/reports/${testData.uniqueId}/visuals/xyz/events/filterAdded`
         };
 
         iframeLoaded
@@ -1690,14 +1701,14 @@ describe('Protocol', function () {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
             // Act
-            hpm.post<void>('/report/visuals/xyz/filters', testData.filter, { ['report-id']: testData.reportId })
+            hpm.post<void>('/report/visuals/xyz/filters', testData.filter, { uid: testData.uniqueId })
               .then(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.addFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
-                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
                 // Cleanup
                 spyApp.validateTarget.calls.reset();
                 spyApp.validateFilter.calls.reset();
@@ -1815,9 +1826,10 @@ describe('Protocol', function () {
           });
       });
 
-      it('PUT /report/visuals/xyz/filters will cause POST /reports/:reportId/visuals/xyz/events/filterUpdated', function (done) {
+      it('PUT /report/visuals/xyz/filters will cause POST /reports/:uniqueId/visuals/xyz/events/filterUpdated', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           expectedTarget: {
             type: "visual",
@@ -1826,25 +1838,27 @@ describe('Protocol', function () {
           filter: {
             name: "fakeFilter"
           },
-          expectedEvent: {
-            method: 'POST',
-            url: '/reports/fakeReportId/visuals/xyz/events/filterUpdated'
-          }
+          
         };
+        const testExpectedEvent = {
+          method: 'POST',
+          url: `/reports/${testData.uniqueId}/visuals/xyz/events/filterUpdated`
+        };
+        
 
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
 
             // Act
-            hpm.put<void>('/report/visuals/xyz/filters', testData.filter, { ['report-id']: testData.reportId })
+            hpm.put<void>('/report/visuals/xyz/filters', testData.filter, { uid: testData.uniqueId })
               .then(response => {
                 // Assert
                 expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.expectedTarget);
                 expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
                 expect(spyApp.updateFilter).toHaveBeenCalledWith(testData.filter, testData.expectedTarget);
                 expect(response.statusCode).toEqual(202);
-                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
                 // Cleanup
                 spyApp.validateFilter.calls.reset();
                 spyApp.updateFilter.calls.reset();
@@ -2025,9 +2039,10 @@ describe('Protocol', function () {
           });
       });
 
-      it('PATCH /report/settings causes POST /reports/:reportId/events/settingsUpdated', function (done) {
+      it('PATCH /report/settings causes POST /reports/:uniqueId/events/settingsUpdated', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           settings: {
             filterPaneEnabled: false
@@ -2035,7 +2050,7 @@ describe('Protocol', function () {
         };
         const testExpectedEvent = {
           method: 'POST',
-          url: `/reports/${testData.reportId}/events/settingsUpdated`,
+          url: `/reports/${testData.uniqueId}/events/settingsUpdated`,
           body: {
             initiator: 'sdk',
             settings: {
@@ -2051,7 +2066,7 @@ describe('Protocol', function () {
             spyApp.updateSettings.and.returnValue(Promise.resolve(testExpectedEvent.body.settings));
 
             // Act
-            hpm.patch<void>('/report/settings', testData.settings, { ['report-id']: testData.reportId })
+            hpm.patch<void>('/report/settings', testData.settings, { uid: testData.uniqueId })
               .then(response => {
                 // Assert
                 setTimeout(() => {
@@ -2073,9 +2088,10 @@ describe('Protocol', function () {
 
   describe('MockApp-to-HPM', function () {
     describe('pages', function () {
-      it('POST /reports/:reportId/events/pageChanged when user changes page', function (done) {
+      it('POST /reports/:uniqueId/events/pageChanged when user changes page', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           event: {
             initiator: 'user',
@@ -2086,7 +2102,7 @@ describe('Protocol', function () {
         };
         const testExpectedRequest = {
           method: 'POST',
-          url: `/reports/${testData.reportId}/events/pageChanged`,
+          url: `/reports/${testData.uniqueId}/events/pageChanged`,
           body: testData.event
         };
 
@@ -2109,9 +2125,10 @@ describe('Protocol', function () {
     });
 
     describe('filters (report level)', function () {
-      it('POST /reports/:reportId/events/filterAdded when user adds filter', function (done) {
+      it('POST /reports/:uniqueId/events/filterAdded when user adds filter', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           event: {
             initiator: 'user',
@@ -2122,7 +2139,7 @@ describe('Protocol', function () {
         };
         const testExpectedRequest = {
           method: 'POST',
-          url: `/reports/${testData.reportId}/events/filterAdded`,
+          url: `/reports/${testData.uniqueId}/events/filterAdded`,
           body: testData.event
         };
 
@@ -2143,9 +2160,10 @@ describe('Protocol', function () {
           });
       });
 
-      it('POST /reports/:reportId/events/filterUpdated when user changes filter', function (done) {
+      it('POST /reports/:uniqueId/events/filterUpdated when user changes filter', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           event: {
             initiator: 'user',
@@ -2156,7 +2174,7 @@ describe('Protocol', function () {
         };
         const testExpectedRequest = {
           method: 'POST',
-          url: `/reports/${testData.reportId}/events/filterUpdated`,
+          url: `/reports/${testData.uniqueId}/events/filterUpdated`,
           body: testData.event
         };
 
@@ -2177,9 +2195,10 @@ describe('Protocol', function () {
           });
       });
 
-      it('POST /reports/:reportId/events/filterRemoved when user removes filter', function (done) {
+      it('POST /reports/:uniqueId/events/filterRemoved when user removes filter', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           event: {
             initiator: 'user',
@@ -2190,7 +2209,7 @@ describe('Protocol', function () {
         };
         const testExpectedRequest = {
           method: 'POST',
-          url: `/reports/${testData.reportId}/events/filterRemoved`,
+          url: `/reports/${testData.uniqueId}/events/filterRemoved`,
           body: testData.event
         };
 
@@ -2213,9 +2232,10 @@ describe('Protocol', function () {
     });
 
     describe('settings', function () {
-      it('POST /reports/:reportId/events/settingsUpdated when user changes settings', function (done) {
+      it('POST /reports/:uniqueId/events/settingsUpdated when user changes settings', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           event: {
             initiator: 'user',
@@ -2226,7 +2246,7 @@ describe('Protocol', function () {
         };
         const testExpectedRequest = {
           method: 'POST',
-          url: `/reports/${testData.reportId}/events/settingsUpdated`,
+          url: `/reports/${testData.uniqueId}/events/settingsUpdated`,
           body: testData.event
         };
 
@@ -2249,9 +2269,10 @@ describe('Protocol', function () {
     });
 
     describe('data selection', function () {
-      it('POST /reports/:reportId/events/dataSelected when user selects data', function (done) {
+      it('POST /reports/:uniqueId/events/dataSelected when user selects data', function (done) {
         // Arrange
         const testData = {
+          uniqueId: 'uniqueId',
           reportId: 'fakeReportId',
           event: {
             initiator: 'user',
@@ -2262,7 +2283,7 @@ describe('Protocol', function () {
         };
         const testExpectedRequest = {
           method: 'POST',
-          url: `/reports/${testData.reportId}/events/dataSelected`,
+          url: `/reports/${testData.uniqueId}/events/dataSelected`,
           body: testData.event
         };
 
@@ -2290,6 +2311,7 @@ describe('SDK-to-HPM', function () {
   let iframe: HTMLIFrameElement;
   let powerbi: service.Service;
   let report: report.Report;
+  let uniqueId = 'uniqueId';
   let embedConfiguration: embed.IEmbedConfiguration;
 
   beforeAll(function () {
@@ -2317,6 +2339,7 @@ describe('SDK-to-HPM', function () {
       embedUrl: iframeSrc
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
+    uniqueId = report.getConfig().uniqueId;
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
 
@@ -2360,7 +2383,7 @@ describe('SDK-to-HPM', function () {
       report.load(testData.loadConfiguration);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { 'report-id': testData.loadConfiguration.id });
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId });
     });
 
     it('report.load() returns promise that rejects with validation error if the load configuration is invalid', function (done) {
@@ -2382,7 +2405,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.load(testData.loadConfiguration)
         .catch(error => {
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { 'report-id': testData.loadConfiguration.id });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId });
           expect(error).toEqual(testData.errorResponse.body);
           // Assert
           done();
@@ -2403,7 +2426,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.load(testData.loadConfiguration)
         .then(response => {
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { 'report-id': testData.loadConfiguration.id });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId });
           expect(response).toEqual(null);
           // Assert
           done();
@@ -2419,7 +2442,7 @@ describe('SDK-to-HPM', function () {
       report.getPages();
 
       // Assert
-      expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { 'report-id': embedConfiguration.id });
+      expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId });
     });
 
     it('report.getPages() return promise that rejects with server error if there was error getting pages', function (done) {
@@ -2438,7 +2461,7 @@ describe('SDK-to-HPM', function () {
       report.getPages()
         .catch(error => {
           // Assert
-          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { 'report-id': embedConfiguration.id });
+          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId });
           expect(error).toEqual(testData.expectedError.body);
           done();
         });
@@ -2461,7 +2484,7 @@ describe('SDK-to-HPM', function () {
       report.getPages()
         .then(pages => {
           // Assert
-          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { 'report-id': embedConfiguration.id });
+          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId });
           expect(pages).toEqual(testData.expectedResponse.body);
           done();
         });
@@ -2480,7 +2503,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
     });
 
     it('report.addFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -2502,7 +2525,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter)
         .catch(errors => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2520,7 +2543,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter)
         .then(response => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
           expect(response).toEqual(null);
           done();
         });
@@ -2537,7 +2560,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter);
 
       // Assert
-      expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
+      expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
     });
 
     it('report.updateFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -2559,7 +2582,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter)
         .catch(errors => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2577,7 +2600,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter)
         .then(response => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
           expect(response).toEqual(null);
           done();
         });
@@ -2594,7 +2617,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter);
 
       // Assert
-      expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
+      expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
     });
 
     it('report.removeFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -2616,7 +2639,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter)
         .catch(errors => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2634,7 +2657,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter)
         .then(response => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
           expect(response).toEqual(null);
           done();
         });
@@ -2657,7 +2680,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
     });
 
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2683,7 +2706,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2705,7 +2728,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
           expect(response).toEqual(null);
           done();
         });
@@ -2725,7 +2748,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
+      expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
     });
 
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2751,7 +2774,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2773,7 +2796,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
           expect(response).toEqual(null);
           done();
         });
@@ -2794,7 +2817,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
+      expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
     });
 
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2820,7 +2843,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2842,7 +2865,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
           expect(response).toEqual(null);
           done();
         });
@@ -2864,7 +2887,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
     });
 
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2890,7 +2913,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2912,7 +2935,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
           expect(response).toEqual(null);
           done();
         });
@@ -2932,7 +2955,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
+      expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
     });
 
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2958,7 +2981,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2980,7 +3003,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
           expect(response).toEqual(null);
           done();
         });
@@ -3000,7 +3023,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
+      expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
     });
 
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -3026,7 +3049,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -3048,7 +3071,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
           expect(response).toEqual(null);
           done();
         });
@@ -3068,7 +3091,7 @@ describe('SDK-to-HPM', function () {
       report.updateSettings(testData.settings);
 
       // Assert
-      expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { 'report-id': embedConfiguration.id });
+      expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId });
     });
 
     it('report.updateSettings(setting) returns promise that rejects with validation error if object is invalid', function (done) {
@@ -3093,7 +3116,7 @@ describe('SDK-to-HPM', function () {
         .catch(errors => {
 
           // Assert
-          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId });
           expect(errors).toEqual(testData.expectedError.body);
           done()
         });
@@ -3114,7 +3137,7 @@ describe('SDK-to-HPM', function () {
         .then(response => {
 
           // Assert
-          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { 'report-id': embedConfiguration.id });
+          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId });
           expect(response).toEqual(null);
           done()
         });
@@ -3150,6 +3173,7 @@ describe('SDK-to-WPMP', function () {
   let iframe: HTMLIFrameElement;
   let powerbi: service.Service;
   let report: report.Report;
+  let uniqueId: string;
 
   beforeAll(function () {
     const spyWpmpFactory: factories.IWpmpFactory = (name?: string, logMessages?: boolean) => {
@@ -3170,6 +3194,7 @@ describe('SDK-to-WPMP', function () {
       wpmpName: 'SDK-to-WPMP report wpmp'
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
+    uniqueId = report.getConfig().uniqueId;
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
 
@@ -3199,7 +3224,7 @@ describe('SDK-to-WPMP', function () {
   });
 
   describe('Event handlers', function () {
-    it(`handler passed to report.on(eventName, handler) is called when POST /report/:reportId/events/:eventName is received`, function () {
+    it(`handler passed to report.on(eventName, handler) is called when POST /report/:uniqueId/events/:eventName is received`, function () {
       // Arrange
       const testData = {
         eventName: 'pageChanged',
@@ -3207,7 +3232,7 @@ describe('SDK-to-WPMP', function () {
         pageChangedEvent: {
           data: {
             method: 'POST',
-            url: '/reports/fakeReportId/events/pageChanged',
+            url: `/reports/${uniqueId}/events/pageChanged`,
             body: {
               initiator: 'sdk',
               page: {
@@ -3236,7 +3261,7 @@ describe('SDK-to-WPMP', function () {
         simulatedEvent: {
           data: {
             method: 'POST',
-            url: '/reports/fakeReportId/events/filterAdded',
+            url: `/reports/${uniqueId}/events/filterAdded`,
             body: {
               initiator: 'sdk',
               filter: {
@@ -3268,7 +3293,7 @@ describe('SDK-to-WPMP', function () {
         simulatedEvent: {
           data: {
             method: 'POST',
-            url: '/reports/fakeReportId/events/filterAdded',
+            url: `/reports/${uniqueId}/events/filterAdded`,
             body: {
               initiator: 'sdk',
               filter: {
@@ -3334,12 +3359,16 @@ describe('SDK-to-WPMP', function () {
 
 describe('SDK-to-MockApp', function () {
   let $element: JQuery;
+  let $element2: JQuery;
   let iframe: HTMLIFrameElement;
+  let iframe2: HTMLIFrameElement;
   let iframeHpm: Hpm.HttpPostMessage;
-  let iframeLoaded: Promise<void>;
+  let iframeHpm2: Hpm.HttpPostMessage;
+  let iframeLoaded: Promise<void[]>;
   let powerbi: service.Service;
   let powerbi2: service.Service;
   let report: report.Report;
+  let report2: report.Report;
 
   beforeAll(function () {
     
@@ -3351,6 +3380,9 @@ describe('SDK-to-MockApp', function () {
     $element = $(`<div class="powerbi-report-container2"></div>`)
       .appendTo(document.body);
 
+    $element2 = $(`<div class="powerbi-report-container3"></div>`)
+      .appendTo(document.body);
+
     const iframeSrc = "base/test/utility/noop.html";
     const embedConfiguration: embed.IEmbedConfiguration = {
       type: "report",
@@ -3359,8 +3391,10 @@ describe('SDK-to-MockApp', function () {
       embedUrl: iframeSrc
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
+    report2 = <report.Report>powerbi.embed($element2[0], embedConfiguration);
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
+    iframe2 = <HTMLIFrameElement>$element2.find('iframe')[0];
 
     /**
      * Note: For testing we need to configure the eventSourceOverrideWindow to allow the host to respond to
@@ -3372,16 +3406,24 @@ describe('SDK-to-MockApp', function () {
 
     // Register Iframe side
     iframeHpm = setupMockApp(iframe.contentWindow, window, logMessages, 'SDK-to-MockApp IframeWpmp');
+    iframeHpm2 = setupMockApp(iframe2.contentWindow, window, logMessages, 'SDK-to-MockApp IframeWpmp2');
 
     // Reset load handler
     spyApp.validateLoad.calls.reset();
     spyApp.reset();
 
-    iframeLoaded = new Promise<void>((resolve, reject) => {
+    const iframe1Loaded = new Promise<void>((resolve, reject) => {
       iframe.addEventListener('load', () => {
         resolve(null);
       });
     });
+    const iframe2Loaded = new Promise<void>((resolve, reject) => {
+      iframe2.addEventListener('load', () => {
+        resolve(null);
+      });
+    });
+
+    iframeLoaded = Promise.all<void>([iframe1Loaded, iframe2Loaded]);
   });
 
   afterAll(function () {
@@ -4074,9 +4116,10 @@ describe('SDK-to-MockApp', function () {
       expect(attemptToSubscribeToEvent).toThrowError();
     });
 
-    it(`report.on(eventName, handler) should register handler and be called when POST /report/:reportId/events/:eventName is received`, function () {
+    it(`report.on(eventName, handler) should register handler and be called when POST /report/:uniqueId/events/:eventName is received`, function () {
       // Arrange
       const testData = {
+        uniqueId: 'uniqueId',
         reportId: 'fakeReportId',
         eventName: 'pageChanged',
         handler: jasmine.createSpy('handler'),
@@ -4092,10 +4135,39 @@ describe('SDK-to-MockApp', function () {
       report.on(testData.eventName, testData.handler);
 
       // Act
-      iframeHpm.post(`/reports/${testData.reportId}/events/${testData.eventName}`, testData.simulatedPageChangeBody)
+      iframeHpm.post(`/reports/${testData.uniqueId}/events/${testData.eventName}`, testData.simulatedPageChangeBody)
         .then(response => {
           // Assert
           expect(testData.handler).toHaveBeenCalledWith(testData.simulatedPageChangeBody);
+        });
+    });
+
+    it(`if multiple reports with the same id are loaded into the host, and event occurs on one of them, only one report handler should be called`, function () {
+      // Arrange
+      const testData = {
+        uniqueId: 'uniqueId',
+        reportId: 'fakeReportId',
+        eventName: 'filterAdded',
+        handler: jasmine.createSpy('handler'),
+        handler2: jasmine.createSpy('handler2'),
+        simulatedPageChangeBody: {
+          initiator: 'sdk',
+          page: {
+            name: 'page1',
+            displayName: 'Page 1'
+          }
+        }
+      };
+
+      report.on(testData.eventName, testData.handler);
+      report2.on(testData.eventName, testData.handler2);
+
+      // Act
+      iframeHpm.post(`/reports/${report2.getConfig().uniqueId}/events/${testData.eventName}`, testData.simulatedPageChangeBody)
+        .then(response => {
+          // Assert
+          expect(testData.handler2).toHaveBeenCalledWith(testData.simulatedPageChangeBody);
+          expect(testData.handler).not.toHaveBeenCalled();
         });
     });
   });

@@ -32,6 +32,7 @@ export interface IEmbedConfiguration {
 export type IGetGlobalAccessToken = () => string;
 
 export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {
+    uniqueId: string;
     type: string;
     embedUrl: string;
     getGlobalAccessToken: IGetGlobalAccessToken;
@@ -78,6 +79,7 @@ export abstract class Embed {
         this.config = utils.assign({}, config);
         this.config.accessToken = this.getAccessToken(service.accessToken);
         this.config.embedUrl = this.getEmbedUrl();
+        this.config.uniqueId = utils.createRandomString();
 
         // TODO: The findIdFromEmbedUrl method is specific to Reports so it should be in the Report class, but it can't be called until
         // after we have fetched the embedUrl from the attributes
@@ -117,7 +119,7 @@ export abstract class Embed {
             throw errors;
         }
 
-        return this.hpm.post<void>('/report/load', config, { [`${this.config.type}-id`]: config.id })
+        return this.hpm.post<void>('/report/load', config, { uid: this.config.uniqueId })
             .catch(response => {
                 throw response.body;
             });

@@ -41,18 +41,18 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
    * Phase 1
    */
   router.post('/report/load', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const loadConfig = req.body;
     return app.validateLoad(loadConfig)
       .then(() => {
         app.load(loadConfig)
           .then(() => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/events/loaded`, {
+            hpm.post(`/reports/${uniqueId}/events/loaded`, {
               initiator
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
           
         res.send(202);
@@ -71,19 +71,19 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
   
   router.put('/report/pages/active', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const page = req.body;
     return app.validatePage(page)
       .then(() => {
         app.setPage(page)
           .then(page => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/events/pageChanged`, {
+            hpm.post(`/reports/${uniqueId}/events/pageChanged`, {
               initiator,
               page
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
         
         res.send(202);
@@ -103,19 +103,19 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
   
   router.post('/report/filters', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const filter = req.body;
     return app.validateFilter(filter)
       .then(() => {
         app.addFilter(filter)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/events/filterAdded`, {
+            hpm.post(`/reports/${uniqueId}/events/filterAdded`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
         
         res.send(202);
@@ -125,19 +125,19 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
   
   router.put('/report/filters', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const filter = req.body;
     return app.validateFilter(filter)
       .then(() => {
         app.updateFilter(filter)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/events/filterUpdated`, {
+            hpm.post(`/reports/${uniqueId}/events/filterUpdated`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
         
         res.send(202);
@@ -147,19 +147,19 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
   
   router.delete('/report/filters', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const filter = req.body;
     return app.validateFilter(filter)
       .then(() => {
         app.removeFilter(filter)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/events/filterRemoved`, {
+            hpm.post(`/reports/${uniqueId}/events/filterRemoved`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
 
         res.send(202);
@@ -169,16 +169,16 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
 
   router.delete('/report/allfilters', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     app.clearFilters()
       .then(filter => {
         const initiator = "sdk";
-        hpm.post(`/reports/${reportId}/events/filtersCleared`, {
+        hpm.post(`/reports/${uniqueId}/events/filtersCleared`, {
           initiator,
           filter
         });
       }, error => {
-        hpm.post(`/reports/${reportId}/events/error`, error);
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
       });
     res.send(202);
   });
@@ -205,7 +205,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
   
   router.post('/report/pages/:pageName/filters', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const filter = req.body;
     const pageName = req.params.pageName;
     const target: models.ITarget = {
@@ -219,12 +219,12 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
         app.addFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/pages/${pageName}/events/filterAdded`, {
+            hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filterAdded`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
         
         res.send(202);
@@ -234,7 +234,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
   
   router.put('/report/pages/:pageName/filters', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const filter = req.body;
     const pageName = req.params.pageName;
     const target: models.ITarget = {
@@ -248,12 +248,12 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
         app.updateFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/pages/${pageName}/events/filterUpdated`, {
+            hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filterUpdated`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
         
         res.send(202);
@@ -263,7 +263,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
 
   router.delete('/report/pages/:pageName/filters', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const filter = req.body;
     const pageName = req.params.pageName;
     const target: models.ITarget = {
@@ -277,12 +277,12 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
         app.removeFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/pages/${pageName}/events/filterRemoved`, {
+            hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filterRemoved`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
         
         res.send(202);
@@ -305,7 +305,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
   
   router.post('/report/visuals/:visualId/filters', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const filter = req.body;
     const visualId = req.params.visualId;
     const target: models.ITarget = {
@@ -319,12 +319,12 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
         app.addFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/visuals/${visualId}/events/filterAdded`, {
+            hpm.post(`/reports/${uniqueId}/visuals/${visualId}/events/filterAdded`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
         
         res.send(202);
@@ -334,7 +334,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
   
   router.put('/report/visuals/:visualId/filters', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const filter = req.body;
     const visualId = req.params.visualId;
     const target: models.ITarget = {
@@ -348,12 +348,12 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
         app.updateFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/visuals/${visualId}/events/filterUpdated`, {
+            hpm.post(`/reports/${uniqueId}/visuals/${visualId}/events/filterUpdated`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
         
         res.send(202);
@@ -363,7 +363,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
 
   router.delete('/report/visuals/:visualId/filters', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const filter = req.body;
     const visualId = req.params.visualId;
     const target: models.ITarget = {
@@ -377,12 +377,12 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
         app.removeFilter(filter, target)
           .then(filter => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/visuals/${visualId}/events/filterRemoved`, {
+            hpm.post(`/reports/${uniqueId}/visuals/${visualId}/events/filterRemoved`, {
               initiator,
               filter
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
         
         res.send(202);
@@ -392,7 +392,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
   
   router.patch('/report/settings', (req, res) => {
-    const reportId = req.headers['report-id'];
+    const uniqueId = req.headers['uid'];
     const settings = req.body;
     
     return app.validateSettings(settings)
@@ -400,12 +400,12 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
         app.updateSettings(settings)
           .then(updatedSettings => {
             const initiator = "sdk";
-            hpm.post(`/reports/${reportId}/events/settingsUpdated`, {
+            hpm.post(`/reports/${uniqueId}/events/settingsUpdated`, {
               initiator,
               settings: updatedSettings
             });
           }, error => {
-            hpm.post(`/reports/${reportId}/events/error`, error);
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
         
         res.send(202);
