@@ -3366,7 +3366,6 @@ describe('SDK-to-MockApp', function () {
   let iframeHpm2: Hpm.HttpPostMessage;
   let iframeLoaded: Promise<void[]>;
   let powerbi: service.Service;
-  let powerbi2: service.Service;
   let report: report.Report;
   let report2: report.Report;
 
