@@ -1,4 +1,4 @@
-import { Utils } from './util';
+import * as utils from './util';
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as hpm from 'http-post-message';
@@ -74,8 +74,8 @@ export abstract class Embed {
         this.element = element;
 
         // TODO: Change when Object.assign is available.
-        config.settings = Utils.assign({}, Embed.defaultSettings, config.settings);
-        this.config = Utils.assign({}, config);
+        config.settings = utils.assign({}, Embed.defaultSettings, config.settings);
+        this.config = utils.assign({}, config);
         this.config.accessToken = this.getAccessToken(service.accessToken);
         this.config.embedUrl = this.getEmbedUrl();
 
@@ -152,7 +152,7 @@ export abstract class Embed {
     off<T>(eventName: string, handler?: service.IEventHandler<T>): void {
         const fakeEvent: service.IEvent<any> = { name: eventName, type: null, id: null, value: null };
         if(handler) {
-            Utils.remove(eventHandler => eventHandler.test(fakeEvent) && (eventHandler.handle === handler), this.eventHandlers);
+            utils.remove(eventHandler => eventHandler.test(fakeEvent) && (eventHandler.handle === handler), this.eventHandlers);
         }
         else {
             const eventHandlersToRemove = this.eventHandlers
@@ -160,7 +160,7 @@ export abstract class Embed {
                 
             eventHandlersToRemove
                 .forEach(eventHandlerToRemove => {
-                    Utils.remove(eventHandler => eventHandler === eventHandlerToRemove, this.eventHandlers);
+                    utils.remove(eventHandler => eventHandler === eventHandlerToRemove, this.eventHandlers);
                 })
         }
     }

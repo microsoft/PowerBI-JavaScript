@@ -1,7 +1,7 @@
 import * as embed from './embed';
 import { Report } from './report';
 import { Tile } from './tile';
-import { Utils } from './util';
+import * as utils from './util';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as router from 'powerbi-router';
@@ -122,7 +122,7 @@ export class Service {
         this.embeds = [];
         
         // TODO: Change when Object.assign is available.
-        this.config = Utils.assign({}, Service.defaultConfig, config);
+        this.config = utils.assign({}, Service.defaultConfig, config);
         
         if (this.config.autoEmbedOnContentLoaded) {
             this.enableAutoEmbed();
@@ -174,7 +174,7 @@ export class Service {
         // Save type on configuration so it can be referenced later at known location
         config.type = componentType;
         
-        const Component = Utils.find(component => componentType === component.type.toLowerCase(), Service.components);
+        const Component = utils.find(component => componentType === component.type.toLowerCase(), Service.components);
         if (!Component) {
             throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
         }
@@ -187,7 +187,7 @@ export class Service {
     }
     
     private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfiguration): embed.Embed {
-        const component = Utils.find(x => x.element === element, this.embeds);
+        const component = utils.find(x => x.element === element, this.embeds);
         if (!component) {
             throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
         }
@@ -230,7 +230,7 @@ export class Service {
         }
         
         /** Remove component from internal list */
-        Utils.remove(x => x === powerBiElement.powerBiEmbed, this.embeds);
+        utils.remove(x => x === powerBiElement.powerBiEmbed, this.embeds);
         /** Delete property from html element */
         delete powerBiElement.powerBiEmbed;
         /** Remove iframe from element */
@@ -241,7 +241,7 @@ export class Service {
     }
 
     handleEvent(event: IEvent<any>): void {
-        const embed = Utils.find(embed => {
+        const embed = utils.find(embed => {
             const config = embed.getConfig();
             return (config.type === event.type
                 && config.id === event.id);
