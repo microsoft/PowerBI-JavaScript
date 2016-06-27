@@ -220,6 +220,13 @@ export class Service {
     }
 
     /**
+     * Find embed instance by name / unique id provided.
+     */
+    find(uniqueId: string): Report | Tile {
+        return utils.find(x => x.config.uniqueId === uniqueId, this.embeds);
+    }
+
+    /**
      * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
      */
     reset(element: HTMLElement) {

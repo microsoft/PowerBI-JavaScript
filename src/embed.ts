@@ -24,6 +24,7 @@ declare global {
 export interface IEmbedConfiguration {
     type?: string;
     id?: string;
+    uniqueId?: string;
     embedUrl?: string;
     accessToken?: string;
     settings?: models.ISettings;
@@ -43,6 +44,7 @@ export interface IInternalEventHandler<T> {
 export abstract class Embed {
     public static accessTokenAttribute = 'powerbi-access-token';
     public static embedUrlAttribute = 'powerbi-embed-url';
+    public static nameAttribute = 'powerbi-name';
     public static typeAttribute = 'powerbi-type';
     public static type: string;
 
@@ -72,7 +74,7 @@ export abstract class Embed {
         this.config.accessToken = this.getAccessToken(service.accessToken);
         this.config.embedUrl = this.getEmbedUrl();
         this.config.id = this.getId();
-        this.config.uniqueId = utils.createRandomString();
+        this.config.uniqueId = this.getUniqueId();
 
         const iframeHtml = `<iframe style="width:100%;height:100%;" src="${this.config.embedUrl}" scrolling="no" allowfullscreen="true"></iframe>`;
 
@@ -186,6 +188,14 @@ export abstract class Embed {
         }
 
         return embedUrl;
+    }
+
+    /**
+     * Get unique id from first available location: options, attribute.
+     * If neither is provided generate unique string.
+     */
+    private getUniqueId(): string {
+        return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || utils.createRandomString();
     }
 
     /**

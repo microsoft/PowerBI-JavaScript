@@ -171,6 +171,48 @@ describe('service', function () {
       expect(attemptToEmbed).toThrowError();
     });
 
+    it('should get uqiqueId from config first', function () {
+      // Arrange
+      const testUniqueId = 'fakeUniqueId';
+      const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed`;
+      const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id="abc123" powerbi-name="differentUniqueId"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const report = powerbi.embed($reportContainer[0], { uniqueId: testUniqueId });
+
+      // Assert
+      expect(report.config.uniqueId).toEqual(testUniqueId);
+    });
+
+    it('should get uqiqueId from name attribute if uniqueId is not specified in config', function () {
+      // Arrange
+      const testUniqueId = 'fakeUniqueId';
+      const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed`;
+      const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id="abc123" powerbi-name="${testUniqueId}"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const report = powerbi.embed($reportContainer[0]);
+
+      // Assert
+      expect(report.config.uniqueId).toEqual(testUniqueId);
+    });
+
+    it('should generate uqiqueId if uniqueId is not specified in config or attribute', function () {
+      // Arrange
+      const testUniqueId = 'fakeUniqueId';
+      const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed`;
+      const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id="abc123"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const report = powerbi.embed($reportContainer[0]);
+
+      // Assert
+      expect(report.config.uniqueId).toEqual(jasmine.any(String));
+    });
+
     it('if component is already embedded in element re-use the existing component by calling load with the new information', function () {
       // Arrange
       const $element = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
@@ -387,6 +429,29 @@ describe('service', function () {
 
       // Assert
       expect($element.html()).toEqual('');
+    });
+
+    it('removes the powerbi instance from the list of embeds', function () {
+      // Arrange
+      const $element = $('<div></div>');
+      const testEmbedConfig = {
+        type: 'report',
+        embedUrl: 'fakeUrl',
+        id: 'fakeReportId',
+        accessToken: 'fakeToken',
+        uniqueId: 'fakeUniqeId'
+      };
+      powerbi.embed($element.get(0), testEmbedConfig);
+
+      // Act
+      const report = powerbi.find(testEmbedConfig.uniqueId);
+      expect(report).toBeDefined();
+
+      powerbi.reset($element.get(0));
+
+      // Assert
+      const report2 = powerbi.find(testEmbedConfig.uniqueId);
+      expect(report2).toBeUndefined();
     });
   });
 });
