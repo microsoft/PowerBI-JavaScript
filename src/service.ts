@@ -54,7 +54,7 @@ export class Service {
      * TODO: See if it's possible to remove need for this interface and just use Embed base object as common between Tile and Report
      * This was only put it to allow both types of components to be in the same list
      */
-    private static components: embed.IEmbedConstructor[] = [
+    private static components: (typeof Report | typeof Tile)[] = [
         Tile,
         Report
     ];

@@ -43,11 +43,6 @@ export interface IInternalEventHandler<T> {
     handle(event: service.IEvent<T>): void;
 }
 
-export interface IEmbedConstructor {
-    new (service: service.Service, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration): Embed;
-    type: string;
-}
-
 export abstract class Embed {
     public static embedUrlAttribute = 'powerbi-embed-url';
     public static accessTokenAttribute = 'powerbi-access-token';
