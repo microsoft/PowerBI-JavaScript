@@ -19,7 +19,7 @@ declare global {
 
 let logMessages = (window.__karma__.config.args[0] === 'logMessages');
 
-describe('powerbi', function () {
+describe('service', function () {
   let powerbi: service.Service;
   let $element: JQuery;
 
@@ -47,7 +47,7 @@ describe('powerbi', function () {
       // Arrange
       const elements = [
         '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
-        '<div powerbi-embed-url="https://app.powerbi.com/embed?dashboardId=D1&tileId=T1" powerbi-type="tile"></div>'
+        '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
       ];
 
       elements.forEach(element => {
@@ -156,6 +156,21 @@ describe('powerbi', function () {
       powerbi.accessToken = originalToken;
     });
 
+    it('if attempting to embed without specifying an id, throw error', function () {
+      // Arrange
+      const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed`;
+      const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const attemptToEmbed = () => {
+        powerbi.embed($reportContainer[0]);
+      };
+
+      // Assert
+      expect(attemptToEmbed).toThrowError();
+    });
+
     it('if component is already embedded in element re-use the existing component by calling load with the new information', function () {
       // Arrange
       const $element = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
@@ -226,9 +241,7 @@ describe('powerbi', function () {
 
       // Assert
       var report = powerbi.get($reportContainer[0]);
-      // TODO: Find way to prevent using private method getAccessToken.
-      // Need to know what token the report used, but don't have another option?
-      var accessToken = (<any>report).getAccessToken();
+      var accessToken = report.getConfig().accessToken;
 
       expect(accessToken).toEqual(testToken);
 
@@ -251,9 +264,76 @@ describe('powerbi', function () {
         expect(iframe.length).toEqual(1);
         expect(iframe.attr('src')).toEqual(embedUrl);
       });
+
+      describe('findIdFromEmbedUrl', function () {
+        it('should return value of reportId query parameter in embedUrl', function () {
+          // Arrange
+          const testReportId = "ABC123";
+          const testEmbedUrl = `http://embedded.powerbi.com/appTokenReportEmbed?reportId=${testReportId}`;
+
+          // Act
+          const reportId = report.Report.findIdFromEmbedUrl(testEmbedUrl);
+
+          // Assert
+          expect(reportId).toEqual(testReportId);
+        });
+
+        it('should return undefinded if the query parameter is not in the url', function () {
+          // Arrange
+          const testEmbedUrl = `http://embedded.powerbi.com/appTokenReportEmbed`;
+
+          // Act
+          const reportId = report.Report.findIdFromEmbedUrl(testEmbedUrl);
+
+          // Assert
+          expect(reportId).toBeUndefined();
+        });
+      });
+
+      it('should get report id from configuration first', function () {
+        // Arrange
+        const testReportId = "ABC123";
+        const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed?reportId=DIFFERENTID`;
+        const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
+          .appendTo('#powerbi-fixture');
+
+        // Act
+        const report = powerbi.embed($reportContainer[0], { id: testReportId });
+
+        // Assert
+        expect(report.getConfig().id).toEqual(testReportId);
+      });
+
+      it('should fallback to using id from attribute if not supplied in embed/load configuration', function () {
+        // Arrange
+        const testReportId = "ABC123";
+        const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed?reportId=DIFFERENTID`;
+        const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id="${testReportId}"></div>`)
+          .appendTo('#powerbi-fixture');
+
+        // Act
+        const report = powerbi.embed($reportContainer[0]);
+
+        // Assert
+        expect(report.getConfig().id).toEqual(testReportId);
+      });
+
+      it('should fallback to using id from embedUrl if not supplied in embed/load configuration or attribute', function () {
+        // Arrange
+        const testReportId = "ABC123";
+        const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed?reportId=${testReportId}`;
+        const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id></div>`)
+          .appendTo('#powerbi-fixture');
+
+        // Act
+        const report = powerbi.embed($reportContainer[0]);
+
+        // Assert
+        expect(report.getConfig().id).toEqual(testReportId);
+      });
     });
 
-    describe('tiles', function () {
+    xdescribe('tiles', function () {
       it('creates tile iframe from embedUrl', function () {
         // Arrange
         var embedUrl = 'https://app.powerbi.com/embed?dashboardId=D1&tileId=T1';
@@ -278,7 +358,7 @@ describe('powerbi', function () {
       powerbi.embed($element.get(0), {
         type: 'report',
         embedUrl: 'fakeUrl',
-        id: undefined,
+        id: 'fakeId',
         accessToken: 'fakeToken'
       });
 
@@ -296,7 +376,7 @@ describe('powerbi', function () {
       powerbi.embed($element.get(0), {
         type: 'report',
         embedUrl: 'fakeUrl',
-        id: undefined,
+        id: 'fakeReportId',
         accessToken: 'fakeToken'
       });
 

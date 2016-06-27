@@ -41,8 +41,8 @@ export interface IInternalEventHandler<T> {
 }
 
 export abstract class Embed {
-    public static embedUrlAttribute = 'powerbi-embed-url';
     public static accessTokenAttribute = 'powerbi-access-token';
+    public static embedUrlAttribute = 'powerbi-embed-url';
     public static typeAttribute = 'powerbi-type';
     public static type: string;
 
@@ -71,21 +71,8 @@ export abstract class Embed {
         this.config = utils.assign({}, config);
         this.config.accessToken = this.getAccessToken(service.accessToken);
         this.config.embedUrl = this.getEmbedUrl();
+        this.config.id = this.getId();
         this.config.uniqueId = utils.createRandomString();
-
-        // TODO: The findIdFromEmbedUrl method is specific to Reports so it should be in the Report class, but it can't be called until
-        // after we have fetched the embedUrl from the attributes
-
-        /**
-         * This adds backwards compatibility for older config which used the reportId query param to specify report id.
-         * E.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1
-         * 
-         * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
-         */
-        const id = Embed.findIdFromEmbedUrl(this.config.embedUrl);
-        if(id) {
-            this.config.id = id;
-        }
 
         const iframeHtml = `<iframe style="width:100%;height:100%;" src="${this.config.embedUrl}" scrolling="no" allowfullscreen="true"></iframe>`;
 
@@ -202,6 +189,11 @@ export abstract class Embed {
     }
 
     /**
+     * Get report id from first available location: options, attribute.
+     */
+    abstract getId(): string;
+
+    /**
      * Request the browser to make the component's iframe fullscreen.
      */
     fullscreen(): void {
@@ -221,17 +213,6 @@ export abstract class Embed {
         exitFullscreen.call(document);
     }
 
-    private static findIdFromEmbedUrl(url: string): string {
-        const reportIdRegEx = /reportId="?([^&]+)"?/
-        const reportIdMatch = url.match(reportIdRegEx);
-        
-        let reportId;
-        if(reportIdMatch) {
-            reportId = reportIdMatch[1];
-        }
-
-        return reportId;
-    }
 
     /**
      * Return true if iframe is fullscreen,

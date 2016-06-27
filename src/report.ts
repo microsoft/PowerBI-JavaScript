@@ -6,7 +6,26 @@ import * as hpm from 'http-post-message';
 
 export class Report extends embed.Embed {
     static allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
+    static reportIdAttribute = 'powerbi-report-id';
     static type = "Report";
+
+    /**
+     * This adds backwards compatibility for older config which used the reportId query param to specify report id.
+     * E.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1
+     * 
+     * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
+     */
+    static findIdFromEmbedUrl(url: string): string {
+        const reportIdRegEx = /reportId="?([^&]+)"?/
+        const reportIdMatch = url.match(reportIdRegEx);
+        
+        let reportId;
+        if(reportIdMatch) {
+            reportId = reportIdMatch[1];
+        }
+
+        return reportId;
+    }
 
     /**
      * Add filter to report
@@ -61,6 +80,19 @@ export class Report extends embed.Embed {
                 response => {
                     throw response.body;
                 });
+    }
+
+    /**
+     * Get report id from first available location: options, attribute, embed url.
+     */
+    getId(): string {
+        const reportId = this.config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(this.config.embedUrl);
+
+        if (typeof reportId !== 'string' || reportId.length === 0) {
+            throw new Error(`Report id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '${Report.reportIdAttribute}'.`);
+        }
+
+        return reportId;
     }
 
     /**
