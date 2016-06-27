@@ -283,7 +283,7 @@ describe('service', function () {
 
       // Assert
       var report = powerbi.get($reportContainer[0]);
-      var accessToken = report.getConfig().accessToken;
+      var accessToken = report.config.accessToken;
 
       expect(accessToken).toEqual(testToken);
 
@@ -343,7 +343,7 @@ describe('service', function () {
         const report = powerbi.embed($reportContainer[0], { id: testReportId });
 
         // Assert
-        expect(report.getConfig().id).toEqual(testReportId);
+        expect(report.config.id).toEqual(testReportId);
       });
 
       it('should fallback to using id from attribute if not supplied in embed/load configuration', function () {
@@ -357,7 +357,7 @@ describe('service', function () {
         const report = powerbi.embed($reportContainer[0]);
 
         // Assert
-        expect(report.getConfig().id).toEqual(testReportId);
+        expect(report.config.id).toEqual(testReportId);
       });
 
       it('should fallback to using id from embedUrl if not supplied in embed/load configuration or attribute', function () {
@@ -371,7 +371,7 @@ describe('service', function () {
         const report = powerbi.embed($reportContainer[0]);
 
         // Assert
-        expect(report.getConfig().id).toEqual(testReportId);
+        expect(report.config.id).toEqual(testReportId);
       });
     });
 
@@ -2484,7 +2484,7 @@ describe('SDK-to-HPM', function () {
       embedUrl: iframeSrc
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
-    uniqueId = report.getConfig().uniqueId;
+    uniqueId = report.config.uniqueId;
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
 
@@ -3339,7 +3339,7 @@ describe('SDK-to-WPMP', function () {
       wpmpName: 'SDK-to-WPMP report wpmp'
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
-    uniqueId = report.getConfig().uniqueId;
+    uniqueId = report.config.uniqueId;
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
 
@@ -4307,7 +4307,7 @@ describe('SDK-to-MockApp', function () {
       report2.on(testData.eventName, testData.handler2);
 
       // Act
-      iframeHpm.post(`/reports/${report2.getConfig().uniqueId}/events/${testData.eventName}`, testData.simulatedPageChangeBody)
+      iframeHpm.post(`/reports/${report2.config.uniqueId}/events/${testData.eventName}`, testData.simulatedPageChangeBody)
         .then(response => {
           // Assert
           expect(testData.handler2).toHaveBeenCalledWith(testData.simulatedPageChangeBody);

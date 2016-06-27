@@ -186,6 +186,9 @@ export class Service {
         return component;
     }
     
+    /**
+     * Given and element which arleady contains embed, load with new configuration
+     */
     private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfiguration): embed.Embed {
         const component = utils.find(x => x.element === element, this.embeds);
         if (!component) {
@@ -249,9 +252,8 @@ export class Service {
 
     handleEvent(event: IEvent<any>): void {
         const embed = utils.find(embed => {
-            const config = embed.getConfig();
-            return (config.type === event.type
-                && config.uniqueId === event.id);
+            return (embed.config.type === event.type
+                && embed.config.uniqueId === event.id);
         }, this.embeds);
 
         if(embed) {

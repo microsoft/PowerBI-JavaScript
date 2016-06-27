@@ -85,10 +85,6 @@ export abstract class Embed {
         this.hpm = hpmFactory(this.iframe.contentWindow, this.service.wpmp);
     }
 
-    getConfig(): IInternalEmbedConfiguration {
-        return this.config;
-    }
-
     /**
      * Handler for when the iframe has finished loading the powerbi placeholder page.
      * This is used to inject configuration data such as id, access token, and settings etc
