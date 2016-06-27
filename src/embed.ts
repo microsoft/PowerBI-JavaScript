@@ -29,13 +29,10 @@ export interface IEmbedConfiguration {
     settings?: models.ISettings;
 }
 
-export type IGetGlobalAccessToken = () => string;
-
 export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {
     uniqueId: string;
     type: string;
     embedUrl: string;
-    getGlobalAccessToken: IGetGlobalAccessToken;
 }
 
 export interface IInternalEventHandler<T> {
