@@ -11,7 +11,6 @@ export interface IApp {
   // Pages
   getPages(): Promise<models.IPage>;
   setPage(pageName: string): Promise<void>;
-  togglePageNavigation(): Promise<void>;
   validatePage(page: models.IPage): Promise<models.IError[]>;
   // Filters
   validateFilter(filter: models.IFilter): Promise<models.IError[]>;
@@ -36,7 +35,6 @@ export const mockAppSpyObj = {
   // Pages
   getPages: jasmine.createSpy("getPages").and.returnValue(Promise.resolve(null)),
   setPage: jasmine.createSpy("setPage").and.returnValue(Promise.resolve(null)),
-  togglePageNavigation: jasmine.createSpy("togglePageNavigation").and.returnValue(Promise.resolve(null)),
   validatePage: jasmine.createSpy("validatePage").and.returnValue(Promise.resolve(null)),
   // Filters
   validateFilter: jasmine.createSpy("validateFilter").and.callFake(models.validateFilter),
@@ -57,7 +55,6 @@ export const mockAppSpyObj = {
     mockAppSpyObj.validateSettings.calls.reset();
     mockAppSpyObj.getPages.calls.reset();
     mockAppSpyObj.setPage.calls.reset();
-    mockAppSpyObj.togglePageNavigation.calls.reset();
     mockAppSpyObj.validatePage.calls.reset();
     mockAppSpyObj.validateFilter.calls.reset();
     mockAppSpyObj.validateTarget.calls.reset();

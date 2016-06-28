@@ -723,7 +723,7 @@ describe('Protocol', function () {
             reportId: "fakeId",
             accessToken: "fakeToken",
             options: {
-              pageNavigationEnabled: false
+              navContentPaneEnabled: false
             }
           },
         };
@@ -2134,7 +2134,7 @@ describe('Protocol', function () {
         const testData = {
           settings: {
             filterPaneEnabled: false,
-            pageNavigationEnabled: false
+            navContentPaneEnabled: false
           }
         };
 
@@ -2161,7 +2161,7 @@ describe('Protocol', function () {
         const testData = {
           settings: {
             filterPaneEnabled: false,
-            pageNavigationEnabled: false
+            navContentPaneEnabled: false
           }
         };
 
@@ -2200,7 +2200,7 @@ describe('Protocol', function () {
             initiator: 'sdk',
             settings: {
               filterPaneEnabled: false,
-              pageNavigationEnabled: false
+              navContentPaneEnabled: false
             }
           }
         };
@@ -2385,7 +2385,7 @@ describe('Protocol', function () {
           event: {
             initiator: 'user',
             settings: {
-              pageNavigationEnabled: true
+              navContentPaneEnabled: true
             }
           }
         };
