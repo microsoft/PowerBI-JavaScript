@@ -1,8 +1,14 @@
+var package = require('./package.json');
+
 module.exports = {
-  entry: './src/powerbi.ts',
+  entry: {
+    'powerbi': './src/powerbi.ts'
+  },
   output: {
     path: __dirname + "/dist",
-    filename: 'powerbi.js'
+    filename: '[name].js',
+    library: package.name,
+    libraryTarget: 'umd'
   },
   devtool: 'source-map',
   resolve: {
