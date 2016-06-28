@@ -48,8 +48,8 @@
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	var service_1 = __webpack_require__(1);
-	exports.Service = service_1.Service;
+	var service = __webpack_require__(1);
+	exports.service = service;
 	var factories = __webpack_require__(7);
 	exports.factories = factories;
 	__export(__webpack_require__(5));
@@ -60,8 +60,8 @@
 	 * Save class to allow creating an instance of the service.
 	 * Create instance of class with default config for normal usage.
 	 */
-	window.Powerbi = service_1.Service;
-	window.powerbi = new service_1.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+	window.Powerbi = service.Service;
+	window.powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
 
 
 /***/ },
