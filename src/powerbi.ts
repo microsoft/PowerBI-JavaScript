@@ -1,10 +1,18 @@
-import { Service } from './service';
+import * as service from './service';
 import * as factories from './factories';
+
+export {
+    service,
+    factories
+};
+export * from './report';
+export * from './tile';
+export * from './embed';
 
 declare global {
     interface Window {
-        Powerbi: typeof Service;
-        powerbi: Service;
+        Powerbi: typeof service.Service;
+        powerbi: service.Service;
     }
 }
 
@@ -13,5 +21,5 @@ declare global {
  * Save class to allow creating an instance of the service.
  * Create instance of class with default config for normal usage.
  */
-window.Powerbi = Service;
-window.powerbi = new Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+window.Powerbi = service.Service;
+window.powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);

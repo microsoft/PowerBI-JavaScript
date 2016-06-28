@@ -45,8 +45,16 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
 	var service_1 = __webpack_require__(1);
+	exports.Service = service_1.Service;
 	var factories = __webpack_require__(7);
+	exports.factories = factories;
+	__export(__webpack_require__(5));
+	__export(__webpack_require__(6));
+	__export(__webpack_require__(2));
 	/**
 	 * Make PowerBi available on global object for use in apps without module loading support.
 	 * Save class to allow creating an instance of the service.
@@ -63,7 +71,7 @@
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(5);
 	var tile_1 = __webpack_require__(6);
-	var util_1 = __webpack_require__(3);
+	var utils = __webpack_require__(3);
 	var Service = (function () {
 	    function Service(hpmFactory, wpmpFactory, routerFactory, config) {
 	        var _this = this;
@@ -74,28 +82,28 @@
 	        /**
 	         * Add handler for report events
 	         */
-	        this.router.post("/reports/:reportId/events/:eventName", function (req, res) {
+	        this.router.post("/reports/:uniqueId/events/:eventName", function (req, res) {
 	            var event = {
 	                type: 'report',
-	                id: req.params.reportId,
+	                id: req.params.uniqueId,
 	                name: req.params.eventName,
 	                value: req.body
 	            };
 	            _this.handleEvent(event);
 	        });
-	        this.router.post("/reports/:reportId/pages/:pageName/events/:eventName", function (req, res) {
+	        this.router.post("/reports/:uniqueId/pages/:pageName/events/:eventName", function (req, res) {
 	            var event = {
 	                type: 'report',
-	                id: req.params.reportId,
+	                id: req.params.uniqueId,
 	                name: req.params.eventName,
 	                value: req.body
 	            };
 	            _this.handleEvent(event);
 	        });
-	        this.router.post("/reports/:reportId/visuals/:pageName/events/:eventName", function (req, res) {
+	        this.router.post("/reports/:uniqueId/visuals/:pageName/events/:eventName", function (req, res) {
 	            var event = {
 	                type: 'report',
-	                id: req.params.reportId,
+	                id: req.params.uniqueId,
 	                name: req.params.eventName,
 	                value: req.body
 	            };
@@ -103,7 +111,7 @@
 	        });
 	        this.embeds = [];
 	        // TODO: Change when Object.assign is available.
-	        this.config = util_1.Utils.assign({}, Service.defaultConfig, config);
+	        this.config = utils.assign({}, Service.defaultConfig, config);
 	        if (this.config.autoEmbedOnContentLoaded) {
 	            this.enableAutoEmbed();
 	        }
@@ -148,7 +156,7 @@
 	        }
 	        // Save type on configuration so it can be referenced later at known location
 	        config.type = componentType;
-	        var Component = util_1.Utils.find(function (component) { return componentType === component.type.toLowerCase(); }, Service.components);
+	        var Component = utils.find(function (component) { return componentType === component.type.toLowerCase(); }, Service.components);
 	        if (!Component) {
 	            throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
 	        }
@@ -157,8 +165,11 @@
 	        this.embeds.push(component);
 	        return component;
 	    };
+	    /**
+	     * Given and element which arleady contains embed, load with new configuration
+	     */
 	    Service.prototype.embedExisting = function (element, config) {
-	        var component = util_1.Utils.find(function (x) { return x.element === element; }, this.embeds);
+	        var component = utils.find(function (x) { return x.element === element; }, this.embeds);
 	        if (!component) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
 	        }
@@ -185,6 +196,12 @@
 	        return powerBiElement.powerBiEmbed;
 	    };
 	    /**
+	     * Find embed instance by name / unique id provided.
+	     */
+	    Service.prototype.find = function (uniqueId) {
+	        return utils.find(function (x) { return x.config.uniqueId === uniqueId; }, this.embeds);
+	    };
+	    /**
 	     * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
 	     */
 	    Service.prototype.reset = function (element) {
@@ -193,7 +210,7 @@
 	            return;
 	        }
 	        /** Remove component from internal list */
-	        util_1.Utils.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
+	        utils.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
 	        /** Delete property from html element */
 	        delete powerBiElement.powerBiEmbed;
 	        /** Remove iframe from element */
@@ -203,10 +220,9 @@
 	        }
 	    };
 	    Service.prototype.handleEvent = function (event) {
-	        var embed = util_1.Utils.find(function (embed) {
-	            var config = embed.getConfig();
-	            return (config.type === event.type
-	                && config.id === event.id);
+	        var embed = utils.find(function (embed) {
+	            return (embed.config.type === event.type
+	                && embed.config.uniqueId === event.id);
 	        }, this.embeds);
 	        if (embed) {
 	            embed.handleEvent(event);
@@ -250,18 +266,6 @@
 	        report_1.Report
 	    ];
 	    /**
-	     * Mapping of event names from iframe postMessage to their name percieved by parent DOM.
-	     * Example: User clicks on embeded report which is inside iframe. The iframe code resends
-	     * event as postMessage with { event: 'reportClicked', ... } and this name is converted to hyphenated
-	     * name and dispatched from the parent element of the iframe to simulate the event bubbling through two
-	     * different windows / DOMs
-	     */
-	    Service.eventMap = {
-	        'tileClicked': 'tile-click',
-	        'tileLoaded': 'tile-load',
-	        'reportPageLoaded': 'report-load'
-	    };
-	    /**
 	     * Default configuration for service.
 	     */
 	    Service.defaultConfig = {
@@ -283,7 +287,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var util_1 = __webpack_require__(3);
+	var utils = __webpack_require__(3);
 	var models = __webpack_require__(4);
 	var Embed = (function () {
 	    /**
@@ -296,31 +300,18 @@
 	        this.service = service;
 	        this.element = element;
 	        // TODO: Change when Object.assign is available.
-	        config.settings = util_1.Utils.assign({}, Embed.defaultSettings, config.settings);
-	        this.config = util_1.Utils.assign({}, config);
+	        config.settings = utils.assign({}, Embed.defaultSettings, config.settings);
+	        this.config = utils.assign({}, config);
 	        this.config.accessToken = this.getAccessToken(service.accessToken);
 	        this.config.embedUrl = this.getEmbedUrl();
-	        // TODO: The findIdFromEmbedUrl method is specific to Reports so it should be in the Report class, but it can't be called until
-	        // after we have fetched the embedUrl from the attributes
-	        /**
-	         * This adds backwards compatibility for older config which used the reportId query param to specify report id.
-	         * E.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1
-	         *
-	         * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
-	         */
-	        var id = Embed.findIdFromEmbedUrl(this.config.embedUrl);
-	        if (id) {
-	            this.config.id = id;
-	        }
+	        this.config.id = this.getId();
+	        this.config.uniqueId = this.getUniqueId();
 	        var iframeHtml = "<iframe style=\"width:100%;height:100%;\" src=\"" + this.config.embedUrl + "\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>";
 	        this.element.innerHTML = iframeHtml;
 	        this.iframe = this.element.childNodes[0];
 	        this.iframe.addEventListener('load', function () { return _this.load(_this.config); }, false);
 	        this.hpm = hpmFactory(this.iframe.contentWindow, this.service.wpmp);
 	    }
-	    Embed.prototype.getConfig = function () {
-	        return this.config;
-	    };
 	    /**
 	     * Handler for when the iframe has finished loading the powerbi placeholder page.
 	     * This is used to inject configuration data such as id, access token, and settings etc
@@ -331,11 +322,10 @@
 	        if (errors) {
 	            throw errors;
 	        }
-	        return this.hpm.post('/report/load', config, (_a = {}, _a[this.config.type + "-id"] = config.id, _a))
+	        return this.hpm.post('/report/load', config, { uid: this.config.uniqueId })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
-	        var _a;
 	    };
 	    Embed.prototype.handleEvent = function (event) {
 	        this.eventHandlers
@@ -366,14 +356,14 @@
 	        var _this = this;
 	        var fakeEvent = { name: eventName, type: null, id: null, value: null };
 	        if (handler) {
-	            util_1.Utils.remove(function (eventHandler) { return eventHandler.test(fakeEvent) && (eventHandler.handle === handler); }, this.eventHandlers);
+	            utils.remove(function (eventHandler) { return eventHandler.test(fakeEvent) && (eventHandler.handle === handler); }, this.eventHandlers);
 	        }
 	        else {
 	            var eventHandlersToRemove = this.eventHandlers
 	                .filter(function (eventHandler) { return eventHandler.test(fakeEvent); });
 	            eventHandlersToRemove
 	                .forEach(function (eventHandlerToRemove) {
-	                util_1.Utils.remove(function (eventHandler) { return eventHandler === eventHandlerToRemove; }, _this.eventHandlers);
+	                utils.remove(function (eventHandler) { return eventHandler === eventHandlerToRemove; }, _this.eventHandlers);
 	            });
 	        }
 	    };
@@ -413,6 +403,13 @@
 	        return embedUrl;
 	    };
 	    /**
+	     * Get unique id from first available location: options, attribute.
+	     * If neither is provided generate unique string.
+	     */
+	    Embed.prototype.getUniqueId = function () {
+	        return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || utils.createRandomString();
+	    };
+	    /**
 	     * Request the browser to make the component's iframe fullscreen.
 	     */
 	    Embed.prototype.fullscreen = function () {
@@ -429,15 +426,6 @@
 	        var exitFullscreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
 	        exitFullscreen.call(document);
 	    };
-	    Embed.findIdFromEmbedUrl = function (url) {
-	        var reportIdRegEx = /reportId="?([^&]+)"?/;
-	        var reportIdMatch = url.match(reportIdRegEx);
-	        var reportId;
-	        if (reportIdMatch) {
-	            reportId = reportIdMatch[1];
-	        }
-	        return reportId;
-	    };
 	    /**
 	     * Return true if iframe is fullscreen,
 	     * otherwise return false
@@ -446,8 +434,9 @@
 	        var options = ['fullscreenElement', 'webkitFullscreenElement', 'mozFullscreenScreenElement', 'msFullscreenElement'];
 	        return options.some(function (option) { return document[option] === iframe; });
 	    };
-	    Embed.embedUrlAttribute = 'powerbi-embed-url';
 	    Embed.accessTokenAttribute = 'powerbi-access-token';
+	    Embed.embedUrlAttribute = 'powerbi-embed-url';
+	    Embed.nameAttribute = 'powerbi-name';
 	    Embed.typeAttribute = 'powerbi-type';
 	    Embed.defaultSettings = {
 	        filterPaneEnabled: true
@@ -461,90 +450,93 @@
 /* 3 */
 /***/ function(module, exports) {
 
-	var Utils = (function () {
-	    function Utils() {
-	    }
-	    Utils.raiseCustomEvent = function (element, eventName, eventData) {
-	        var customEvent;
-	        if (typeof CustomEvent === 'function') {
-	            customEvent = new CustomEvent(eventName, {
-	                detail: eventData,
-	                bubbles: true,
-	                cancelable: true
-	            });
-	        }
-	        else {
-	            customEvent = document.createEvent('CustomEvent');
-	            customEvent.initCustomEvent(eventName, true, true, eventData);
-	        }
-	        element.dispatchEvent(customEvent);
-	        if (customEvent.defaultPrevented || !customEvent.returnValue) {
-	            return;
-	        }
-	        // TODO: Remove this? Should be better way to handle events than using eval?
-	        // What is use case? <div powerbi-type="report" onload="alert('loaded');"></div>
-	        var inlineEventAttr = 'on' + eventName.replace('-', '');
-	        var inlineScript = element.getAttribute(inlineEventAttr);
-	        if (inlineScript) {
-	            eval.call(element, inlineScript);
-	        }
-	    };
-	    Utils.findIndex = function (predicate, xs) {
-	        if (!Array.isArray(xs)) {
-	            throw new Error("You attempted to call find with second parameter that was not an array. You passed: " + xs);
-	        }
-	        var index;
-	        xs.some(function (x, i) {
-	            if (predicate(x)) {
-	                index = i;
-	                return true;
-	            }
+	function raiseCustomEvent(element, eventName, eventData) {
+	    var customEvent;
+	    if (typeof CustomEvent === 'function') {
+	        customEvent = new CustomEvent(eventName, {
+	            detail: eventData,
+	            bubbles: true,
+	            cancelable: true
 	        });
-	        return index;
-	    };
-	    Utils.find = function (predicate, xs) {
-	        var index = Utils.findIndex(predicate, xs);
-	        return xs[index];
-	    };
-	    Utils.remove = function (predicate, xs) {
-	        var index = Utils.findIndex(predicate, xs);
-	        xs.splice(index, 1);
-	    };
-	    // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
-	    // TODO: replace in favor of using polyfill
-	    Utils.assign = function () {
-	        var args = [];
-	        for (var _i = 0; _i < arguments.length; _i++) {
-	            args[_i - 0] = arguments[_i];
+	    }
+	    else {
+	        customEvent = document.createEvent('CustomEvent');
+	        customEvent.initCustomEvent(eventName, true, true, eventData);
+	    }
+	    element.dispatchEvent(customEvent);
+	    if (customEvent.defaultPrevented || !customEvent.returnValue) {
+	        return;
+	    }
+	    // TODO: Remove this? Should be better way to handle events than using eval?
+	    // What is use case? <div powerbi-type="report" onload="alert('loaded');"></div>
+	    var inlineEventAttr = 'on' + eventName.replace('-', '');
+	    var inlineScript = element.getAttribute(inlineEventAttr);
+	    if (inlineScript) {
+	        eval.call(element, inlineScript);
+	    }
+	}
+	exports.raiseCustomEvent = raiseCustomEvent;
+	function findIndex(predicate, xs) {
+	    if (!Array.isArray(xs)) {
+	        throw new Error("You attempted to call find with second parameter that was not an array. You passed: " + xs);
+	    }
+	    var index;
+	    xs.some(function (x, i) {
+	        if (predicate(x)) {
+	            index = i;
+	            return true;
 	        }
-	        var target = args[0];
-	        'use strict';
-	        if (target === undefined || target === null) {
-	            throw new TypeError('Cannot convert undefined or null to object');
-	        }
-	        var output = Object(target);
-	        for (var index = 1; index < arguments.length; index++) {
-	            var source = arguments[index];
-	            if (source !== undefined && source !== null) {
-	                for (var nextKey in source) {
-	                    if (source.hasOwnProperty(nextKey)) {
-	                        output[nextKey] = source[nextKey];
-	                    }
+	    });
+	    return index;
+	}
+	exports.findIndex = findIndex;
+	function find(predicate, xs) {
+	    var index = findIndex(predicate, xs);
+	    return xs[index];
+	}
+	exports.find = find;
+	function remove(predicate, xs) {
+	    var index = findIndex(predicate, xs);
+	    xs.splice(index, 1);
+	}
+	exports.remove = remove;
+	// See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+	// TODO: replace in favor of using polyfill
+	function assign() {
+	    var args = [];
+	    for (var _i = 0; _i < arguments.length; _i++) {
+	        args[_i - 0] = arguments[_i];
+	    }
+	    var target = args[0];
+	    'use strict';
+	    if (target === undefined || target === null) {
+	        throw new TypeError('Cannot convert undefined or null to object');
+	    }
+	    var output = Object(target);
+	    for (var index = 1; index < arguments.length; index++) {
+	        var source = arguments[index];
+	        if (source !== undefined && source !== null) {
+	            for (var nextKey in source) {
+	                if (source.hasOwnProperty(nextKey)) {
+	                    output[nextKey] = source[nextKey];
 	                }
 	            }
 	        }
-	        return output;
-	    };
-	    return Utils;
-	}());
-	exports.Utils = Utils;
+	    }
+	    return output;
+	}
+	exports.assign = assign;
+	function createRandomString() {
+	    return (Math.random() + 1).toString(36).substring(7);
+	}
+	exports.createRandomString = createRandomString;
 
 
 /***/ },
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v0.2.2 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v0.3.0 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -900,6 +892,24 @@
 				},
 				"settings": {
 					"$ref": "#settings"
+				},
+				"pageName": {
+					"type": "string",
+					"messages": {
+						"type": "pageName must be a string"
+					}
+				},
+				"filter": {
+					"type": "object",
+					"oneOf": [
+						{
+							"$ref": "#valueFilter"
+						},
+						{
+							"$ref": "#advancedFilter"
+						}
+					],
+					"invalidMessage": "filter property is invalid"
 				}
 			},
 			"required": [
@@ -922,18 +932,10 @@
 						"type": "name must be a string",
 						"required": "name is required"
 					}
-				},
-				"displayName": {
-					"type": "string",
-					"messages": {
-						"type": "displayName must be a string",
-						"required": "displayName is required"
-					}
 				}
 			},
 			"required": [
-				"name",
-				"displayName"
+				"name"
 			]
 		};
 	
@@ -978,34 +980,16 @@
 			"$schema": "http://json-schema.org/draft-04/schema#",
 			"type": "object",
 			"properties": {
-				"filter": {
-					"type": "object",
-					"oneOf": [
-						{
-							"$ref": "#valueFilter"
-						},
-						{
-							"$ref": "#advancedFilter"
-						}
-					],
-					"invalidMessage": "filter property is invalid"
-				},
 				"filterPaneEnabled": {
 					"type": "boolean",
 					"messages": {
 						"type": "filterPaneEnabled must be a boolean"
 					}
 				},
-				"pageName": {
-					"type": "string",
-					"messages": {
-						"type": "pageName must be a string"
-					}
-				},
-				"pageNavigationEnabled": {
+				"navContentPaneEnabled": {
 					"type": "boolean",
 					"messages": {
-						"type": "pageNavigationEnabled must be a boolean"
+						"type": "navContentPaneEnabled must be a boolean"
 					}
 				}
 			}
@@ -2882,6 +2866,21 @@
 	        _super.apply(this, arguments);
 	    }
 	    /**
+	     * This adds backwards compatibility for older config which used the reportId query param to specify report id.
+	     * E.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1
+	     *
+	     * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
+	     */
+	    Report.findIdFromEmbedUrl = function (url) {
+	        var reportIdRegEx = /reportId="?([^&]+)"?/;
+	        var reportIdMatch = url.match(reportIdRegEx);
+	        var reportId;
+	        if (reportIdMatch) {
+	            reportId = reportIdMatch[1];
+	        }
+	        return reportId;
+	    };
+	    /**
 	     * Add filter to report
 	     * An optional target may be passed to apply the filter to specific page or visual.
 	     *
@@ -2898,7 +2897,7 @@
 	     */
 	    Report.prototype.addFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.post(targetUrl + "/filters", filter, { "report-id": this.config.id })
+	        return this.hpm.post(targetUrl + "/filters", filter, { uid: this.config.uniqueId })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2928,10 +2927,20 @@
 	     */
 	    Report.prototype.getFilters = function (target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.get(targetUrl + "/filters", { "report-id": this.config.id })
+	        return this.hpm.get(targetUrl + "/filters", { uid: this.config.uniqueId })
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
+	    };
+	    /**
+	     * Get report id from first available location: options, attribute, embed url.
+	     */
+	    Report.prototype.getId = function () {
+	        var reportId = this.config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(this.config.embedUrl);
+	        if (typeof reportId !== 'string' || reportId.length === 0) {
+	            throw new Error("Report id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '" + Report.reportIdAttribute + "'.");
+	        }
+	        return reportId;
 	    };
 	    /**
 	     * Get the list of pages within the report
@@ -2944,7 +2953,7 @@
 	     * ```
 	     */
 	    Report.prototype.getPages = function () {
-	        return this.hpm.get('/report/pages', { "report-id": this.config.id })
+	        return this.hpm.get('/report/pages', { uid: this.config.uniqueId })
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
@@ -2963,7 +2972,7 @@
 	            name: pageName,
 	            displayName: null
 	        };
-	        return this.hpm.put('/report/pages/active', page, { "report-id": this.config.id })
+	        return this.hpm.put('/report/pages/active', page, { uid: this.config.uniqueId })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2973,7 +2982,7 @@
 	     */
 	    Report.prototype.removeFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.delete(targetUrl + "/filters", filter, { "report-id": this.config.id })
+	        return this.hpm.delete(targetUrl + "/filters", filter, { uid: this.config.uniqueId })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2986,7 +2995,7 @@
 	     * ```
 	     */
 	    Report.prototype.removeAllFilters = function () {
-	        return this.hpm.delete('/report/allfilters', null, { "report-id": this.config.id })
+	        return this.hpm.delete('/report/allfilters', null, { uid: this.config.uniqueId })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2998,7 +3007,7 @@
 	     */
 	    Report.prototype.updateFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.put(targetUrl + "/filters", filter, { "report-id": this.config.id })
+	        return this.hpm.put(targetUrl + "/filters", filter, { uid: this.config.uniqueId })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -3007,7 +3016,7 @@
 	     * Update settings of report (filter pane visibility, page navigation visibility)
 	     */
 	    Report.prototype.updateSettings = function (settings) {
-	        return this.hpm.patch('/report/settings', settings, { "report-id": this.config.id })
+	        return this.hpm.patch('/report/settings', settings, { uid: this.config.uniqueId })
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -3039,6 +3048,7 @@
 	        return targetUrl;
 	    };
 	    Report.allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
+	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.type = "Report";
 	    return Report;
 	}(embed.Embed));
@@ -3060,6 +3070,9 @@
 	    function Tile() {
 	        _super.apply(this, arguments);
 	    }
+	    Tile.prototype.getId = function () {
+	        throw Error('Not implemented. Embedding tiles is not supported yet.');
+	    };
 	    Tile.type = "Tile";
 	    return Tile;
 	}(embed_1.Embed));

@@ -84,18 +84,20 @@ gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
         .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('compile:dts', 'Generate single dts file from modules', function (done) {
-    var tsResult = gulp.src(['./typings/global/**/*.d.ts', './src/**/*.ts'])
-        .pipe(ts({
-            outDir: 'dts',
-            declaration: true
-        }));
+gulp.task('compile:dts', 'Generate dts files from modules', function () {
+    var tsProject = ts.createProject('tsconfig.json', {
+        declaration: true,
+        sourceMap: false
+    });
+
+    var tsResult = tsProject.src()
+        .pipe(ts(tsProject));
     
     return tsResult.dts
-        .pipe(replace(/import[^;]+;/, ''))
-        .pipe(concat('powerbi.d.ts'))
-        .pipe(gulp.dest('dist/'));
+        .pipe(flatten())
+        .pipe(gulp.dest('./dist'));
 });
+
 
 gulp.task('compile:spec', 'Compile spec tests', function () {
     return gulp.src(['./test/test.spec.ts'])
