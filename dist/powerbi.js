@@ -1,5 +1,15 @@
 /*! powerbi-client v2.0.0-beta.6 | (c) 2016 Microsoft Corporation MIT */
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["powerbi-client"] = factory();
+	else
+		root["powerbi-client"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -4358,5 +4368,7 @@
 	//# sourceMappingURL=router.js.map
 
 /***/ }
-/******/ ]);
+/******/ ])
+});
+;
 //# sourceMappingURL=powerbi.js.map
