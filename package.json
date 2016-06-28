@@ -4,6 +4,9 @@
   "description": "",
   "main": "dist/powerbi.js",
   "typings": "dist/powerbi.d.ts",
+  "files": [
+    "dist"
+  ],
   "directories": {
     "test": "test"
   },
