@@ -1,12 +1,11 @@
 $(function () {
 
   var $staticReport = $('#reportstatic');
-
   var $reportsList = $('#reportslist');
   var $dynamicReport = $('#reportdynamic');
   var $customPageNavReport = $('#reportcustompagenav');
+  var $reportPagesList = $('#reportpageslist');
   var $resetButton = $('#resetButton');
-
   var apiBaseUrl = 'http://powerbipaasapi.azurewebsites.net/api/reports';
 
   /**
@@ -21,7 +20,37 @@ $(function () {
     })
     .then(function (report) {
       var reportConfig = $.extend({ type: 'report' }, report);
-      powerbi.embed($staticReport.get(0), reportConfig);
+      var staticReport = powerbi.embed($staticReport.get(0), reportConfig);
+      staticReport.on('loaded', function (event) {
+        console.log('static report loaded');
+      });
+      
+      var customPageNavConfig = $.extend({
+        settings: {
+          navContentPaneEnabled: false,
+          filterPaneEnabled: false
+        }
+      }, reportConfig);
+
+      var customPageNavReport = powerbi.embed($customPageNavReport.get(0), customPageNavConfig);
+      customPageNavReport.on('loaded', function (event) {
+        console.log('custom page nav report loaded');
+        customPageNavReport.getPages()
+          .then(pages => {
+            console.log('pages: ', pages);
+            return pages
+              .map(function (page) {
+                return generateReportPage(report, page);
+              })
+              .forEach(function (element) {
+                $reportPagesList.append(element);
+              });
+          });
+      });
+
+      customPageNavReport.on('pageChanged', function (event) {
+        console.log('pageChanged event received');
+      })
     });
 
   /**
@@ -45,6 +74,17 @@ $(function () {
       .append(button);
 
     return element;
+  }
+
+  function generateReportPage(report, page) {
+    return $('<button>')
+      .attr({
+        type: 'button'
+      })
+      .addClass('btn btn-success')
+      .data('report', report)
+      .data('page', page)
+      .text(page.name);
   }
 
   var allReportsUrl = apiBaseUrl;
@@ -78,5 +118,20 @@ $(function () {
 
   $resetButton.on('click', function (event) {
     powerbi.reset($dynamicReport.get(0));
+  });
+
+  /**
+   * Custom Page Navigation
+   */
+  $reportPagesList.on('click', 'button', function (event) {
+    var button = event.target;
+    var report = $(button).data('report');
+    var page = $(button).data('page');
+
+    console.log('Attempting to set page to: ', page.name);
+    report.setPage(page.name)
+      .then(function (response) {
+        console.log('Page changed request accepted');
+      });
   });
 });
