@@ -19,5 +19,10 @@
   ],
   "devDependencies": {
     "jquery": "~2.2.0"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "fetch": "^1.0.0",
+    "es6-promise": "^3.2.2"
   }
 }

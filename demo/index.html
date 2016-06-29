@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Power BI - Sample - Client - JavaScript</title>
+    <base path="/" />
+    
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="styles/app.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Power BI - Sample - Client - Javascript</h1>
+      <p>Demonstrate how to consume Power BI API and render using core library. <a href="https://github.com/microsoft/PowerBI-JavaScript" target="_blank">PowerBI-JavaScript</a></p>
+      
+      <h2>Static Embed</h2>
+      <p>Report to embed is known by the developer.</p>
+
+      <div id="reportstatic" class="powerbi-container"></div>
+
+      <h2>Dynamic Embed</h2>
+      <p>Report to embed is chosen by the user.</p>
+      <ol id="reportslist">
+      </ol>
+      <p class="text-right">
+          <button type="button" id="resetButton" class="btn btn-danger">Reset</button>
+      </p>
+
+      <div id="reportdynamic" class="powerbi-container"></div>
+
+      <h2>Custom Page Navigation</h2>
+      <p>Page navigation is hidden in the embedded report and recreated by developer to allow custom branding or even automation to tell stories and navigate user.</p>
+
+      <div id="reportcustompagenav" class="powerbi-container"></div>
+    </div>
+
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/es6-promise/es6-promise.js"></script>
+    <script src="../bower_components/fetch/fetch.js"></script>
+
+    <script src="../dist/powerbi.js"></script>
+    <script src="app/app.js"></script>
+  </body>
+</html>
