@@ -312,8 +312,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.service = service;
 	        this.element = element;
 	        // TODO: Change when Object.assign is available.
-	        config.settings = utils.assign({}, Embed.defaultSettings, config.settings);
-	        this.config = utils.assign({}, config);
+	        var settings = utils.assign({}, Embed.defaultSettings, config.settings);
+	        this.config = utils.assign({ settings: settings }, config);
 	        this.config.accessToken = this.getAccessToken(service.accessToken);
 	        this.config.embedUrl = this.getEmbedUrl();
 	        this.config.id = this.getId();
