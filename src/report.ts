@@ -9,6 +9,11 @@ export class Report extends embed.Embed {
     static reportIdAttribute = 'powerbi-report-id';
     static type = "Report";
 
+    constructor(service: service.Service, hpmFactory: service.IHpmFactory, element: HTMLElement, config: embed.IEmbedConfiguration) {
+        super(service, hpmFactory, element, config);
+        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
+    }
+
     /**
      * This adds backwards compatibility for older config which used the reportId query param to specify report id.
      * E.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1
@@ -113,14 +118,6 @@ export class Report extends embed.Embed {
                 });
     }
     
-    on<T>(eventName: string, handler: service.IEventHandler<T>): void {
-        if(Report.allowedEvents.indexOf(eventName) === -1) {
-            throw new Error(`eventName is must be one of ${Report.allowedEvents}. You passed: ${eventName}`);
-        }
-        
-        super.on<T>(eventName, handler);
-    }
-
     /**
      * Set the active page
      */

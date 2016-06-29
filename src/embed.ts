@@ -42,16 +42,18 @@ export interface IInternalEventHandler<T> {
 }
 
 export abstract class Embed {
-    public static accessTokenAttribute = 'powerbi-access-token';
-    public static embedUrlAttribute = 'powerbi-embed-url';
-    public static nameAttribute = 'powerbi-name';
-    public static typeAttribute = 'powerbi-type';
-    public static type: string;
+    static allowedEvents = ["loaded"];
+    static accessTokenAttribute = 'powerbi-access-token';
+    static embedUrlAttribute = 'powerbi-embed-url';
+    static nameAttribute = 'powerbi-name';
+    static typeAttribute = 'powerbi-type';
+    static type: string;
 
     private static defaultSettings: models.ISettings = {
         filterPaneEnabled: true
     };
 
+    allowedEvents = [];
     eventHandlers: IInternalEventHandler<any>[];
     hpm: hpm.HttpPostMessage;
     service: service.Service;
@@ -64,6 +66,7 @@ export abstract class Embed {
      * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
      */
     constructor(service: service.Service, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration) {
+        Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
         this.eventHandlers = [];
         this.service = service;
         this.element = element;
@@ -154,6 +157,10 @@ export abstract class Embed {
      * ```
      */
     on<T>(eventName: string, handler: service.IEventHandler<T>): void {
+        if(this.allowedEvents.indexOf(eventName) === -1) {
+            throw new Error(`eventName is must be one of ${this.allowedEvents}. You passed: ${eventName}`);
+        }
+
         this.eventHandlers.push({
             test: (event: service.IEvent<T>) => event.name === eventName,
             handle: handler

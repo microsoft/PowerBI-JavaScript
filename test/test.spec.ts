@@ -4314,5 +4314,27 @@ describe('SDK-to-MockApp', function () {
           expect(testData.handler).not.toHaveBeenCalled();
         });
     });
+
+    it(`ensure load event is allowed`, function () {
+      // Arrange
+      const testData = {
+        uniqueId: 'uniqueId',
+        reportId: 'fakeReportId',
+        eventName: 'loaded',
+        handler: jasmine.createSpy('handler'),
+        simulatedBody: {
+          initiator: 'sdk'
+        }
+      };
+
+      report.on(testData.eventName, testData.handler);
+
+      // Act
+      iframeHpm.post(`/reports/${report2.config.uniqueId}/events/${testData.eventName}`, testData.simulatedBody)
+        .then(response => {
+          // Assert
+          expect(testData.handler).toHaveBeenCalledWith(testData.simulatedBody);
+        });
+    });
   });
 });
