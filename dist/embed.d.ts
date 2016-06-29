@@ -30,12 +30,14 @@ export interface IInternalEventHandler<T> {
     handle(event: service.IEvent<T>): void;
 }
 export declare abstract class Embed {
+    static allowedEvents: string[];
     static accessTokenAttribute: string;
     static embedUrlAttribute: string;
     static nameAttribute: string;
     static typeAttribute: string;
     static type: string;
     private static defaultSettings;
+    allowedEvents: any[];
     eventHandlers: IInternalEventHandler<any>[];
     hpm: hpm.HttpPostMessage;
     service: service.Service;

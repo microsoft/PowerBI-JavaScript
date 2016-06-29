@@ -306,6 +306,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    function Embed(service, hpmFactory, element, config) {
 	        var _this = this;
+	        this.allowedEvents = [];
+	        Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
 	        this.eventHandlers = [];
 	        this.service = service;
 	        this.element = element;
@@ -387,6 +389,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * ```
 	     */
 	    Embed.prototype.on = function (eventName, handler) {
+	        if (this.allowedEvents.indexOf(eventName) === -1) {
+	            throw new Error("eventName is must be one of " + this.allowedEvents + ". You passed: " + eventName);
+	        }
 	        this.eventHandlers.push({
 	            test: function (event) { return event.name === eventName; },
 	            handle: handler
@@ -444,6 +449,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var options = ['fullscreenElement', 'webkitFullscreenElement', 'mozFullscreenScreenElement', 'msFullscreenElement'];
 	        return options.some(function (option) { return document[option] === iframe; });
 	    };
+	    Embed.allowedEvents = ["loaded"];
 	    Embed.accessTokenAttribute = 'powerbi-access-token';
 	    Embed.embedUrlAttribute = 'powerbi-embed-url';
 	    Embed.nameAttribute = 'powerbi-name';
@@ -2872,8 +2878,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var embed = __webpack_require__(2);
 	var Report = (function (_super) {
 	    __extends(Report, _super);
-	    function Report() {
-	        _super.apply(this, arguments);
+	    function Report(service, hpmFactory, element, config) {
+	        _super.call(this, service, hpmFactory, element, config);
+	        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
 	    }
 	    /**
 	     * This adds backwards compatibility for older config which used the reportId query param to specify report id.
@@ -2967,12 +2974,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
-	    };
-	    Report.prototype.on = function (eventName, handler) {
-	        if (Report.allowedEvents.indexOf(eventName) === -1) {
-	            throw new Error("eventName is must be one of " + Report.allowedEvents + ". You passed: " + eventName);
-	        }
-	        _super.prototype.on.call(this, eventName, handler);
 	    };
 	    /**
 	     * Set the active page
