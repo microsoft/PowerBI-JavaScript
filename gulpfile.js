@@ -12,7 +12,8 @@ var header = require('gulp-header'),
     rimraf = require('rimraf'),
     merge = require('merge2'),
     karma = require('karma'),
-    webpack = require('webpack-stream'),
+    webpack = require('webpack');
+    webpackStream = require('webpack-stream'),
     webpackConfig = require('./webpack.config'),
     webpackTestConfig = require('./webpack.test.config'),
     runSequence = require('run-sequence'),
@@ -20,7 +21,8 @@ var header = require('gulp-header'),
     ;
 
 var package = require('./package.json');
-var banner = "/*! <%= package.name %> v<%= package.version %> | (c) 2016 Microsoft Corporation <%= package.license %> */\n";
+var webpackBanner = package.name + " v" + package.version + " | (c) 2016 Microsoft Corporation " + package.license;
+var gulpBanner = "/*! " + webpackBanner + " */\n";
 
 gulp.task('watch', 'Watches for changes', ['lint'], function () {
     gulp.watch(['./src/**/*.ts', './test/**/*.ts'], ['lint:ts']);
@@ -55,7 +57,7 @@ gulp.task('build', 'Runs a full build', function (done) {
 
 gulp.task('header', 'Add header to distributed files', function () {
     return gulp.src(['./dist/*.d.ts'])
-        .pipe(header(banner, { package : package }))
+        .pipe(header(gulpBanner))
         .pipe(gulp.dest('./dist'));
 });
 
@@ -81,8 +83,12 @@ gulp.task('min:js', 'Creates minified JavaScript file', function() {
 });
 
 gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
+    webpackConfig.plugins = [
+        new webpack.BannerPlugin(webpackBanner)
+    ];
+
     return gulp.src(['./src/powerbi.ts'])
-        .pipe(webpack(webpackConfig))
+        .pipe(webpackStream(webpackConfig))
         .pipe(gulp.dest('dist/'));
 });
 
@@ -103,7 +109,7 @@ gulp.task('compile:dts', 'Generate dts files from modules', function () {
 
 gulp.task('compile:spec', 'Compile spec tests', function () {
     return gulp.src(['./test/test.spec.ts'])
-        .pipe(webpack(webpackTestConfig))
+        .pipe(webpackStream(webpackTestConfig))
         .pipe(gulp.dest('./tmp'));
 });
 
