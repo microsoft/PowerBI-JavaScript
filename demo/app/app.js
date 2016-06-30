@@ -17,7 +17,7 @@ $(function () {
   var localReportOverride = {
     embedUrl: 'https://portal.analysis.windows-int.net/appTokenReportEmbed',
     id: 'c4d31ef0-7b34-4d80-9bcb-5974d1405572',
-    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ2NzMxNjQ2MCwiZXhwIjoxNDY3MzIwMDYwfQ.1iKcgmG07m-VLGKmGwKI95ICVYowYkVGnudws02rtow'
+    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ2NzMyMDQ4NCwiZXhwIjoxNDY3MzI0MDg0fQ.ouy-gKS1VenmTBJ5KmB-ICr9TlXzlpHFOztLWa8nOOI'
   };
 
   /**
@@ -31,7 +31,13 @@ $(function () {
       return response.json();
     })
     .then(function (report) {
-      var reportConfig = $.extend({ type: 'report' }, report, localReportOverride);
+      var reportConfig = $.extend({
+        type: 'report',
+        settings: {
+          filterPaneEnabled: false,
+          navContentPaneEnabled: false
+        }
+      }, report, localReportOverride);
       var staticReport = powerbi.embed($staticReport.get(0), reportConfig);
 
       staticReport.on('loaded', function (event) {
@@ -41,11 +47,12 @@ $(function () {
         console.log('static report error');
       });
       
-      var customPageNavConfig = $.extend({
+      var customPageNavConfig = $.extend({}, reportConfig, {
         settings: {
-          filterPaneEnabled: false
+          filterPaneEnabled: false,
+          navContentPaneEnabled: true
         }
-      }, reportConfig);
+      });
 
       customPageNavReport = powerbi.embed($customPageNavReport.get(0), customPageNavConfig);
       customPageNavReport.on('loaded', function (event) {
@@ -206,7 +213,14 @@ $(function () {
         return response.json();
       })
       .then(function (reportWithToken) {
-        var reportConfig = $.extend({ type: 'report' }, reportWithToken, localReportOverride);
+        var reportConfig = $.extend({
+            type: 'report',
+            settings: {
+              filterPaneEnabled: false,
+              navContentPaneEnabled: false
+            }
+        }, reportWithToken, localReportOverride);
+
         powerbi.embed($dynamicReport.get(0), reportConfig);
       });
   });
