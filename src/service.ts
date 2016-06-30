@@ -37,7 +37,6 @@ export interface IPowerBiElement extends HTMLElement {
 export interface IDebugOptions {
     logMessages?: boolean;
     wpmpName?: string;
-    eventSourceOverrideWindow?: Window;
 }
 
 export interface IServiceConfiguration extends IDebugOptions {
