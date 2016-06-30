@@ -73,12 +73,12 @@ gulp.task('lint:ts', 'Lints all TypeScript', function() {
 
 gulp.task('min:js', 'Creates minified JavaScript file', function() {
     return gulp.src(['!./dist/*.min.js', './dist/*.js'])
-        .pipe(sourcemaps.init({ debug: true }))
         .pipe(uglify({
             preserveComments: 'license'
         }))
-        .pipe(sourcemaps.write())
-        .pipe(rename({ suffix: '.min' }))
+        .pipe(rename({
+            suffix: '.min'
+        }))
         .pipe(gulp.dest('./dist'));
 });
 
