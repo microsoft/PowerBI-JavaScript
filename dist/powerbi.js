@@ -62,6 +62,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.service = service;
 	var factories = __webpack_require__(7);
 	exports.factories = factories;
+	var models = __webpack_require__(4);
+	exports.models = models;
 	__export(__webpack_require__(5));
 	__export(__webpack_require__(6));
 	__export(__webpack_require__(2));
@@ -229,6 +231,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            iframe.remove();
 	        }
 	    };
+	    /**
+	     * Given an event object, find embed with matching type and id and invoke its handleEvent method with event.
+	     */
 	    Service.prototype.handleEvent = function (event) {
 	        var embed = utils.find(function (embed) {
 	            return (embed.config.type === event.type
@@ -266,10 +271,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    /**
 	     * List of components this service can embed.
-	     */
-	    /**
-	     * TODO: See if it's possible to remove need for this interface and just use Embed base object as common between Tile and Report
-	     * This was only put it to allow both types of components to be in the same list
 	     */
 	    Service.components = [
 	        tile_1.Tile,
@@ -325,9 +326,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.hpm = hpmFactory(this.iframe.contentWindow, this.service.wpmp);
 	    }
 	    /**
-	     * Handler for when the iframe has finished loading the powerbi placeholder page.
-	     * This is used to inject configuration data such as id, access token, and settings etc
-	     * which allow iframe to load the actual report with authentication.
+	     * Sends load configuration data.
+	     *
+	     * ```javascript
+	     * report.load({
+	     *   type: 'report',
+	     *   id: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
+	     *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+	     *   settings: {
+	     *     navContentPaneEnabled: false
+	     *   },
+	     *   pageName: "DefaultPage",
+	     *   filte: "DefaultReportFilter"
+	     * })
+	     *   .catch(error => { ... });
+	     * ```
 	     */
 	    Embed.prototype.load = function (config) {
 	        var errors = models.validateLoad(config);
@@ -339,6 +352,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
+	    /**
+	     * Given an event object, find all event handlers for the event, and invoke them with the event value.
+	     */
 	    Embed.prototype.handleEvent = function (event) {
 	        this.eventHandlers
 	            .filter(function (handler) { return handler.test(event); })
@@ -2926,20 +2942,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * ```javascript
 	     * // Get filters applied at report level
 	     * report.getFilters()
-	     *      .then(filters => {
-	     *          ...
-	     *      });
+	     *   .then(filters => {
+	     *     ...
+	     *   });
 	     *
 	     * // Get filters applied at page level
 	     * const pageTarget = {
-	     *   type: "page",
 	     *   name: "reportSection1"
 	     * };
 	     *
 	     * report.getFilters(pageTarget)
-	     *      .then(filters => {
-	     *          ...
-	     *      });
+	     *   .then(filters => {
+	     *       ...
+	     *   });
 	     * ```
 	     */
 	    Report.prototype.getFilters = function (target) {
@@ -2977,6 +2992,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    /**
 	     * Set the active page
+	     *
+	     * ```javascript
+	     * report.setPage("page2")
+	     *  .catch(error => { ... });
+	     * ```
 	     */
 	    Report.prototype.setPage = function (pageName) {
 	        var page = {
@@ -2990,6 +3010,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    /**
 	     * Remove specific filter from report, page, or visual
+	     *
+	     * ```javascript
+	     * const filter = new models.ValueFilter(...);
+	     *
+	     * report.removeFilter(filter)
+	     *  .catch(error => { ... });
+	     * ```
 	     */
 	    Report.prototype.removeFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
@@ -3015,6 +3042,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Update existing filter applied to report, page, or visual.
 	     *
 	     * The existing filter will be replaced with the new filter.
+	     *
+	     * ```javascript
+	     * const filter = new models.ValueFilter(...);
+	     * const target = {
+	     *   type: "page",
+	     *   name: "ReportSection2"
+	     * };
+	     *
+	     * report.updateFilter(filter, target)
+	     *  .catch(errors => { ... });
 	     */
 	    Report.prototype.updateFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
@@ -3025,6 +3062,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    /**
 	     * Update settings of report (filter pane visibility, page navigation visibility)
+	     *
+	     * ```javascript
+	     * const newSettings = {
+	     *   navContentPaneEnabled: true,
+	     *   filterPaneEnabled: false
+	     * };
+	     *
+	     * report.updateSettings(newSettings)
+	     *   .catch(error => { ... });
+	     * ```
 	     */
 	    Report.prototype.updateSettings = function (settings) {
 	        return this.hpm.patch('/report/settings', settings, { uid: this.config.uniqueId })

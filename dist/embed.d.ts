@@ -50,11 +50,26 @@ export declare abstract class Embed {
      */
     constructor(service: service.Service, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration);
     /**
-     * Handler for when the iframe has finished loading the powerbi placeholder page.
-     * This is used to inject configuration data such as id, access token, and settings etc
-     * which allow iframe to load the actual report with authentication.
+     * Sends load configuration data.
+     *
+     * ```javascript
+     * report.load({
+     *   type: 'report',
+     *   id: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
+     *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+     *   settings: {
+     *     navContentPaneEnabled: false
+     *   },
+     *   pageName: "DefaultPage",
+     *   filte: "DefaultReportFilter"
+     * })
+     *   .catch(error => { ... });
+     * ```
      */
     load(config: models.ILoadConfiguration): Promise<void>;
+    /**
+     * Given an event object, find all event handlers for the event, and invoke them with the event value.
+     */
     handleEvent(event: service.IEvent<any>): void;
     /**
      * Removes event handler(s) from list of handlers.

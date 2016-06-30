@@ -29,7 +29,6 @@ export interface IPowerBiElement extends HTMLElement {
 export interface IDebugOptions {
     logMessages?: boolean;
     wpmpName?: string;
-    eventSourceOverrideWindow?: Window;
 }
 export interface IServiceConfiguration extends IDebugOptions {
     autoEmbedOnContentLoaded?: boolean;
@@ -38,10 +37,6 @@ export interface IServiceConfiguration extends IDebugOptions {
 export declare class Service {
     /**
      * List of components this service can embed.
-     */
-    /**
-     * TODO: See if it's possible to remove need for this interface and just use Embed base object as common between Tile and Report
-     * This was only put it to allow both types of components to be in the same list
      */
     private static components;
     /**
@@ -98,6 +93,9 @@ export declare class Service {
      * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
      */
     reset(element: HTMLElement): void;
+    /**
+     * Given an event object, find embed with matching type and id and invoke its handleEvent method with event.
+     */
     handleEvent(event: IEvent<any>): void;
     /**
      * Translate target into url

@@ -37,20 +37,19 @@ export declare class Report extends embed.Embed {
      * ```javascript
      * // Get filters applied at report level
      * report.getFilters()
-     *      .then(filters => {
-     *          ...
-     *      });
+     *   .then(filters => {
+     *     ...
+     *   });
      *
      * // Get filters applied at page level
      * const pageTarget = {
-     *   type: "page",
      *   name: "reportSection1"
      * };
      *
      * report.getFilters(pageTarget)
-     *      .then(filters => {
-     *          ...
-     *      });
+     *   .then(filters => {
+     *       ...
+     *   });
      * ```
      */
     getFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<models.IFilter[]>;
@@ -71,10 +70,22 @@ export declare class Report extends embed.Embed {
     getPages(): Promise<models.IPage[]>;
     /**
      * Set the active page
+     *
+     * ```javascript
+     * report.setPage("page2")
+     *  .catch(error => { ... });
+     * ```
      */
     setPage(pageName: string): Promise<void>;
     /**
      * Remove specific filter from report, page, or visual
+     *
+     * ```javascript
+     * const filter = new models.ValueFilter(...);
+     *
+     * report.removeFilter(filter)
+     *  .catch(error => { ... });
+     * ```
      */
     removeFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void>;
     /**
@@ -89,10 +100,30 @@ export declare class Report extends embed.Embed {
      * Update existing filter applied to report, page, or visual.
      *
      * The existing filter will be replaced with the new filter.
+     *
+     * ```javascript
+     * const filter = new models.ValueFilter(...);
+     * const target = {
+     *   type: "page",
+     *   name: "ReportSection2"
+     * };
+     *
+     * report.updateFilter(filter, target)
+     *  .catch(errors => { ... });
      */
     updateFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void>;
     /**
      * Update settings of report (filter pane visibility, page navigation visibility)
+     *
+     * ```javascript
+     * const newSettings = {
+     *   navContentPaneEnabled: true,
+     *   filterPaneEnabled: false
+     * };
+     *
+     * report.updateSettings(newSettings)
+     *   .catch(error => { ... });
+     * ```
      */
     updateSettings(settings: models.ISettings): Promise<void>;
     /**
