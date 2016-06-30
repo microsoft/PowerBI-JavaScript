@@ -4,9 +4,21 @@ $(function () {
   var $reportsList = $('#reportslist');
   var $dynamicReport = $('#reportdynamic');
   var $customPageNavReport = $('#reportcustompagenav');
-  var $reportPagesList = $('#reportpageslist');
+  var customPageNavReport;
+  var customPageNavReportPages;
+  var $reportPagesList = $('#reportpagesbuttons');
   var $resetButton = $('#resetButton');
+  var $prevButton = $('#prevbutton');
+  var $nextButton = $('#nextbutton');
+  var $cycleButton = $('#cyclebutton');
+  var cycleIntervalId;
   var apiBaseUrl = 'http://powerbipaasapi.azurewebsites.net/api/reports';
+
+  var localReportOverride = {
+    embedUrl: 'https://portal.analysis.windows-int.net/appTokenReportEmbed',
+    id: 'c4d31ef0-7b34-4d80-9bcb-5974d1405572',
+    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ2NzMxNjQ2MCwiZXhwIjoxNDY3MzIwMDYwfQ.1iKcgmG07m-VLGKmGwKI95ICVYowYkVGnudws02rtow'
+  };
 
   /**
    * Basic Embed
@@ -19,39 +31,117 @@ $(function () {
       return response.json();
     })
     .then(function (report) {
-      var reportConfig = $.extend({ type: 'report' }, report);
+      var reportConfig = $.extend({ type: 'report' }, report, localReportOverride);
       var staticReport = powerbi.embed($staticReport.get(0), reportConfig);
+
       staticReport.on('loaded', function (event) {
         console.log('static report loaded');
+      });
+      staticReport.on('error', function (event) {
+        console.log('static report error');
       });
       
       var customPageNavConfig = $.extend({
         settings: {
-          navContentPaneEnabled: false,
           filterPaneEnabled: false
         }
       }, reportConfig);
 
-      var customPageNavReport = powerbi.embed($customPageNavReport.get(0), customPageNavConfig);
+      customPageNavReport = powerbi.embed($customPageNavReport.get(0), customPageNavConfig);
       customPageNavReport.on('loaded', function (event) {
         console.log('custom page nav report loaded');
         customPageNavReport.getPages()
           .then(pages => {
             console.log('pages: ', pages);
-            return pages
-              .map(function (page) {
-                return generateReportPage(report, page);
-              })
-              .forEach(function (element) {
-                $reportPagesList.append(element);
-              });
+            if(pages.length > 0) {
+              customPageNavReportPages = pages;
+              const firstPage = customPageNavReportPages[0];
+              firstPage.isActive = true;
+
+            	pages
+                .map(function (page) {
+                  return generateReportPage(page);
+                })
+                .forEach(function (element) {
+                  $reportPagesList.append(element);
+                });
+            }
           });
+      });
+      customPageNavReport.on('error', function (event) {
+        console.log('customPageNavReport error', event);
       });
 
       customPageNavReport.on('pageChanged', function (event) {
-        console.log('pageChanged event received');
-      })
+        console.log('pageChanged event received', event);
+        updateActivePage(event.newPage);
+      });
     });
+
+  function updateActivePage(newPage) {
+    // Remove active class
+    var reportButtons = $reportPagesList.children('button');
+
+    reportButtons
+      .each(function (index, element) {
+        var $element = $(element);
+        var buttonPage = $element.data('page');
+        if(buttonPage.isActive) {
+          buttonPage.isActive = false;
+          $element.removeClass('active');
+        }
+      });
+
+    // Set active class
+    reportButtons
+      .each(function (index, element) {
+        var $element = $(element);
+        var buttonPage = $element.data('page');
+        if(buttonPage.name === newPage.name) {
+          buttonPage.isActive = true;
+          $element.addClass('active');
+        }
+      });
+  }
+
+  function changePage(forwards) {
+    // Remove active class
+    var reportButtons = $reportPagesList.children('button');
+    var $activeButtonIndex = -1;
+
+    reportButtons
+      .each(function (index, element) {
+        var $element = $(element);
+        var buttonPage = $element.data('page');
+        if(buttonPage.isActive) {
+          $activeButtonIndex = index;
+        }
+      });
+
+    if(forwards) {
+      $activeButtonIndex += 1;
+    }
+    else {
+      $activeButtonIndex -= 1;
+    }
+
+    if($activeButtonIndex > reportButtons.length - 1) {
+      $activeButtonIndex = 0;
+    }
+    if($activeButtonIndex < 0) {
+      $activeButtonIndex = reportButtons.length - 1;
+    }
+
+    reportButtons
+      .each(function (index, element) {
+        if($activeButtonIndex === index) {
+          var $element = $(element);
+          var buttonPage = $element.data('page');
+          
+          customPageNavReport.setPage(buttonPage.name);
+        }
+      });
+  }
 
   /**
    * Dynamic Embed
@@ -76,15 +166,20 @@ $(function () {
     return element;
   }
 
-  function generateReportPage(report, page) {
-    return $('<button>')
+  function generateReportPage(page) {
+    var $page = $('<button>')
       .attr({
         type: 'button'
       })
       .addClass('btn btn-success')
-      .data('report', report)
       .data('page', page)
-      .text(page.name);
+      .text(page.displayName);
+
+    if(page.isActive) {
+      $page.addClass('active');
+    }
+
+    return $page;
   }
 
   var allReportsUrl = apiBaseUrl;
@@ -111,14 +206,38 @@ $(function () {
         return response.json();
       })
       .then(function (reportWithToken) {
-        var reportConfig = $.extend({ type: 'report' }, reportWithToken);
+        var reportConfig = $.extend({ type: 'report' }, reportWithToken, localReportOverride);
         powerbi.embed($dynamicReport.get(0), reportConfig);
       });
+  });
+
+  $prevButton.on('click', function (event) {
+    changePage(false);
+  });
+
+  $nextButton.on('click', function (event) {
+    changePage(true);
+  });
+
+  $cycleButton.on('click', function (event) {
+    $cycleButton.toggleClass('active');
+    $cycleButton.data('cycle', !$cycleButton.data('cycle'));
+
+    if($cycleButton.data('cycle')) {
+      cycleIntervalId = setInterval(function () {
+        console.log('cycle page: ');
+        changePage(true);
+      }, 1000);
+    }
+    else {
+      clearInterval(cycleIntervalId);
+    }
   });
 
   $resetButton.on('click', function (event) {
     powerbi.reset($dynamicReport.get(0));
   });
+
 
   /**
    * Custom Page Navigation
@@ -129,7 +248,7 @@ $(function () {
     var page = $(button).data('page');
 
     console.log('Attempting to set page to: ', page.name);
-    report.setPage(page.name)
+    customPageNavReport.setPage(page.name)
       .then(function (response) {
         console.log('Page changed request accepted');
       });
