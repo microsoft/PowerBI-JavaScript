@@ -1,9 +1,11 @@
 import * as service from './service';
 import * as factories from './factories';
+import * as models from 'powerbi-models';
 
 export {
     service,
-    factories
+    factories,
+    models
 };
 export * from './report';
 export * from './tile';
