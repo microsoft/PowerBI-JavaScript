@@ -50,10 +50,6 @@ export class Service {
     /**
      * List of components this service can embed.
      */
-    /**
-     * TODO: See if it's possible to remove need for this interface and just use Embed base object as common between Tile and Report
-     * This was only put it to allow both types of components to be in the same list
-     */
     private static components: (typeof Report | typeof Tile)[] = [
         Tile,
         Report
@@ -250,6 +246,9 @@ export class Service {
         }
     }
 
+    /**
+     * Given an event object, find embed with matching type and id and invoke its handleEvent method with event.
+     */
     handleEvent(event: IEvent<any>): void {
         const embed = utils.find(embed => {
             return (embed.config.type === event.type
