@@ -149,7 +149,7 @@ export abstract class Embed {
     off<T>(eventName: string, handler?: service.IEventHandler<T>): void {
         const fakeEvent: service.IEvent<any> = { name: eventName, type: null, id: null, value: null };
         if(handler) {
-            utils.remove(eventHandler => eventHandler.test(fakeEvent) && (eventHandler.handle === handler), this.eventHandlers);
+            this.element.removeEventListener(eventName, <any>handler);
         }
         else {
             const eventHandlersToRemove = this.eventHandlers
@@ -157,8 +157,8 @@ export abstract class Embed {
                 
             eventHandlersToRemove
                 .forEach(eventHandlerToRemove => {
-                    utils.remove(eventHandler => eventHandler === eventHandlerToRemove, this.eventHandlers);
-                })
+                    this.element.removeEventListener(eventName, <any>eventHandlerToRemove.handle);
+                });
         }
     }
 
@@ -180,6 +180,8 @@ export abstract class Embed {
             test: (event: service.IEvent<T>) => event.name === eventName,
             handle: handler
         });
+
+        this.element.addEventListener(eventName, <any>handler)
     }
 
     /**

@@ -3395,7 +3395,7 @@ describe('SDK-to-WPMP', function () {
       spyWpmp.onMessageReceived(testData.pageChangedEvent);
 
       // Assert
-      expect(testData.handler).toHaveBeenCalledWith(testData.pageChangedEvent.data.body);
+      expect(testData.handler).toHaveBeenCalledWith(jasmine.objectContaining({ detail: testData.pageChangedEvent.data.body }));
     });
 
     it(`off('eventName', handler) will remove single handler which matches function reference for that event`, function () {
@@ -3458,9 +3458,9 @@ describe('SDK-to-WPMP', function () {
       spyWpmp.onMessageReceived(testData.simulatedEvent);
 
       // Assert
-      expect(testData.handler).toHaveBeenCalledWith(testData.simulatedEvent.data.body);
-      expect(testData.handler2).toHaveBeenCalledWith(testData.simulatedEvent.data.body);
-      expect(testData.handler3).toHaveBeenCalledWith(testData.simulatedEvent.data.body);
+      expect(testData.handler).toHaveBeenCalledWith(jasmine.objectContaining({ detail: testData.simulatedEvent.data.body }));
+      expect(testData.handler2).toHaveBeenCalledWith(jasmine.objectContaining({ detail: testData.simulatedEvent.data.body }));
+      expect(testData.handler3).toHaveBeenCalledWith(jasmine.objectContaining({ detail: testData.simulatedEvent.data.body }));
     });
 
 

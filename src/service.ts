@@ -255,7 +255,7 @@ export class Service {
         }, this.embeds);
 
         if(embed) {
-            embed.handleEvent(event);
+            utils.raiseCustomEvent(embed.element, event.name, event.value);
         }
     }
 
