@@ -113,17 +113,6 @@ export abstract class Embed {
                 throw response.body;
             });
     }
-    
-    /**
-     * Given an event object, find all event handlers for the event, and invoke them with the event value.
-     */
-    handleEvent(event: service.IEvent<any>): void {
-        this.eventHandlers
-            .filter(handler => handler.test(event))
-            .forEach(handler => {
-                handler.handle(event.value);
-            });
-    }
 
     /**
      * Removes event handler(s) from list of handlers.
@@ -146,6 +135,7 @@ export abstract class Embed {
     off<T>(eventName: string, handler?: service.IEventHandler<T>): void {
         const fakeEvent: service.IEvent<any> = { name: eventName, type: null, id: null, value: null };
         if(handler) {
+            utils.remove(eventHandler => eventHandler.test(fakeEvent) && (eventHandler.handle === handler), this.eventHandlers);
             this.element.removeEventListener(eventName, <any>handler);
         }
         else {
@@ -154,6 +144,7 @@ export abstract class Embed {
                 
             eventHandlersToRemove
                 .forEach(eventHandlerToRemove => {
+                    utils.remove(eventHandler => eventHandler === eventHandlerToRemove, this.eventHandlers);
                     this.element.removeEventListener(eventName, <any>eventHandlerToRemove.handle);
                 });
         }
