@@ -88,8 +88,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function Service(hpmFactory, wpmpFactory, routerFactory, config) {
 	        var _this = this;
 	        if (config === void 0) { config = {}; }
-	        this.hpmFactory = hpmFactory;
 	        this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
+	        this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
 	        this.router = routerFactory(this.wpmp);
 	        /**
 	         * Add handler for report events
@@ -172,7 +172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!Component) {
 	            throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
 	        }
-	        var component = new Component(this, this.hpmFactory, element, config);
+	        var component = new Component(this, element, config);
 	        element.powerBiEmbed = component;
 	        this.embeds.push(component);
 	        return component;
@@ -240,7 +240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                && embed.config.uniqueId === event.id);
 	        }, this.embeds);
 	        if (embed) {
-	            embed.handleEvent(event);
+	            utils.raiseCustomEvent(embed.element, event.name, event.value);
 	        }
 	    };
 	    /**
@@ -305,7 +305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Note: there is circular reference between embeds and service
 	     * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
 	     */
-	    function Embed(service, hpmFactory, element, config) {
+	    function Embed(service, element, config) {
 	        var _this = this;
 	        this.allowedEvents = [];
 	        Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
@@ -323,7 +323,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.element.innerHTML = iframeHtml;
 	        this.iframe = this.element.childNodes[0];
 	        this.iframe.addEventListener('load', function () { return _this.load(_this.config); }, false);
-	        this.hpm = hpmFactory(this.iframe.contentWindow, this.service.wpmp);
 	    }
 	    /**
 	     * Sends load configuration data.
@@ -347,19 +346,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (errors) {
 	            throw errors;
 	        }
-	        return this.hpm.post('/report/load', config, { uid: this.config.uniqueId })
+	        return this.service.hpm.post('/report/load', config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Given an event object, find all event handlers for the event, and invoke them with the event value.
-	     */
-	    Embed.prototype.handleEvent = function (event) {
-	        this.eventHandlers
-	            .filter(function (handler) { return handler.test(event); })
-	            .forEach(function (handler) {
-	            handler.handle(event.value);
 	        });
 	    };
 	    /**
@@ -385,6 +374,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var fakeEvent = { name: eventName, type: null, id: null, value: null };
 	        if (handler) {
 	            utils.remove(function (eventHandler) { return eventHandler.test(fakeEvent) && (eventHandler.handle === handler); }, this.eventHandlers);
+	            this.element.removeEventListener(eventName, handler);
 	        }
 	        else {
 	            var eventHandlersToRemove = this.eventHandlers
@@ -392,6 +382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            eventHandlersToRemove
 	                .forEach(function (eventHandlerToRemove) {
 	                utils.remove(function (eventHandler) { return eventHandler === eventHandlerToRemove; }, _this.eventHandlers);
+	                _this.element.removeEventListener(eventName, eventHandlerToRemove.handle);
 	            });
 	        }
 	    };
@@ -412,6 +403,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            test: function (event) { return event.name === eventName; },
 	            handle: handler
 	        });
+	        this.element.addEventListener(eventName, handler);
 	    };
 	    /**
 	     * Get access token from first available location: config, attribute, global.
@@ -2894,8 +2886,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var embed = __webpack_require__(2);
 	var Report = (function (_super) {
 	    __extends(Report, _super);
-	    function Report(service, hpmFactory, element, config) {
-	        _super.call(this, service, hpmFactory, element, config);
+	    function Report(service, element, config) {
+	        _super.call(this, service, element, config);
 	        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
 	    }
 	    /**
@@ -2930,7 +2922,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Report.prototype.addFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.post(targetUrl + "/filters", filter, { uid: this.config.uniqueId })
+	        return this.service.hpm.post(targetUrl + "/filters", filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -2959,7 +2951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Report.prototype.getFilters = function (target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.get(targetUrl + "/filters", { uid: this.config.uniqueId })
+	        return this.service.hpm.get(targetUrl + "/filters", { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
@@ -2985,7 +2977,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * ```
 	     */
 	    Report.prototype.getPages = function () {
-	        return this.hpm.get('/report/pages', { uid: this.config.uniqueId })
+	        return this.service.hpm.get('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
@@ -3003,7 +2995,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            name: pageName,
 	            displayName: null
 	        };
-	        return this.hpm.put('/report/pages/active', page, { uid: this.config.uniqueId })
+	        return this.service.hpm.put('/report/pages/active', page, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -3020,7 +3012,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Report.prototype.removeFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.delete(targetUrl + "/filters", filter, { uid: this.config.uniqueId })
+	        return this.service.hpm.delete(targetUrl + "/filters", filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -3033,7 +3025,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * ```
 	     */
 	    Report.prototype.removeAllFilters = function () {
-	        return this.hpm.delete('/report/allfilters', null, { uid: this.config.uniqueId })
+	        return this.service.hpm.delete('/report/allfilters', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -3055,7 +3047,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Report.prototype.updateFilter = function (filter, target) {
 	        var targetUrl = this.getTargetUrl(target);
-	        return this.hpm.put(targetUrl + "/filters", filter, { uid: this.config.uniqueId })
+	        return this.service.hpm.put(targetUrl + "/filters", filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -3074,7 +3066,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * ```
 	     */
 	    Report.prototype.updateSettings = function (settings) {
-	        return this.hpm.patch('/report/settings', settings, { uid: this.config.uniqueId })
+	        return this.service.hpm.patch('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -3141,21 +3133,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var wpmp = __webpack_require__(8);
-	var hpm = __webpack_require__(9);
-	var router = __webpack_require__(10);
+	var config_1 = __webpack_require__(8);
+	var wpmp = __webpack_require__(9);
+	var hpm = __webpack_require__(10);
+	var router = __webpack_require__(11);
 	/**
 	 * TODO: Need to get sdk version and settings from package.json, Generate config file via gulp task?
 	 */
-	exports.hpmFactory = function (targetWindow, wpmp, sdkVersion, sdkType, origin) {
-	    if (sdkVersion === void 0) { sdkVersion = '2.0.0'; }
-	    if (sdkType === void 0) { sdkType = 'js'; }
-	    if (origin === void 0) { origin = 'sdk'; }
-	    return new hpm.HttpPostMessage(targetWindow, wpmp, {
-	        'origin': origin,
+	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
+	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
+	    if (sdkType === void 0) { sdkType = config_1.default.type; }
+	    return new hpm.HttpPostMessage(wpmp, {
 	        'x-sdk-type': sdkType,
 	        'x-sdk-version': sdkVersion
-	    });
+	    }, defaultTargetWindow);
 	};
 	exports.wpmpFactory = function (name, logMessages, eventSourceOverrideWindow) {
 	    return new wpmp.WindowPostMessageProxy({
@@ -3176,6 +3167,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 8 */
+/***/ function(module, exports) {
+
+	var config = {
+	    version: '2.0.0-beta.6',
+	    type: 'js'
+	};
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = config;
+
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function webpackUniversalModuleDefinition(root, factory) {
@@ -3425,9 +3428,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*! http-post-message v0.1.2 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -3486,14 +3490,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 		"use strict";
 		var HttpPostMessage = (function () {
-		    function HttpPostMessage(targetWindow, windowPostMessageProxy, defaultHeaders) {
+		    function HttpPostMessage(windowPostMessageProxy, defaultHeaders, defaultTargetWindow) {
 		        if (defaultHeaders === void 0) { defaultHeaders = {}; }
 		        this.defaultHeaders = defaultHeaders;
-		        this.targetWindow = targetWindow;
+		        this.defaultTargetWindow = defaultTargetWindow;
 		        this.windowPostMessageProxy = windowPostMessageProxy;
 		    }
-		    // TODO: I the responsibility of knowing how to configure windowPostMessageProxy should
-		    // live in this class, but then we have to have hard dependency for things like ITrackingProperties
+		    // TODO: See if it's possible to share tracking properties interface?
+		    // The responsibility of knowing how to configure windowPostMessageProxy for http should
+		    // live in this http class, but the configuration would need ITrackingProperties
+		    // interface which lives in WindowPostMessageProxy. Use <any> type as workaround
 		    HttpPostMessage.addTrackingProperties = function (message, trackingProperties) {
 		        message.headers = message.headers || {};
 		        if (trackingProperties && trackingProperties.id) {
@@ -3503,60 +3509,72 @@ return /******/ (function(modules) { // webpackBootstrap
 		    };
 		    HttpPostMessage.getTrackingProperties = function (message) {
 		        return {
-		            id: message.headers.id
+		            id: message.headers && message.headers.id
 		        };
 		    };
 		    HttpPostMessage.isErrorMessage = function (message) {
+		        if (typeof (message && message.statusCode) !== 'number') {
+		            return false;
+		        }
 		        return !(200 <= message.statusCode && message.statusCode < 300);
 		    };
-		    HttpPostMessage.prototype.get = function (url, headers) {
+		    HttpPostMessage.prototype.get = function (url, headers, targetWindow) {
 		        if (headers === void 0) { headers = {}; }
+		        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
 		        return this.send({
 		            method: "GET",
 		            url: url,
 		            headers: headers
-		        });
+		        }, targetWindow);
 		    };
-		    HttpPostMessage.prototype.post = function (url, body, headers) {
+		    HttpPostMessage.prototype.post = function (url, body, headers, targetWindow) {
 		        if (headers === void 0) { headers = {}; }
+		        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
 		        return this.send({
 		            method: "POST",
 		            url: url,
 		            headers: headers,
 		            body: body
-		        });
+		        }, targetWindow);
 		    };
-		    HttpPostMessage.prototype.put = function (url, body, headers) {
+		    HttpPostMessage.prototype.put = function (url, body, headers, targetWindow) {
 		        if (headers === void 0) { headers = {}; }
+		        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
 		        return this.send({
 		            method: "PUT",
 		            url: url,
 		            headers: headers,
 		            body: body
-		        });
+		        }, targetWindow);
 		    };
-		    HttpPostMessage.prototype.patch = function (url, body, headers) {
+		    HttpPostMessage.prototype.patch = function (url, body, headers, targetWindow) {
 		        if (headers === void 0) { headers = {}; }
+		        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
 		        return this.send({
 		            method: "PATCH",
 		            url: url,
 		            headers: headers,
 		            body: body
-		        });
+		        }, targetWindow);
 		    };
-		    HttpPostMessage.prototype.delete = function (url, body, headers) {
+		    HttpPostMessage.prototype.delete = function (url, body, headers, targetWindow) {
 		        if (body === void 0) { body = null; }
 		        if (headers === void 0) { headers = {}; }
+		        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
 		        return this.send({
 		            method: "DELETE",
 		            url: url,
 		            headers: headers,
 		            body: body
-		        });
+		        }, targetWindow);
 		    };
-		    HttpPostMessage.prototype.send = function (request) {
-		        this.assign(request.headers, this.defaultHeaders);
-		        return this.windowPostMessageProxy.postMessage(this.targetWindow, request);
+		    HttpPostMessage.prototype.send = function (request, targetWindow) {
+		        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
+		        request.headers = this.assign({}, this.defaultHeaders, request.headers);
+		        if (!targetWindow) {
+		            throw new Error("target window is not provided.  You must either provide the target window explicitly as argument to request, or specify default target window when constructing instance of this class.");
+		        }
+		        return this.windowPostMessageProxy.postMessage(targetWindow, request);
 		    };
 		    /**
 		     * Object.assign() polyfill
@@ -3594,7 +3612,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function webpackUniversalModuleDefinition(root, factory) {

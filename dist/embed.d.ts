@@ -1,7 +1,6 @@
 /*! powerbi-client v2.0.0-beta.6 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as models from 'powerbi-models';
-import * as hpm from 'http-post-message';
 declare global  {
     interface Document {
         mozCancelFullScreen: Function;
@@ -39,7 +38,6 @@ export declare abstract class Embed {
     private static defaultSettings;
     allowedEvents: any[];
     eventHandlers: IInternalEventHandler<any>[];
-    hpm: hpm.HttpPostMessage;
     service: service.Service;
     element: HTMLElement;
     iframe: HTMLIFrameElement;
@@ -48,7 +46,7 @@ export declare abstract class Embed {
      * Note: there is circular reference between embeds and service
      * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
      */
-    constructor(service: service.Service, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration);
+    constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration);
     /**
      * Sends load configuration data.
      *
@@ -67,10 +65,6 @@ export declare abstract class Embed {
      * ```
      */
     load(config: models.ILoadConfiguration): Promise<void>;
-    /**
-     * Given an event object, find all event handlers for the event, and invoke them with the event value.
-     */
-    handleEvent(event: service.IEvent<any>): void;
     /**
      * Removes event handler(s) from list of handlers.
      *

@@ -15,7 +15,7 @@ export interface IEventHandler<T> {
     (event: IEvent<T>): any;
 }
 export interface IHpmFactory {
-    (targetWindow: Window, wpmp: wpmp.WindowPostMessageProxy, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
+    (wpmp: wpmp.WindowPostMessageProxy, targetWindow?: Window, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
 }
 export interface IWpmpFactory {
     (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window): wpmp.WindowPostMessageProxy;
@@ -33,6 +33,8 @@ export interface IDebugOptions {
 export interface IServiceConfiguration extends IDebugOptions {
     autoEmbedOnContentLoaded?: boolean;
     onError?: (error: any) => any;
+    version?: string;
+    type?: string;
 }
 export declare class Service {
     /**
@@ -49,8 +51,8 @@ export declare class Service {
     private config;
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds;
-    private hpmFactory;
-    /** TODO: Look for way to make this private. This should be private but in embed constructor needs to pass the wpmp instance to the hpm factory. */
+    /** TODO: Look for way to make this private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
+    hpm: hpm.HttpPostMessage;
     wpmp: wpmp.WindowPostMessageProxy;
     private router;
     constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IServiceConfiguration);
