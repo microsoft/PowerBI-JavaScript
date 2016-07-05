@@ -38,6 +38,7 @@ gulp.task('lint', 'Lints all files', function (done) {
 
 gulp.task('test', 'Runs all tests', function (done) {
     runSequence(
+        'config',
         'compile:spec',
         'test:js',
         done
@@ -48,11 +49,18 @@ gulp.task('build', 'Runs a full build', function (done) {
     runSequence(
         'lint',
         'clean',
+        'config',
         ['compile:ts', 'compile:dts'],
         'min:js',
         'header',
         done
     );
+});
+
+gulp.task('config', 'Update config version with package version', function () {
+    return gulp.src(['./src/config.ts'], {base: "./"})
+        .pipe(replace(/version: '([^']+)'/, `version: '${package.version}'`))
+        .pipe(gulp.dest('.'));
 });
 
 gulp.task('header', 'Add header to distributed files', function () {

@@ -2,6 +2,7 @@
  * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
  */
 import { IHpmFactory, IWpmpFactory, IRouterFactory } from './service';
+import config from './config';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as router from 'powerbi-router';
@@ -15,9 +16,8 @@ export {
 /**
  * TODO: Need to get sdk version and settings from package.json, Generate config file via gulp task?
  */
-export const hpmFactory: IHpmFactory = (wpmp, defaultTargetWindow, sdkVersion = '2.0.0', sdkType = 'js', origin = 'sdk') => {
+export const hpmFactory: IHpmFactory = (wpmp, defaultTargetWindow, sdkVersion = config.version, sdkType = config.type) => {
     return new hpm.HttpPostMessage(wpmp, {
-        'origin': origin,
         'x-sdk-type': sdkType,
         'x-sdk-version': sdkVersion
     }, defaultTargetWindow);
