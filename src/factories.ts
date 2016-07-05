@@ -15,12 +15,12 @@ export {
 /**
  * TODO: Need to get sdk version and settings from package.json, Generate config file via gulp task?
  */
-export const hpmFactory: IHpmFactory = (targetWindow, wpmp, sdkVersion = '2.0.0', sdkType = 'js', origin = 'sdk') => {
-    return new hpm.HttpPostMessage(targetWindow, wpmp, {
+export const hpmFactory: IHpmFactory = (wpmp, defaultTargetWindow, sdkVersion = '2.0.0', sdkType = 'js', origin = 'sdk') => {
+    return new hpm.HttpPostMessage(wpmp, {
         'origin': origin,
         'x-sdk-type': sdkType,
         'x-sdk-version': sdkVersion
-    });
+    }, defaultTargetWindow);
 };
 
 export const wpmpFactory: IWpmpFactory = (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window) => {

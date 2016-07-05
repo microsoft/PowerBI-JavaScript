@@ -9,8 +9,8 @@ export class Report extends embed.Embed {
     static reportIdAttribute = 'powerbi-report-id';
     static type = "Report";
 
-    constructor(service: service.Service, hpmFactory: service.IHpmFactory, element: HTMLElement, config: embed.IEmbedConfiguration) {
-        super(service, hpmFactory, element, config);
+    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration) {
+        super(service, element, config);
         Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
     }
 
@@ -49,7 +49,7 @@ export class Report extends embed.Embed {
      */
     addFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.post<void>(`${targetUrl}/filters`, filter, { uid: this.config.uniqueId })
+        return this.service.hpm.post<void>(`${targetUrl}/filters`, filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .catch(response => {
                 throw response.body;
             });
@@ -79,7 +79,7 @@ export class Report extends embed.Embed {
      */
     getFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<models.IFilter[]> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.get<models.IFilter[]>(`${targetUrl}/filters`, { uid: this.config.uniqueId })
+        return this.service.hpm.get<models.IFilter[]>(`${targetUrl}/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .then(response => response.body,
                 response => {
                     throw response.body;
@@ -110,7 +110,7 @@ export class Report extends embed.Embed {
      * ```
      */
     getPages(): Promise<models.IPage[]> {
-        return this.hpm.get<models.IPage[]>('/report/pages', { uid: this.config.uniqueId })
+        return this.service.hpm.get<models.IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .then(response => response.body,
                 response => {
                     throw response.body;
@@ -131,7 +131,7 @@ export class Report extends embed.Embed {
             displayName: null
         };
 
-        return this.hpm.put<models.IError[]>('/report/pages/active', page, { uid: this.config.uniqueId })
+        return this.service.hpm.put<models.IError[]>('/report/pages/active', page, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .catch(response => {
                 throw response.body;
             });
@@ -149,7 +149,7 @@ export class Report extends embed.Embed {
      */
     removeFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.delete<models.IError[]>(`${targetUrl}/filters`, filter, { uid: this.config.uniqueId })
+        return this.service.hpm.delete<models.IError[]>(`${targetUrl}/filters`, filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .catch(response => {
                 throw response.body;
             });
@@ -163,7 +163,7 @@ export class Report extends embed.Embed {
      * ```
      */
     removeAllFilters(): Promise<void> {
-        return this.hpm.delete<models.IError[]>('/report/allfilters', null, { uid: this.config.uniqueId })
+        return this.service.hpm.delete<models.IError[]>('/report/allfilters', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .catch(response => {
                 throw response.body;
             });
@@ -186,7 +186,7 @@ export class Report extends embed.Embed {
      */
     updateFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
         const targetUrl = this.getTargetUrl(target);
-        return this.hpm.put<models.IError[]>(`${targetUrl}/filters`, filter, { uid: this.config.uniqueId })
+        return this.service.hpm.put<models.IError[]>(`${targetUrl}/filters`, filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .catch(response => {
                 throw response.body;
             });
@@ -206,7 +206,7 @@ export class Report extends embed.Embed {
      * ```
      */
     updateSettings(settings: models.ISettings): Promise<void> {
-        return this.hpm.patch<models.IError[]>('/report/settings', settings, { uid: this.config.uniqueId })
+        return this.service.hpm.patch<models.IError[]>('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .catch(response => {
                 throw response.body;
             });

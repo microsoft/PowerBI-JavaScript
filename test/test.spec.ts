@@ -543,7 +543,7 @@ describe('Protocol', function () {
 
     // Register SDK side WPMP
     wpmp = factories.wpmpFactory('HostProxyDefaultNoHandlers', logMessages, iframe.contentWindow);
-    hpm = factories.hpmFactory(iframe.contentWindow, wpmp, 'testVersion');
+    hpm = factories.hpmFactory(wpmp, iframe.contentWindow, 'testVersion');
     const router = factories.routerFactory(wpmp);
 
     router.post('/reports/:uniqueId/events/:eventName', (req, res) => {
@@ -2528,7 +2528,7 @@ describe('SDK-to-HPM', function () {
       report.load(testData.loadConfiguration);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId });
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.load() returns promise that rejects with validation error if the load configuration is invalid', function (done) {
@@ -2550,7 +2550,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.load(testData.loadConfiguration)
         .catch(error => {
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId }, iframe.contentWindow);
           expect(error).toEqual(testData.errorResponse.body);
           // Assert
           done();
@@ -2571,7 +2571,7 @@ describe('SDK-to-HPM', function () {
       // Act
       report.load(testData.loadConfiguration)
         .then(response => {
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           // Assert
           done();
@@ -2587,7 +2587,7 @@ describe('SDK-to-HPM', function () {
       report.getPages();
 
       // Assert
-      expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId });
+      expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.getPages() return promise that rejects with server error if there was error getting pages', function (done) {
@@ -2606,7 +2606,7 @@ describe('SDK-to-HPM', function () {
       report.getPages()
         .catch(error => {
           // Assert
-          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId });
+          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
           expect(error).toEqual(testData.expectedError.body);
           done();
         });
@@ -2629,7 +2629,7 @@ describe('SDK-to-HPM', function () {
       report.getPages()
         .then(pages => {
           // Assert
-          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId });
+          expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
           expect(pages).toEqual(testData.expectedResponse.body);
           done();
         });
@@ -2648,7 +2648,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.addFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -2670,7 +2670,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter)
         .catch(errors => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2688,7 +2688,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter)
         .then(response => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           done();
         });
@@ -2705,7 +2705,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter);
 
       // Assert
-      expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
+      expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.updateFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -2727,7 +2727,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter)
         .catch(errors => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2745,7 +2745,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter)
         .then(response => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           done();
         });
@@ -2762,7 +2762,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter);
 
       // Assert
-      expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
+      expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.removeFilter(filter) returns promise that rejects with validation errors if filter is invalid', function (done) {
@@ -2784,7 +2784,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter)
         .catch(errors => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2802,7 +2802,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter)
         .then(response => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           done();
         });
@@ -2825,7 +2825,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2851,7 +2851,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2873,7 +2873,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           done();
         });
@@ -2893,7 +2893,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
+      expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2919,7 +2919,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -2941,7 +2941,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           done();
         });
@@ -2962,7 +2962,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
+      expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -2988,7 +2988,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -3010,7 +3010,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/pages/page1/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           done();
         });
@@ -3032,7 +3032,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.addFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -3058,7 +3058,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -3080,7 +3080,7 @@ describe('SDK-to-HPM', function () {
       report.addFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.post).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           done();
         });
@@ -3100,7 +3100,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
+      expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.updateFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -3126,7 +3126,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -3148,7 +3148,7 @@ describe('SDK-to-HPM', function () {
       report.updateFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           done();
         });
@@ -3168,7 +3168,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target);
 
       // Assert
-      expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
+      expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.removeFilter(filter, target) returns promise that rejects with validation errors if target or filter is invalid', function (done) {
@@ -3194,7 +3194,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .catch(errors => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(errors).toEqual(testData.expectedErrors.body);
           done();
         });
@@ -3216,7 +3216,7 @@ describe('SDK-to-HPM', function () {
       report.removeFilter(testData.filter, testData.target)
         .then(response => {
           // Assert
-          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId });
+          expect(spyHpm.delete).toHaveBeenCalledWith('/report/visuals/visualId/filters', testData.filter, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           done();
         });
@@ -3236,7 +3236,7 @@ describe('SDK-to-HPM', function () {
       report.updateSettings(testData.settings);
 
       // Assert
-      expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId });
+      expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
     });
 
     it('report.updateSettings(setting) returns promise that rejects with validation error if object is invalid', function (done) {
@@ -3261,7 +3261,7 @@ describe('SDK-to-HPM', function () {
         .catch(errors => {
 
           // Assert
-          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId });
+          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
           expect(errors).toEqual(testData.expectedError.body);
           done()
         });
@@ -3282,7 +3282,7 @@ describe('SDK-to-HPM', function () {
         .then(response => {
 
           // Assert
-          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId });
+          expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
           expect(response).toEqual(null);
           done()
         });

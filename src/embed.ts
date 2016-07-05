@@ -55,7 +55,6 @@ export abstract class Embed {
 
     allowedEvents = [];
     eventHandlers: IInternalEventHandler<any>[];
-    hpm: hpm.HttpPostMessage;
     service: service.Service;
     element: HTMLElement;
     iframe: HTMLIFrameElement;
@@ -65,7 +64,7 @@ export abstract class Embed {
      * Note: there is circular reference between embeds and service
      * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
      */
-    constructor(service: service.Service, hpmFactory: service.IHpmFactory, element: HTMLElement, config: IEmbedConfiguration) {
+    constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration) {
         Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
         this.eventHandlers = [];
         this.service = service;
@@ -84,8 +83,6 @@ export abstract class Embed {
         this.element.innerHTML = iframeHtml;
         this.iframe = <HTMLIFrameElement>this.element.childNodes[0];
         this.iframe.addEventListener('load', () => this.load(this.config), false);
-
-        this.hpm = hpmFactory(this.iframe.contentWindow, this.service.wpmp);
     }
 
     /**
@@ -111,7 +108,7 @@ export abstract class Embed {
             throw errors;
         }
 
-        return this.hpm.post<void>('/report/load', config, { uid: this.config.uniqueId })
+        return this.service.hpm.post<void>('/report/load', config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .catch(response => {
                 throw response.body;
             });

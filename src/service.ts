@@ -19,7 +19,7 @@ export interface IEventHandler<T> {
 }
 
 export interface IHpmFactory {
-    (targetWindow: Window, wpmp: wpmp.WindowPostMessageProxy, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
+    (wpmp: wpmp.WindowPostMessageProxy, targetWindow?: Window, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
 }
 
 export interface IWpmpFactory {
@@ -42,6 +42,8 @@ export interface IDebugOptions {
 export interface IServiceConfiguration extends IDebugOptions {
     autoEmbedOnContentLoaded?: boolean;
     onError?: (error: any) => any;
+    version?: string;
+    type?: string;
 }
 
 export class Service {
@@ -70,14 +72,14 @@ export class Service {
     
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds: embed.Embed[];
-    private hpmFactory: IHpmFactory;
-    /** TODO: Look for way to make this private. This should be private but in embed constructor needs to pass the wpmp instance to the hpm factory. */
+    /** TODO: Look for way to make this private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
+    public hpm: hpm.HttpPostMessage;
     public wpmp: wpmp.WindowPostMessageProxy;
     private router: router.Router;
 
     constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config: IServiceConfiguration = {}) {
-        this.hpmFactory = hpmFactory;
         this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
+        this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
         this.router = routerFactory(this.wpmp);
 
         /**
@@ -174,7 +176,7 @@ export class Service {
             throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
         }
 
-        const component = new Component(this, this.hpmFactory, element, config);
+        const component = new Component(this, element, config);
         element.powerBiEmbed = component;
         this.embeds.push(component);
         

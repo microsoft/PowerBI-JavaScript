@@ -18,10 +18,10 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     name,
     logMessages
   });
-  const hpm = new Hpm.HttpPostMessage(parent, wpmp, {
+  const hpm = new Hpm.HttpPostMessage(wpmp, {
     'origin': 'reportEmbedMock',
     'x-version': '1.0.0'
-  });
+  }, parent);
   const router = new Router.Router(wpmp);
   const app = mockApp;
   
