@@ -250,7 +250,7 @@ export class Service {
     /**
      * Given an event object, find embed with matching type and id and invoke its handleEvent method with event.
      */
-    handleEvent(event: IEvent<any>): void {
+    private handleEvent(event: IEvent<any>): void {
         const embed = utils.find(embed => {
             return (embed.config.type === event.type
                 && embed.config.uniqueId === event.id);
