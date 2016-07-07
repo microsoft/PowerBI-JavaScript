@@ -26,7 +26,7 @@ export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {
 }
 export interface IInternalEventHandler<T> {
     test(event: service.IEvent<T>): boolean;
-    handle(event: service.IEvent<T>): void;
+    handle(event: service.ICustomEvent<T>): void;
 }
 export declare abstract class Embed {
     static allowedEvents: string[];

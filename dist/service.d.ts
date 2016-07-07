@@ -11,8 +11,11 @@ export interface IEvent<T> {
     name: string;
     value: T;
 }
+export interface ICustomEvent<T> extends CustomEvent {
+    detail: T;
+}
 export interface IEventHandler<T> {
-    (event: IEvent<T>): any;
+    (event: ICustomEvent<T>): any;
 }
 export interface IHpmFactory {
     (wpmp: wpmp.WindowPostMessageProxy, targetWindow?: Window, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
@@ -98,7 +101,7 @@ export declare class Service {
     /**
      * Given an event object, find embed with matching type and id and invoke its handleEvent method with event.
      */
-    handleEvent(event: IEvent<any>): void;
+    private handleEvent(event);
     /**
      * Translate target into url
      * Target may be to the whole report, speific page, or specific visual
