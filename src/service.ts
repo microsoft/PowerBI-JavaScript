@@ -14,8 +14,12 @@ export interface IEvent<T> {
     value: T;
 }
 
+export interface ICustomEvent<T> extends CustomEvent {
+    detail: T;
+}
+
 export interface IEventHandler<T> {
-    (event: IEvent<T>): any;
+    (event: ICustomEvent<T>): any;
 }
 
 export interface IHpmFactory {
