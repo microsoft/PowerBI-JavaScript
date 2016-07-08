@@ -57,5 +57,8 @@
     "webpack-stream": "^3.1.0",
     "yargs": "^4.4.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "publishConfig": {
+    "tag": "beta"
+  }
 }
