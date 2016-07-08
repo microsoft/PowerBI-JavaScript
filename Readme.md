@@ -5,7 +5,7 @@
 
 Install via Nuget:
 
-`Install-Package Microsoft.PowerBI.JavaScript -Pre`
+`Install-Package Microsoft.PowerBI.JavaScript`
 
 Install from NPM:
 
