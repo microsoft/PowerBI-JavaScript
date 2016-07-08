@@ -1,3 +1,4 @@
+/*! powerbi-client v1.1.0 | (c) 2016 Microsoft Corporation MIT */
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};

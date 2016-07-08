@@ -1,6 +1,6 @@
 {
   "name": "powerbi-client",
-  "version": "2.0.0-beta.6",
+  "version": "1.1.0",
   "description": "",
   "main": "dist/powerbi.js",
   "typings": "dist/powerbi.d.ts",
@@ -27,6 +27,7 @@
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
+    "gulp-header": "^1.8.7",
     "gulp-help": "^1.6.1",
     "gulp-jshint": "^2.0.0",
     "gulp-rename": "^1.2.2",
