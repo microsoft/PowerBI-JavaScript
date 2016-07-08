@@ -4288,10 +4288,9 @@ describe('SDK-to-MockApp', function () {
       expect(attemptToSubscribeToEvent).toThrowError();
     });
 
-    it(`report.on(eventName, handler) should register handler and be called when POST /report/:uniqueId/events/:eventName is received`, function () {
+    it(`report.on(eventName, handler) should register handler and be called when POST /report/:uniqueId/events/:eventName is received`, function (done) {
       // Arrange
       const testData = {
-        uniqueId: 'uniqueId',
         reportId: 'fakeReportId',
         eventName: 'pageChanged',
         handler: jasmine.createSpy('handler'),
@@ -4307,17 +4306,18 @@ describe('SDK-to-MockApp', function () {
       report.on(testData.eventName, testData.handler);
 
       // Act
-      iframeHpm.post(`/reports/${testData.uniqueId}/events/${testData.eventName}`, testData.simulatedPageChangeBody)
+      iframeHpm.post(`/reports/${report.config.uniqueId}/events/${testData.eventName}`, testData.simulatedPageChangeBody)
         .then(response => {
           // Assert
-          expect(testData.handler).toHaveBeenCalledWith(testData.simulatedPageChangeBody);
+          expect(testData.handler).toHaveBeenCalledWith(jasmine.any(CustomEvent));
+          expect(testData.handler).toHaveBeenCalledWith(jasmine.objectContaining({ detail: testData.simulatedPageChangeBody }));
+          done();
         });
     });
 
-    it(`if multiple reports with the same id are loaded into the host, and event occurs on one of them, only one report handler should be called`, function () {
+    it(`if multiple reports with the same id are loaded into the host, and event occurs on one of them, only one report handler should be called`, function (done) {
       // Arrange
       const testData = {
-        uniqueId: 'uniqueId',
         reportId: 'fakeReportId',
         eventName: 'filterAdded',
         handler: jasmine.createSpy('handler'),
@@ -4338,18 +4338,19 @@ describe('SDK-to-MockApp', function () {
       iframeHpm.post(`/reports/${report2.config.uniqueId}/events/${testData.eventName}`, testData.simulatedPageChangeBody)
         .then(response => {
           // Assert
-          expect(testData.handler2).toHaveBeenCalledWith(testData.simulatedPageChangeBody);
+          expect(testData.handler2).toHaveBeenCalledWith(jasmine.any(CustomEvent));
+          expect(testData.handler2).toHaveBeenCalledWith(jasmine.objectContaining({ detail: testData.simulatedPageChangeBody }));
           expect(testData.handler).not.toHaveBeenCalled();
+          done();
         });
     });
 
-    it(`ensure load event is allowed`, function () {
+    it(`ensure load event is allowed`, function (done) {
       // Arrange
       const testData = {
-        uniqueId: 'uniqueId',
         reportId: 'fakeReportId',
         eventName: 'loaded',
-        handler: jasmine.createSpy('handler'),
+        handler: jasmine.createSpy('handler3'),
         simulatedBody: {
           initiator: 'sdk'
         }
@@ -4358,10 +4359,12 @@ describe('SDK-to-MockApp', function () {
       report.on(testData.eventName, testData.handler);
 
       // Act
-      iframeHpm.post(`/reports/${report2.config.uniqueId}/events/${testData.eventName}`, testData.simulatedBody)
+      iframeHpm.post(`/reports/${report.config.uniqueId}/events/${testData.eventName}`, testData.simulatedBody)
         .then(response => {
           // Assert
-          expect(testData.handler).toHaveBeenCalledWith(testData.simulatedBody);
+          expect(testData.handler).toHaveBeenCalledWith(jasmine.any(CustomEvent));
+          expect(testData.handler).toHaveBeenCalledWith(jasmine.objectContaining({ detail: testData.simulatedBody }));
+          done();
         });
     });
   });
