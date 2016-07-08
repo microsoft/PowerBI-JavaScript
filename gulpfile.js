@@ -1,5 +1,6 @@
 var gulp = require('gulp-help')(require('gulp'));
-var header = require('gulp-header'),
+var ghPages = require('gulp-gh-pages'),
+    header = require('gulp-header'),
     rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
@@ -23,6 +24,13 @@ var header = require('gulp-header'),
 var package = require('./package.json');
 var webpackBanner = package.name + " v" + package.version + " | (c) 2016 Microsoft Corporation " + package.license;
 var gulpBanner = "/*! " + webpackBanner + " */\n";
+
+gulp.task('ghpages', function() {
+  return gulp.src(['./demo/**/*'])
+    .pipe(ghPages({
+        force: true
+    }));
+});
 
 gulp.task('watch', 'Watches for changes', ['lint'], function () {
     gulp.watch(['./src/**/*.ts', './test/**/*.ts'], ['lint:ts']);
