@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "noImplicitUseStrict": true
+    },
+    "exclude": [
+        "bower_components",
+        "node_modules",
+        "typings/main",
+        "typings/main.d.ts",
+        "typings/browser",
+        "typings/browser.d.ts",
+        "typings/index.d.ts",
+        "dist"
+    ]
+}

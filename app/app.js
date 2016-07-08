@@ -17,7 +17,7 @@ $(function () {
   var localReportOverride = {
     embedUrl: 'https://portal.analysis.windows-int.net/appTokenReportEmbed',
     id: 'c4d31ef0-7b34-4d80-9bcb-5974d1405572',
-    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ2NzMyMDQ4NCwiZXhwIjoxNDY3MzI0MDg0fQ.ouy-gKS1VenmTBJ5KmB-ICr9TlXzlpHFOztLWa8nOOI'
+    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ2ODAxNTg5NSwiZXhwIjoxNDY4MDE5NDk1fQ.exh-qIpdEoa5lLxJleyGFli8ZvdNNyiDjVyHl9XBAiA'
   };
 
   /**
@@ -81,7 +81,7 @@ $(function () {
 
       customPageNavReport.on('pageChanged', function (event) {
         console.log('pageChanged event received', event);
-        updateActivePage(event.newPage);
+        updateActivePage(event.detail.newPage);
       });
     });
 
