@@ -1,5 +1,6 @@
 var gulp = require('gulp-help')(require('gulp'));
-var rename = require('gulp-rename'),
+var header = require('gulp-header'),
+    rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
     jshint = require('gulp-jshint'),
@@ -11,11 +12,16 @@ var rename = require('gulp-rename'),
     merge = require('merge2'),
     karma = require('karma'),
     paths = require('./paths'),
-    webpack = require('webpack-stream'),
+    webpack = require('webpack');
+    webpackStream = require('webpack-stream'),
     webpackConfig = require('./webpack.config'),
     runSequence = require('run-sequence'),
     argv = require('yargs').argv;
     ;
+
+var package = require('./package.json');
+var webpackBanner = package.name + " v" + package.version + " | (c) 2016 Microsoft Corporation " + package.license;
+var gulpBanner = "/*! " + webpackBanner + " */\n";
 
 gulp.task('watch', 'Watches for changes', ['lint'], function () {
     gulp.watch(['./src/**/*.ts', './test/**/*.ts'], ['lint:ts']);
@@ -44,8 +50,15 @@ gulp.task('build', 'Runs a full build', function (done) {
         'clean',
         ['compile:ts', 'compile:dts'],
         'min:js',
+        'header',
         done
     );
+});
+
+gulp.task('header', 'Add header to distributed files', function () {
+    return gulp.src(['./dist/*.d.ts'])
+        .pipe(header(gulpBanner))
+        .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('clean', 'Cleans destination folder', function(done) {
@@ -59,12 +72,14 @@ gulp.task('lint:ts', 'Lints all TypeScript', function() {
 });
 
 gulp.task('min:js', 'Creates minified JavaScript file', function() {
-    return gulp.src(paths.jsDest + paths.outFilename)
-        .pipe(sourcemaps.init({ debug: true }))
-        .pipe(uglify())
-        .pipe(sourcemaps.write())
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest(paths.jsDest));
+    return gulp.src(['!./dist/*.min.js', './dist/*.js'])
+        .pipe(uglify({
+            preserveComments: 'license'
+        }))
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('test:js', 'Runs unit tests', function(done) {
@@ -76,8 +91,12 @@ gulp.task('test:js', 'Runs unit tests', function(done) {
 });
 
 gulp.task('compile:ts', 'Compile typescript for powerbi library', function() {
+    webpackConfig.plugins = [
+        new webpack.BannerPlugin(webpackBanner)
+    ];
+
     return gulp.src(['./src/powerbi.ts'])
-        .pipe(webpack(webpackConfig))
+        .pipe(webpackStream(webpackConfig))
         .pipe(gulp.dest('dist/'));
 });
 
