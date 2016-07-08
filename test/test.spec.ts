@@ -213,6 +213,34 @@ describe('service', function () {
       expect(report.config.uniqueId).toEqual(jasmine.any(String));
     });
 
+    it('should get filterPaneEnabled setting from attribute from config and then attribute', function () {
+      // Arrange
+      const testUniqueId = 'fakeUniqueId';
+      const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed`;
+      const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id="abc123" powerbi-settings-filter-pane-enabled="false"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const report = powerbi.embed($reportContainer[0]);
+
+      // Assert
+      expect(report.config.settings.filterPaneEnabled).toEqual(false);
+    });
+
+    it('should get navContentPaneEnabled setting from attribute from config and then attribute', function () {
+      // Arrange
+      const testUniqueId = 'fakeUniqueId';
+      const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed`;
+      const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id="abc123" powerbi-settings-nav-content-pane-enabled="false"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const report = powerbi.embed($reportContainer[0]);
+
+      // Assert
+      expect(report.config.settings.navContentPaneEnabled).toEqual(false);
+    });
+
     it('if component is already embedded in element re-use the existing component by calling load with the new information', function () {
       // Arrange
       const $element = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')

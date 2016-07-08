@@ -3,14 +3,26 @@ import * as embed from './embed';
 import * as models from 'powerbi-models';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
+import * as utils from './util';
 
 export class Report extends embed.Embed {
     static allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
     static reportIdAttribute = 'powerbi-report-id';
+    static filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
+    static navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
+    static typeAttribute = 'powerbi-type';
     static type = "Report";
 
     constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration) {
-        super(service, element, config);
+        const filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
+        const navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
+        const settings = utils.assign({
+            filterPaneEnabled,
+            navContentPaneEnabled
+        }, config.settings);
+        const configCopy = utils.assign({ settings }, config);
+
+        super(service, element, configCopy);
         Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
     }
 

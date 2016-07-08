@@ -69,13 +69,21 @@ If your app is dynamically adding new embed components after page load you will 
 
 # Embed configuration and other options
 
-All configuration and options will be provided as attributes prefixed with `powerbi-options-` on the containing html element.
+All configuration and settings will be provided as attributes prefixed with `powerbi-settings-` on the containing html element.
+
 
 1. **Filter Pane**
 
-	FilterPane is enabled by default but can be disabled by adding the attribute:
+	FilterPane is enabled/visible by default but can be disabled/hidden by adding the attribute:
 	```
-	<div ... powerbi-options-filter-pane-enabled="false"`></div>
+	<div ... powerbi-settings-filter-pane-enabled="false"></div>
+	```
+
+2. **Page Navigation**
+
+	Page navigation is enabled/visible by default but can be disabled/hidden by adding the attribute:
+	```
+	<div ... powerbi-settings-nav-content-pane-enabled="false"></div>
 	```
 
 ## Setting the size of embedded components

@@ -50,7 +50,7 @@
       
 - Embed url attribute changed from `powerbi-embed` to `powerbi-embed-url`
 - Component type is specified by attribute `powerbi-type`. Use `powerbi-type="report"` instead of applying the attribute `powerbi-report`
-- Configuration option attributes all start with prefix `powerbi-options-`. Example (`powerbi-options-filter`)
+- Configuration settings attributes all start with prefix `powerbi-settings-`.
 
 ## Changes
 
