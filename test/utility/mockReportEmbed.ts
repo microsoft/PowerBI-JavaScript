@@ -182,6 +182,61 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
       });
     res.send(202);
   });
+
+  router.delete('/report/pages/:pageName/allfilters', (req, res) => {
+    const uniqueId = req.headers['uid'];
+    const pageName = req.params.pageName;
+    const target: models.ITarget = {
+      type: "page",
+      name: pageName
+    };
+
+    return app.validateTarget(target)
+      .then(() => {
+        app.clearFilters(target)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filtersCleared`, {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
+          });
+          
+        res.send(202);
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+  
+  router.delete('/report/visuals/:visualId/allfilters', (req, res) => {
+    const uniqueId = req.headers['uid'];
+    const filter = req.body;
+    const visualId = req.params.visualId;
+    const target: models.ITarget = {
+      type: "visual",
+      id: visualId
+    };
+    
+    return app.validateTarget(target)
+      .then(() => {
+        app.clearFilters(target)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post(`/reports/${uniqueId}/visuals/${visualId}/events/filtersCleared`, {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
+          });
+
+        res.send(202);
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
   
   /**
    * Phase 3

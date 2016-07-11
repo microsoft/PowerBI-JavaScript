@@ -174,8 +174,9 @@ export class Report extends embed.Embed {
      * report.removeAllFilters();
      * ```
      */
-    removeAllFilters(): Promise<void> {
-        return this.service.hpm.delete<models.IError[]>('/report/allfilters', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    removeAllFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
+        const targetUrl = this.getTargetUrl(target);
+        return this.service.hpm.delete<models.IError[]>(`${targetUrl}/allfilters`, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .catch(response => {
                 throw response.body;
             });
