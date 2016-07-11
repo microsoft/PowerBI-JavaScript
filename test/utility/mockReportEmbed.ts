@@ -99,6 +99,8 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     return app.getFilters()
       .then(filters => {
         res.send(200, filters);
+      }, error => {
+        res.send(500, error);
       });
   });
   
@@ -256,6 +258,8 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     return app.getFilters(target)
       .then(filters => {
         res.send(200, filters);
+      }, error => {
+        res.send(500, error);
       });
   });
   
