@@ -2884,10 +2884,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var embed = __webpack_require__(2);
+	var utils = __webpack_require__(3);
 	var Report = (function (_super) {
 	    __extends(Report, _super);
 	    function Report(service, element, config) {
-	        _super.call(this, service, element, config);
+	        var filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
+	        var navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
+	        var settings = utils.assign({
+	            filterPaneEnabled: filterPaneEnabled,
+	            navContentPaneEnabled: navContentPaneEnabled
+	        }, config.settings);
+	        var configCopy = utils.assign({ settings: settings }, config);
+	        _super.call(this, service, element, configCopy);
 	        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
 	    }
 	    /**
@@ -3024,8 +3032,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * report.removeAllFilters();
 	     * ```
 	     */
-	    Report.prototype.removeAllFilters = function () {
-	        return this.service.hpm.delete('/report/allfilters', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	    Report.prototype.removeAllFilters = function (target) {
+	        var targetUrl = this.getTargetUrl(target);
+	        return this.service.hpm.delete(targetUrl + "/allfilters", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -3099,6 +3108,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    Report.allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
+	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
+	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
+	    Report.typeAttribute = 'powerbi-type';
 	    Report.type = "Report";
 	    return Report;
 	}(embed.Embed));
@@ -3181,6 +3193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*! window-post-message-proxy v0.2.0 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -3259,7 +3272,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        this.name = options.name || WindowPostMessageProxy.createRandomString();
 		        this.logMessages = options.logMessages || false;
 		        this.eventSourceOverrideWindow = options.eventSourceOverrideWindow;
-		        this.suppressMessageNotHandledWarning = options.suppressMessageNotHandledWarning || false;
+		        this.suppressWarnings = options.suppressWarnings || false;
 		        if (this.logMessages) {
 		            console.log("new WindowPostMessageProxy created with name: " + this.name + " receiving on window: " + this.receiveWindow.document.title);
 		        }
@@ -3349,7 +3362,21 @@ return /******/ (function(modules) { // webpackBootstrap
 		        }
 		        var sendingWindow = this.eventSourceOverrideWindow || event.source;
 		        var message = event.data;
-		        var trackingProperties = this.getTrackingProperties(message);
+		        if (typeof message !== "object") {
+		            if (!this.suppressWarnings) {
+		                console.warn("Proxy(" + this.name + "): Received message that was not an object. Discarding message");
+		            }
+		            return;
+		        }
+		        var trackingProperties;
+		        try {
+		            trackingProperties = this.getTrackingProperties(message);
+		        }
+		        catch (e) {
+		            if (!this.suppressWarnings) {
+		                console.warn("Proxy(" + this.name + "): Error occurred when attempting to get tracking properties from incoming message:", JSON.stringify(message, null, '  '), "Error: ", e);
+		            }
+		        }
 		        var deferred;
 		        if (trackingProperties) {
 		            deferred = this.pendingRequestPromises[trackingProperties.id];
@@ -3358,9 +3385,38 @@ return /******/ (function(modules) { // webpackBootstrap
 		        // Otherwise, treat message as response
 		        if (!deferred) {
 		            var handled = this.handlers.some(function (handler) {
-		                if (handler.test(message)) {
-		                    Promise.resolve(handler.handle(message))
+		                var canMessageBeHandled = false;
+		                try {
+		                    canMessageBeHandled = handler.test(message);
+		                }
+		                catch (e) {
+		                    if (!_this.suppressWarnings) {
+		                        console.warn("Proxy(" + _this.name + "): Error occurred when handler was testing incoming message:", JSON.stringify(message, null, '  '), "Error: ", e);
+		                    }
+		                }
+		                if (canMessageBeHandled) {
+		                    var responseMessagePromise = void 0;
+		                    try {
+		                        responseMessagePromise = Promise.resolve(handler.handle(message));
+		                    }
+		                    catch (e) {
+		                        if (!_this.suppressWarnings) {
+		                            console.warn("Proxy(" + _this.name + "): Error occurred when handler was processing incoming message:", JSON.stringify(message, null, '  '), "Error: ", e);
+		                        }
+		                        responseMessagePromise = Promise.resolve();
+		                    }
+		                    responseMessagePromise
 		                        .then(function (responseMessage) {
+		                        if (!responseMessage) {
+		                            var warningMessage = "Handler for message: " + JSON.stringify(message, null, '  ') + " did not return a response message. The default response message will be returned instead.";
+		                            if (!_this.suppressWarnings) {
+		                                console.warn("Proxy(" + _this.name + "): " + warningMessage);
+		                            }
+		                            responseMessage = {
+		                                warning: warningMessage,
+		                                originalMessage: message
+		                            };
+		                        }
 		                        _this.sendResponse(sendingWindow, responseMessage, trackingProperties);
 		                    });
 		                    return true;
@@ -3372,7 +3428,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		             * however, in the case of the SDK receiving messages it's likely it won't register handlers
 		             * for all events. Perhaps make this an option at construction time.
 		             */
-		            if (!handled && !this.suppressMessageNotHandledWarning) {
+		            if (!handled && !this.suppressWarnings) {
 		                console.warn("Proxy(" + this.name + ") did not handle message. Handlers: " + this.handlers.length + "  Message: " + JSON.stringify(message, null, '') + ".");
 		            }
 		        }
@@ -3381,7 +3437,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		             * If error message reject promise,
 		             * Otherwise, resolve promise
 		             */
-		            if (this.isErrorMessage(message)) {
+		            var isErrorMessage = true;
+		            try {
+		                isErrorMessage = this.isErrorMessage(message);
+		            }
+		            catch (e) {
+		                console.warn("Proxy(" + this.name + ") Error occurred when trying to determine if message is consider an error response. Message: ", JSON.stringify(message, null, ''), 'Error: ', e);
+		            }
+		            if (isErrorMessage) {
 		                deferred.reject(message);
 		            }
 		            else {
@@ -3431,7 +3494,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! http-post-message v0.1.2 | (c) 2016 Microsoft Corporation MIT */
+	/*! http-post-message v0.2.0 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();

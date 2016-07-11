@@ -5,6 +5,9 @@ import * as models from 'powerbi-models';
 export declare class Report extends embed.Embed {
     static allowedEvents: string[];
     static reportIdAttribute: string;
+    static filterPaneEnabledAttribute: string;
+    static navContentPaneEnabledAttribute: string;
+    static typeAttribute: string;
     static type: string;
     constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration);
     /**
@@ -95,7 +98,7 @@ export declare class Report extends embed.Embed {
      * report.removeAllFilters();
      * ```
      */
-    removeAllFilters(): Promise<void>;
+    removeAllFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<void>;
     /**
      * Update existing filter applied to report, page, or visual.
      *
