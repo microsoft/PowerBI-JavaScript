@@ -44,7 +44,232 @@
       </div>
 
       <h2>Custom Filter Pane</h2>
-      <p></p>
+      <p>Filter pane is hidden in the embedded report and recreated by developer to allow custom branding or focused experience on filters specialized for the report.</p>
+
+      <div class="row">
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-xs-12">
+              <div id="reportcustomfilter" class="powerbi-container"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <p>&nbsp;</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4">
+              <form id="removeAllFiltersReportForm">
+                <div class="form-group">
+                  <p>N/A</p>
+                </div>
+                <button type="submit" class="btn btn-warning">Remove All Filters at Report Level</button>
+              </form>
+            </div>
+            <div class="col-xs-4">
+              <form id="removeAllFiltersPageForm">
+                <div class="form-group">
+                  <select id="removeAllFiltersPagesList" class="form-control">
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-warning">Remove All Filters at Page Level</button>
+              </form>
+            </div>
+            <div class="col-xs-4">
+              <form id="removeAllFiltersVisualForm">
+                <div class="form-group">
+                  <select id="removeAllFiltersVisualsList" class="form-control">
+                    <option value="visualId1">Visual Id 1</option>
+                    <option value="visualId2">Visual Id 2</option>
+                    <option value="visualId3">Visual Id 3</option>
+                    <option value="visualId4">Visual Id 4</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-warning">Remove All Filters at Visual Level</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <form id="customfilterform" name="abc">
+            <h2>Custom Filter Pane</h2>
+
+            <fieldset>
+              <legend>Target Type:</legend>
+              <div class="form-group">
+                <select id="filtertype" class="form-control">
+                  <option value="column">Column</option>
+                  <option value="hierarchy">Hierarchy</option>
+                  <option value="measure">Measure</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="table">Table</label>
+                <input type="text" class="form-control" id="filtertable" placeholder="Table" >
+              </div>
+              <div class="form-group filter-type filter-type--column">
+                <label for="column">Column</label>
+                <input type="text" class="form-control" id="filtercolumn" placeholder="Column" >
+              </div>
+              <div class="form-group filter-type filter-type--hierarchy">
+                <label for="hierarchy">Hierarchy</label>
+                <input type="text" class="form-control" id="filterhierarchy" placeholder="hierarchy" >
+              </div>
+              <div class="form-group filter-type filter-type--hierarchy">
+                <label for="hierarchylevel">Hierarchy Level</label>
+                <input type="text" class="form-control" id="filterhierarchylevel" placeholder="Hierarchy Level">
+              </div>
+              <div class="form-group filter-type filter-type--measure">
+                <label for="measure">Measure</label>
+                <input type="text" class="form-control" id="filtermeasure" placeholder="Measure" >
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Operator Type:</legend>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="operatorType" id="operatorType1" value="basic" checked>
+                  Basic
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="operatorType" id="operatorType2" value="advanced">
+                  Advanced
+                </label>
+              </div>
+
+              <div class="filter-operators filter-operators--basic">
+                <h5>Basic Operators</h5>
+                <div class="form-group">
+                  <select id="filterbasicoperator" class="form-control">
+                    <option>In</option>
+                    <option>Out</option>
+                  </select>
+                </div>
+
+                <h5>Values</h5>
+                <div class="basicvalues">
+                  <div class="form-group">
+                    <input class="form-control basic-value" placeholder="Value 1" />
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control basic-value" placeholder="Value 2" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="filter-operators filter-operators--advanced">
+                <h5>Advanced Operators</h5>
+
+                <p>Logical Operator</p>
+                <div class="form-group">
+                  <select id="filterlogicaloperator" class="form-control">
+                    <option>And</option>
+                    <option>Or</option>
+                  </select>
+                </div>
+
+                <div class="advancedvalues">
+                  <div class="form-group advanced-value">
+                    <p>Value</p>
+                    <div class="form-group">
+                      <input class="form-control advanced-value-input" placeholder="Value 1" />
+                    </div>
+                    <p>Condition Operator</p>
+                    <select class="form-control advanced-logical-condition">
+                      <option>None</option>
+                      <option>LessThan</option>
+                      <option>LessThanOrEqual</option>
+                      <option>GreaterThan</option>
+                      <option>GreaterThanOrEqual</option>
+                      <option>Contains</option>
+                      <option>DoesNotContain</option>
+                      <option>StartWith</option>
+                      <option>DoesNotStartWith</option>
+                      <option>Is</option>
+                      <option>IsNot</option>
+                      <option>IsBlank</option>
+                      <option>IsNotBlank</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group advanced-value">
+                    <p>Value</p>
+                    <div class="form-group">
+                      <input class="form-control advanced-value-input" placeholder="Value 1" />
+                    </div>
+                    <p>Condition Operator</p>
+                    <select class="form-control advanced-logical-condition">
+                      <option>None</option>
+                      <option>LessThan</option>
+                      <option>LessThanOrEqual</option>
+                      <option>GreaterThan</option>
+                      <option>GreaterThanOrEqual</option>
+                      <option>Contains</option>
+                      <option>DoesNotContain</option>
+                      <option>StartWith</option>
+                      <option>DoesNotStartWith</option>
+                      <option>Is</option>
+                      <option>IsNot</option>
+                      <option>IsBlank</option>
+                      <option>IsNotBlank</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Filter Target:</legend>
+              <div class="form-group">
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="filterTarget" value="report" checked>
+                    Report
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="filterTarget" value="page">
+                    Page
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="filterTarget" value="visual">
+                    Visual
+                  </label>
+                </div>
+              </div>
+
+              <div class="filter-target filter-target--page">
+                <div class="form-group">
+                  <select id="filtertargetpage" class="form-control">
+                  </select>
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-success">Add Filter</button>
+            </div>
+          </form>
+
+          <h2>Pre-Defined Filters:</h2>
+          <button type="button" id="predefinedFilter1" class="btn btn-primary">Predefined Basic Report Filter</button>
+          <p>Store > Name 'In' or 'Park'</p>
+          <button type="button" id="predefinedFilter2" class="btn btn-primary">Predefined Advanced Report Filter</button>
+          <p>Store > Name contains 'Wash' or contains 'Park'</p>
+          <button type="button" id="predefinedFilter3" class="btn btn-primary">Predefined Advanced Page Filter</button>
+          <p>Store > Name contains 'Wash' or contains 'Park' (Page: District Monthly Sales)</p>
+          </div>
+        </div>
+      </div>
+      
     </div>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
