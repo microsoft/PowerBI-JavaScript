@@ -1,11 +1,10 @@
 language: node_js
 node_js:
 - '4.4'
-before_script:
+before_install:
 - npm install -g typings typescript
 - npm link typescript
 - typings install
-- npm install
 script: gulp test
 after_success:
 - ".travis/push.sh"
