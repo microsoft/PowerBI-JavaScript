@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+- '4.4'
+before_script:
+- npm install
+script: gulp test
+after_success:
+- ".travis/push.sh"
+branches:
+  except:
+  - "/^build-[0-9a-z\\-]*/"
+deploy:
+  provider: npm
+  email: nugetpowerbi@microsoft.com
+  api_key:
+    secure: RwWdc+Xlgkm6t1kjOIpopL35tsWTdI01ZC5ygy4DTGNG99sD9+z8PoQFMHWedcgfs+GDJNX8omlxrDVYKjBMRRJ46Y42d3n4nmAydSKvtx8hE2XNiKSyxpzzwdWA15zpwc3t7ijStC3qd8qAZqp+TozykUDO07CSftPv2tj07OK1J5IKIDwHNxJg4vkS9Ab6MOkfHHicEUYk7g0Yey1TmsXUx+tnlzPrx8pxrmxok7jmgm5k5qGa+otw+UPWnKMSL+PhdFBjk/CfEnmDrgqpP41fA7J5tOCeNG1HhV8UnH+ChuIz3WHFbM9AoUeDf7e3wdev4TZ5mk4o2NJgWL6Sj1aTDbMJOnmtun+rZUqy0ph5PD5yieV31HlYQBXLhzph8LLL5Ejo0wdUohxni4Dnn1R0GoI2AFWbq7EVwmO6COVAIEw+lnGvNCEgMmBhkM1QrV5BYVgOiTXYyPVv/9VBbVcQeD+kN/Z/x5FyxB1YaD5sJV5wZRmOfFSTSnKiSwVX6Fd++/3gcWpX57jXBsT4E9Bw8oMxlPmHGogzm4VJP/tShQG/N3l8pqP4JcsozoSxPHP07aDhphh3Nr2c8Gz48z5ggv8QEuvxzwn8aT1c3o7OO7niGWbMTXvN3oxx4t0jE8KsrvkGA8w67D3F7RnRZFOEDJKz3/dfAJCQlGeIKcU=
+  on:
+    tags: true
+    repo: Microsoft/PowerBI-JavaScript
+    branch: dev
