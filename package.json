@@ -27,6 +27,7 @@
   "author": "Microsoft",
   "license": "MIT",
   "devDependencies": {
+    "es6-promise": "^3.2.1",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-flatten": "^0.2.0",
