@@ -3,6 +3,8 @@ node_js:
 - '4.4'
 before_script:
 - npm install
+- npm install -g typings
+- typings install
 script: gulp test
 after_success:
 - ".travis/push.sh"
