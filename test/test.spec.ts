@@ -4343,7 +4343,7 @@ describe('SDK-to-MockApp', function () {
               // Assert
               expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
               expect(spyApp.load).not.toHaveBeenCalled();
-              expect(errors).toEqual(testData.expectedErrors);
+              expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors));
               done();
             });
         });
@@ -4396,7 +4396,7 @@ describe('SDK-to-MockApp', function () {
             .catch(error => {
               // Assert
               expect(spyApp.getPages).toHaveBeenCalled();
-              expect(error).toEqual(testData.expectedError);
+              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
               done();
             });
         });
@@ -4447,7 +4447,7 @@ describe('SDK-to-MockApp', function () {
               // Assert
               expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
               expect(spyApp.addFilter).not.toHaveBeenCalled();
-              expect(error).toEqual(testData.expectedError);
+              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
               done();
             });
         });
@@ -4492,7 +4492,7 @@ describe('SDK-to-MockApp', function () {
               // Assert
               expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
               expect(spyApp.updateFilter).not.toHaveBeenCalled();
-              expect(error).toEqual(testData.expectedError);
+              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
               done();
             });
         });
@@ -4537,7 +4537,7 @@ describe('SDK-to-MockApp', function () {
               // Assert
               expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filter);
               expect(spyApp.removeFilter).not.toHaveBeenCalled();
-              expect(error).toEqual(testData.expectedError);
+              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
               done();
             });
         });
@@ -4619,7 +4619,7 @@ describe('SDK-to-MockApp', function () {
               expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
               expect(spyApp.validateFilter).not.toHaveBeenCalled();
               expect(spyApp.addFilter).not.toHaveBeenCalled();
-              expect(error).toEqual(testData.expectedError);
+              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
               done();
             });
         });
@@ -4675,7 +4675,7 @@ describe('SDK-to-MockApp', function () {
               expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
               expect(spyApp.validateFilter).not.toHaveBeenCalled();
               expect(spyApp.updateFilter).not.toHaveBeenCalled();
-              expect(error).toEqual(testData.expectedError);
+              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
               done();
             });
         });
@@ -4731,7 +4731,7 @@ describe('SDK-to-MockApp', function () {
               expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
               expect(spyApp.validateFilter).not.toHaveBeenCalled();
               expect(spyApp.removeFilter).not.toHaveBeenCalled();
-              expect(error).toEqual(testData.expectedError);
+              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
               done();
             });
         });
@@ -4789,7 +4789,7 @@ describe('SDK-to-MockApp', function () {
               expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
               expect(spyApp.validateFilter).not.toHaveBeenCalled();
               expect(spyApp.addFilter).not.toHaveBeenCalled();
-              expect(error).toEqual(testData.expectedError);
+              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
               done();
             });
         });
@@ -4845,7 +4845,7 @@ describe('SDK-to-MockApp', function () {
               expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
               expect(spyApp.validateFilter).not.toHaveBeenCalled();
               expect(spyApp.updateFilter).not.toHaveBeenCalled();
-              expect(error).toEqual(testData.expectedError);
+              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
               done();
             });
         });
@@ -4901,7 +4901,7 @@ describe('SDK-to-MockApp', function () {
               expect(spyApp.validateTarget).toHaveBeenCalledWith(testData.target);
               expect(spyApp.validateFilter).not.toHaveBeenCalled();
               expect(spyApp.removeFilter).not.toHaveBeenCalled();
-              expect(error).toEqual(testData.expectedError);
+              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
               done();
             });
         });
@@ -4958,7 +4958,7 @@ describe('SDK-to-MockApp', function () {
               // Assert
               expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
               expect(spyApp.updateSettings).not.toHaveBeenCalled();
-              expect(errors).toEqual(testData.expectedErrors);
+              expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors));
               done();
             });
         });
