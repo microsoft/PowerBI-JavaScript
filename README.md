@@ -1,4 +1,5 @@
 # powerbi-client
+[![Build Status](https://travis-ci.org/Microsoft/PowerBI-JavaScript.svg?branch=dev)](https://travis-ci.org/Microsoft/PowerBI-JavaScript)
 
 ## Installation
 
