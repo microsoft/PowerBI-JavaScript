@@ -15,6 +15,7 @@
         "demo",
         "dist",
         "test",
-        "tmp"
+        "tmp",
+        ".publish"
     ]
 }
