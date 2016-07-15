@@ -28,7 +28,7 @@ $(function () {
   var localReportOverride = {
     embedUrl: 'https://portal.analysis.windows-int.net/appTokenReportEmbed?unmin=true',
     id: 'c4d31ef0-7b34-4d80-9bcb-5974d1405572',
-    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ2ODM2NTA5MywiZXhwIjoxNDY4MzY4NjkzfQ.ZnX8S6MfUsbUBF0b297fGd4RZT2QS_ZM_Ve3xUsUjhE'
+    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ2ODYyMDIyNiwiZXhwIjoxNDY4NjIzODI2fQ.Lr7HC8BJJOrnpU81VZFbOY90BJ89TYSBFOmAYpRGLpg'
   };
 
   /**
@@ -384,8 +384,11 @@ $(function () {
       event.preventDefault();
       console.log('submit');
 
-      var data = collectFormData();
-      console.log(data);
+      var data = {
+        target: getFilterTypeTarget(),
+        operator: getFilterOperatorAndValues(),
+        reportTarget: getReportTarget()
+      };
 
       var filter;
       var values = Array.prototype.slice.call(data.operator.values);
@@ -394,7 +397,7 @@ $(function () {
         filter = new models.ValueFilter(data.target, data.operator.operator, values);
       }
       else if (data.operator.type === "advanced") {
-        filter = new models.AdvancedFilter(data.target, data.operator.logicalOperator, values);
+        filter = new models.AdvancedFilter(data.target, data.operator.operator, values);
       }
 
       var target;
@@ -440,14 +443,6 @@ $(function () {
       customFilterPaneReport.addFilter(predefinedFilter3, predefinedTarget3);
     });
 
-    function collectFormData() {
-      return {
-        target: getFilterTypeTarget(),
-        operator: getFilterOperatorAndValues(),
-        reportTarget: getReportTarget()
-      };
-    }
-
     function getFilterTypeTarget() {
       var filterType = $filterType.val().toLowerCase();
       var filterTypeTarget = {};
@@ -480,7 +475,7 @@ $(function () {
         });
       }
       else if (operatorType === "advanced") {
-        operatorAndValues.logicalOperator = $('#filterlogicaloperator').val();
+        operatorAndValues.operator = $('#filterlogicaloperator').val();
         operatorAndValues.values = $('.advanced-value')
           .map(function (index, element) {
             return {
@@ -572,6 +567,6 @@ $(function () {
       console.log('submit removeAllFiltersVisualForm', visualId);
       customFilterPaneReport.removeAllFilters(target);
       
-    })
+    });
   })();
 });

@@ -54,17 +54,23 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-12">
-              <p>&nbsp;</p>
+            <div class="col-md-4">
+              <h4>Report</h4>
+            </div>
+            <div class="col-md-4">
+              <h4>Page</h4>
+            </div>
+            <div class="col-md-4">
+              <h4>Visual</h4>
             </div>
           </div>
           <div class="row">
             <div class="col-xs-4">
               <form id="removeAllFiltersReportForm">
                 <div class="form-group">
-                  <p>N/A</p>
+                  <input class="form-control" disabled placeholder="N/A" />
                 </div>
-                <button type="submit" class="btn btn-warning">Remove All Filters at Report Level</button>
+                <button type="submit" class="btn btn-warning btn-block">Remove All Filters at Report Level</button>
               </form>
             </div>
             <div class="col-xs-4">
@@ -73,7 +79,7 @@
                   <select id="removeAllFiltersPagesList" class="form-control">
                   </select>
                 </div>
-                <button type="submit" class="btn btn-warning">Remove All Filters at Page Level</button>
+                <button type="submit" class="btn btn-warning btn-block">Remove All Filters at Page Level</button>
               </form>
             </div>
             <div class="col-xs-4">
@@ -86,8 +92,28 @@
                     <option value="visualId4">Visual Id 4</option>
                   </select>
                 </div>
-                <button type="submit" class="btn btn-warning">Remove All Filters at Visual Level</button>
+                <button type="submit" class="btn btn-warning btn-block">Remove All Filters at Visual Level</button>
               </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <hr />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <button type="button" id="predefinedFilter1" class="btn btn-primary btn-block">Predefined Basic Report Filter</button>
+              <p>Store > Name 'In' or 'Park'</p>
+              <button type="button" id="predefinedFilter2" class="btn btn-primary btn-block">Predefined Advanced Report Filter</button>
+              <p>Store > Name contains 'Wash' or contains 'Park'</p>
+            </div>
+            <div class="col-md-4">
+              <button type="button" id="predefinedFilter3" class="btn btn-primary btn-block">Predefined Advanced Page Filter</button>
+              <p>Store > Name contains 'Wash' or contains 'Park' (Page: District Monthly Sales)</p>
+            </div>
+            <div class="col-md-4">
+              N/A
             </div>
           </div>
         </div>
@@ -259,13 +285,6 @@
             </div>
           </form>
 
-          <h2>Pre-Defined Filters:</h2>
-          <button type="button" id="predefinedFilter1" class="btn btn-primary">Predefined Basic Report Filter</button>
-          <p>Store > Name 'In' or 'Park'</p>
-          <button type="button" id="predefinedFilter2" class="btn btn-primary">Predefined Advanced Report Filter</button>
-          <p>Store > Name contains 'Wash' or contains 'Park'</p>
-          <button type="button" id="predefinedFilter3" class="btn btn-primary">Predefined Advanced Page Filter</button>
-          <p>Store > Name contains 'Wash' or contains 'Park' (Page: District Monthly Sales)</p>
           </div>
         </div>
       </div>

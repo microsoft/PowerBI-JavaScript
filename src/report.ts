@@ -153,7 +153,7 @@ export class Report extends embed.Embed {
      * Remove specific filter from report, page, or visual
      * 
      * ```javascript
-     * const filter = new models.ValueFilter(...);
+     * const filter = new models.BasicFilter(...);
      * 
      * report.removeFilter(filter)
      *  .catch(error => { ... });
@@ -188,7 +188,7 @@ export class Report extends embed.Embed {
      * The existing filter will be replaced with the new filter.
      * 
      * ```javascript
-     * const filter = new models.ValueFilter(...);
+     * const filter = new models.BasicFilter(...);
      * const target = {
      *   type: "page",
      *   name: "ReportSection2"
