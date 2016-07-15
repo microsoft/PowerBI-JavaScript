@@ -12,6 +12,7 @@
         "typings/browser",
         "typings/browser.d.ts",
         "typings/index.d.ts",
+        "demo",
         "dist",
         "test",
         "tmp"
