@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.6 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.7 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -84,7 +84,7 @@ export declare class Report extends embed.Embed {
      * Remove specific filter from report, page, or visual
      *
      * ```javascript
-     * const filter = new models.ValueFilter(...);
+     * const filter = new models.BasicFilter(...);
      *
      * report.removeFilter(filter)
      *  .catch(error => { ... });
@@ -105,7 +105,7 @@ export declare class Report extends embed.Embed {
      * The existing filter will be replaced with the new filter.
      *
      * ```javascript
-     * const filter = new models.ValueFilter(...);
+     * const filter = new models.BasicFilter(...);
      * const target = {
      *   type: "page",
      *   name: "ReportSection2"

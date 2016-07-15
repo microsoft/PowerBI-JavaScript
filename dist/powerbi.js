@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.6 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.7 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -560,7 +560,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v0.3.0 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v0.5.0 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -629,7 +629,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.pageTargetSchema = __webpack_require__(5);
 		exports.settingsSchema = __webpack_require__(6);
 		exports.targetSchema = __webpack_require__(7);
-		exports.valueFilterSchema = __webpack_require__(8);
+		exports.basicFilterSchema = __webpack_require__(8);
 		exports.visualTargetSchema = __webpack_require__(9);
 		var jsen = __webpack_require__(10);
 		function normalizeError(error) {
@@ -658,25 +658,52 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 		exports.validateSettings = validate(exports.settingsSchema, {
 		    schemas: {
-		        valueFilter: exports.valueFilterSchema,
+		        basicFilter: exports.basicFilterSchema,
 		        advancedFilter: exports.advancedFilterSchema
 		    }
 		});
 		exports.validateLoad = validate(exports.loadSchema, {
 		    schemas: {
 		        settings: exports.settingsSchema,
-		        valueFilter: exports.valueFilterSchema,
+		        basicFilter: exports.basicFilterSchema,
 		        advancedFilter: exports.advancedFilterSchema
 		    }
 		});
-		exports.validateTarget = validate(exports.targetSchema);
+		exports.validateTarget = validate(exports.targetSchema, {
+		    schemas: {
+		        pageTarget: exports.pageTargetSchema,
+		        visualTarget: exports.visualTargetSchema
+		    }
+		});
 		exports.validatePage = validate(exports.pageSchema);
 		exports.validateFilter = validate(exports.filterSchema, {
 		    schemas: {
-		        valueFilter: exports.valueFilterSchema,
+		        basicFilter: exports.basicFilterSchema,
 		        advancedFilter: exports.advancedFilterSchema
 		    }
 		});
+		(function (FilterType) {
+		    FilterType[FilterType["Advanced"] = 0] = "Advanced";
+		    FilterType[FilterType["Basic"] = 1] = "Basic";
+		    FilterType[FilterType["Unknown"] = 2] = "Unknown";
+		})(exports.FilterType || (exports.FilterType = {}));
+		var FilterType = exports.FilterType;
+		function getFilterType(filter) {
+		    var basicFilter = filter;
+		    var advancedFilter = filter;
+		    if ((typeof basicFilter.operator === "string")
+		        && (Array.isArray(basicFilter.values))) {
+		        return FilterType.Basic;
+		    }
+		    else if ((typeof advancedFilter.logicalOperator === "string")
+		        && (Array.isArray(advancedFilter.conditions))) {
+		        return FilterType.Advanced;
+		    }
+		    else {
+		        return FilterType.Unknown;
+		    }
+		}
+		exports.getFilterType = getFilterType;
 		function isMeasure(arg) {
 		    return arg.table !== undefined && arg.measure !== undefined;
 		}
@@ -703,23 +730,23 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return Filter;
 		}());
 		exports.Filter = Filter;
-		var ValueFilter = (function (_super) {
-		    __extends(ValueFilter, _super);
-		    function ValueFilter(target, operator) {
+		var BasicFilter = (function (_super) {
+		    __extends(BasicFilter, _super);
+		    function BasicFilter(target, operator) {
 		        var values = [];
 		        for (var _i = 2; _i < arguments.length; _i++) {
 		            values[_i - 2] = arguments[_i];
 		        }
 		        _super.call(this, target);
 		        this.operator = operator;
-		        this.schemaUrl = ValueFilter.schemaUrl;
+		        this.schemaUrl = BasicFilter.schemaUrl;
 		        if (values.length === 0) {
 		            throw new Error("values must be a non-empty array. You passed: " + values);
 		        }
 		        /**
 		         * Accept values as array instead of as individual arguments
-		         * new ValueFilter('a', 'b', 1, 2);
-		         * new valueFilter('a', 'b', [1,2]);
+		         * new BasicFilter('a', 'b', 1, 2);
+		         * new BasicFilter('a', 'b', [1,2]);
 		         */
 		        if (Array.isArray(values[0])) {
 		            this.values = values[0];
@@ -728,16 +755,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		            this.values = values;
 		        }
 		    }
-		    ValueFilter.prototype.toJSON = function () {
+		    BasicFilter.prototype.toJSON = function () {
 		        var filter = _super.prototype.toJSON.call(this);
 		        filter.operator = this.operator;
 		        filter.values = this.values;
 		        return filter;
 		    };
-		    ValueFilter.schemaUrl = "http://powerbi.com/product/schema#basic";
-		    return ValueFilter;
+		    BasicFilter.schemaUrl = "http://powerbi.com/product/schema#basic";
+		    return BasicFilter;
 		}(Filter));
-		exports.ValueFilter = ValueFilter;
+		exports.BasicFilter = BasicFilter;
 		var AdvancedFilter = (function (_super) {
 		    __extends(AdvancedFilter, _super);
 		    function AdvancedFilter(target, logicalOperator) {
@@ -761,8 +788,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		        }
 		        /**
 		         * Accept conditions as array instead of as individual arguments
-		         * new ValueFilter('a', 'b', "And", { value: 1, operator: "Equals" }, { value: 2, operator: "IsGreaterThan" });
-		         * new valueFilter('a', 'b', "And", [{ value: 1, operator: "Equals" }, { value: 2, operator: "IsGreaterThan" }]);
+		         * new AdvancedFilter('a', 'b', "And", { value: 1, operator: "Equals" }, { value: 2, operator: "IsGreaterThan" });
+		         * new AdvancedFilter('a', 'b', "And", [{ value: 1, operator: "Equals" }, { value: 2, operator: "IsGreaterThan" }]);
 		         */
 		        if (Array.isArray(conditions[0])) {
 		            this.conditions = conditions[0];
@@ -881,7 +908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			"$schema": "http://json-schema.org/draft-04/schema#",
 			"oneOf": [
 				{
-					"$ref": "#valueFilter"
+					"$ref": "#basicFilter"
 				},
 				{
 					"$ref": "#advancedFilter"
@@ -927,7 +954,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					"type": "object",
 					"oneOf": [
 						{
-							"$ref": "#valueFilter"
+							"$ref": "#basicFilter"
 						},
 						{
 							"$ref": "#advancedFilter"
@@ -1072,7 +1099,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				"values": {
 					"type": "array",
 					"items": {
-						"type": "string"
+						"type": [
+							"string",
+							"boolean",
+							"number"
+						]
 					}
 				}
 			},
@@ -3012,7 +3043,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Remove specific filter from report, page, or visual
 	     *
 	     * ```javascript
-	     * const filter = new models.ValueFilter(...);
+	     * const filter = new models.BasicFilter(...);
 	     *
 	     * report.removeFilter(filter)
 	     *  .catch(error => { ... });
@@ -3045,7 +3076,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * The existing filter will be replaced with the new filter.
 	     *
 	     * ```javascript
-	     * const filter = new models.ValueFilter(...);
+	     * const filter = new models.BasicFilter(...);
 	     * const target = {
 	     *   type: "page",
 	     *   name: "ReportSection2"
@@ -3182,7 +3213,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	var config = {
-	    version: '2.0.0-beta.6',
+	    version: '2.0.0-beta.7',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -3193,7 +3224,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.0 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.1 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -3413,8 +3444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		                                console.warn("Proxy(" + _this.name + "): " + warningMessage);
 		                            }
 		                            responseMessage = {
-		                                warning: warningMessage,
-		                                originalMessage: message
+		                                warning: warningMessage
 		                            };
 		                        }
 		                        _this.sendResponse(sendingWindow, responseMessage, trackingProperties);
