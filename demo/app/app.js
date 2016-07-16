@@ -1,4 +1,5 @@
 $(function () {
+  var models = window['powerbi-client'].models;
 
   // Other
   var apiBaseUrl = 'http://powerbipaasapi.azurewebsites.net/api';
@@ -22,13 +23,31 @@ $(function () {
   var $customFilterPaneContainer = $('#reportcustomfilter');
   var customFilterPaneReport;
 
+  // Scenario 5: Default Page and/or Filter
+  var $defaultPageReportContainer = $('#reportdefaults');
+  var defaultPageReport;
+  var defaultPageName = 'ReportSection2';
+  var defaultFilter = new models.AdvancedFilter({
+    table: "Store",
+    column: "Name"
+  }, "Or", [
+      {
+        operator: "Contains",
+        value: "Wash"
+      },
+      {
+        operator: "Contains",
+        value: "Park"
+      }
+    ]);
+
   /**
    * This is temporarily hard code so we can load reports from the pre-production environment for testing out new features.
    */
   var localReportOverride = {
     embedUrl: 'https://portal.analysis.windows-int.net/appTokenReportEmbed?unmin=true',
     id: 'c4d31ef0-7b34-4d80-9bcb-5974d1405572',
-    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ2ODYyMDIyNiwiZXhwIjoxNDY4NjIzODI2fQ.Lr7HC8BJJOrnpU81VZFbOY90BJ89TYSBFOmAYpRGLpg'
+    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ2ODYyNDc3NCwiZXhwIjoxNDY4NjI4Mzc0fQ.o3RnWzxQxoy3hpFs27Gx5NauZZ-gzbNfMSFfcWEReN4'
   };
 
   /**
@@ -50,6 +69,20 @@ $(function () {
               }
             }, report, localReportOverride);
             var staticReport = powerbi.embed($staticReportContainer.get(0), reportConfig);
+
+            /**
+             * Default Page Report
+             */
+            var defaultPageConfig = $.extend({}, reportConfig, {
+              pageName: defaultPageName,
+              filter: defaultFilter.toJSON(),
+              settings: {
+                filterPaneEnabled: true,
+                navContentPaneEnabled: true
+              }
+            });
+
+            var defaultPageReport = powerbi.embed($defaultPageReportContainer.get(0), defaultPageConfig);
 
             /**
              * Custom Page Navigation Embed
@@ -330,7 +363,6 @@ $(function () {
     var $targetTypeFields = $('input[type=radio][name=filterTarget]');
     var $targetFields = $('.filter-target');
 
-    var models = window['powerbi-client'].models;
     var $predefinedFilter1 = $('#predefinedFilter1');
     var predefinedFilter1 = new models.AdvancedFilter({
       table: "Store",
