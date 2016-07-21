@@ -13,16 +13,11 @@ export interface IApp {
   setPage(pageName: string): Promise<void>;
   validatePage(page: models.IPage): Promise<models.IError[]>;
   // Filters
+  getFilters(): Promise<models.IFilter[]>;
+  setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void>;
   validateFilter(filter: models.IFilter): Promise<models.IError[]>;
-  validateTarget(target: models.ITarget): Promise<models.IError[]>;
-  getFilters(target?: models.ITarget): Promise<models.IFilter[]>;
-  addFilter(filter: models.IFilter, target?: models.ITarget): Promise<void>;
-  updateFilter(filter: models.IFilter, target?: models.ITarget): Promise<void>;
-  removeFilter(filter: models.IFilter, target?: models.ITarget): Promise<void>;
-  clearFilters(target?: models.ITarget): Promise<void>;
-  toggleFilterPane(): Promise<void>;
   // Other
-  exportData(target: models.ITarget): Promise<void>;
+  exportData(): Promise<void>;
 }
 
 export const mockAppSpyObj = {
@@ -37,14 +32,9 @@ export const mockAppSpyObj = {
   setPage: jasmine.createSpy("setPage").and.returnValue(Promise.resolve(null)),
   validatePage: jasmine.createSpy("validatePage").and.returnValue(Promise.resolve(null)),
   // Filters
-  validateFilter: jasmine.createSpy("validateFilter").and.callFake(models.validateFilter),
-  validateTarget: jasmine.createSpy("validateTarget").and.callFake(models.validateTarget),
   getFilters: jasmine.createSpy("getFilters").and.returnValue(Promise.resolve(null)),
-  addFilter: jasmine.createSpy("addFilter").and.returnValue(Promise.resolve(null)),
-  updateFilter: jasmine.createSpy("updateFilter").and.returnValue(Promise.resolve(null)),
-  removeFilter: jasmine.createSpy("removeFilter").and.returnValue(Promise.resolve(null)),
-  clearFilters: jasmine.createSpy("clearFilters").and.returnValue(Promise.resolve(null)),
-  toggleFilterPane: jasmine.createSpy("toggleFilterPane").and.returnValue(Promise.resolve(null)),
+  setFilters: jasmine.createSpy("setFilters").and.returnValue(Promise.resolve(null)),
+  validateFilter: jasmine.createSpy("validateFilter").and.callFake(models.validateFilter),
   // Other
   exportData: jasmine.createSpy("exportData").and.returnValue(Promise.resolve(null)),
 
@@ -56,14 +46,9 @@ export const mockAppSpyObj = {
     mockAppSpyObj.getPages.calls.reset();
     mockAppSpyObj.setPage.calls.reset();
     mockAppSpyObj.validatePage.calls.reset();
-    mockAppSpyObj.validateFilter.calls.reset();
-    mockAppSpyObj.validateTarget.calls.reset();
     mockAppSpyObj.getFilters.calls.reset();
-    mockAppSpyObj.addFilter.calls.reset();
-    mockAppSpyObj.updateFilter.calls.reset();
-    mockAppSpyObj.removeFilter.calls.reset();
-    mockAppSpyObj.clearFilters.calls.reset();
-    mockAppSpyObj.toggleFilterPane.calls.reset();
+    mockAppSpyObj.setFilters.calls.reset();
+    mockAppSpyObj.validateFilter.calls.reset();
   }
 };
 

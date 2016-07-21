@@ -1,6 +1,7 @@
 import * as embed from './embed';
 import { Report } from './report';
 import { Tile } from './tile';
+import { Page } from './page';
 import * as utils from './util';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
@@ -48,6 +49,10 @@ export interface IServiceConfiguration extends IDebugOptions {
     onError?: (error: any) => any;
     version?: string;
     type?: string;
+}
+
+export interface IService {
+    hpm: hpm.HttpPostMessage;
 }
 
 export class Service {
@@ -261,36 +266,13 @@ export class Service {
         }, this.embeds);
 
         if(embed) {
-            utils.raiseCustomEvent(embed.element, event.name, event.value);
-        }
-    }
+            let value = event.value;
 
-    /**
-     * Translate target into url
-     * Target may be to the whole report, speific page, or specific visual
-     */
-    private getTargetUrl(target?: models.IPageTarget | models.IVisualTarget): string {
-        let targetUrl;
+            if (event.name === 'pageChanged') {
+                value.page = new Page(embed, event.value.page.name);
+            }
 
-        /**
-         * TODO: I mentioned this issue in the protocol test, but we're tranlating targets from objects
-         * into parts of the url, and then back to objects. It is a trade off between complixity in this code vs semantic URIs
-         * 
-         * We could come up with a different idea which passed the target as part of the body
-         */
-        if(!target) {
-            targetUrl = '/report';
+            utils.raiseCustomEvent(embed.element, event.name, value);
         }
-        else if(target.type === "page") {
-            targetUrl = `/report/pages/${(<models.IPageTarget>target).name}`;
-        }
-        else if(target.type === "visual") {
-            targetUrl = `/report/visuals/${(<models.IVisualTarget>target).id}`;
-        }
-        else {
-            throw new Error(`target.type must be either 'page' or 'visual'. You passed: ${target.type}`);
-        }
-
-        return targetUrl;
     }
 }
