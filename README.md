@@ -1,5 +1,8 @@
 # powerbi-client
 [![Build Status](https://travis-ci.org/Microsoft/PowerBI-JavaScript.svg?branch=dev)](https://travis-ci.org/Microsoft/PowerBI-JavaScript)
+[![npm version](https://badge.fury.io/js/powerbi-client.svg)](https://www.npmjs.com/package/powerbi-client)
+[![Downloads](https://img.shields.io/npm/dm/powerbi-client.svg)](https://www.npmjs.com/package/powerbi-client)
+[![GitHub tag](https://img.shields.io/github/tag/microsoft/powerbi-javascript.svg)](https://github.com/Microsoft/PowerBI-JavaScript/tags)
 
 ## Installation
 
