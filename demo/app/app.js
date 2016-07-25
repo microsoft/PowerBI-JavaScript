@@ -41,6 +41,28 @@ $(function () {
       }
     ]);
 
+  // Scenario 6: Update settings
+  var $updateSettingsReport = $('#updatesettingsreport');
+  var updateSettingsReport;
+  var updateSettingsReportFilterPaneEnabled = false;
+  var updateSettingsReprotNavContentPaneEnabled = false;
+  var $toggleFilterPaneButton = $('#toggleFilterPane');
+  var $toggleNavContentPaneButton = $('#toggleNavContentPane');
+
+  $toggleFilterPaneButton.on('click', function () {
+    updateSettingsReportFilterPaneEnabled = !updateSettingsReportFilterPaneEnabled;
+    updateSettingsReport.updateSettings({
+      filterPaneEnabled: updateSettingsReportFilterPaneEnabled
+    });
+  });
+
+  $toggleNavContentPaneButton.on('click', function () {
+    updateSettingsReprotNavContentPaneEnabled = !updateSettingsReprotNavContentPaneEnabled;
+    updateSettingsReport.updateSettings({
+      navContentPaneEnabled: updateSettingsReprotNavContentPaneEnabled
+    });
+  });
+
   /**
    * This is temporarily hard code so we can load reports from the pre-production environment for testing out new features.
    */
@@ -159,6 +181,18 @@ $(function () {
                     });
                 });
             });
+
+            /**
+             * Update Settings
+             */
+            var updateSettingsEmbedConfig = $.extend({
+              settings: {
+                filterPaneEnabled: updateSettingsReportFilterPaneEnabled,
+                navContentPaneEnabled: updateSettingsReprotNavContentPaneEnabled
+              }
+            }, reportConfig);
+
+            updateSettingsReport = powerbi.embed($updateSettingsReport.get(0), updateSettingsEmbedConfig);
           });
       }
     });
