@@ -55,7 +55,7 @@ export interface IService {
     hpm: hpm.HttpPostMessage;
 }
 
-export class Service {
+export class Service implements IService {
 
     /**
      * List of components this service can embed.
