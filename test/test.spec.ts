@@ -2343,7 +2343,8 @@ describe('SDK-to-HPM', function () {
           .then(visuals => {
             // Assert
             expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals`, { uid: uniqueId }, iframe.contentWindow);
-            expect(visuals).toEqual(testData.response.body);
+            expect(visuals[0].name).toEqual(testData.response.body[0].name);
+            expect(visuals[1].name).toEqual(testData.response.body[1].name);
             done();
           });
       });
@@ -3233,7 +3234,7 @@ describe('SDK-to-MockApp', function () {
                 // Assert
                 expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
                 expect(spyApp.getVisuals).toHaveBeenCalled();
-                expect(visuals).toEqual(testData.visuals);
+                expect(visuals[0].name).toEqual(testData.visuals[0].name);
                 done();
               });
           });

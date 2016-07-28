@@ -94,7 +94,7 @@ export class Report extends embed.Embed implements IReport, IFilterable {
      *  });
      * ```
      */
-    getPages(): Promise<IPage[]> {
+    getPages(): Promise<Page[]> {
         return this.service.hpm.get<models.IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .then(response => {
                 return response.body

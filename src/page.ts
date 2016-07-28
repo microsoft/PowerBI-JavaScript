@@ -46,10 +46,14 @@ export class Page implements IPage, IFilterable {
      *   .then(visuals => { ... });
      * ```
      */
-    getVisuals() {
+    getVisuals(): Promise<Visual[]> {
         return this.report.service.hpm.get<models.IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
-            .then(response => response.body,
-            response => {
+            .then(response => {
+                return response.body
+                    .map(visual => {
+                        return new Visual(this, visual.name);
+                    });
+            }, response => {
                 throw response.body;
             });
     }
