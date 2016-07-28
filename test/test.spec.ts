@@ -946,8 +946,7 @@ describe('Protocol', function () {
           reportId: 'fakeReportId',
           page: {
             name: "fakeName"
-          },
-          
+          }
         };
         const expectedEvent = {
           method: 'POST',
@@ -2724,6 +2723,8 @@ describe('SDK-to-MockApp', function () {
   let iframeLoaded: Promise<void[]>;
   let powerbi: service.Service;
   let report: report.Report;
+  let page1: page.Page;
+  let visual1: visual.Visual;
   let report2: report.Report;
 
   beforeAll(function () {
@@ -2747,6 +2748,8 @@ describe('SDK-to-MockApp', function () {
       embedUrl: iframeSrc
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
+    page1 = report.page('ReportSection1');
+    visual1 = page1.visual('xyz');
     report2 = <report.Report>powerbi.embed($element2[0], embedConfiguration);
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
@@ -2792,240 +2795,660 @@ describe('SDK-to-MockApp', function () {
     spyApp.reset();
   });
 
-  describe('load', function () {
-    it(`report.load() returns promise that rejects with validation errors if load configuration is invalid`, function (done) {
-      /**
-       * TODO: Add settings to load config
-       */
+  describe('report', function () {
+    describe('load', function () {
+      it(`report.load() returns promise that rejects with validation errors if load configuration is invalid`, function (done) {
+        /**
+         * TODO: Add settings to load config
+         */
 
-      // Arrange
-      const testData = {
-        loadConfig: {
-          id: 'fakeReportId',
-          accessToken: 'fakeAccessToken'
-        },
-        expectedErrors: [
-          {
-            message: 'invalid load config'
-          }
-        ]
-      };
+        // Arrange
+        const testData = {
+          loadConfig: {
+            id: 'fakeReportId',
+            accessToken: 'fakeAccessToken'
+          },
+          expectedErrors: [
+            {
+              message: 'invalid load config'
+            }
+          ]
+        };
 
-      iframeLoaded
-        .then(() => {
-          spyApp.validateLoad.and.returnValue(Promise.reject(testData.expectedErrors));
-          // Act
-          report.load(testData.loadConfig)
-            .catch(errors => {
-              // Assert
-              expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
-              expect(spyApp.load).not.toHaveBeenCalled();
-              expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors));
-              done();
-            });
-        });
+        iframeLoaded
+          .then(() => {
+            spyApp.validateLoad.and.returnValue(Promise.reject(testData.expectedErrors));
+            // Act
+            report.load(testData.loadConfig)
+              .catch(errors => {
+                // Assert
+                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
+                expect(spyApp.load).not.toHaveBeenCalled();
+                expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors));
+                done();
+              });
+          });
+      });
+
+      it('report.load() returns promise that resolves with null if the report load successful', function (done) {
+        // Arrange
+        const testData = {
+          loadConfig: {
+            id: 'fakeReportId',
+            accessToken: 'fakeAccessToken'
+          },
+          expectedErrors: [
+            {
+              message: 'invalid load config'
+            }
+          ]
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.validateLoad.and.returnValue(Promise.resolve(null));
+            spyApp.load.and.returnValue(Promise.resolve(null));
+            // Act
+            report.load(testData.loadConfig)
+              .then(response => {
+                // Assert
+                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
+                expect(spyApp.load).toHaveBeenCalledWith(testData.loadConfig);
+                done();
+              });
+          });
+      });
     });
 
-    it('report.load() returns promise that resolves with null if the report load successful', function (done) {
-      // Arrange
-      const testData = {
-        loadConfig: {
-          id: 'fakeReportId',
-          accessToken: 'fakeAccessToken'
-        },
-        expectedErrors: [
-          {
-            message: 'invalid load config'
+    describe('pages', function () {
+      it('report.getPages() return promise that rejects with server error if there was error getting pages', function (done) {
+        // Arrange
+        const testData = {
+          expectedError: {
+            message: 'internal server error'
           }
-        ]
-      };
+        };
 
-      iframeLoaded
-        .then(() => {
-          spyApp.validateLoad.and.returnValue(Promise.resolve(null));
-          spyApp.load.and.returnValue(Promise.resolve(null));
-          // Act
-          report.load(testData.loadConfig)
-            .then(response => {
-              // Assert
-              expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
-              expect(spyApp.load).toHaveBeenCalledWith(testData.loadConfig);
-              done();
-            });
-        });
+        iframeLoaded
+          .then(() => {
+            spyApp.getPages.and.returnValue(Promise.reject(testData.expectedError));
+            // Act
+            report.getPages()
+              .catch(error => {
+                // Assert
+                expect(spyApp.getPages).toHaveBeenCalled();
+                expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
+                done();
+              });
+          });
+      });
+
+      it('report.getPages() returns promise that resolves with list of page names', function (done) {
+        // Arrange
+        const testData = {
+          pages: [
+            {
+              name: "page1",
+              displayName: "Page 1"
+            }
+          ]
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.getPages.and.returnValue(Promise.resolve(testData.pages));
+            // Act
+            report.getPages()
+              .then(pages => {
+                // Assert
+                expect(spyApp.getPages).toHaveBeenCalled();
+                // expect(pages).toEqual(testData.pages);
+                done();
+              });
+          });
+      });
+    });
+
+    describe('filters', function () {
+      it('report.getFilters() returns promise that rejects with server error if there was problem getting filters', function (done) {
+        // Arrange
+        const testData = {
+          expectedError: {
+            message: 'could not serialize filters'
+          }
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.getFilters.and.returnValue(Promise.reject(testData.expectedError));
+            // Act
+            report.getFilters()
+              .catch(error => {
+                // Assert
+                expect(spyApp.getFilters).toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
+      });
+
+      it('report.getFilters() returns promise that resolves with filters is request is successful', function (done) {
+        // Arrange
+        const testData = {
+          filters: [
+            { x: 'fakeFilter' }
+          ]
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
+            // Act
+            report.getFilters()
+              .then(filters => {
+                // Assert
+                expect(spyApp.getFilters).toHaveBeenCalled();
+                expect(filters).toEqual(testData.filters);
+                done();
+              });
+          });
+      });
+
+      it('report.setFilters(filters) returns promise that rejects with validation errors if filter is invalid', function (done) {
+        // Arrange
+        const testData = {
+          filters: [
+              (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+          ],
+          expectedErrors: [
+            {
+              message: 'invalid filter'
+            }
+          ]
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedErrors));
+            // Act
+            report.setFilters(testData.filters)
+              .catch(error => {
+                // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
+                expect(spyApp.setFilters).not.toHaveBeenCalled();
+                expect(error).toEqual(jasmine.objectContaining(testData.expectedErrors));
+                done();
+              });
+          });
+      });
+
+      it('report.setFilters(filters) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
+        // Arrange
+        const testData = {
+          filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.setFilters.and.returnValue(Promise.resolve(null));
+            // Act
+            report.setFilters(testData.filters)
+              .then(response => {
+                // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
+                expect(spyApp.setFilters).toHaveBeenCalledWith(testData.filters);
+                done();
+              });
+          });
+      });
+
+      it('report.removeFilters() returns promise that resolves with null if the request was accepted', function (done) {
+        // Arrange
+        iframeLoaded
+          .then(() => {
+            spyApp.setFilters.and.returnValue(Promise.resolve(null));
+            // Act
+            report.removeFilters()
+              .then(response => {
+                // Assert
+                expect(spyApp.setFilters).toHaveBeenCalled();
+                done();
+              });
+          });
+      });
+    });
+
+    describe('settings', function () {
+      it('report.updateSettings(setting) returns promise that rejects with validation error if object is invalid', function (done) {
+        // Arrange
+        const testData = {
+          settings: {
+            filterPaneEnabled: false
+          },
+          expectedErrors: [
+            {
+              message: 'invalid target'
+            }
+          ]
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.validateSettings.and.returnValue(Promise.reject(testData.expectedErrors));
+            // Act
+            report.updateSettings(testData.settings)
+              .catch(errors => {
+                // Assert
+                expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
+                expect(spyApp.updateSettings).not.toHaveBeenCalled();
+                expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors));
+                done();
+              });
+          });
+      });
+
+      it('report.updateSettings(settings) returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        const testData = {
+          settings: {
+            filterPaneEnabled: false
+          },
+          expectedErrors: [
+            {
+              message: 'invalid target'
+            }
+          ]
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.validateSettings.and.returnValue(Promise.resolve(null));
+            spyApp.updateSettings.and.returnValue(Promise.resolve(null));
+            // Act
+            report.updateSettings(testData.settings)
+              .then(response => {
+                // Assert
+                expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
+                expect(spyApp.updateSettings).toHaveBeenCalledWith(testData.settings);
+                done();
+              });
+          });
+      });
     });
   });
 
-  describe('pages', function () {
-    it('report.getPages() return promise that rejects with server error if there was error getting pages', function (done) {
-      // Arrange
-      const testData = {
-        expectedError: {
-          message: 'internal server error'
-        }
-      };
+  describe('page', function () {
+    describe('filters', function () {
+      it('page.getFilters() returns promise that rejects with server error if there was problem getting filters', function (done) {
+        // Arrange
+        const testData = {
+          expectedError: {
+            message: 'could not serialize filters'
+          }
+        };
 
-      iframeLoaded
-        .then(() => {
-          spyApp.getPages.and.returnValue(Promise.reject(testData.expectedError));
-          // Act
-          report.getPages()
-            .catch(error => {
-              // Assert
-              expect(spyApp.getPages).toHaveBeenCalled();
-              expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
-              done();
-            });
-        });
+        iframeLoaded
+          .then(() => {
+            spyApp.getFilters.and.returnValue(Promise.reject(testData.expectedError));
+            // Act
+            page1.getFilters()
+              .catch(error => {
+                // Assert
+                expect(spyApp.getFilters).toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
+      });
+
+      it('page.getFilters() returns promise that resolves with filters is request is successful', function (done) {
+        // Arrange
+        const testData = {
+          filters: [
+            { x: 'fakeFilter' }
+          ]
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
+            // Act
+            page1.getFilters()
+              .then(filters => {
+                // Assert
+                expect(spyApp.getFilters).toHaveBeenCalled();
+                expect(filters).toEqual(testData.filters);
+                done();
+              });
+          });
+      });
+
+      it('page.setFilters(filters) returns promise that rejects with validation errors if filter is invalid', function (done) {
+        // Arrange
+        const testData = {
+          filters: [
+              (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+          ],
+          expectedErrors: [
+            {
+              message: 'invalid filter'
+            }
+          ]
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedErrors));
+            // Act
+            page1.setFilters(testData.filters)
+              .catch(error => {
+                // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
+                expect(spyApp.setFilters).not.toHaveBeenCalled();
+                expect(error).toEqual(jasmine.objectContaining(testData.expectedErrors));
+                done();
+              });
+          });
+      });
+
+      it('page.setFilters(filters) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
+        // Arrange
+        const testData = {
+          filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.setFilters.and.returnValue(Promise.resolve(null));
+            // Act
+            page1.setFilters(testData.filters)
+              .then(response => {
+                // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
+                expect(spyApp.setFilters).toHaveBeenCalledWith(testData.filters);
+                done();
+              });
+          });
+      });
+
+      it('page.removeFilters() returns promise that resolves with null if the request was accepted', function (done) {
+        // Arrange
+        iframeLoaded
+          .then(() => {
+            spyApp.setFilters.and.returnValue(Promise.resolve(null));
+            // Act
+            page1.removeFilters()
+              .then(response => {
+                // Assert
+                expect(spyApp.setFilters).toHaveBeenCalled();
+                done();
+              });
+          });
+      });
     });
 
-    it('report.getPages() returns promise that resolves with list of page names', function (done) {
-      // Arrange
-      const testData = {
-        pages: [
-          {
-            name: "page1",
-            displayName: "Page 1"
-          }
-        ]
-      };
+    describe('visuals', function () {
+      it('page.getVisuals() returns promise that rejects with validation errors if page is invalid', function (done) {
+        // Arrange
+        const testData = {
+          errors: [
+            { message: 'page xyz was not found in report' }
+          ]
+        };
 
-      iframeLoaded
-        .then(() => {
-          spyApp.getPages.and.returnValue(Promise.resolve(testData.pages));
-          // Act
-          report.getPages()
-            .then(pages => {
-              // Assert
-              expect(spyApp.getPages).toHaveBeenCalled();
-              // expect(pages).toEqual(testData.pages);
-              done();
-            });
-        });
+        // Act
+        iframeLoaded
+          .then(() => {
+            spyApp.validatePage.and.returnValue(Promise.reject(testData.errors));
+            // Act
+            page1.getVisuals()
+              .catch(errors => {
+                // Assert
+                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
+                expect(spyApp.getVisuals).not.toHaveBeenCalled();
+                expect(errors).toEqual(testData.errors);
+                done();
+              });
+          });
+      });
+
+      it('page.getVisuals() returns promise that resolves with list of visuals on that page', function (done) {
+        // Arrange
+        const testData = {
+          visuals: [
+            { name: 'Visual1' }
+          ]
+        };
+
+        // Arrange
+        iframeLoaded
+          .then(() => {
+            spyApp.validatePage.and.returnValue(Promise.resolve(null));
+            spyApp.getVisuals.and.returnValue(Promise.resolve(testData.visuals));
+            // Act
+            page1.getVisuals()
+              .then(visuals => {
+                // Assert
+                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
+                expect(spyApp.getVisuals).toHaveBeenCalled();
+                expect(visuals).toEqual(testData.visuals);
+                done();
+              });
+          });
+      });
+    });
+
+    describe('setActive', function () {
+      it('page.setActive() returns promise that rejects if page is invalid', function (done) {
+        // Arrange
+        const testData = {
+          errors: [
+            {
+              message: 'page xyz was not found in report'
+            }
+          ]
+        };
+
+        // Act
+        iframeLoaded
+          .then(() => {
+            spyApp.validatePage.and.returnValue(Promise.resolve(undefined));
+            spyApp.setPage.and.returnValue(Promise.reject(testData.errors));
+            // Act
+            page1.setActive()
+              .catch(errors => {
+                // Assert
+                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
+                expect(spyApp.setPage).not.toHaveBeenCalled();
+                expect(errors).toEqual(testData.errors);
+                done();
+              });
+          });
+      });
+
+      it('page.setActive() returns promise that resolves with null if request is successful', function (done) {
+        // Arrange
+        const testData = {
+          errors: [
+            {
+              message: 'page xyz was not found in report'
+            }
+          ]
+        };
+        
+        // Act
+        iframeLoaded
+          .then(() => {
+            setTimeout(() => {
+              spyApp.setPage.and.returnValue(Promise.resolve(null));
+              // Act
+              page1.setActive()
+                .then(() => {
+                  // Assert
+                  expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
+                  expect(spyApp.setPage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
+                  done();
+                });
+            }, 500);
+          });
+      });
     });
   });
+  
+  describe('visual', function () {
+    describe('filters', function () {
+      it('visual.getFilters() returns promise that rejects with validation errors if the page or visual was invalid', function (done) {
+        // Arrange
+        const testData = {
+          errors: [
+              {
+              message: 'visual uvw was not found on page xyx'
+            }
+          ]
+        };
 
-  describe('filters', function () {
-    it('report.setFilters(filters) returns promise that rejects with validation errors if filter is invalid', function (done) {
-      // Arrange
-      const testData = {
-        filters: [
-            (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
-        ],
-        expectedErrors: [
-          {
-            message: 'invalid filter'
+        iframeLoaded
+          .then(() => {
+            spyApp.validatePage.and.returnValue(Promise.resolve(null));
+            spyApp.validateVisual.and.returnValue(Promise.reject(testData.errors));
+            // Act
+            visual1.getFilters()
+              .catch(error => {
+                // Assert
+                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
+                expect(spyApp.validateVisual).toHaveBeenCalled();
+                expect(spyApp.getFilters).not.toHaveBeenCalled();
+                expect(error).toEqual(testData.errors);
+                done();
+              });
+          });
+      });
+
+      it('visual.getFilters() returns promise that rejects with server error if there was problem getting filters', function (done) {
+        // Arrange
+        const testData = {
+          expectedError: {
+            message: 'could not serialize filters'
           }
-        ]
-      };
+        };
 
-      iframeLoaded
-        .then(() => {
-          spyApp.validateFilter.and.returnValue(Promise.reject(testData.expectedErrors));
-          // Act
-          report.setFilters(testData.filters)
-            .catch(error => {
-              // Assert
-              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
-              expect(spyApp.setFilters).not.toHaveBeenCalled();
-              expect(error).toEqual(jasmine.objectContaining(testData.expectedErrors));
-              done();
-            });
-        });
-    });
+        iframeLoaded
+          .then(() => {
+            spyApp.validatePage.and.returnValue(Promise.resolve(undefined));
+            spyApp.validateVisual.and.returnValue(Promise.resolve(undefined));
+            spyApp.getFilters.and.returnValue(Promise.reject(testData.expectedError));
+            // Act
+            visual1.getFilters()
+              .catch(error => {
+                // Assert
+                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
+                expect(spyApp.validateVisual).toHaveBeenCalled();
+                expect(spyApp.getFilters).toHaveBeenCalled();
+                expect(error).toEqual(testData.expectedError);
+                done();
+              });
+          });
+      });
 
-    it('report.setFilters(filters) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
-      // Arrange
-      const testData = {
-        filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
-      };
-      
-      iframeLoaded
-        .then(() => {
-          spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-          spyApp.setFilters.and.returnValue(Promise.resolve(null));
-          // Act
-          report.setFilters(testData.filters)
-            .then(response => {
-              // Assert
-              expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
-              expect(spyApp.setFilters).toHaveBeenCalledWith(testData.filters);
-              done();
-            });
-        });
-    });
+      it('visual.getFilters() returns promise that resolves with filters is request is successful', function (done) {
+        // Arrange
+        const testData = {
+          filters: [
+            { x: 'fakeFilter' }
+          ]
+        };
 
-    it('report.removeFilters() returns promise that resolves with null if the request was accepted', function (done) {
-      // Arrange
-      iframeLoaded
-        .then(() => {
-          spyApp.setFilters.and.returnValue(Promise.resolve(null));
-          // Act
-          report.removeFilters()
-            .then(response => {
-              // Assert
-              expect(spyApp.setFilters).toHaveBeenCalled();
-              done();
-            });
-        });
-    });
-  });
+        iframeLoaded
+          .then(() => {
+            spyApp.validatePage.and.returnValue(Promise.resolve(null));
+            spyApp.validateVisual.and.returnValue(Promise.resolve(null));
+            spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
+            // Act
+            visual1.getFilters()
+              .then(filters => {
+                // Assert
+                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
+                expect(spyApp.validateVisual).toHaveBeenCalled();
+                expect(spyApp.getFilters).toHaveBeenCalled();
+                expect(filters).toEqual(testData.filters);
+                done();
+              });
+          });
+      });
 
-  describe('settings', function () {
-    it('report.updateSettings(setting) returns promise that rejects with validation error if object is invalid', function (done) {
-      // Arrange
-      const testData = {
-        settings: {
-          filterPaneEnabled: false
-        },
-        expectedErrors: [
-          {
-            message: 'invalid target'
-          }
-        ]
-      };
+      it('visual.setFilters(filters) returns promise that rejects with validation errors if filter is invalid', function (done) {
+        // Arrange
+        const testData = {
+          filters: [
+              (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+          ],
+          errors: [
+            {
+              message: 'invalid filter'
+            }
+          ]
+        };
 
-      iframeLoaded
-        .then(() => {
-          spyApp.validateSettings.and.returnValue(Promise.reject(testData.expectedErrors));
-          // Act
-          report.updateSettings(testData.settings)
-            .catch(errors => {
-              // Assert
-              expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
-              expect(spyApp.updateSettings).not.toHaveBeenCalled();
-              expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors));
-              done();
-            });
-        });
-    });
+        iframeLoaded
+          .then(() => {
+            spyApp.validatePage.and.returnValue(Promise.resolve(undefined));
+            spyApp.validateVisual.and.returnValue(Promise.resolve(undefined));
+            spyApp.validateFilter.and.returnValue(Promise.reject(testData.errors));
+            // Act
+            visual1.setFilters(testData.filters)
+              .catch(errors => {
+                // Assert
+                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
+                expect(spyApp.validateVisual).toHaveBeenCalled(); //.toHaveBeenCalledWith(visual1);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
+                expect(spyApp.setFilters).not.toHaveBeenCalled();
+                expect(errors).toEqual(jasmine.objectContaining(testData.errors));
+                done();
+              });
+          });
+      });
 
-    it('report.updateSettings(settings) returns promise that resolves with null if requst is valid and accepted', function (done) {
-      // Arrange
-      const testData = {
-        settings: {
-          filterPaneEnabled: false
-        },
-        expectedErrors: [
-          {
-            message: 'invalid target'
-          }
-        ]
-      };
+      it('visual.setFilters(filters) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
+        // Arrange
+        const testData = {
+          filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
+        };
+        
+        iframeLoaded
+          .then(() => {
+            spyApp.validatePage.and.returnValue(Promise.resolve(null));
+            spyApp.validateVisual.and.returnValue(Promise.resolve(null));
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+            spyApp.setFilters.and.returnValue(Promise.resolve(null));
+            // Act
+            visual1.setFilters(testData.filters)
+              .then(response => {
+                // Assert
+                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
+                expect(spyApp.validateVisual).toHaveBeenCalled(); //.toHaveBeenCalledWith(visual1);
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
+                expect(spyApp.setFilters).toHaveBeenCalledWith(testData.filters);
+                done();
+              });
+          });
+      });
 
-      iframeLoaded
-        .then(() => {
-          spyApp.validateSettings.and.returnValue(Promise.resolve(null));
-          spyApp.updateSettings.and.returnValue(Promise.resolve(null));
-          // Act
-          report.updateSettings(testData.settings)
-            .then(response => {
-              // Assert
-              expect(spyApp.validateSettings).toHaveBeenCalledWith(testData.settings);
-              expect(spyApp.updateSettings).toHaveBeenCalledWith(testData.settings);
-              done();
-            });
-        });
+      it('visual.removeFilters() returns promise that resolves with null if the request was accepted', function (done) {
+        // Arrange
+        iframeLoaded
+          .then(() => {
+            spyApp.setFilters.and.returnValue(Promise.resolve(null));
+            // Act
+            page1.removeFilters()
+              .then(response => {
+                // Assert
+                expect(spyApp.setFilters).toHaveBeenCalled();
+                done();
+              });
+          });
+      });
     });
   });
 

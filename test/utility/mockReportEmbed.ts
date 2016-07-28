@@ -131,13 +131,21 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
    * Phase 3
    */
   router.get('/report/pages/:pageName/filters', (req, res) => {
-    const pageName = req.params.pageName;
+    const page = {
+      name: req.params.pageName,
+      displayName: null
+    };
     
-    return app.getFilters()
-      .then(filters => {
-        res.send(200, filters);
-      }, error => {
-        res.send(500, error);
+    return app.validatePage(page)
+      .then(() => {
+        return app.getFilters()
+          .then(filters => {
+            res.send(200, filters);
+          }, error => {
+            res.send(500, error);
+          });
+      }, errors => {
+        res.send(400, errors);
       });
   });
 
@@ -170,6 +178,32 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
       });
   });
 
+  router.get('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
+    const pageName = req.params.pageName;
+    const visualName = req.params.visualName;
+    const uniqueId = req.headers['uid'];
+    const page: models.IPage = {
+      name: pageName,
+      displayName: null
+    };
+    const visual: models.IVisual = {
+      name: visualName
+    };
+
+    return app.validatePage(page)
+      .then(() => app.validateVisual(visual))
+      .then(() => {
+        return app.getFilters()
+          .then(filters => {
+            res.send(200, filters);
+          }, error => {
+            res.send(500, error);
+          });
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+
   router.put('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
     const pageName = req.params.pageName;
     const visualName = req.params.visualName;
@@ -184,6 +218,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     };
 
     return app.validatePage(page)
+      .then(() => app.validateVisual(visual))
       .then(() => {
         return Promise.all(filters.map(filter => app.validateFilter(filter)));
       })
@@ -231,7 +266,25 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   /**
    * Phase 4
    */
-  // No work for router
+  router.get('/report/pages/:pageName/visuals', (req, res) => {
+    const uniqueId = req.headers['uid'];
+    const page = {
+      name: req.params.pageName,
+      displayName: null
+    };
+
+    return app.validatePage(page)
+      .then(() => {
+        return app.getVisuals(page)
+          .then(visuals => {
+            res.send(200, visuals);
+          }, error => {
+            res.send(500, error);
+          });
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
   
   /**
    * Phase 5
