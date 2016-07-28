@@ -1,17 +1,17 @@
 import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
-import { IPage, Page } from './page';
+import { IPageNode, Page } from './page';
 
-export interface IVisual {
+export interface IVisualNode {
     name: string;
-    page: IPage;
+    page: IPageNode;
 }
 
-export class Visual implements IVisual, IFilterable {
+export class Visual implements IVisualNode, IFilterable {
     name: string;
-    page: IPage;
+    page: IPageNode;
 
-    constructor(page: IPage, name: string) {
+    constructor(page: IPageNode, name: string) {
         this.name = name;
         this.page = page;
     }

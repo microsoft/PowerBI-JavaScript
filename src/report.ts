@@ -5,15 +5,15 @@ import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as utils from './util';
 import { IFilterable } from './ifilterable';
-import { IPage, Page } from './page';
+import { IPageNode, Page } from './page';
 
-export interface IReport {
+export interface IReportNode {
     iframe: HTMLIFrameElement;
     service: service.IService;
     config: embed.IInternalEmbedConfiguration
 }
 
-export class Report extends embed.Embed implements IReport, IFilterable {
+export class Report extends embed.Embed implements IReportNode, IFilterable {
     static allowedEvents = ["dataSelected", "filtersApplied", "pageChanged", "error"];
     static reportIdAttribute = 'powerbi-report-id';
     static filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';

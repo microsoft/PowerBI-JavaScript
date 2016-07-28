@@ -1,22 +1,20 @@
 import { IFilterable } from './ifilterable';
-import { IReport } from './report';
+import { IReportNode } from './report';
 import { Visual } from './visual';
 import * as models from 'powerbi-models';
 
-export interface IPage {
-    report: IReport;
+export interface IPageNode {
+    report: IReportNode;
     name: string;
-    displayName: string;
-    setActive(): void;
 }
 
-export class Page implements IPage, IFilterable {
-    report: IReport;
+export class Page implements IPageNode, IFilterable {
+    report: IReportNode;
     name: string;
     // This can be undefined in cases where page is created manually
     displayName: string;
 
-    constructor(report: IReport, name: string, displayName?: string) {
+    constructor(report: IReportNode, name: string, displayName?: string) {
         this.report = report;
         this.name = name;
         this.displayName = displayName;
