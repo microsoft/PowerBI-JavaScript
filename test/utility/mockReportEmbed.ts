@@ -76,7 +76,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
     return app.validatePage(page)
       .then(() => {
         app.setPage(page)
-          .then(page => {
+          .then(() => {
             const initiator = "sdk";
             hpm.post(`/reports/${uniqueId}/events/pageChanged`, {
               initiator,
@@ -87,8 +87,8 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
           });
         
         res.send(202);
-      }, error => {
-        res.send(400, error);
+      }, errors => {
+        res.send(400, errors);
       });
   });
   

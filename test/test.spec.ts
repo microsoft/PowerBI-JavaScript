@@ -1728,10 +1728,13 @@ describe('SDK-to-HPM', function () {
           loadConfiguration: {
             id: 'fakeId',
             accessToken: 'fakeToken'
+          },
+          response: {
+            body: null
           }
         };
 
-        spyHpm.post.and.returnValue(Promise.resolve(null));
+        spyHpm.post.and.returnValue(Promise.resolve(testData.response));
 
         // Act
         report.load(testData.loadConfiguration);
@@ -1772,10 +1775,13 @@ describe('SDK-to-HPM', function () {
           loadConfiguration: {
             id: 'fakeId',
             accessToken: 'fakeToken'
+          },
+          response: {
+            body: null
           }
         };
 
-        spyHpm.post.and.returnValue(Promise.resolve(null));
+        spyHpm.post.and.returnValue(Promise.resolve(testData.response));
 
         // Act
         report.load(testData.loadConfiguration)
@@ -1791,6 +1797,17 @@ describe('SDK-to-HPM', function () {
     describe('pages', function () {
       it('report.getPages() sends GET /report/pages', function () {
         // Arrange
+        const testData = {
+          response: {
+            body: [
+              {
+                name: 'page1'
+              }
+            ]
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.resolve(testData.response));
 
         // Act
         report.getPages();
@@ -1854,11 +1871,15 @@ describe('SDK-to-HPM', function () {
       it('report.getFilters() sends GET /report/filters', function () {
         // Arrange
         const testData = {
-          filters: [
+          response: {
+            body: [
               (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
               (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
-          ]
+            ]
+          }
         };
+
+        spyHpm.get.and.returnValue(Promise.resolve(testData.response));
 
         // Act
         report.getFilters();
@@ -2134,8 +2155,13 @@ describe('SDK-to-HPM', function () {
           filters: [
               (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
               (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
-          ]
+          ],
+          response: {
+            body: []
+          }
         };
+
+        spyHpm.put.and.returnValue(Promise.resolve(testData.response));
 
         // Act
         page1.setFilters(testData.filters);
@@ -2290,7 +2316,17 @@ describe('SDK-to-HPM', function () {
     describe('visuals', function () {
       it('page.getVisuals() sends GET /report/xyz/pages/uvw/visuals', function () {
         // Arrange
-        spyHpm.get.and.returnValue(Promise.resolve(null));
+        const testData = {
+          response: {
+            body: [
+              {
+                name: 'visual1'
+              }
+            ]
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.resolve(testData.response));
 
         // Act
         page1.getVisuals();
@@ -2825,7 +2861,7 @@ describe('SDK-to-MockApp', function () {
                 // Assert
                 expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
                 expect(spyApp.load).not.toHaveBeenCalled();
-                expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors));
+                expect(errors).toEqual(testData.expectedErrors);
                 done();
               });
           });
@@ -2837,12 +2873,7 @@ describe('SDK-to-MockApp', function () {
           loadConfig: {
             id: 'fakeReportId',
             accessToken: 'fakeAccessToken'
-          },
-          expectedErrors: [
-            {
-              message: 'invalid load config'
-            }
-          ]
+          }
         };
 
         iframeLoaded
@@ -2855,6 +2886,7 @@ describe('SDK-to-MockApp', function () {
                 // Assert
                 expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
                 expect(spyApp.load).toHaveBeenCalledWith(testData.loadConfig);
+                expect(response).toEqual(undefined);
                 done();
               });
           });
@@ -3255,8 +3287,8 @@ describe('SDK-to-MockApp', function () {
         // Act
         iframeLoaded
           .then(() => {
-            spyApp.validatePage.and.returnValue(Promise.resolve(undefined));
-            spyApp.setPage.and.returnValue(Promise.reject(testData.errors));
+            spyApp.validatePage.and.returnValue(Promise.reject(testData.errors));
+
             // Act
             page1.setActive()
               .catch(errors => {
@@ -3283,6 +3315,7 @@ describe('SDK-to-MockApp', function () {
         iframeLoaded
           .then(() => {
             setTimeout(() => {
+              spyApp.validatePage.and.returnValue(Promise.resolve(null));
               spyApp.setPage.and.returnValue(Promise.resolve(null));
               // Act
               page1.setActive()
