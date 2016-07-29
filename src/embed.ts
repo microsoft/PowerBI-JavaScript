@@ -97,7 +97,11 @@ export abstract class Embed {
      *     navContentPaneEnabled: false
      *   },
      *   pageName: "DefaultPage",
-     *   filte: "DefaultReportFilter"
+     *   filters: [
+     *     {
+     *        ...  DefaultReportFilter ...
+     *     }
+     *   ]
      * })
      *   .catch(error => { ... });
      * ```
