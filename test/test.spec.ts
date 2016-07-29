@@ -1907,7 +1907,7 @@ describe('SDK-to-HPM', function () {
           .catch(errors => {
             // Assert
             expect(spyHpm.get).toHaveBeenCalledWith('/report/filters', { uid: uniqueId }, iframe.contentWindow);
-            expect(errors).toEqual(testData.expectedErrors.body);
+            expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors.body));
             done();
           });
       });
@@ -1974,7 +1974,7 @@ describe('SDK-to-HPM', function () {
           .catch(errors => {
             // Assert
             expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filters, { uid: uniqueId }, iframe.contentWindow);
-            expect(errors).toEqual(testData.expectedErrors.body);
+            expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors.body));
             done();
           });
       });
@@ -2193,7 +2193,7 @@ describe('SDK-to-HPM', function () {
           .catch(errors => {
             // Assert
             expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/filters`, testData.filters, { uid: uniqueId }, iframe.contentWindow);
-            expect(errors).toEqual(testData.expectedErrors.body);
+            expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors.body));
             done();
           });
       });
@@ -2286,7 +2286,7 @@ describe('SDK-to-HPM', function () {
           .catch(errors => {
             // Assert
             expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/active`, testData.page, { uid: uniqueId }, iframe.contentWindow);
-            expect(errors).toEqual(testData.response.body);
+            expect(errors).toEqual(jasmine.objectContaining(testData.response.body));
             done();
           });
       });
@@ -2352,7 +2352,7 @@ describe('SDK-to-HPM', function () {
           .catch(error => {
             // Assert
             expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals`, { uid: uniqueId }, iframe.contentWindow);
-            expect(error).toEqual(testData.response.body);
+            expect(error).toEqual(jasmine.objectContaining(testData.response.body));
             done();
           });
       });
@@ -2416,7 +2416,7 @@ describe('SDK-to-HPM', function () {
           .catch(error => {
             // Assert
             expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${visual1.page.name}/visuals/${visual1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
-            expect(error).toEqual(testData.expectedError.body);
+            expect(error).toEqual(jasmine.objectContaining(testData.expectedError.body));
             done();
           });
       });
@@ -2485,7 +2485,7 @@ describe('SDK-to-HPM', function () {
           .catch(errors => {
             // Assert
             expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${visual1.page.name}/visuals/${visual1.name}/filters`, testData.filters, { uid: uniqueId }, iframe.contentWindow);
-            expect(errors).toEqual(testData.expectedErrors.body);
+            expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors.body));
             done();
           });
       });
@@ -2861,7 +2861,7 @@ describe('SDK-to-MockApp', function () {
                 // Assert
                 expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
                 expect(spyApp.load).not.toHaveBeenCalled();
-                expect(errors).toEqual(testData.expectedErrors);
+                expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors));
                 done();
               });
           });
@@ -2959,7 +2959,7 @@ describe('SDK-to-MockApp', function () {
               .catch(error => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
+                expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
                 done();
               });
           });
@@ -3129,7 +3129,7 @@ describe('SDK-to-MockApp', function () {
               .catch(error => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
+                expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
                 done();
               });
           });
@@ -3241,7 +3241,7 @@ describe('SDK-to-MockApp', function () {
                 // Assert
                 expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
                 expect(spyApp.getVisuals).not.toHaveBeenCalled();
-                expect(errors).toEqual(testData.errors);
+                expect(errors).toEqual(jasmine.objectContaining(testData.errors));
                 done();
               });
           });
@@ -3295,7 +3295,7 @@ describe('SDK-to-MockApp', function () {
                 // Assert
                 expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
                 expect(spyApp.setPage).not.toHaveBeenCalled();
-                expect(errors).toEqual(testData.errors);
+                expect(errors).toEqual(jasmine.objectContaining(testData.errors));
                 done();
               });
           });
@@ -3354,7 +3354,7 @@ describe('SDK-to-MockApp', function () {
                 expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
                 expect(spyApp.validateVisual).toHaveBeenCalled();
                 expect(spyApp.getFilters).not.toHaveBeenCalled();
-                expect(error).toEqual(testData.errors);
+                expect(error).toEqual(jasmine.objectContaining(testData.errors));
                 done();
               });
           });
@@ -3380,7 +3380,7 @@ describe('SDK-to-MockApp', function () {
                 expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
                 expect(spyApp.validateVisual).toHaveBeenCalled();
                 expect(spyApp.getFilters).toHaveBeenCalled();
-                expect(error).toEqual(testData.expectedError);
+                expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
                 done();
               });
           });
