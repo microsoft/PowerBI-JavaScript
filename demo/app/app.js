@@ -22,6 +22,7 @@ $(function () {
   // Scenario 4: Custom Filter Pane
   var $customFilterPaneContainer = $('#reportcustomfilter');
   var customFilterPaneReport;
+  var customFilterPaneReportPages;
 
   // Scenario 5: Default Page and/or Filter
   var $defaultPageReportContainer = $('#reportdefaults');
@@ -69,7 +70,7 @@ $(function () {
   var localReportOverride = {
     embedUrl: 'https://portal.analysis.windows-int.net/appTokenReportEmbed?unmin=true',
     id: 'c4d31ef0-7b34-4d80-9bcb-5974d1405572',
-    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ2ODYyNDc3NCwiZXhwIjoxNDY4NjI4Mzc0fQ.o3RnWzxQxoy3hpFs27Gx5NauZZ-gzbNfMSFfcWEReN4'
+    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ3MDE2MzY0MywiZXhwIjoxNDcwMTY3MjQzfQ.t6uS9A3vB3avRYv9zzM-GMk2HDP5-ADQ1dIfvCS95Z4'
   };
 
   /**
@@ -163,20 +164,23 @@ $(function () {
               console.log('custom filter pane report loaded');
               customFilterPaneReport.getPages()
                 .then(function (pages) {
+                  customFilterPaneReportPages = pages;
                   var $pagesSelect = $('#filtertargetpage');
-                  var $removeAllFiltersPagesList = $('#removeAllFiltersPagesList');
+                  var $removeFiltersPagesList = $('#removeFiltersPagesList');
 
                   pages
                     .forEach(function (page) {
                       var $pageOption = $('<option>')
                         .val(page.name)
-                        .text(page.displayName);
+                        .text(page.displayName)
+                        .data(page);
 
                       var $pageOption1 = $('<option>')
                         .val(page.name)
-                        .text(page.displayName);
+                        .text(page.displayName)
+                        .data(page);
 
-                      $removeAllFiltersPagesList.append($pageOption);
+                      $removeFiltersPagesList.append($pageOption);
                       $pagesSelect.append($pageOption1);
                     });
                 });
@@ -287,7 +291,7 @@ $(function () {
     $reportsList.on('click', 'button', function (event) {
       var button = event.target;
       var report = $(button).data('report');
-      var url = apiBaseUrl + '/' + report.id;
+      var url = allReportsUrl + '/' + report.id;
 
       fetch(url)
         .then(function (response) {
@@ -404,11 +408,11 @@ $(function () {
     }, "Or", [
       {
         operator: "Contains",
-        value: "Wash"
+        value: "Direct"
       },
       {
-        operator: "Contains",
-        value: "Park"
+        operator: "None",
+        value: "x"
       }
     ]);
 
@@ -441,10 +445,6 @@ $(function () {
         value: "Park"
       }
     ]);
-    var predefinedTarget3 = {
-      type: "page",
-      name: "ReportSection2"
-    };
 
     $customFilterForm.on('submit', function (event) {
       event.preventDefault();
@@ -460,21 +460,23 @@ $(function () {
       var values = Array.prototype.slice.call(data.operator.values);
 
       if (data.operator.type === "basic") {
-        filter = new models.ValueFilter(data.target, data.operator.operator, values);
+        filter = new models.BasicFilter(data.target, data.operator.operator, values);
       }
       else if (data.operator.type === "advanced") {
         filter = new models.AdvancedFilter(data.target, data.operator.operator, values);
       }
 
-      var target;
-      if ((data.reportTarget.type === "page")
-        || (data.reportTarget.type === "visual")) {
-        target = data.reportTarget;
+      var filterTargetLevel = customFilterPaneReport;
+      if (data.reportTarget.type === "page") {
+        filterTargetLevel = customFilterPaneReport.page(data.reportTarget.name);
+      }
+      else if (data.reportTarget.type === "visual") {
+        // Need to finalize how visuals report whichp age they are on in order to construct correct page object.
+        filterTargetLevel = customFilterPaneReport.page('ReportSection1').visual(data.reportTarget.name);
       }
 
       var filterJson = filter.toJSON();
-
-      customFilterPaneReport.addFilter(filterJson, target);
+      filterTargetLevel.setFilters([filterJson]);
     });
 
     $filterType.on('change', function (event) {
@@ -498,15 +500,15 @@ $(function () {
     });
 
     $predefinedFilter1.on('click', function (event) {
-      customFilterPaneReport.addFilter(predefinedFilter1);
+      customFilterPaneReport.setFilters([predefinedFilter1.toJSON()]);
     });
 
     $predefinedFilter2.on('click', function (event) {
-      customFilterPaneReport.addFilter(predefinedFilter2);
+      customFilterPaneReport.setFilters([predefinedFilter1.toJSON()]);
     });
 
     $predefinedFilter3.on('click', function (event) {
-      customFilterPaneReport.addFilter(predefinedFilter3, predefinedTarget3);
+      customFilterPaneReport.page('ReportSection2').setFilters([predefinedFilter3.toJSON()]);
     });
 
     function getFilterTypeTarget() {
@@ -595,44 +597,33 @@ $(function () {
    * Remove Filters Buttons
    */
   (function () {
-    var $removeAllFiltersReportForm = $('#removeAllFiltersReportForm');
-    var $removeAllFiltersPageForm = $('#removeAllFiltersPageForm');
-    var $removeAllFiltersVisualForm = $('#removeAllFiltersVisualForm');
-    var $removeAllFiltersPagesList = $('#removeAllFiltersPagesList');
-    var $removeAllFiltersVisualsList = $('#removeAllFiltersVisualsList');
+    var $removeFiltersReportForm = $('#removeFiltersReportForm');
+    var $removeFiltersPageForm = $('#removeFiltersPageForm');
+    var $removeFiltersVisualForm = $('#removeFiltersVisualForm');
+    var $removeFiltersPagesList = $('#removeFiltersPagesList');
+    var $removeFiltersVisualsList = $('#removeFiltersVisualsList');
 
-    $removeAllFiltersReportForm.on('submit', function (event) {
+    $removeFiltersReportForm.on('submit', function (event) {
       event.preventDefault();
 
-      console.log('submit removeAllFiltersReportForm');
-      customFilterPaneReport.removeAllFilters();
+      console.log('submit removeFiltersReportForm');
+      customFilterPaneReport.removeFilters();
     });
 
-    $removeAllFiltersPageForm.on('submit', function (event) {
+    $removeFiltersPageForm.on('submit', function (event) {
       event.preventDefault();
 
-      var pageName = $removeAllFiltersPagesList.val();
-      var target = {
-        type: "page",
-        name: pageName
-      };
-
-      console.log('submit removeAllFiltersPageForm', pageName);
-      customFilterPaneReport.removeAllFilters(target);
+      var pageName = $removeFiltersPagesList.val();
+      console.log('submit removeFiltersPageForm', pageName);
+      customFilterPaneReport.page(pageName).removeFilters();
     });
 
-    $removeAllFiltersVisualForm.on('submit', function (event) {
+    $removeFiltersVisualForm.on('submit', function (event) {
       event.preventDefault();
 
-      var visualId = $removeAllFiltersVisualsList.val();
-      var target = {
-        type: "visual",
-        id: visualId
-      };
-
-      console.log('submit removeAllFiltersVisualForm', visualId);
-      customFilterPaneReport.removeAllFilters(target);
-      
+      var visualName = $removeFiltersVisualsList.val();
+      console.log('submit removeFiltersVisualForm', visualName);
+      customFilterPaneReport.page('ReportSection2').visual(visualName).removeFilters();
     });
   })();
 });
