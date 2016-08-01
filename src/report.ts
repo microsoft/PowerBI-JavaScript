@@ -4,9 +4,17 @@ import * as models from 'powerbi-models';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as utils from './util';
+import { IFilterable } from './ifilterable';
+import { IPageNode, Page } from './page';
 
-export class Report extends embed.Embed {
-    static allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
+export interface IReportNode {
+    iframe: HTMLIFrameElement;
+    service: service.IService;
+    config: embed.IInternalEmbedConfiguration
+}
+
+export class Report extends embed.Embed implements IReportNode, IFilterable {
+    static allowedEvents = ["dataSelected", "filtersApplied", "pageChanged", "error"];
     static reportIdAttribute = 'powerbi-report-id';
     static filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
     static navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
@@ -35,9 +43,9 @@ export class Report extends embed.Embed {
     static findIdFromEmbedUrl(url: string): string {
         const reportIdRegEx = /reportId="?([^&]+)"?/
         const reportIdMatch = url.match(reportIdRegEx);
-        
+
         let reportId;
-        if(reportIdMatch) {
+        if (reportIdMatch) {
             reportId = reportIdMatch[1];
         }
 
@@ -45,31 +53,7 @@ export class Report extends embed.Embed {
     }
 
     /**
-     * Add filter to report
-     * An optional target may be passed to apply the filter to specific page or visual.
-     * 
-     * ```javascript
-     * // Add filter to report
-     * const filter = new models.BasicFilter(...);
-     * report.addFilter(filter);
-     * 
-     * // Add advanced filter to specific visual;
-     * const target = ...
-     * const filter = new models.AdvancedFilter(...);
-     * report.addFilter(filter, target);
-     * ```
-     */
-    addFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
-        const targetUrl = this.getTargetUrl(target);
-        return this.service.hpm.post<void>(`${targetUrl}/filters`, filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-            .catch(response => {
-                throw response.body;
-            });
-    }
-
-    /**
-     * Get filters that are applied to the report
-     * An optional target may be passed to get filters applied to a specific page or visual
+     * Get filters that are applied at the report level
      * 
      * ```javascript
      * // Get filters applied at report level
@@ -77,25 +61,14 @@ export class Report extends embed.Embed {
      *   .then(filters => {
      *     ...
      *   });
-     * 
-     * // Get filters applied at page level
-     * const pageTarget = {
-     *   name: "reportSection1"
-     * };
-     * 
-     * report.getFilters(pageTarget)
-     *   .then(filters => {
-     *       ...
-     *   });
      * ```
      */
-    getFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<models.IFilter[]> {
-        const targetUrl = this.getTargetUrl(target);
-        return this.service.hpm.get<models.IFilter[]>(`${targetUrl}/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    getFilters(): Promise<models.IFilter[]> {
+        return this.service.hpm.get<models.IFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .then(response => response.body,
-                response => {
-                    throw response.body;
-                });
+            response => {
+                throw response.body;
+            });
     }
 
     /**
@@ -121,14 +94,47 @@ export class Report extends embed.Embed {
      *  });
      * ```
      */
-    getPages(): Promise<models.IPage[]> {
+    getPages(): Promise<Page[]> {
         return this.service.hpm.get<models.IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
-            .then(response => response.body,
-                response => {
-                    throw response.body;
-                });
+            .then(response => {
+                return response.body
+                    .map(page => {
+                        return new Page(this, page.name);
+                    });
+            }, response => {
+                throw response.body;
+            });
     }
-    
+
+    /**
+     * Create new Page instance.
+     * 
+     * Normally you would get Page objects by calling `report.getPages()` but in the case
+     * that the page name is known and you want to perform an action on a page without having to retrieve it
+     * you can create it directly.
+     * 
+     * Note: Since you are creating the page manually there is no guarantee that the page actually exists in the report and the subsequence requests could fail.
+     * 
+     * ```javascript
+     * const page = report.page('ReportSection1');
+     * page.setActive();
+     * ```
+     */
+    page(name: string): Page {
+        return new Page(this, name);
+    }
+
+    /**
+     * Remove all filters at report level
+     * 
+     * ```javascript
+     * report.removeFilters();
+     * ```
+     */
+    removeFilters() {
+        return this.setFilters([]);
+    }
+
     /**
      * Set the active page
      * 
@@ -150,56 +156,21 @@ export class Report extends embed.Embed {
     }
 
     /**
-     * Remove specific filter from report, page, or visual
+     * Sets filters
      * 
      * ```javascript
-     * const filter = new models.BasicFilter(...);
+     * const filters: [
+     *    ...
+     * ];
      * 
-     * report.removeFilter(filter)
-     *  .catch(error => { ... });
+     * report.setFilters(filters)
+     *  .catch(errors => {
+     *    ...
+     *  });
      * ```
      */
-    removeFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
-        const targetUrl = this.getTargetUrl(target);
-        return this.service.hpm.delete<models.IError[]>(`${targetUrl}/filters`, filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-            .catch(response => {
-                throw response.body;
-            });
-    }
-
-    /**
-     * Remove all filters across the report, pages, and visuals
-     * 
-     * ```javascript
-     * report.removeAllFilters();
-     * ```
-     */
-    removeAllFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
-        const targetUrl = this.getTargetUrl(target);
-        return this.service.hpm.delete<models.IError[]>(`${targetUrl}/allfilters`, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-            .catch(response => {
-                throw response.body;
-            });
-    }
-    
-    /**
-     * Update existing filter applied to report, page, or visual.
-     * 
-     * The existing filter will be replaced with the new filter.
-     * 
-     * ```javascript
-     * const filter = new models.BasicFilter(...);
-     * const target = {
-     *   type: "page",
-     *   name: "ReportSection2"
-     * };
-     * 
-     * report.updateFilter(filter, target)
-     *  .catch(errors => { ... });
-     */
-    updateFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void> {
-        const targetUrl = this.getTargetUrl(target);
-        return this.service.hpm.put<models.IError[]>(`${targetUrl}/filters`, filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void> {
+        return this.service.hpm.put<models.IError[]>(`/report/filters`, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
             .catch(response => {
                 throw response.body;
             });
@@ -223,34 +194,5 @@ export class Report extends embed.Embed {
             .catch(response => {
                 throw response.body;
             });
-    }
-
-    /**
-     * Translate target into url
-     * Target may be to the whole report, speific page, or specific visual
-     */
-    private getTargetUrl(target?: models.IPageTarget | models.IVisualTarget): string {
-        let targetUrl;
-
-        /**
-         * TODO: I mentioned this issue in the protocol test, but we're tranlating targets from objects
-         * into parts of the url, and then back to objects. It is a trade off between complixity in this code vs semantic URIs
-         * 
-         * We could come up with a different idea which passed the target as part of the body
-         */
-        if(!target) {
-            targetUrl = '/report';
-        }
-        else if(target.type === "page") {
-            targetUrl = `/report/pages/${(<models.IPageTarget>target).name}`;
-        }
-        else if(target.type === "visual") {
-            targetUrl = `/report/visuals/${(<models.IVisualTarget>target).id}`;
-        }
-        else {
-            throw new Error(`target.type must be either 'page' or 'visual'. You passed: ${target.type}`);
-        }
-
-        return targetUrl;
     }
 }

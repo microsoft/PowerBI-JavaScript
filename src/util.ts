@@ -12,17 +12,6 @@ export function raiseCustomEvent(element: HTMLElement, eventName: string, eventD
     }
 
     element.dispatchEvent(customEvent);
-    if (customEvent.defaultPrevented || !customEvent.returnValue) {
-        return;
-    }
-
-    // TODO: Remove this? Should be better way to handle events than using eval?
-    // What is use case? <div powerbi-type="report" onload="alert('loaded');"></div>
-    const inlineEventAttr = 'on' + eventName.replace('-', '');
-    const inlineScript = element.getAttribute(inlineEventAttr);
-    if (inlineScript) {
-        eval.call(element, inlineScript);
-    }
 }
 
 export function findIndex<T>(predicate: (x: T) => boolean, xs: T[]): number {

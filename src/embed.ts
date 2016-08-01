@@ -97,7 +97,11 @@ export abstract class Embed {
      *     navContentPaneEnabled: false
      *   },
      *   pageName: "DefaultPage",
-     *   filte: "DefaultReportFilter"
+     *   filters: [
+     *     {
+     *        ...  DefaultReportFilter ...
+     *     }
+     *   ]
      * })
      *   .catch(error => { ... });
      * ```
@@ -109,7 +113,10 @@ export abstract class Embed {
         }
 
         return this.service.hpm.post<void>('/report/load', config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-            .catch(response => {
+            .then(response => {
+                return response.body;
+            },
+            response => {
                 throw response.body;
             });
     }
