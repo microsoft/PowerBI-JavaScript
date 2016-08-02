@@ -120,8 +120,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
      * page.setActive();
      * ```
      */
-    page(name: string): Page {
-        return new Page(this, name);
+    page(name: string, displayName?: string): Page {
+        return new Page(this, name, displayName);
     }
 
     /**
