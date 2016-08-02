@@ -99,7 +99,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
             .then(response => {
                 return response.body
                     .map(page => {
-                        return new Page(this, page.name);
+                        return new Page(this, page.name, page.displayName);
                     });
             }, response => {
                 throw response.body;
