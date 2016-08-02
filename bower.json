@@ -11,11 +11,18 @@
   "private": false,
   "ignore": [
     "**/.*",
+    "*/.js",
+    "*/.md",
+    "*/.nuspec",
+    "demo",
     "node_modules",
     "bower_components",
     "src",
     "test",
-    "tests"
+    "tests",
+    "tsconfig.json",
+    "typings.json",
+    "webpack.test.tsconfig.json"
   ],
   "devDependencies": {
     "jquery": "~2.2.0"
