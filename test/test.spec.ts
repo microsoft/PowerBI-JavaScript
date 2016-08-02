@@ -12,6 +12,7 @@ import * as factories from '../src/factories';
 import { spyWpmp } from './utility/mockWpmp';
 import { spyHpm } from './utility/mockHpm';
 import { spyRouter } from './utility/mockRouter';
+import * as util from '../src/util';
 
 declare global {
   interface Window {
@@ -2936,7 +2937,17 @@ describe('SDK-to-MockApp', function () {
               .then(pages => {
                 // Assert
                 expect(spyApp.getPages).toHaveBeenCalled();
-                // expect(pages).toEqual(testData.pages);
+                // Workaround to compare pages
+                pages
+                  .forEach(page => {
+                    const testPage = util.find(p => p.name === page.name, testData.pages);
+                    if (testPage) {
+                      expect(page.name).toEqual(testPage.name);
+                    }
+                    else {
+                      expect(true).toBe(false);
+                    }
+                  });
                 done();
               });
           });
