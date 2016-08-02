@@ -1,8 +1,15 @@
-/*! powerbi-client v2.0.0-beta.7 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.9 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
-export declare class Report extends embed.Embed {
+import { IFilterable } from './ifilterable';
+import { Page } from './page';
+export interface IReportNode {
+    iframe: HTMLIFrameElement;
+    service: service.IService;
+    config: embed.IInternalEmbedConfiguration;
+}
+export declare class Report extends embed.Embed implements IReportNode, IFilterable {
     static allowedEvents: string[];
     static reportIdAttribute: string;
     static filterPaneEnabledAttribute: string;
@@ -18,24 +25,7 @@ export declare class Report extends embed.Embed {
      */
     static findIdFromEmbedUrl(url: string): string;
     /**
-     * Add filter to report
-     * An optional target may be passed to apply the filter to specific page or visual.
-     *
-     * ```javascript
-     * // Add filter to report
-     * const filter = new models.BasicFilter(...);
-     * report.addFilter(filter);
-     *
-     * // Add advanced filter to specific visual;
-     * const target = ...
-     * const filter = new models.AdvancedFilter(...);
-     * report.addFilter(filter, target);
-     * ```
-     */
-    addFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void>;
-    /**
-     * Get filters that are applied to the report
-     * An optional target may be passed to get filters applied to a specific page or visual
+     * Get filters that are applied at the report level
      *
      * ```javascript
      * // Get filters applied at report level
@@ -43,19 +33,9 @@ export declare class Report extends embed.Embed {
      *   .then(filters => {
      *     ...
      *   });
-     *
-     * // Get filters applied at page level
-     * const pageTarget = {
-     *   name: "reportSection1"
-     * };
-     *
-     * report.getFilters(pageTarget)
-     *   .then(filters => {
-     *       ...
-     *   });
      * ```
      */
-    getFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<models.IFilter[]>;
+    getFilters(): Promise<models.IFilter[]>;
     /**
      * Get report id from first available location: options, attribute, embed url.
      */
@@ -70,7 +50,30 @@ export declare class Report extends embed.Embed {
      *  });
      * ```
      */
-    getPages(): Promise<models.IPage[]>;
+    getPages(): Promise<Page[]>;
+    /**
+     * Create new Page instance.
+     *
+     * Normally you would get Page objects by calling `report.getPages()` but in the case
+     * that the page name is known and you want to perform an action on a page without having to retrieve it
+     * you can create it directly.
+     *
+     * Note: Since you are creating the page manually there is no guarantee that the page actually exists in the report and the subsequence requests could fail.
+     *
+     * ```javascript
+     * const page = report.page('ReportSection1');
+     * page.setActive();
+     * ```
+     */
+    page(name: string, displayName?: string): Page;
+    /**
+     * Remove all filters at report level
+     *
+     * ```javascript
+     * report.removeFilters();
+     * ```
+     */
+    removeFilters(): Promise<void>;
     /**
      * Set the active page
      *
@@ -81,40 +84,20 @@ export declare class Report extends embed.Embed {
      */
     setPage(pageName: string): Promise<void>;
     /**
-     * Remove specific filter from report, page, or visual
+     * Sets filters
      *
      * ```javascript
-     * const filter = new models.BasicFilter(...);
+     * const filters: [
+     *    ...
+     * ];
      *
-     * report.removeFilter(filter)
-     *  .catch(error => { ... });
+     * report.setFilters(filters)
+     *  .catch(errors => {
+     *    ...
+     *  });
      * ```
      */
-    removeFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void>;
-    /**
-     * Remove all filters across the report, pages, and visuals
-     *
-     * ```javascript
-     * report.removeAllFilters();
-     * ```
-     */
-    removeAllFilters(target?: models.IPageTarget | models.IVisualTarget): Promise<void>;
-    /**
-     * Update existing filter applied to report, page, or visual.
-     *
-     * The existing filter will be replaced with the new filter.
-     *
-     * ```javascript
-     * const filter = new models.BasicFilter(...);
-     * const target = {
-     *   type: "page",
-     *   name: "ReportSection2"
-     * };
-     *
-     * report.updateFilter(filter, target)
-     *  .catch(errors => { ... });
-     */
-    updateFilter(filter: models.IFilter, target?: models.IPageTarget | models.IVisualTarget): Promise<void>;
+    setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void>;
     /**
      * Update settings of report (filter pane visibility, page navigation visibility)
      *
@@ -129,9 +112,4 @@ export declare class Report extends embed.Embed {
      * ```
      */
     updateSettings(settings: models.ISettings): Promise<void>;
-    /**
-     * Translate target into url
-     * Target may be to the whole report, speific page, or specific visual
-     */
-    private getTargetUrl(target?);
 }

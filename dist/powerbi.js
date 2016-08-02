@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.7 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.9 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -60,12 +60,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(7);
+	var factories = __webpack_require__(9);
 	exports.factories = factories;
 	var models = __webpack_require__(4);
 	exports.models = models;
 	__export(__webpack_require__(5));
-	__export(__webpack_require__(6));
+	__export(__webpack_require__(8));
 	__export(__webpack_require__(2));
 	/**
 	 * Make PowerBi available on global object for use in apps without module loading support.
@@ -82,7 +82,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(5);
-	var tile_1 = __webpack_require__(6);
+	var tile_1 = __webpack_require__(8);
+	var page_1 = __webpack_require__(6);
 	var utils = __webpack_require__(3);
 	var Service = (function () {
 	    function Service(hpmFactory, wpmpFactory, routerFactory, config) {
@@ -112,7 +113,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            };
 	            _this.handleEvent(event);
 	        });
-	        this.router.post("/reports/:uniqueId/visuals/:pageName/events/:eventName", function (req, res) {
+	        this.router.post("/reports/:uniqueId/pages/:pageName/visuals/:pageName/events/:eventName", function (req, res) {
 	            var event = {
 	                type: 'report',
 	                id: req.params.uniqueId,
@@ -240,34 +241,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                && embed.config.uniqueId === event.id);
 	        }, this.embeds);
 	        if (embed) {
-	            utils.raiseCustomEvent(embed.element, event.name, event.value);
+	            var value = event.value;
+	            if (event.name === 'pageChanged') {
+	                var pageKey = 'newPage';
+	                var page = value[pageKey];
+	                if (!page) {
+	                    throw new Error("Page model not found at 'event.value." + pageKey + "'.");
+	                }
+	                value[pageKey] = new page_1.Page(embed, page.name, page.displayName);
+	            }
+	            utils.raiseCustomEvent(embed.element, event.name, value);
 	        }
-	    };
-	    /**
-	     * Translate target into url
-	     * Target may be to the whole report, speific page, or specific visual
-	     */
-	    Service.prototype.getTargetUrl = function (target) {
-	        var targetUrl;
-	        /**
-	         * TODO: I mentioned this issue in the protocol test, but we're tranlating targets from objects
-	         * into parts of the url, and then back to objects. It is a trade off between complixity in this code vs semantic URIs
-	         *
-	         * We could come up with a different idea which passed the target as part of the body
-	         */
-	        if (!target) {
-	            targetUrl = '/report';
-	        }
-	        else if (target.type === "page") {
-	            targetUrl = "/report/pages/" + target.name;
-	        }
-	        else if (target.type === "visual") {
-	            targetUrl = "/report/visuals/" + target.id;
-	        }
-	        else {
-	            throw new Error("target.type must be either 'page' or 'visual'. You passed: " + target.type);
-	        }
-	        return targetUrl;
 	    };
 	    /**
 	     * List of components this service can embed.
@@ -336,7 +320,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *     navContentPaneEnabled: false
 	     *   },
 	     *   pageName: "DefaultPage",
-	     *   filte: "DefaultReportFilter"
+	     *   filters: [
+	     *     {
+	     *        ...  DefaultReportFilter ...
+	     *     }
+	     *   ]
 	     * })
 	     *   .catch(error => { ... });
 	     * ```
@@ -347,7 +335,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw errors;
 	        }
 	        return this.service.hpm.post('/report/load', config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .catch(function (response) {
+	            .then(function (response) {
+	            return response.body;
+	        }, function (response) {
 	            throw response.body;
 	        });
 	    };
@@ -488,16 +478,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        customEvent.initCustomEvent(eventName, true, true, eventData);
 	    }
 	    element.dispatchEvent(customEvent);
-	    if (customEvent.defaultPrevented || !customEvent.returnValue) {
-	        return;
-	    }
-	    // TODO: Remove this? Should be better way to handle events than using eval?
-	    // What is use case? <div powerbi-type="report" onload="alert('loaded');"></div>
-	    var inlineEventAttr = 'on' + eventName.replace('-', '');
-	    var inlineScript = element.getAttribute(inlineEventAttr);
-	    if (inlineScript) {
-	        eval.call(element, inlineScript);
-	    }
 	}
 	exports.raiseCustomEvent = raiseCustomEvent;
 	function findIndex(predicate, xs) {
@@ -560,7 +540,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v0.5.0 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v0.7.2 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -626,12 +606,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.filterSchema = __webpack_require__(2);
 		exports.loadSchema = __webpack_require__(3);
 		exports.pageSchema = __webpack_require__(4);
-		exports.pageTargetSchema = __webpack_require__(5);
-		exports.settingsSchema = __webpack_require__(6);
-		exports.targetSchema = __webpack_require__(7);
-		exports.basicFilterSchema = __webpack_require__(8);
-		exports.visualTargetSchema = __webpack_require__(9);
-		var jsen = __webpack_require__(10);
+		exports.settingsSchema = __webpack_require__(5);
+		exports.basicFilterSchema = __webpack_require__(6);
+		var jsen = __webpack_require__(7);
 		function normalizeError(error) {
 		    if (!error.message) {
 		        error.message = error.path + " is invalid. Not meeting " + error.keyword + " constraint";
@@ -667,12 +644,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		        settings: exports.settingsSchema,
 		        basicFilter: exports.basicFilterSchema,
 		        advancedFilter: exports.advancedFilterSchema
-		    }
-		});
-		exports.validateTarget = validate(exports.targetSchema, {
-		    schemas: {
-		        pageTarget: exports.pageTargetSchema,
-		        visualTarget: exports.visualTargetSchema
 		    }
 		});
 		exports.validatePage = validate(exports.pageSchema);
@@ -880,7 +851,11 @@ return /******/ (function(modules) { // webpackBootstrap
 						"type": "object",
 						"properties": {
 							"value": {
-								"type": "string"
+								"type": [
+									"string",
+									"boolean",
+									"number"
+								]
 							},
 							"operator": {
 								"type": "string"
@@ -950,8 +925,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						"type": "pageName must be a string"
 					}
 				},
-				"filter": {
-					"type": "object",
+				"filters": {
+					"type": "array",
 					"oneOf": [
 						{
 							"$ref": "#basicFilter"
@@ -960,7 +935,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							"$ref": "#advancedFilter"
 						}
 					],
-					"invalidMessage": "filter property is invalid"
+					"invalidMessage": "filters property is invalid"
 				}
 			},
 			"required": [
@@ -998,39 +973,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			"$schema": "http://json-schema.org/draft-04/schema#",
 			"type": "object",
 			"properties": {
-				"type": {
-					"type": "string",
-					"enum": [
-						"page"
-					],
-					"messages": {
-						"type": "type must be a string",
-						"enum": "type must be 'page'",
-						"required": "type is required"
-					}
-				},
-				"name": {
-					"type": "string",
-					"messages": {
-						"type": "name must be a string",
-						"required": "name is required"
-					}
-				}
-			},
-			"required": [
-				"type",
-				"name"
-			]
-		};
-	
-	/***/ },
-	/* 6 */
-	/***/ function(module, exports) {
-	
-		module.exports = {
-			"$schema": "http://json-schema.org/draft-04/schema#",
-			"type": "object",
-			"properties": {
 				"filterPaneEnabled": {
 					"type": "boolean",
 					"messages": {
@@ -1047,23 +989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	
 	/***/ },
-	/* 7 */
-	/***/ function(module, exports) {
-	
-		module.exports = {
-			"$schema": "http://json-schema.org/draft-04/schema#",
-			"oneOf": [
-				{
-					"$ref": "#pageTarget"
-				},
-				{
-					"$ref": "#visualTarget"
-				}
-			]
-		};
-	
-	/***/ },
-	/* 8 */
+	/* 6 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -1115,46 +1041,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	
 	/***/ },
-	/* 9 */
-	/***/ function(module, exports) {
-	
-		module.exports = {
-			"$schema": "http://json-schema.org/draft-04/schema#",
-			"type": "object",
-			"properties": {
-				"type": {
-					"type": "string",
-					"enum": [
-						"visual"
-					],
-					"messages": {
-						"type": "type must be a string",
-						"enum": "type must be 'visual'",
-						"required": "type is required"
-					}
-				},
-				"id": {
-					"type": "string",
-					"messages": {
-						"type": "id must be a string",
-						"required": "id is required"
-					}
-				}
-			},
-			"required": [
-				"type",
-				"id"
-			]
-		};
-	
-	/***/ },
-	/* 10 */
+	/* 7 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		module.exports = __webpack_require__(11);
+		module.exports = __webpack_require__(8);
 	
 	/***/ },
-	/* 11 */
+	/* 8 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -1166,11 +1059,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		    INVALID_SCHEMA = 'jsen: invalid schema object',
 		    browser = typeof window === 'object' && !!window.navigator,   // jshint ignore: line
 		    nodev0 = typeof process === 'object' && process.version.split('.')[0] === 'v0',
-		    func = __webpack_require__(13),
-		    equal = __webpack_require__(14),
-		    unique = __webpack_require__(15),
-		    SchemaResolver = __webpack_require__(16),
-		    formats = __webpack_require__(18),
+		    func = __webpack_require__(10),
+		    equal = __webpack_require__(11),
+		    unique = __webpack_require__(12),
+		    SchemaResolver = __webpack_require__(13),
+		    formats = __webpack_require__(15),
 		    types = {},
 		    keywords = {};
 		
@@ -2149,10 +2042,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		module.exports = jsen;
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 	
 	/***/ },
-	/* 12 */
+	/* 9 */
 	/***/ function(module, exports) {
 	
 		// shim for using process in browser
@@ -2277,7 +2170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ },
-	/* 13 */
+	/* 10 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2344,7 +2237,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	
 	/***/ },
-	/* 14 */
+	/* 11 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2421,12 +2314,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports = equal;
 	
 	/***/ },
-	/* 15 */
+	/* 12 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		'use strict';
 		
-		var equal = __webpack_require__(14);
+		var equal = __webpack_require__(11);
 		
 		function findIndex(arr, value, comparator) {
 		    for (var i = 0, len = arr.length; i < len; i++) {
@@ -2447,12 +2340,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports.findIndex = findIndex;
 	
 	/***/ },
-	/* 16 */
+	/* 13 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		'use strict';
 		
-		var metaschema = __webpack_require__(17),
+		var metaschema = __webpack_require__(14),
 		    INVALID_SCHEMA_REFERENCE = 'jsen: invalid schema reference';
 		
 		function get(obj, path) {
@@ -2642,7 +2535,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports = SchemaResolver;
 	
 	/***/ },
-	/* 17 */
+	/* 14 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -2876,7 +2769,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	
 	/***/ },
-	/* 18 */
+	/* 15 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2916,6 +2809,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	var embed = __webpack_require__(2);
 	var utils = __webpack_require__(3);
+	var page_1 = __webpack_require__(6);
 	var Report = (function (_super) {
 	    __extends(Report, _super);
 	    function Report(service, element, config) {
@@ -2945,30 +2839,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return reportId;
 	    };
 	    /**
-	     * Add filter to report
-	     * An optional target may be passed to apply the filter to specific page or visual.
-	     *
-	     * ```javascript
-	     * // Add filter to report
-	     * const filter = new models.BasicFilter(...);
-	     * report.addFilter(filter);
-	     *
-	     * // Add advanced filter to specific visual;
-	     * const target = ...
-	     * const filter = new models.AdvancedFilter(...);
-	     * report.addFilter(filter, target);
-	     * ```
-	     */
-	    Report.prototype.addFilter = function (filter, target) {
-	        var targetUrl = this.getTargetUrl(target);
-	        return this.service.hpm.post(targetUrl + "/filters", filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Get filters that are applied to the report
-	     * An optional target may be passed to get filters applied to a specific page or visual
+	     * Get filters that are applied at the report level
 	     *
 	     * ```javascript
 	     * // Get filters applied at report level
@@ -2976,21 +2847,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *   .then(filters => {
 	     *     ...
 	     *   });
-	     *
-	     * // Get filters applied at page level
-	     * const pageTarget = {
-	     *   name: "reportSection1"
-	     * };
-	     *
-	     * report.getFilters(pageTarget)
-	     *   .then(filters => {
-	     *       ...
-	     *   });
 	     * ```
 	     */
-	    Report.prototype.getFilters = function (target) {
-	        var targetUrl = this.getTargetUrl(target);
-	        return this.service.hpm.get(targetUrl + "/filters", { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	    Report.prototype.getFilters = function () {
+	        return this.service.hpm.get("/report/filters", { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
@@ -3016,10 +2876,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * ```
 	     */
 	    Report.prototype.getPages = function () {
+	        var _this = this;
 	        return this.service.hpm.get('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .then(function (response) { return response.body; }, function (response) {
+	            .then(function (response) {
+	            return response.body
+	                .map(function (page) {
+	                return new page_1.Page(_this, page.name, page.displayName);
+	            });
+	        }, function (response) {
 	            throw response.body;
 	        });
+	    };
+	    /**
+	     * Create new Page instance.
+	     *
+	     * Normally you would get Page objects by calling `report.getPages()` but in the case
+	     * that the page name is known and you want to perform an action on a page without having to retrieve it
+	     * you can create it directly.
+	     *
+	     * Note: Since you are creating the page manually there is no guarantee that the page actually exists in the report and the subsequence requests could fail.
+	     *
+	     * ```javascript
+	     * const page = report.page('ReportSection1');
+	     * page.setActive();
+	     * ```
+	     */
+	    Report.prototype.page = function (name, displayName) {
+	        return new page_1.Page(this, name, displayName);
+	    };
+	    /**
+	     * Remove all filters at report level
+	     *
+	     * ```javascript
+	     * report.removeFilters();
+	     * ```
+	     */
+	    Report.prototype.removeFilters = function () {
+	        return this.setFilters([]);
 	    };
 	    /**
 	     * Set the active page
@@ -3040,54 +2933,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    /**
-	     * Remove specific filter from report, page, or visual
+	     * Sets filters
 	     *
 	     * ```javascript
-	     * const filter = new models.BasicFilter(...);
+	     * const filters: [
+	     *    ...
+	     * ];
 	     *
-	     * report.removeFilter(filter)
-	     *  .catch(error => { ... });
+	     * report.setFilters(filters)
+	     *  .catch(errors => {
+	     *    ...
+	     *  });
 	     * ```
 	     */
-	    Report.prototype.removeFilter = function (filter, target) {
-	        var targetUrl = this.getTargetUrl(target);
-	        return this.service.hpm.delete(targetUrl + "/filters", filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Remove all filters across the report, pages, and visuals
-	     *
-	     * ```javascript
-	     * report.removeAllFilters();
-	     * ```
-	     */
-	    Report.prototype.removeAllFilters = function (target) {
-	        var targetUrl = this.getTargetUrl(target);
-	        return this.service.hpm.delete(targetUrl + "/allfilters", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Update existing filter applied to report, page, or visual.
-	     *
-	     * The existing filter will be replaced with the new filter.
-	     *
-	     * ```javascript
-	     * const filter = new models.BasicFilter(...);
-	     * const target = {
-	     *   type: "page",
-	     *   name: "ReportSection2"
-	     * };
-	     *
-	     * report.updateFilter(filter, target)
-	     *  .catch(errors => { ... });
-	     */
-	    Report.prototype.updateFilter = function (filter, target) {
-	        var targetUrl = this.getTargetUrl(target);
-	        return this.service.hpm.put(targetUrl + "/filters", filter, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	    Report.prototype.setFilters = function (filters) {
+	        return this.service.hpm.put("/report/filters", filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
 	        });
@@ -3111,33 +2971,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
-	    /**
-	     * Translate target into url
-	     * Target may be to the whole report, speific page, or specific visual
-	     */
-	    Report.prototype.getTargetUrl = function (target) {
-	        var targetUrl;
-	        /**
-	         * TODO: I mentioned this issue in the protocol test, but we're tranlating targets from objects
-	         * into parts of the url, and then back to objects. It is a trade off between complixity in this code vs semantic URIs
-	         *
-	         * We could come up with a different idea which passed the target as part of the body
-	         */
-	        if (!target) {
-	            targetUrl = '/report';
-	        }
-	        else if (target.type === "page") {
-	            targetUrl = "/report/pages/" + target.name;
-	        }
-	        else if (target.type === "visual") {
-	            targetUrl = "/report/visuals/" + target.id;
-	        }
-	        else {
-	            throw new Error("target.type must be either 'page' or 'visual'. You passed: " + target.type);
-	        }
-	        return targetUrl;
-	    };
-	    Report.allowedEvents = ["dataSelected", "filterAdded", "filterUpdated", "filterRemoved", "pageChanged", "error"];
+	    Report.allowedEvents = ["dataSelected", "filtersApplied", "pageChanged", "error"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
 	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
@@ -3150,6 +2984,166 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var visual_1 = __webpack_require__(7);
+	var Page = (function () {
+	    function Page(report, name, displayName) {
+	        this.report = report;
+	        this.name = name;
+	        this.displayName = displayName;
+	    }
+	    /**
+	     * Gets all page level filters within report
+	     *
+	     * ```javascript
+	     * page.getFilters()
+	     *  .then(pages => { ... });
+	     * ```
+	     */
+	    Page.prototype.getFilters = function () {
+	        return this.report.service.hpm.get("/report/pages/" + this.name + "/filters", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Gets all the visuals on the page.
+	     *
+	     * ```javascript
+	     * page.getVisuals()
+	     *   .then(visuals => { ... });
+	     * ```
+	     */
+	    Page.prototype.getVisuals = function () {
+	        var _this = this;
+	        return this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body
+	                .map(function (visual) {
+	                return new visual_1.Visual(_this, visual.name);
+	            });
+	        }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Remove all filters on this page within the report
+	     *
+	     * ```javascript
+	     * page.removeFilters();
+	     * ```
+	     */
+	    Page.prototype.removeFilters = function () {
+	        return this.setFilters([]);
+	    };
+	    /**
+	     * Make the current page the active page of the report.
+	     *
+	     * ```javascripot
+	     * page.setActive();
+	     * ```
+	     */
+	    Page.prototype.setActive = function () {
+	        var page = {
+	            name: this.name,
+	            displayName: null
+	        };
+	        return this.report.service.hpm.put('/report/pages/active', page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Sets all filters on the current page.
+	     *
+	     * ```javascript
+	     * page.setFilters(filters);
+	     *   .catch(errors => { ... });
+	     * ```
+	     */
+	    Page.prototype.setFilters = function (filters) {
+	        return this.report.service.hpm.put("/report/pages/" + this.name + "/filters", filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Creates new Visual object given a name of the visual.
+	     *
+	     * Normally you would get Visual objects by calling `page.getVisuals()` but in the case
+	     * that the visual name is known and you want to perform an action on a visaul such as setting a filters
+	     * without having to retrieve it first you can create it directly.
+	     *
+	     * Note: Since you are creating the visual manually there is no guarantee that the visual actually exists in the report and the subsequence requests could fail.
+	     *
+	     * ```javascript
+	     * const visual = report.page('ReportSection1').visual('BarChart1');
+	     * visual.setFilters(filters);
+	     * ```
+	     */
+	    Page.prototype.visual = function (name) {
+	        return new visual_1.Visual(this, name);
+	    };
+	    return Page;
+	}());
+	exports.Page = Page;
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	var Visual = (function () {
+	    function Visual(page, name) {
+	        this.name = name;
+	        this.page = page;
+	    }
+	    /**
+	     * Gets all page level filters within report
+	     *
+	     * ```javascript
+	     * visual.getFilters()
+	     *  .then(pages => { ... });
+	     * ```
+	     */
+	    Visual.prototype.getFilters = function () {
+	        return this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Remove all filters on this page within the report
+	     *
+	     * ```javascript
+	     * visual.removeFilters();
+	     * ```
+	     */
+	    Visual.prototype.removeFilters = function () {
+	        return this.setFilters([]);
+	    };
+	    /**
+	     * Set all filters at the visual level of the page
+	     *
+	     * ```javascript
+	     * visual.setFilters(filters)
+	     *  .catch(errors => { ... });
+	     * ```
+	     */
+	    Visual.prototype.setFilters = function (filters) {
+	        return this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    return Visual;
+	}());
+	exports.Visual = Visual;
+
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3173,13 +3167,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config_1 = __webpack_require__(8);
-	var wpmp = __webpack_require__(9);
-	var hpm = __webpack_require__(10);
-	var router = __webpack_require__(11);
+	var config_1 = __webpack_require__(10);
+	var wpmp = __webpack_require__(11);
+	var hpm = __webpack_require__(12);
+	var router = __webpack_require__(13);
 	/**
 	 * TODO: Need to get sdk version and settings from package.json, Generate config file via gulp task?
 	 */
@@ -3209,11 +3203,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports) {
 
 	var config = {
-	    version: '2.0.0-beta.7',
+	    version: '2.0.0-beta.9',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -3221,7 +3215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! window-post-message-proxy v0.2.1 | (c) 2016 Microsoft Corporation MIT */
@@ -3521,7 +3515,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.0 | (c) 2016 Microsoft Corporation MIT */
@@ -3705,7 +3699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function webpackUniversalModuleDefinition(root, factory) {

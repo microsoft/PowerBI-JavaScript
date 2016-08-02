@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.7 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.9 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as models from 'powerbi-models';
 declare global  {
@@ -59,7 +59,11 @@ export declare abstract class Embed {
      *     navContentPaneEnabled: false
      *   },
      *   pageName: "DefaultPage",
-     *   filte: "DefaultReportFilter"
+     *   filters: [
+     *     {
+     *        ...  DefaultReportFilter ...
+     *     }
+     *   ]
      * })
      *   .catch(error => { ... });
      * ```

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.7 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.9 | (c) 2016 Microsoft Corporation MIT */
 import * as embed from './embed';
 import { Report } from './report';
 import { Tile } from './tile';
@@ -39,7 +39,10 @@ export interface IServiceConfiguration extends IDebugOptions {
     version?: string;
     type?: string;
 }
-export declare class Service {
+export interface IService {
+    hpm: hpm.HttpPostMessage;
+}
+export declare class Service implements IService {
     /**
      * List of components this service can embed.
      */
@@ -102,9 +105,4 @@ export declare class Service {
      * Given an event object, find embed with matching type and id and invoke its handleEvent method with event.
      */
     private handleEvent(event);
-    /**
-     * Translate target into url
-     * Target may be to the whole report, speific page, or specific visual
-     */
-    private getTargetUrl(target?);
 }

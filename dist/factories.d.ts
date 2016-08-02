@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.7 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.9 | (c) 2016 Microsoft Corporation MIT */
 /**
  * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
  */
