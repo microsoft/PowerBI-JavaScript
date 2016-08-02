@@ -3535,6 +3535,7 @@ describe('SDK-to-MockApp', function () {
           }
         }
       };
+      const testDataHandler: jasmine.Spy = testData.handler;
 
       report.on(testData.eventName, testData.handler);
 
@@ -3543,7 +3544,9 @@ describe('SDK-to-MockApp', function () {
         .then(response => {
           // Assert
           expect(testData.handler).toHaveBeenCalledWith(jasmine.any(CustomEvent));
-          // expect(testData.handler).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+          // Workaround to compare pages which prevents recursive loop in jasmine equals
+          // expect(testData.handler2).toHaveBeenCalledWith(jasmine.objectContaining({ detail: testData.simulatedPageChangeBody }));
+          expect(testData.handler.calls.mostRecent().args[0].detail.newPage.name).toEqual(testData.expectedEvent.detail.newPage.name);
           done();
         });
     });
@@ -3552,12 +3555,12 @@ describe('SDK-to-MockApp', function () {
       // Arrange
       const testData = {
         reportId: 'fakeReportId',
-        eventName: 'filtersApplied',
+        eventName: 'pageChanged',
         handler: jasmine.createSpy('handler'),
         handler2: jasmine.createSpy('handler2'),
         simulatedPageChangeBody: {
           initiator: 'sdk',
-          page: {
+          newPage: {
             name: 'page1',
             displayName: 'Page 1'
           }
@@ -3572,7 +3575,9 @@ describe('SDK-to-MockApp', function () {
         .then(response => {
           // Assert
           expect(testData.handler2).toHaveBeenCalledWith(jasmine.any(CustomEvent));
-          // expect(testData.handler2).toHaveBeenCalledWith(jasmine.objectContaining({ detail: testData.simulatedPageChangeBody }));
+          // Workaround to compare pages which prevents recursive loop in jasmine equals
+          // expect(testData.handler).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
+          expect(testData.handler2.calls.mostRecent().args[0].detail.newPage.name).toEqual(testData.simulatedPageChangeBody.newPage.name);
           expect(testData.handler).not.toHaveBeenCalled();
           done();
         });
