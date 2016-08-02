@@ -80,7 +80,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
             const initiator = "sdk";
             hpm.post(`/reports/${uniqueId}/events/pageChanged`, {
               initiator,
-              page
+              newPage: page
             });
           }, error => {
             hpm.post(`/reports/${uniqueId}/events/error`, error);

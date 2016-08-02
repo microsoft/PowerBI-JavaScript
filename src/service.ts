@@ -266,10 +266,15 @@ export class Service implements IService {
         }, this.embeds);
 
         if(embed) {
-            let value = event.value;
+            const value = event.value;
 
             if (event.name === 'pageChanged') {
-                value.page = new Page(embed, event.value.page.name);
+                const pageKey = 'newPage';
+                const page: models.IPage = value[pageKey];
+                if (!page) {
+                    throw new Error(`Page model not found at 'event.value.${pageKey}'.`);
+                }
+                value[pageKey] = new Page(embed, page.name, page.displayName);
             }
 
             utils.raiseCustomEvent(embed.element, event.name, value);
