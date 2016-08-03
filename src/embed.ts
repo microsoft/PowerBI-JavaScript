@@ -21,6 +21,8 @@ declare global {
     }
 }
 
+// TODO: Re-use ILoadConfiguration interface to prevent duplicating properties.
+// Current issue is that they are optional when embedding since they can be specificed as attributes but they are required when loading.
 export interface IEmbedConfiguration {
     type?: string;
     id?: string;
@@ -28,6 +30,8 @@ export interface IEmbedConfiguration {
     embedUrl?: string;
     accessToken?: string;
     settings?: models.ISettings;
+    pageName?: string;
+    filters?: (models.IBasicFilter | models.IAdvancedFilter)[];
 }
 
 export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {
