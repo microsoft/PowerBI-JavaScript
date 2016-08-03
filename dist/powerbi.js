@@ -55,18 +55,22 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	function __export(m) {
-	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-	}
 	var service = __webpack_require__(1);
 	exports.service = service;
 	var factories = __webpack_require__(9);
 	exports.factories = factories;
 	var models = __webpack_require__(4);
 	exports.models = models;
-	__export(__webpack_require__(5));
-	__export(__webpack_require__(8));
-	__export(__webpack_require__(2));
+	var report_1 = __webpack_require__(5);
+	exports.Report = report_1.Report;
+	var tile_1 = __webpack_require__(8);
+	exports.Tile = tile_1.Tile;
+	var embed_1 = __webpack_require__(2);
+	exports.Embed = embed_1.Embed;
+	var page_1 = __webpack_require__(6);
+	exports.Page = page_1.Page;
+	var visual_1 = __webpack_require__(7);
+	exports.Visual = visual_1.Visual;
 	/**
 	 * Make PowerBi available on global object for use in apps without module loading support.
 	 * Save class to allow creating an instance of the service.
@@ -3518,7 +3522,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! http-post-message v0.2.0 | (c) 2016 Microsoft Corporation MIT */
+	/*! http-post-message v0.2.1 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -3702,6 +3706,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*! powerbi-router v0.1.2 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
