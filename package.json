@@ -11,8 +11,7 @@
     "test": "test"
   },
   "scripts": {
-    "preversion": "gulp build",
-    "version": "gulp config && git add .",
+    "version": "gulp build && git add .",
     "prepublish": "gulp build",
     "test": "gulp test --chrome"
   },
