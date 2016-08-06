@@ -5,6 +5,9 @@
 [![GitHub tag](https://img.shields.io/github/tag/microsoft/powerbi-javascript.svg)](https://github.com/Microsoft/PowerBI-JavaScript/tags)
 [![Gitter](https://img.shields.io/gitter/room/Microsoft/PowerBI-JavaScript.svg)](https://gitter.im/Microsoft/PowerBI-JavaScript)
 
+## Documentation
+### [https://microsoft.github.io/PowerBI-JavaScript](https://microsoft.github.io/PowerBI-JavaScript)
+
 ## Installation
 
 Install via Nuget:
@@ -25,12 +28,20 @@ Installing beta versions:
 
 ## Setup Power BI for embedding
 
-Add the Power BI script before your apps closing `</body>` tag
+Ideally you would use module loader or compilation step to import using ES6 modules as:
 
-`<script src="/bower_components/powerbi-client/dist/powerbi.js"></script>`
+```javascript
+import * as pbi from 'powerbi-client';
+```
 
-This exposes two globals `Powerbi` which is the service class and `powerbi` which is an instance of the service.
+However, the library is exported as a Universal Module and the Power BI script can be included before your apps closing `</body>` tag as:
 
+```html
+<script src="/bower_components/powerbi-client/dist/powerbi.js"></script>
+```
+
+When included directly the library is exposd as a global named 'powerbi-client'.
+There are also other globals `Powerbi` which is the service class and `powerbi` which is an instance of the service.
 
 # Embedding
 
@@ -194,22 +205,18 @@ All Embeds
 ```
 loaded
 	configuration
+error
+	error
 ```
 
 Reports
 
 ```
 pageChanged
-	activePage
-filterAdded
-	filter
-filterUpdated
-	filter
-filterRemoved
-	filter
-filtersRemoved
-	target
-dataSelected
+	newPage
+filtersApplied
+	filters
+dataSelected (Coming soon)
 	filter
 	data (Array of points)
 	pageName
@@ -229,3 +236,74 @@ report.on('loaded', event => {
 });
 ```
 
+# Understanding the embed process
+What actually happens when you call `powerbi.embed(element, embedConfig);`?
+
+1. Determine if we are embedding on an element which is contains embedded content.
+
+	If the content already embedded is of the same type, we can re-use the existing iframe and simply send a new load command to it rather than reloading the entire contents of the iframe which is much slower since there is significant amount of JavaScript to download.
+
+2. (New Embed) Create instance of embed object.
+
+	The [constructor](https://github.com/Microsoft/PowerBI-JavaScript/blob/dev/src/embed.ts#L67) of the embed will normalize all the required configuration from either the HTML attributes or those passed directly in the configuraiton object.
+
+	(Existing Embed) Pass through to next step.
+
+3. Call `embed.load` which will take the normalized load configuration and send the load message to the iframe.
+
+// TODO: Insert flow-chart diagram
+
+# Understanding the object hierarchy
+The core of the library is a service which is responsible for tracking the embeds in the application, handling communication to and from their iframes, and also handling event bubbling.
+
+The embeds that the service tracks are all implementations of the abstract `Embed` class. Concrete implementations of this class are things that you are familiar with in Power BI such as Reports and Dashbaords.
+
+Within these top-level embed objects, the have a logical composition of other objects.  For example: Reports have pages and pages have visuals and each of these objects has different types of actions that can be performed on it.
+
+// TODO: Insert UML and Block Diagrams
+
+# Understanding the post message communication flow
+Although `powerbi-client` is bundled as a single script for ease of use there are 4 other dependent libraries which enable familiar Promise-based programming style for communication accross windows.
+
+1. [window-post-message-proxy](https://github.com/Microsoft/window-post-message-proxy)
+2. [http-post-message](https://github.com/Microsoft/http-post-message)
+3. [powerbi-models](https://github.com/Microsoft/powerbi-models)
+4. [powerbi-router](https://github.com/Microsoft/powerbi-router)
+
+Check out those repositories for individual descriptions and example usage.
+
+In summary, we simulate HTTP protocol over window.postMessage.
+This makes reasoning about message structure intuitive for web developers instead of being another arbitrary protocol.
+This also makes the understanding the flow just like any other client server relationship.
+
+Examples:
+- Getting pages on a report: `GET /report/pages`
+- Getting visuals on a page: `GET /report/pages/ReportSection/visuals`
+
+// TODO: Include sequence diagram with requests flow and possible returns
+
+There is more complexity in understanding the communication flow when the requests are state changing operations such as changing pages or setting filters.  These operations can be initiated programmatically by the SDK or manually by the user and in order to have a constent way of dealing with this in code the API's are asynchronous.
+
+This means instead of request and response, it is commands and events.
+In the case of the SDK sending the command it will only be validated and immediately return 202 Accepted response. Meanwhile, the embed will execute the operation and when complete it will send an event.
+In the case of the user initiating the command, only the event will be emitted.
+
+Page change example:
+```javascript
+// Register event handler for page change events.
+// Will execute regardless of the event being initated programmatically or by the user.
+report.on('pageChanged', event => {
+  const page = event.detail.newPage;
+  console.log(`${page.name} was set as active page`);
+  // ... update ui with new page
+});
+
+// Programmatically change pages which will resolve before the page has actually changed.
+page.setActive()
+  .then(() => {
+    console.log('command accepted');
+  })
+  .catch(errors => {
+    console.log(errors);
+  });
+```
