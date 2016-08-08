@@ -1,11 +1,6 @@
 language: node_js
 node_js:
-- '4.4'
-before_install:
-- npm install -g typings typescript
-- npm link typescript
-- typings install
-script: gulp test
+- node
 after_success:
 - ".travis/push.sh"
 branches:
