@@ -41,7 +41,7 @@ However, the library is exported as a Universal Module and the Power BI script c
 ```
 
 When included directly the library is exposd as a global named 'powerbi-client'.
-There are also other globals `Powerbi` which is the service class and `powerbi` which is an instance of the service.
+There is also another global `powerbi` which is an instance of the service.
 
 # Embedding
 

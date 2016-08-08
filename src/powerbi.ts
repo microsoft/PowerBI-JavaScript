@@ -26,9 +26,9 @@ export {
     Visual
 } from './visual';
 
+declare var powerbi: service.Service;
 declare global {
     interface Window {
-        Powerbi: typeof service.Service;
         powerbi: service.Service;
     }
 }
@@ -38,5 +38,5 @@ declare global {
  * Save class to allow creating an instance of the service.
  * Create instance of class with default config for normal usage.
  */
-window.Powerbi = service.Service;
-window.powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+var powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+window.powerbi = powerbi;
