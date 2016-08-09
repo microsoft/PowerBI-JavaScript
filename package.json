@@ -59,7 +59,5 @@
     "yargs": "^4.4.0"
   },
   "dependencies": {},
-  "publishConfig": {
-    "tag": "beta"
-  }
+  "publishConfig": {}
 }
