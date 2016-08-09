@@ -2,7 +2,7 @@ language: node_js
 node_js:
     - '4.4'
 before_script:
-    - npm install
+    - npm run contrib
 script: gulp test
 after_success:
     - .travis/push.sh

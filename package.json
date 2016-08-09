@@ -8,9 +8,9 @@
     "test": "test"
   },
   "scripts": {
+    "build": "gulp build",
     "test": "gulp test",
-    "preinstall": "npm install -g typings",
-    "postinstall": "typings install"
+    "contrib": "typings install && npm run build"
   },
   "keywords": [
     "microsoft",
@@ -53,6 +53,7 @@
     "run-sequence": "^1.1.5",
     "ts-loader": "^0.8.1",
     "tslint": "^3.6.0",
+    "typings": "^1.3.2",
     "webpack": "^1.12.14",
     "webpack-stream": "^3.1.0",
     "yargs": "^4.4.0"
