@@ -1,7 +1,7 @@
 {
   "name": "powerbi-client",
   "description": "",
-  "main": "./dist/powerbi.min.js",
+  "main": "./dist/powerbi.js",
   "authors": [
     "Microsoft"
   ],
