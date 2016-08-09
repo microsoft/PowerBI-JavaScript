@@ -1,4 +1,4 @@
-/*! powerbi-client v1.1.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v1.1.2 | (c) 2016 Microsoft Corporation MIT */
 export declare class Utils {
     static raiseCustomEvent(element: HTMLElement, eventName: string, eventData: any): void;
     static findIndex<T>(predicate: (T) => boolean, xs: T[]): number;
