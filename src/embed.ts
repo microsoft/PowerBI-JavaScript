@@ -23,6 +23,12 @@ declare global {
 
 // TODO: Re-use ILoadConfiguration interface to prevent duplicating properties.
 // Current issue is that they are optional when embedding since they can be specificed as attributes but they are required when loading.
+/**
+ * Configuration settings for Power BI embed components
+ * 
+ * @export
+ * @interface IEmbedConfiguration
+ */
 export interface IEmbedConfiguration {
     type?: string;
     id?: string;
@@ -45,6 +51,13 @@ export interface IInternalEventHandler<T> {
     handle(event: service.ICustomEvent<T>): void;
 }
 
+/**
+ * Base class for all Power BI embed components
+ * 
+ * @export
+ * @abstract
+ * @class Embed
+ */
 export abstract class Embed {
     static allowedEvents = ["loaded"];
     static accessTokenAttribute = 'powerbi-access-token';
@@ -58,17 +71,53 @@ export abstract class Embed {
     };
 
     allowedEvents = [];
+
+    /**
+     * Gets or set the event handler registered for this embed component
+     * 
+     * @type {IInternalEventHandler<any>[]}
+     */
     eventHandlers: IInternalEventHandler<any>[];
+    
+    /**
+     * Gets or sets the Power BI embed service
+     * 
+     * @type {service.Service}
+     */
     service: service.Service;
+
+    /**
+     * Gets or sets the HTML element containing the Power BI embed component
+     * 
+     * @type {HTMLElement}
+     */
     element: HTMLElement;
+
+    /**
+     * Gets or sets the HTML iframe element that renders the Power BI embed component
+     * 
+     * @type {HTMLIFrameElement}
+     */
     iframe: HTMLIFrameElement;
+
+    /**
+     * Gets or sets the configuration settings for the embed component
+     * 
+     * @type {IInternalEmbedConfiguration}
+     */
     config: IInternalEmbedConfiguration;
 
     /**
+     * Creates an instance of Embed.
+     * 
      * Note: there is circular reference between embeds and service
      * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
+     * 
+     * @param {service.Service} service
+     * @param {HTMLElement} element
+     * @param {IEmbedConfiguration} config
      */
-    constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration) {
+   constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration) {
         Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
         this.eventHandlers = [];
         this.service = service;
@@ -109,6 +158,9 @@ export abstract class Embed {
      * })
      *   .catch(error => { ... });
      * ```
+     * 
+     * @param {models.ILoadConfiguration} config
+     * @returns {Promise<void>}
      */
     load(config: models.ILoadConfiguration): Promise<void> {
         const errors = models.validateLoad(config);
@@ -142,6 +194,10 @@ export abstract class Embed {
      * 
      * report.off('pageChanged', logHandler);
      * ```
+     * 
+     * @template T
+     * @param {string} eventName
+     * @param {service.IEventHandler<T>} [handler]
      */
     off<T>(eventName: string, handler?: service.IEventHandler<T>): void {
         const fakeEvent: service.IEvent<any> = { name: eventName, type: null, id: null, value: null };
@@ -169,6 +225,10 @@ export abstract class Embed {
      *   console.log('PageChanged: ', event.page.name);
      * });
      * ```
+     * 
+     * @template T
+     * @param {string} eventName
+     * @param {service.IEventHandler<T>} handler
      */
     on<T>(eventName: string, handler: service.IEventHandler<T>): void {
         if(this.allowedEvents.indexOf(eventName) === -1) {
@@ -185,6 +245,10 @@ export abstract class Embed {
 
     /**
      * Get access token from first available location: config, attribute, global.
+     * 
+     * @private
+     * @param {string} globalAccessToken
+     * @returns {string}
      */
     private getAccessToken(globalAccessToken: string): string {
         const accessToken = this.config.accessToken || this.element.getAttribute(Embed.accessTokenAttribute) || globalAccessToken;
@@ -198,6 +262,9 @@ export abstract class Embed {
 
     /**
      * Get embed url from first available location: options, attribute.
+     * 
+     * @private
+     * @returns {string}
      */
     private getEmbedUrl(): string {
         const embedUrl = this.config.embedUrl || this.element.getAttribute(Embed.embedUrlAttribute);
@@ -212,6 +279,9 @@ export abstract class Embed {
     /**
      * Get unique id from first available location: options, attribute.
      * If neither is provided generate unique string.
+     * 
+     * @private
+     * @returns {string}
      */
     private getUniqueId(): string {
         return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || utils.createRandomString();
@@ -219,6 +289,9 @@ export abstract class Embed {
 
     /**
      * Get report id from first available location: options, attribute.
+     * 
+     * @abstract
+     * @returns {string}
      */
     abstract getId(): string;
 
@@ -246,6 +319,10 @@ export abstract class Embed {
     /**
      * Return true if iframe is fullscreen,
      * otherwise return false
+     * 
+     * @private
+     * @param {HTMLIFrameElement} iframe
+     * @returns {boolean}
      */
     private isFullscreen(iframe: HTMLIFrameElement): boolean {
         const options = ['fullscreenElement', 'webkitFullscreenElement', 'mozFullscreenScreenElement', 'msFullscreenElement'];

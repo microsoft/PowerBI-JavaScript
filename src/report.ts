@@ -7,12 +7,27 @@ import * as utils from './util';
 import { IFilterable } from './ifilterable';
 import { IPageNode, Page } from './page';
 
+/**
+ * A Report node within a report hierarchy
+ * 
+ * @export
+ * @interface IReportNode
+ */
 export interface IReportNode {
     iframe: HTMLIFrameElement;
     service: service.IService;
     config: embed.IInternalEmbedConfiguration
 }
 
+/**
+ * A Power BI Report embed component
+ * 
+ * @export
+ * @class Report
+ * @extends {embed.Embed}
+ * @implements {IReportNode}
+ * @implements {IFilterable}
+ */
 export class Report extends embed.Embed implements IReportNode, IFilterable {
     static allowedEvents = ["dataSelected", "filtersApplied", "pageChanged", "error"];
     static reportIdAttribute = 'powerbi-report-id';
@@ -21,6 +36,13 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     static typeAttribute = 'powerbi-type';
     static type = "Report";
 
+    /**
+     * Creates an instance of a Power BI Report.
+     * 
+     * @param {service.Service} service
+     * @param {HTMLElement} element
+     * @param {embed.IEmbedConfiguration} config
+     */
     constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration) {
         const filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
         const navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
@@ -39,6 +61,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
      * E.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1
      * 
      * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
+     * 
+     * @static
+     * @param {string} url
+     * @returns {string}
      */
     static findIdFromEmbedUrl(url: string): string {
         const reportIdRegEx = /reportId="?([^&]+)"?/
@@ -62,6 +88,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
      *     ...
      *   });
      * ```
+     * 
+     * @returns {Promise<models.IFilter[]>}
      */
     getFilters(): Promise<models.IFilter[]> {
         return this.service.hpm.get<models.IFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
@@ -73,6 +101,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
     /**
      * Get report id from first available location: options, attribute, embed url.
+     * 
+     * @returns {string}
      */
     getId(): string {
         const reportId = this.config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(this.config.embedUrl);
@@ -93,6 +123,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
      *      ...
      *  });
      * ```
+     * 
+     * @returns {Promise<Page[]>}
      */
     getPages(): Promise<Page[]> {
         return this.service.hpm.get<models.IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
@@ -119,6 +151,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
      * const page = report.page('ReportSection1');
      * page.setActive();
      * ```
+     * 
+     * @param {string} name
+     * @param {string} [displayName]
+     * @returns {Page}
      */
     page(name: string, displayName?: string): Page {
         return new Page(this, name, displayName);
@@ -130,8 +166,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
      * ```javascript
      * report.removeFilters();
      * ```
+     * 
+     * @returns {Promise<void>}
      */
-    removeFilters() {
+    removeFilters(): Promise<void> {
         return this.setFilters([]);
     }
 
@@ -142,6 +180,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
      * report.setPage("page2")
      *  .catch(error => { ... });
      * ```
+     * 
+     * @param {string} pageName
+     * @returns {Promise<void>}
      */
     setPage(pageName: string): Promise<void> {
         const page: models.IPage = {
@@ -168,6 +209,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
      *    ...
      *  });
      * ```
+     * 
+     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+     * @returns {Promise<void>}
      */
     setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void> {
         return this.service.hpm.put<models.IError[]>(`/report/filters`, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
@@ -188,6 +232,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
      * report.updateSettings(newSettings)
      *   .catch(error => { ... });
      * ```
+     * 
+     * @param {models.ISettings} settings
+     * @returns {Promise<void>}
      */
     updateSettings(settings: models.ISettings): Promise<void> {
         return this.service.hpm.patch<models.IError[]>('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)

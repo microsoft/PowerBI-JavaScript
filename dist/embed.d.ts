@@ -11,6 +11,12 @@ declare global  {
         msRequestFullscreen: Function;
     }
 }
+/**
+ * Configuration settings for Power BI embed components
+ *
+ * @export
+ * @interface IEmbedConfiguration
+ */
 export interface IEmbedConfiguration {
     type?: string;
     id?: string;
@@ -18,6 +24,8 @@ export interface IEmbedConfiguration {
     embedUrl?: string;
     accessToken?: string;
     settings?: models.ISettings;
+    pageName?: string;
+    filters?: (models.IBasicFilter | models.IAdvancedFilter)[];
 }
 export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {
     uniqueId: string;
@@ -28,6 +36,13 @@ export interface IInternalEventHandler<T> {
     test(event: service.IEvent<T>): boolean;
     handle(event: service.ICustomEvent<T>): void;
 }
+/**
+ * Base class for all Power BI embed components
+ *
+ * @export
+ * @abstract
+ * @class Embed
+ */
 export declare abstract class Embed {
     static allowedEvents: string[];
     static accessTokenAttribute: string;
@@ -37,14 +52,45 @@ export declare abstract class Embed {
     static type: string;
     private static defaultSettings;
     allowedEvents: any[];
+    /**
+     * Gets or set the event handler registered for this embed component
+     *
+     * @type {IInternalEventHandler<any>[]}
+     */
     eventHandlers: IInternalEventHandler<any>[];
+    /**
+     * Gets or sets the Power BI embed service
+     *
+     * @type {service.Service}
+     */
     service: service.Service;
+    /**
+     * Gets or sets the HTML element containing the Power BI embed component
+     *
+     * @type {HTMLElement}
+     */
     element: HTMLElement;
+    /**
+     * Gets or sets the HTML iframe element that renders the Power BI embed component
+     *
+     * @type {HTMLIFrameElement}
+     */
     iframe: HTMLIFrameElement;
+    /**
+     * Gets or sets the configuration settings for the embed component
+     *
+     * @type {IInternalEmbedConfiguration}
+     */
     config: IInternalEmbedConfiguration;
     /**
+     * Creates an instance of Embed.
+     *
      * Note: there is circular reference between embeds and service
      * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
+     *
+     * @param {service.Service} service
+     * @param {HTMLElement} element
+     * @param {IEmbedConfiguration} config
      */
     constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration);
     /**
@@ -67,6 +113,9 @@ export declare abstract class Embed {
      * })
      *   .catch(error => { ... });
      * ```
+     *
+     * @param {models.ILoadConfiguration} config
+     * @returns {Promise<void>}
      */
     load(config: models.ILoadConfiguration): Promise<void>;
     /**
@@ -86,6 +135,10 @@ export declare abstract class Embed {
      *
      * report.off('pageChanged', logHandler);
      * ```
+     *
+     * @template T
+     * @param {string} eventName
+     * @param {service.IEventHandler<T>} [handler]
      */
     off<T>(eventName: string, handler?: service.IEventHandler<T>): void;
     /**
@@ -96,23 +149,40 @@ export declare abstract class Embed {
      *   console.log('PageChanged: ', event.page.name);
      * });
      * ```
+     *
+     * @template T
+     * @param {string} eventName
+     * @param {service.IEventHandler<T>} handler
      */
     on<T>(eventName: string, handler: service.IEventHandler<T>): void;
     /**
      * Get access token from first available location: config, attribute, global.
+     *
+     * @private
+     * @param {string} globalAccessToken
+     * @returns {string}
      */
     private getAccessToken(globalAccessToken);
     /**
      * Get embed url from first available location: options, attribute.
+     *
+     * @private
+     * @returns {string}
      */
     private getEmbedUrl();
     /**
      * Get unique id from first available location: options, attribute.
      * If neither is provided generate unique string.
+     *
+     * @private
+     * @returns {string}
      */
     private getUniqueId();
     /**
      * Get report id from first available location: options, attribute.
+     *
+     * @abstract
+     * @returns {string}
      */
     abstract getId(): string;
     /**
@@ -126,6 +196,10 @@ export declare abstract class Embed {
     /**
      * Return true if iframe is fullscreen,
      * otherwise return false
+     *
+     * @private
+     * @param {HTMLIFrameElement} iframe
+     * @returns {boolean}
      */
     private isFullscreen(iframe);
 }

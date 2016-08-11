@@ -4,11 +4,26 @@ import * as embed from './embed';
 import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 import { Page } from './page';
+/**
+ * A Report node within a report hierarchy
+ *
+ * @export
+ * @interface IReportNode
+ */
 export interface IReportNode {
     iframe: HTMLIFrameElement;
     service: service.IService;
     config: embed.IInternalEmbedConfiguration;
 }
+/**
+ * A Power BI Report embed component
+ *
+ * @export
+ * @class Report
+ * @extends {embed.Embed}
+ * @implements {IReportNode}
+ * @implements {IFilterable}
+ */
 export declare class Report extends embed.Embed implements IReportNode, IFilterable {
     static allowedEvents: string[];
     static reportIdAttribute: string;
@@ -16,12 +31,23 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
     static navContentPaneEnabledAttribute: string;
     static typeAttribute: string;
     static type: string;
+    /**
+     * Creates an instance of a Power BI Report.
+     *
+     * @param {service.Service} service
+     * @param {HTMLElement} element
+     * @param {embed.IEmbedConfiguration} config
+     */
     constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration);
     /**
      * This adds backwards compatibility for older config which used the reportId query param to specify report id.
      * E.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1
      *
      * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
+     *
+     * @static
+     * @param {string} url
+     * @returns {string}
      */
     static findIdFromEmbedUrl(url: string): string;
     /**
@@ -34,10 +60,14 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      *     ...
      *   });
      * ```
+     *
+     * @returns {Promise<models.IFilter[]>}
      */
     getFilters(): Promise<models.IFilter[]>;
     /**
      * Get report id from first available location: options, attribute, embed url.
+     *
+     * @returns {string}
      */
     getId(): string;
     /**
@@ -49,6 +79,8 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      *      ...
      *  });
      * ```
+     *
+     * @returns {Promise<Page[]>}
      */
     getPages(): Promise<Page[]>;
     /**
@@ -64,6 +96,10 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      * const page = report.page('ReportSection1');
      * page.setActive();
      * ```
+     *
+     * @param {string} name
+     * @param {string} [displayName]
+     * @returns {Page}
      */
     page(name: string, displayName?: string): Page;
     /**
@@ -72,6 +108,8 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      * ```javascript
      * report.removeFilters();
      * ```
+     *
+     * @returns {Promise<void>}
      */
     removeFilters(): Promise<void>;
     /**
@@ -81,6 +119,9 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      * report.setPage("page2")
      *  .catch(error => { ... });
      * ```
+     *
+     * @param {string} pageName
+     * @returns {Promise<void>}
      */
     setPage(pageName: string): Promise<void>;
     /**
@@ -96,6 +137,9 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      *    ...
      *  });
      * ```
+     *
+     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+     * @returns {Promise<void>}
      */
     setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void>;
     /**
@@ -110,6 +154,9 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      * report.updateSettings(newSettings)
      *   .catch(error => { ... });
      * ```
+     *
+     * @param {models.ISettings} settings
+     * @returns {Promise<void>}
      */
     updateSettings(settings: models.ISettings): Promise<void>;
 }

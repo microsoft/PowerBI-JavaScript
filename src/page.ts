@@ -3,17 +3,54 @@ import { IReportNode } from './report';
 import { Visual } from './visual';
 import * as models from 'powerbi-models';
 
+/**
+ * A Page node within a report hierarchy
+ * 
+ * @export
+ * @interface IPageNode
+ */
 export interface IPageNode {
     report: IReportNode;
     name: string;
 }
 
+/**
+ * A Power BI report page
+ * 
+ * @export
+ * @class Page
+ * @implements {IPageNode}
+ * @implements {IFilterable}
+ */
 export class Page implements IPageNode, IFilterable {
+    /**
+     * The parent Power BI report that this page is a member of
+     * 
+     * @type {IReportNode}
+     */
     report: IReportNode;
+    /**
+     * The report page name
+     * 
+     * @type {string}
+     */
     name: string;
-    // This can be undefined in cases where page is created manually
+
+    /**
+     * The user defined display name of the report page
+     * This can be undefined in cases where page is created manually
+     * 
+     * @type {string}
+     */
     displayName: string;
 
+    /**
+     * Creates an instance of a Power BI report page.
+     * 
+     * @param {IReportNode} report
+     * @param {string} name
+     * @param {string} [displayName]
+     */
     constructor(report: IReportNode, name: string, displayName?: string) {
         this.report = report;
         this.name = name;
@@ -27,8 +64,10 @@ export class Page implements IPageNode, IFilterable {
      * page.getFilters()
      *  .then(pages => { ... });
      * ```
+     * 
+     * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
      */
-    getFilters() {
+    getFilters(): Promise<(models.IBasicFilter | models.IAdvancedFilter)[]> {
         return this.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.name}/filters`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
             .then(response => response.body,
             response => {
@@ -43,6 +82,8 @@ export class Page implements IPageNode, IFilterable {
      * page.getVisuals()
      *   .then(visuals => { ... });
      * ```
+     * 
+     * @returns {Promise<Visual[]>}
      */
     getVisuals(): Promise<Visual[]> {
         return this.report.service.hpm.get<models.IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
@@ -62,8 +103,10 @@ export class Page implements IPageNode, IFilterable {
      * ```javascript
      * page.removeFilters();
      * ```
+     * 
+     * @returns {Promise<void>}
      */
-    removeFilters() {
+    removeFilters(): Promise<void> {
         return this.setFilters([]);
     }
 
@@ -73,8 +116,10 @@ export class Page implements IPageNode, IFilterable {
      * ```javascripot
      * page.setActive();
      * ```
+     * 
+     * @returns {Promise<void>}
      */
-    setActive() {
+    setActive(): Promise<void> {
         const page: models.IPage = {
             name: this.name,
             displayName: null
@@ -93,8 +138,11 @@ export class Page implements IPageNode, IFilterable {
      * page.setFilters(filters);
      *   .catch(errors => { ... });
      * ```
+     * 
+     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+     * @returns {Promise<void>}
      */
-    setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]) {
+    setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void> {
         return this.report.service.hpm.put<models.IError[]>(`/report/pages/${this.name}/filters`, filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
             .catch(response => {
                 throw response.body;
@@ -114,6 +162,9 @@ export class Page implements IPageNode, IFilterable {
      * const visual = report.page('ReportSection1').visual('BarChart1');
      * visual.setFilters(filters);
      * ```
+     * 
+     * @param {string} name
+     * @returns {Visual}
      */
     visual(name: string): Visual {
         return new Visual(this, name);
