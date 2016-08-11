@@ -3,14 +3,51 @@ import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
 import { Visual } from './visual';
 import * as models from 'powerbi-models';
+/**
+ * A Page node within a report hierarchy
+ *
+ * @export
+ * @interface IPageNode
+ */
 export interface IPageNode {
     report: IReportNode;
     name: string;
 }
+/**
+ * A Power BI report page
+ *
+ * @export
+ * @class Page
+ * @implements {IPageNode}
+ * @implements {IFilterable}
+ */
 export declare class Page implements IPageNode, IFilterable {
+    /**
+     * The parent Power BI report that this page is a member of
+     *
+     * @type {IReportNode}
+     */
     report: IReportNode;
+    /**
+     * The report page name
+     *
+     * @type {string}
+     */
     name: string;
+    /**
+     * The user defined display name of the report page
+     * This can be undefined in cases where page is created manually
+     *
+     * @type {string}
+     */
     displayName: string;
+    /**
+     * Creates an instance of a Power BI report page.
+     *
+     * @param {IReportNode} report
+     * @param {string} name
+     * @param {string} [displayName]
+     */
     constructor(report: IReportNode, name: string, displayName?: string);
     /**
      * Gets all page level filters within report
@@ -19,8 +56,10 @@ export declare class Page implements IPageNode, IFilterable {
      * page.getFilters()
      *  .then(pages => { ... });
      * ```
+     *
+     * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
      */
-    getFilters(): Promise<models.IFilter[]>;
+    getFilters(): Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>;
     /**
      * Gets all the visuals on the page.
      *
@@ -28,6 +67,8 @@ export declare class Page implements IPageNode, IFilterable {
      * page.getVisuals()
      *   .then(visuals => { ... });
      * ```
+     *
+     * @returns {Promise<Visual[]>}
      */
     getVisuals(): Promise<Visual[]>;
     /**
@@ -36,6 +77,8 @@ export declare class Page implements IPageNode, IFilterable {
      * ```javascript
      * page.removeFilters();
      * ```
+     *
+     * @returns {Promise<void>}
      */
     removeFilters(): Promise<void>;
     /**
@@ -44,6 +87,8 @@ export declare class Page implements IPageNode, IFilterable {
      * ```javascripot
      * page.setActive();
      * ```
+     *
+     * @returns {Promise<void>}
      */
     setActive(): Promise<void>;
     /**
@@ -53,6 +98,9 @@ export declare class Page implements IPageNode, IFilterable {
      * page.setFilters(filters);
      *   .catch(errors => { ... });
      * ```
+     *
+     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+     * @returns {Promise<void>}
      */
     setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void>;
     /**
@@ -68,6 +116,9 @@ export declare class Page implements IPageNode, IFilterable {
      * const visual = report.page('ReportSection1').visual('BarChart1');
      * visual.setFilters(filters);
      * ```
+     *
+     * @param {string} name
+     * @returns {Visual}
      */
     visual(name: string): Visual;
 }

@@ -11,7 +11,6 @@ export { Page } from './page';
 export { Visual } from './visual';
 declare global  {
     interface Window {
-        Powerbi: typeof service.Service;
         powerbi: service.Service;
     }
 }
