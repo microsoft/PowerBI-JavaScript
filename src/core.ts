@@ -1,5 +1,6 @@
 import { Embed, IEmbedConstructor, IEmbedOptions } from './embed';
 import { Report } from './report';
+import { Dashboard } from './dashboard';
 import { Tile } from './tile';
 import { Utils } from './util';
 

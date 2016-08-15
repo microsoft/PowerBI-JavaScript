@@ -1,7 +1,7 @@
 import { Embed, IEmbedOptions, ILoadMessage } from './embed';
 
 export interface IDashboardLoadMessage extends ILoadMessage {
-    reportId: string
+    dashboardId: string
 }
 
 export class Dashboard extends Embed {
