@@ -1,5 +1,6 @@
 import { Embed, IEmbedConstructor, IEmbedOptions } from './embed';
 import { Report } from './report';
+import { Dashboard } from './dashboard';
 import { Tile } from './tile';
 import { Utils } from './util';
 
@@ -18,7 +19,8 @@ export class PowerBi {
      */
     private static components: IEmbedConstructor[] = [
         Tile,
-        Report
+        Report,
+        Dashboard
     ];
     /**
      * Mapping of event names from iframe postMessage to their name percieved by parent DOM.
@@ -30,7 +32,8 @@ export class PowerBi {
     private static eventMap = {
         'tileClicked': 'tile-click',
         'tileLoaded': 'tile-load',
-        'reportPageLoaded': 'report-load'
+        'reportPageLoaded': 'report-load',
+        'dashboardPageLoaded': 'dashboard-load'
     };
     
     /**
@@ -47,7 +50,7 @@ export class PowerBi {
     /** Configuration object */
     private config: IPowerBiConfiguration;
     
-    /** List of components (Reports/Tiles) that have been embedded using this service instance. */
+    /** List of components (Dashboards/Reports/Tiles) that have been embedded using this service instance. */
     private embeds: Embed[];
     
     constructor(config: IPowerBiConfiguration = {}) {
@@ -112,7 +115,7 @@ export class PowerBi {
         }
         
         // TODO: Consider removing in favor of passing reference to `this` in constructor
-        // The getGlobalAccessToken function is only here so that the components (Tile | Report) can get the global access token without needing reference
+        // The getGlobalAccessToken function is only here so that the components (Dashboard | Tile | Report) can get the global access token without needing reference
         // to the service that they are registered within becaues it creates circular dependencies
         config.getGlobalAccessToken = () => this.accessToken;
         
