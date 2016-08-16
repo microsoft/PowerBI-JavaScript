@@ -1,5 +1,6 @@
 import * as embed from './embed';
 import { Report } from './report';
+import { Dashboard } from './dashboard';
 import { Tile } from './tile';
 import { Page } from './page';
 import * as utils from './util';
@@ -67,9 +68,10 @@ export class Service implements IService {
     /**
      * List of components this service can embed.
      */
-    private static components: (typeof Report | typeof Tile)[] = [
+    private static components: (typeof Report | typeof Tile | typeof Dashboard)[] = [
         Tile,
-        Report
+        Report,
+        Dashboard
     ];
 
     /**
@@ -90,7 +92,7 @@ export class Service implements IService {
     /** Configuration object */
     private config: IServiceConfiguration;
 
-    /** List of components (Reports/Tiles) that have been embedded using this service instance. */
+    /** List of components (Reports/Tiles/Dashboards) that have been embedded using this service instance. */
     private embeds: embed.Embed[];
     /** TODO: Look for way to make this private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
     public hpm: hpm.HttpPostMessage;
@@ -136,6 +138,16 @@ export class Service implements IService {
         this.router.post(`/reports/:uniqueId/pages/:pageName/visuals/:pageName/events/:eventName`, (req, res) => {
             const event: IEvent<any> = {
                 type: 'report',
+                id: req.params.uniqueId,
+                name: req.params.eventName,
+                value: req.body
+            };
+
+            this.handleEvent(event);
+        });
+        this.router.post(`/dashboards/:uniqueId/events/:eventName`, (req, res) => {
+            const event: IEvent<any> = {
+                type: 'dashboard',
                 id: req.params.uniqueId,
                 name: req.params.eventName,
                 value: req.body
@@ -257,7 +269,7 @@ export class Service implements IService {
      * @param {HTMLElement} element
      * @returns {(Report | Tile)}
      */
-    get(element: HTMLElement): Report | Tile {
+    get(element: HTMLElement): Report | Tile | Dashboard {
         const powerBiElement = <IPowerBiElement>element;
 
         if (!powerBiElement.powerBiEmbed) {
@@ -273,7 +285,7 @@ export class Service implements IService {
      * @param {string} uniqueId
      * @returns {(Report | Tile)}
      */
-    find(uniqueId: string): Report | Tile {
+    find(uniqueId: string): Report | Tile | Dashboard {
         return utils.find(x => x.config.uniqueId === uniqueId, this.embeds);
     }
 
