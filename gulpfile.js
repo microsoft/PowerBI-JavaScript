@@ -10,9 +10,12 @@ var ghPages = require('gulp-gh-pages'),
     tslint = require("gulp-tslint"),
     ts = require('gulp-typescript'),
     flatten = require('gulp-flatten'),
-    rimraf = require('rimraf'),
+    fs = require('fs'),
+    del = require('del'),
+    moment = require('moment'),
     merge = require('merge2'),
     karma = require('karma'),
+    typedoc = require('gulp-typedoc'),
     webpack = require('webpack');
     webpackStream = require('webpack-stream'),
     webpackConfig = require('./webpack.config'),
@@ -25,11 +28,48 @@ var package = require('./package.json');
 var webpackBanner = package.name + " v" + package.version + " | (c) 2016 Microsoft Corporation " + package.license;
 var gulpBanner = "/*! " + webpackBanner + " */\n";
 
-gulp.task('ghpages', function() {
-  return gulp.src(['./demo/**/*'])
-    .pipe(ghPages({
-        force: true
-    }));
+gulp.task('ghpages', 'Deploy documentation to gh-pages', ['nojekyll'], function () {
+    return gulp.src(['./docs/**/*'], {
+        dot: true
+    })
+        .pipe(ghPages({
+            force: true,
+            message: 'Update ' + moment().format('LLL')
+        }));
+});
+
+gulp.task("docs", 'Compile documentation from src code', function () {
+    return gulp
+        .src(["src/**/*.ts"])
+        .pipe(typedoc({
+            mode: 'modules',
+            includeDeclarations: true,
+
+            // Output options (see typedoc docs) 
+            out: "./docs",
+            json: "./docs/json/" + package.name + ".json",
+
+            // TypeDoc options (see typedoc docs) 
+            ignoreCompilerErrors: true,
+            version: true
+        }))
+        ;
+});
+
+gulp.task('copydemotodocs', 'Copy the demo to the docs', function () {
+    return gulp.src(["demo/**/*"])
+        .pipe(gulp.dest("docs/demo"))
+        ;
+});
+
+gulp.task('nojekyll', 'Add .nojekyll file to docs directory', function (done) {
+    fs.writeFile('./docs/.nojekyll', '', function (error) {
+        if (error) {
+            throw error;
+        }
+
+        done();
+    });
 });
 
 gulp.task('watch', 'Watches for changes', ['lint'], function () {
@@ -65,6 +105,16 @@ gulp.task('build', 'Runs a full build', function (done) {
     );
 });
 
+gulp.task('build:docs', 'Build docs folder', function (done) {
+    return runSequence(
+        'clean:docs',
+        'docs',
+        'nojekyll',
+        'copydemotodocs',
+        done
+    );
+});
+
 gulp.task('config', 'Update config version with package version', function () {
     return gulp.src(['./src/config.ts'], {base: "./"})
         .pipe(replace(/version: '([^']+)'/, `version: '${package.version}'`))
@@ -78,7 +128,16 @@ gulp.task('header', 'Add header to distributed files', function () {
 });
 
 gulp.task('clean', 'Cleans destination folder', function(done) {
-    rimraf('./dist/', done);
+    return del([
+        './dist/**/*'
+    ]);
+});
+
+gulp.task('clean:docs', 'Clean docs directory', function () {
+    return del([
+        'docs/**/*',
+        'docs'
+    ]);
 });
 
 gulp.task('lint:ts', 'Lints all TypeScript', function() {

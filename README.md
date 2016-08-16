@@ -8,8 +8,11 @@
 ## Wiki
 See the [wiki](https://github.com/Microsoft/PowerBI-JavaScript/wiki) for more details about embedding, service configuration, setting default page, page navigation, dynamically applying filters, and more.
 
+## Code Docs
+See the [code docs](https://microsoft.github.io/PowerBI-JavaScript) for detailed information about classes, interfaces, types, etc.
+
 ## Demo
-### [https://microsoft.github.io/PowerBI-JavaScript](https://microsoft.github.io/PowerBI-JavaScript)
+See the [live demo](https://microsoft.github.io/PowerBI-JavaScript/demo) for sample application using the powerbi-client library in scenarios such as page navigation, applying filters, updating settings, and more.
 
 ## Installation
 
