@@ -3,18 +3,18 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>powerbi-client</title>
+	<title>IService | powerbi-client</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-	<script src="assets/js/modernizr.js"></script>
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script src="../assets/js/modernizr.js"></script>
 </head>
 <body>
 <header>
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">powerbi-client</a>
+					<a href="../index.html" class="title">powerbi-client</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -54,92 +54,148 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="globals.html">Globals</a>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/_service_.html">&quot;service&quot;</a>
+				</li>
+				<li>
+					<a href="_service_.iservice.html">IService</a>
 				</li>
 			</ul>
-			<h1> powerbi-client</h1>
+			<h1>Interface IService</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<div class="tsd-panel tsd-typography">
-				<h1 id="powerbi-client">powerbi-client</h1>
-				<p><a href="https://travis-ci.org/Microsoft/PowerBI-JavaScript"><img src="https://travis-ci.org/Microsoft/PowerBI-JavaScript.svg?branch=dev" alt="Build Status"></a>
-					<a href="https://www.npmjs.com/package/powerbi-client"><img src="https://badge.fury.io/js/powerbi-client.svg" alt="npm version"></a>
-					<a href="https://www.npmjs.com/package/powerbi-client"><img src="https://img.shields.io/npm/dm/powerbi-client.svg" alt="Downloads"></a>
-					<a href="https://github.com/Microsoft/PowerBI-JavaScript/tags"><img src="https://img.shields.io/github/tag/microsoft/powerbi-javascript.svg" alt="GitHub tag"></a>
-				<a href="https://gitter.im/Microsoft/PowerBI-JavaScript"><img src="https://img.shields.io/gitter/room/Microsoft/PowerBI-JavaScript.svg" alt="Gitter"></a></p>
-				<h2 id="wiki">Wiki</h2>
-				<p>See the <a href="https://github.com/Microsoft/PowerBI-JavaScript/wiki">wiki</a> for more details about embedding, service configuration, setting default page, page navigation, dynamically applying filters, and more.</p>
-				<h2 id="code-docs">Code Docs</h2>
-				<h3 id="-https-microsoft-github-io-powerbi-javascript-https-microsoft-github-io-powerbi-javascript-"><a href="https://microsoft.github.io/PowerBI-JavaScript">https://microsoft.github.io/PowerBI-JavaScript</a></h3>
-				<h2 id="demo">Demo</h2>
-				<h3 id="-demo-demo-"><a href="demo/index.html">demo</a></h3>
-				<h2 id="installation">Installation</h2>
-				<p>Install via Nuget:</p>
-				<p><code>Install-Package Microsoft.PowerBI.JavaScript -Pre</code></p>
-				<p>Install from NPM:</p>
-				<p><code>npm install -save powerbi-client</code></p>
-				<p>Install from Bower:</p>
-				<p><code>bower install powerbi-client --save</code></p>
-				<p>Installing beta versions:</p>
-				<p><code>npm install --save powerbi-client@beta</code></p>
-				<h2 id="include-the-library-via-import-or-manually">Include the library via import or manually</h2>
-				<p>Ideally you would use module loader or compilation step to import using ES6 modules as:</p>
-				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> pbi <span class="hljs-keyword">from</span> <span class="hljs-string">'powerbi-client'</span>;
-</code></pre>
-				<p>However, the library is exported as a Universal Module and the powerbi.js script can be included before your apps closing <code>&lt;/body&gt;</code> tag as:</p>
-				<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"/bower_components/powerbi-client/dist/powerbi.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-</code></pre>
-				<p>When included directly the library is exposd as a global named &#39;powerbi-client&#39;.
-				There is also another global <code>powerbi</code> which is an instance of the service.</p>
-			</div>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">IService</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implemented by</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../classes/_service_.service.html" class="tsd-signature-type">Service</a></li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_service_.iservice.html#hpm" class="tsd-kind-icon">hpm</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="hpm" class="tsd-anchor"></a>
+					<h3>hpm</h3>
+					<div class="tsd-signature tsd-kind-icon">hpm<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">hpm.HttpPostMessage</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/08e9d27/src/service.ts#L55">service.ts:55</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
 					<li class="globals  ">
-						<a href="globals.html"><em>Globals</em></a>
+						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_config_.html">"config"</a>
+						<a href="../modules/_config_.html">"config"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_embed_.html">"embed"</a>
+						<a href="../modules/_embed_.html">"embed"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_factories_.html">"factories"</a>
+						<a href="../modules/_factories_.html">"factories"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_ifilterable_.html">"ifilterable"</a>
+						<a href="../modules/_ifilterable_.html">"ifilterable"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_page_.html">"page"</a>
+						<a href="../modules/_page_.html">"page"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_powerbi_.html">"powerbi"</a>
+						<a href="../modules/_powerbi_.html">"powerbi"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_report_.html">"report"</a>
+						<a href="../modules/_report_.html">"report"</a>
+					</li>
+					<li class="current tsd-kind-external-module">
+						<a href="../modules/_service_.html">"service"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_service_.html">"service"</a>
+						<a href="../modules/_tile_.html">"tile"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_tile_.html">"tile"</a>
+						<a href="../modules/_util_.html">"util"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_util_.html">"util"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_visual_.html">"visual"</a>
+						<a href="../modules/_visual_.html">"visual"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/_service_.service.html" class="tsd-kind-icon">Service</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="_service_.icustomevent.html" class="tsd-kind-icon">ICustom<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_service_.idebugoptions.html" class="tsd-kind-icon">IDebug<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="_service_.ievent.html" class="tsd-kind-icon">IEvent</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="_service_.ieventhandler.html" class="tsd-kind-icon">IEvent<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_service_.ihpmfactory.html" class="tsd-kind-icon">IHpm<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_service_.ipowerbielement.html" class="tsd-kind-icon">IPower<wbr>BiElement</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_service_.irouterfactory.html" class="tsd-kind-icon">IRouter<wbr>Factory</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_service_.iservice.html" class="tsd-kind-icon">IService</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_service_.iservice.html#hpm" class="tsd-kind-icon">hpm</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_service_.iserviceconfiguration.html" class="tsd-kind-icon">IService<wbr>Configuration</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_service_.iwpmpfactory.html" class="tsd-kind-icon">IWpmp<wbr>Factory</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -208,7 +264,7 @@
 	<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
-<script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>
