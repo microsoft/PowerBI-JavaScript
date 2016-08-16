@@ -53,18 +53,17 @@ The build and tests use webpack to compile all the source modules into one bundl
 ## Running the demo
 Navigate to `/demo` directory
 
-Install bower dependencies
+Install bower dependencies:
 ```
 bower install
 ```
 
-Run http-server from demo directory:
+Serve the demo directory:
 ```
-http-server
+npm start
 ```
-You can install `http-server` using `npm install -g http-server`;
 
-Open the demo folder in the browser: `http://127.0.0.1:8080/`
+Open the address to view in the browser:
 ```
 http://127.0.0.1:8080/
 ```
