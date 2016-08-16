@@ -92,9 +92,10 @@ export class Service implements IService {
 
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds: embed.Embed[];
-    /** TODO: Look for way to make this private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
-    public hpm: hpm.HttpPostMessage;
-    public wpmp: wpmp.WindowPostMessageProxy;
+    /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
+    hpm: hpm.HttpPostMessage;
+    /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
+    wpmp: wpmp.WindowPostMessageProxy;
     private router: router.Router;
 
     /**
