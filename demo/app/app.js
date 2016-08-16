@@ -2,10 +2,11 @@ $(function () {
   var models = window['powerbi-client'].models;
 
   // Other
-  var apiBaseUrl = 'http://powerbipaasapi.azurewebsites.net/api';
+  var apiBaseUrl = 'https://powerbiembedapi.azurewebsites.net/api';
   var allReportsUrl = apiBaseUrl + '/reports';
-  var staticReportId = '5dac7a4a-4452-46b3-99f6-a25915e0fe55';
+  var staticReportId = 'c52af8ab-0468-4165-92af-dc39858d66ad';
   var staticReportUrl = allReportsUrl + '/' + staticReportId;
+  var edogReportUrl = apiBaseUrl + '/dxt/reports/c4d31ef0-7b34-4d80-9bcb-5974d1405572';
 
   // Scenario 1: Static Embed
   var $staticReportContainer = $('#reportstatic');
@@ -65,15 +66,6 @@ $(function () {
   });
 
   /**
-   * This is temporarily hard code so we can load reports from the pre-production environment for testing out new features.
-   */
-  var localReportOverride = {
-    embedUrl: 'https://portal.analysis.windows-int.net/appTokenReportEmbed?unmin=true',
-    id: 'c4d31ef0-7b34-4d80-9bcb-5974d1405572',
-    accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjEuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlckJJU0RLIiwidHlwZSI6ImVtYmVkIiwid2NuIjoiV2FsbGFjZSIsIndpZCI6IjUyMWNkYTJhLTRlZDItNDg5Ni1hYzA0LWM5YzM4MWRjMjUyYSIsInJpZCI6ImM0ZDMxZWYwLTdiMzQtNGQ4MC05YmNiLTU5NzRkMTQwNTU3MiIsIm5iZiI6MTQ3MDE2MzY0MywiZXhwIjoxNDcwMTY3MjQzfQ.t6uS9A3vB3avRYv9zzM-GMk2HDP5-ADQ1dIfvCS95Z4'
-  };
-
-  /**
    * Load 
    */
   fetch(staticReportUrl)
@@ -85,12 +77,11 @@ $(function () {
              * Basic Embed
              */
             var reportConfig = $.extend({
-              type: 'report',
               settings: {
                 filterPaneEnabled: false,
                 navContentPaneEnabled: false
               }
-            }, report, localReportOverride);
+            }, report);
             var staticReport = powerbi.embed($staticReportContainer.get(0), reportConfig);
 
             /**
@@ -113,7 +104,7 @@ $(function () {
             var customPageNavConfig = $.extend({}, reportConfig, {
               settings: {
                 filterPaneEnabled: false,
-                navContentPaneEnabled: true
+                navContentPaneEnabled: false
               }
             });
 
@@ -147,13 +138,21 @@ $(function () {
               console.log('pageChanged event received', event);
               updateActivePage(event.detail.newPage);
             });
+          });
+      }
+    });
 
+  fetch(edogReportUrl)
+    .then(function (response) {
+      if (response.ok) {
+        return response.json()
+          .then(function (report) {
             /**
              * Custom Filter Pane
              */
-            var customFilterPaneConfig = $.extend({}, reportConfig, {
+            var customFilterPaneConfig = $.extend({}, report, {
               settings: {
-                filterPaneEnabled: true,
+                filterPaneEnabled: false,
                 navContentPaneEnabled: true
               }
             });
@@ -189,12 +188,12 @@ $(function () {
             /**
              * Update Settings
              */
-            var updateSettingsEmbedConfig = $.extend({
+            var updateSettingsEmbedConfig = $.extend({}, report, {
               settings: {
                 filterPaneEnabled: updateSettingsReportFilterPaneEnabled,
                 navContentPaneEnabled: updateSettingsReprotNavContentPaneEnabled
               }
-            }, reportConfig);
+            });
 
             updateSettingsReport = powerbi.embed($updateSettingsReport.get(0), updateSettingsEmbedConfig);
           });
@@ -304,7 +303,7 @@ $(function () {
                 filterPaneEnabled: false,
                 navContentPaneEnabled: false
               }
-          }, reportWithToken, localReportOverride);
+          }, reportWithToken);
 
           powerbi.embed($dynamicReportContainer.get(0), reportConfig);
         });
