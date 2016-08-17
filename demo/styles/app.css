@@ -48,3 +48,21 @@ body {
 .reportpageslist__cycle.btn-warning.active {
     background-color: red;
 }
+
+.filters > * + * {
+    margin-top: 1em;
+}
+.filter {
+    padding: 0.5em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.filter__remove {
+    float: right;
+}
+.filter__text {
+    margin-right: 3em;
+    word-break: break-all;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 90%;
+}

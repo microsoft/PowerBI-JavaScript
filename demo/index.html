@@ -109,8 +109,8 @@
           </div>
           <div class="row">
             <div class="col-md-4">
-              <button type="button" id="predefinedFilter1" class="btn btn-primary btn-block">Predefined Basic Report Filter</button>
-              <p>Store > Name 'In' or 'Park'</p>
+              <button type="button" id="predefinedFilter1" class="btn btn-primary btn-block">Predefined Advanced Report Filter</button>
+              <p>Store > Name Contains 'Direct'</p>
               <button type="button" id="predefinedFilter2" class="btn btn-primary btn-block">Predefined Advanced Report Filter</button>
               <p>Store > Name contains 'Wash' or contains 'Park'</p>
             </div>
@@ -291,6 +291,21 @@
             </div>
           </form>
 
+          <div id="appliedFilters">
+            <h2>Applied Filters</h2>
+            <p>
+              <button type="button" class="btn btn-success" id="refreshAppliedFilters">Refresh</button>
+            </p>
+
+            <h3>Report Level</h3>
+            <div class="filters" id="reportFilters">
+            </div>
+
+            <h3>Page Level</h3>
+            <div id="pageFilters">
+            </div>
+          </div>
+          
         </div>
       </div>
 

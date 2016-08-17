@@ -160,6 +160,8 @@ $(function () {
             customFilterPaneReport = powerbi.embed($customFilterPaneContainer.get(0), customFilterPaneConfig);
 
             customFilterPaneReport.on('loaded', function (event) {
+              createAppliedFiltersPane(null, customFilterPaneReport);
+              
               console.log('custom filter pane report loaded');
               customFilterPaneReport.getPages()
                 .then(function (pages) {
@@ -404,14 +406,10 @@ $(function () {
     var predefinedFilter1 = new models.AdvancedFilter({
       table: "Store",
       column: "Name"
-    }, "Or", [
+    }, "And", [
       {
         operator: "Contains",
         value: "Direct"
-      },
-      {
-        operator: "None",
-        value: "x"
       }
     ]);
 
@@ -499,7 +497,20 @@ $(function () {
     });
 
     $predefinedFilter1.on('click', function (event) {
-      customFilterPaneReport.setFilters([predefinedFilter1.toJSON()]);
+      var filter = predefinedFilter1.toJSON();
+      customFilterPaneReport.setFilters([filter]);
+
+      var $filtersSelection = $('.filters');
+      $.each($filtersSelection, (index, filtersElement) => {
+        var $filters = $(filtersElement);
+        var filterable = $filters.data('filterable');
+
+        if (customFilterPaneReport === filterable) {
+          $filters.empty()
+          var $filter = generateFilterElement(filter);
+          $filters.append($filter);
+        }
+      });
     });
 
     $predefinedFilter2.on('click', function (event) {
@@ -591,6 +602,134 @@ $(function () {
     updateFieldsForOperator("basic");
     updateTargetFields("report");
   })();
+
+  function generateFilterElement(filter) {
+    var $removeButton = $('<button>')
+      .addClass('btn')
+      .addClass('btn-danger')
+      .addClass('filter__remove')
+      .data('filter', filter)
+      .html('&times;')
+      ;
+    
+    var $filterText = $('<div>')
+      .addClass('filter__text')
+      .text(JSON.stringify(filter, null, '  '))
+      ;
+
+    var $filter = $('<div>')
+      .addClass('filter')
+      .append($removeButton)
+      .append($filterText)
+      ;
+
+    return $filter;
+  }
+
+  /**
+   * Applied Filters Pane
+   */
+  function createAppliedFiltersPane($element, report) {
+    var $appliedFiltersContainer = $('#appliedFilters');
+    var $reportFilters = $('#reportFilters');
+    var $pageFilters = $('#pageFilters');
+    var $refreshAppliedFilters = $('#refreshAppliedFilters');
+    let reportPages;
+
+    var filtersTree = {
+      filterable: report,
+      filters: [],
+      nodes: []
+    };
+
+
+
+    function generatePageFiltersContainer(page) {
+      var $heading = $('<h4>')
+        .text(page.name)
+        ;
+
+      var $filters = $('<div>')
+        .addClass('filters')
+        .data('filterable', page)
+        ;
+
+      var $filtersContainer = $('<div>')
+        .append($heading)
+        .append($filters)
+        ;
+
+      return $filtersContainer;
+    }
+
+    // Setup static report filterable on element;
+    $reportFilters
+      .data('filterable', report);
+
+    // Setup page filters containers which have filterable
+    report.getPages()
+      .then(pages => {
+        reportPages = pages;
+
+        pages
+          .map(generatePageFiltersContainer)
+          .forEach($pageFiltersContainer => {
+            $pageFilters.append($pageFiltersContainer)
+          });
+      });
+
+    $refreshAppliedFilters.on('click', function (event) {
+      event.preventDefault();
+
+      const $filters = $('.filters');
+
+      $.each($filters, (index, element) => {
+        const $element = $(element);
+        const filterable = $element.data('filterable');
+
+        console.log($element, filterable);
+
+        filterable.getFilters()
+          .then(filters => {
+            console.log(filterable.displayName, filters);
+            $element.empty();
+            filters
+              .map(generateFilterElement)
+              .forEach($filter => {
+                $element.append($filter);
+              });
+          });
+      });
+    });
+
+    $appliedFiltersContainer.on('click', 'button.filter__remove', function (event) {
+      event.preventDefault();
+      const $element = $(event.target);
+      const filterToRemove = $element.data('filter');
+      const $filter = $element.closest('.filter');
+      const $filtersContainer = $element.closest('.filters');
+      const filterable = $filtersContainer.data('filterable');
+
+      console.log('remove filter', $element, $filtersContainer, filterToRemove, filterable);
+
+      filterable.getFilters()
+        .then(filters => {
+          let index = -1;
+          filters.some(function (filter, i) {
+            if (JSON.stringify(filter) === JSON.stringify(filterToRemove)) {
+              index = i;
+              return true; 
+            }
+          });
+
+          if (index !== -1) {
+            filters.splice(index, 1);
+            filterable.setFilters(filters);
+            $filter.remove();
+          }
+        });
+    });
+  };
 
   /**
    * Remove Filters Buttons
