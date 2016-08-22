@@ -16,6 +16,7 @@
         "typings/index.d.ts",
         "demo",
         "dist",
+        "docs",
         "test",
         "tmp",
         ".publish"

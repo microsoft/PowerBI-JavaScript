@@ -4,7 +4,6 @@ var ghPages = require('gulp-gh-pages'),
     rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
-    jshint = require('gulp-jshint'),
     replace = require('gulp-replace'),
     sourcemaps = require('gulp-sourcemaps'),
     tslint = require("gulp-tslint"),
@@ -86,6 +85,7 @@ gulp.task('lint', 'Lints all files', function (done) {
 
 gulp.task('test', 'Runs all tests', function (done) {
     runSequence(
+        'lint:ts',
         'config',
         'compile:spec',
         'test:js',
@@ -95,7 +95,7 @@ gulp.task('test', 'Runs all tests', function (done) {
 
 gulp.task('build', 'Runs a full build', function (done) {
     runSequence(
-        'lint',
+        'lint:ts',
         'clean',
         'config',
         ['compile:ts', 'compile:dts'],
@@ -142,8 +142,10 @@ gulp.task('clean:docs', 'Clean docs directory', function () {
 
 gulp.task('lint:ts', 'Lints all TypeScript', function() {
     return gulp.src(['./src/**/*.ts', './test/**/*.ts'])
-        .pipe(tslint())
-        .pipe(tslint.report("verbose"));
+        .pipe(tslint({
+            formatter: "verbose"
+        }))
+        .pipe(tslint.report());
 });
 
 gulp.task('min:js', 'Creates minified JavaScript file', function() {
@@ -180,7 +182,6 @@ gulp.task('compile:dts', 'Generate dts files from modules', function () {
         .pipe(flatten())
         .pipe(gulp.dest('./dist'));
 });
-
 
 gulp.task('compile:spec', 'Compile spec tests', function () {
     return gulp.src(['./test/test.spec.ts'])

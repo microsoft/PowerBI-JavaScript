@@ -21,7 +21,7 @@ export const spyWpmp = {
   stop: jasmine.createSpy("stop"),
 
   onMessageReceived(event) {
-    let message:any = event.data;
+    let message: any = event.data;
 
     const handled = spyWpmp.handlers.some(handler => {
         if(handler.test(message)) {

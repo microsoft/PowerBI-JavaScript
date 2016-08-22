@@ -7,7 +7,7 @@
  * @param {string} eventName
  * @param {*} eventData
  */
-export function raiseCustomEvent(element: HTMLElement, eventName: string, eventData: any):void {
+export function raiseCustomEvent(element: HTMLElement, eventName: string, eventData: any): void {
     let customEvent;
     if (typeof CustomEvent === 'function') {
         customEvent = new CustomEvent(eventName, {
