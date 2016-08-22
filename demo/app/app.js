@@ -115,7 +115,7 @@ $(function () {
               customPageNavReport.getPages()
                 .then(function (pages) {
                   console.log('pages: ', pages);
-                  if(pages.length > 0) {
+                  if (pages.length > 0) {
                     const firstPage = pages[0];
                     firstPage.isActive = true;
 
@@ -161,7 +161,7 @@ $(function () {
 
             customFilterPaneReport.on('loaded', function (event) {
               createAppliedFiltersPane(null, customFilterPaneReport);
-              
+
               console.log('custom filter pane report loaded');
               customFilterPaneReport.getPages()
                 .then(function (pages) {
@@ -224,7 +224,7 @@ $(function () {
       .each(function (index, element) {
         var $element = $(element);
         var buttonPage = $element.data('page');
-        if(buttonPage.isActive) {
+        if (buttonPage.isActive) {
           buttonPage.isActive = false;
           $element.removeClass('active');
         }
@@ -235,7 +235,7 @@ $(function () {
       .each(function (index, element) {
         var $element = $(element);
         var buttonPage = $element.data('page');
-        if(buttonPage.name === newPage.name) {
+        if (buttonPage.name === newPage.name) {
           buttonPage.isActive = true;
           $element.addClass('active');
         }
@@ -271,7 +271,7 @@ $(function () {
       .data('page', page)
       .text(page.displayName);
 
-    if(page.isActive) {
+    if (page.isActive) {
       $page.addClass('active');
     }
 
@@ -287,7 +287,7 @@ $(function () {
     var $nextButton = $('#nextbutton');
     var $cycleButton = $('#cyclebutton');
     var cycleIntervalId;
-    
+
     // When report button is clicked embed the report
     $reportsList.on('click', 'button', function (event) {
       var button = event.target;
@@ -300,11 +300,11 @@ $(function () {
         })
         .then(function (reportWithToken) {
           var reportConfig = $.extend({
-              type: 'report',
-              settings: {
-                filterPaneEnabled: false,
-                navContentPaneEnabled: false
-              }
+            type: 'report',
+            settings: {
+              filterPaneEnabled: false,
+              navContentPaneEnabled: false
+            }
           }, reportWithToken);
 
           powerbi.embed($dynamicReportContainer.get(0), reportConfig);
@@ -323,7 +323,7 @@ $(function () {
       $cycleButton.toggleClass('active');
       $cycleButton.data('cycle', !$cycleButton.data('cycle'));
 
-      if($cycleButton.data('cycle')) {
+      if ($cycleButton.data('cycle')) {
         cycleIntervalId = setInterval(function () {
           console.log('cycle page: ');
           changePage(true);
@@ -359,31 +359,31 @@ $(function () {
         .each(function (index, element) {
           var $element = $(element);
           var buttonPage = $element.data('page');
-          if(buttonPage.isActive) {
+          if (buttonPage.isActive) {
             $activeButtonIndex = index;
           }
         });
 
-      if(forwards) {
+      if (forwards) {
         $activeButtonIndex += 1;
       }
       else {
         $activeButtonIndex -= 1;
       }
 
-      if($activeButtonIndex > reportButtons.length - 1) {
+      if ($activeButtonIndex > reportButtons.length - 1) {
         $activeButtonIndex = 0;
       }
-      if($activeButtonIndex < 0) {
+      if ($activeButtonIndex < 0) {
         $activeButtonIndex = reportButtons.length - 1;
       }
 
       reportButtons
         .each(function (index, element) {
-          if($activeButtonIndex === index) {
+          if ($activeButtonIndex === index) {
             var $element = $(element);
             var buttonPage = $element.data('page');
-            
+
             customPageNavReport.setPage(buttonPage.name);
           }
         });
@@ -407,41 +407,41 @@ $(function () {
       table: "Store",
       column: "Name"
     }, "And", [
-      {
-        operator: "Contains",
-        value: "Direct"
-      }
-    ]);
+        {
+          operator: "Contains",
+          value: "Direct"
+        }
+      ]);
 
     var $predefinedFilter2 = $('#predefinedFilter2');
     var predefinedFilter2 = new models.AdvancedFilter({
       table: "Store",
       column: "Name"
     }, "Or", [
-      {
-        operator: "Contains",
-        value: "Wash"
-      },
-      {
-        operator: "Contains",
-        value: "Park"
-      }
-    ]);
+        {
+          operator: "Contains",
+          value: "Wash"
+        },
+        {
+          operator: "Contains",
+          value: "Park"
+        }
+      ]);
 
     var $predefinedFilter3 = $('#predefinedFilter3');
     var predefinedFilter3 = new models.AdvancedFilter({
       table: "Store",
       column: "Name"
     }, "Or", [
-      {
-        operator: "Contains",
-        value: "Wash"
-      },
-      {
-        operator: "Contains",
-        value: "Park"
-      }
-    ]);
+        {
+          operator: "Contains",
+          value: "Wash"
+        },
+        {
+          operator: "Contains",
+          value: "Park"
+        }
+      ]);
 
     $customFilterForm.on('submit', function (event) {
       event.preventDefault();
@@ -485,14 +485,14 @@ $(function () {
     $operatorTypeFields.on('change', function (event) {
       var checkedType = $('#customfilterform input[name=operatorType]:checked').val();
       console.log('operator change', checkedType);
-      
+
       updateFieldsForOperator(checkedType.toLowerCase());
     });
 
     $targetTypeFields.on('change', function (event) {
       var checkedTarget = $('#customfilterform input[name=filterTarget]:checked').val();
       console.log('target change', checkedTarget);
-      
+
       updateTargetFields(checkedTarget.toLowerCase());
     });
 
@@ -526,14 +526,14 @@ $(function () {
       var filterTypeTarget = {};
       filterTypeTarget.table = $('#filtertable').val();
 
-      if(filterType === "column") {
+      if (filterType === "column") {
         filterTypeTarget.column = $('#filtercolumn').val();
       }
-      else if(filterType === "hierarchy") {
+      else if (filterType === "hierarchy") {
         filterTypeTarget.hierarchy = $('#filterhierarchy').val();
         filterTypeTarget.hierarchyLevel = $('#filterhierarchylevel').val();
       }
-      else if(filterType === "measure") {
+      else if (filterType === "measure") {
         filterTypeTarget.measure = $('#filtermeasure').val();
       }
 
@@ -571,7 +571,7 @@ $(function () {
       var target = {
         type: checkedTarget
       };
-      
+
       if (checkedTarget === "page") {
         target.name = $('#filtertargetpage').val();
       }
@@ -611,7 +611,7 @@ $(function () {
       .data('filter', filter)
       .html('&times;')
       ;
-    
+
     var $filterText = $('<div>')
       .addClass('filter__text')
       .text(JSON.stringify(filter, null, '  '))
@@ -718,7 +718,7 @@ $(function () {
           filters.some(function (filter, i) {
             if (JSON.stringify(filter) === JSON.stringify(filterToRemove)) {
               index = i;
-              return true; 
+              return true;
             }
           });
 

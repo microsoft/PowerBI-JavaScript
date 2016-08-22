@@ -10,8 +10,8 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   const parent = parentWindow || iframeContentWindow.parent;
   const wpmp = new Wpmp.WindowPostMessageProxy({
     processTrackingProperties: {
-        addTrackingProperties: Hpm.HttpPostMessage.addTrackingProperties,
-        getTrackingProperties: Hpm.HttpPostMessage.getTrackingProperties,
+      addTrackingProperties: Hpm.HttpPostMessage.addTrackingProperties,
+      getTrackingProperties: Hpm.HttpPostMessage.getTrackingProperties,
     },
     isErrorMessage: Hpm.HttpPostMessage.isErrorMessage,
     receiveWindow: iframeContentWindow,
@@ -24,7 +24,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   }, parent);
   const router = new Router.Router(wpmp);
   const app = mockApp;
-  
+
   /**
    * Setup not found handlers.
    */
@@ -54,13 +54,13 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
           }, error => {
             hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
-          
+
         res.send(202);
       }, error => {
         res.send(400, error);
       });
   });
-  
+
   router.get('/report/pages', (req, res) => {
     return app.getPages()
       .then(pages => {
@@ -69,7 +69,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
         res.send(500, error);
       });
   });
-  
+
   router.put('/report/pages/active', (req, res) => {
     const uniqueId = req.headers['uid'];
     const page = req.body;
@@ -85,13 +85,13 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
           }, error => {
             hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
-        
+
         res.send(202);
       }, errors => {
         res.send(400, errors);
       });
   });
-  
+
   /**
    * Phase 2
    */
@@ -107,7 +107,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   router.put('/report/filters', (req, res) => {
     const uniqueId = req.headers['uid'];
     const filters = req.body;
-    
+
     return Promise.all(filters.map(filter => app.validateFilter(filter)))
       .then(() => {
         app.setFilters(filters)
@@ -120,13 +120,13 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
           }, error => {
             hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
-        
+
         res.send(202);
       }, error => {
         res.send(400, error);
       });
   });
-  
+
   /**
    * Phase 3
    */
@@ -135,7 +135,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
       name: req.params.pageName,
       displayName: null
     };
-    
+
     return app.validatePage(page)
       .then(() => {
         return app.getFilters()
@@ -171,7 +171,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
           }, error => {
             hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
-        
+
         res.send(202);
       }, errors => {
         res.send(400, errors);
@@ -233,7 +233,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
           }, error => {
             hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
-        
+
         res.send(202);
       }, errors => {
         res.send(400, errors);
@@ -243,7 +243,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   router.patch('/report/settings', (req, res) => {
     const uniqueId = req.headers['uid'];
     const settings = req.body;
-    
+
     return app.validateSettings(settings)
       .then(() => {
         app.updateSettings(settings)
@@ -256,13 +256,13 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
           }, error => {
             hpm.post(`/reports/${uniqueId}/events/error`, error);
           });
-        
+
         res.send(202);
       }, errors => {
         res.send(400, errors);
       });
   });
-  
+
   /**
    * Phase 4
    */
@@ -285,7 +285,7 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
         res.send(400, errors);
       });
   });
-  
+
   /**
    * Phase 5
    */
@@ -295,6 +295,6 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
         res.send(200, data);
       });
   });
-  
+
   return hpm;
 }

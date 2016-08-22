@@ -1168,7 +1168,7 @@ describe('Protocol', function () {
           });
       });
     });
-    
+
     describe('filters (page level)', function () {
       it('GET /report/pages/xyz/filters returns 200 with body as array of filters', function (done) {
         // Arrange
@@ -1940,8 +1940,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ]
         };
 
@@ -1956,8 +1956,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ],
           expectedErrors: {
             body: [
@@ -1984,8 +1984,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ]
         };
 
@@ -2154,8 +2154,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ],
           response: {
             body: []
@@ -2175,8 +2175,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ],
           expectedErrors: {
             body: [
@@ -2203,8 +2203,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ]
         };
 
@@ -2449,8 +2449,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ]
         };
 
@@ -2467,8 +2467,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ],
           expectedErrors: {
             body: [
@@ -2495,8 +2495,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ]
         };
 
@@ -2535,7 +2535,7 @@ describe('SDK-to-HPM', function () {
             done();
           });
       });
-    });    
+    });
   });
 
   describe('SDK-to-Router (Event subscription)', function () {
@@ -2767,7 +2767,7 @@ describe('SDK-to-MockApp', function () {
   let report2: report.Report;
 
   beforeAll(function () {
-    
+
     powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory, {
       wpmpName: 'SDK-to-MockApp HostWpmp',
       logMessages
@@ -3003,7 +3003,7 @@ describe('SDK-to-MockApp', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+            (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
           ],
           expectedErrors: [
             {
@@ -3032,7 +3032,7 @@ describe('SDK-to-MockApp', function () {
         const testData = {
           filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
@@ -3173,7 +3173,7 @@ describe('SDK-to-MockApp', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+            (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
           ],
           expectedErrors: [
             {
@@ -3202,7 +3202,7 @@ describe('SDK-to-MockApp', function () {
         const testData = {
           filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validateFilter.and.returnValue(Promise.resolve(null));
@@ -3322,7 +3322,7 @@ describe('SDK-to-MockApp', function () {
             }
           ]
         };
-        
+
         // Act
         iframeLoaded
           .then(() => {
@@ -3342,14 +3342,14 @@ describe('SDK-to-MockApp', function () {
       });
     });
   });
-  
+
   describe('visual', function () {
     describe('filters', function () {
       it('visual.getFilters() returns promise that rejects with validation errors if the page or visual was invalid', function (done) {
         // Arrange
         const testData = {
           errors: [
-              {
+            {
               message: 'visual uvw was not found on page xyx'
             }
           ]
@@ -3428,7 +3428,7 @@ describe('SDK-to-MockApp', function () {
         // Arrange
         const testData = {
           filters: [
-              (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+            (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
           ],
           errors: [
             {
@@ -3461,7 +3461,7 @@ describe('SDK-to-MockApp', function () {
         const testData = {
           filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
         };
-        
+
         iframeLoaded
           .then(() => {
             spyApp.validatePage.and.returnValue(Promise.resolve(null));

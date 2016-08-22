@@ -4,33 +4,33 @@ import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 
 export {
-    IFilterable,
-    service,
-    factories,
-    models
+  IFilterable,
+  service,
+  factories,
+  models
 };
 export {
-    Report
+  Report
 } from './report';
 export {
-    Tile
+  Tile
 } from './tile';
 export {
-    IEmbedConfiguration,
-    Embed
+  IEmbedConfiguration,
+  Embed
 } from './embed';
 export {
-    Page
+  Page
 } from './page';
 export {
-    Visual
+  Visual
 } from './visual';
 
 declare var powerbi: service.Service;
 declare global {
-    interface Window {
-        powerbi: service.Service;
-    }
+  interface Window {
+    powerbi: service.Service;
+  }
 }
 
 /**
