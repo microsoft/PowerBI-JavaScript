@@ -12,7 +12,6 @@ var ghPages = require('gulp-gh-pages'),
     fs = require('fs'),
     del = require('del'),
     moment = require('moment'),
-    merge = require('merge2'),
     karma = require('karma'),
     typedoc = require('gulp-typedoc'),
     webpack = require('webpack');
