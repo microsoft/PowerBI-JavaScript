@@ -296,5 +296,10 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
       });
   });
 
+  router.post('/report/print', (req, res) => {
+    app.print();
+    res.send(202);
+  });
+
   return hpm;
 }

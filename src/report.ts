@@ -161,6 +161,20 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
+   * Print the active page of the report.
+   * (Invokes window.print() on embed iframe)
+   */
+  print(): Promise<void> {
+    return this.service.hpm.post<models.IError[]>('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
    * Remove all filters at report level
    * 
    * ```javascript
