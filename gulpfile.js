@@ -191,7 +191,7 @@ gulp.task('compile:spec', 'Compile spec tests', function () {
 gulp.task('test:js', 'Run js tests', function (done) {
   new karma.Server.start({
     configFile: __dirname + '/karma.conf.js',
-    singleRun: argv.debug ? false : true,
+    singleRun: argv.watch ? false : true,
     captureTimeout: argv.timeout || 60000
   }, done);
 });
