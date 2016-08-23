@@ -1,5 +1,13 @@
 var argv = require('yargs').argv;
 
+var browserName = 'PhantomJS';
+if (argv.chrome) {
+  browserName = 'Chrome'
+}
+else if (argv.firefox) {
+  browserName = 'Firefox'
+}
+
 module.exports = function (config) {
   config.set({
     frameworks: ['jasmine'],
@@ -12,8 +20,9 @@ module.exports = function (config) {
     exclude: [],
     reporters: argv.debug ? ['spec'] : ['spec', 'coverage'],
     autoWatch: true,
-    browsers: [argv.chrome ? 'Chrome' : 'PhantomJS'],
+    browsers: [browserName],
     plugins: [
+      'karma-firefox-launcher',
       'karma-chrome-launcher',
       'karma-jasmine',
       'karma-spec-reporter',
