@@ -175,6 +175,23 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
+   * Refreshes data sources for report.
+   * 
+   * ```javascript
+   * report.refresh();
+   * ```
+   */
+  refresh(): Promise<void> {
+    return this.service.hpm.post<models.IError[]>('/report/refresh', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
    * Remove all filters at report level
    * 
    * ```javascript

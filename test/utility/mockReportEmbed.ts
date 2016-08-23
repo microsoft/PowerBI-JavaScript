@@ -240,6 +240,11 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
       });
   });
 
+  router.post('/report/refresh', (req, res) => {
+    app.refreshData();
+    res.send(202);
+  });
+
   router.patch('/report/settings', (req, res) => {
     const uniqueId = req.headers['uid'];
     const settings = req.body;
