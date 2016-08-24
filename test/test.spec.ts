@@ -1017,6 +1017,26 @@ describe('Protocol', function () {
       });
     });
 
+    describe('print', function () {
+      it('POST /report/print returns 202 if the request is valid', function (done) {
+        // Arrange
+        iframeLoaded
+          .then(() => {
+            spyApp.print.and.returnValue(Promise.resolve(null));
+            // Act
+            hpm.post<void>('/report/print', null)
+              .then(response => {
+                // Assert
+                expect(spyApp.print).toHaveBeenCalled();
+                expect(response.statusCode).toEqual(202);
+                // Cleanup
+                spyApp.print.calls.reset();
+                done();
+              });
+          });
+      });
+    });
+
     describe('filters (report level)', function () {
       it('GET /report/filters returns 200 with body as array of filters', function (done) {
         // Arrange
@@ -2021,6 +2041,36 @@ describe('SDK-to-HPM', function () {
             // Assert
             expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', [], { uid: uniqueId }, iframe.contentWindow);
             expect(response).toEqual(null);
+            done();
+          });
+      });
+    });
+
+    describe('print', function () {
+      it('report.print() sends POST /report/print', function () {
+        // Arrange
+        spyHpm.post.and.returnValue(Promise.resolve({
+          body: {}
+        }));
+
+        // Act
+        report.print();
+
+        // Assert
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/print', null, { uid: uniqueId }, iframe.contentWindow);
+      });
+
+      it('report.print() returns promise that resolves if the request is accepted', function (done) {
+        // Arrange
+        spyHpm.post.and.returnValue(Promise.resolve({
+          body: {}
+        }));
+
+        // Act
+        report.print()
+          .then(() => {
+            // Assert
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/print', null, { uid: uniqueId }, iframe.contentWindow);
             done();
           });
       });
@@ -3058,6 +3108,24 @@ describe('SDK-to-MockApp', function () {
               .then(response => {
                 // Assert
                 expect(spyApp.setFilters).toHaveBeenCalled();
+                done();
+              });
+          });
+      });
+    });
+
+    describe('print', function () {
+      it('report.print() returns promise that resolves with null if the report print command was accepted', function (done) {
+        // Arrange
+        iframeLoaded
+          .then(() => {
+            spyApp.print.and.returnValue(Promise.resolve(null));
+            // Act
+            report.print()
+              .then(response => {
+                // Assert
+                expect(spyApp.print).toHaveBeenCalled();
+                expect(response).toEqual(undefined);
                 done();
               });
           });
