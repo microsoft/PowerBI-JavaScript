@@ -16,7 +16,9 @@
     "version": "gulp build && git add .",
     "postinstall": "typings install",
     "prepublish": "gulp build",
-    "test": "gulp test"
+    "test": "gulp test",
+    "gulp": "gulp",
+    "typings": "typings"
   },
   "keywords": [
     "microsoft",
