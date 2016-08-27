@@ -14,8 +14,7 @@
     "build": "gulp build",
     "start": "http-server ./demo",
     "version": "gulp build && git add .",
-    "postinstall": "typings install",
-    "prepublish": "gulp build",
+    "prepublish": "typings install && gulp build",
     "test": "gulp test",
     "gulp": "gulp",
     "typings": "typings"
