@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.12 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
 import * as embed from './embed';
 import { Report } from './report';
 import { Tile } from './tile';
@@ -68,8 +68,9 @@ export declare class Service implements IService {
     private config;
     /** List of components (Reports/Tiles) that have been embedded using this service instance. */
     private embeds;
-    /** TODO: Look for way to make this private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
+    /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
     hpm: hpm.HttpPostMessage;
+    /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
     wpmp: wpmp.WindowPostMessageProxy;
     private router;
     /**

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.12 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -102,6 +102,19 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      * @returns {Page}
      */
     page(name: string, displayName?: string): Page;
+    /**
+     * Print the active page of the report.
+     * (Invokes window.print() on embed iframe)
+     */
+    print(): Promise<void>;
+    /**
+     * Refreshes data sources for report.
+     *
+     * ```javascript
+     * report.refresh();
+     * ```
+     */
+    refresh(): Promise<void>;
     /**
      * Remove all filters at report level
      *

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.12 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -666,7 +666,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v0.7.2 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v0.7.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -728,12 +728,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		    function __() { this.constructor = d; }
 		    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 		};
+		/* tslint:disable:no-var-requires */
 		exports.advancedFilterSchema = __webpack_require__(1);
 		exports.filterSchema = __webpack_require__(2);
 		exports.loadSchema = __webpack_require__(3);
 		exports.pageSchema = __webpack_require__(4);
 		exports.settingsSchema = __webpack_require__(5);
 		exports.basicFilterSchema = __webpack_require__(6);
+		/* tslint:enable:no-var-requires */
 		var jsen = __webpack_require__(7);
 		function normalizeError(error) {
 		    if (!error.message) {
@@ -877,23 +879,28 @@ return /******/ (function(modules) { // webpackBootstrap
 		            throw new Error("logicalOperator must be a valid operator, You passed: " + logicalOperator);
 		        }
 		        this.logicalOperator = logicalOperator;
-		        if (conditions.length === 0) {
-		            throw new Error("conditions must be a non-empty array. You passed: " + conditions);
-		        }
-		        if (conditions.length > 2) {
-		            throw new Error("AdvancedFilters may not have more than two conditions. You passed: " + conditions.length);
-		        }
+		        var extractedConditions;
 		        /**
 		         * Accept conditions as array instead of as individual arguments
 		         * new AdvancedFilter('a', 'b', "And", { value: 1, operator: "Equals" }, { value: 2, operator: "IsGreaterThan" });
 		         * new AdvancedFilter('a', 'b', "And", [{ value: 1, operator: "Equals" }, { value: 2, operator: "IsGreaterThan" }]);
 		         */
 		        if (Array.isArray(conditions[0])) {
-		            this.conditions = conditions[0];
+		            extractedConditions = conditions[0];
 		        }
 		        else {
-		            this.conditions = conditions;
+		            extractedConditions = conditions;
 		        }
+		        if (extractedConditions.length === 0) {
+		            throw new Error("conditions must be a non-empty array. You passed: " + conditions);
+		        }
+		        if (extractedConditions.length > 2) {
+		            throw new Error("AdvancedFilters may not have more than two conditions. You passed: " + conditions.length);
+		        }
+		        if (extractedConditions.length === 1 && logicalOperator !== "And") {
+		            throw new Error("Logical Operator must be \"And\" when there is only one condition provided");
+		        }
+		        this.conditions = extractedConditions;
 		    }
 		    AdvancedFilter.prototype.toJSON = function () {
 		        var filter = _super.prototype.toJSON.call(this);
@@ -2175,7 +2182,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	/***/ function(module, exports) {
 	
 		// shim for using process in browser
-		
 		var process = module.exports = {};
 		
 		// cached from whatever global is present so that test runners that stub it
@@ -2187,21 +2193,63 @@ return /******/ (function(modules) { // webpackBootstrap
 		var cachedClearTimeout;
 		
 		(function () {
-		  try {
-		    cachedSetTimeout = setTimeout;
-		  } catch (e) {
-		    cachedSetTimeout = function () {
-		      throw new Error('setTimeout is not defined');
+		    try {
+		        cachedSetTimeout = setTimeout;
+		    } catch (e) {
+		        cachedSetTimeout = function () {
+		            throw new Error('setTimeout is not defined');
+		        }
 		    }
-		  }
-		  try {
-		    cachedClearTimeout = clearTimeout;
-		  } catch (e) {
-		    cachedClearTimeout = function () {
-		      throw new Error('clearTimeout is not defined');
+		    try {
+		        cachedClearTimeout = clearTimeout;
+		    } catch (e) {
+		        cachedClearTimeout = function () {
+		            throw new Error('clearTimeout is not defined');
+		        }
 		    }
-		  }
 		} ())
+		function runTimeout(fun) {
+		    if (cachedSetTimeout === setTimeout) {
+		        //normal enviroments in sane situations
+		        return setTimeout(fun, 0);
+		    }
+		    try {
+		        // when when somebody has screwed with setTimeout but no I.E. maddness
+		        return cachedSetTimeout(fun, 0);
+		    } catch(e){
+		        try {
+		            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+		            return cachedSetTimeout.call(null, fun, 0);
+		        } catch(e){
+		            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+		            return cachedSetTimeout.call(this, fun, 0);
+		        }
+		    }
+		
+		
+		}
+		function runClearTimeout(marker) {
+		    if (cachedClearTimeout === clearTimeout) {
+		        //normal enviroments in sane situations
+		        return clearTimeout(marker);
+		    }
+		    try {
+		        // when when somebody has screwed with setTimeout but no I.E. maddness
+		        return cachedClearTimeout(marker);
+		    } catch (e){
+		        try {
+		            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+		            return cachedClearTimeout.call(null, marker);
+		        } catch (e){
+		            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+		            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+		            return cachedClearTimeout.call(this, marker);
+		        }
+		    }
+		
+		
+		
+		}
 		var queue = [];
 		var draining = false;
 		var currentQueue;
@@ -2226,7 +2274,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    if (draining) {
 		        return;
 		    }
-		    var timeout = cachedSetTimeout(cleanUpNextTick);
+		    var timeout = runTimeout(cleanUpNextTick);
 		    draining = true;
 		
 		    var len = queue.length;
@@ -2243,7 +2291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    }
 		    currentQueue = null;
 		    draining = false;
-		    cachedClearTimeout(timeout);
+		    runClearTimeout(timeout);
 		}
 		
 		process.nextTick = function (fun) {
@@ -2255,7 +2303,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    }
 		    queue.push(new Item(fun, args));
 		    if (queue.length === 1 && !draining) {
-		        cachedSetTimeout(drainQueue, 0);
+		        runTimeout(drainQueue);
 		    }
 		};
 		
@@ -3061,6 +3109,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return new page_1.Page(this, name, displayName);
 	    };
 	    /**
+	     * Print the active page of the report.
+	     * (Invokes window.print() on embed iframe)
+	     */
+	    Report.prototype.print = function () {
+	        return this.service.hpm.post('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Refreshes data sources for report.
+	     *
+	     * ```javascript
+	     * report.refresh();
+	     * ```
+	     */
+	    Report.prototype.refresh = function () {
+	        return this.service.hpm.post('/report/refresh', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
 	     * Remove all filters at report level
 	     *
 	     * ```javascript
@@ -3430,7 +3507,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	var config = {
-	    version: '2.0.0-beta.12',
+	    version: '2.0.0-beta.13',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -3441,7 +3518,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.3 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -3541,6 +3618,30 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return !!message.error;
 		    };
 		    /**
+		     * Utility to create a deferred object.
+		     */
+		    // TODO: Look to use RSVP library instead of doing this manually.
+		    // From what I searched RSVP would work better because it has .finally and .deferred; however, it doesn't have Typings information. 
+		    WindowPostMessageProxy.createDeferred = function () {
+		        var deferred = {
+		            resolve: null,
+		            reject: null,
+		            promise: null
+		        };
+		        var promise = new Promise(function (resolve, reject) {
+		            deferred.resolve = resolve;
+		            deferred.reject = reject;
+		        });
+		        deferred.promise = promise;
+		        return deferred;
+		    };
+		    /**
+		     * Utility to generate random sequence of characters used as tracking id for promises.
+		     */
+		    WindowPostMessageProxy.createRandomString = function () {
+		        return (Math.random() + 1).toString(36).substring(7);
+		    };
+		    /**
 		     * Adds handler.
 		     * If the first handler whose test method returns true will handle the message and provide a response.
 		     */
@@ -3553,7 +3654,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		     */
 		    WindowPostMessageProxy.prototype.removeHandler = function (handler) {
 		        var handlerIndex = this.handlers.indexOf(handler);
-		        if (handlerIndex == -1) {
+		        if (handlerIndex === -1) {
 		            throw new Error("You attempted to remove a handler but no matching handler was found.");
 		        }
 		        this.handlers.splice(handlerIndex, 1);
@@ -3701,30 +3802,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		            delete this.pendingRequestPromises[trackingProperties.id];
 		        }
 		    };
-		    /**
-		     * Utility to create a deferred object.
-		     */
-		    // TODO: Look to use RSVP library instead of doing this manually.
-		    // From what I searched RSVP would work better because it has .finally and .deferred; however, it doesn't have Typings information. 
-		    WindowPostMessageProxy.createDeferred = function () {
-		        var deferred = {
-		            resolve: null,
-		            reject: null,
-		            promise: null
-		        };
-		        var promise = new Promise(function (resolve, reject) {
-		            deferred.resolve = resolve;
-		            deferred.reject = reject;
-		        });
-		        deferred.promise = promise;
-		        return deferred;
-		    };
-		    /**
-		     * Utility to generate random sequence of characters used as tracking id for promises.
-		     */
-		    WindowPostMessageProxy.createRandomString = function () {
-		        return (Math.random() + 1).toString(36).substring(7);
-		    };
 		    WindowPostMessageProxy.messagePropertyName = "windowPostMessageProxy";
 		    return WindowPostMessageProxy;
 		}());
@@ -3741,7 +3818,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! http-post-message v0.2.2 | (c) 2016 Microsoft Corporation MIT */
+	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -3925,7 +4002,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-router v0.1.2 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-router v0.1.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();

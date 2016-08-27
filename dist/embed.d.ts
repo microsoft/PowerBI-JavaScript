@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.12 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as models from 'powerbi-models';
 declare global  {
