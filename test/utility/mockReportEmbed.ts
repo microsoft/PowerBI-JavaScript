@@ -179,15 +179,17 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   });
 
   router.get('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
-    const pageName = req.params.pageName;
-    const visualName = req.params.visualName;
+    const pageName: string = req.params.pageName;
+    const visualName: string = req.params.visualName;
     const uniqueId = req.headers['uid'];
     const page: models.IPage = {
       name: pageName,
       displayName: null
     };
     const visual: models.IVisual = {
-      name: visualName
+      name: visualName,
+      title: "",
+      type: ""
     };
 
     return app.validatePage(page)
@@ -214,7 +216,9 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
       displayName: null
     };
     const visual: models.IVisual = {
-      name: visualName
+      name: visualName,
+      title: "",
+      type: ""
     };
 
     return app.validatePage(page)
