@@ -13,9 +13,6 @@ export {
   IRouterFactory
 };
 
-/**
- * TODO: Need to get sdk version and settings from package.json, Generate config file via gulp task?
- */
 export const hpmFactory: IHpmFactory = (wpmp, defaultTargetWindow, sdkVersion = config.version, sdkType = config.type) => {
   return new hpm.HttpPostMessage(wpmp, {
     'x-sdk-type': sdkType,

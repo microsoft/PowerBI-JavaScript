@@ -290,11 +290,7 @@ describe('service', function () {
 
       // Assert
       var report = powerbi.get($reportContainer[0]);
-      // TODO: Find way to prevent using private method getAccessToken.
-      // Need to know what token the report used, but don't have another option?
-      // To properly only test public methods but still confirm this we would need to create special iframe which echoed all
-      // messages and then we could test what it received
-      var accessToken = (<any>report).getAccessToken();
+      var accessToken = report.config.accessToken;
 
       expect(accessToken).toEqual(testToken);
     });
@@ -1742,7 +1738,7 @@ describe('SDK-to-HPM', function () {
   });
 
   afterAll(function () {
-    // TODO: Should call remove using the powerbi service first to clean up intenral references to DOM inside this element
+    powerbi.reset($element.get(0));
     $element.remove();
     powerbi.wpmp.stop();
   });
@@ -2722,7 +2718,7 @@ describe('SDK-to-WPMP', function () {
   });
 
   afterAll(function () {
-    // TODO: Should call remove using the powerbi service first to clean up intenral references to DOM inside this element
+    powerbi.reset($element.get(0));
     $element.remove();
     powerbi.wpmp.stop();
   });
@@ -2949,7 +2945,7 @@ describe('SDK-to-MockApp', function () {
   });
 
   afterAll(function () {
-    // TODO: Should call remove using the powerbi service first to clean up intenral references to DOM inside this element
+    powerbi.reset($element.get(0));
     $element.remove();
     powerbi.wpmp.stop();
   });
@@ -2961,10 +2957,6 @@ describe('SDK-to-MockApp', function () {
   describe('report', function () {
     describe('load', function () {
       it(`report.load() returns promise that rejects with validation errors if load configuration is invalid`, function (done) {
-        /**
-         * TODO: Add settings to load config
-         */
-
         // Arrange
         const testData = {
           loadConfig: {
