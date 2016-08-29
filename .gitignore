@@ -4,5 +4,5 @@ coverage/
 docs
 typings/
 tmp
-.*
+.publish
 npm-debug.log*
