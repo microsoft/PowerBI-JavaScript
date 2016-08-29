@@ -73,35 +73,35 @@ export abstract class Embed {
   allowedEvents = [];
 
   /**
-   * Gets or set the event handler registered for this embed component
+   * Gets or sets the event handler registered for this embed component.
    * 
    * @type {IInternalEventHandler<any>[]}
    */
   eventHandlers: IInternalEventHandler<any>[];
 
   /**
-   * Gets or sets the Power BI embed service
+   * Gets or sets the Power BI embed service.
    * 
    * @type {service.Service}
    */
   service: service.Service;
 
   /**
-   * Gets or sets the HTML element containing the Power BI embed component
+   * Gets or sets the HTML element that contains the Power BI embed component.
    * 
    * @type {HTMLElement}
    */
   element: HTMLElement;
 
   /**
-   * Gets or sets the HTML iframe element that renders the Power BI embed component
+   * Gets or sets the HTML iframe element that renders the Power BI embed component.
    * 
    * @type {HTMLIFrameElement}
    */
   iframe: HTMLIFrameElement;
 
   /**
-   * Gets or sets the configuration settings for the embed component
+   * Gets or sets the configuration settings for the Power BI embed component.
    * 
    * @type {IInternalEmbedConfiguration}
    */
@@ -110,8 +110,8 @@ export abstract class Embed {
   /**
    * Creates an instance of Embed.
    * 
-   * Note: there is circular reference between embeds and service
-   * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
+   * Note: there is circular reference between embeds and the service, because
+   * the service has a list of all embeds on the host page, and each embed has a reference to the service that created it.
    * 
    * @param {service.Service} service
    * @param {HTMLElement} element
@@ -178,10 +178,9 @@ export abstract class Embed {
   }
 
   /**
-   * Removes event handler(s) from list of handlers.
-   * 
-   * If reference to existing handle function is specified remove specific handler.
-   * If handler is not specified, remove all handlers for the event name specified.
+   * Removes one or more event handlers from the list of handlers.
+   * If a reference to the existing handle function is specified, remove the specific handler.
+   * If the handler is not specified, remove all handlers for the event name specified.
    * 
    * ```javascript
    * report.off('pageChanged')
@@ -218,7 +217,7 @@ export abstract class Embed {
   }
 
   /**
-   * Adds event handler for specific event.
+   * Adds an event handler for a specific event.
    * 
    * ```javascript
    * report.on('pageChanged', (event) => {
@@ -244,7 +243,7 @@ export abstract class Embed {
   }
 
   /**
-   * Get access token from first available location: config, attribute, global.
+   * Gets an access token from the first available location: config, attribute, global.
    * 
    * @private
    * @param {string} globalAccessToken
@@ -261,7 +260,7 @@ export abstract class Embed {
   }
 
   /**
-   * Get embed url from first available location: options, attribute.
+   * Gets an embed url from the first available location: options, attribute.
    * 
    * @private
    * @returns {string}
@@ -277,8 +276,8 @@ export abstract class Embed {
   }
 
   /**
-   * Get unique id from first available location: options, attribute.
-   * If neither is provided generate unique string.
+   * Gets a unique ID from the first available location: options, attribute.
+   * If neither is provided generate a unique string.
    * 
    * @private
    * @returns {string}
@@ -288,7 +287,7 @@ export abstract class Embed {
   }
 
   /**
-   * Get report id from first available location: options, attribute.
+   * Gets the report ID from the first available location: options, attribute.
    * 
    * @abstract
    * @returns {string}
@@ -296,7 +295,7 @@ export abstract class Embed {
   abstract getId(): string;
 
   /**
-   * Request the browser to make the component's iframe fullscreen.
+   * Requests the browser to render the component's iframe in fullscreen mode.
    */
   fullscreen(): void {
     const requestFullScreen = this.iframe.requestFullscreen || this.iframe.msRequestFullscreen || this.iframe.mozRequestFullScreen || this.iframe.webkitRequestFullscreen;
@@ -304,7 +303,7 @@ export abstract class Embed {
   }
 
   /**
-   * Exit fullscreen.
+   * Requests the browser to exit fullscreen mode.
    */
   exitFullscreen(): void {
     if (!this.isFullscreen(this.iframe)) {
@@ -317,8 +316,8 @@ export abstract class Embed {
 
 
   /**
-   * Return true if iframe is fullscreen,
-   * otherwise return false
+   * Returns true if the iframe is rendered in fullscreen mode,
+   * otherwise returns false.
    * 
    * @private
    * @param {HTMLIFrameElement} iframe

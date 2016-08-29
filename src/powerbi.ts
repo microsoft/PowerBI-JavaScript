@@ -34,9 +34,9 @@ declare global {
 }
 
 /**
- * Make PowerBi available on global object for use in apps without module loading support.
- * Save class to allow creating an instance of the service.
- * Create instance of class with default config for normal usage.
+ * Makes Power BI available to the global object for use in applications that don't have module loading support.
+ *
+ * Note: create an instance of the class with the default configuration for normal usage, or save the class so that you can create an instance of the service.
  */
 var powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
 window.powerbi = powerbi;

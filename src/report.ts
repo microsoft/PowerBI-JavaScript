@@ -20,7 +20,7 @@ export interface IReportNode {
 }
 
 /**
- * A Power BI Report embed component
+ * The Power BI Report embed component
  * 
  * @export
  * @class Report
@@ -57,10 +57,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * This adds backwards compatibility for older config which used the reportId query param to specify report id.
-   * E.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1
+   * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
+   * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
    * 
-   * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
+   * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
    * 
    * @static
    * @param {string} url
@@ -79,7 +79,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Get filters that are applied at the report level
+   * Gets filters that are applied at the report level.
    * 
    * ```javascript
    * // Get filters applied at report level
@@ -100,7 +100,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Get report id from first available location: options, attribute, embed url.
+   * Gets the report ID from the first available location: options, attribute, embed url.
    * 
    * @returns {string}
    */
@@ -115,7 +115,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Get the list of pages within the report
+   * Gets the list of pages within the report.
    * 
    * ```javascript
    * report.getPages()
@@ -139,13 +139,13 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Create new Page instance.
+   * Creates an instance of a Page.
    * 
-   * Normally you would get Page objects by calling `report.getPages()` but in the case
+   * Normally you would get Page objects by calling `report.getPages()`, but in the case
    * that the page name is known and you want to perform an action on a page without having to retrieve it
    * you can create it directly.
    * 
-   * Note: Since you are creating the page manually there is no guarantee that the page actually exists in the report and the subsequence requests could fail.
+   * Note: Because you are creating the page manually there is no guarantee that the page actually exists in the report, and subsequent requests could fail.
    * 
    * ```javascript
    * const page = report.page('ReportSection1');
@@ -161,8 +161,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Print the active page of the report.
-   * (Invokes window.print() on embed iframe)
+   * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
    */
   print(): Promise<void> {
     return this.service.hpm.post<models.IError[]>('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
@@ -175,7 +174,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Refreshes data sources for report.
+   * Refreshes data sources for the report.
    * 
    * ```javascript
    * report.refresh();
@@ -192,7 +191,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Remove all filters at report level
+   * Removes all filters at the report level.
    * 
    * ```javascript
    * report.removeFilters();
@@ -205,7 +204,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Set the active page
+   * Sets the active page of the report.
    * 
    * ```javascript
    * report.setPage("page2")
@@ -228,7 +227,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Sets filters
+   * Sets filters at the report level.
    * 
    * ```javascript
    * const filters: [
@@ -252,7 +251,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Update settings of report (filter pane visibility, page navigation visibility)
+   * Updates visibility settings for the filter pane and the page navigation pane.
    * 
    * ```javascript
    * const newSettings = {

@@ -29,7 +29,7 @@ export class Visual implements IVisualNode, IFilterable {
    */
   name: string;
   /**
-   * The parent Power BI page containing this visual
+   * The parent Power BI page that contains this visual
    * 
    * @type {IPageNode}
    */
@@ -41,7 +41,7 @@ export class Visual implements IVisualNode, IFilterable {
   }
 
   /**
-   * Gets all page level filters within report
+   * Gets all page level filters within a report.
    * 
    * ```javascript
    * visual.getFilters()
@@ -59,7 +59,7 @@ export class Visual implements IVisualNode, IFilterable {
   }
 
   /**
-   * Remove all filters on this page within the report
+   * Removes all filters on this page of the report.
    * 
    * ```javascript
    * visual.removeFilters();
@@ -72,7 +72,7 @@ export class Visual implements IVisualNode, IFilterable {
   }
 
   /**
-   * Set all filters at the visual level of the page
+   * Sets all filters at the visual level of the page.
    * 
    * ```javascript
    * visual.setFilters(filters)

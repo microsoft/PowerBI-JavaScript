@@ -11,7 +11,7 @@ export class Tile extends Embed {
   static type = "Tile";
 
   /**
-   * The the id of the tile
+   * The ID of the tile
    * 
    * @returns {string}
    */

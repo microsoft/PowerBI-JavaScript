@@ -1,6 +1,6 @@
 
 /**
- * Raises a custom event with event data on the specified HTML element
+ * Raises a custom event with event data on the specified HTML element.
  * 
  * @export
  * @param {HTMLElement} element
@@ -24,7 +24,7 @@ export function raiseCustomEvent(element: HTMLElement, eventName: string, eventD
 }
 
 /**
- * Finds the index of the first matching value in an array that matches the specified predicate
+ * Finds the index of the first value in an array that matches the specified predicate.
  * 
  * @export
  * @template T
@@ -49,7 +49,7 @@ export function findIndex<T>(predicate: (x: T) => boolean, xs: T[]): number {
 }
 
 /**
- * Findes the first matching value in an array that matches the specified predicate
+ * Finds the first value in an array that matches the specified predicate.
  * 
  * @export
  * @template T
@@ -70,7 +70,7 @@ export function remove<T>(predicate: (x: T) => boolean, xs: T[]): void {
 // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 // TODO: replace in favor of using polyfill
 /**
- * Copies the values of all enumerable own properties from one or more source objects to a target object. It will return the target object.
+ * Copies the values of all enumerable properties from one or more source objects to a target object, and returns the target object.
  * 
  * @export
  * @param {any} args
@@ -99,7 +99,7 @@ export function assign(...args) {
 }
 
 /**
- * Generates a random 7 character string
+ * Generates a random 7 character string.
  * 
  * @export
  * @returns {string}
