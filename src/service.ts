@@ -56,7 +56,7 @@ export interface IService {
 }
 
 /**
- * The Power BI embed service.  This is the entry point to embed Power BI components intor your application.
+ * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
  *  
  * @export
  * @class Service
@@ -65,7 +65,7 @@ export interface IService {
 export class Service implements IService {
 
   /**
-   * List of components this service can embed.
+   * A list of components that this service can embed
    */
   private static components: (typeof Report | typeof Tile)[] = [
     Tile,
@@ -73,7 +73,7 @@ export class Service implements IService {
   ];
 
   /**
-   * Default configuration for service.
+   * The default configuration for the service
    */
   private static defaultConfig: IServiceConfiguration = {
     autoEmbedOnContentLoaded: false,
@@ -81,16 +81,16 @@ export class Service implements IService {
   };
 
   /**
-   * Gets or sets the access token as fallback/global token to use when local token for report/tile is not provided.
+   * Gets or sets the access token as the global fallback token to use when a local token is not provided for a report or tile.
    * 
    * @type {string}
    */
   accessToken: string;
 
-  /** Configuration object */
+  /**The Configuration object for the service*/
   private config: IServiceConfiguration;
 
-  /** List of components (Reports/Tiles) that have been embedded using this service instance. */
+  /** A list of Report and Tile components that have been embedded using this service instance. */
   private embeds: embed.Embed[];
   /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
   hpm: hpm.HttpPostMessage;
@@ -99,7 +99,7 @@ export class Service implements IService {
   private router: router.Router;
 
   /**
-   * Creates an instance of Power BI embed service.
+   * Creates an instance of a Power BI Service.
    * 
    * @param {IHpmFactory} hpmFactory The http post message factory used in the postMessage communication layer
    * @param {IWpmpFactory} wpmpFactory The window post message factory used in the postMessage communication layer
@@ -112,7 +112,7 @@ export class Service implements IService {
     this.router = routerFactory(this.wpmp);
 
     /**
-     * Add handler for report events
+     * Adds handler for report events.
      */
     this.router.post(`/reports/:uniqueId/events/:eventName`, (req, res) => {
       const event: IEvent<any> = {
@@ -156,9 +156,7 @@ export class Service implements IService {
   }
 
   /**
-   * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed-url' attribute
-   * and automatically attempts to embed a powerbi component based on information from the attributes.
-   * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
+   * TODO: Add a description here
    * 
    * @param {HTMLElement} [container]
    * @param {embed.IEmbedConfiguration} [config=undefined]
@@ -172,9 +170,9 @@ export class Service implements IService {
   }
 
   /**
-   * Given an html element embed component based on configuration.
-   * If component has already been created and attached to element re-use component instance and existing iframe,
-   * otherwise create a new component instance
+   * Given a configuration based on an HTML element,
+   * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
+   * otherwise creates a new component instance.
    * 
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfiguration} [config={}]
@@ -195,8 +193,7 @@ export class Service implements IService {
   }
 
   /**
-   * Given an html element embed component base configuration.
-   * Save component instance on element for later lookup. 
+   * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
    * 
    * @private
    * @param {IPowerBiElement} element
@@ -209,7 +206,7 @@ export class Service implements IService {
       throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${embed.Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
     }
 
-    // Save type on configuration so it can be referenced later at known location
+    // Saves the type as part of the configuration so that it can be referenced later at a known location.
     config.type = componentType;
 
     const Component = utils.find(component => componentType === component.type.toLowerCase(), Service.components);
@@ -225,7 +222,7 @@ export class Service implements IService {
   }
 
   /**
-   * Given and element which arleady contains embed, load with new configuration
+   * Given an element that already contains an embed component, load with a new configuration.
    * 
    * @private
    * @param {IPowerBiElement} element
@@ -244,16 +241,18 @@ export class Service implements IService {
   }
 
   /**
-   * Adds event handler for DOMContentLoaded which finds all elements in DOM with attribute powerbi-embed-url
-   * then attempts to initiate the embed process based on data from other powerbi-* attributes.
-   * (This is usually only useful for applications rendered on by the server since all the data needed will be available by the time the handler is called.)
+   * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
+   * and automatically attempts to embed a powerbi component based on information from other powerbi-* attributes.
+   *
+   * Note: Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
+   * This handler is typically useful only for applications that are rendered on the server so that all required data is available when the handler is called.
    */
   enableAutoEmbed(): void {
     window.addEventListener('DOMContentLoaded', (event: Event) => this.init(document.body), false);
   }
 
   /**
-   * Returns instance of component associated with element.
+   * Returns an instance of the component associated with the element.
    * 
    * @param {HTMLElement} element
    * @returns {(Report | Tile)}
@@ -269,7 +268,7 @@ export class Service implements IService {
   }
 
   /**
-   * Find embed instance by name / unique id provided.
+   * Finds an embed instance by the name or unique ID that is provided.
    * 
    * @param {string} uniqueId
    * @returns {(Report | Tile)}
@@ -279,7 +278,7 @@ export class Service implements IService {
   }
 
   /**
-   * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
+   * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
    * 
    * @param {HTMLElement} element
    * @returns {void}
@@ -291,11 +290,11 @@ export class Service implements IService {
       return;
     }
 
-    /** Remove component from internal list */
+    /** Removes the component from an internal list of components. */
     utils.remove(x => x === powerBiElement.powerBiEmbed, this.embeds);
-    /** Delete property from html element */
+    /** Deletes a property from the HTML element. */
     delete powerBiElement.powerBiEmbed;
-    /** Remove iframe from element */
+    /** Removes the iframe from the element. */
     const iframe = element.querySelector('iframe');
     if (iframe) {
       iframe.remove();
@@ -303,7 +302,7 @@ export class Service implements IService {
   }
 
   /**
-   * Given an event object, find embed with matching type and id and invoke its handleEvent method with event.
+   * Given an event object, finds the embed component with the matching type and ID, and invokes its handleEvent method with the event object.
    * 
    * @private
    * @param {IEvent<any>} event

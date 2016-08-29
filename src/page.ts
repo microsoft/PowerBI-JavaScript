@@ -37,8 +37,7 @@ export class Page implements IPageNode, IFilterable {
   name: string;
 
   /**
-   * The user defined display name of the report page
-   * This can be undefined in cases where page is created manually
+   * The user defined display name of the report page, which is undefined if the page is created manually
    * 
    * @type {string}
    */
@@ -58,7 +57,7 @@ export class Page implements IPageNode, IFilterable {
   }
 
   /**
-   * Gets all page level filters within report
+   * Gets all page level filters within the report.
    * 
    * ```javascript
    * page.getFilters()
@@ -98,7 +97,7 @@ export class Page implements IPageNode, IFilterable {
   }
 
   /**
-   * Remove all filters on this page within the report
+   * Removes all filters from this page of the report.
    * 
    * ```javascript
    * page.removeFilters();
@@ -111,7 +110,7 @@ export class Page implements IPageNode, IFilterable {
   }
 
   /**
-   * Make the current page the active page of the report.
+   * Makes the current page the active page of the report.
    * 
    * ```javascripot
    * page.setActive();
@@ -150,13 +149,13 @@ export class Page implements IPageNode, IFilterable {
   }
 
   /**
-   * Creates new Visual object given a name of the visual.
+   * Creates a Visual object given a name for the visual.
    * 
    * Normally you would get Visual objects by calling `page.getVisuals()` but in the case
-   * that the visual name is known and you want to perform an action on a visaul such as setting a filters
+   * that the visual name is known and you want to perform an action on a visual such as setting a filter
    * without having to retrieve it first you can create it directly.
    * 
-   * Note: Since you are creating the visual manually there is no guarantee that the visual actually exists in the report and the subsequence requests could fail.
+   * Note: Because you are creating the visual manually there is no guarantee that the visual actually exists in the report and the subsequence requests could fail.
    * 
    * ```javascript
    * const visual = report.page('ReportSection1').visual('BarChart1');
