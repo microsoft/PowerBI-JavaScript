@@ -22,9 +22,6 @@ export {
 export {
   Page
 } from './page';
-export {
-  Visual
-} from './visual';
 
 declare var powerbi: service.Service;
 declare global {
