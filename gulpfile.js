@@ -38,7 +38,11 @@ gulp.task('ghpages', 'Deploy documentation to gh-pages', ['nojekyll'], function 
 
 gulp.task("docs", 'Compile documentation from src code', function () {
   return gulp
-    .src(["src/**/*.ts"])
+    .src([
+      "typings/globals/es6-promise/index.d.ts",
+      "node_modules/powerbi-models/dist/models.d.ts",
+      "src/**/*.ts"
+    ])
     .pipe(typedoc({
       mode: 'modules',
       includeDeclarations: true,
