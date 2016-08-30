@@ -20,7 +20,7 @@ var ghPages = require('gulp-gh-pages'),
   webpackTestConfig = require('./webpack.test.config'),
   runSequence = require('run-sequence'),
   argv = require('yargs').argv;
-  ;
+;
 
 var package = require('./package.json');
 var webpackBanner = package.name + " v" + package.version + " | (c) 2016 Microsoft Corporation " + package.license;

@@ -48,9 +48,9 @@ export class Visual implements IVisualNode, IFilterable {
    *  .then(pages => { ... });
    * ```
    * 
-   * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
+   * @returns {(Promise<models.IFilter[]>)}
    */
-  getFilters(): Promise<(models.IBasicFilter | models.IAdvancedFilter)[]> {
+  getFilters(): Promise<models.IFilter[]> {
     return this.page.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.page.name}/visuals/${this.name}/filters`, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
       .then(response => response.body,
       response => {
@@ -79,10 +79,10 @@ export class Visual implements IVisualNode, IFilterable {
    *  .catch(errors => { ... });
    * ```
    * 
-   * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+   * @param {(models.IFilter[])} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void> {
+  setFilters(filters: models.IFilter[]): Promise<void> {
     return this.page.report.service.hpm.put<models.IError[]>(`/report/pages/${this.page.name}/visuals/${this.name}/filters`, filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
       .catch(response => {
         throw response.body;
