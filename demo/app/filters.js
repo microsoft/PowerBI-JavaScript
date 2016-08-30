@@ -203,19 +203,19 @@ $(function () {
   function updateFiltersPane() {
     const $filters = $('.filters');
 
-    $.each($filters, (index, element) => {
+    $.each($filters, function(index, element)  {
       const $element = $(element);
       const filterable = $element.data('filterable');
 
       console.log($element, filterable);
 
       filterable.getFilters()
-        .then(filters => {
+        .then(function(filters) {
           console.log(filterable.displayName, filters);
           $element.empty();
           filters
             .map(generateFilterElement)
-            .forEach($filter => {
+            .forEach(function($filter) {
               $element.append($filter);
             });
         });
@@ -291,12 +291,12 @@ $(function () {
 
     // Setup page filters containers which have filterable
     report.getPages()
-      .then(pages => {
+      .then(function(pages) {
         reportPages = pages;
 
         pages
           .map(generatePageFiltersContainer)
-          .forEach($pageFiltersContainer => {
+          .forEach(function($pageFiltersContainer) {
             $pageFilters.append($pageFiltersContainer)
           });
       });
@@ -318,7 +318,7 @@ $(function () {
       console.log('remove filter', $element, $filtersContainer, filterToRemove, filterable);
 
       filterable.getFilters()
-        .then(filters => {
+        .then(function(filters) {
           let index = -1;
           filters.some(function (filter, i) {
             if (JSON.stringify(filter) === JSON.stringify(filterToRemove)) {
@@ -390,7 +390,7 @@ $(function () {
       }
       else {
         return response.json()
-          .then(error => {
+          .then(function(error) {
             throw new Error(error);
           });
       }
