@@ -14,6 +14,7 @@ $(function () {
   var $operatorFields = $('.filter-operators');
   var $targetTypeFields = $('input[type=radio][name=filterTarget]');
   var $targetFields = $('.filter-target');
+  var $reloadButton = $('#reload');
 
   var $predefinedFilter1 = $('#predefinedFilter1');
   var predefinedFilter1 = new models.AdvancedFilter({
@@ -55,6 +56,13 @@ $(function () {
         value: "Park"
       }
     ]);
+
+  $reloadButton.on('click', function (event) {
+    event.preventDefault();
+
+    console.log('reload');
+    customFilterPaneReport.reload();
+  });
 
   $customFilterForm.on('submit', function (event) {
     event.preventDefault();

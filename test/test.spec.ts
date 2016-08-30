@@ -2146,6 +2146,33 @@ describe('SDK-to-HPM', function () {
       });
     });
 
+    describe('reload', function () {
+      it('report.reload() sends POST /report/load with configuration in body', function () {
+        // Arrange
+        const testData = {
+          loadConfiguration: {
+            id: 'fakeId',
+            accessToken: 'fakeToken'
+          },
+          response: {
+            body: null
+          }
+        };
+
+        spyHpm.post.and.returnValue(Promise.resolve(testData.response));
+        report.load(testData.loadConfiguration)
+          .then(() => {
+            spyHpm.post.calls.reset();
+
+            // Act
+            report.reload();
+
+            // Assert
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.loadConfiguration), { uid: uniqueId }, iframe.contentWindow);
+          });
+      });
+    });
+
     describe('settings', function () {
       it('report.updateSettings(settings) sends PATCH /report/settings with settings object', function () {
         // Arrange
