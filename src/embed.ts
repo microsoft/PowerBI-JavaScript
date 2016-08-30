@@ -170,6 +170,7 @@ export abstract class Embed {
 
     return this.service.hpm.post<void>('/report/load', config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
+        utils.assign(this.config, config);
         return response.body;
       },
       response => {

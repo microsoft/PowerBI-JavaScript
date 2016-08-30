@@ -1833,6 +1833,30 @@ describe('SDK-to-HPM', function () {
             done();
           });
       });
+
+      it('report.load() updates the internal configuration if the load request was successful', function (done) {
+        // Arrange
+        const testData = {
+          loadConfiguration: {
+            id: 'newFakeId',
+            accessToken: 'newFakeToken'
+          },
+          response: {
+            body: null
+          }
+        };
+
+        spyHpm.post.and.returnValue(Promise.resolve(testData.response));
+
+        // Act
+        report.load(testData.loadConfiguration)
+          .then(response => {
+            expect(report.config).toEqual(jasmine.objectContaining(testData.loadConfiguration));
+            expect(response).toEqual(null);
+            // Assert
+            done();
+          });
+      });
     });
 
     describe('pages', function () {
