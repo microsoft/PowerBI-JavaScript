@@ -21,4 +21,10 @@ $(function () {
           });
       }
     });
+
+  var $fullscreen = $('#fullscreen');
+
+  $fullscreen.on('click', function (event) {
+    staticReport.fullscreen();
+  });
 });
