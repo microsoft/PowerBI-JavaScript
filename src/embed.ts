@@ -244,6 +244,18 @@ export abstract class Embed {
   }
 
   /**
+   * Reloads embed using existing configuration.
+   * E.g. For reports this effectively clears all filters and makes the first page active which simulates resetting a report back to loaded state.
+   * 
+   * ```javascript
+   * report.reload();
+   * ```
+   */
+  reload(): Promise<void> {
+    return this.load(this.config);
+  }
+
+  /**
    * Gets an access token from the first available location: config, attribute, global.
    * 
    * @private
