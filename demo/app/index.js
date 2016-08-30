@@ -16,7 +16,7 @@ $(function () {
       }
       else {
         return response.json()
-          .then(error => {
+          .then(function(error) {
             throw new Error(error);
           });
       }
