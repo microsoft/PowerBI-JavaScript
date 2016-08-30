@@ -89,10 +89,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *   });
    * ```
    * 
-   * @returns {Promise<models.IFilter[]>}
+   * @returns {Promise<models.IBaseFilter[]>}
    */
-  getFilters(): Promise<models.IFilter[]> {
-    return this.service.hpm.get<models.IFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+  getFilters(): Promise<models.IBaseFilter[]> {
+    return this.service.hpm.get<models.IBaseFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => response.body,
       response => {
         throw response.body;
@@ -224,10 +224,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *  });
    * ```
    * 
-   * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+   * @param {(models.IBaseFilter[])} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void> {
+  setFilters(filters: models.IBaseFilter[]): Promise<void> {
     return this.service.hpm.put<models.IError[]>(`/report/filters`, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .catch(response => {
         throw response.body;
