@@ -240,10 +240,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *  });
    * ```
    * 
-   * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+   * @param {(models.IFilter[])} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void> {
+  setFilters(filters: models.IFilter[]): Promise<void> {
     return this.service.hpm.put<models.IError[]>(`/report/filters`, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .catch(response => {
         throw response.body;

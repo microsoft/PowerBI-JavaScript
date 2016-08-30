@@ -37,7 +37,7 @@ export interface IEmbedConfiguration {
   accessToken?: string;
   settings?: models.ISettings;
   pageName?: string;
-  filters?: (models.IBasicFilter | models.IAdvancedFilter)[];
+  filters?: models.IFilter[];
 }
 
 export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {

@@ -64,9 +64,9 @@ export class Page implements IPageNode, IFilterable {
    *  .then(pages => { ... });
    * ```
    * 
-   * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
+   * @returns {(Promise<models.IFilter[]>)}
    */
-  getFilters(): Promise<(models.IBasicFilter | models.IAdvancedFilter)[]> {
+  getFilters(): Promise<models.IFilter[]> {
     return this.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.name}/filters`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .then(response => response.body,
       response => {
@@ -138,10 +138,10 @@ export class Page implements IPageNode, IFilterable {
    *   .catch(errors => { ... });
    * ```
    * 
-   * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+   * @param {(models.IFilter[])} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void> {
+  setFilters(filters: models.IFilter[]): Promise<void> {
     return this.report.service.hpm.put<models.IError[]>(`/report/pages/${this.name}/filters`, filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .catch(response => {
         throw response.body;

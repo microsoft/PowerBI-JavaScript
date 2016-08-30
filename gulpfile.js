@@ -20,7 +20,7 @@ var ghPages = require('gulp-gh-pages'),
   webpackTestConfig = require('./webpack.test.config'),
   runSequence = require('run-sequence'),
   argv = require('yargs').argv;
-  ;
+;
 
 var package = require('./package.json');
 var webpackBanner = package.name + " v" + package.version + " | (c) 2016 Microsoft Corporation " + package.license;
@@ -38,7 +38,7 @@ gulp.task('ghpages', 'Deploy documentation to gh-pages', ['nojekyll'], function 
 
 gulp.task("docs", 'Compile documentation from src code', function () {
   return gulp
-    .src(["src/**/*.ts"])
+    .src(["typings/globals/es6-promise/index.d.ts", "src/**/*.ts"])
     .pipe(typedoc({
       mode: 'modules',
       includeDeclarations: true,
