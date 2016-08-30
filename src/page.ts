@@ -64,10 +64,10 @@ export class Page implements IPageNode, IFilterable {
    *  .then(pages => { ... });
    * ```
    * 
-   * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
+   * @returns {Promise<models.IBaseFilter[]>}
    */
-  getFilters(): Promise<(models.IBasicFilter | models.IAdvancedFilter)[]> {
-    return this.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.name}/filters`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+  getFilters(): Promise<models.IBaseFilter[]> {
+    return this.report.service.hpm.get<models.IBaseFilter[]>(`/report/pages/${this.name}/filters`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .then(response => response.body,
       response => {
         throw response.body;
@@ -138,10 +138,10 @@ export class Page implements IPageNode, IFilterable {
    *   .catch(errors => { ... });
    * ```
    * 
-   * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+   * @param {(models.IBaseFilter[])} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void> {
+  setFilters(filters: models.IBaseFilter[]): Promise<void> {
     return this.report.service.hpm.put<models.IError[]>(`/report/pages/${this.name}/filters`, filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .catch(response => {
         throw response.body;

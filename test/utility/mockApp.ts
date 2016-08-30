@@ -15,8 +15,8 @@ export interface IApp {
   getVisuals(page: models.IPage): Promise<models.IVisual>;
   validateVisual(visual: models.IVisual): Promise<models.IError[]>;
   // Filters
-  getFilters(): Promise<models.IFilter[]>;
-  setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void>;
+  getFilters(): Promise<models.IBaseFilter[]>;
+  setFilters(filters: models.IBaseFilter[]): Promise<void>;
   validateFilter(filter: models.IFilter): Promise<models.IError[]>;
   // Other
   print(): Promise<void>;

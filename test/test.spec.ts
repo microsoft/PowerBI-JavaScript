@@ -1072,7 +1072,7 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
 
             // Act
-            hpm.get<models.IFilter[]>('/report/filters')
+            hpm.get<models.IBaseFilter[]>('/report/filters')
               .then(response => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
@@ -1098,7 +1098,7 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.reject(testData.error));
 
             // Act
-            hpm.get<models.IFilter[]>('/report/filters')
+            hpm.get<models.IBaseFilter[]>('/report/filters')
               .catch(response => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
@@ -1224,7 +1224,7 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
 
             // Act
-            hpm.get<models.IFilter[]>('/report/pages/xyz/filters')
+            hpm.get<models.IBaseFilter[]>('/report/pages/xyz/filters')
               .then(response => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
@@ -1250,7 +1250,7 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.reject(testData.error));
 
             // Act
-            hpm.get<models.IFilter[]>('/report/pages/xyz/filters')
+            hpm.get<models.IBaseFilter[]>('/report/pages/xyz/filters')
               .catch(response => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();

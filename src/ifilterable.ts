@@ -11,16 +11,16 @@ export interface IFilterable {
   /**
    * Gets the filters currently applied to the object.
    * 
-   * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
+   * @returns {Promise<models.IBaseFilter[]>}
    */
-  getFilters(): Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>;
+  getFilters(): Promise<models.IBaseFilter[]>;
   /**
    * Replaces all filters on the current object with the specified filter values.
    * 
-   * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+   * @param {models.IBaseFilter[]} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void>;
+  setFilters(filters: models.IBaseFilter[]): Promise<void>;
   /**
    * Removes all filters from the current object.
    * 
