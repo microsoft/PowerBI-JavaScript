@@ -1,13 +1,14 @@
 import * as service from '../src/service';
 import * as embed from '../src/embed';
 import * as report from '../src/report';
+import * as dashboard from '../src/dashboard';
 import * as page from '../src/page';
 import * as visual from '../src/visual';
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
 import * as Router from 'powerbi-router';
 import * as models from 'powerbi-models';
-import { spyApp, setupMockApp } from './utility/mockReportEmbed';
+import { spyApp, setupEmbedMockApp } from './utility/mockEmbed';
 import * as factories from '../src/factories';
 import { spyWpmp } from './utility/mockWpmp';
 import { spyHpm } from './utility/mockHpm';
@@ -81,9 +82,23 @@ describe('service', function () {
       expect(attemptGet).toThrowError(Error);
     });
 
-    it('calling get on element with embeded component returns the instance', function () {
+    it('calling get on element with embeded report component returns the instance', function () {
       // Arrange
       const $element = $('<div powerbi-type="report" powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123"></div>')
+        .appendTo('#powerbi-fixture');
+
+      const componentInstance = powerbi.embed($element[0]);
+
+      // Act
+      const componentInstance2 = powerbi.get($element[0]);
+
+      // Assert
+      expect(componentInstance).toEqual(componentInstance2);
+    })
+
+    it('calling get on element with embeded dashboard component returns the instance', function () {
+      // Arrange
+      const $element = $('<div powerbi-type="dashboard" powerbi-embed-url="https://app.powerbi.com/dashboardEmbed?dashboardId=ABC123"></div>')
         .appendTo('#powerbi-fixture');
 
       const componentInstance = powerbi.embed($element[0]);
@@ -266,7 +281,7 @@ describe('service', function () {
       expect(component2).toBe(component);
     });
 
-    it('if component was not previously created, creates an instance and return it', function () {
+    it('if report embed component was not previously created, creates an instance and return it', function () {
       // Arrange
       var component = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
         .appendTo('#powerbi-fixture');
@@ -276,6 +291,18 @@ describe('service', function () {
 
       // Assert
       expect(report).toBeDefined();
+    });
+    
+    it('if dashboard embed component was not previously created, creates an instance and return it', function () {
+      // Arrange
+      var component = $('<div powerbi-embed-url="https://app.powerbi.com/dashboardEmbed?dashboardId=ABC123" powerbi-type="dashboard"></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      var dashboard = powerbi.embed(component[0]);
+
+      // Assert
+      expect(dashboard).toBeDefined();
     });
 
     it("looks for a token first from attribute 'powerbi-access-token'", function () {
@@ -566,7 +593,7 @@ describe('Protocol', function () {
     iframe = <HTMLIFrameElement>$iframe.get(0);
 
     // Register Iframe side
-    iframeHpm = setupMockApp(iframe.contentWindow, window, logMessages, 'ProtocolMockAppWpmp');
+    iframeHpm = setupEmbedMockApp(iframe.contentWindow, window, logMessages, 'ProtocolMockAppWpmp');
 
     // Register SDK side WPMP
     wpmp = factories.wpmpFactory('HostProxyDefaultNoHandlers', logMessages, iframe.contentWindow);
@@ -678,7 +705,8 @@ describe('Protocol', function () {
     });
 
     describe('load', function () {
-      it('POST /report/load returns 400 if the request is invalid', function (done) {
+      describe('report', function () {
+        it('POST /report/load returns 400 if the request is invalid', function (done) {
         // Arrange
         const testData = {
           uniqueId: 'uniqueId',
@@ -712,8 +740,8 @@ describe('Protocol', function () {
               });
           });
       });
-
-      it('POST /report/load returns 202 if the request is valid', function (done) {
+      
+        it('POST /report/load returns 202 if the request is valid', function (done) {
         // Arrange
         const testData = {
           load: {
@@ -741,8 +769,8 @@ describe('Protocol', function () {
               });
           });
       });
-
-      it('POST /report/load causes POST /reports/:uniqueId/events/loaded', function (done) {
+      
+        it('POST /report/load causes POST /reports/:uniqueId/events/loaded', function (done) {
         // Arrange
         const testData = {
           uniqueId: 'uniqueId',
@@ -783,7 +811,7 @@ describe('Protocol', function () {
           });
       });
 
-      it('POST /report/load causes POST /reports/:uniqueId/events/error', function (done) {
+        it('POST /report/load causes POST /reports/:uniqueId/events/error', function (done) {
         // Arrange
         const testData = {
           uniqueId: 'uniqueId',
@@ -823,6 +851,75 @@ describe('Protocol', function () {
                 });
               });
           });
+      });
+      });
+      
+      describe('dashboard', function () {
+        it('POST /dashboard/load returns 202 if the request is valid', function (done) {
+          
+        // Arrange
+        const testData = {
+          load: {
+            dashboardId: "fakeId",
+            accessToken: "fakeToken",
+            options: {
+            }
+          }
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.validateLoad.and.returnValue(Promise.resolve(null));
+            // Act
+            hpm.post<void>('/dashboard/load', testData.load)
+              .then(response => {
+                // Assert
+                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
+                expect(spyApp.load).toHaveBeenCalledWith(testData.load);
+                expect(response.statusCode).toEqual(202);
+                // Cleanup
+                spyApp.validateLoad.calls.reset();
+                spyApp.load.calls.reset();
+                done();
+              });
+          });
+      });
+      
+        it('POST /dashboard/load returns 400 if the request is invalid', function (done) {
+            
+        // Arrange
+        const testData = {
+          uniqueId: 'uniqueId',
+          load: {
+            dashboardId: "fakeId",
+            accessToken: "fakeToken",
+            options: {
+            }
+          }
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.validateLoad.and.returnValue(Promise.reject(null));
+
+            // Act
+            hpm.post<models.IError>('/dashboard/load', testData.load, { uid: testData.uniqueId })
+              .then(() => {
+                expect(false).toBe(true);
+                spyApp.validateLoad.calls.reset();
+                done();
+              })
+              .catch(response => {
+                // Assert
+                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
+                expect(spyApp.load).not.toHaveBeenCalledWith(testData.load);
+                expect(response.statusCode).toEqual(400);
+                // Cleanup
+                spyApp.validateLoad.calls.reset();
+                done();
+              });
+          });
+      });
       });
     });
 
@@ -1693,14 +1790,19 @@ describe('Protocol', function () {
 });
 
 describe('SDK-to-HPM', function () {
-  let $element: JQuery;
+  let $reportElement: JQuery;
+  let $dashboardElement: JQuery;
   let iframe: HTMLIFrameElement;
+  let dashboardIframe: HTMLIFrameElement;
   let powerbi: service.Service;
   let report: report.Report;
+  let dashboard: dashboard.Dashboard;
   let page1: page.Page;
   let visual1: visual.Visual;
   let uniqueId = 'uniqueId';
+  let dashboardUniqueId = 'uniqueId';
   let embedConfiguration: embed.IEmbedConfiguration;
+  let dashboardEmbedConfiguration: embed.IEmbedConfiguration;
 
   beforeAll(function () {
     const spyHpmFactory: factories.IHpmFactory = () => {
@@ -1716,7 +1818,9 @@ describe('SDK-to-HPM', function () {
 
     powerbi = new service.Service(spyHpmFactory, noop, spyRouterFactory, { wpmpName: 'SDK-to-HPM report wpmp' });
 
-    $element = $(`<div class="powerbi-report-container"></div>`)
+    $reportElement = $(`<div class="powerbi-report-container"></div>`)
+      .appendTo(document.body);
+    $dashboardElement = $(`<div class="powerbi-dashboard-container"></div>`)
       .appendTo(document.body);
 
     const iframeSrc = "base/test/utility/noop.html";
@@ -1726,20 +1830,31 @@ describe('SDK-to-HPM', function () {
       accessToken: 'fakeToken',
       embedUrl: iframeSrc
     };
-    report = <report.Report>powerbi.embed($element[0], embedConfiguration);
+    dashboardEmbedConfiguration = {
+      type: "dashboard",
+      id: "fakeDashboardId",
+      accessToken: 'fakeToken',
+      embedUrl: iframeSrc
+    };
+    report = <report.Report>powerbi.embed($reportElement[0], embedConfiguration);
+    dashboard = <dashboard.Dashboard>powerbi.embed($dashboardElement[0], dashboardEmbedConfiguration);
     page1 = new page.Page(report, 'xyz');
     visual1 = new visual.Visual(page1, 'uvw');
     uniqueId = report.config.uniqueId;
-
-    iframe = <HTMLIFrameElement>$element.find('iframe')[0];
+    dashboardUniqueId = dashboard.config.uniqueId;
+    
+    iframe = <HTMLIFrameElement>$reportElement.find('iframe')[0];
+    dashboardIframe = <HTMLIFrameElement>$dashboardElement.find('iframe')[0];
 
     // Reset load handler
     spyHpm.post.calls.reset();
   });
 
   afterAll(function () {
-    powerbi.reset($element.get(0));
-    $element.remove();
+    powerbi.reset($reportElement.get(0));
+    powerbi.reset($dashboardElement.get(0));
+    $reportElement.remove();
+    $dashboardElement.remove();
     powerbi.wpmp.stop();
   });
 
@@ -2239,7 +2354,33 @@ describe('SDK-to-HPM', function () {
       });
     });
   });
+    
+  describe('dashboard', function () {
+    describe('load', function () {
+      it('dashboard.load() sends POST /dashboard/load with configuration in body', function () {
+        // Arrange
+        const testData = {
+          loadConfiguration: {
+            id: 'fakeId',
+            accessToken: 'fakeToken',
+            type: 'dashboard'
+          },
+          response: {
+            body: null
+          }
+        };
 
+        spyHpm.post.and.returnValue(Promise.resolve(testData.response));
+
+        // Act
+        dashboard.load(testData.loadConfiguration);
+
+        // Assert
+        expect(spyHpm.post).toHaveBeenCalledWith('/dashboard/load', testData.loadConfiguration, { uid: dashboardUniqueId }, dashboardIframe.contentWindow);
+      });
+    });
+  });
+  
   describe('page', function () {
     describe('filters', function () {
       it('page.getFilters() sends GET /report/pages/xyz/filters', function () {
@@ -2950,8 +3091,8 @@ describe('SDK-to-MockApp', function () {
     (<any>powerbi.wpmp).eventSourceOverrideWindow = iframe.contentWindow;
 
     // Register Iframe side
-    iframeHpm = setupMockApp(iframe.contentWindow, window, logMessages, 'SDK-to-MockApp IframeWpmp');
-    iframeHpm2 = setupMockApp(iframe2.contentWindow, window, logMessages, 'SDK-to-MockApp IframeWpmp2');
+    iframeHpm = setupEmbedMockApp(iframe.contentWindow, window, logMessages, 'SDK-to-MockApp IframeWpmp');
+    iframeHpm2 = setupEmbedMockApp(iframe2.contentWindow, window, logMessages, 'SDK-to-MockApp IframeWpmp2');
 
     // Reset load handler
     spyApp.validateLoad.calls.reset();

@@ -167,15 +167,20 @@ export abstract class Embed {
     if (errors) {
       throw errors;
     }
-
-    return this.service.hpm.post<void>('/report/load', config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        utils.assign(this.config, config);
-        return response.body;
-      },
-      response => {
-        throw response.body;
-      });
+  
+    let loadPath = '/report/load';
+    if(this.config && this.config.type === 'dashboard') {
+      loadPath = '/dashboard/load';
+    }
+   
+    return this.service.hpm.post<void>(loadPath, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    .then(response => {
+      utils.assign(this.config, config);
+      return response.body;
+    },
+    response => {
+      throw response.body;
+    });
   }
 
   /**

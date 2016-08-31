@@ -6,7 +6,7 @@ import { mockAppSpyObj, mockApp } from './mockApp';
 
 export const spyApp = mockAppSpyObj;
 
-export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean, name: string = 'MockAppWindowPostMessageProxy'): Hpm.HttpPostMessage {
+export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean, name: string = 'MockAppWindowPostMessageProxy'): Hpm.HttpPostMessage {
   const parent = parentWindow || iframeContentWindow.parent;
   const wpmp = new Wpmp.WindowPostMessageProxy({
     processTrackingProperties: {
@@ -39,6 +39,34 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
 
   /**
    * Phase 1
+   */
+  
+  /**
+   * Dashboard Embed
+   */
+  router.post('/dashboard/load', (req, res) => {
+    const uniqueId = req.headers['uid'];
+    const loadConfig = req.body;
+    return app.validateLoad(loadConfig)
+      .then(() => {
+        app.load(loadConfig)
+          .then(() => {
+            const initiator = "sdk";
+            hpm.post(`/dashboards/${uniqueId}/events/loaded`, {
+              initiator
+            });
+          }, error => {
+            hpm.post(`/dashboards/${uniqueId}/events/error`, error);
+          });
+          
+        res.send(202);
+      }, error => {
+        res.send(400, error);
+      });
+  });
+  
+  /**
+   * Report Embed
    */
   router.post('/report/load', (req, res) => {
     const uniqueId = req.headers['uid'];
