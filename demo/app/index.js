@@ -16,9 +16,15 @@ $(function () {
       }
       else {
         return response.json()
-          .then(function(error) {
+          .then(function (error) {
             throw new Error(error);
           });
       }
     });
+
+  var $fullscreen = $('#fullscreen');
+
+  $fullscreen.on('click', function (event) {
+    staticReport.fullscreen();
+  });
 });

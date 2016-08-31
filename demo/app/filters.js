@@ -14,6 +14,7 @@ $(function () {
   var $operatorFields = $('.filter-operators');
   var $targetTypeFields = $('input[type=radio][name=filterTarget]');
   var $targetFields = $('.filter-target');
+  var $reloadButton = $('#reload');
 
   var $predefinedFilter1 = $('#predefinedFilter1');
   var predefinedFilter1 = new models.AdvancedFilter({
@@ -55,6 +56,13 @@ $(function () {
         value: "Park"
       }
     ]);
+
+  $reloadButton.on('click', function (event) {
+    event.preventDefault();
+
+    console.log('reload');
+    customFilterPaneReport.reload();
+  });
 
   $customFilterForm.on('submit', function (event) {
     event.preventDefault();
@@ -203,19 +211,19 @@ $(function () {
   function updateFiltersPane() {
     const $filters = $('.filters');
 
-    $.each($filters, function(index, element)  {
+    $.each($filters, function (index, element) {
       const $element = $(element);
       const filterable = $element.data('filterable');
 
       console.log($element, filterable);
 
       filterable.getFilters()
-        .then(function(filters) {
+        .then(function (filters) {
           console.log(filterable.displayName, filters);
           $element.empty();
           filters
             .map(generateFilterElement)
-            .forEach(function($filter) {
+            .forEach(function ($filterS) {
               $element.append($filter);
             });
         });
@@ -291,12 +299,12 @@ $(function () {
 
     // Setup page filters containers which have filterable
     report.getPages()
-      .then(function(pages) {
+      .then(function (pages) {
         reportPages = pages;
 
         pages
           .map(generatePageFiltersContainer)
-          .forEach(function($pageFiltersContainer) {
+          .forEach(function ($pageFiltersContainer) {
             $pageFilters.append($pageFiltersContainer)
           });
       });
@@ -318,7 +326,7 @@ $(function () {
       console.log('remove filter', $element, $filtersContainer, filterToRemove, filterable);
 
       filterable.getFilters()
-        .then(function(filters) {
+        .then(function (filters) {
           let index = -1;
           filters.some(function (filter, i) {
             if (JSON.stringify(filter) === JSON.stringify(filterToRemove)) {
@@ -390,7 +398,7 @@ $(function () {
       }
       else {
         return response.json()
-          .then(function(error) {
+          .then(function (error) {
             throw new Error(error);
           });
       }

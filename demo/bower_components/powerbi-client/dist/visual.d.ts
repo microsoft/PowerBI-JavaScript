@@ -1,13 +1,37 @@
-/*! powerbi-client v2.0.0-beta.12 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
 import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 import { IPageNode } from './page';
+/**
+ * A Visual node within a report hierarchy
+ *
+ * @export
+ * @interface IVisualNode
+ */
 export interface IVisualNode {
     name: string;
     page: IPageNode;
 }
+/**
+ * A Power BI visual within a page
+ *
+ * @export
+ * @class Visual
+ * @implements {IVisualNode}
+ * @implements {IFilterable}
+ */
 export declare class Visual implements IVisualNode, IFilterable {
+    /**
+     * The visual name
+     *
+     * @type {string}
+     */
     name: string;
+    /**
+     * The parent Power BI page containing this visual
+     *
+     * @type {IPageNode}
+     */
     page: IPageNode;
     constructor(page: IPageNode, name: string);
     /**
@@ -17,14 +41,18 @@ export declare class Visual implements IVisualNode, IFilterable {
      * visual.getFilters()
      *  .then(pages => { ... });
      * ```
+     *
+     * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
      */
-    getFilters(): Promise<models.IFilter[]>;
+    getFilters(): Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>;
     /**
      * Remove all filters on this page within the report
      *
      * ```javascript
      * visual.removeFilters();
      * ```
+     *
+     * @returns {Promise<void>}
      */
     removeFilters(): Promise<void>;
     /**
@@ -34,6 +62,9 @@ export declare class Visual implements IVisualNode, IFilterable {
      * visual.setFilters(filters)
      *  .catch(errors => { ... });
      * ```
+     *
+     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+     * @returns {Promise<void>}
      */
     setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void>;
 }
