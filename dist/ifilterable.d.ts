@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
 import * as models from 'powerbi-models';
 /**
  * Decorates embed components that support filters
@@ -9,20 +9,20 @@ import * as models from 'powerbi-models';
  */
 export interface IFilterable {
     /**
-     * Gets the filters currently applied to the object
+     * Gets the filters currently applied to the object.
      *
-     * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
+     * @returns {(Promise<models.IFilter[]>)}
      */
-    getFilters(): Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>;
+    getFilters(): Promise<models.IFilter[]>;
     /**
-     * Replaces all filters on the current object with the specified filter values
+     * Replaces all filters on the current object with the specified filter values.
      *
-     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+     * @param {(models.IFilter[])} filters
      * @returns {Promise<void>}
      */
-    setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void>;
+    setFilters(filters: models.IFilter[]): Promise<void>;
     /**
-     * Removes all filters from the current object
+     * Removes all filters from the current object.
      *
      * @returns {Promise<void>}
      */

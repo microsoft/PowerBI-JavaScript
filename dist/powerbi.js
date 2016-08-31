@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -57,24 +57,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(9);
+	var factories = __webpack_require__(8);
 	exports.factories = factories;
 	var models = __webpack_require__(4);
 	exports.models = models;
 	var report_1 = __webpack_require__(5);
 	exports.Report = report_1.Report;
-	var tile_1 = __webpack_require__(8);
+	var tile_1 = __webpack_require__(7);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
 	var page_1 = __webpack_require__(6);
 	exports.Page = page_1.Page;
-	var visual_1 = __webpack_require__(7);
-	exports.Visual = visual_1.Visual;
 	/**
-	 * Make PowerBi available on global object for use in apps without module loading support.
-	 * Save class to allow creating an instance of the service.
-	 * Create instance of class with default config for normal usage.
+	 * Makes Power BI available to the global object for use in applications that don't have module loading support.
+	 *
+	 * Note: create an instance of the class with the default configuration for normal usage, or save the class so that you can create an instance of the service.
 	 */
 	var powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
 	window.powerbi = powerbi;
@@ -86,11 +84,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(5);
-	var tile_1 = __webpack_require__(8);
+	var tile_1 = __webpack_require__(7);
 	var page_1 = __webpack_require__(6);
 	var utils = __webpack_require__(3);
 	/**
-	 * The Power BI embed service.  This is the entry point to embed Power BI components intor your application.
+	 * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
 	 *
 	 * @export
 	 * @class Service
@@ -98,7 +96,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var Service = (function () {
 	    /**
-	     * Creates an instance of Power BI embed service.
+	     * Creates an instance of a Power BI Service.
 	     *
 	     * @param {IHpmFactory} hpmFactory The http post message factory used in the postMessage communication layer
 	     * @param {IWpmpFactory} wpmpFactory The window post message factory used in the postMessage communication layer
@@ -112,7 +110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
 	        this.router = routerFactory(this.wpmp);
 	        /**
-	         * Add handler for report events
+	         * Adds handler for report events.
 	         */
 	        this.router.post("/reports/:uniqueId/events/:eventName", function (req, res) {
 	            var event = {
@@ -149,9 +147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 	    /**
-	     * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed-url' attribute
-	     * and automatically attempts to embed a powerbi component based on information from the attributes.
-	     * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
+	     * TODO: Add a description here
 	     *
 	     * @param {HTMLElement} [container]
 	     * @param {embed.IEmbedConfiguration} [config=undefined]
@@ -165,9 +161,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return elements.map(function (element) { return _this.embed(element, config); });
 	    };
 	    /**
-	     * Given an html element embed component based on configuration.
-	     * If component has already been created and attached to element re-use component instance and existing iframe,
-	     * otherwise create a new component instance
+	     * Given a configuration based on an HTML element,
+	     * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
+	     * otherwise creates a new component instance.
 	     *
 	     * @param {HTMLElement} element
 	     * @param {embed.IEmbedConfiguration} [config={}]
@@ -186,8 +182,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return component;
 	    };
 	    /**
-	     * Given an html element embed component base configuration.
-	     * Save component instance on element for later lookup.
+	     * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
 	     *
 	     * @private
 	     * @param {IPowerBiElement} element
@@ -199,7 +194,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!componentType) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed.Embed.typeAttribute + "=\"" + report_1.Report.type.toLowerCase() + "\"'.");
 	        }
-	        // Save type on configuration so it can be referenced later at known location
+	        // Saves the type as part of the configuration so that it can be referenced later at a known location.
 	        config.type = componentType;
 	        var Component = utils.find(function (component) { return componentType === component.type.toLowerCase(); }, Service.components);
 	        if (!Component) {
@@ -211,7 +206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return component;
 	    };
 	    /**
-	     * Given and element which arleady contains embed, load with new configuration
+	     * Given an element that already contains an embed component, load with a new configuration.
 	     *
 	     * @private
 	     * @param {IPowerBiElement} element
@@ -227,16 +222,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return component;
 	    };
 	    /**
-	     * Adds event handler for DOMContentLoaded which finds all elements in DOM with attribute powerbi-embed-url
-	     * then attempts to initiate the embed process based on data from other powerbi-* attributes.
-	     * (This is usually only useful for applications rendered on by the server since all the data needed will be available by the time the handler is called.)
+	     * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
+	     * and automatically attempts to embed a powerbi component based on information from other powerbi-* attributes.
+	     *
+	     * Note: Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
+	     * This handler is typically useful only for applications that are rendered on the server so that all required data is available when the handler is called.
 	     */
 	    Service.prototype.enableAutoEmbed = function () {
 	        var _this = this;
 	        window.addEventListener('DOMContentLoaded', function (event) { return _this.init(document.body); }, false);
 	    };
 	    /**
-	     * Returns instance of component associated with element.
+	     * Returns an instance of the component associated with the element.
 	     *
 	     * @param {HTMLElement} element
 	     * @returns {(Report | Tile)}
@@ -249,7 +246,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return powerBiElement.powerBiEmbed;
 	    };
 	    /**
-	     * Find embed instance by name / unique id provided.
+	     * Finds an embed instance by the name or unique ID that is provided.
 	     *
 	     * @param {string} uniqueId
 	     * @returns {(Report | Tile)}
@@ -258,7 +255,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return utils.find(function (x) { return x.config.uniqueId === uniqueId; }, this.embeds);
 	    };
 	    /**
-	     * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
+	     * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
 	     *
 	     * @param {HTMLElement} element
 	     * @returns {void}
@@ -268,18 +265,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!powerBiElement.powerBiEmbed) {
 	            return;
 	        }
-	        /** Remove component from internal list */
+	        /** Removes the component from an internal list of components. */
 	        utils.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
-	        /** Delete property from html element */
+	        /** Deletes a property from the HTML element. */
 	        delete powerBiElement.powerBiEmbed;
-	        /** Remove iframe from element */
+	        /** Removes the iframe from the element. */
 	        var iframe = element.querySelector('iframe');
 	        if (iframe) {
 	            iframe.remove();
 	        }
 	    };
 	    /**
-	     * Given an event object, find embed with matching type and id and invoke its handleEvent method with event.
+	     * Given an event object, finds the embed component with the matching type and ID, and invokes its handleEvent method with the event object.
 	     *
 	     * @private
 	     * @param {IEvent<any>} event
@@ -303,14 +300,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	    /**
-	     * List of components this service can embed.
+	     * A list of components that this service can embed
 	     */
 	    Service.components = [
 	        tile_1.Tile,
 	        report_1.Report
 	    ];
 	    /**
-	     * Default configuration for service.
+	     * The default configuration for the service
 	     */
 	    Service.defaultConfig = {
 	        autoEmbedOnContentLoaded: false,
@@ -344,8 +341,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Creates an instance of Embed.
 	     *
-	     * Note: there is circular reference between embeds and service
-	     * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
+	     * Note: there is circular reference between embeds and the service, because
+	     * the service has a list of all embeds on the host page, and each embed has a reference to the service that created it.
 	     *
 	     * @param {service.Service} service
 	     * @param {HTMLElement} element
@@ -395,22 +392,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    Embed.prototype.load = function (config) {
+	        var _this = this;
 	        var errors = models.validateLoad(config);
 	        if (errors) {
 	            throw errors;
 	        }
 	        return this.service.hpm.post('/report/load', config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
+	            utils.assign(_this.config, config);
 	            return response.body;
 	        }, function (response) {
 	            throw response.body;
 	        });
 	    };
 	    /**
-	     * Removes event handler(s) from list of handlers.
-	     *
-	     * If reference to existing handle function is specified remove specific handler.
-	     * If handler is not specified, remove all handlers for the event name specified.
+	     * Removes one or more event handlers from the list of handlers.
+	     * If a reference to the existing handle function is specified, remove the specific handler.
+	     * If the handler is not specified, remove all handlers for the event name specified.
 	     *
 	     * ```javascript
 	     * report.off('pageChanged')
@@ -446,7 +444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	    /**
-	     * Adds event handler for specific event.
+	     * Adds an event handler for a specific event.
 	     *
 	     * ```javascript
 	     * report.on('pageChanged', (event) => {
@@ -469,7 +467,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.element.addEventListener(eventName, handler);
 	    };
 	    /**
-	     * Get access token from first available location: config, attribute, global.
+	     * Reloads embed using existing configuration.
+	     * E.g. For reports this effectively clears all filters and makes the first page active which simulates resetting a report back to loaded state.
+	     *
+	     * ```javascript
+	     * report.reload();
+	     * ```
+	     */
+	    Embed.prototype.reload = function () {
+	        return this.load(this.config);
+	    };
+	    /**
+	     * Gets an access token from the first available location: config, attribute, global.
 	     *
 	     * @private
 	     * @param {string} globalAccessToken
@@ -483,7 +492,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return accessToken;
 	    };
 	    /**
-	     * Get embed url from first available location: options, attribute.
+	     * Gets an embed url from the first available location: options, attribute.
 	     *
 	     * @private
 	     * @returns {string}
@@ -496,8 +505,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return embedUrl;
 	    };
 	    /**
-	     * Get unique id from first available location: options, attribute.
-	     * If neither is provided generate unique string.
+	     * Gets a unique ID from the first available location: options, attribute.
+	     * If neither is provided generate a unique string.
 	     *
 	     * @private
 	     * @returns {string}
@@ -506,14 +515,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || utils.createRandomString();
 	    };
 	    /**
-	     * Request the browser to make the component's iframe fullscreen.
+	     * Requests the browser to render the component's iframe in fullscreen mode.
 	     */
 	    Embed.prototype.fullscreen = function () {
 	        var requestFullScreen = this.iframe.requestFullscreen || this.iframe.msRequestFullscreen || this.iframe.mozRequestFullScreen || this.iframe.webkitRequestFullscreen;
 	        requestFullScreen.call(this.iframe);
 	    };
 	    /**
-	     * Exit fullscreen.
+	     * Requests the browser to exit fullscreen mode.
 	     */
 	    Embed.prototype.exitFullscreen = function () {
 	        if (!this.isFullscreen(this.iframe)) {
@@ -523,8 +532,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        exitFullscreen.call(document);
 	    };
 	    /**
-	     * Return true if iframe is fullscreen,
-	     * otherwise return false
+	     * Returns true if the iframe is rendered in fullscreen mode,
+	     * otherwise returns false.
 	     *
 	     * @private
 	     * @param {HTMLIFrameElement} iframe
@@ -552,7 +561,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	/**
-	 * Raises a custom event with event data on the specified HTML element
+	 * Raises a custom event with event data on the specified HTML element.
 	 *
 	 * @export
 	 * @param {HTMLElement} element
@@ -576,7 +585,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	exports.raiseCustomEvent = raiseCustomEvent;
 	/**
-	 * Finds the index of the first matching value in an array that matches the specified predicate
+	 * Finds the index of the first value in an array that matches the specified predicate.
 	 *
 	 * @export
 	 * @template T
@@ -599,7 +608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	exports.findIndex = findIndex;
 	/**
-	 * Findes the first matching value in an array that matches the specified predicate
+	 * Finds the first value in an array that matches the specified predicate.
 	 *
 	 * @export
 	 * @template T
@@ -620,7 +629,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 	// TODO: replace in favor of using polyfill
 	/**
-	 * Copies the values of all enumerable own properties from one or more source objects to a target object. It will return the target object.
+	 * Copies the values of all enumerable properties from one or more source objects to a target object, and returns the target object.
 	 *
 	 * @export
 	 * @param {any} args
@@ -651,7 +660,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	exports.assign = assign;
 	/**
-	 * Generates a random 7 character string
+	 * Generates a random 7 character string.
 	 *
 	 * @export
 	 * @returns {string}
@@ -2985,7 +2994,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var utils = __webpack_require__(3);
 	var page_1 = __webpack_require__(6);
 	/**
-	 * A Power BI Report embed component
+	 * The Power BI Report embed component
 	 *
 	 * @export
 	 * @class Report
@@ -3014,10 +3023,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
 	    }
 	    /**
-	     * This adds backwards compatibility for older config which used the reportId query param to specify report id.
-	     * E.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1
+	     * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
+	     * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
 	     *
-	     * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
+	     * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
 	     *
 	     * @static
 	     * @param {string} url
@@ -3033,7 +3042,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return reportId;
 	    };
 	    /**
-	     * Get filters that are applied at the report level
+	     * Gets filters that are applied at the report level.
 	     *
 	     * ```javascript
 	     * // Get filters applied at report level
@@ -3052,7 +3061,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    /**
-	     * Get report id from first available location: options, attribute, embed url.
+	     * Gets the report ID from the first available location: options, attribute, embed url.
 	     *
 	     * @returns {string}
 	     */
@@ -3064,7 +3073,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return reportId;
 	    };
 	    /**
-	     * Get the list of pages within the report
+	     * Gets the list of pages within the report.
 	     *
 	     * ```javascript
 	     * report.getPages()
@@ -3088,13 +3097,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    /**
-	     * Create new Page instance.
+	     * Creates an instance of a Page.
 	     *
-	     * Normally you would get Page objects by calling `report.getPages()` but in the case
+	     * Normally you would get Page objects by calling `report.getPages()`, but in the case
 	     * that the page name is known and you want to perform an action on a page without having to retrieve it
 	     * you can create it directly.
 	     *
-	     * Note: Since you are creating the page manually there is no guarantee that the page actually exists in the report and the subsequence requests could fail.
+	     * Note: Because you are creating the page manually there is no guarantee that the page actually exists in the report, and subsequent requests could fail.
 	     *
 	     * ```javascript
 	     * const page = report.page('ReportSection1');
@@ -3109,36 +3118,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return new page_1.Page(this, name, displayName);
 	    };
 	    /**
-	     * Print the active page of the report.
-	     * (Invokes window.print() on embed iframe)
-	     */
-	    Report.prototype.print = function () {
-	        return this.service.hpm.post('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .then(function (response) {
-	            return response.body;
-	        })
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Refreshes data sources for report.
-	     *
-	     * ```javascript
-	     * report.refresh();
-	     * ```
-	     */
-	    Report.prototype.refresh = function () {
-	        return this.service.hpm.post('/report/refresh', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .then(function (response) {
-	            return response.body;
-	        })
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Remove all filters at report level
+	     * Removes all filters at the report level.
 	     *
 	     * ```javascript
 	     * report.removeFilters();
@@ -3150,7 +3130,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this.setFilters([]);
 	    };
 	    /**
-	     * Set the active page
+	     * Sets the active page of the report.
 	     *
 	     * ```javascript
 	     * report.setPage("page2")
@@ -3171,7 +3151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    /**
-	     * Sets filters
+	     * Sets filters at the report level.
 	     *
 	     * ```javascript
 	     * const filters: [
@@ -3184,7 +3164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *  });
 	     * ```
 	     *
-	     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+	     * @param {(models.IFilter[])} filters
 	     * @returns {Promise<void>}
 	     */
 	    Report.prototype.setFilters = function (filters) {
@@ -3194,7 +3174,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    /**
-	     * Update settings of report (filter pane visibility, page navigation visibility)
+	     * Updates visibility settings for the filter pane and the page navigation pane.
 	     *
 	     * ```javascript
 	     * const newSettings = {
@@ -3228,9 +3208,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	var visual_1 = __webpack_require__(7);
 	/**
 	 * A Power BI report page
 	 *
@@ -3253,14 +3232,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.displayName = displayName;
 	    }
 	    /**
-	     * Gets all page level filters within report
+	     * Gets all page level filters within the report.
 	     *
 	     * ```javascript
 	     * page.getFilters()
 	     *  .then(pages => { ... });
 	     * ```
 	     *
-	     * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
+	     * @returns {(Promise<models.IFilter[]>)}
 	     */
 	    Page.prototype.getFilters = function () {
 	        return this.report.service.hpm.get("/report/pages/" + this.name + "/filters", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
@@ -3269,29 +3248,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    /**
-	     * Gets all the visuals on the page.
-	     *
-	     * ```javascript
-	     * page.getVisuals()
-	     *   .then(visuals => { ... });
-	     * ```
-	     *
-	     * @returns {Promise<Visual[]>}
-	     */
-	    Page.prototype.getVisuals = function () {
-	        var _this = this;
-	        return this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
-	            .then(function (response) {
-	            return response.body
-	                .map(function (visual) {
-	                return new visual_1.Visual(_this, visual.name);
-	            });
-	        }, function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Remove all filters on this page within the report
+	     * Removes all filters from this page of the report.
 	     *
 	     * ```javascript
 	     * page.removeFilters();
@@ -3303,7 +3260,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this.setFilters([]);
 	    };
 	    /**
-	     * Make the current page the active page of the report.
+	     * Makes the current page the active page of the report.
 	     *
 	     * ```javascripot
 	     * page.setActive();
@@ -3329,7 +3286,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *   .catch(errors => { ... });
 	     * ```
 	     *
-	     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+	     * @param {(models.IFilter[])} filters
 	     * @returns {Promise<void>}
 	     */
 	    Page.prototype.setFilters = function (filters) {
@@ -3338,26 +3295,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
-	    /**
-	     * Creates new Visual object given a name of the visual.
-	     *
-	     * Normally you would get Visual objects by calling `page.getVisuals()` but in the case
-	     * that the visual name is known and you want to perform an action on a visaul such as setting a filters
-	     * without having to retrieve it first you can create it directly.
-	     *
-	     * Note: Since you are creating the visual manually there is no guarantee that the visual actually exists in the report and the subsequence requests could fail.
-	     *
-	     * ```javascript
-	     * const visual = report.page('ReportSection1').visual('BarChart1');
-	     * visual.setFilters(filters);
-	     * ```
-	     *
-	     * @param {string} name
-	     * @returns {Visual}
-	     */
-	    Page.prototype.visual = function (name) {
-	        return new visual_1.Visual(this, name);
-	    };
 	    return Page;
 	}());
 	exports.Page = Page;
@@ -3365,73 +3302,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 7 */
-/***/ function(module, exports) {
-
-	/**
-	 * A Power BI visual within a page
-	 *
-	 * @export
-	 * @class Visual
-	 * @implements {IVisualNode}
-	 * @implements {IFilterable}
-	 */
-	var Visual = (function () {
-	    function Visual(page, name) {
-	        this.name = name;
-	        this.page = page;
-	    }
-	    /**
-	     * Gets all page level filters within report
-	     *
-	     * ```javascript
-	     * visual.getFilters()
-	     *  .then(pages => { ... });
-	     * ```
-	     *
-	     * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
-	     */
-	    Visual.prototype.getFilters = function () {
-	        return this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-	            .then(function (response) { return response.body; }, function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Remove all filters on this page within the report
-	     *
-	     * ```javascript
-	     * visual.removeFilters();
-	     * ```
-	     *
-	     * @returns {Promise<void>}
-	     */
-	    Visual.prototype.removeFilters = function () {
-	        return this.setFilters([]);
-	    };
-	    /**
-	     * Set all filters at the visual level of the page
-	     *
-	     * ```javascript
-	     * visual.setFilters(filters)
-	     *  .catch(errors => { ... });
-	     * ```
-	     *
-	     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
-	     * @returns {Promise<void>}
-	     */
-	    Visual.prototype.setFilters = function (filters) {
-	        return this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    return Visual;
-	}());
-	exports.Visual = Visual;
-
-
-/***/ },
-/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3453,7 +3323,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _super.apply(this, arguments);
 	    }
 	    /**
-	     * The the id of the tile
+	     * The ID of the tile
 	     *
 	     * @returns {string}
 	     */
@@ -3467,16 +3337,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config_1 = __webpack_require__(10);
-	var wpmp = __webpack_require__(11);
-	var hpm = __webpack_require__(12);
-	var router = __webpack_require__(13);
-	/**
-	 * TODO: Need to get sdk version and settings from package.json, Generate config file via gulp task?
-	 */
+	var config_1 = __webpack_require__(9);
+	var wpmp = __webpack_require__(10);
+	var hpm = __webpack_require__(11);
+	var router = __webpack_require__(12);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -3503,11 +3370,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	var config = {
-	    version: '2.0.0-beta.13',
+	    version: '2.0.0',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -3515,7 +3382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
@@ -3815,7 +3682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -3999,10 +3866,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-router v0.1.4 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();

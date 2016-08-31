@@ -1,6 +1,6 @@
-/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
 /**
- * Raises a custom event with event data on the specified HTML element
+ * Raises a custom event with event data on the specified HTML element.
  *
  * @export
  * @param {HTMLElement} element
@@ -9,7 +9,7 @@
  */
 export declare function raiseCustomEvent(element: HTMLElement, eventName: string, eventData: any): void;
 /**
- * Finds the index of the first matching value in an array that matches the specified predicate
+ * Finds the index of the first value in an array that matches the specified predicate.
  *
  * @export
  * @template T
@@ -19,7 +19,7 @@ export declare function raiseCustomEvent(element: HTMLElement, eventName: string
  */
 export declare function findIndex<T>(predicate: (x: T) => boolean, xs: T[]): number;
 /**
- * Findes the first matching value in an array that matches the specified predicate
+ * Finds the first value in an array that matches the specified predicate.
  *
  * @export
  * @template T
@@ -30,7 +30,7 @@ export declare function findIndex<T>(predicate: (x: T) => boolean, xs: T[]): num
 export declare function find<T>(predicate: (x: T) => boolean, xs: T[]): T;
 export declare function remove<T>(predicate: (x: T) => boolean, xs: T[]): void;
 /**
- * Copies the values of all enumerable own properties from one or more source objects to a target object. It will return the target object.
+ * Copies the values of all enumerable properties from one or more source objects to a target object, and returns the target object.
  *
  * @export
  * @param {any} args
@@ -38,7 +38,7 @@ export declare function remove<T>(predicate: (x: T) => boolean, xs: T[]): void;
  */
 export declare function assign(...args: any[]): any;
 /**
- * Generates a random 7 character string
+ * Generates a random 7 character string.
  *
  * @export
  * @returns {string}
