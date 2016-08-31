@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
 import { Embed } from './embed';
 /**
  * The Power BI tile embed component
@@ -10,7 +10,7 @@ import { Embed } from './embed';
 export declare class Tile extends Embed {
     static type: string;
     /**
-     * The the id of the tile
+     * The ID of the tile
      *
      * @returns {string}
      */

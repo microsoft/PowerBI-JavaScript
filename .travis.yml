@@ -1,8 +1,6 @@
 language: node_js
 node_js:
 - node
-after_success:
-- ".travis/push.sh"
 branches:
   except:
   - "/^build-[0-9a-z\\-]*/"

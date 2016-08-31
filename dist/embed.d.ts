@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as models from 'powerbi-models';
 declare global  {
@@ -25,7 +25,7 @@ export interface IEmbedConfiguration {
     accessToken?: string;
     settings?: models.ISettings;
     pageName?: string;
-    filters?: (models.IBasicFilter | models.IAdvancedFilter)[];
+    filters?: models.IFilter[];
 }
 export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {
     uniqueId: string;
@@ -53,31 +53,31 @@ export declare abstract class Embed {
     private static defaultSettings;
     allowedEvents: any[];
     /**
-     * Gets or set the event handler registered for this embed component
+     * Gets or sets the event handler registered for this embed component.
      *
      * @type {IInternalEventHandler<any>[]}
      */
     eventHandlers: IInternalEventHandler<any>[];
     /**
-     * Gets or sets the Power BI embed service
+     * Gets or sets the Power BI embed service.
      *
      * @type {service.Service}
      */
     service: service.Service;
     /**
-     * Gets or sets the HTML element containing the Power BI embed component
+     * Gets or sets the HTML element that contains the Power BI embed component.
      *
      * @type {HTMLElement}
      */
     element: HTMLElement;
     /**
-     * Gets or sets the HTML iframe element that renders the Power BI embed component
+     * Gets or sets the HTML iframe element that renders the Power BI embed component.
      *
      * @type {HTMLIFrameElement}
      */
     iframe: HTMLIFrameElement;
     /**
-     * Gets or sets the configuration settings for the embed component
+     * Gets or sets the configuration settings for the Power BI embed component.
      *
      * @type {IInternalEmbedConfiguration}
      */
@@ -85,8 +85,8 @@ export declare abstract class Embed {
     /**
      * Creates an instance of Embed.
      *
-     * Note: there is circular reference between embeds and service
-     * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
+     * Note: there is circular reference between embeds and the service, because
+     * the service has a list of all embeds on the host page, and each embed has a reference to the service that created it.
      *
      * @param {service.Service} service
      * @param {HTMLElement} element
@@ -119,10 +119,9 @@ export declare abstract class Embed {
      */
     load(config: models.ILoadConfiguration): Promise<void>;
     /**
-     * Removes event handler(s) from list of handlers.
-     *
-     * If reference to existing handle function is specified remove specific handler.
-     * If handler is not specified, remove all handlers for the event name specified.
+     * Removes one or more event handlers from the list of handlers.
+     * If a reference to the existing handle function is specified, remove the specific handler.
+     * If the handler is not specified, remove all handlers for the event name specified.
      *
      * ```javascript
      * report.off('pageChanged')
@@ -142,7 +141,7 @@ export declare abstract class Embed {
      */
     off<T>(eventName: string, handler?: service.IEventHandler<T>): void;
     /**
-     * Adds event handler for specific event.
+     * Adds an event handler for a specific event.
      *
      * ```javascript
      * report.on('pageChanged', (event) => {
@@ -156,7 +155,16 @@ export declare abstract class Embed {
      */
     on<T>(eventName: string, handler: service.IEventHandler<T>): void;
     /**
-     * Get access token from first available location: config, attribute, global.
+     * Reloads embed using existing configuration.
+     * E.g. For reports this effectively clears all filters and makes the first page active which simulates resetting a report back to loaded state.
+     *
+     * ```javascript
+     * report.reload();
+     * ```
+     */
+    reload(): Promise<void>;
+    /**
+     * Gets an access token from the first available location: config, attribute, global.
      *
      * @private
      * @param {string} globalAccessToken
@@ -164,38 +172,38 @@ export declare abstract class Embed {
      */
     private getAccessToken(globalAccessToken);
     /**
-     * Get embed url from first available location: options, attribute.
+     * Gets an embed url from the first available location: options, attribute.
      *
      * @private
      * @returns {string}
      */
     private getEmbedUrl();
     /**
-     * Get unique id from first available location: options, attribute.
-     * If neither is provided generate unique string.
+     * Gets a unique ID from the first available location: options, attribute.
+     * If neither is provided generate a unique string.
      *
      * @private
      * @returns {string}
      */
     private getUniqueId();
     /**
-     * Get report id from first available location: options, attribute.
+     * Gets the report ID from the first available location: options, attribute.
      *
      * @abstract
      * @returns {string}
      */
     abstract getId(): string;
     /**
-     * Request the browser to make the component's iframe fullscreen.
+     * Requests the browser to render the component's iframe in fullscreen mode.
      */
     fullscreen(): void;
     /**
-     * Exit fullscreen.
+     * Requests the browser to exit fullscreen mode.
      */
     exitFullscreen(): void;
     /**
-     * Return true if iframe is fullscreen,
-     * otherwise return false
+     * Returns true if the iframe is rendered in fullscreen mode,
+     * otherwise returns false.
      *
      * @private
      * @param {HTMLIFrameElement} iframe
