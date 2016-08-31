@@ -1,6 +1,7 @@
-/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.0 | (c) 2016 Microsoft Corporation MIT */
 import * as embed from './embed';
 import { Report } from './report';
+import { Dashboard } from './dashboard';
 import { Tile } from './tile';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
@@ -66,7 +67,7 @@ export declare class Service implements IService {
     accessToken: string;
     /**The Configuration object for the service*/
     private config;
-    /** A list of Report and Tile components that have been embedded using this service instance. */
+    /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
     private embeds;
     /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
     hpm: hpm.HttpPostMessage;
@@ -132,14 +133,14 @@ export declare class Service implements IService {
      * @param {HTMLElement} element
      * @returns {(Report | Tile)}
      */
-    get(element: HTMLElement): Report | Tile;
+    get(element: HTMLElement): Report | Tile | Dashboard;
     /**
      * Finds an embed instance by the name or unique ID that is provided.
      *
      * @param {string} uniqueId
      * @returns {(Report | Tile)}
      */
-    find(uniqueId: string): Report | Tile;
+    find(uniqueId: string): Report | Tile | Dashboard;
     /**
      * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
      *

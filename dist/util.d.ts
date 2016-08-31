@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.0 | (c) 2016 Microsoft Corporation MIT */
 /**
  * Raises a custom event with event data on the specified HTML element.
  *

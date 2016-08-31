@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.0 | (c) 2016 Microsoft Corporation MIT */
 import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 import { IPageNode } from './page';
@@ -28,25 +28,25 @@ export declare class Visual implements IVisualNode, IFilterable {
      */
     name: string;
     /**
-     * The parent Power BI page containing this visual
+     * The parent Power BI page that contains this visual
      *
      * @type {IPageNode}
      */
     page: IPageNode;
     constructor(page: IPageNode, name: string);
     /**
-     * Gets all page level filters within report
+     * Gets all page level filters within a report.
      *
      * ```javascript
      * visual.getFilters()
      *  .then(pages => { ... });
      * ```
      *
-     * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
+     * @returns {(Promise<models.IFilter[]>)}
      */
-    getFilters(): Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>;
+    getFilters(): Promise<models.IFilter[]>;
     /**
-     * Remove all filters on this page within the report
+     * Removes all filters on this page of the report.
      *
      * ```javascript
      * visual.removeFilters();
@@ -56,15 +56,15 @@ export declare class Visual implements IVisualNode, IFilterable {
      */
     removeFilters(): Promise<void>;
     /**
-     * Set all filters at the visual level of the page
+     * Sets all filters at the visual level of the page.
      *
      * ```javascript
      * visual.setFilters(filters)
      *  .catch(errors => { ... });
      * ```
      *
-     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+     * @param {(models.IFilter[])} filters
      * @returns {Promise<void>}
      */
-    setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void>;
+    setFilters(filters: models.IFilter[]): Promise<void>;
 }

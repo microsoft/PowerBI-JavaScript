@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.0 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -57,18 +57,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(8);
+	var factories = __webpack_require__(10);
 	exports.factories = factories;
 	var models = __webpack_require__(4);
 	exports.models = models;
 	var report_1 = __webpack_require__(5);
 	exports.Report = report_1.Report;
-	var tile_1 = __webpack_require__(7);
+	var tile_1 = __webpack_require__(9);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
 	var page_1 = __webpack_require__(6);
 	exports.Page = page_1.Page;
+	var visual_1 = __webpack_require__(7);
+	exports.Visual = visual_1.Visual;
 	/**
 	 * Makes Power BI available to the global object for use in applications that don't have module loading support.
 	 *
@@ -84,7 +86,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(5);
-	var tile_1 = __webpack_require__(7);
+	var dashboard_1 = __webpack_require__(8);
+	var tile_1 = __webpack_require__(9);
 	var page_1 = __webpack_require__(6);
 	var utils = __webpack_require__(3);
 	/**
@@ -133,6 +136,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.router.post("/reports/:uniqueId/pages/:pageName/visuals/:pageName/events/:eventName", function (req, res) {
 	            var event = {
 	                type: 'report',
+	                id: req.params.uniqueId,
+	                name: req.params.eventName,
+	                value: req.body
+	            };
+	            _this.handleEvent(event);
+	        });
+	        this.router.post("/dashboards/:uniqueId/events/:eventName", function (req, res) {
+	            var event = {
+	                type: 'dashboard',
 	                id: req.params.uniqueId,
 	                name: req.params.eventName,
 	                value: req.body
@@ -304,7 +316,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Service.components = [
 	        tile_1.Tile,
-	        report_1.Report
+	        report_1.Report,
+	        dashboard_1.Dashboard
 	    ];
 	    /**
 	     * The default configuration for the service
@@ -397,7 +410,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (errors) {
 	            throw errors;
 	        }
-	        return this.service.hpm.post('/report/load', config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	        var loadPath = '/report/load';
+	        if (this.config && this.config.type === 'dashboard') {
+	            loadPath = '/dashboard/load';
+	        }
+	        return this.service.hpm.post(loadPath, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
 	            utils.assign(_this.config, config);
 	            return response.body;
@@ -3118,6 +3135,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return new page_1.Page(this, name, displayName);
 	    };
 	    /**
+	     * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
+	     */
+	    Report.prototype.print = function () {
+	        return this.service.hpm.post('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Refreshes data sources for the report.
+	     *
+	     * ```javascript
+	     * report.refresh();
+	     * ```
+	     */
+	    Report.prototype.refresh = function () {
+	        return this.service.hpm.post('/report/refresh', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
 	     * Removes all filters at the report level.
 	     *
 	     * ```javascript
@@ -3208,8 +3253,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	var visual_1 = __webpack_require__(7);
 	/**
 	 * A Power BI report page
 	 *
@@ -3244,6 +3290,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Page.prototype.getFilters = function () {
 	        return this.report.service.hpm.get("/report/pages/" + this.name + "/filters", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Gets all the visuals on the page.
+	     *
+	     * ```javascript
+	     * page.getVisuals()
+	     *   .then(visuals => { ... });
+	     * ```
+	     *
+	     * @returns {Promise<Visual[]>}
+	     */
+	    Page.prototype.getVisuals = function () {
+	        var _this = this;
+	        return this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body
+	                .map(function (visual) {
+	                return new visual_1.Visual(_this, visual.name);
+	            });
+	        }, function (response) {
 	            throw response.body;
 	        });
 	    };
@@ -3295,6 +3363,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
+	    /**
+	     * Creates a Visual object given a name for the visual.
+	     *
+	     * Normally you would get Visual objects by calling `page.getVisuals()` but in the case
+	     * that the visual name is known and you want to perform an action on a visual such as setting a filter
+	     * without having to retrieve it first you can create it directly.
+	     *
+	     * Note: Because you are creating the visual manually there is no guarantee that the visual actually exists in the report and the subsequence requests could fail.
+	     *
+	     * ```javascript
+	     * const visual = report.page('ReportSection1').visual('BarChart1');
+	     * visual.setFilters(filters);
+	     * ```
+	     *
+	     * @param {string} name
+	     * @returns {Visual}
+	     */
+	    Page.prototype.visual = function (name) {
+	        return new visual_1.Visual(this, name);
+	    };
 	    return Page;
 	}());
 	exports.Page = Page;
@@ -3302,6 +3390,144 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	/**
+	 * A Power BI visual within a page
+	 *
+	 * @export
+	 * @class Visual
+	 * @implements {IVisualNode}
+	 * @implements {IFilterable}
+	 */
+	var Visual = (function () {
+	    function Visual(page, name) {
+	        this.name = name;
+	        this.page = page;
+	    }
+	    /**
+	     * Gets all page level filters within a report.
+	     *
+	     * ```javascript
+	     * visual.getFilters()
+	     *  .then(pages => { ... });
+	     * ```
+	     *
+	     * @returns {(Promise<models.IFilter[]>)}
+	     */
+	    Visual.prototype.getFilters = function () {
+	        return this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Removes all filters on this page of the report.
+	     *
+	     * ```javascript
+	     * visual.removeFilters();
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Visual.prototype.removeFilters = function () {
+	        return this.setFilters([]);
+	    };
+	    /**
+	     * Sets all filters at the visual level of the page.
+	     *
+	     * ```javascript
+	     * visual.setFilters(filters)
+	     *  .catch(errors => { ... });
+	     * ```
+	     *
+	     * @param {(models.IFilter[])} filters
+	     * @returns {Promise<void>}
+	     */
+	    Visual.prototype.setFilters = function (filters) {
+	        return this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    return Visual;
+	}());
+	exports.Visual = Visual;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var embed = __webpack_require__(2);
+	/**
+	 * A Power BI Dashboard embed component
+	 *
+	 * @export
+	 * @class Dashboard
+	 * @extends {embed.Embed}
+	 * @implements {IDashboardNode}
+	 * @implements {IFilterable}
+	 */
+	var Dashboard = (function (_super) {
+	    __extends(Dashboard, _super);
+	    /**
+	     * Creates an instance of a Power BI Dashboard.
+	     *
+	     * @param {service.Service} service
+	     * @param {HTMLElement} element
+	     */
+	    function Dashboard(service, element, config) {
+	        _super.call(this, service, element, config);
+	        Array.prototype.push.apply(this.allowedEvents, Dashboard.allowedEvents);
+	    }
+	    /**
+	     * This adds backwards compatibility for older config which used the dashboardId query param to specify dashboard id.
+	     * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
+	     *
+	     * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
+	     *
+	     * @static
+	     * @param {string} url
+	     * @returns {string}
+	     */
+	    Dashboard.findIdFromEmbedUrl = function (url) {
+	        var dashboardIdRegEx = /dashboardId="?([^&]+)"?/;
+	        var dashboardIdMatch = url.match(dashboardIdRegEx);
+	        var dashboardId;
+	        if (dashboardIdMatch) {
+	            dashboardId = dashboardIdMatch[1];
+	        }
+	        return dashboardId;
+	    };
+	    /**
+	     * Get dashboard id from first available location: options, attribute, embed url.
+	     *
+	     * @returns {string}
+	     */
+	    Dashboard.prototype.getId = function () {
+	        var dashboardId = this.config.id || this.element.getAttribute(Dashboard.dashboardIdAttribute) || Dashboard.findIdFromEmbedUrl(this.config.embedUrl);
+	        if (typeof dashboardId !== 'string' || dashboardId.length === 0) {
+	            throw new Error("Dashboard id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '" + Dashboard.dashboardIdAttribute + "'.");
+	        }
+	        return dashboardId;
+	    };
+	    Dashboard.allowedEvents = ["tileClicked", "error"];
+	    Dashboard.dashboardIdAttribute = 'powerbi-dashboard-id';
+	    Dashboard.typeAttribute = 'powerbi-type';
+	    Dashboard.type = "Dashboard";
+	    return Dashboard;
+	}(embed.Embed));
+	exports.Dashboard = Dashboard;
+
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3337,13 +3563,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config_1 = __webpack_require__(9);
-	var wpmp = __webpack_require__(10);
-	var hpm = __webpack_require__(11);
-	var router = __webpack_require__(12);
+	var config_1 = __webpack_require__(11);
+	var wpmp = __webpack_require__(12);
+	var hpm = __webpack_require__(13);
+	var router = __webpack_require__(14);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -3370,11 +3596,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports) {
 
 	var config = {
-	    version: '2.0.0',
+	    version: '2.1.0',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -3382,7 +3608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
@@ -3682,7 +3908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -3866,7 +4092,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */
