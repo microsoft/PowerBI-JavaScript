@@ -247,6 +247,15 @@ export class Service implements IService {
       throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
     }
 
+    /**
+     * TODO: Dynamic embed type switching could be supported but there is work needed to prepare the service state and DOM cleanup.
+     * remove all event handlers from the DOM, then reset the element to initial state which removes iframe, and removes from list of embeds
+     * then we can call the embedNew function which would allow setting the proper embedUrl and construction of object based on the new type.
+     */
+    if (typeof config.type === "string" && config.type !== component.config.type) {
+      throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
+    }
+
     component.load(<embed.IInternalEmbedConfiguration>config);
 
     return component;
