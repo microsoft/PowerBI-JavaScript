@@ -140,6 +140,36 @@ describe('service', function () {
       expect(attemptEmbed).toThrowError(Error);
     });
 
+    it('if attempting to embed on existing element with different type than previous embed, throw error', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      const reportEmbedConfig: embed.IEmbedConfiguration = {
+        type: "report",
+        id: "fakeReportId",
+        accessToken: "fakeAccessToken",
+        embedUrl: "fakeEmbedUrl"
+      };
+
+      const dashboardEmbedConfig: embed.IEmbedConfiguration = {
+        type: "dashboard",
+        id: "fakeDashboardId",
+        accessToken: "fakeAccessToken",
+        embedUrl: "fakeEmbedUrl"
+      };
+
+      powerbi.embed(component[0], reportEmbedConfig);
+
+      // Act
+      const attemptEmbed = () => {
+        powerbi.embed(component[0], dashboardEmbedConfig);
+      };
+
+      // Assert
+      expect(attemptEmbed).toThrowError(Error);
+    });
+
     it('if attempting to embed without specifying an embed url, throw error', function () {
       // Arrange
       const component = $('<div></div>')
