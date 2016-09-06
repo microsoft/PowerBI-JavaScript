@@ -53,6 +53,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     const configCopy = utils.assign({ settings }, config);
 
     super(service, element, configCopy);
+    this.loadPath = "/report/load";
     Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
   }
 
@@ -91,8 +92,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * 
    * @returns {Promise<models.IFilter[]>}
    */
-  getFilters(): Promise<models.IFilter[]> {
-    return this.service.hpm.get<models.IFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+  getFilters(): Promise<models.report.IFilter[]> {
+    return this.service.hpm.get<models.report.IFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => response.body,
       response => {
         throw response.body;
@@ -127,7 +128,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<Page[]>}
    */
   getPages(): Promise<Page[]> {
-    return this.service.hpm.get<models.IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    return this.service.hpm.get<models.report.IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body
           .map(page => {
@@ -136,6 +137,36 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       }, response => {
         throw response.body;
       });
+  }
+
+  /**
+   * Loads report using configuration object.
+   * 
+   * ```javascript
+   * report.load({
+   *   type: 'report',
+   *   id: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
+   *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+   *   settings: {
+   *     navContentPaneEnabled: false
+   *   },
+   *   pageName: "DefaultPage",
+   *   filters: [
+   *     {
+   *        ...  DefaultReportFilter ...
+   *     }
+   *   ]
+   * })
+   *   .catch(error => { ... });
+   * ```
+   */
+  load(config: models.report.ILoadConfiguration): Promise<void> {
+    const errors = models.report.validateLoad(config);
+    if (errors) {
+      throw errors;
+    }
+
+    return super.load(config);
   }
 
   /**
@@ -215,7 +246,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<void>}
    */
   setPage(pageName: string): Promise<void> {
-    const page: models.IPage = {
+    const page: models.report.IPage = {
       name: pageName,
       displayName: null
     };
@@ -243,7 +274,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @param {(models.IFilter[])} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: models.IFilter[]): Promise<void> {
+  setFilters(filters: models.report.IFilter[]): Promise<void> {
     return this.service.hpm.put<models.IError[]>(`/report/filters`, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .catch(response => {
         throw response.body;
@@ -266,7 +297,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @param {models.ISettings} settings
    * @returns {Promise<void>}
    */
-  updateSettings(settings: models.ISettings): Promise<void> {
+  updateSettings(settings: models.report.ISettings): Promise<void> {
     return this.service.hpm.patch<models.IError[]>('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .catch(response => {
         throw response.body;

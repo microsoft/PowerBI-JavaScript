@@ -50,8 +50,8 @@ export class Visual implements IVisualNode, IFilterable {
    * 
    * @returns {(Promise<models.IFilter[]>)}
    */
-  getFilters(): Promise<models.IFilter[]> {
-    return this.page.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.page.name}/visuals/${this.name}/filters`, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+  getFilters(): Promise<models.report.IFilter[]> {
+    return this.page.report.service.hpm.get<models.report.IFilter[]>(`/report/pages/${this.page.name}/visuals/${this.name}/filters`, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
       .then(response => response.body,
       response => {
         throw response.body;
@@ -82,7 +82,7 @@ export class Visual implements IVisualNode, IFilterable {
    * @param {(models.IFilter[])} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: models.IFilter[]): Promise<void> {
+  setFilters(filters: models.report.IFilter[]): Promise<void> {
     return this.page.report.service.hpm.put<models.IError[]>(`/report/pages/${this.page.name}/visuals/${this.name}/filters`, filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
       .catch(response => {
         throw response.body;

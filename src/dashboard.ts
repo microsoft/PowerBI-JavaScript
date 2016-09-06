@@ -40,6 +40,7 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
      */
     constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration) {
         super(service, element, config);
+        this.loadPath = "/dashboard/load";
         Array.prototype.push.apply(this.allowedEvents, Dashboard.allowedEvents);
     }
 
@@ -79,4 +80,25 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
 
         return dashboardId;
     }
+
+    /**
+   * Loads report using configuration object.
+   * 
+   * ```javascript
+   * dashboard.load({
+   *   type: 'dashboard',
+   *   id: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
+   *   accessToken: 'eyJ0eXA ... TaE2rTSbmg'
+   * })
+   *   .catch(error => { ... });
+   * ```
+   */
+  load(config: models.report.ILoadConfiguration): Promise<void> {
+    const errors = models.dashboard.validateLoad(config);
+    if (errors) {
+      throw errors;
+    }
+
+    return super.load(config);
+  }
 }

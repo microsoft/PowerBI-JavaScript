@@ -339,7 +339,7 @@ export class Service implements IService {
 
       if (event.name === 'pageChanged') {
         const pageKey = 'newPage';
-        const page: models.IPage = value[pageKey];
+        const page: models.report.IPage = value[pageKey];
         if (!page) {
           throw new Error(`Page model not found at 'event.value.${pageKey}'.`);
         }

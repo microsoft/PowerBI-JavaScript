@@ -35,12 +35,12 @@ export interface IEmbedConfiguration {
   uniqueId?: string;
   embedUrl?: string;
   accessToken?: string;
-  settings?: models.ISettings;
+  settings?: models.report.ISettings;
   pageName?: string;
-  filters?: models.IFilter[];
+  filters?: models.report.IFilter[];
 }
 
-export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {
+export interface IInternalEmbedConfiguration extends models.report.ILoadConfiguration {
   uniqueId: string;
   type: string;
   embedUrl: string;
@@ -66,7 +66,7 @@ export abstract class Embed {
   static typeAttribute = 'powerbi-type';
   static type: string;
 
-  private static defaultSettings: models.ISettings = {
+  private static defaultSettings: models.report.ISettings = {
     filterPaneEnabled: true
   };
 
@@ -106,6 +106,7 @@ export abstract class Embed {
    * @type {IInternalEmbedConfiguration}
    */
   config: IInternalEmbedConfiguration;
+  loadPath: string;
 
   /**
    * Creates an instance of Embed.
@@ -139,48 +140,23 @@ export abstract class Embed {
   }
 
   /**
-   * Sends load configuration data.
+   * Sends load configuration data to iframe.
+   * See concrete classes for more specific code samples.
    * 
    * ```javascript
-   * report.load({
-   *   type: 'report',
-   *   id: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
-   *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
-   *   settings: {
-   *     navContentPaneEnabled: false
-   *   },
-   *   pageName: "DefaultPage",
-   *   filters: [
-   *     {
-   *        ...  DefaultReportFilter ...
-   *     }
-   *   ]
-   * })
+   * embed.load({ ... })
    *   .catch(error => { ... });
    * ```
-   * 
-   * @param {models.ILoadConfiguration} config
-   * @returns {Promise<void>}
    */
-  load(config: models.ILoadConfiguration): Promise<void> {
-    const errors = models.validateLoad(config);
-    if (errors) {
-      throw errors;
-    }
-  
-    let loadPath = '/report/load';
-    if(this.config && this.config.type === 'dashboard') {
-      loadPath = '/dashboard/load';
-    }
-   
-    return this.service.hpm.post<void>(loadPath, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-    .then(response => {
-      utils.assign(this.config, config);
-      return response.body;
-    },
-    response => {
-      throw response.body;
-    });
+  load(config: models.report.ILoadConfiguration | models.dashboard.ILoadConfiguration): Promise<void> {
+    return this.service.hpm.post<void>(this.loadPath, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        utils.assign(this.config, config);
+        return response.body;
+      },
+      response => {
+        throw response.body;
+      });
   }
 
   /**
