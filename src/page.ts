@@ -63,11 +63,9 @@ export class Page implements IPageNode, IFilterable {
    * page.getFilters()
    *  .then(pages => { ... });
    * ```
-   * 
-   * @returns {(Promise<models.IFilter[]>)}
    */
-  getFilters(): Promise<models.IFilter[]> {
-    return this.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.name}/filters`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+  getFilters(): Promise<models.report.IFilter[]> {
+    return this.report.service.hpm.get<models.report.IFilter[]>(`/report/pages/${this.name}/filters`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .then(response => response.body,
       response => {
         throw response.body;
@@ -81,11 +79,9 @@ export class Page implements IPageNode, IFilterable {
    * page.getVisuals()
    *   .then(visuals => { ... });
    * ```
-   * 
-   * @returns {Promise<Visual[]>}
    */
   getVisuals(): Promise<Visual[]> {
-    return this.report.service.hpm.get<models.IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+    return this.report.service.hpm.get<models.report.IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .then(response => {
         return response.body
           .map(visual => {
@@ -119,7 +115,7 @@ export class Page implements IPageNode, IFilterable {
    * @returns {Promise<void>}
    */
   setActive(): Promise<void> {
-    const page: models.IPage = {
+    const page: models.report.IPage = {
       name: this.name,
       displayName: null
     };
@@ -138,10 +134,9 @@ export class Page implements IPageNode, IFilterable {
    *   .catch(errors => { ... });
    * ```
    * 
-   * @param {(models.IFilter[])} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: models.IFilter[]): Promise<void> {
+  setFilters(filters: models.report.IFilter[]): Promise<void> {
     return this.report.service.hpm.put<models.IError[]>(`/report/pages/${this.name}/filters`, filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .catch(response => {
         throw response.body;

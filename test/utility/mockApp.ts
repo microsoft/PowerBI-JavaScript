@@ -2,22 +2,22 @@ import * as models from 'powerbi-models';
 
 export interface IApp {
   // Load
-  load(config: models.ILoadConfiguration): Promise<void>;
-  validateLoad(config: models.ILoadConfiguration): Promise<models.IError[]>;
+  load(config: models.report.ILoadConfiguration): Promise<void>;
+  validateLoad(config: models.report.ILoadConfiguration): Promise<models.IError[]>;
   // Settings
-  updateSettings(settings: models.ISettings): Promise<void>;
-  validateSettings(settigns: models.ISettings): Promise<models.IError[]>;
+  updateSettings(settings: models.report.ISettings): Promise<void>;
+  validateSettings(settigns: models.report.ISettings): Promise<models.IError[]>;
   // Pages
-  getPages(): Promise<models.IPage>;
+  getPages(): Promise<models.report.IPage>;
   setPage(pageName: string): Promise<void>;
-  validatePage(page: models.IPage): Promise<models.IError[]>;
+  validatePage(page: models.report.IPage): Promise<models.IError[]>;
   // Visuals
-  getVisuals(page: models.IPage): Promise<models.IVisual>;
-  validateVisual(visual: models.IVisual): Promise<models.IError[]>;
+  getVisuals(page: models.report.IPage): Promise<models.report.IVisual>;
+  validateVisual(visual: models.report.IVisual): Promise<models.IError[]>;
   // Filters
-  getFilters(): Promise<models.IFilter[]>;
-  setFilters(filters: models.IFilter[]): Promise<void>;
-  validateFilter(filter: models.IFilter): Promise<models.IError[]>;
+  getFilters(): Promise<models.report.IFilter[]>;
+  setFilters(filters: models.report.IFilter[]): Promise<void>;
+  validateFilter(filter: models.report.IFilter): Promise<models.IError[]>;
   // Other
   print(): Promise<void>;
   refreshData(): Promise<void>;
@@ -27,10 +27,10 @@ export interface IApp {
 export const mockAppSpyObj = {
   // Load
   load: jasmine.createSpy("load").and.returnValue(Promise.resolve(null)),
-  validateLoad: jasmine.createSpy("validateLoad").and.callFake(models.validateLoad),
+  validateLoad: jasmine.createSpy("validateLoad").and.callFake(models.report.validateLoad),
   // Settings
   updateSettings: jasmine.createSpy("updateSettings").and.returnValue(Promise.resolve(null)),
-  validateSettings: jasmine.createSpy("validateSettings").and.callFake(models.validateSettings),
+  validateSettings: jasmine.createSpy("validateSettings").and.callFake(models.report.validateSettings),
   // Pages
   getPages: jasmine.createSpy("getPages").and.returnValue(Promise.resolve(null)),
   setPage: jasmine.createSpy("setPage").and.returnValue(Promise.resolve(null)),
@@ -41,7 +41,7 @@ export const mockAppSpyObj = {
   // Filters
   getFilters: jasmine.createSpy("getFilters").and.returnValue(Promise.resolve(null)),
   setFilters: jasmine.createSpy("setFilters").and.returnValue(Promise.resolve(null)),
-  validateFilter: jasmine.createSpy("validateFilter").and.callFake(models.validateFilter),
+  validateFilter: jasmine.createSpy("validateFilter").and.callFake(models.report.validateFilter),
   // Other
   print: jasmine.createSpy("print").and.returnValue(Promise.resolve(null)),
   refreshData: jasmine.createSpy("refreshData").and.returnValue(Promise.resolve(null)),

@@ -972,7 +972,7 @@ describe('Protocol', function () {
           .then(() => {
             spyApp.getPages.and.returnValue(Promise.resolve(testData.expectedPages));
             // Act
-            hpm.get<models.IPage[]>('/report/pages')
+            hpm.get<models.report.IPage[]>('/report/pages')
               .then(response => {
                 // Assert
                 expect(spyApp.getPages).toHaveBeenCalled();
@@ -997,7 +997,7 @@ describe('Protocol', function () {
           .then(() => {
             spyApp.getPages.and.returnValue(Promise.reject(testData.expectedError));
             // Act
-            hpm.get<models.IPage[]>('/report/pages')
+            hpm.get<models.report.IPage[]>('/report/pages')
               .catch(response => {
                 // Assert
                 expect(spyApp.getPages).toHaveBeenCalled();
@@ -1199,7 +1199,7 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
 
             // Act
-            hpm.get<models.IFilter[]>('/report/filters')
+            hpm.get<models.report.IFilter[]>('/report/filters')
               .then(response => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
@@ -1225,7 +1225,7 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.reject(testData.error));
 
             // Act
-            hpm.get<models.IFilter[]>('/report/filters')
+            hpm.get<models.report.IFilter[]>('/report/filters')
               .catch(response => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
@@ -1351,7 +1351,7 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
 
             // Act
-            hpm.get<models.IFilter[]>('/report/pages/xyz/filters')
+            hpm.get<models.report.IFilter[]>('/report/pages/xyz/filters')
               .then(response => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
@@ -1377,7 +1377,7 @@ describe('Protocol', function () {
             spyApp.getFilters.and.returnValue(Promise.reject(testData.error));
 
             // Act
-            hpm.get<models.IFilter[]>('/report/pages/xyz/filters')
+            hpm.get<models.report.IFilter[]>('/report/pages/xyz/filters')
               .catch(response => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
@@ -2079,8 +2079,8 @@ describe('SDK-to-HPM', function () {
         const testData = {
           response: {
             body: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+              (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+              (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
             ]
           }
         };
@@ -2123,8 +2123,8 @@ describe('SDK-to-HPM', function () {
         const testData = {
           response: {
             body: [
-              (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-              (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+              (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+              (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
             ]
           }
         };
@@ -2145,8 +2145,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ]
         };
 
@@ -2161,8 +2161,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ],
           expectedErrors: {
             body: [
@@ -2189,8 +2189,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ]
         };
 
@@ -2472,8 +2472,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ],
           response: {
             body: []
@@ -2493,8 +2493,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ],
           expectedErrors: {
             body: [
@@ -2521,8 +2521,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ]
         };
 
@@ -2767,8 +2767,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ]
         };
 
@@ -2785,8 +2785,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ],
           expectedErrors: {
             body: [
@@ -2813,8 +2813,8 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+            (new models.report.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.report.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
           ]
         };
 
@@ -3317,7 +3317,7 @@ describe('SDK-to-MockApp', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+            (new models.report.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
           ],
           expectedErrors: [
             {
@@ -3344,7 +3344,7 @@ describe('SDK-to-MockApp', function () {
       it('report.setFilters(filters) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
         // Arrange
         const testData = {
-          filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
+          filters: [(new models.report.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
         };
 
         iframeLoaded
@@ -3523,7 +3523,7 @@ describe('SDK-to-MockApp', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+            (new models.report.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
           ],
           expectedErrors: [
             {
@@ -3550,7 +3550,7 @@ describe('SDK-to-MockApp', function () {
       it('page.setFilters(filters) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
         // Arrange
         const testData = {
-          filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
+          filters: [(new models.report.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
         };
 
         iframeLoaded
@@ -3778,7 +3778,7 @@ describe('SDK-to-MockApp', function () {
         // Arrange
         const testData = {
           filters: [
-            (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
+            (new models.report.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
           ],
           errors: [
             {
@@ -3809,7 +3809,7 @@ describe('SDK-to-MockApp', function () {
       it('visual.setFilters(filters) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
         // Arrange
         const testData = {
-          filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
+          filters: [(new models.report.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
         };
 
         iframeLoaded

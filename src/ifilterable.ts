@@ -13,14 +13,14 @@ export interface IFilterable {
    * 
    * @returns {(Promise<models.IFilter[]>)}
    */
-  getFilters(): Promise<models.IFilter[]>;
+  getFilters(): Promise<models.report.IFilter[]>;
   /**
    * Replaces all filters on the current object with the specified filter values.
    * 
    * @param {(models.IFilter[])} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: models.IFilter[]): Promise<void>;
+  setFilters(filters: models.report.IFilter[]): Promise<void>;
   /**
    * Removes all filters from the current object.
    * 

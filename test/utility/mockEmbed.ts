@@ -181,7 +181,7 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
     const pageName = req.params.pageName;
     const uniqueId = req.headers['uid'];
     const filters = req.body;
-    const page: models.IPage = {
+    const page: models.report.IPage = {
       name: pageName,
       displayName: null
     };
@@ -210,11 +210,11 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
     const pageName: string = req.params.pageName;
     const visualName: string = req.params.visualName;
     const uniqueId = req.headers['uid'];
-    const page: models.IPage = {
+    const page: models.report.IPage = {
       name: pageName,
       displayName: null
     };
-    const visual: models.IVisual = {
+    const visual: models.report.IVisual = {
       name: visualName,
       title: "",
       type: ""
@@ -239,11 +239,11 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
     const visualName = req.params.visualName;
     const uniqueId = req.headers['uid'];
     const filters = req.body;
-    const page: models.IPage = {
+    const page: models.report.IPage = {
       name: pageName,
       displayName: null
     };
-    const visual: models.IVisual = {
+    const visual: models.report.IVisual = {
       name: visualName,
       title: "",
       type: ""
