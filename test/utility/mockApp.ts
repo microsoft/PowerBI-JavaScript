@@ -2,8 +2,8 @@ import * as models from 'powerbi-models';
 
 export interface IApp {
   // Load
-  load(config: models.ILoadConfiguration): Promise<void>;
-  validateLoad(config: models.ILoadConfiguration): Promise<models.IError[]>;
+  load(config: models.IReportLoadConfiguration): Promise<void>;
+  validateLoad(config: models.IReportLoadConfiguration): Promise<models.IError[]>;
   // Settings
   updateSettings(settings: models.ISettings): Promise<void>;
   validateSettings(settigns: models.ISettings): Promise<models.IError[]>;
@@ -27,7 +27,7 @@ export interface IApp {
 export const mockAppSpyObj = {
   // Load
   load: jasmine.createSpy("load").and.returnValue(Promise.resolve(null)),
-  validateLoad: jasmine.createSpy("validateLoad").and.callFake(models.validateLoad),
+  validateLoad: jasmine.createSpy("validateLoad").and.callFake(models.validateReportLoad),
   // Settings
   updateSettings: jasmine.createSpy("updateSettings").and.returnValue(Promise.resolve(null)),
   validateSettings: jasmine.createSpy("validateSettings").and.callFake(models.validateSettings),

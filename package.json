@@ -74,7 +74,7 @@
   },
   "dependencies": {
     "http-post-message": "^0.2.3",
-    "powerbi-models": "^0.7.4",
+    "powerbi-models": "^0.9.0",
     "powerbi-router": "^0.1.4",
     "window-post-message-proxy": "^0.2.4"
   },
