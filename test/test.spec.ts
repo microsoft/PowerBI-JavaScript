@@ -750,22 +750,22 @@ describe('Protocol', function () {
 
         iframeLoaded
           .then(() => {
-            spyApp.validateLoad.and.returnValue(Promise.reject(null));
+            spyApp.validateReportLoad.and.returnValue(Promise.reject(null));
 
             // Act
             hpm.post<models.IError>('/report/load', testData.load, { uid: testData.uniqueId })
               .then(() => {
                 expect(false).toBe(true);
-                spyApp.validateLoad.calls.reset();
+                spyApp.validateReportLoad.calls.reset();
                 done();
               })
               .catch(response => {
                 // Assert
-                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
-                expect(spyApp.load).not.toHaveBeenCalledWith(testData.load);
+                expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                expect(spyApp.reportLoad).not.toHaveBeenCalledWith(testData.load);
                 expect(response.statusCode).toEqual(400);
                 // Cleanup
-                spyApp.validateLoad.calls.reset();
+                spyApp.validateReportLoad.calls.reset();
                 done();
               });
           });
@@ -784,17 +784,17 @@ describe('Protocol', function () {
 
         iframeLoaded
           .then(() => {
-            spyApp.validateLoad.and.returnValue(Promise.resolve(null));
+            spyApp.validateReportLoad.and.returnValue(Promise.resolve(null));
             // Act
             hpm.post<void>('/report/load', testData.load)
               .then(response => {
                 // Assert
-                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
-                expect(spyApp.load).toHaveBeenCalledWith(testData.load);
+                expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
                 expect(response.statusCode).toEqual(202);
                 // Cleanup
-                spyApp.validateLoad.calls.reset();
-                spyApp.load.calls.reset();
+                spyApp.validateReportLoad.calls.reset();
+                spyApp.reportLoad.calls.reset();
                 done();
               });
           });
@@ -822,19 +822,19 @@ describe('Protocol', function () {
 
         iframeLoaded
           .then(() => {
-            spyApp.load.and.returnValue(Promise.resolve(testData.load));
+            spyApp.reportLoad.and.returnValue(Promise.resolve(testData.load));
 
             // Act
             hpm.post<void>('/report/load', testData.load, { uid: testData.uniqueId })
               .then(response => {
                 setTimeout(() => {
                   // Assert
-                  expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
-                  expect(spyApp.load).toHaveBeenCalledWith(testData.load);
+                  expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                  expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
                   expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
                   // Cleanup
-                  spyApp.validateLoad.calls.reset();
-                  spyApp.load.calls.reset();
+                  spyApp.validateReportLoad.calls.reset();
+                  spyApp.reportLoad.calls.reset();
                   done();
                 });
               });
@@ -864,19 +864,19 @@ describe('Protocol', function () {
 
         iframeLoaded
           .then(() => {
-            spyApp.load.and.returnValue(Promise.reject(testData.error));
+            spyApp.reportLoad.and.returnValue(Promise.reject(testData.error));
 
             // Act
             hpm.post<void>('/report/load', testData.load, { uid: testData.uniqueId })
               .then(response => {
                 setTimeout(() => {
                   // Assert
-                  expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
-                  expect(spyApp.load).toHaveBeenCalledWith(testData.load);
+                  expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                  expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
                   expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
                   // Cleanup
-                  spyApp.validateLoad.calls.reset();
-                  spyApp.load.calls.reset();
+                  spyApp.validateReportLoad.calls.reset();
+                  spyApp.reportLoad.calls.reset();
                   done();
                 });
               });
@@ -899,17 +899,17 @@ describe('Protocol', function () {
 
         iframeLoaded
           .then(() => {
-            spyApp.validateLoad.and.returnValue(Promise.resolve(null));
+            spyApp.validateDashboardLoad.and.returnValue(Promise.resolve(null));
             // Act
             hpm.post<void>('/dashboard/load', testData.load)
               .then(response => {
                 // Assert
-                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
-                expect(spyApp.load).toHaveBeenCalledWith(testData.load);
+                expect(spyApp.validateDashboardLoad).toHaveBeenCalledWith(testData.load);
+                expect(spyApp.dashboardLoad).toHaveBeenCalledWith(testData.load);
                 expect(response.statusCode).toEqual(202);
                 // Cleanup
-                spyApp.validateLoad.calls.reset();
-                spyApp.load.calls.reset();
+                spyApp.validateDashboardLoad.calls.reset();
+                spyApp.dashboardLoad.calls.reset();
                 done();
               });
           });
@@ -930,22 +930,22 @@ describe('Protocol', function () {
 
         iframeLoaded
           .then(() => {
-            spyApp.validateLoad.and.returnValue(Promise.reject(null));
+            spyApp.validateDashboardLoad.and.returnValue(Promise.reject(null));
 
             // Act
             hpm.post<models.IError>('/dashboard/load', testData.load, { uid: testData.uniqueId })
               .then(() => {
                 expect(false).toBe(true);
-                spyApp.validateLoad.calls.reset();
+                spyApp.validateDashboardLoad.calls.reset();
                 done();
               })
               .catch(response => {
                 // Assert
-                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.load);
-                expect(spyApp.load).not.toHaveBeenCalledWith(testData.load);
+                expect(spyApp.validateDashboardLoad).toHaveBeenCalledWith(testData.load);
+                expect(spyApp.dashboardLoad).not.toHaveBeenCalledWith(testData.load);
                 expect(response.statusCode).toEqual(400);
                 // Cleanup
-                spyApp.validateLoad.calls.reset();
+                spyApp.validateDashboardLoad.calls.reset();
                 done();
               });
           });
@@ -1093,7 +1093,7 @@ describe('Protocol', function () {
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(expectedEvent));
                 // Cleanup
-                spyApp.validateLoad.calls.reset();
+                spyApp.validateReportLoad.calls.reset();
                 spyApp.setPage.calls.reset();
                 done();
               });
@@ -1132,7 +1132,7 @@ describe('Protocol', function () {
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(expectedEvent));
                 // Cleanup
-                spyApp.validateLoad.calls.reset();
+                spyApp.validateReportLoad.calls.reset();
                 spyApp.setPage.calls.reset();
                 done();
               });
@@ -3125,7 +3125,8 @@ describe('SDK-to-MockApp', function () {
     iframeHpm2 = setupEmbedMockApp(iframe2.contentWindow, window, logMessages, 'SDK-to-MockApp IframeWpmp2');
 
     // Reset load handler
-    spyApp.validateLoad.calls.reset();
+    spyApp.validateReportLoad.calls.reset();
+    spyApp.validateDashboardLoad.calls.reset();
     spyApp.reset();
 
     const iframe1Loaded = new Promise<void>((resolve, reject) => {
@@ -3170,13 +3171,13 @@ describe('SDK-to-MockApp', function () {
 
         iframeLoaded
           .then(() => {
-            spyApp.validateLoad.and.returnValue(Promise.reject(testData.expectedErrors));
+            spyApp.validateReportLoad.and.returnValue(Promise.reject(testData.expectedErrors));
             // Act
             report.load(testData.loadConfig)
               .catch(errors => {
                 // Assert
-                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
-                expect(spyApp.load).not.toHaveBeenCalled();
+                expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.loadConfig);
+                expect(spyApp.reportLoad).not.toHaveBeenCalled();
                 expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors));
                 done();
               });
@@ -3194,14 +3195,14 @@ describe('SDK-to-MockApp', function () {
 
         iframeLoaded
           .then(() => {
-            spyApp.validateLoad.and.returnValue(Promise.resolve(null));
-            spyApp.load.and.returnValue(Promise.resolve(null));
+            spyApp.validateReportLoad.and.returnValue(Promise.resolve(null));
+            spyApp.reportLoad.and.returnValue(Promise.resolve(null));
             // Act
             report.load(testData.loadConfig)
               .then(response => {
                 // Assert
-                expect(spyApp.validateLoad).toHaveBeenCalledWith(testData.loadConfig);
-                expect(spyApp.load).toHaveBeenCalledWith(testData.loadConfig);
+                expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.loadConfig);
+                expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.loadConfig);
                 expect(response).toEqual(undefined);
                 done();
               });
