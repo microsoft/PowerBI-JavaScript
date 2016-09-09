@@ -53,6 +53,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     const configCopy = utils.assign({ settings }, config);
 
     super(service, element, configCopy);
+    this.loadPath = "/report/load";
     Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
   }
 
@@ -271,5 +272,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       .catch(response => {
         throw response.body;
       });
+  }
+
+  /**
+   * Validate load configuration.
+   */
+  validate(config: models.IReportLoadConfiguration): models.IError[] {
+    return models.validateReportLoad(config);
   }
 }

@@ -40,6 +40,7 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
      */
     constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration) {
         super(service, element, config);
+        this.loadPath = "/dashboard/load";
         Array.prototype.push.apply(this.allowedEvents, Dashboard.allowedEvents);
     }
 
@@ -78,5 +79,12 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
         }
 
         return dashboardId;
+    }
+
+    /**
+     * Validate load configuration.
+     */
+    validate(config: models.IDashboardLoadConfiguration): models.IError[] {
+      return models.validateDashboardLoad(config);
     }
 }

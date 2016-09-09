@@ -47,9 +47,9 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
   router.post('/dashboard/load', (req, res) => {
     const uniqueId = req.headers['uid'];
     const loadConfig = req.body;
-    return app.validateLoad(loadConfig)
+    return app.validateDashboardLoad(loadConfig)
       .then(() => {
-        app.load(loadConfig)
+        app.dashboardLoad(loadConfig)
           .then(() => {
             const initiator = "sdk";
             hpm.post(`/dashboards/${uniqueId}/events/loaded`, {
@@ -71,9 +71,9 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
   router.post('/report/load', (req, res) => {
     const uniqueId = req.headers['uid'];
     const loadConfig = req.body;
-    return app.validateLoad(loadConfig)
+    return app.validateReportLoad(loadConfig)
       .then(() => {
-        app.load(loadConfig)
+        app.reportLoad(loadConfig)
           .then(() => {
             const initiator = "sdk";
             hpm.post(`/reports/${uniqueId}/events/loaded`, {
