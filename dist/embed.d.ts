@@ -1,4 +1,4 @@
-/*! powerbi-client v2.1.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.1 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as models from 'powerbi-models';
 declare global  {
@@ -27,7 +27,7 @@ export interface IEmbedConfiguration {
     pageName?: string;
     filters?: models.IFilter[];
 }
-export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {
+export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
     uniqueId: string;
     type: string;
     embedUrl: string;
@@ -83,6 +83,10 @@ export declare abstract class Embed {
      */
     config: IInternalEmbedConfiguration;
     /**
+     * Url used in the load request.
+     */
+    loadPath: string;
+    /**
      * Creates an instance of Embed.
      *
      * Note: there is circular reference between embeds and the service, because
@@ -117,7 +121,7 @@ export declare abstract class Embed {
      * @param {models.ILoadConfiguration} config
      * @returns {Promise<void>}
      */
-    load(config: models.ILoadConfiguration): Promise<void>;
+    load(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration): Promise<void>;
     /**
      * Removes one or more event handlers from the list of handlers.
      * If a reference to the existing handle function is specified, remove the specific handler.
@@ -210,4 +214,8 @@ export declare abstract class Embed {
      * @returns {boolean}
      */
     private isFullscreen(iframe);
+    /**
+     * Validate load configuration.
+     */
+    abstract validate(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration): models.IError[];
 }

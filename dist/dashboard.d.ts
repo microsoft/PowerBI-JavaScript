@@ -1,6 +1,7 @@
-/*! powerbi-client v2.1.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.1 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as embed from './embed';
+import * as models from 'powerbi-models';
 /**
  * A Dashboard node within a dashboard hierarchy
  *
@@ -50,4 +51,8 @@ export declare class Dashboard extends embed.Embed implements IDashboardNode {
      * @returns {string}
      */
     getId(): string;
+    /**
+     * Validate load configuration.
+     */
+    validate(config: models.IDashboardLoadConfiguration): models.IError[];
 }

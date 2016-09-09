@@ -1,4 +1,4 @@
-/*! powerbi-client v2.1.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.1 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -171,4 +171,8 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      * @returns {Promise<void>}
      */
     updateSettings(settings: models.ISettings): Promise<void>;
+    /**
+     * Validate load configuration.
+     */
+    validate(config: models.IReportLoadConfiguration): models.IError[];
 }

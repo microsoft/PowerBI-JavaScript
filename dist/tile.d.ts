@@ -1,4 +1,5 @@
-/*! powerbi-client v2.1.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.1 | (c) 2016 Microsoft Corporation MIT */
+import * as models from 'powerbi-models';
 import { Embed } from './embed';
 /**
  * The Power BI tile embed component
@@ -15,4 +16,8 @@ export declare class Tile extends Embed {
      * @returns {string}
      */
     getId(): string;
+    /**
+     * Validate load configuration.
+     */
+    validate(config: any): models.IError[];
 }
