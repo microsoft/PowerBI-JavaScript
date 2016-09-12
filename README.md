@@ -27,7 +27,7 @@ Install via Nuget:
 
 Install from NPM:
 
-`npm install -save powerbi-client`
+`npm install --save powerbi-client`
 
 Install from Bower:
 
