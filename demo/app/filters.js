@@ -223,7 +223,7 @@ $(function () {
           $element.empty();
           filters
             .map(generateFilterElement)
-            .forEach(function ($filterS) {
+            .forEach(function ($filter) {
               $element.append($filter);
             });
         });
