@@ -3,7 +3,7 @@ $(function () {
 
   console.log('Scenario 5: Default Page and/or Filter');
 
-  var staticReportUrl = 'https://powerbiembedapi.azurewebsites.net/api/dxt/reports/c4d31ef0-7b34-4d80-9bcb-5974d1405572';
+  var staticReportUrl = 'https://powerbiembedapi.azurewebsites.net/api/reports/c4d31ef0-7b34-4d80-9bcb-5974d1405572';
   var $defaultPageReportContainer = $('#reportdefaults');
   var defaultPageReport;
   var defaultPageName = 'ReportSection2';
