@@ -2,7 +2,7 @@
 import * as models from 'powerbi-models';
 /**
  * Decorates embed components that support filters
- * Examples include reports, pages and visuals
+ * Examples include reports and pages
  *
  * @export
  * @interface IFilterable

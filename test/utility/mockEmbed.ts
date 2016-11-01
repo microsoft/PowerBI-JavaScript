@@ -206,72 +206,6 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
       });
   });
 
-  router.get('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
-    const pageName: string = req.params.pageName;
-    const visualName: string = req.params.visualName;
-    const uniqueId = req.headers['uid'];
-    const page: models.IPage = {
-      name: pageName,
-      displayName: null
-    };
-    const visual: models.IVisual = {
-      name: visualName,
-      title: "",
-      type: ""
-    };
-
-    return app.validatePage(page)
-      .then(() => app.validateVisual(visual))
-      .then(() => {
-        return app.getFilters()
-          .then(filters => {
-            res.send(200, filters);
-          }, error => {
-            res.send(500, error);
-          });
-      }, errors => {
-        res.send(400, errors);
-      });
-  });
-
-  router.put('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
-    const pageName = req.params.pageName;
-    const visualName = req.params.visualName;
-    const uniqueId = req.headers['uid'];
-    const filters = req.body;
-    const page: models.IPage = {
-      name: pageName,
-      displayName: null
-    };
-    const visual: models.IVisual = {
-      name: visualName,
-      title: "",
-      type: ""
-    };
-
-    return app.validatePage(page)
-      .then(() => app.validateVisual(visual))
-      .then(() => {
-        return Promise.all(filters.map(filter => app.validateFilter(filter)));
-      })
-      .then(() => {
-        app.setFilters(filters)
-          .then(filter => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filtersApplied`, {
-              initiator,
-              filter
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
-
-        res.send(202);
-      }, errors => {
-        res.send(400, errors);
-      });
-  });
-
   router.post('/report/refresh', (req, res) => {
     app.refreshData();
     res.send(202);
@@ -302,29 +236,6 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
 
   /**
    * Phase 4
-   */
-  router.get('/report/pages/:pageName/visuals', (req, res) => {
-    const uniqueId = req.headers['uid'];
-    const page = {
-      name: req.params.pageName,
-      displayName: null
-    };
-
-    return app.validatePage(page)
-      .then(() => {
-        return app.getVisuals(page)
-          .then(visuals => {
-            res.send(200, visuals);
-          }, error => {
-            res.send(500, error);
-          });
-      }, errors => {
-        res.send(400, errors);
-      });
-  });
-
-  /**
-   * Phase 5
    */
   router.get('/report/data', (req, res) => {
     return app.exportData()
