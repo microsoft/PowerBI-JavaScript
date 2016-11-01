@@ -3,7 +3,7 @@ $(function () {
 
   console.log('Scenario 4: Custom Filter Pane');
 
-  var reportUrl = 'https://powerbiembedapi.azurewebsites.net/api/dxt/reports/c4d31ef0-7b34-4d80-9bcb-5974d1405572';
+  var reportUrl = 'https://powerbiembedapi.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
   var $customFilterPaneContainer = $('#reportcustomfilter');
   var customFilterPaneReport;
   var customFilterPaneReportPages;
@@ -223,7 +223,7 @@ $(function () {
           $element.empty();
           filters
             .map(generateFilterElement)
-            .forEach(function ($filterS) {
+            .forEach(function ($filter) {
               $element.append($filter);
             });
         });

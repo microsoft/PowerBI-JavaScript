@@ -40,7 +40,7 @@ export interface IEmbedConfiguration {
   filters?: models.IFilter[];
 }
 
-export interface IInternalEmbedConfiguration extends models.ILoadConfiguration {
+export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
   uniqueId: string;
   type: string;
   embedUrl: string;
@@ -108,6 +108,11 @@ export abstract class Embed {
   config: IInternalEmbedConfiguration;
 
   /**
+   * Url used in the load request.
+   */
+  loadPath: string;
+
+  /**
    * Creates an instance of Embed.
    * 
    * Note: there is circular reference between embeds and the service, because
@@ -162,13 +167,13 @@ export abstract class Embed {
    * @param {models.ILoadConfiguration} config
    * @returns {Promise<void>}
    */
-  load(config: models.ILoadConfiguration): Promise<void> {
-    const errors = models.validateLoad(config);
+  load(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration): Promise<void> {
+    const errors = this.validate(config);
     if (errors) {
       throw errors;
     }
 
-    return this.service.hpm.post<void>('/report/load', config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    return this.service.hpm.post<void>(this.loadPath, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         utils.assign(this.config, config);
         return response.body;
@@ -327,7 +332,6 @@ export abstract class Embed {
     exitFullscreen.call(document);
   }
 
-
   /**
    * Returns true if the iframe is rendered in fullscreen mode,
    * otherwise returns false.
@@ -341,4 +345,9 @@ export abstract class Embed {
 
     return options.some(option => document[option] === iframe);
   }
+  
+  /**
+   * Validate load configuration.
+   */
+  abstract validate(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration): models.IError[];
 }

@@ -6,7 +6,7 @@ import { mockAppSpyObj, mockApp } from './mockApp';
 
 export const spyApp = mockAppSpyObj;
 
-export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean, name: string = 'MockAppWindowPostMessageProxy'): Hpm.HttpPostMessage {
+export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean, name: string = 'MockAppWindowPostMessageProxy'): Hpm.HttpPostMessage {
   const parent = parentWindow || iframeContentWindow.parent;
   const wpmp = new Wpmp.WindowPostMessageProxy({
     processTrackingProperties: {
@@ -40,12 +40,40 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   /**
    * Phase 1
    */
+  
+  /**
+   * Dashboard Embed
+   */
+  router.post('/dashboard/load', (req, res) => {
+    const uniqueId = req.headers['uid'];
+    const loadConfig = req.body;
+    return app.validateDashboardLoad(loadConfig)
+      .then(() => {
+        app.dashboardLoad(loadConfig)
+          .then(() => {
+            const initiator = "sdk";
+            hpm.post(`/dashboards/${uniqueId}/events/loaded`, {
+              initiator
+            });
+          }, error => {
+            hpm.post(`/dashboards/${uniqueId}/events/error`, error);
+          });
+          
+        res.send(202);
+      }, error => {
+        res.send(400, error);
+      });
+  });
+  
+  /**
+   * Report Embed
+   */
   router.post('/report/load', (req, res) => {
     const uniqueId = req.headers['uid'];
     const loadConfig = req.body;
-    return app.validateLoad(loadConfig)
+    return app.validateReportLoad(loadConfig)
       .then(() => {
-        app.load(loadConfig)
+        app.reportLoad(loadConfig)
           .then(() => {
             const initiator = "sdk";
             hpm.post(`/reports/${uniqueId}/events/loaded`, {
@@ -178,6 +206,77 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
       });
   });
 
+  router.get('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
+    const pageName: string = req.params.pageName;
+    const visualName: string = req.params.visualName;
+    const uniqueId = req.headers['uid'];
+    const page: models.IPage = {
+      name: pageName,
+      displayName: null
+    };
+    const visual: models.IVisual = {
+      name: visualName,
+      title: "",
+      type: ""
+    };
+
+    return app.validatePage(page)
+      .then(() => app.validateVisual(visual))
+      .then(() => {
+        return app.getFilters()
+          .then(filters => {
+            res.send(200, filters);
+          }, error => {
+            res.send(500, error);
+          });
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+
+  router.put('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
+    const pageName = req.params.pageName;
+    const visualName = req.params.visualName;
+    const uniqueId = req.headers['uid'];
+    const filters = req.body;
+    const page: models.IPage = {
+      name: pageName,
+      displayName: null
+    };
+    const visual: models.IVisual = {
+      name: visualName,
+      title: "",
+      type: ""
+    };
+
+    return app.validatePage(page)
+      .then(() => app.validateVisual(visual))
+      .then(() => {
+        return Promise.all(filters.map(filter => app.validateFilter(filter)));
+      })
+      .then(() => {
+        app.setFilters(filters)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filtersApplied`, {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
+          });
+
+        res.send(202);
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+
+  router.post('/report/refresh', (req, res) => {
+    app.refreshData();
+    res.send(202);
+  });
+
   router.patch('/report/settings', (req, res) => {
     const uniqueId = req.headers['uid'];
     const settings = req.body;
@@ -204,6 +303,25 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
   /**
    * Phase 4
    */
+  router.get('/report/pages/:pageName/visuals', (req, res) => {
+    const uniqueId = req.headers['uid'];
+    const page = {
+      name: req.params.pageName,
+      displayName: null
+    };
+
+    return app.validatePage(page)
+      .then(() => {
+        return app.getVisuals(page)
+          .then(visuals => {
+            res.send(200, visuals);
+          }, error => {
+            res.send(500, error);
+          });
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
 
   /**
    * Phase 5
@@ -213,6 +331,11 @@ export function setupMockApp(iframeContentWindow: Window, parentWindow: Window, 
       .then(data => {
         res.send(200, data);
       });
+  });
+
+  router.post('/report/print', (req, res) => {
+    app.print();
+    res.send(202);
   });
 
   return hpm;

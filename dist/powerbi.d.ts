@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.1 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as factories from './factories';
 import * as models from 'powerbi-models';
@@ -8,6 +8,7 @@ export { Report } from './report';
 export { Tile } from './tile';
 export { IEmbedConfiguration, Embed } from './embed';
 export { Page } from './page';
+export { Visual } from './visual';
 declare global  {
     interface Window {
         powerbi: service.Service;

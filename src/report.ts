@@ -53,6 +53,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     const configCopy = utils.assign({ settings }, config);
 
     super(service, element, configCopy);
+    this.loadPath = "/report/load";
     Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
   }
 
@@ -161,6 +162,36 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
+   * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
+   */
+  print(): Promise<void> {
+    return this.service.hpm.post<models.IError[]>('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
+   * Refreshes data sources for the report.
+   * 
+   * ```javascript
+   * report.refresh();
+   * ```
+   */
+  refresh(): Promise<void> {
+    return this.service.hpm.post<models.IError[]>('/report/refresh', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
    * Removes all filters at the report level.
    * 
    * ```javascript
@@ -241,5 +272,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       .catch(response => {
         throw response.body;
       });
+  }
+
+  /**
+   * Validate load configuration.
+   */
+  validate(config: models.IReportLoadConfiguration): models.IError[] {
+    return models.validateReportLoad(config);
   }
 }

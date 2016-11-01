@@ -1,5 +1,6 @@
 import * as embed from './embed';
 import { Report } from './report';
+import { Dashboard } from './dashboard';
 import { Tile } from './tile';
 import { Page } from './page';
 import * as utils from './util';
@@ -67,9 +68,10 @@ export class Service implements IService {
   /**
    * A list of components that this service can embed
    */
-  private static components: (typeof Report | typeof Tile)[] = [
+    private static components: (typeof Report | typeof Tile | typeof Dashboard)[] = [
     Tile,
-    Report
+    Report,
+    Dashboard
   ];
 
   /**
@@ -90,7 +92,7 @@ export class Service implements IService {
   /**The Configuration object for the service*/
   private config: IServiceConfiguration;
 
-  /** A list of Report and Tile components that have been embedded using this service instance. */
+  /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
   private embeds: embed.Embed[];
   /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
   hpm: hpm.HttpPostMessage;
@@ -137,6 +139,17 @@ export class Service implements IService {
     this.router.post(`/reports/:uniqueId/pages/:pageName/visuals/:pageName/events/:eventName`, (req, res) => {
       const event: IEvent<any> = {
         type: 'report',
+        id: req.params.uniqueId,
+        name: req.params.eventName,
+        value: req.body
+      };
+
+      this.handleEvent(event);
+    });
+
+    this.router.post(`/dashboards/:uniqueId/events/:eventName`, (req, res) => {
+      const event: IEvent<any> = {
+        type: 'dashboard',
         id: req.params.uniqueId,
         name: req.params.eventName,
         value: req.body
@@ -235,6 +248,15 @@ export class Service implements IService {
       throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
     }
 
+    /**
+     * TODO: Dynamic embed type switching could be supported but there is work needed to prepare the service state and DOM cleanup.
+     * remove all event handlers from the DOM, then reset the element to initial state which removes iframe, and removes from list of embeds
+     * then we can call the embedNew function which would allow setting the proper embedUrl and construction of object based on the new type.
+     */
+    if (typeof config.type === "string" && config.type !== component.config.type) {
+      throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
+    }
+
     component.load(<embed.IInternalEmbedConfiguration>config);
 
     return component;
@@ -257,7 +279,7 @@ export class Service implements IService {
    * @param {HTMLElement} element
    * @returns {(Report | Tile)}
    */
-  get(element: HTMLElement): Report | Tile {
+  get(element: HTMLElement): Report | Tile | Dashboard {
     const powerBiElement = <IPowerBiElement>element;
 
     if (!powerBiElement.powerBiEmbed) {
@@ -273,7 +295,7 @@ export class Service implements IService {
    * @param {string} uniqueId
    * @returns {(Report | Tile)}
    */
-  find(uniqueId: string): Report | Tile {
+  find(uniqueId: string): Report | Tile | Dashboard {
     return utils.find(x => x.config.uniqueId === uniqueId, this.embeds);
   }
 

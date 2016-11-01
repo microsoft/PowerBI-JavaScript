@@ -1,6 +1,7 @@
-/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.1 | (c) 2016 Microsoft Corporation MIT */
 import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
+import { Visual } from './visual';
 import * as models from 'powerbi-models';
 /**
  * A Page node within a report hierarchy
@@ -59,6 +60,17 @@ export declare class Page implements IPageNode, IFilterable {
      */
     getFilters(): Promise<models.IFilter[]>;
     /**
+     * Gets all the visuals on the page.
+     *
+     * ```javascript
+     * page.getVisuals()
+     *   .then(visuals => { ... });
+     * ```
+     *
+     * @returns {Promise<Visual[]>}
+     */
+    getVisuals(): Promise<Visual[]>;
+    /**
      * Removes all filters from this page of the report.
      *
      * ```javascript
@@ -90,4 +102,22 @@ export declare class Page implements IPageNode, IFilterable {
      * @returns {Promise<void>}
      */
     setFilters(filters: models.IFilter[]): Promise<void>;
+    /**
+     * Creates a Visual object given a name for the visual.
+     *
+     * Normally you would get Visual objects by calling `page.getVisuals()` but in the case
+     * that the visual name is known and you want to perform an action on a visual such as setting a filter
+     * without having to retrieve it first you can create it directly.
+     *
+     * Note: Because you are creating the visual manually there is no guarantee that the visual actually exists in the report and the subsequence requests could fail.
+     *
+     * ```javascript
+     * const visual = report.page('ReportSection1').visual('BarChart1');
+     * visual.setFilters(filters);
+     * ```
+     *
+     * @param {string} name
+     * @returns {Visual}
+     */
+    visual(name: string): Visual;
 }
