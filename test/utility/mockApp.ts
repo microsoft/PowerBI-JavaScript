@@ -2,8 +2,10 @@ import * as models from 'powerbi-models';
 
 export interface IApp {
   // Load
-  load(config: models.ILoadConfiguration): Promise<void>;
-  validateLoad(config: models.ILoadConfiguration): Promise<models.IError[]>;
+  dashboardLoad(config: models.IDashboardLoadConfiguration): Promise<void>;
+  validateDashboardLoad(config: models.IDashboardLoadConfiguration): Promise<models.IError[]>;
+  reportLoad(config: models.IReportLoadConfiguration): Promise<void>;
+  validateReportLoad(config: models.IReportLoadConfiguration): Promise<models.IError[]>;
   // Settings
   updateSettings(settings: models.ISettings): Promise<void>;
   validateSettings(settigns: models.ISettings): Promise<models.IError[]>;
@@ -16,13 +18,17 @@ export interface IApp {
   setFilters(filters: models.IFilter[]): Promise<void>;
   validateFilter(filter: models.IFilter): Promise<models.IError[]>;
   // Other
+  print(): Promise<void>;
+  refreshData(): Promise<void>;
   exportData(): Promise<void>;
 }
 
 export const mockAppSpyObj = {
   // Load
-  load: jasmine.createSpy("load").and.returnValue(Promise.resolve(null)),
-  validateLoad: jasmine.createSpy("validateLoad").and.callFake(models.validateLoad),
+  dashboardLoad: jasmine.createSpy("dashboardLoad").and.returnValue(Promise.resolve(null)),
+  validateDashboardLoad: jasmine.createSpy("validateDashboardLoad").and.callFake(models.validateDashboardLoad),
+  reportLoad: jasmine.createSpy("reportLoad").and.returnValue(Promise.resolve(null)),
+  validateReportLoad: jasmine.createSpy("validateReportLoad").and.callFake(models.validateReportLoad),
   // Settings
   updateSettings: jasmine.createSpy("updateSettings").and.returnValue(Promise.resolve(null)),
   validateSettings: jasmine.createSpy("validateSettings").and.callFake(models.validateSettings),
@@ -40,8 +46,10 @@ export const mockAppSpyObj = {
   exportData: jasmine.createSpy("exportData").and.returnValue(Promise.resolve(null)),
 
   reset() {
-    mockAppSpyObj.load.calls.reset();
-    mockAppSpyObj.validateLoad.calls.reset();
+    mockAppSpyObj.dashboardLoad.calls.reset();
+    mockAppSpyObj.validateDashboardLoad.calls.reset();
+    mockAppSpyObj.reportLoad.calls.reset();
+    mockAppSpyObj.validateReportLoad.calls.reset();
     mockAppSpyObj.updateSettings.calls.reset();
     mockAppSpyObj.validateSettings.calls.reset();
     mockAppSpyObj.getPages.calls.reset();
@@ -50,6 +58,8 @@ export const mockAppSpyObj = {
     mockAppSpyObj.getFilters.calls.reset();
     mockAppSpyObj.setFilters.calls.reset();
     mockAppSpyObj.validateFilter.calls.reset();
+    mockAppSpyObj.print.calls.reset();
+    mockAppSpyObj.refreshData.calls.reset();
     mockAppSpyObj.exportData.calls.reset();
   }
 };

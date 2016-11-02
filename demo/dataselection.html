@@ -21,16 +21,21 @@
           <li id="pageLinkDynamic" class=""><a href="dynamic.html">Scenario 2: Dynamic Embed</a></li>
           <li id="pageLinkPageNav" class=""><a href="pagenavigation.html">Scenario 3: Custom Page Navigation</a></li>
           <li id="pageLinkFilters" class=""><a href="filters.html">Scenario 4: Custom Filter Pane</a></li>
-          <li id="pageLinkDefaults" class="active"><a href="defaults.html">Scenario 5: Default Page and/or Filter</a></li>
+          <li id="pageLinkDefaults" class=""><a href="defaults.html">Scenario 5: Default Page and/or Filter</a></li>
           <li id="pageLinkSettings" class=""><a href="settings.html">Scenario 6: Update Settings</a></li>
-          <li id="pageLinkDataSelection" class=""><a href="dataselection.html">Scenario 7: Data Selection</a></li>
+          <li id="pageLinkDataSelection" class="active"><a href="dataselection.html">Scenario 7: Data Selection</a></li>
       </ul>
 
-      <h2>Default Page and/or Default Filter</h2>
-      <p>Load a report at a specified page and/or report level filter.</p>
+      <h2>Data Selection Events</h2>
+      <p>Respond to user selecting data.</p>
 
-      <div id="reportdefaults" class="powerbi-container"></div>
+      <div id="reportContainer" class="powerbi-container"></div>
 
+      <h2>Data Selected Event Data:</h2>
+      <p>Notice the event.detail contains information about the visual the user clicked and the page the visual is on. It also contains details about the data the user clicked such as identity, value, and regions if applicable.</p>
+      <p>Note: the values rendered in the tooltip are currently not returned in event but we hope to have this feature soon.</p>
+      <pre id="dataSelectedContainer">
+      </pre>
     </div>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -38,7 +43,7 @@
     <script src="bower_components/fetch/fetch.js"></script>
     <script src="bower_components/powerbi-client/dist/powerbi.js"></script>
 
-    <script src="app/defaults.js"></script>
+    <script src="app/dataselection.js"></script>
 
   </body>
 </html>

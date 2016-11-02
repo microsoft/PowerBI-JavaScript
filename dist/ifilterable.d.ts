@@ -1,8 +1,8 @@
-/*! powerbi-client v2.0.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.1.1 | (c) 2016 Microsoft Corporation MIT */
 import * as models from 'powerbi-models';
 /**
  * Decorates embed components that support filters
- * Examples include reports, pages and visuals
+ * Examples include reports and pages
  *
  * @export
  * @interface IFilterable

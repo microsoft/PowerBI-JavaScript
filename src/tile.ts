@@ -1,3 +1,4 @@
+import * as models from 'powerbi-models';
 import { Embed } from './embed';
 
 /**
@@ -16,6 +17,13 @@ export class Tile extends Embed {
    * @returns {string}
    */
   getId(): string {
-    throw Error('Not implemented. Embedding tiles is not supported yet.');
+    throw new Error('Not implemented. Embedding tiles is not supported yet.');
+  }
+
+  /**
+   * Validate load configuration.
+   */
+  validate(config: any): models.IError[] {
+    throw new Error('Not implemented. Embedding tiles is not supported yet.');
   }
 }
