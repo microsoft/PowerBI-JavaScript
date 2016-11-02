@@ -57,20 +57,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(10);
+	var factories = __webpack_require__(9);
 	exports.factories = factories;
 	var models = __webpack_require__(5);
 	exports.models = models;
 	var report_1 = __webpack_require__(4);
 	exports.Report = report_1.Report;
-	var tile_1 = __webpack_require__(9);
+	var tile_1 = __webpack_require__(8);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
 	var page_1 = __webpack_require__(6);
 	exports.Page = page_1.Page;
-	var visual_1 = __webpack_require__(7);
-	exports.Visual = visual_1.Visual;
 	/**
 	 * Makes Power BI available to the global object for use in applications that don't have module loading support.
 	 *
@@ -86,8 +84,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(4);
-	var dashboard_1 = __webpack_require__(8);
-	var tile_1 = __webpack_require__(9);
+	var dashboard_1 = __webpack_require__(7);
+	var tile_1 = __webpack_require__(8);
 	var page_1 = __webpack_require__(6);
 	var utils = __webpack_require__(3);
 	/**
@@ -125,15 +123,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            _this.handleEvent(event);
 	        });
 	        this.router.post("/reports/:uniqueId/pages/:pageName/events/:eventName", function (req, res) {
-	            var event = {
-	                type: 'report',
-	                id: req.params.uniqueId,
-	                name: req.params.eventName,
-	                value: req.body
-	            };
-	            _this.handleEvent(event);
-	        });
-	        this.router.post("/reports/:uniqueId/pages/:pageName/visuals/:pageName/events/:eventName", function (req, res) {
 	            var event = {
 	                type: 'report',
 	                id: req.params.uniqueId,
@@ -3317,9 +3306,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	var visual_1 = __webpack_require__(7);
 	/**
 	 * A Power BI report page
 	 *
@@ -3354,28 +3342,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Page.prototype.getFilters = function () {
 	        return this.report.service.hpm.get("/report/pages/" + this.name + "/filters", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Gets all the visuals on the page.
-	     *
-	     * ```javascript
-	     * page.getVisuals()
-	     *   .then(visuals => { ... });
-	     * ```
-	     *
-	     * @returns {Promise<Visual[]>}
-	     */
-	    Page.prototype.getVisuals = function () {
-	        var _this = this;
-	        return this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
-	            .then(function (response) {
-	            return response.body
-	                .map(function (visual) {
-	                return new visual_1.Visual(_this, visual.name);
-	            });
-	        }, function (response) {
 	            throw response.body;
 	        });
 	    };
@@ -3427,26 +3393,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
-	    /**
-	     * Creates a Visual object given a name for the visual.
-	     *
-	     * Normally you would get Visual objects by calling `page.getVisuals()` but in the case
-	     * that the visual name is known and you want to perform an action on a visual such as setting a filter
-	     * without having to retrieve it first you can create it directly.
-	     *
-	     * Note: Because you are creating the visual manually there is no guarantee that the visual actually exists in the report and the subsequence requests could fail.
-	     *
-	     * ```javascript
-	     * const visual = report.page('ReportSection1').visual('BarChart1');
-	     * visual.setFilters(filters);
-	     * ```
-	     *
-	     * @param {string} name
-	     * @returns {Visual}
-	     */
-	    Page.prototype.visual = function (name) {
-	        return new visual_1.Visual(this, name);
-	    };
 	    return Page;
 	}());
 	exports.Page = Page;
@@ -3454,73 +3400,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 7 */
-/***/ function(module, exports) {
-
-	/**
-	 * A Power BI visual within a page
-	 *
-	 * @export
-	 * @class Visual
-	 * @implements {IVisualNode}
-	 * @implements {IFilterable}
-	 */
-	var Visual = (function () {
-	    function Visual(page, name) {
-	        this.name = name;
-	        this.page = page;
-	    }
-	    /**
-	     * Gets all page level filters within a report.
-	     *
-	     * ```javascript
-	     * visual.getFilters()
-	     *  .then(pages => { ... });
-	     * ```
-	     *
-	     * @returns {(Promise<models.IFilter[]>)}
-	     */
-	    Visual.prototype.getFilters = function () {
-	        return this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-	            .then(function (response) { return response.body; }, function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Removes all filters on this page of the report.
-	     *
-	     * ```javascript
-	     * visual.removeFilters();
-	     * ```
-	     *
-	     * @returns {Promise<void>}
-	     */
-	    Visual.prototype.removeFilters = function () {
-	        return this.setFilters([]);
-	    };
-	    /**
-	     * Sets all filters at the visual level of the page.
-	     *
-	     * ```javascript
-	     * visual.setFilters(filters)
-	     *  .catch(errors => { ... });
-	     * ```
-	     *
-	     * @param {(models.IFilter[])} filters
-	     * @returns {Promise<void>}
-	     */
-	    Visual.prototype.setFilters = function (filters) {
-	        return this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    return Visual;
-	}());
-	exports.Visual = Visual;
-
-
-/***/ },
-/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3599,7 +3478,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3641,13 +3520,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config_1 = __webpack_require__(11);
-	var wpmp = __webpack_require__(12);
-	var hpm = __webpack_require__(13);
-	var router = __webpack_require__(14);
+	var config_1 = __webpack_require__(10);
+	var wpmp = __webpack_require__(11);
+	var hpm = __webpack_require__(12);
+	var router = __webpack_require__(13);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -3674,7 +3553,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	var config = {
@@ -3686,7 +3565,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
@@ -3986,7 +3865,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -4170,7 +4049,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */

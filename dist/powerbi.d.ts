@@ -8,7 +8,6 @@ export { Report } from './report';
 export { Tile } from './tile';
 export { IEmbedConfiguration, Embed } from './embed';
 export { Page } from './page';
-export { Visual } from './visual';
 declare global  {
     interface Window {
         powerbi: service.Service;

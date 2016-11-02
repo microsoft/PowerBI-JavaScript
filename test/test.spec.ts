@@ -3,7 +3,6 @@ import * as embed from '../src/embed';
 import * as report from '../src/report';
 import * as dashboard from '../src/dashboard';
 import * as page from '../src/page';
-import * as visual from '../src/visual';
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
 import * as Router from 'powerbi-router';
@@ -636,11 +635,6 @@ describe('Protocol', function () {
     });
 
     router.post('/reports/:uniqueId/pages/:pageName/events/:eventName', (req, res) => {
-      handler.handle(req);
-      res.send(202);
-    });
-
-    router.post('/reports/:uniqueId/pages/:pageName/visuals/:visualId/events/:eventName', (req, res) => {
       handler.handle(req);
       res.send(202);
     });
@@ -1705,45 +1699,6 @@ describe('Protocol', function () {
       });
     });
 
-    describe('filters (visual level)', function () {
-      it('POST /reports/:uniqueId/pages/xyz/visuals/uvw/events/filtersApplied when user changes filter', function (done) {
-        // Arrange
-        const testData = {
-          uniqueId: 'uniqueId',
-          reportId: 'fakeReportId',
-          event: {
-            initiator: 'user',
-            filters: [
-              {
-                name: "fakeFilter"
-              }
-            ]
-          }
-        };
-        const testExpectedRequest = {
-          method: 'POST',
-          url: `/reports/${testData.uniqueId}/pages/xyz/visuals/uvw/events/filtersApplied`,
-          body: testData.event
-        };
-
-        iframeLoaded
-          .then(() => {
-
-            // Act
-            iframeHpm.post(testExpectedRequest.url, testData.event)
-              .then(response => {
-                // Assert
-                expect(response.statusCode).toBe(202);
-                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
-
-                done();
-              });
-
-            // Cleanup
-          });
-      });
-    });
-
     describe('settings', function () {
       it('POST /reports/:uniqueId/events/settingsUpdated when user changes settings', function (done) {
         // Arrange
@@ -1828,7 +1783,6 @@ describe('SDK-to-HPM', function () {
   let report: report.Report;
   let dashboard: dashboard.Dashboard;
   let page1: page.Page;
-  let visual1: visual.Visual;
   let uniqueId = 'uniqueId';
   let dashboardUniqueId = 'uniqueId';
   let embedConfiguration: embed.IEmbedConfiguration;
@@ -1869,7 +1823,6 @@ describe('SDK-to-HPM', function () {
     report = <report.Report>powerbi.embed($reportElement[0], embedConfiguration);
     dashboard = <dashboard.Dashboard>powerbi.embed($dashboardElement[0], dashboardEmbedConfiguration);
     page1 = new page.Page(report, 'xyz');
-    visual1 = new visual.Visual(page1, 'uvw');
     uniqueId = report.config.uniqueId;
     dashboardUniqueId = dashboard.config.uniqueId;
     
@@ -2631,229 +2584,6 @@ describe('SDK-to-HPM', function () {
           });
       });
     });
-
-    describe('visuals', function () {
-      it('page.getVisuals() sends GET /report/xyz/pages/uvw/visuals', function () {
-        // Arrange
-        const testData = {
-          response: {
-            body: [
-              {
-                name: 'visual1'
-              }
-            ]
-          }
-        };
-
-        spyHpm.get.and.returnValue(Promise.resolve(testData.response));
-
-        // Act
-        page1.getVisuals();
-
-        // Assert
-        expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals`, { uid: uniqueId }, iframe.contentWindow);
-      });
-
-      it('page.getVisuals() returns promise rejected with error if server could not retrieve visuals', function (done) {
-        // Arrange
-        const testData = {
-          response: {
-            body: {
-              message: 'could not get visuals'
-            }
-          }
-        };
-
-        spyHpm.get.and.returnValue(Promise.reject(testData.response));
-
-        // Act
-        page1.getVisuals()
-          .catch(error => {
-            // Assert
-            expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals`, { uid: uniqueId }, iframe.contentWindow);
-            expect(error).toEqual(jasmine.objectContaining(testData.response.body));
-            done();
-          });
-      });
-
-      it('page.getVisuals() returns promise resolved with visuals if request is successful', function (done) {
-        // Arrange
-        const testData = {
-          response: {
-            body: [
-              {
-                name: 'Visual1'
-              },
-              {
-                name: 'Visual2'
-              }
-            ]
-          }
-        };
-
-        spyHpm.get.and.returnValue(Promise.resolve(testData.response));
-
-        // Act
-        page1.getVisuals()
-          .then(visuals => {
-            // Assert
-            expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals`, { uid: uniqueId }, iframe.contentWindow);
-            expect(visuals[0].name).toEqual(testData.response.body[0].name);
-            expect(visuals[1].name).toEqual(testData.response.body[1].name);
-            done();
-          });
-      });
-    });
-  });
-
-  describe('visuals', function () {
-    describe('filters', function () {
-      it('visual.getFilters() sends GET /report/pages/xyz/visuals/uvw/filters', function () {
-        // Arrange
-
-        // Act
-        visual1.getFilters();
-
-        // Assert
-        expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${visual1.page.name}/visuals/${visual1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
-      });
-
-      it('visual.getFilters() return promise that rejects with server error if there was error getting filters', function (done) {
-        // Arrange
-        const testData = {
-          expectedError: {
-            body: {
-              message: 'internal server error'
-            }
-          }
-        };
-
-        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
-
-        // Act
-        visual1.getFilters()
-          .catch(error => {
-            // Assert
-            expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${visual1.page.name}/visuals/${visual1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
-            expect(error).toEqual(jasmine.objectContaining(testData.expectedError.body));
-            done();
-          });
-      });
-
-      it('visual.getFilters() returns promise that resolves with list of filters', function (done) {
-        // Arrange
-        const testData = {
-          response: {
-            body: [
-              { x: 'fakeFilter1' },
-              { x: 'fakeFilter2' }
-            ]
-          }
-        };
-
-        spyHpm.get.and.returnValue(Promise.resolve(testData.response));
-
-        // Act
-        visual1.getFilters()
-          .then(filters => {
-            // Assert
-            expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${visual1.page.name}/visuals/${visual1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
-            expect(filters).toEqual(testData.response.body);
-            done();
-          });
-      });
-
-      it('visual.setFilters(filters) sends PUT /report/pages/xyz/visuals/uvw/filters', function () {
-        // Arrange
-        const testData = {
-          filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
-          ]
-        };
-
-        spyHpm.put.and.returnValue(Promise.resolve(null));
-
-        // Act
-        visual1.setFilters(testData.filters);
-
-        // Assert
-        expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${visual1.page.name}/visuals/${visual1.name}/filters`, testData.filters, { uid: uniqueId }, iframe.contentWindow);
-      });
-
-      it('visual.setFilters(filters) returns promise that rejects with validation errors if filter is invalid', function (done) {
-        // Arrange
-        const testData = {
-          filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
-          ],
-          expectedErrors: {
-            body: [
-              {
-                message: 'target is invalid, missing property x'
-              }
-            ]
-          }
-        };
-
-        spyHpm.put.and.returnValue(Promise.reject(testData.expectedErrors));
-
-        // Act
-        visual1.setFilters(testData.filters)
-          .catch(errors => {
-            // Assert
-            expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${visual1.page.name}/visuals/${visual1.name}/filters`, testData.filters, { uid: uniqueId }, iframe.contentWindow);
-            expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors.body));
-            done();
-          });
-      });
-
-      it('visual.setFilters(filters) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
-        // Arrange
-        const testData = {
-          filters: [
-            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
-            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
-          ]
-        };
-
-        spyHpm.put.and.returnValue(Promise.resolve(null));
-
-        // Act
-        visual1.setFilters(testData.filters)
-          .then(response => {
-            // Assert
-            expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${visual1.page.name}/visuals/${visual1.name}/filters`, testData.filters, { uid: uniqueId }, iframe.contentWindow);
-            expect(response).toEqual(null);
-            done();
-          });
-      });
-
-      it('visual.removeFilters() sends PUT /report/pages/xyz/filters', function () {
-        // Arrange
-
-        // Act
-        visual1.removeFilters();
-
-        // Assert
-        expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${visual1.page.name}/visuals/${visual1.name}/filters`, [], { uid: uniqueId }, iframe.contentWindow);
-      });
-
-      it('visual.removeFilters() returns promise that resolves with null if request is accepted', function (done) {
-        // Arrange
-        spyHpm.put.and.returnValue(Promise.resolve(null));
-
-        // Act
-        visual1.removeFilters()
-          .then(response => {
-            // Assert
-            expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${visual1.page.name}/visuals/${visual1.name}/filters`, [], { uid: uniqueId }, iframe.contentWindow);
-            expect(response).toEqual(null);
-            done();
-          });
-      });
-    });
   });
 
   describe('SDK-to-Router (Event subscription)', function () {
@@ -3081,7 +2811,6 @@ describe('SDK-to-MockApp', function () {
   let powerbi: service.Service;
   let report: report.Report;
   let page1: page.Page;
-  let visual1: visual.Visual;
   let report2: report.Report;
 
   beforeAll(function () {
@@ -3106,7 +2835,6 @@ describe('SDK-to-MockApp', function () {
     };
     report = <report.Report>powerbi.embed($element[0], embedConfiguration);
     page1 = report.page('ReportSection1');
-    visual1 = page1.visual('xyz');
     report2 = <report.Report>powerbi.embed($element2[0], embedConfiguration);
 
     iframe = <HTMLIFrameElement>$element.find('iframe')[0];
@@ -3585,57 +3313,6 @@ describe('SDK-to-MockApp', function () {
       });
     });
 
-    describe('visuals', function () {
-      it('page.getVisuals() returns promise that rejects with validation errors if page is invalid', function (done) {
-        // Arrange
-        const testData = {
-          errors: [
-            { message: 'page xyz was not found in report' }
-          ]
-        };
-
-        // Act
-        iframeLoaded
-          .then(() => {
-            spyApp.validatePage.and.returnValue(Promise.reject(testData.errors));
-            // Act
-            page1.getVisuals()
-              .catch(errors => {
-                // Assert
-                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
-                expect(spyApp.getVisuals).not.toHaveBeenCalled();
-                expect(errors).toEqual(jasmine.objectContaining(testData.errors));
-                done();
-              });
-          });
-      });
-
-      it('page.getVisuals() returns promise that resolves with list of visuals on that page', function (done) {
-        // Arrange
-        const testData = {
-          visuals: [
-            { name: 'Visual1' }
-          ]
-        };
-
-        // Arrange
-        iframeLoaded
-          .then(() => {
-            spyApp.validatePage.and.returnValue(Promise.resolve(null));
-            spyApp.getVisuals.and.returnValue(Promise.resolve(testData.visuals));
-            // Act
-            page1.getVisuals()
-              .then(visuals => {
-                // Assert
-                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
-                expect(spyApp.getVisuals).toHaveBeenCalled();
-                expect(visuals[0].name).toEqual(testData.visuals[0].name);
-                done();
-              });
-          });
-      });
-    });
-
     describe('setActive', function () {
       it('page.setActive() returns promise that rejects if page is invalid', function (done) {
         // Arrange
@@ -3689,161 +3366,6 @@ describe('SDK-to-MockApp', function () {
                   done();
                 });
             }, 500);
-          });
-      });
-    });
-  });
-
-  describe('visual', function () {
-    describe('filters', function () {
-      it('visual.getFilters() returns promise that rejects with validation errors if the page or visual was invalid', function (done) {
-        // Arrange
-        const testData = {
-          errors: [
-            {
-              message: 'visual uvw was not found on page xyx'
-            }
-          ]
-        };
-
-        iframeLoaded
-          .then(() => {
-            spyApp.validatePage.and.returnValue(Promise.resolve(null));
-            spyApp.validateVisual.and.returnValue(Promise.reject(testData.errors));
-            // Act
-            visual1.getFilters()
-              .catch(error => {
-                // Assert
-                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
-                expect(spyApp.validateVisual).toHaveBeenCalled();
-                expect(spyApp.getFilters).not.toHaveBeenCalled();
-                expect(error).toEqual(jasmine.objectContaining(testData.errors));
-                done();
-              });
-          });
-      });
-
-      it('visual.getFilters() returns promise that rejects with server error if there was problem getting filters', function (done) {
-        // Arrange
-        const testData = {
-          expectedError: {
-            message: 'could not serialize filters'
-          }
-        };
-
-        iframeLoaded
-          .then(() => {
-            spyApp.validatePage.and.returnValue(Promise.resolve(undefined));
-            spyApp.validateVisual.and.returnValue(Promise.resolve(undefined));
-            spyApp.getFilters.and.returnValue(Promise.reject(testData.expectedError));
-            // Act
-            visual1.getFilters()
-              .catch(error => {
-                // Assert
-                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
-                expect(spyApp.validateVisual).toHaveBeenCalled();
-                expect(spyApp.getFilters).toHaveBeenCalled();
-                expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
-                done();
-              });
-          });
-      });
-
-      it('visual.getFilters() returns promise that resolves with filters is request is successful', function (done) {
-        // Arrange
-        const testData = {
-          filters: [
-            { x: 'fakeFilter' }
-          ]
-        };
-
-        iframeLoaded
-          .then(() => {
-            spyApp.validatePage.and.returnValue(Promise.resolve(null));
-            spyApp.validateVisual.and.returnValue(Promise.resolve(null));
-            spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
-            // Act
-            visual1.getFilters()
-              .then(filters => {
-                // Assert
-                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
-                expect(spyApp.validateVisual).toHaveBeenCalled();
-                expect(spyApp.getFilters).toHaveBeenCalled();
-                expect(filters).toEqual(testData.filters);
-                done();
-              });
-          });
-      });
-
-      it('visual.setFilters(filters) returns promise that rejects with validation errors if filter is invalid', function (done) {
-        // Arrange
-        const testData = {
-          filters: [
-            (new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()
-          ],
-          errors: [
-            {
-              message: 'invalid filter'
-            }
-          ]
-        };
-
-        iframeLoaded
-          .then(() => {
-            spyApp.validatePage.and.returnValue(Promise.resolve(undefined));
-            spyApp.validateVisual.and.returnValue(Promise.resolve(undefined));
-            spyApp.validateFilter.and.returnValue(Promise.reject(testData.errors));
-            // Act
-            visual1.setFilters(testData.filters)
-              .catch(errors => {
-                // Assert
-                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
-                expect(spyApp.validateVisual).toHaveBeenCalled(); //.toHaveBeenCalledWith(visual1);
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
-                expect(spyApp.setFilters).not.toHaveBeenCalled();
-                expect(errors).toEqual(jasmine.objectContaining(testData.errors));
-                done();
-              });
-          });
-      });
-
-      it('visual.setFilters(filters) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
-        // Arrange
-        const testData = {
-          filters: [(new models.BasicFilter({ table: "cars", column: "make" }, "In", ["subaru", "honda"])).toJSON()]
-        };
-
-        iframeLoaded
-          .then(() => {
-            spyApp.validatePage.and.returnValue(Promise.resolve(null));
-            spyApp.validateVisual.and.returnValue(Promise.resolve(null));
-            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
-            spyApp.setFilters.and.returnValue(Promise.resolve(null));
-            // Act
-            visual1.setFilters(testData.filters)
-              .then(response => {
-                // Assert
-                expect(spyApp.validatePage).toHaveBeenCalled(); //.toHaveBeenCalledWith(page1);
-                expect(spyApp.validateVisual).toHaveBeenCalled(); //.toHaveBeenCalledWith(visual1);
-                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
-                expect(spyApp.setFilters).toHaveBeenCalledWith(testData.filters);
-                done();
-              });
-          });
-      });
-
-      it('visual.removeFilters() returns promise that resolves with null if the request was accepted', function (done) {
-        // Arrange
-        iframeLoaded
-          .then(() => {
-            spyApp.setFilters.and.returnValue(Promise.resolve(null));
-            // Act
-            page1.removeFilters()
-              .then(response => {
-                // Assert
-                expect(spyApp.setFilters).toHaveBeenCalled();
-                done();
-              });
           });
       });
     });
