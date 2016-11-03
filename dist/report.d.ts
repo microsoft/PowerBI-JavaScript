@@ -107,14 +107,6 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      */
     print(): Promise<void>;
     /**
-     * Refreshes data sources for the report.
-     *
-     * ```javascript
-     * report.refresh();
-     * ```
-     */
-    refresh(): Promise<void>;
-    /**
      * Removes all filters at the report level.
      *
      * ```javascript
