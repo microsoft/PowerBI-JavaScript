@@ -1,4 +1,4 @@
-/*! powerbi-client v2.1.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.2.0 | (c) 2016 Microsoft Corporation MIT */
 import * as models from 'powerbi-models';
 /**
  * Decorates embed components that support filters
