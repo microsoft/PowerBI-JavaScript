@@ -22,9 +22,24 @@ $(function () {
       }
     });
 
+  var $getId = $('#getId');
+  $getId.on('click', function (event) {
+	alert(staticReport.getId());
+  });
+	
   var $fullscreen = $('#fullscreen');
-
   $fullscreen.on('click', function (event) {
     staticReport.fullscreen();
+  });
+  
+  var $reloadReport = $('#reloadReport');
+  $reloadReport.on('click', function (event) {
+    staticReport.reload()
+		.catch(error => { alert(error); });
+  });
+  
+  var $printReport = $('#printReport');
+  $printReport.on('click', function (event) {
+    staticReport.print();
   });
 });
