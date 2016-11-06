@@ -1,4 +1,4 @@
-/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.2.1 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -59,9 +59,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.service = service;
 	var factories = __webpack_require__(9);
 	exports.factories = factories;
-	var models = __webpack_require__(4);
+	var models = __webpack_require__(5);
 	exports.models = models;
-	var report_1 = __webpack_require__(5);
+	var report_1 = __webpack_require__(4);
 	exports.Report = report_1.Report;
 	var tile_1 = __webpack_require__(8);
 	exports.Tile = tile_1.Tile;
@@ -69,12 +69,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Embed = embed_1.Embed;
 	var page_1 = __webpack_require__(6);
 	exports.Page = page_1.Page;
-	var visual_1 = __webpack_require__(7);
-	exports.Visual = visual_1.Visual;
 	/**
-	 * Make PowerBi available on global object for use in apps without module loading support.
-	 * Save class to allow creating an instance of the service.
-	 * Create instance of class with default config for normal usage.
+	 * Makes Power BI available to the global object for use in applications that don't have module loading support.
+	 *
+	 * Note: create an instance of the class with the default configuration for normal usage, or save the class so that you can create an instance of the service.
 	 */
 	var powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
 	window.powerbi = powerbi;
@@ -85,12 +83,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var embed = __webpack_require__(2);
-	var report_1 = __webpack_require__(5);
+	var report_1 = __webpack_require__(4);
+	var dashboard_1 = __webpack_require__(7);
 	var tile_1 = __webpack_require__(8);
 	var page_1 = __webpack_require__(6);
 	var utils = __webpack_require__(3);
 	/**
-	 * The Power BI embed service.  This is the entry point to embed Power BI components intor your application.
+	 * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
 	 *
 	 * @export
 	 * @class Service
@@ -98,7 +97,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var Service = (function () {
 	    /**
-	     * Creates an instance of Power BI embed service.
+	     * Creates an instance of a Power BI Service.
 	     *
 	     * @param {IHpmFactory} hpmFactory The http post message factory used in the postMessage communication layer
 	     * @param {IWpmpFactory} wpmpFactory The window post message factory used in the postMessage communication layer
@@ -112,7 +111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
 	        this.router = routerFactory(this.wpmp);
 	        /**
-	         * Add handler for report events
+	         * Adds handler for report events.
 	         */
 	        this.router.post("/reports/:uniqueId/events/:eventName", function (req, res) {
 	            var event = {
@@ -132,9 +131,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            };
 	            _this.handleEvent(event);
 	        });
-	        this.router.post("/reports/:uniqueId/pages/:pageName/visuals/:pageName/events/:eventName", function (req, res) {
+	        this.router.post("/dashboards/:uniqueId/events/:eventName", function (req, res) {
 	            var event = {
-	                type: 'report',
+	                type: 'dashboard',
 	                id: req.params.uniqueId,
 	                name: req.params.eventName,
 	                value: req.body
@@ -149,9 +148,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 	    /**
-	     * Handler for DOMContentLoaded which searches DOM for elements having 'powerbi-embed-url' attribute
-	     * and automatically attempts to embed a powerbi component based on information from the attributes.
-	     * Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
+	     * TODO: Add a description here
 	     *
 	     * @param {HTMLElement} [container]
 	     * @param {embed.IEmbedConfiguration} [config=undefined]
@@ -165,9 +162,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return elements.map(function (element) { return _this.embed(element, config); });
 	    };
 	    /**
-	     * Given an html element embed component based on configuration.
-	     * If component has already been created and attached to element re-use component instance and existing iframe,
-	     * otherwise create a new component instance
+	     * Given a configuration based on an HTML element,
+	     * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
+	     * otherwise creates a new component instance.
 	     *
 	     * @param {HTMLElement} element
 	     * @param {embed.IEmbedConfiguration} [config={}]
@@ -186,8 +183,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return component;
 	    };
 	    /**
-	     * Given an html element embed component base configuration.
-	     * Save component instance on element for later lookup.
+	     * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
 	     *
 	     * @private
 	     * @param {IPowerBiElement} element
@@ -199,7 +195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!componentType) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed.Embed.typeAttribute + "=\"" + report_1.Report.type.toLowerCase() + "\"'.");
 	        }
-	        // Save type on configuration so it can be referenced later at known location
+	        // Saves the type as part of the configuration so that it can be referenced later at a known location.
 	        config.type = componentType;
 	        var Component = utils.find(function (component) { return componentType === component.type.toLowerCase(); }, Service.components);
 	        if (!Component) {
@@ -211,7 +207,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return component;
 	    };
 	    /**
-	     * Given and element which arleady contains embed, load with new configuration
+	     * Given an element that already contains an embed component, load with a new configuration.
 	     *
 	     * @private
 	     * @param {IPowerBiElement} element
@@ -223,20 +219,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!component) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
 	        }
+	        /**
+	         * TODO: Dynamic embed type switching could be supported but there is work needed to prepare the service state and DOM cleanup.
+	         * remove all event handlers from the DOM, then reset the element to initial state which removes iframe, and removes from list of embeds
+	         * then we can call the embedNew function which would allow setting the proper embedUrl and construction of object based on the new type.
+	         */
+	        if (typeof config.type === "string" && config.type !== component.config.type) {
+	            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but the existing element contains an embed of type: " + this.config.type + " which does not match the new type: " + config.type);
+	        }
 	        component.load(config);
 	        return component;
 	    };
 	    /**
-	     * Adds event handler for DOMContentLoaded which finds all elements in DOM with attribute powerbi-embed-url
-	     * then attempts to initiate the embed process based on data from other powerbi-* attributes.
-	     * (This is usually only useful for applications rendered on by the server since all the data needed will be available by the time the handler is called.)
+	     * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
+	     * and automatically attempts to embed a powerbi component based on information from other powerbi-* attributes.
+	     *
+	     * Note: Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
+	     * This handler is typically useful only for applications that are rendered on the server so that all required data is available when the handler is called.
 	     */
 	    Service.prototype.enableAutoEmbed = function () {
 	        var _this = this;
 	        window.addEventListener('DOMContentLoaded', function (event) { return _this.init(document.body); }, false);
 	    };
 	    /**
-	     * Returns instance of component associated with element.
+	     * Returns an instance of the component associated with the element.
 	     *
 	     * @param {HTMLElement} element
 	     * @returns {(Report | Tile)}
@@ -249,7 +255,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return powerBiElement.powerBiEmbed;
 	    };
 	    /**
-	     * Find embed instance by name / unique id provided.
+	     * Finds an embed instance by the name or unique ID that is provided.
 	     *
 	     * @param {string} uniqueId
 	     * @returns {(Report | Tile)}
@@ -258,7 +264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return utils.find(function (x) { return x.config.uniqueId === uniqueId; }, this.embeds);
 	    };
 	    /**
-	     * Given an html element which has component embedded within it, remove the component from list of embeds, remove association with component, and remove the iframe.
+	     * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
 	     *
 	     * @param {HTMLElement} element
 	     * @returns {void}
@@ -268,18 +274,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!powerBiElement.powerBiEmbed) {
 	            return;
 	        }
-	        /** Remove component from internal list */
+	        /** Removes the component from an internal list of components. */
 	        utils.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
-	        /** Delete property from html element */
+	        /** Deletes a property from the HTML element. */
 	        delete powerBiElement.powerBiEmbed;
-	        /** Remove iframe from element */
+	        /** Removes the iframe from the element. */
 	        var iframe = element.querySelector('iframe');
 	        if (iframe) {
 	            iframe.remove();
 	        }
 	    };
 	    /**
-	     * Given an event object, find embed with matching type and id and invoke its handleEvent method with event.
+	     * Given an event object, finds the embed component with the matching type and ID, and invokes its handleEvent method with the event object.
 	     *
 	     * @private
 	     * @param {IEvent<any>} event
@@ -303,14 +309,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	    /**
-	     * List of components this service can embed.
+	     * A list of components that this service can embed
 	     */
 	    Service.components = [
 	        tile_1.Tile,
-	        report_1.Report
+	        report_1.Report,
+	        dashboard_1.Dashboard
 	    ];
 	    /**
-	     * Default configuration for service.
+	     * The default configuration for the service
 	     */
 	    Service.defaultConfig = {
 	        autoEmbedOnContentLoaded: false,
@@ -332,7 +339,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__(3);
-	var models = __webpack_require__(4);
 	/**
 	 * Base class for all Power BI embed components
 	 *
@@ -344,8 +350,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Creates an instance of Embed.
 	     *
-	     * Note: there is circular reference between embeds and service
-	     * The service has list of all embeds on the host page, and each embed has reference to the service that created it.
+	     * Note: there is circular reference between embeds and the service, because
+	     * the service has a list of all embeds on the host page, and each embed has a reference to the service that created it.
 	     *
 	     * @param {service.Service} service
 	     * @param {HTMLElement} element
@@ -395,22 +401,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    Embed.prototype.load = function (config) {
-	        var errors = models.validateLoad(config);
+	        var _this = this;
+	        var errors = this.validate(config);
 	        if (errors) {
 	            throw errors;
 	        }
-	        return this.service.hpm.post('/report/load', config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	        return this.service.hpm.post(this.loadPath, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
+	            utils.assign(_this.config, config);
 	            return response.body;
 	        }, function (response) {
 	            throw response.body;
 	        });
 	    };
 	    /**
-	     * Removes event handler(s) from list of handlers.
-	     *
-	     * If reference to existing handle function is specified remove specific handler.
-	     * If handler is not specified, remove all handlers for the event name specified.
+	     * Removes one or more event handlers from the list of handlers.
+	     * If a reference to the existing handle function is specified, remove the specific handler.
+	     * If the handler is not specified, remove all handlers for the event name specified.
 	     *
 	     * ```javascript
 	     * report.off('pageChanged')
@@ -446,7 +453,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	    /**
-	     * Adds event handler for specific event.
+	     * Adds an event handler for a specific event.
 	     *
 	     * ```javascript
 	     * report.on('pageChanged', (event) => {
@@ -469,7 +476,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.element.addEventListener(eventName, handler);
 	    };
 	    /**
-	     * Get access token from first available location: config, attribute, global.
+	     * Reloads embed using existing configuration.
+	     * E.g. For reports this effectively clears all filters and makes the first page active which simulates resetting a report back to loaded state.
+	     *
+	     * ```javascript
+	     * report.reload();
+	     * ```
+	     */
+	    Embed.prototype.reload = function () {
+	        return this.load(this.config);
+	    };
+	    /**
+	     * Gets an access token from the first available location: config, attribute, global.
 	     *
 	     * @private
 	     * @param {string} globalAccessToken
@@ -483,7 +501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return accessToken;
 	    };
 	    /**
-	     * Get embed url from first available location: options, attribute.
+	     * Gets an embed url from the first available location: options, attribute.
 	     *
 	     * @private
 	     * @returns {string}
@@ -496,8 +514,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return embedUrl;
 	    };
 	    /**
-	     * Get unique id from first available location: options, attribute.
-	     * If neither is provided generate unique string.
+	     * Gets a unique ID from the first available location: options, attribute.
+	     * If neither is provided generate a unique string.
 	     *
 	     * @private
 	     * @returns {string}
@@ -506,14 +524,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || utils.createRandomString();
 	    };
 	    /**
-	     * Request the browser to make the component's iframe fullscreen.
+	     * Requests the browser to render the component's iframe in fullscreen mode.
 	     */
 	    Embed.prototype.fullscreen = function () {
 	        var requestFullScreen = this.iframe.requestFullscreen || this.iframe.msRequestFullscreen || this.iframe.mozRequestFullScreen || this.iframe.webkitRequestFullscreen;
 	        requestFullScreen.call(this.iframe);
 	    };
 	    /**
-	     * Exit fullscreen.
+	     * Requests the browser to exit fullscreen mode.
 	     */
 	    Embed.prototype.exitFullscreen = function () {
 	        if (!this.isFullscreen(this.iframe)) {
@@ -523,8 +541,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        exitFullscreen.call(document);
 	    };
 	    /**
-	     * Return true if iframe is fullscreen,
-	     * otherwise return false
+	     * Returns true if the iframe is rendered in fullscreen mode,
+	     * otherwise returns false.
 	     *
 	     * @private
 	     * @param {HTMLIFrameElement} iframe
@@ -552,7 +570,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	/**
-	 * Raises a custom event with event data on the specified HTML element
+	 * Raises a custom event with event data on the specified HTML element.
 	 *
 	 * @export
 	 * @param {HTMLElement} element
@@ -576,7 +594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	exports.raiseCustomEvent = raiseCustomEvent;
 	/**
-	 * Finds the index of the first matching value in an array that matches the specified predicate
+	 * Finds the index of the first value in an array that matches the specified predicate.
 	 *
 	 * @export
 	 * @template T
@@ -599,7 +617,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	exports.findIndex = findIndex;
 	/**
-	 * Findes the first matching value in an array that matches the specified predicate
+	 * Finds the first value in an array that matches the specified predicate.
 	 *
 	 * @export
 	 * @template T
@@ -620,7 +638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 	// TODO: replace in favor of using polyfill
 	/**
-	 * Copies the values of all enumerable own properties from one or more source objects to a target object. It will return the target object.
+	 * Copies the values of all enumerable properties from one or more source objects to a target object, and returns the target object.
 	 *
 	 * @export
 	 * @param {any} args
@@ -651,7 +669,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	exports.assign = assign;
 	/**
-	 * Generates a random 7 character string
+	 * Generates a random 7 character string.
 	 *
 	 * @export
 	 * @returns {string}
@@ -666,7 +684,252 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v0.7.2 | (c) 2016 Microsoft Corporation MIT */
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var embed = __webpack_require__(2);
+	var models = __webpack_require__(5);
+	var utils = __webpack_require__(3);
+	var page_1 = __webpack_require__(6);
+	/**
+	 * The Power BI Report embed component
+	 *
+	 * @export
+	 * @class Report
+	 * @extends {embed.Embed}
+	 * @implements {IReportNode}
+	 * @implements {IFilterable}
+	 */
+	var Report = (function (_super) {
+	    __extends(Report, _super);
+	    /**
+	     * Creates an instance of a Power BI Report.
+	     *
+	     * @param {service.Service} service
+	     * @param {HTMLElement} element
+	     * @param {embed.IEmbedConfiguration} config
+	     */
+	    function Report(service, element, config) {
+	        var filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
+	        var navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
+	        var settings = utils.assign({
+	            filterPaneEnabled: filterPaneEnabled,
+	            navContentPaneEnabled: navContentPaneEnabled
+	        }, config.settings);
+	        var configCopy = utils.assign({ settings: settings }, config);
+	        _super.call(this, service, element, configCopy);
+	        this.loadPath = "/report/load";
+	        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
+	    }
+	    /**
+	     * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
+	     * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
+	     *
+	     * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
+	     *
+	     * @static
+	     * @param {string} url
+	     * @returns {string}
+	     */
+	    Report.findIdFromEmbedUrl = function (url) {
+	        var reportIdRegEx = /reportId="?([^&]+)"?/;
+	        var reportIdMatch = url.match(reportIdRegEx);
+	        var reportId;
+	        if (reportIdMatch) {
+	            reportId = reportIdMatch[1];
+	        }
+	        return reportId;
+	    };
+	    /**
+	     * Gets filters that are applied at the report level.
+	     *
+	     * ```javascript
+	     * // Get filters applied at report level
+	     * report.getFilters()
+	     *   .then(filters => {
+	     *     ...
+	     *   });
+	     * ```
+	     *
+	     * @returns {Promise<models.IFilter[]>}
+	     */
+	    Report.prototype.getFilters = function () {
+	        return this.service.hpm.get("/report/filters", { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Gets the report ID from the first available location: options, attribute, embed url.
+	     *
+	     * @returns {string}
+	     */
+	    Report.prototype.getId = function () {
+	        var reportId = this.config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(this.config.embedUrl);
+	        if (typeof reportId !== 'string' || reportId.length === 0) {
+	            throw new Error("Report id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '" + Report.reportIdAttribute + "'.");
+	        }
+	        return reportId;
+	    };
+	    /**
+	     * Gets the list of pages within the report.
+	     *
+	     * ```javascript
+	     * report.getPages()
+	     *  .then(pages => {
+	     *      ...
+	     *  });
+	     * ```
+	     *
+	     * @returns {Promise<Page[]>}
+	     */
+	    Report.prototype.getPages = function () {
+	        var _this = this;
+	        return this.service.hpm.get('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body
+	                .map(function (page) {
+	                return new page_1.Page(_this, page.name, page.displayName);
+	            });
+	        }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Creates an instance of a Page.
+	     *
+	     * Normally you would get Page objects by calling `report.getPages()`, but in the case
+	     * that the page name is known and you want to perform an action on a page without having to retrieve it
+	     * you can create it directly.
+	     *
+	     * Note: Because you are creating the page manually there is no guarantee that the page actually exists in the report, and subsequent requests could fail.
+	     *
+	     * ```javascript
+	     * const page = report.page('ReportSection1');
+	     * page.setActive();
+	     * ```
+	     *
+	     * @param {string} name
+	     * @param {string} [displayName]
+	     * @returns {Page}
+	     */
+	    Report.prototype.page = function (name, displayName) {
+	        return new page_1.Page(this, name, displayName);
+	    };
+	    /**
+	     * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
+	     */
+	    Report.prototype.print = function () {
+	        return this.service.hpm.post('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Removes all filters at the report level.
+	     *
+	     * ```javascript
+	     * report.removeFilters();
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Report.prototype.removeFilters = function () {
+	        return this.setFilters([]);
+	    };
+	    /**
+	     * Sets the active page of the report.
+	     *
+	     * ```javascript
+	     * report.setPage("page2")
+	     *  .catch(error => { ... });
+	     * ```
+	     *
+	     * @param {string} pageName
+	     * @returns {Promise<void>}
+	     */
+	    Report.prototype.setPage = function (pageName) {
+	        var page = {
+	            name: pageName,
+	            displayName: null
+	        };
+	        return this.service.hpm.put('/report/pages/active', page, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Sets filters at the report level.
+	     *
+	     * ```javascript
+	     * const filters: [
+	     *    ...
+	     * ];
+	     *
+	     * report.setFilters(filters)
+	     *  .catch(errors => {
+	     *    ...
+	     *  });
+	     * ```
+	     *
+	     * @param {(models.IFilter[])} filters
+	     * @returns {Promise<void>}
+	     */
+	    Report.prototype.setFilters = function (filters) {
+	        return this.service.hpm.put("/report/filters", filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Updates visibility settings for the filter pane and the page navigation pane.
+	     *
+	     * ```javascript
+	     * const newSettings = {
+	     *   navContentPaneEnabled: true,
+	     *   filterPaneEnabled: false
+	     * };
+	     *
+	     * report.updateSettings(newSettings)
+	     *   .catch(error => { ... });
+	     * ```
+	     *
+	     * @param {models.ISettings} settings
+	     * @returns {Promise<void>}
+	     */
+	    Report.prototype.updateSettings = function (settings) {
+	        return this.service.hpm.patch('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Validate load configuration.
+	     */
+	    Report.prototype.validate = function (config) {
+	        return models.validateReportLoad(config);
+	    };
+	    Report.allowedEvents = ["dataSelected", "filtersApplied", "pageChanged", "error"];
+	    Report.reportIdAttribute = 'powerbi-report-id';
+	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
+	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
+	    Report.typeAttribute = 'powerbi-type';
+	    Report.type = "Report";
+	    return Report;
+	}(embed.Embed));
+	exports.Report = Report;
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*! powerbi-models v0.10.0 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -728,20 +991,24 @@ return /******/ (function(modules) { // webpackBootstrap
 		    function __() { this.constructor = d; }
 		    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 		};
+		/* tslint:disable:no-var-requires */
 		exports.advancedFilterSchema = __webpack_require__(1);
 		exports.filterSchema = __webpack_require__(2);
 		exports.loadSchema = __webpack_require__(3);
-		exports.pageSchema = __webpack_require__(4);
-		exports.settingsSchema = __webpack_require__(5);
-		exports.basicFilterSchema = __webpack_require__(6);
-		var jsen = __webpack_require__(7);
+		exports.dashboardLoadSchema = __webpack_require__(4);
+		exports.pageSchema = __webpack_require__(5);
+		exports.settingsSchema = __webpack_require__(6);
+		exports.basicFilterSchema = __webpack_require__(7);
+		/* tslint:enable:no-var-requires */
+		var jsen = __webpack_require__(8);
 		function normalizeError(error) {
-		    if (!error.message) {
-		        error.message = error.path + " is invalid. Not meeting " + error.keyword + " constraint";
+		    var message = error.message;
+		    if (!message) {
+		        message = error.path + " is invalid. Not meeting " + error.keyword + " constraint";
 		    }
-		    delete error.path;
-		    delete error.keyword;
-		    return error;
+		    return {
+		        message: message
+		    };
 		}
 		/**
 		 * Takes in schema and returns function which can be used to validate the schema with better semantics around exposing errors
@@ -765,13 +1032,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		        advancedFilter: exports.advancedFilterSchema
 		    }
 		});
-		exports.validateLoad = validate(exports.loadSchema, {
+		exports.validateReportLoad = validate(exports.loadSchema, {
 		    schemas: {
 		        settings: exports.settingsSchema,
 		        basicFilter: exports.basicFilterSchema,
 		        advancedFilter: exports.advancedFilterSchema
 		    }
 		});
+		exports.validateDashboardLoad = validate(exports.dashboardLoadSchema);
 		exports.validatePage = validate(exports.pageSchema);
 		exports.validateFilter = validate(exports.filterSchema, {
 		    schemas: {
@@ -877,23 +1145,28 @@ return /******/ (function(modules) { // webpackBootstrap
 		            throw new Error("logicalOperator must be a valid operator, You passed: " + logicalOperator);
 		        }
 		        this.logicalOperator = logicalOperator;
-		        if (conditions.length === 0) {
-		            throw new Error("conditions must be a non-empty array. You passed: " + conditions);
-		        }
-		        if (conditions.length > 2) {
-		            throw new Error("AdvancedFilters may not have more than two conditions. You passed: " + conditions.length);
-		        }
+		        var extractedConditions;
 		        /**
 		         * Accept conditions as array instead of as individual arguments
 		         * new AdvancedFilter('a', 'b', "And", { value: 1, operator: "Equals" }, { value: 2, operator: "IsGreaterThan" });
 		         * new AdvancedFilter('a', 'b', "And", [{ value: 1, operator: "Equals" }, { value: 2, operator: "IsGreaterThan" }]);
 		         */
 		        if (Array.isArray(conditions[0])) {
-		            this.conditions = conditions[0];
+		            extractedConditions = conditions[0];
 		        }
 		        else {
-		            this.conditions = conditions;
+		            extractedConditions = conditions;
 		        }
+		        if (extractedConditions.length === 0) {
+		            throw new Error("conditions must be a non-empty array. You passed: " + conditions);
+		        }
+		        if (extractedConditions.length > 2) {
+		            throw new Error("AdvancedFilters may not have more than two conditions. You passed: " + conditions.length);
+		        }
+		        if (extractedConditions.length === 1 && logicalOperator !== "And") {
+		            throw new Error("Logical Operator must be \"And\" when there is only one condition provided");
+		        }
+		        this.conditions = extractedConditions;
 		    }
 		    AdvancedFilter.prototype.toJSON = function () {
 		        var filter = _super.prototype.toJSON.call(this);
@@ -1031,16 +1304,14 @@ return /******/ (function(modules) { // webpackBootstrap
 					"messages": {
 						"type": "accessToken must be a string",
 						"required": "accessToken is required"
-					},
-					"invalidMessage": "accessToken property is invalid"
+					}
 				},
 				"id": {
 					"type": "string",
 					"messages": {
 						"type": "id must be a string",
 						"required": "id is required"
-					},
-					"invalidMessage": "id property is invalid"
+					}
 				},
 				"settings": {
 					"$ref": "#settings"
@@ -1053,14 +1324,17 @@ return /******/ (function(modules) { // webpackBootstrap
 				},
 				"filters": {
 					"type": "array",
-					"oneOf": [
-						{
-							"$ref": "#basicFilter"
-						},
-						{
-							"$ref": "#advancedFilter"
-						}
-					],
+					"items": {
+						"type": "object",
+						"oneOf": [
+							{
+								"$ref": "#basicFilter"
+							},
+							{
+								"$ref": "#advancedFilter"
+							}
+						]
+					},
 					"invalidMessage": "filters property is invalid"
 				}
 			},
@@ -1072,6 +1346,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/***/ },
 	/* 4 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"accessToken": {
+					"type": "string",
+					"messages": {
+						"type": "accessToken must be a string",
+						"required": "accessToken is required"
+					}
+				},
+				"id": {
+					"type": "string",
+					"messages": {
+						"type": "id must be a string",
+						"required": "id is required"
+					}
+				}
+			},
+			"required": [
+				"accessToken",
+				"id"
+			]
+		};
+	
+	/***/ },
+	/* 5 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -1092,7 +1395,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	
 	/***/ },
-	/* 5 */
+	/* 6 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -1115,7 +1418,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	
 	/***/ },
-	/* 6 */
+	/* 7 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -1167,43 +1470,42 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	
 	/***/ },
-	/* 7 */
-	/***/ function(module, exports, __webpack_require__) {
-	
-		module.exports = __webpack_require__(8);
-	
-	/***/ },
 	/* 8 */
 	/***/ function(module, exports, __webpack_require__) {
 	
-		/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+		module.exports = __webpack_require__(9);
+	
+	/***/ },
+	/* 9 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		'use strict';
 		
-		var PATH_REPLACE_EXPR = /\[.+?\]/g,
-		    PATH_PROP_REPLACE_EXPR = /\[?(.*?)?\]/,
-		    REGEX_ESCAPE_EXPR = /[\/]/g,
+		var REGEX_ESCAPE_EXPR = /[\/]/g,
+		    STR_ESCAPE_EXPR = /(")/gim,
 		    VALID_IDENTIFIER_EXPR = /^[a-z_$][0-9a-z]*$/gi,
 		    INVALID_SCHEMA = 'jsen: invalid schema object',
 		    browser = typeof window === 'object' && !!window.navigator,   // jshint ignore: line
-		    nodev0 = typeof process === 'object' && process.version.split('.')[0] === 'v0',
+		    regescape = new RegExp('/').source !== '/', // node v0.x does not properly escape '/'s in inline regex
 		    func = __webpack_require__(10),
 		    equal = __webpack_require__(11),
 		    unique = __webpack_require__(12),
 		    SchemaResolver = __webpack_require__(13),
-		    formats = __webpack_require__(15),
+		    formats = __webpack_require__(21),
+		    ucs2length = __webpack_require__(22),
 		    types = {},
 		    keywords = {};
 		
 		function inlineRegex(regex) {
-		    var str = regex instanceof RegExp ? regex.toString() : new RegExp(regex).toString();
+		    regex = regex instanceof RegExp ? regex : new RegExp(regex);
 		
-		    if (!nodev0) {
-		        return str;
-		    }
+		    return regescape ?
+		        regex.toString() :
+		        '/' + regex.source.replace(REGEX_ESCAPE_EXPR, '\\$&') + '/';
+		}
 		
-		    str = str.substr(1, str.length - 2);
-		    str = '/' + str.replace(REGEX_ESCAPE_EXPR, '\\$&') + '/';
-		
-		    return str;
+		function encodeStr(str) {
+		    return '"' + str.replace(STR_ESCAPE_EXPR, '\\$1') + '"';
 		}
 		
 		function appendToPath(path, key) {
@@ -1211,10 +1513,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		    return VALID_IDENTIFIER_EXPR.test(key) ?
 		        path + '.' + key :
-		        path + '["' + key + '"]';
+		        path + '[' + encodeStr(key) + ']';
 		}
 		
 		function type(obj) {
+		    if (obj === undefined) {
+		        return 'undefined';
+		    }
+		
 		    var str = Object.prototype.toString.call(obj);
 		    return str.substr(8, str.length - 9).toLowerCase();
 		}
@@ -1244,65 +1550,21 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 		
 		types.array = function (path) {
-		    return path + ' !== undefined && Array.isArray(' + path + ')';
+		    return 'Array.isArray(' + path + ')';
 		};
 		
 		types.object = function (path) {
-		    return path + ' !== undefined && typeof ' + path + ' === "object" && ' + path + ' !== null && !Array.isArray(' + path + ')';
+		    return 'typeof ' + path + ' === "object" && ' + path + ' !== null && !Array.isArray(' + path + ')';
 		};
 		
 		types.date = function (path) {
-		    return path + ' !== undefined && ' + path + ' instanceof Date';
+		    return path + ' instanceof Date';
 		};
 		
-		keywords.type = function (context) {
-		    if (!context.schema.type) {
-		        return;
-		    }
+		keywords.enum = function (context) {
+		    var arr = context.schema['enum'];
 		
-		    var specified = Array.isArray(context.schema.type) ? context.schema.type : [context.schema.type],
-		        src = specified.map(function mapType(type) {
-		            return types[type] ? types[type](context.path) || 'true' : 'true';
-		        }).join(' || ');
-		
-		    if (src) {
-		        context.code('if (!(' + src + ')) {');
-		
-		        context.error('type');
-		
-		        context.code('}');
-		    }
-		};
-		
-		keywords['enum'] = function (context) {
-		    var arr = context.schema['enum'],
-		        clauses = [],
-		        value, enumType, i;
-		
-		    if (!Array.isArray(arr)) {
-		        return;
-		    }
-		
-		    for (i = 0; i < arr.length; i++) {
-		        value = arr[i];
-		        enumType = typeof value;
-		
-		        if (value === null || ['boolean', 'number', 'string'].indexOf(enumType) > -1) {
-		            // simple equality check for simple data types
-		            if (enumType === 'string') {
-		                clauses.push(context.path + ' === "' + value + '"');
-		            }
-		            else {
-		                clauses.push(context.path + ' === ' + value);
-		            }
-		        }
-		        else {
-		            // deep equality check for complex types or regexes
-		            clauses.push('equal(' + context.path + ', ' + JSON.stringify(value) + ')');
-		        }
-		    }
-		
-		    context.code('if (!(' + clauses.join(' || ') + ')) {');
+		    context.code('if (!equalAny(' + context.path + ', ' + JSON.stringify(arr) + ')) {');
 		    context.error('enum');
 		    context.code('}');
 		};
@@ -1359,7 +1621,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		keywords.minLength = function (context) {
 		    if (isInteger(context.schema.minLength)) {
-		        context.code('if (' + context.path + '.length < ' + context.schema.minLength + ') {');
+		        context.code('if (ucs2length(' + context.path + ') < ' + context.schema.minLength + ') {');
 		        context.error('minLength');
 		        context.code('}');
 		    }
@@ -1367,19 +1629,17 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		keywords.maxLength = function (context) {
 		    if (isInteger(context.schema.maxLength)) {
-		        context.code('if (' + context.path + '.length > ' + context.schema.maxLength + ') {');
+		        context.code('if (ucs2length(' + context.path + ') > ' + context.schema.maxLength + ') {');
 		        context.error('maxLength');
 		        context.code('}');
 		    }
 		};
 		
 		keywords.pattern = function (context) {
-		    var regex = typeof context.schema.pattern === 'string' ?
-		        new RegExp(context.schema.pattern) :
-		        context.schema.pattern;
+		    var pattern = context.schema.pattern;
 		
-		    if (type(regex) === 'regexp') {
-		        context.code('if (!(' + inlineRegex(regex) + ').test(' + context.path + ')) {');
+		    if (typeof pattern === 'string' || pattern instanceof RegExp) {
+		        context.code('if (!(' + inlineRegex(pattern) + ').test(' + context.path + ')) {');
 		        context.error('pattern');
 		        context.code('}');
 		    }
@@ -1432,9 +1692,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		        i = 0;
 		
 		    if (type(context.schema.items) === 'object') {
-		        context.code('for (' + index + '; ' + index + ' < ' + context.path + '.length; ' + index + '++) {');
+		        context.code('for (' + index + ' = 0; ' + index + ' < ' + context.path + '.length; ' + index + '++) {');
 		
-		        context.validate(context.path + '[' + index + ']', context.schema.items, context.noFailFast);
+		        context.descend(context.path + '[' + index + ']', context.schema.items);
 		
 		        context.code('}');
 		    }
@@ -1442,7 +1702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        for (; i < context.schema.items.length; i++) {
 		            context.code('if (' + context.path + '.length - 1 >= ' + i + ') {');
 		
-		            context.validate(context.path + '[' + i + ']', context.schema.items[i], context.noFailFast);
+		            context.descend(context.path + '[' + i + ']', context.schema.items[i]);
 		
 		            context.code('}');
 		        }
@@ -1450,7 +1710,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        if (type(context.schema.additionalItems) === 'object') {
 		            context.code('for (' + index + ' = ' + i + '; ' + index + ' < ' + context.path + '.length; ' + index + '++) {');
 		
-		            context.validate(context.path + '[' + index + ']', context.schema.additionalItems, context.noFailFast);
+		            context.descend(context.path + '[' + index + ']', context.schema.additionalItems);
 		
 		            context.code('}');
 		        }
@@ -1486,22 +1746,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 		
 		keywords.properties = function (context) {
-		    if (context.validatedProperties) {
-		        // prevent multiple generations of property validation
-		        return;
-		    }
-		
 		    var props = context.schema.properties,
 		        propKeys = type(props) === 'object' ? Object.keys(props) : [],
-		        patProps = context.schema.patternProperties,
-		        patterns = type(patProps) === 'object' ? Object.keys(patProps) : [],
-		        addProps = context.schema.additionalProperties,
-		        addPropsCheck = addProps === false || type(addProps) === 'object',
+		        required = Array.isArray(context.schema.required) ? context.schema.required : [],
 		        prop, i, nestedPath;
 		
-		    // do not use this generator if we have patternProperties or additionalProperties
-		    // instead, the generator below will be used for all three keywords
-		    if (!propKeys.length || patterns.length || addPropsCheck) {
+		    if (!propKeys.length) {
 		        return;
 		    }
 		
@@ -1511,30 +1761,28 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		        context.code('if (' + nestedPath + ' !== undefined) {');
 		
-		        context.validate(nestedPath, props[prop], context.noFailFast);
+		        context.descend(nestedPath, props[prop]);
 		
 		        context.code('}');
-		    }
 		
-		    context.validatedProperties = true;
+		        if (required.indexOf(prop) > -1) {
+		            context.code('else {');
+		            context.error('required', prop);
+		            context.code('}');
+		        }
+		    }
 		};
 		
 		keywords.patternProperties = keywords.additionalProperties = function (context) {
-		    if (context.validatedProperties) {
-		        // prevent multiple generations of this function
-		        return;
-		    }
-		
-		    var props = context.schema.properties,
-		        propKeys = type(props) === 'object' ? Object.keys(props) : [],
+		    var propKeys = type(context.schema.properties) === 'object' ?
+		            Object.keys(context.schema.properties) : [],
 		        patProps = context.schema.patternProperties,
 		        patterns = type(patProps) === 'object' ? Object.keys(patProps) : [],
 		        addProps = context.schema.additionalProperties,
 		        addPropsCheck = addProps === false || type(addProps) === 'object',
-		        keys, key, n, found,
-		        propKey, pattern, i;
+		        props, keys, key, n, found, pattern, i;
 		
-		    if (!propKeys.length && !patterns.length && !addPropsCheck) {
+		    if (!patterns.length && !addPropsCheck) {
 		        return;
 		    }
 		
@@ -1548,7 +1796,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		    context.code(keys + ' = Object.keys(' + context.path + ')');
 		
-		    context.code('for (' + n + '; ' + n + ' < ' + keys + '.length; ' + n + '++) {')
+		    context.code('for (' + n + ' = 0; ' + n + ' < ' + keys + '.length; ' + n + '++) {')
 		        (key + ' = ' + keys + '[' + n + ']')
 		
 		        ('if (' + context.path + '[' + key + '] === undefined) {')
@@ -1559,55 +1807,47 @@ return /******/ (function(modules) { // webpackBootstrap
 		        context.code(found + ' = false');
 		    }
 		
-		    // validate regular properties
-		    for (i = 0; i < propKeys.length; i++) {
-		        propKey = propKeys[i];
-		
-		        context.code((i ? 'else ' : '') + 'if (' + key + ' === "' + propKey + '") {');
-		
-		        if (addPropsCheck) {
-		            context.code(found + ' = true');
-		        }
-		
-		        context.validate(appendToPath(context.path, propKey), props[propKey], context.noFailFast);
-		
-		        context.code('}');
-		    }
-		
 		    // validate pattern properties
 		    for (i = 0; i < patterns.length; i++) {
 		        pattern = patterns[i];
 		
 		        context.code('if ((' + inlineRegex(pattern) + ').test(' + key + ')) {');
 		
+		        context.descend(context.path + '[' + key + ']', patProps[pattern]);
+		
 		        if (addPropsCheck) {
 		            context.code(found + ' = true');
 		        }
-		
-		        context.validate(context.path + '[' + key + ']', patProps[pattern], context.noFailFast);
 		
 		        context.code('}');
 		    }
 		
 		    // validate additional properties
 		    if (addPropsCheck) {
+		        if (propKeys.length) {
+		            props = context.declare(JSON.stringify(propKeys));
+		
+		            // do not validate regular properties
+		            context.code('if (' + props + '.indexOf(' + key + ') > -1) {')
+		                ('continue')
+		            ('}');
+		        }
+		
 		        context.code('if (!' + found + ') {');
 		
 		        if (addProps === false) {
 		            // do not allow additional properties
-		            context.error('additionalProperties');
+		            context.error('additionalProperties', undefined, key);
 		        }
 		        else {
 		            // validate additional properties
-		            context.validate(context.path + '[' + key + ']', addProps, context.noFailFast);
+		            context.descend(context.path + '[' + key + ']', addProps);
 		        }
 		
 		        context.code('}');
 		    }
 		
 		    context.code('}');
-		
-		    context.validatedProperties = true;
 		};
 		
 		keywords.dependencies = function (context) {
@@ -1615,16 +1855,19 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return;
 		    }
 		
-		    var key, dep, i = 0;
+		    var depKeys = Object.keys(context.schema.dependencies),
+		        len = depKeys.length,
+		        key, dep, i = 0, k = 0;
 		
-		    for (key in context.schema.dependencies) {
+		    for (; k < len; k++) {
+		        key = depKeys[k];
 		        dep = context.schema.dependencies[key];
 		
 		        context.code('if (' + appendToPath(context.path, key) + ' !== undefined) {');
 		
 		        if (type(dep) === 'object') {
 		            //schema dependency
-		            context.validate(context.path, dep, context.noFailFast);
+		            context.descend(context.path, dep);
 		        }
 		        else {
 		            // property dependency
@@ -1645,7 +1888,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    }
 		
 		    for (var i = 0; i < context.schema.allOf.length; i++) {
-		        context.validate(context.path, context.schema.allOf[i], context.noFailFast);
+		        context.descend(context.path, context.schema.allOf[i]);
 		    }
 		};
 		
@@ -1654,7 +1897,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return;
 		    }
 		
-		    var errCount = context.declare(0),
+		    var greedy = context.greedy,
+		        errCount = context.declare(0),
 		        initialCount = context.declare(0),
 		        found = context.declare(false),
 		        i = 0;
@@ -1666,11 +1910,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		        context.code(errCount + ' = errors.length');
 		
-		        context.validate(context.path, context.schema.anyOf[i], true);
+		        context.greedy = true;
+		
+		        context.descend(context.path, context.schema.anyOf[i]);
 		
 		        context.code(found + ' = errors.length === ' + errCount)
 		        ('}');
 		    }
+		
+		    context.greedy = greedy;
 		
 		    context.code('if (!' + found + ') {');
 		
@@ -1686,22 +1934,28 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return;
 		    }
 		
-		    var matching = context.declare(0),
+		    var greedy = context.greedy,
+		        matching = context.declare(0),
 		        initialCount = context.declare(0),
 		        errCount = context.declare(0),
 		        i = 0;
 		
 		    context.code(initialCount + ' = errors.length');
+		    context.code(matching + ' = 0');
 		
 		    for (; i < context.schema.oneOf.length; i++) {
 		        context.code(errCount + ' = errors.length');
 		
-		        context.validate(context.path, context.schema.oneOf[i], true);
+		        context.greedy = true;
+		
+		        context.descend(context.path, context.schema.oneOf[i]);
 		
 		        context.code('if (errors.length === ' + errCount + ') {')
 		            (matching + '++')
 		        ('}');
 		    }
+		
+		    context.greedy = greedy;
 		
 		    context.code('if (' + matching + ' !== 1) {');
 		
@@ -1717,11 +1971,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return;
 		    }
 		
-		    var errCount = context.declare(0);
+		    var greedy = context.greedy,
+		        errCount = context.declare(0);
 		
 		    context.code(errCount + ' = errors.length');
 		
-		    context.validate(context.path, context.schema.not, true);
+		    context.greedy = true;
+		
+		    context.descend(context.path, context.schema.not);
+		
+		    context.greedy = greedy;
 		
 		    context.code('if (errors.length === ' + errCount + ') {');
 		
@@ -1732,84 +1991,154 @@ return /******/ (function(modules) { // webpackBootstrap
 		    ('}');
 		};
 		
+		function decorateGenerator(type, keyword) {
+		    keywords[keyword].type = type;
+		    keywords[keyword].keyword = keyword;
+		}
+		
 		['minimum', 'exclusiveMinimum', 'maximum', 'exclusiveMaximum', 'multipleOf']
-		    .forEach(function (keyword) { keywords[keyword].type = 'number'; });
+		    .forEach(decorateGenerator.bind(null, 'number'));
 		
 		['minLength', 'maxLength', 'pattern', 'format']
-		    .forEach(function (keyword) { keywords[keyword].type = 'string'; });
+		    .forEach(decorateGenerator.bind(null, 'string'));
 		
 		['minItems', 'maxItems', 'additionalItems', 'uniqueItems', 'items']
-		    .forEach(function (keyword) { keywords[keyword].type = 'array'; });
+		    .forEach(decorateGenerator.bind(null, 'array'));
 		
 		['maxProperties', 'minProperties', 'required', 'properties', 'patternProperties', 'additionalProperties', 'dependencies']
-		    .forEach(function (keyword) { keywords[keyword].type = 'object'; });
+		    .forEach(decorateGenerator.bind(null, 'object'));
 		
-		function getGenerators(schema) {
+		['enum', 'allOf', 'anyOf', 'oneOf', 'not']
+		    .forEach(decorateGenerator.bind(null, null));
+		
+		function groupKeywords(schema) {
 		    var keys = Object.keys(schema),
-		        start = [],
-		        perType = {},
-		        gen, i;
+		        propIndex = keys.indexOf('properties'),
+		        patIndex = keys.indexOf('patternProperties'),
+		        ret = {
+		            enum: Array.isArray(schema.enum) && schema.enum.length > 0,
+		            type: null,
+		            allType: [],
+		            perType: {}
+		        },
+		        key, gen, i;
+		
+		    if (schema.type) {
+		        if (typeof schema.type === 'string') {
+		            ret.type = [schema.type];
+		        }
+		        else if (Array.isArray(schema.type) && schema.type.length) {
+		            ret.type = schema.type.slice(0);
+		        }
+		    }
 		
 		    for (i = 0; i < keys.length; i++) {
-		        gen = keywords[keys[i]];
+		        key = keys[i];
+		
+		        if (key === 'enum' || key === 'type') {
+		            continue;
+		        }
+		
+		        gen = keywords[key];
 		
 		        if (!gen) {
 		            continue;
 		        }
 		
 		        if (gen.type) {
-		            if (!perType[gen.type]) {
-		                perType[gen.type] = [];
+		            if (!ret.perType[gen.type]) {
+		                ret.perType[gen.type] = [];
 		            }
 		
-		            perType[gen.type].push(gen);
+		            if (!(propIndex > -1 && key === 'required') &&
+		                !(patIndex > -1 && key === 'additionalProperties')) {
+		                ret.perType[gen.type].push(key);
+		            }
 		        }
 		        else {
-		            start.push(gen);
+		            ret.allType.push(key);
 		        }
 		    }
 		
-		    return start.concat(Object.keys(perType).reduce(function (arr, key) {
-		        return arr.concat(perType[key]);
-		    }, []));
+		    return ret;
 		}
 		
-		function replaceIndexedProperty(match) {
-		    var index = match.replace(PATH_PROP_REPLACE_EXPR, '$1');
+		function getPathExpression(path, key) {
+		    var path_ = path.substr(4),
+		        len = path_.length,
+		        tokens = [],
+		        token = '',
+		        isvar = false,
+		        char, i;
 		
-		    if (!isNaN(+index)) {
-		        // numeric index in array
-		        return '.' + index;
+		    for (i = 0; i < len; i++) {
+		        char = path_[i];
+		
+		        switch (char) {
+		            case '.':
+		                if (token) {
+		                    token += char;
+		                }
+		                break;
+		            case '[':
+		                if (isNaN(+path_[i + 1])) {
+		                    isvar = true;
+		
+		                    if (token) {
+		                        tokens.push('"' + token + '"');
+		                        token = '';
+		                    }
+		                }
+		                else {
+		                    isvar = false;
+		
+		                    if (token) {
+		                        token += '.';
+		                    }
+		                }
+		                break;
+		            case ']':
+		                tokens.push(isvar ? token : '"' + token + '"');
+		                token = '';
+		                break;
+		            default:
+		                token += char;
+		        }
 		    }
-		    else if (index[0] === '"') {
-		        // string key for an object property
-		        return '[\\"' + index.substr(1, index.length - 2) + '\\"]';
+		
+		    if (token) {
+		        tokens.push('"' + token + '"');
 		    }
 		
-		    // variable containing the actual key
-		    return '." + ' + index + ' + "';
-		}
+		    if (key) {
+		        tokens.push('"' + key + '"');
+		    }
 		
-		function getPathExpression(path) {
-		    return '"' + path.replace(PATH_REPLACE_EXPR, replaceIndexedProperty).substr(5) + '"';
+		    if (tokens.length === 1 && isvar) {
+		        return '"" + ' + tokens[0] + ' + ""';
+		    }
+		
+		    return tokens.join(' + "." + ') || '""';
 		}
 		
 		function clone(obj) {
 		    var cloned = obj,
 		        objType = type(obj),
-		        key, i;
+		        keys, len, key, i;
 		
 		    if (objType === 'object') {
 		        cloned = {};
+		        keys = Object.keys(obj);
 		
-		        for (key in obj) {
+		        for (i = 0, len = keys.length; i < len; i++) {
+		            key = keys[i];
 		            cloned[key] = clone(obj[key]);
 		        }
 		    }
 		    else if (objType === 'array') {
 		        cloned = [];
 		
-		        for (i = 0; i < obj.length; i++) {
+		        for (i = 0, len = obj.length; i < len; i++) {
 		            cloned[i] = clone(obj[i]);
 		        }
 		    }
@@ -1821,6 +2150,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		    }
 		
 		    return cloned;
+		}
+		
+		function equalAny(obj, options) {
+		    for (var i = 0, len = options.length; i < len; i++) {
+		        if (equal(obj, options[i])) {
+		            return true;
+		        }
+		    }
+		
+		    return false;
 		}
 		
 		function PropertyMarker() {
@@ -1849,11 +2188,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 		
 		PropertyMarker.prototype.deleteDuplicates = function () {
-		    var key, i;
+		    var props, keys, key, i, j;
 		
 		    for (i = 0; i < this.properties.length; i++) {
-		        for (key in this.properties[i]) {
-		            if (this.properties[i][key] > 1) {
+		        props = this.properties[i];
+		        keys = Object.keys(props);
+		
+		        for (j = 0; j < keys.length; j++) {
+		            key = keys[j];
+		
+		            if (props[key] > 1) {
 		                delete this.objects[i][key];
 		            }
 		        }
@@ -1866,7 +2210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 		
 		function build(schema, def, additional, resolver, parentMarker) {
-		    var defType, defValue, key, i, propertyMarker;
+		    var defType, defValue, key, i, propertyMarker, props, defProps;
 		
 		    if (type(schema) !== 'object') {
 		        return def;
@@ -1881,7 +2225,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		    defType = type(def);
 		
 		    if (defType === 'object' && type(schema.properties) === 'object') {
-		        for (key in schema.properties) {
+		        props = Object.keys(schema.properties);
+		
+		        for (i = 0; i < props.length; i++) {
+		            key = props[i];
 		            defValue = build(schema.properties[key], def[key], additional, resolver);
 		
 		            if (defValue !== undefined) {
@@ -1889,16 +2236,22 @@ return /******/ (function(modules) { // webpackBootstrap
 		            }
 		        }
 		
-		        for (key in def) {
-		            if (!(key in schema.properties) &&
-		                (schema.additionalProperties === false ||
-		                (additional === false && !schema.additionalProperties))) {
+		        if (additional !== 'always') {
+		            defProps = Object.keys(def);
 		
-		                if (parentMarker) {
-		                    parentMarker.mark(def, key);
-		                }
-		                else {
-		                    delete def[key];
+		            for (i = 0; i < defProps.length; i++) {
+		                key = defProps[i];
+		
+		                if (props.indexOf(key) < 0 &&
+		                    (schema.additionalProperties === false ||
+		                    (additional === false && !schema.additionalProperties))) {
+		
+		                    if (parentMarker) {
+		                        parentMarker.mark(def, key);
+		                    }
+		                    else {
+		                        delete def[key];
+		                    }
 		                }
 		            }
 		        }
@@ -1933,6 +2286,243 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return def;
 		}
 		
+		function ValidationContext(options) {
+		    this.path = 'data';
+		    this.schema = options.schema;
+		    this.formats = options.formats;
+		    this.greedy = options.greedy;
+		    this.resolver = options.resolver;
+		    this.id = options.id;
+		    this.funcache = options.funcache || {};
+		    this.scope = options.scope || {
+		        equalAny: equalAny,
+		        unique: unique,
+		        ucs2length: ucs2length,
+		        refs: {}
+		    };
+		}
+		
+		ValidationContext.prototype.clone = function (schema) {
+		    var ctx = new ValidationContext({
+		        schema: schema,
+		        formats: this.formats,
+		        greedy: this.greedy,
+		        resolver: this.resolver,
+		        id: this.id,
+		        funcache: this.funcache,
+		        scope: this.scope
+		    });
+		
+		    return ctx;
+		};
+		
+		ValidationContext.prototype.declare = function (def) {
+		    var variname = this.id();
+		    this.code.def(variname, def);
+		    return variname;
+		};
+		
+		ValidationContext.prototype.cache = function (cacheKey, schema) {
+		    var cached = this.funcache[cacheKey],
+		        context;
+		
+		    if (!cached) {
+		        cached = this.funcache[cacheKey] = {
+		            key: this.id()
+		        };
+		
+		        context = this.clone(schema);
+		
+		        cached.func = context.compile(cached.key);
+		
+		        this.scope.refs[cached.key] = cached.func;
+		
+		        context.dispose();
+		    }
+		
+		    return 'refs.' + cached.key;
+		};
+		
+		ValidationContext.prototype.error = function (keyword, key, additional) {
+		    var schema = this.schema,
+		        path = this.path,
+		        errorPath = path !== 'data' || key ?
+		            '(path ? path + "." : "") + ' + getPathExpression(path, key) + ',' :
+		            'path,',
+		        res = key && schema.properties && schema.properties[key] ?
+		            this.resolver.resolve(schema.properties[key]) : null,
+		        message = res ? res.requiredMessage : schema.invalidMessage;
+		
+		    if (!message) {
+		        message = (res && res.messages && res.messages[keyword]) ||
+		            (schema.messages && schema.messages[keyword]);
+		    }
+		
+		    this.code('errors.push({');
+		
+		    if (message) {
+		        this.code('message: ' + encodeStr(message) + ',');
+		    }
+		
+		    if (additional) {
+		        this.code('additionalProperties: ' + additional + ',');
+		    }
+		
+		    this.code('path: ' + errorPath)
+		        ('keyword: ' + encodeStr(keyword))
+		    ('})');
+		
+		    if (!this.greedy) {
+		        this.code('return');
+		    }
+		};
+		
+		ValidationContext.prototype.refactor = function (path, schema, cacheKey) {
+		    var parentPathExp = path !== 'data' ?
+		            '(path ? path + "." : "") + ' + getPathExpression(path) :
+		            'path',
+		        cachedRef = this.cache(cacheKey, schema),
+		        refErrors = this.declare();
+		
+		    this.code(refErrors + ' = ' + cachedRef + '(' + path + ', ' + parentPathExp + ', errors)');
+		
+		    if (!this.greedy) {
+		        this.code('if (errors.length) { return }');
+		    }
+		};
+		
+		ValidationContext.prototype.descend = function (path, schema) {
+		    var origPath = this.path,
+		        origSchema = this.schema;
+		
+		    this.path = path;
+		    this.schema = schema;
+		
+		    this.generate();
+		
+		    this.path = origPath;
+		    this.schema = origSchema;
+		};
+		
+		ValidationContext.prototype.generate = function () {
+		    var path = this.path,
+		        schema = this.schema,
+		        context = this,
+		        scope = this.scope,
+		        encodedFormat,
+		        format,
+		        schemaKeys,
+		        typeKeys,
+		        typeIndex,
+		        validatedType,
+		        i;
+		
+		    if (type(schema) !== 'object') {
+		        return;
+		    }
+		
+		    if (schema.$ref !== undefined) {
+		        schema = this.resolver.resolve(schema);
+		
+		        if (this.resolver.hasRef(schema)) {
+		            this.refactor(path, schema,
+		                this.resolver.getNormalizedRef(this.schema) || this.schema.$ref);
+		
+		            return;
+		        }
+		        else {
+		            // substitute $ref schema with the resolved instance
+		            this.schema = schema;
+		        }
+		    }
+		
+		    schemaKeys = groupKeywords(schema);
+		
+		    if (schemaKeys.enum) {
+		        keywords.enum(context);
+		
+		        return; // do not process the schema further
+		    }
+		
+		    typeKeys = Object.keys(schemaKeys.perType);
+		
+		    function generateForKeyword(keyword) {
+		        keywords[keyword](context);    // jshint ignore: line
+		    }
+		
+		    for (i = 0; i < typeKeys.length; i++) {
+		        validatedType = typeKeys[i];
+		
+		        this.code((i ? 'else ' : '') + 'if (' + types[validatedType](path) + ') {');
+		
+		        schemaKeys.perType[validatedType].forEach(generateForKeyword);
+		
+		        this.code('}');
+		
+		        if (schemaKeys.type) {
+		            typeIndex = schemaKeys.type.indexOf(validatedType);
+		
+		            if (typeIndex > -1) {
+		                schemaKeys.type.splice(typeIndex, 1);
+		            }
+		        }
+		    }
+		
+		    if (schemaKeys.type) {              // we have types in the schema
+		        if (schemaKeys.type.length) {   // case 1: we still have some left to check
+		            this.code((typeKeys.length ? 'else ' : '') + 'if (!(' + schemaKeys.type.map(function (type) {
+		                return types[type] ? types[type](path) : 'true';
+		            }).join(' || ') + ')) {');
+		            this.error('type');
+		            this.code('}');
+		        }
+		        else {
+		            this.code('else {');             // case 2: we don't have any left to check
+		            this.error('type');
+		            this.code('}');
+		        }
+		    }
+		
+		    schemaKeys.allType.forEach(function (keyword) {
+		        keywords[keyword](context);
+		    });
+		
+		    if (schema.format && this.formats) {
+		        format = this.formats[schema.format];
+		
+		        if (format) {
+		            if (typeof format === 'string' || format instanceof RegExp) {
+		                this.code('if (!(' + inlineRegex(format) + ').test(' + path + ')) {');
+		                this.error('format');
+		                this.code('}');
+		            }
+		            else if (typeof format === 'function') {
+		                (scope.formats || (scope.formats = {}))[schema.format] = format;
+		                (scope.schemas || (scope.schemas = {}))[schema.format] = schema;
+		
+		                encodedFormat = encodeStr(schema.format);
+		
+		                this.code('if (!formats[' + encodedFormat + '](' + path + ', schemas[' + encodedFormat + '])) {');
+		                this.error('format');
+		                this.code('}');
+		            }
+		        }
+		    }
+		};
+		
+		ValidationContext.prototype.compile = function (id) {
+		    this.code = func('jsen_compiled' + (id ? '_' + id : ''), 'data', 'path', 'errors');
+		    this.generate();
+		
+		    return this.code.compile(this.scope);
+		};
+		
+		ValidationContext.prototype.dispose = function () {
+		    for (var key in this) {
+		        this[key] = undefined;
+		    }
+		};
+		
 		function jsen(schema, options) {
 		    if (type(schema) !== 'object') {
 		        throw new Error(INVALID_SCHEMA);
@@ -1940,359 +2530,48 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		    options = options || {};
 		
-		    var missing$Ref = options.missing$Ref || false,
-		        resolver = new SchemaResolver(schema, options.schemas, missing$Ref),
-		        counter = 0,
+		    var counter = 0,
 		        id = function () { return 'i' + (counter++); },
-		        funcache = {},
-		        compiled,
-		        refs = {
-		            errors: []
-		        },
-		        scope = {
-		            equal: equal,
-		            unique: unique,
-		            refs: refs
-		        };
+		        resolver = new SchemaResolver(schema, options.schemas, options.missing$Ref || false),
+		        context = new ValidationContext({
+		            schema: schema,
+		            resolver: resolver,
+		            id: id,
+		            schemas: options.schemas,
+		            formats: options.formats,
+		            greedy: options.greedy || false
+		        }),
+		        compiled = func('validate', 'data')
+		            ('validate.errors = []')
+		            ('gen(data, "", validate.errors)')
+		            ('return validate.errors.length === 0')
+		            .compile({ gen: context.compile() });
 		
-		    function cache(schema) {
-		        var deref = resolver.resolve(schema),
-		            ref = schema.$ref,
-		            cached = funcache[ref],
-		            func;
+		    context.dispose();
+		    context = null;
 		
-		        if (!cached) {
-		            cached = funcache[ref] = {
-		                key: id(),
-		                func: function (data) {
-		                    return func(data);
-		                }
-		            };
+		    compiled.errors = [];
 		
-		            func = compile(deref);
+		    compiled.build = function (initial, options) {
+		        return build(
+		            schema,
+		            (options && options.copy === false ? initial : clone(initial)),
+		            options && options.additionalProperties,
+		            resolver);
+		    };
 		
-		            Object.defineProperty(cached.func, 'errors', {
-		                get: function () {
-		                    return func.errors;
-		                }
-		            });
-		
-		            refs[cached.key] = cached.func;
-		        }
-		
-		        return 'refs.' + cached.key;
-		    }
-		
-		    function compile(schema) {
-		        function declare(def) {
-		            var variname = id();
-		
-		            code.def(variname, def);
-		
-		            return variname;
-		        }
-		
-		        function validate(path, schema, noFailFast) {
-		            var context,
-		                cachedRef,
-		                pathExp,
-		                index,
-		                lastType,
-		                format,
-		                gens,
-		                gen,
-		                i;
-		
-		            function error(keyword, key) {
-		                var varid,
-		                    errorPath = path,
-		                    message = (key && schema.properties && schema.properties[key] && schema.properties[key].requiredMessage) ||
-		                        schema.invalidMessage;
-		
-		                if (!message) {
-		                    message = key && schema.properties && schema.properties[key] && schema.properties[key].messages &&
-		                        schema.properties[key].messages[keyword] ||
-		                        schema.messages && schema.messages[keyword];
-		                }
-		
-		                if (path.indexOf('[') > -1) {
-		                    // create error objects dynamically when path contains indexed property expressions
-		                    errorPath = getPathExpression(path);
-		
-		                    if (key) {
-		                        errorPath = errorPath ? errorPath + ' + ".' + key + '"' : key;
-		                    }
-		
-		                    code('errors.push({')
-		                        ('path: ' +  errorPath + ', ')
-		                        ('keyword: "' + keyword + '"' + (message ? ',' : ''));
-		
-		                    if (message) {
-		                        code('message: "' + message + '"');
-		                    }
-		
-		                    code('})');
-		                }
-		                else {
-		                    // generate faster code when no indexed properties in the path
-		                    varid = id();
-		
-		                    errorPath = errorPath.substr(5);
-		
-		                    if (key) {
-		                        errorPath = errorPath ? errorPath + '.' + key : key;
-		                    }
-		
-		                    refs[varid] = {
-		                        path: errorPath,
-		                        keyword: keyword
-		                    };
-		
-		                    if (message) {
-		                        refs[varid].message = message;
-		                    }
-		
-		                    code('errors.push(refs.' + varid + ')');
-		                }
-		
-		                if (!noFailFast && !options.greedy) {
-		                    code('return (validate.errors = errors) && false');
-		                }
-		            }
-		
-		            if (schema.$ref !== undefined) {
-		                cachedRef = cache(schema);
-		                pathExp = getPathExpression(path);
-		                index = declare(0);
-		
-		                code('if (!' + cachedRef + '(' + path + ')) {')
-		                    ('if (' + cachedRef + '.errors) {')
-		                        ('errors.push.apply(errors, ' + cachedRef + '.errors)')
-		                        ('for (' + index + ' = 0; ' + index + ' < ' + cachedRef + '.errors.length; ' + index + '++) {')
-		                            ('if (' + cachedRef + '.errors[' + index + '].path) {')
-		                                ('errors[errors.length - ' + cachedRef + '.errors.length + ' + index + '].path = ' + pathExp +
-		                                    ' + "." + ' + cachedRef + '.errors[' + index + '].path')
-		                            ('} else {')
-		                                ('errors[errors.length - ' + cachedRef + '.errors.length + ' + index + '].path = ' + pathExp)
-		                            ('}')
-		                        ('}')
-		                    ('}')
-		                ('}');
-		
-		                return;
-		            }
-		
-		            context = {
-		                path: path,
-		                schema: schema,
-		                code: code,
-		                declare: declare,
-		                validate: validate,
-		                error: error,
-		                noFailFast: noFailFast
-		            };
-		
-		            gens = getGenerators(schema);
-		
-		            for (i = 0; i < gens.length; i++) {
-		                gen = gens[i];
-		
-		                if (gen.type && lastType !== gen.type) {
-		                    if (lastType) {
-		                        code('}');
-		                    }
-		
-		                    lastType = gen.type;
-		
-		                    code('if (' + types[gen.type](path) + ') {');
-		                }
-		
-		                gen(context);
-		            }
-		
-		            if (lastType) {
-		                code('}');
-		            }
-		
-		            if (schema.format && options.formats) {
-		                format = options.formats[schema.format];
-		
-		                if (format) {
-		                    if (typeof format === 'string' || format instanceof RegExp) {
-		                        code('if (!(' + inlineRegex(format) + ').test(' + context.path + ')) {');
-		                        error('format');
-		                        code('}');
-		                    }
-		                    else if (typeof format === 'function') {
-		                        (scope.formats || (scope.formats = {}))[schema.format] = format;
-		                        (scope.schemas || (scope.schemas = {}))[schema.format] = schema;
-		
-		                        code('if (!formats["' + schema.format + '"](' + context.path + ', schemas["' + schema.format + '"])) {');
-		                        error('format');
-		                        code('}');
-		                    }
-		                }
-		            }
-		        }
-		
-		        var code = func('validate', 'data')
-		            ('var errors = []');
-		
-		        validate('data', schema);
-		
-		        code('return (validate.errors = errors) && errors.length === 0');
-		
-		        compiled = code.compile(scope);
-		
-		        compiled.errors = [];
-		
-		        compiled.build = function (initial, options) {
-		            return build(
-		                schema,
-		                (options && options.copy === false ? initial : clone(initial)),
-		                options && options.additionalProperties,
-		                resolver);
-		        };
-		
-		        return compiled;
-		    }
-		
-		    return compile(schema);
+		    return compiled;
 		}
 		
 		jsen.browser = browser;
 		jsen.clone = clone;
 		jsen.equal = equal;
 		jsen.unique = unique;
+		jsen.ucs2length = ucs2length;
+		jsen.SchemaResolver = SchemaResolver;
 		jsen.resolve = SchemaResolver.resolvePointer;
 		
 		module.exports = jsen;
-		
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
-	
-	/***/ },
-	/* 9 */
-	/***/ function(module, exports) {
-	
-		// shim for using process in browser
-		
-		var process = module.exports = {};
-		
-		// cached from whatever global is present so that test runners that stub it
-		// don't break things.  But we need to wrap it in a try catch in case it is
-		// wrapped in strict mode code which doesn't define any globals.  It's inside a
-		// function because try/catches deoptimize in certain engines.
-		
-		var cachedSetTimeout;
-		var cachedClearTimeout;
-		
-		(function () {
-		  try {
-		    cachedSetTimeout = setTimeout;
-		  } catch (e) {
-		    cachedSetTimeout = function () {
-		      throw new Error('setTimeout is not defined');
-		    }
-		  }
-		  try {
-		    cachedClearTimeout = clearTimeout;
-		  } catch (e) {
-		    cachedClearTimeout = function () {
-		      throw new Error('clearTimeout is not defined');
-		    }
-		  }
-		} ())
-		var queue = [];
-		var draining = false;
-		var currentQueue;
-		var queueIndex = -1;
-		
-		function cleanUpNextTick() {
-		    if (!draining || !currentQueue) {
-		        return;
-		    }
-		    draining = false;
-		    if (currentQueue.length) {
-		        queue = currentQueue.concat(queue);
-		    } else {
-		        queueIndex = -1;
-		    }
-		    if (queue.length) {
-		        drainQueue();
-		    }
-		}
-		
-		function drainQueue() {
-		    if (draining) {
-		        return;
-		    }
-		    var timeout = cachedSetTimeout(cleanUpNextTick);
-		    draining = true;
-		
-		    var len = queue.length;
-		    while(len) {
-		        currentQueue = queue;
-		        queue = [];
-		        while (++queueIndex < len) {
-		            if (currentQueue) {
-		                currentQueue[queueIndex].run();
-		            }
-		        }
-		        queueIndex = -1;
-		        len = queue.length;
-		    }
-		    currentQueue = null;
-		    draining = false;
-		    cachedClearTimeout(timeout);
-		}
-		
-		process.nextTick = function (fun) {
-		    var args = new Array(arguments.length - 1);
-		    if (arguments.length > 1) {
-		        for (var i = 1; i < arguments.length; i++) {
-		            args[i - 1] = arguments[i];
-		        }
-		    }
-		    queue.push(new Item(fun, args));
-		    if (queue.length === 1 && !draining) {
-		        cachedSetTimeout(drainQueue, 0);
-		    }
-		};
-		
-		// v8 likes predictible objects
-		function Item(fun, array) {
-		    this.fun = fun;
-		    this.array = array;
-		}
-		Item.prototype.run = function () {
-		    this.fun.apply(null, this.array);
-		};
-		process.title = 'browser';
-		process.browser = true;
-		process.env = {};
-		process.argv = [];
-		process.version = ''; // empty string to avoid regexp issues
-		process.versions = {};
-		
-		function noop() {}
-		
-		process.on = noop;
-		process.addListener = noop;
-		process.once = noop;
-		process.off = noop;
-		process.removeListener = noop;
-		process.removeAllListeners = noop;
-		process.emit = noop;
-		
-		process.binding = function (name) {
-		    throw new Error('process.binding is not supported');
-		};
-		
-		process.cwd = function () { return '/' };
-		process.chdir = function (dir) {
-		    throw new Error('process.chdir is not supported');
-		};
-		process.umask = function() { return 0; };
 	
 	
 	/***/ },
@@ -2302,18 +2581,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		'use strict';
 		
 		module.exports = function func() {
-		    var name = arguments[0] || '',
-		        args = [].join.call([].slice.call(arguments, 1), ', '),
+		    var args = Array.apply(null, arguments),
+		        name = args.shift(),
+		        tab = '  ',
 		        lines = '',
 		        vars = '',
-		        ind = 1,
-		        tab = '  ',
+		        ind = 1,    // indentation
 		        bs = '{[',  // block start
 		        be = '}]',  // block end
 		        space = function () {
-		            return new Array(ind + 1).join(tab);
+		            var sp = tab, i = 0;
+		            while (i++ < ind - 1) { sp += tab; }
+		            return sp;
 		        },
-		        push = function (line) {
+		        add = function (line) {
 		            lines += space() + line + '\n';
 		        },
 		        builder = function (line) {
@@ -2322,32 +2603,34 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		            if (be.indexOf(first) > -1 && bs.indexOf(last) > -1) {
 		                ind--;
-		                push(line);
+		                add(line);
 		                ind++;
 		            }
 		            else if (bs.indexOf(last) > -1) {
-		                push(line);
+		                add(line);
 		                ind++;
 		            }
 		            else if (be.indexOf(first) > -1) {
 		                ind--;
-		                push(line);
+		                add(line);
 		            }
 		            else {
-		                push(line);
+		                add(line);
 		            }
 		
 		            return builder;
 		        };
 		
 		    builder.def = function (id, def) {
-		        vars += space() + 'var ' + id + (def !== undefined ? ' = ' + def : '') + '\n';
-		
+		        vars += (vars ? ',\n' + tab + '    ' : '') + id + (def !== undefined ? ' = ' + def : '');
 		        return builder;
 		    };
 		
 		    builder.toSource = function () {
-		        return 'function ' + name + '(' + args + ') {\n' + vars + '\n' + lines + '\n}';
+		        return 'function ' + name + '(' + args.join(', ') + ') {\n' +
+		            tab + '"use strict"' + '\n' +
+		            (vars ? tab + 'var ' + vars + ';\n' : '') +
+		            lines + '}';
 		    };
 		
 		    builder.compile = function (scope) {
@@ -2471,8 +2754,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 		'use strict';
 		
-		var metaschema = __webpack_require__(14),
-		    INVALID_SCHEMA_REFERENCE = 'jsen: invalid schema reference';
+		var url = __webpack_require__(14),
+		    metaschema = __webpack_require__(20),
+		    INVALID_SCHEMA_REFERENCE = 'jsen: invalid schema reference',
+		    DUPLICATE_SCHEMA_ID = 'jsen: duplicate schema id',
+		    CIRCULAR_SCHEMA_REFERENCE = 'jsen: circular schema reference';
 		
 		function get(obj, path) {
 		    if (!path.length) {
@@ -2497,21 +2783,25 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return val;
 		}
 		
-		function refToPath(ref) {
+		function refToObj(ref) {
 		    var index = ref.indexOf('#'),
-		        path;
+		        ret = {
+		            base: ref.substr(0, index),
+		            path: []
+		        };
 		
-		    if (index !== 0) {
-		        return [ref];
+		    if (index < 0) {
+		        ret.base = ref;
+		        return ret;
 		    }
 		
 		    ref = ref.substr(index + 1);
 		
 		    if (!ref) {
-		        return [];
+		        return ret;
 		    }
 		
-		    path = ref.split('/').map(function (segment) {
+		    ret.path = ref.split('/').map(function (segment) {
 		        // Reference: http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-08#section-3
 		        return decodeURIComponent(segment)
 		            .replace(/~1/g, '/')
@@ -2519,57 +2809,105 @@ return /******/ (function(modules) { // webpackBootstrap
 		    });
 		
 		    if (ref[0] === '/') {
-		        path.shift();
+		        ret.path.shift();
 		    }
 		
-		    return path;
+		    return ret;
 		}
 		
-		function refFromId(obj, ref) {
-		    if (obj && typeof obj === 'object') {
-		        if (obj.id === ref) {
-		            return obj;
-		        }
-		
-		        return Object.keys(obj).reduce(function (resolved, key) {
-		            return resolved || refFromId(obj[key], ref);
-		        }, undefined);
-		    }
-		
-		    return undefined;
-		}
-		
-		function getResolvers(schemas) {
-		    var keys = Object.keys(schemas),
-		        resolvers = {},
-		        key, i;
-		
-		    for (i = 0; i < keys.length; i++) {
-		        key = keys[i];
-		        resolvers[key] = new SchemaResolver(schemas[key]);
-		    }
-		
-		    return resolvers;
-		}
-		
-		function SchemaResolver(rootSchema, external, missing$Ref) {  // jshint ignore: line
+		// TODO: Can we prevent nested resolvers and combine schemas instead?
+		function SchemaResolver(rootSchema, external, missing$Ref, baseId) {  // jshint ignore: line
 		    this.rootSchema = rootSchema;
+		    this.resolvers = null;
 		    this.resolvedRootSchema = null;
 		    this.cache = {};
+		    this.idCache = {};
+		    this.refCache = { refs: [], schemas: [] };
 		    this.missing$Ref = missing$Ref;
+		    this.refStack = [];
 		
-		    this.resolvers = external && typeof external === 'object' ?
-		        getResolvers(external) :
-		        null;
+		    baseId = baseId || '';
+		
+		    this._buildIdCache(rootSchema, baseId);
+		
+		    // get updated base id after normalizing root schema id
+		    baseId = this.refCache.refs[this.refCache.schemas.indexOf(this.rootSchema)] || baseId;
+		
+		    this._buildResolvers(external, baseId);
 		}
 		
-		SchemaResolver.prototype.resolveRef = function (ref) {
+		SchemaResolver.prototype._cacheId = function (id, schema, resolver) {
+		    if (this.idCache[id]) {
+		        throw new Error(DUPLICATE_SCHEMA_ID + ' ' + id);
+		    }
+		
+		    this.idCache[id] = { resolver: resolver, schema: schema };
+		};
+		
+		SchemaResolver.prototype._buildIdCache = function (schema, baseId) {
+		    var id = baseId,
+		        ref, keys, i;
+		
+		    if (!schema || typeof schema !== 'object') {
+		        return;
+		    }
+		
+		    if (typeof schema.id === 'string' && schema.id) {
+		        id = url.resolve(baseId, schema.id);
+		
+		        this._cacheId(id, schema, this);
+		    }
+		    else if (schema === this.rootSchema && baseId) {
+		        this._cacheId(baseId, schema, this);
+		    }
+		
+		    if (schema.$ref && typeof schema.$ref === 'string') {
+		        ref = url.resolve(id, schema.$ref);
+		
+		        this.refCache.schemas.push(schema);
+		        this.refCache.refs.push(ref);
+		    }
+		
+		    keys = Object.keys(schema);
+		
+		    for (i = 0; i < keys.length; i++) {
+		        this._buildIdCache(schema[keys[i]], id);
+		    }
+		};
+		
+		SchemaResolver.prototype._buildResolvers = function (schemas, baseId) {
+		    if (!schemas || typeof schemas !== 'object') {
+		        return;
+		    }
+		
+		    var that = this,
+		        resolvers = {};
+		
+		    Object.keys(schemas).forEach(function (key) {
+		        var id = url.resolve(baseId, key),
+		            resolver = new SchemaResolver(schemas[key], null, that.missing$Ref, id);
+		
+		        that._cacheId(id, resolver.rootSchema, resolver);
+		
+		        Object.keys(resolver.idCache).forEach(function (idKey) {
+		            that.idCache[idKey] = resolver.idCache[idKey];
+		        });
+		
+		        resolvers[key] = resolver;
+		    });
+		
+		    this.resolvers = resolvers;
+		};
+		
+		SchemaResolver.prototype.getNormalizedRef = function (schema) {
+		    var index = this.refCache.schemas.indexOf(schema);
+		    return this.refCache.refs[index];
+		};
+		
+		SchemaResolver.prototype._resolveRef = function (ref) {
 		    var err = new Error(INVALID_SCHEMA_REFERENCE + ' ' + ref),
-		        root = this.rootSchema,
-		        resolvedRoot = this.resolvedRootSchema,
-		        externalResolver,
-		        path,
-		        dest;
+		        idCache = this.idCache,
+		        externalResolver, cached, descriptor, path, dest;
 		
 		    if (!ref || typeof ref !== 'string') {
 		        throw err;
@@ -2579,24 +2917,34 @@ return /******/ (function(modules) { // webpackBootstrap
 		        dest = metaschema;
 		    }
 		
-		    if (dest === undefined && resolvedRoot) {
-		        dest = refFromId(resolvedRoot, ref);
+		    cached = idCache[ref];
+		
+		    if (cached) {
+		        dest = cached.resolver.resolve(cached.schema);
 		    }
 		
 		    if (dest === undefined) {
-		        dest = refFromId(root, ref);
+		        descriptor = refToObj(ref);
+		        path = descriptor.path;
+		
+		        if (descriptor.base) {
+		            cached = idCache[descriptor.base] || idCache[descriptor.base + '#'];
+		
+		            if (cached) {
+		                dest = cached.resolver.resolve(get(cached.schema, path.slice(0)));
+		            }
+		            else {
+		                path.unshift(descriptor.base);
+		            }
+		        }
+		    }
+		
+		    if (dest === undefined && this.resolvedRootSchema) {
+		        dest = get(this.resolvedRootSchema, path.slice(0));
 		    }
 		
 		    if (dest === undefined) {
-		        path = refToPath(ref);
-		
-		        if (resolvedRoot) {
-		            dest = get(resolvedRoot, path.slice(0));
-		        }
-		
-		        if (dest === undefined) {
-		            dest = get(root, path.slice(0));
-		        }
+		        dest = get(this.rootSchema, path.slice(0));
 		    }
 		
 		    if (dest === undefined && path.length && this.resolvers) {
@@ -2622,31 +2970,35 @@ return /******/ (function(modules) { // webpackBootstrap
 		    this.cache[ref] = dest;
 		
 		    if (dest.$ref !== undefined) {
-		        dest = this.cache[ref] = this.resolveRef(dest.$ref);
+		        dest = this.resolve(dest);
 		    }
 		
 		    return dest;
 		};
 		
 		SchemaResolver.prototype.resolve = function (schema) {
-		    if (!schema || typeof schema !== 'object') {
+		    if (!schema || typeof schema !== 'object' || schema.$ref === undefined) {
 		        return schema;
 		    }
 		
-		    var ref = schema.$ref,
+		    var ref = this.getNormalizedRef(schema) || schema.$ref,
 		        resolved = this.cache[ref];
-		
-		    if (ref === undefined) {
-		        return schema;
-		    }
 		
 		    if (resolved !== undefined) {
 		        return resolved;
 		    }
 		
-		    resolved = this.resolveRef(ref);
+		    if (this.refStack.indexOf(ref) > -1) {
+		        throw new Error(CIRCULAR_SCHEMA_REFERENCE + ' ' + ref);
+		    }
 		
-		    if (schema === this.rootSchema && schema !== resolved) {
+		    this.refStack.push(ref);
+		
+		    resolved = this._resolveRef(ref);
+		
+		    this.refStack.pop();
+		
+		    if (schema === this.rootSchema) {
 		        // cache the resolved root schema
 		        this.resolvedRootSchema = resolved;
 		    }
@@ -2654,14 +3006,1474 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return resolved;
 		};
 		
+		SchemaResolver.prototype.hasRef = function (schema) {
+		    var keys = Object.keys(schema),
+		        len, key, i, hasChildRef;
+		
+		    if (keys.indexOf('$ref') > -1) {
+		        return true;
+		    }
+		
+		    for (i = 0, len = keys.length; i < len; i++) {
+		        key = keys[i];
+		
+		        if (schema[key] && typeof schema[key] === 'object' && !Array.isArray(schema[key])) {
+		            hasChildRef = this.hasRef(schema[key]);
+		
+		            if (hasChildRef) {
+		                return true;
+		            }
+		        }
+		    }
+		
+		    return false;
+		};
+		
 		SchemaResolver.resolvePointer = function (obj, pointer) {
-		    return get(obj, refToPath(pointer));
+		    var descriptor = refToObj(pointer),
+		        path = descriptor.path;
+		
+		    if (descriptor.base) {
+		        path = [descriptor.base].concat(path);
+		    }
+		
+		    return get(obj, path);
 		};
 		
 		module.exports = SchemaResolver;
 	
 	/***/ },
 	/* 14 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		// Copyright Joyent, Inc. and other Node contributors.
+		//
+		// Permission is hereby granted, free of charge, to any person obtaining a
+		// copy of this software and associated documentation files (the
+		// "Software"), to deal in the Software without restriction, including
+		// without limitation the rights to use, copy, modify, merge, publish,
+		// distribute, sublicense, and/or sell copies of the Software, and to permit
+		// persons to whom the Software is furnished to do so, subject to the
+		// following conditions:
+		//
+		// The above copyright notice and this permission notice shall be included
+		// in all copies or substantial portions of the Software.
+		//
+		// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+		// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+		// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+		// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+		// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+		// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+		// USE OR OTHER DEALINGS IN THE SOFTWARE.
+		
+		var punycode = __webpack_require__(15);
+		
+		exports.parse = urlParse;
+		exports.resolve = urlResolve;
+		exports.resolveObject = urlResolveObject;
+		exports.format = urlFormat;
+		
+		exports.Url = Url;
+		
+		function Url() {
+		  this.protocol = null;
+		  this.slashes = null;
+		  this.auth = null;
+		  this.host = null;
+		  this.port = null;
+		  this.hostname = null;
+		  this.hash = null;
+		  this.search = null;
+		  this.query = null;
+		  this.pathname = null;
+		  this.path = null;
+		  this.href = null;
+		}
+		
+		// Reference: RFC 3986, RFC 1808, RFC 2396
+		
+		// define these here so at least they only have to be
+		// compiled once on the first module load.
+		var protocolPattern = /^([a-z0-9.+-]+:)/i,
+		    portPattern = /:[0-9]*$/,
+		
+		    // RFC 2396: characters reserved for delimiting URLs.
+		    // We actually just auto-escape these.
+		    delims = ['<', '>', '"', '`', ' ', '\r', '\n', '\t'],
+		
+		    // RFC 2396: characters not allowed for various reasons.
+		    unwise = ['{', '}', '|', '\\', '^', '`'].concat(delims),
+		
+		    // Allowed by RFCs, but cause of XSS attacks.  Always escape these.
+		    autoEscape = ['\''].concat(unwise),
+		    // Characters that are never ever allowed in a hostname.
+		    // Note that any invalid chars are also handled, but these
+		    // are the ones that are *expected* to be seen, so we fast-path
+		    // them.
+		    nonHostChars = ['%', '/', '?', ';', '#'].concat(autoEscape),
+		    hostEndingChars = ['/', '?', '#'],
+		    hostnameMaxLen = 255,
+		    hostnamePartPattern = /^[a-z0-9A-Z_-]{0,63}$/,
+		    hostnamePartStart = /^([a-z0-9A-Z_-]{0,63})(.*)$/,
+		    // protocols that can allow "unsafe" and "unwise" chars.
+		    unsafeProtocol = {
+		      'javascript': true,
+		      'javascript:': true
+		    },
+		    // protocols that never have a hostname.
+		    hostlessProtocol = {
+		      'javascript': true,
+		      'javascript:': true
+		    },
+		    // protocols that always contain a // bit.
+		    slashedProtocol = {
+		      'http': true,
+		      'https': true,
+		      'ftp': true,
+		      'gopher': true,
+		      'file': true,
+		      'http:': true,
+		      'https:': true,
+		      'ftp:': true,
+		      'gopher:': true,
+		      'file:': true
+		    },
+		    querystring = __webpack_require__(17);
+		
+		function urlParse(url, parseQueryString, slashesDenoteHost) {
+		  if (url && isObject(url) && url instanceof Url) return url;
+		
+		  var u = new Url;
+		  u.parse(url, parseQueryString, slashesDenoteHost);
+		  return u;
+		}
+		
+		Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
+		  if (!isString(url)) {
+		    throw new TypeError("Parameter 'url' must be a string, not " + typeof url);
+		  }
+		
+		  var rest = url;
+		
+		  // trim before proceeding.
+		  // This is to support parse stuff like "  http://foo.com  \n"
+		  rest = rest.trim();
+		
+		  var proto = protocolPattern.exec(rest);
+		  if (proto) {
+		    proto = proto[0];
+		    var lowerProto = proto.toLowerCase();
+		    this.protocol = lowerProto;
+		    rest = rest.substr(proto.length);
+		  }
+		
+		  // figure out if it's got a host
+		  // user@server is *always* interpreted as a hostname, and url
+		  // resolution will treat //foo/bar as host=foo,path=bar because that's
+		  // how the browser resolves relative URLs.
+		  if (slashesDenoteHost || proto || rest.match(/^\/\/[^@\/]+@[^@\/]+/)) {
+		    var slashes = rest.substr(0, 2) === '//';
+		    if (slashes && !(proto && hostlessProtocol[proto])) {
+		      rest = rest.substr(2);
+		      this.slashes = true;
+		    }
+		  }
+		
+		  if (!hostlessProtocol[proto] &&
+		      (slashes || (proto && !slashedProtocol[proto]))) {
+		
+		    // there's a hostname.
+		    // the first instance of /, ?, ;, or # ends the host.
+		    //
+		    // If there is an @ in the hostname, then non-host chars *are* allowed
+		    // to the left of the last @ sign, unless some host-ending character
+		    // comes *before* the @-sign.
+		    // URLs are obnoxious.
+		    //
+		    // ex:
+		    // http://a@b@c/ => user:a@b host:c
+		    // http://a@b?@c => user:a host:c path:/?@c
+		
+		    // v0.12 TODO(isaacs): This is not quite how Chrome does things.
+		    // Review our test case against browsers more comprehensively.
+		
+		    // find the first instance of any hostEndingChars
+		    var hostEnd = -1;
+		    for (var i = 0; i < hostEndingChars.length; i++) {
+		      var hec = rest.indexOf(hostEndingChars[i]);
+		      if (hec !== -1 && (hostEnd === -1 || hec < hostEnd))
+		        hostEnd = hec;
+		    }
+		
+		    // at this point, either we have an explicit point where the
+		    // auth portion cannot go past, or the last @ char is the decider.
+		    var auth, atSign;
+		    if (hostEnd === -1) {
+		      // atSign can be anywhere.
+		      atSign = rest.lastIndexOf('@');
+		    } else {
+		      // atSign must be in auth portion.
+		      // http://a@b/c@d => host:b auth:a path:/c@d
+		      atSign = rest.lastIndexOf('@', hostEnd);
+		    }
+		
+		    // Now we have a portion which is definitely the auth.
+		    // Pull that off.
+		    if (atSign !== -1) {
+		      auth = rest.slice(0, atSign);
+		      rest = rest.slice(atSign + 1);
+		      this.auth = decodeURIComponent(auth);
+		    }
+		
+		    // the host is the remaining to the left of the first non-host char
+		    hostEnd = -1;
+		    for (var i = 0; i < nonHostChars.length; i++) {
+		      var hec = rest.indexOf(nonHostChars[i]);
+		      if (hec !== -1 && (hostEnd === -1 || hec < hostEnd))
+		        hostEnd = hec;
+		    }
+		    // if we still have not hit it, then the entire thing is a host.
+		    if (hostEnd === -1)
+		      hostEnd = rest.length;
+		
+		    this.host = rest.slice(0, hostEnd);
+		    rest = rest.slice(hostEnd);
+		
+		    // pull out port.
+		    this.parseHost();
+		
+		    // we've indicated that there is a hostname,
+		    // so even if it's empty, it has to be present.
+		    this.hostname = this.hostname || '';
+		
+		    // if hostname begins with [ and ends with ]
+		    // assume that it's an IPv6 address.
+		    var ipv6Hostname = this.hostname[0] === '[' &&
+		        this.hostname[this.hostname.length - 1] === ']';
+		
+		    // validate a little.
+		    if (!ipv6Hostname) {
+		      var hostparts = this.hostname.split(/\./);
+		      for (var i = 0, l = hostparts.length; i < l; i++) {
+		        var part = hostparts[i];
+		        if (!part) continue;
+		        if (!part.match(hostnamePartPattern)) {
+		          var newpart = '';
+		          for (var j = 0, k = part.length; j < k; j++) {
+		            if (part.charCodeAt(j) > 127) {
+		              // we replace non-ASCII char with a temporary placeholder
+		              // we need this to make sure size of hostname is not
+		              // broken by replacing non-ASCII by nothing
+		              newpart += 'x';
+		            } else {
+		              newpart += part[j];
+		            }
+		          }
+		          // we test again with ASCII char only
+		          if (!newpart.match(hostnamePartPattern)) {
+		            var validParts = hostparts.slice(0, i);
+		            var notHost = hostparts.slice(i + 1);
+		            var bit = part.match(hostnamePartStart);
+		            if (bit) {
+		              validParts.push(bit[1]);
+		              notHost.unshift(bit[2]);
+		            }
+		            if (notHost.length) {
+		              rest = '/' + notHost.join('.') + rest;
+		            }
+		            this.hostname = validParts.join('.');
+		            break;
+		          }
+		        }
+		      }
+		    }
+		
+		    if (this.hostname.length > hostnameMaxLen) {
+		      this.hostname = '';
+		    } else {
+		      // hostnames are always lower case.
+		      this.hostname = this.hostname.toLowerCase();
+		    }
+		
+		    if (!ipv6Hostname) {
+		      // IDNA Support: Returns a puny coded representation of "domain".
+		      // It only converts the part of the domain name that
+		      // has non ASCII characters. I.e. it dosent matter if
+		      // you call it with a domain that already is in ASCII.
+		      var domainArray = this.hostname.split('.');
+		      var newOut = [];
+		      for (var i = 0; i < domainArray.length; ++i) {
+		        var s = domainArray[i];
+		        newOut.push(s.match(/[^A-Za-z0-9_-]/) ?
+		            'xn--' + punycode.encode(s) : s);
+		      }
+		      this.hostname = newOut.join('.');
+		    }
+		
+		    var p = this.port ? ':' + this.port : '';
+		    var h = this.hostname || '';
+		    this.host = h + p;
+		    this.href += this.host;
+		
+		    // strip [ and ] from the hostname
+		    // the host field still retains them, though
+		    if (ipv6Hostname) {
+		      this.hostname = this.hostname.substr(1, this.hostname.length - 2);
+		      if (rest[0] !== '/') {
+		        rest = '/' + rest;
+		      }
+		    }
+		  }
+		
+		  // now rest is set to the post-host stuff.
+		  // chop off any delim chars.
+		  if (!unsafeProtocol[lowerProto]) {
+		
+		    // First, make 100% sure that any "autoEscape" chars get
+		    // escaped, even if encodeURIComponent doesn't think they
+		    // need to be.
+		    for (var i = 0, l = autoEscape.length; i < l; i++) {
+		      var ae = autoEscape[i];
+		      var esc = encodeURIComponent(ae);
+		      if (esc === ae) {
+		        esc = escape(ae);
+		      }
+		      rest = rest.split(ae).join(esc);
+		    }
+		  }
+		
+		
+		  // chop off from the tail first.
+		  var hash = rest.indexOf('#');
+		  if (hash !== -1) {
+		    // got a fragment string.
+		    this.hash = rest.substr(hash);
+		    rest = rest.slice(0, hash);
+		  }
+		  var qm = rest.indexOf('?');
+		  if (qm !== -1) {
+		    this.search = rest.substr(qm);
+		    this.query = rest.substr(qm + 1);
+		    if (parseQueryString) {
+		      this.query = querystring.parse(this.query);
+		    }
+		    rest = rest.slice(0, qm);
+		  } else if (parseQueryString) {
+		    // no query string, but parseQueryString still requested
+		    this.search = '';
+		    this.query = {};
+		  }
+		  if (rest) this.pathname = rest;
+		  if (slashedProtocol[lowerProto] &&
+		      this.hostname && !this.pathname) {
+		    this.pathname = '/';
+		  }
+		
+		  //to support http.request
+		  if (this.pathname || this.search) {
+		    var p = this.pathname || '';
+		    var s = this.search || '';
+		    this.path = p + s;
+		  }
+		
+		  // finally, reconstruct the href based on what has been validated.
+		  this.href = this.format();
+		  return this;
+		};
+		
+		// format a parsed object into a url string
+		function urlFormat(obj) {
+		  // ensure it's an object, and not a string url.
+		  // If it's an obj, this is a no-op.
+		  // this way, you can call url_format() on strings
+		  // to clean up potentially wonky urls.
+		  if (isString(obj)) obj = urlParse(obj);
+		  if (!(obj instanceof Url)) return Url.prototype.format.call(obj);
+		  return obj.format();
+		}
+		
+		Url.prototype.format = function() {
+		  var auth = this.auth || '';
+		  if (auth) {
+		    auth = encodeURIComponent(auth);
+		    auth = auth.replace(/%3A/i, ':');
+		    auth += '@';
+		  }
+		
+		  var protocol = this.protocol || '',
+		      pathname = this.pathname || '',
+		      hash = this.hash || '',
+		      host = false,
+		      query = '';
+		
+		  if (this.host) {
+		    host = auth + this.host;
+		  } else if (this.hostname) {
+		    host = auth + (this.hostname.indexOf(':') === -1 ?
+		        this.hostname :
+		        '[' + this.hostname + ']');
+		    if (this.port) {
+		      host += ':' + this.port;
+		    }
+		  }
+		
+		  if (this.query &&
+		      isObject(this.query) &&
+		      Object.keys(this.query).length) {
+		    query = querystring.stringify(this.query);
+		  }
+		
+		  var search = this.search || (query && ('?' + query)) || '';
+		
+		  if (protocol && protocol.substr(-1) !== ':') protocol += ':';
+		
+		  // only the slashedProtocols get the //.  Not mailto:, xmpp:, etc.
+		  // unless they had them to begin with.
+		  if (this.slashes ||
+		      (!protocol || slashedProtocol[protocol]) && host !== false) {
+		    host = '//' + (host || '');
+		    if (pathname && pathname.charAt(0) !== '/') pathname = '/' + pathname;
+		  } else if (!host) {
+		    host = '';
+		  }
+		
+		  if (hash && hash.charAt(0) !== '#') hash = '#' + hash;
+		  if (search && search.charAt(0) !== '?') search = '?' + search;
+		
+		  pathname = pathname.replace(/[?#]/g, function(match) {
+		    return encodeURIComponent(match);
+		  });
+		  search = search.replace('#', '%23');
+		
+		  return protocol + host + pathname + search + hash;
+		};
+		
+		function urlResolve(source, relative) {
+		  return urlParse(source, false, true).resolve(relative);
+		}
+		
+		Url.prototype.resolve = function(relative) {
+		  return this.resolveObject(urlParse(relative, false, true)).format();
+		};
+		
+		function urlResolveObject(source, relative) {
+		  if (!source) return relative;
+		  return urlParse(source, false, true).resolveObject(relative);
+		}
+		
+		Url.prototype.resolveObject = function(relative) {
+		  if (isString(relative)) {
+		    var rel = new Url();
+		    rel.parse(relative, false, true);
+		    relative = rel;
+		  }
+		
+		  var result = new Url();
+		  Object.keys(this).forEach(function(k) {
+		    result[k] = this[k];
+		  }, this);
+		
+		  // hash is always overridden, no matter what.
+		  // even href="" will remove it.
+		  result.hash = relative.hash;
+		
+		  // if the relative url is empty, then there's nothing left to do here.
+		  if (relative.href === '') {
+		    result.href = result.format();
+		    return result;
+		  }
+		
+		  // hrefs like //foo/bar always cut to the protocol.
+		  if (relative.slashes && !relative.protocol) {
+		    // take everything except the protocol from relative
+		    Object.keys(relative).forEach(function(k) {
+		      if (k !== 'protocol')
+		        result[k] = relative[k];
+		    });
+		
+		    //urlParse appends trailing / to urls like http://www.example.com
+		    if (slashedProtocol[result.protocol] &&
+		        result.hostname && !result.pathname) {
+		      result.path = result.pathname = '/';
+		    }
+		
+		    result.href = result.format();
+		    return result;
+		  }
+		
+		  if (relative.protocol && relative.protocol !== result.protocol) {
+		    // if it's a known url protocol, then changing
+		    // the protocol does weird things
+		    // first, if it's not file:, then we MUST have a host,
+		    // and if there was a path
+		    // to begin with, then we MUST have a path.
+		    // if it is file:, then the host is dropped,
+		    // because that's known to be hostless.
+		    // anything else is assumed to be absolute.
+		    if (!slashedProtocol[relative.protocol]) {
+		      Object.keys(relative).forEach(function(k) {
+		        result[k] = relative[k];
+		      });
+		      result.href = result.format();
+		      return result;
+		    }
+		
+		    result.protocol = relative.protocol;
+		    if (!relative.host && !hostlessProtocol[relative.protocol]) {
+		      var relPath = (relative.pathname || '').split('/');
+		      while (relPath.length && !(relative.host = relPath.shift()));
+		      if (!relative.host) relative.host = '';
+		      if (!relative.hostname) relative.hostname = '';
+		      if (relPath[0] !== '') relPath.unshift('');
+		      if (relPath.length < 2) relPath.unshift('');
+		      result.pathname = relPath.join('/');
+		    } else {
+		      result.pathname = relative.pathname;
+		    }
+		    result.search = relative.search;
+		    result.query = relative.query;
+		    result.host = relative.host || '';
+		    result.auth = relative.auth;
+		    result.hostname = relative.hostname || relative.host;
+		    result.port = relative.port;
+		    // to support http.request
+		    if (result.pathname || result.search) {
+		      var p = result.pathname || '';
+		      var s = result.search || '';
+		      result.path = p + s;
+		    }
+		    result.slashes = result.slashes || relative.slashes;
+		    result.href = result.format();
+		    return result;
+		  }
+		
+		  var isSourceAbs = (result.pathname && result.pathname.charAt(0) === '/'),
+		      isRelAbs = (
+		          relative.host ||
+		          relative.pathname && relative.pathname.charAt(0) === '/'
+		      ),
+		      mustEndAbs = (isRelAbs || isSourceAbs ||
+		                    (result.host && relative.pathname)),
+		      removeAllDots = mustEndAbs,
+		      srcPath = result.pathname && result.pathname.split('/') || [],
+		      relPath = relative.pathname && relative.pathname.split('/') || [],
+		      psychotic = result.protocol && !slashedProtocol[result.protocol];
+		
+		  // if the url is a non-slashed url, then relative
+		  // links like ../.. should be able
+		  // to crawl up to the hostname, as well.  This is strange.
+		  // result.protocol has already been set by now.
+		  // Later on, put the first path part into the host field.
+		  if (psychotic) {
+		    result.hostname = '';
+		    result.port = null;
+		    if (result.host) {
+		      if (srcPath[0] === '') srcPath[0] = result.host;
+		      else srcPath.unshift(result.host);
+		    }
+		    result.host = '';
+		    if (relative.protocol) {
+		      relative.hostname = null;
+		      relative.port = null;
+		      if (relative.host) {
+		        if (relPath[0] === '') relPath[0] = relative.host;
+		        else relPath.unshift(relative.host);
+		      }
+		      relative.host = null;
+		    }
+		    mustEndAbs = mustEndAbs && (relPath[0] === '' || srcPath[0] === '');
+		  }
+		
+		  if (isRelAbs) {
+		    // it's absolute.
+		    result.host = (relative.host || relative.host === '') ?
+		                  relative.host : result.host;
+		    result.hostname = (relative.hostname || relative.hostname === '') ?
+		                      relative.hostname : result.hostname;
+		    result.search = relative.search;
+		    result.query = relative.query;
+		    srcPath = relPath;
+		    // fall through to the dot-handling below.
+		  } else if (relPath.length) {
+		    // it's relative
+		    // throw away the existing file, and take the new path instead.
+		    if (!srcPath) srcPath = [];
+		    srcPath.pop();
+		    srcPath = srcPath.concat(relPath);
+		    result.search = relative.search;
+		    result.query = relative.query;
+		  } else if (!isNullOrUndefined(relative.search)) {
+		    // just pull out the search.
+		    // like href='?foo'.
+		    // Put this after the other two cases because it simplifies the booleans
+		    if (psychotic) {
+		      result.hostname = result.host = srcPath.shift();
+		      //occationaly the auth can get stuck only in host
+		      //this especialy happens in cases like
+		      //url.resolveObject('mailto:local1@domain1', 'local2@domain2')
+		      var authInHost = result.host && result.host.indexOf('@') > 0 ?
+		                       result.host.split('@') : false;
+		      if (authInHost) {
+		        result.auth = authInHost.shift();
+		        result.host = result.hostname = authInHost.shift();
+		      }
+		    }
+		    result.search = relative.search;
+		    result.query = relative.query;
+		    //to support http.request
+		    if (!isNull(result.pathname) || !isNull(result.search)) {
+		      result.path = (result.pathname ? result.pathname : '') +
+		                    (result.search ? result.search : '');
+		    }
+		    result.href = result.format();
+		    return result;
+		  }
+		
+		  if (!srcPath.length) {
+		    // no path at all.  easy.
+		    // we've already handled the other stuff above.
+		    result.pathname = null;
+		    //to support http.request
+		    if (result.search) {
+		      result.path = '/' + result.search;
+		    } else {
+		      result.path = null;
+		    }
+		    result.href = result.format();
+		    return result;
+		  }
+		
+		  // if a url ENDs in . or .., then it must get a trailing slash.
+		  // however, if it ends in anything else non-slashy,
+		  // then it must NOT get a trailing slash.
+		  var last = srcPath.slice(-1)[0];
+		  var hasTrailingSlash = (
+		      (result.host || relative.host) && (last === '.' || last === '..') ||
+		      last === '');
+		
+		  // strip single dots, resolve double dots to parent dir
+		  // if the path tries to go above the root, `up` ends up > 0
+		  var up = 0;
+		  for (var i = srcPath.length; i >= 0; i--) {
+		    last = srcPath[i];
+		    if (last == '.') {
+		      srcPath.splice(i, 1);
+		    } else if (last === '..') {
+		      srcPath.splice(i, 1);
+		      up++;
+		    } else if (up) {
+		      srcPath.splice(i, 1);
+		      up--;
+		    }
+		  }
+		
+		  // if the path is allowed to go above the root, restore leading ..s
+		  if (!mustEndAbs && !removeAllDots) {
+		    for (; up--; up) {
+		      srcPath.unshift('..');
+		    }
+		  }
+		
+		  if (mustEndAbs && srcPath[0] !== '' &&
+		      (!srcPath[0] || srcPath[0].charAt(0) !== '/')) {
+		    srcPath.unshift('');
+		  }
+		
+		  if (hasTrailingSlash && (srcPath.join('/').substr(-1) !== '/')) {
+		    srcPath.push('');
+		  }
+		
+		  var isAbsolute = srcPath[0] === '' ||
+		      (srcPath[0] && srcPath[0].charAt(0) === '/');
+		
+		  // put the host back
+		  if (psychotic) {
+		    result.hostname = result.host = isAbsolute ? '' :
+		                                    srcPath.length ? srcPath.shift() : '';
+		    //occationaly the auth can get stuck only in host
+		    //this especialy happens in cases like
+		    //url.resolveObject('mailto:local1@domain1', 'local2@domain2')
+		    var authInHost = result.host && result.host.indexOf('@') > 0 ?
+		                     result.host.split('@') : false;
+		    if (authInHost) {
+		      result.auth = authInHost.shift();
+		      result.host = result.hostname = authInHost.shift();
+		    }
+		  }
+		
+		  mustEndAbs = mustEndAbs || (result.host && srcPath.length);
+		
+		  if (mustEndAbs && !isAbsolute) {
+		    srcPath.unshift('');
+		  }
+		
+		  if (!srcPath.length) {
+		    result.pathname = null;
+		    result.path = null;
+		  } else {
+		    result.pathname = srcPath.join('/');
+		  }
+		
+		  //to support request.http
+		  if (!isNull(result.pathname) || !isNull(result.search)) {
+		    result.path = (result.pathname ? result.pathname : '') +
+		                  (result.search ? result.search : '');
+		  }
+		  result.auth = relative.auth || result.auth;
+		  result.slashes = result.slashes || relative.slashes;
+		  result.href = result.format();
+		  return result;
+		};
+		
+		Url.prototype.parseHost = function() {
+		  var host = this.host;
+		  var port = portPattern.exec(host);
+		  if (port) {
+		    port = port[0];
+		    if (port !== ':') {
+		      this.port = port.substr(1);
+		    }
+		    host = host.substr(0, host.length - port.length);
+		  }
+		  if (host) this.hostname = host;
+		};
+		
+		function isString(arg) {
+		  return typeof arg === "string";
+		}
+		
+		function isObject(arg) {
+		  return typeof arg === 'object' && arg !== null;
+		}
+		
+		function isNull(arg) {
+		  return arg === null;
+		}
+		function isNullOrUndefined(arg) {
+		  return  arg == null;
+		}
+	
+	
+	/***/ },
+	/* 15 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/punycode v1.3.2 by @mathias */
+		;(function(root) {
+		
+			/** Detect free variables */
+			var freeExports = typeof exports == 'object' && exports &&
+				!exports.nodeType && exports;
+			var freeModule = typeof module == 'object' && module &&
+				!module.nodeType && module;
+			var freeGlobal = typeof global == 'object' && global;
+			if (
+				freeGlobal.global === freeGlobal ||
+				freeGlobal.window === freeGlobal ||
+				freeGlobal.self === freeGlobal
+			) {
+				root = freeGlobal;
+			}
+		
+			/**
+			 * The `punycode` object.
+			 * @name punycode
+			 * @type Object
+			 */
+			var punycode,
+		
+			/** Highest positive signed 32-bit float value */
+			maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
+		
+			/** Bootstring parameters */
+			base = 36,
+			tMin = 1,
+			tMax = 26,
+			skew = 38,
+			damp = 700,
+			initialBias = 72,
+			initialN = 128, // 0x80
+			delimiter = '-', // '\x2D'
+		
+			/** Regular expressions */
+			regexPunycode = /^xn--/,
+			regexNonASCII = /[^\x20-\x7E]/, // unprintable ASCII chars + non-ASCII chars
+			regexSeparators = /[\x2E\u3002\uFF0E\uFF61]/g, // RFC 3490 separators
+		
+			/** Error messages */
+			errors = {
+				'overflow': 'Overflow: input needs wider integers to process',
+				'not-basic': 'Illegal input >= 0x80 (not a basic code point)',
+				'invalid-input': 'Invalid input'
+			},
+		
+			/** Convenience shortcuts */
+			baseMinusTMin = base - tMin,
+			floor = Math.floor,
+			stringFromCharCode = String.fromCharCode,
+		
+			/** Temporary variable */
+			key;
+		
+			/*--------------------------------------------------------------------------*/
+		
+			/**
+			 * A generic error utility function.
+			 * @private
+			 * @param {String} type The error type.
+			 * @returns {Error} Throws a `RangeError` with the applicable error message.
+			 */
+			function error(type) {
+				throw RangeError(errors[type]);
+			}
+		
+			/**
+			 * A generic `Array#map` utility function.
+			 * @private
+			 * @param {Array} array The array to iterate over.
+			 * @param {Function} callback The function that gets called for every array
+			 * item.
+			 * @returns {Array} A new array of values returned by the callback function.
+			 */
+			function map(array, fn) {
+				var length = array.length;
+				var result = [];
+				while (length--) {
+					result[length] = fn(array[length]);
+				}
+				return result;
+			}
+		
+			/**
+			 * A simple `Array#map`-like wrapper to work with domain name strings or email
+			 * addresses.
+			 * @private
+			 * @param {String} domain The domain name or email address.
+			 * @param {Function} callback The function that gets called for every
+			 * character.
+			 * @returns {Array} A new string of characters returned by the callback
+			 * function.
+			 */
+			function mapDomain(string, fn) {
+				var parts = string.split('@');
+				var result = '';
+				if (parts.length > 1) {
+					// In email addresses, only the domain name should be punycoded. Leave
+					// the local part (i.e. everything up to `@`) intact.
+					result = parts[0] + '@';
+					string = parts[1];
+				}
+				// Avoid `split(regex)` for IE8 compatibility. See #17.
+				string = string.replace(regexSeparators, '\x2E');
+				var labels = string.split('.');
+				var encoded = map(labels, fn).join('.');
+				return result + encoded;
+			}
+		
+			/**
+			 * Creates an array containing the numeric code points of each Unicode
+			 * character in the string. While JavaScript uses UCS-2 internally,
+			 * this function will convert a pair of surrogate halves (each of which
+			 * UCS-2 exposes as separate characters) into a single code point,
+			 * matching UTF-16.
+			 * @see `punycode.ucs2.encode`
+			 * @see <https://mathiasbynens.be/notes/javascript-encoding>
+			 * @memberOf punycode.ucs2
+			 * @name decode
+			 * @param {String} string The Unicode input string (UCS-2).
+			 * @returns {Array} The new array of code points.
+			 */
+			function ucs2decode(string) {
+				var output = [],
+				    counter = 0,
+				    length = string.length,
+				    value,
+				    extra;
+				while (counter < length) {
+					value = string.charCodeAt(counter++);
+					if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+						// high surrogate, and there is a next character
+						extra = string.charCodeAt(counter++);
+						if ((extra & 0xFC00) == 0xDC00) { // low surrogate
+							output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+						} else {
+							// unmatched surrogate; only append this code unit, in case the next
+							// code unit is the high surrogate of a surrogate pair
+							output.push(value);
+							counter--;
+						}
+					} else {
+						output.push(value);
+					}
+				}
+				return output;
+			}
+		
+			/**
+			 * Creates a string based on an array of numeric code points.
+			 * @see `punycode.ucs2.decode`
+			 * @memberOf punycode.ucs2
+			 * @name encode
+			 * @param {Array} codePoints The array of numeric code points.
+			 * @returns {String} The new Unicode string (UCS-2).
+			 */
+			function ucs2encode(array) {
+				return map(array, function(value) {
+					var output = '';
+					if (value > 0xFFFF) {
+						value -= 0x10000;
+						output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
+						value = 0xDC00 | value & 0x3FF;
+					}
+					output += stringFromCharCode(value);
+					return output;
+				}).join('');
+			}
+		
+			/**
+			 * Converts a basic code point into a digit/integer.
+			 * @see `digitToBasic()`
+			 * @private
+			 * @param {Number} codePoint The basic numeric code point value.
+			 * @returns {Number} The numeric value of a basic code point (for use in
+			 * representing integers) in the range `0` to `base - 1`, or `base` if
+			 * the code point does not represent a value.
+			 */
+			function basicToDigit(codePoint) {
+				if (codePoint - 48 < 10) {
+					return codePoint - 22;
+				}
+				if (codePoint - 65 < 26) {
+					return codePoint - 65;
+				}
+				if (codePoint - 97 < 26) {
+					return codePoint - 97;
+				}
+				return base;
+			}
+		
+			/**
+			 * Converts a digit/integer into a basic code point.
+			 * @see `basicToDigit()`
+			 * @private
+			 * @param {Number} digit The numeric value of a basic code point.
+			 * @returns {Number} The basic code point whose value (when used for
+			 * representing integers) is `digit`, which needs to be in the range
+			 * `0` to `base - 1`. If `flag` is non-zero, the uppercase form is
+			 * used; else, the lowercase form is used. The behavior is undefined
+			 * if `flag` is non-zero and `digit` has no uppercase form.
+			 */
+			function digitToBasic(digit, flag) {
+				//  0..25 map to ASCII a..z or A..Z
+				// 26..35 map to ASCII 0..9
+				return digit + 22 + 75 * (digit < 26) - ((flag != 0) << 5);
+			}
+		
+			/**
+			 * Bias adaptation function as per section 3.4 of RFC 3492.
+			 * http://tools.ietf.org/html/rfc3492#section-3.4
+			 * @private
+			 */
+			function adapt(delta, numPoints, firstTime) {
+				var k = 0;
+				delta = firstTime ? floor(delta / damp) : delta >> 1;
+				delta += floor(delta / numPoints);
+				for (/* no initialization */; delta > baseMinusTMin * tMax >> 1; k += base) {
+					delta = floor(delta / baseMinusTMin);
+				}
+				return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
+			}
+		
+			/**
+			 * Converts a Punycode string of ASCII-only symbols to a string of Unicode
+			 * symbols.
+			 * @memberOf punycode
+			 * @param {String} input The Punycode string of ASCII-only symbols.
+			 * @returns {String} The resulting string of Unicode symbols.
+			 */
+			function decode(input) {
+				// Don't use UCS-2
+				var output = [],
+				    inputLength = input.length,
+				    out,
+				    i = 0,
+				    n = initialN,
+				    bias = initialBias,
+				    basic,
+				    j,
+				    index,
+				    oldi,
+				    w,
+				    k,
+				    digit,
+				    t,
+				    /** Cached calculation results */
+				    baseMinusT;
+		
+				// Handle the basic code points: let `basic` be the number of input code
+				// points before the last delimiter, or `0` if there is none, then copy
+				// the first basic code points to the output.
+		
+				basic = input.lastIndexOf(delimiter);
+				if (basic < 0) {
+					basic = 0;
+				}
+		
+				for (j = 0; j < basic; ++j) {
+					// if it's not a basic code point
+					if (input.charCodeAt(j) >= 0x80) {
+						error('not-basic');
+					}
+					output.push(input.charCodeAt(j));
+				}
+		
+				// Main decoding loop: start just after the last delimiter if any basic code
+				// points were copied; start at the beginning otherwise.
+		
+				for (index = basic > 0 ? basic + 1 : 0; index < inputLength; /* no final expression */) {
+		
+					// `index` is the index of the next character to be consumed.
+					// Decode a generalized variable-length integer into `delta`,
+					// which gets added to `i`. The overflow checking is easier
+					// if we increase `i` as we go, then subtract off its starting
+					// value at the end to obtain `delta`.
+					for (oldi = i, w = 1, k = base; /* no condition */; k += base) {
+		
+						if (index >= inputLength) {
+							error('invalid-input');
+						}
+		
+						digit = basicToDigit(input.charCodeAt(index++));
+		
+						if (digit >= base || digit > floor((maxInt - i) / w)) {
+							error('overflow');
+						}
+		
+						i += digit * w;
+						t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+		
+						if (digit < t) {
+							break;
+						}
+		
+						baseMinusT = base - t;
+						if (w > floor(maxInt / baseMinusT)) {
+							error('overflow');
+						}
+		
+						w *= baseMinusT;
+		
+					}
+		
+					out = output.length + 1;
+					bias = adapt(i - oldi, out, oldi == 0);
+		
+					// `i` was supposed to wrap around from `out` to `0`,
+					// incrementing `n` each time, so we'll fix that now:
+					if (floor(i / out) > maxInt - n) {
+						error('overflow');
+					}
+		
+					n += floor(i / out);
+					i %= out;
+		
+					// Insert `n` at position `i` of the output
+					output.splice(i++, 0, n);
+		
+				}
+		
+				return ucs2encode(output);
+			}
+		
+			/**
+			 * Converts a string of Unicode symbols (e.g. a domain name label) to a
+			 * Punycode string of ASCII-only symbols.
+			 * @memberOf punycode
+			 * @param {String} input The string of Unicode symbols.
+			 * @returns {String} The resulting Punycode string of ASCII-only symbols.
+			 */
+			function encode(input) {
+				var n,
+				    delta,
+				    handledCPCount,
+				    basicLength,
+				    bias,
+				    j,
+				    m,
+				    q,
+				    k,
+				    t,
+				    currentValue,
+				    output = [],
+				    /** `inputLength` will hold the number of code points in `input`. */
+				    inputLength,
+				    /** Cached calculation results */
+				    handledCPCountPlusOne,
+				    baseMinusT,
+				    qMinusT;
+		
+				// Convert the input in UCS-2 to Unicode
+				input = ucs2decode(input);
+		
+				// Cache the length
+				inputLength = input.length;
+		
+				// Initialize the state
+				n = initialN;
+				delta = 0;
+				bias = initialBias;
+		
+				// Handle the basic code points
+				for (j = 0; j < inputLength; ++j) {
+					currentValue = input[j];
+					if (currentValue < 0x80) {
+						output.push(stringFromCharCode(currentValue));
+					}
+				}
+		
+				handledCPCount = basicLength = output.length;
+		
+				// `handledCPCount` is the number of code points that have been handled;
+				// `basicLength` is the number of basic code points.
+		
+				// Finish the basic string - if it is not empty - with a delimiter
+				if (basicLength) {
+					output.push(delimiter);
+				}
+		
+				// Main encoding loop:
+				while (handledCPCount < inputLength) {
+		
+					// All non-basic code points < n have been handled already. Find the next
+					// larger one:
+					for (m = maxInt, j = 0; j < inputLength; ++j) {
+						currentValue = input[j];
+						if (currentValue >= n && currentValue < m) {
+							m = currentValue;
+						}
+					}
+		
+					// Increase `delta` enough to advance the decoder's <n,i> state to <m,0>,
+					// but guard against overflow
+					handledCPCountPlusOne = handledCPCount + 1;
+					if (m - n > floor((maxInt - delta) / handledCPCountPlusOne)) {
+						error('overflow');
+					}
+		
+					delta += (m - n) * handledCPCountPlusOne;
+					n = m;
+		
+					for (j = 0; j < inputLength; ++j) {
+						currentValue = input[j];
+		
+						if (currentValue < n && ++delta > maxInt) {
+							error('overflow');
+						}
+		
+						if (currentValue == n) {
+							// Represent delta as a generalized variable-length integer
+							for (q = delta, k = base; /* no condition */; k += base) {
+								t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+								if (q < t) {
+									break;
+								}
+								qMinusT = q - t;
+								baseMinusT = base - t;
+								output.push(
+									stringFromCharCode(digitToBasic(t + qMinusT % baseMinusT, 0))
+								);
+								q = floor(qMinusT / baseMinusT);
+							}
+		
+							output.push(stringFromCharCode(digitToBasic(q, 0)));
+							bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
+							delta = 0;
+							++handledCPCount;
+						}
+					}
+		
+					++delta;
+					++n;
+		
+				}
+				return output.join('');
+			}
+		
+			/**
+			 * Converts a Punycode string representing a domain name or an email address
+			 * to Unicode. Only the Punycoded parts of the input will be converted, i.e.
+			 * it doesn't matter if you call it on a string that has already been
+			 * converted to Unicode.
+			 * @memberOf punycode
+			 * @param {String} input The Punycoded domain name or email address to
+			 * convert to Unicode.
+			 * @returns {String} The Unicode representation of the given Punycode
+			 * string.
+			 */
+			function toUnicode(input) {
+				return mapDomain(input, function(string) {
+					return regexPunycode.test(string)
+						? decode(string.slice(4).toLowerCase())
+						: string;
+				});
+			}
+		
+			/**
+			 * Converts a Unicode string representing a domain name or an email address to
+			 * Punycode. Only the non-ASCII parts of the domain name will be converted,
+			 * i.e. it doesn't matter if you call it with a domain that's already in
+			 * ASCII.
+			 * @memberOf punycode
+			 * @param {String} input The domain name or email address to convert, as a
+			 * Unicode string.
+			 * @returns {String} The Punycode representation of the given domain name or
+			 * email address.
+			 */
+			function toASCII(input) {
+				return mapDomain(input, function(string) {
+					return regexNonASCII.test(string)
+						? 'xn--' + encode(string)
+						: string;
+				});
+			}
+		
+			/*--------------------------------------------------------------------------*/
+		
+			/** Define the public API */
+			punycode = {
+				/**
+				 * A string representing the current Punycode.js version number.
+				 * @memberOf punycode
+				 * @type String
+				 */
+				'version': '1.3.2',
+				/**
+				 * An object of methods to convert from JavaScript's internal character
+				 * representation (UCS-2) to Unicode code points, and back.
+				 * @see <https://mathiasbynens.be/notes/javascript-encoding>
+				 * @memberOf punycode
+				 * @type Object
+				 */
+				'ucs2': {
+					'decode': ucs2decode,
+					'encode': ucs2encode
+				},
+				'decode': decode,
+				'encode': encode,
+				'toASCII': toASCII,
+				'toUnicode': toUnicode
+			};
+		
+			/** Expose `punycode` */
+			// Some AMD build optimizers, like r.js, check for specific condition patterns
+			// like the following:
+			if (
+				true
+			) {
+				!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+					return punycode;
+				}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+			} else if (freeExports && freeModule) {
+				if (module.exports == freeExports) { // in Node.js or RingoJS v0.8.0+
+					freeModule.exports = punycode;
+				} else { // in Narwhal or RingoJS v0.7.0-
+					for (key in punycode) {
+						punycode.hasOwnProperty(key) && (freeExports[key] = punycode[key]);
+					}
+				}
+			} else { // in Rhino or a web browser
+				root.punycode = punycode;
+			}
+		
+		}(this));
+		
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)(module), (function() { return this; }())))
+	
+	/***/ },
+	/* 16 */
+	/***/ function(module, exports) {
+	
+		module.exports = function(module) {
+			if(!module.webpackPolyfill) {
+				module.deprecate = function() {};
+				module.paths = [];
+				// module.parent = undefined by default
+				module.children = [];
+				module.webpackPolyfill = 1;
+			}
+			return module;
+		}
+	
+	
+	/***/ },
+	/* 17 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		'use strict';
+		
+		exports.decode = exports.parse = __webpack_require__(18);
+		exports.encode = exports.stringify = __webpack_require__(19);
+	
+	
+	/***/ },
+	/* 18 */
+	/***/ function(module, exports) {
+	
+		// Copyright Joyent, Inc. and other Node contributors.
+		//
+		// Permission is hereby granted, free of charge, to any person obtaining a
+		// copy of this software and associated documentation files (the
+		// "Software"), to deal in the Software without restriction, including
+		// without limitation the rights to use, copy, modify, merge, publish,
+		// distribute, sublicense, and/or sell copies of the Software, and to permit
+		// persons to whom the Software is furnished to do so, subject to the
+		// following conditions:
+		//
+		// The above copyright notice and this permission notice shall be included
+		// in all copies or substantial portions of the Software.
+		//
+		// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+		// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+		// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+		// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+		// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+		// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+		// USE OR OTHER DEALINGS IN THE SOFTWARE.
+		
+		'use strict';
+		
+		// If obj.hasOwnProperty has been overridden, then calling
+		// obj.hasOwnProperty(prop) will break.
+		// See: https://github.com/joyent/node/issues/1707
+		function hasOwnProperty(obj, prop) {
+		  return Object.prototype.hasOwnProperty.call(obj, prop);
+		}
+		
+		module.exports = function(qs, sep, eq, options) {
+		  sep = sep || '&';
+		  eq = eq || '=';
+		  var obj = {};
+		
+		  if (typeof qs !== 'string' || qs.length === 0) {
+		    return obj;
+		  }
+		
+		  var regexp = /\+/g;
+		  qs = qs.split(sep);
+		
+		  var maxKeys = 1000;
+		  if (options && typeof options.maxKeys === 'number') {
+		    maxKeys = options.maxKeys;
+		  }
+		
+		  var len = qs.length;
+		  // maxKeys <= 0 means that we should not limit keys count
+		  if (maxKeys > 0 && len > maxKeys) {
+		    len = maxKeys;
+		  }
+		
+		  for (var i = 0; i < len; ++i) {
+		    var x = qs[i].replace(regexp, '%20'),
+		        idx = x.indexOf(eq),
+		        kstr, vstr, k, v;
+		
+		    if (idx >= 0) {
+		      kstr = x.substr(0, idx);
+		      vstr = x.substr(idx + 1);
+		    } else {
+		      kstr = x;
+		      vstr = '';
+		    }
+		
+		    k = decodeURIComponent(kstr);
+		    v = decodeURIComponent(vstr);
+		
+		    if (!hasOwnProperty(obj, k)) {
+		      obj[k] = v;
+		    } else if (Array.isArray(obj[k])) {
+		      obj[k].push(v);
+		    } else {
+		      obj[k] = [obj[k], v];
+		    }
+		  }
+		
+		  return obj;
+		};
+	
+	
+	/***/ },
+	/* 19 */
+	/***/ function(module, exports) {
+	
+		// Copyright Joyent, Inc. and other Node contributors.
+		//
+		// Permission is hereby granted, free of charge, to any person obtaining a
+		// copy of this software and associated documentation files (the
+		// "Software"), to deal in the Software without restriction, including
+		// without limitation the rights to use, copy, modify, merge, publish,
+		// distribute, sublicense, and/or sell copies of the Software, and to permit
+		// persons to whom the Software is furnished to do so, subject to the
+		// following conditions:
+		//
+		// The above copyright notice and this permission notice shall be included
+		// in all copies or substantial portions of the Software.
+		//
+		// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+		// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+		// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+		// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+		// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+		// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+		// USE OR OTHER DEALINGS IN THE SOFTWARE.
+		
+		'use strict';
+		
+		var stringifyPrimitive = function(v) {
+		  switch (typeof v) {
+		    case 'string':
+		      return v;
+		
+		    case 'boolean':
+		      return v ? 'true' : 'false';
+		
+		    case 'number':
+		      return isFinite(v) ? v : '';
+		
+		    default:
+		      return '';
+		  }
+		};
+		
+		module.exports = function(obj, sep, eq, name) {
+		  sep = sep || '&';
+		  eq = eq || '=';
+		  if (obj === null) {
+		    obj = undefined;
+		  }
+		
+		  if (typeof obj === 'object') {
+		    return Object.keys(obj).map(function(k) {
+		      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+		      if (Array.isArray(obj[k])) {
+		        return obj[k].map(function(v) {
+		          return ks + encodeURIComponent(stringifyPrimitive(v));
+		        }).join(sep);
+		      } else {
+		        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+		      }
+		    }).join(sep);
+		
+		  }
+		
+		  if (!name) return '';
+		  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+		         encodeURIComponent(stringifyPrimitive(obj));
+		};
+	
+	
+	/***/ },
+	/* 20 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -2691,22 +4503,14 @@ return /******/ (function(modules) { // webpackBootstrap
 					]
 				},
 				"simpleTypes": {
-					"anyOf": [
-						{
-							"enum": [
-								"array",
-								"boolean",
-								"integer",
-								"null",
-								"number",
-								"object",
-								"string",
-								"any"
-							]
-						},
-						{
-							"type": "string"
-						}
+					"enum": [
+						"array",
+						"boolean",
+						"integer",
+						"null",
+						"number",
+						"object",
+						"string"
 					]
 				},
 				"stringArray": {
@@ -2895,7 +4699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	
 	/***/ },
-	/* 15 */
+	/* 21 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2918,6 +4722,39 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		module.exports = formats;
 	
+	/***/ },
+	/* 22 */
+	/***/ function(module, exports) {
+	
+		'use strict';
+		
+		// Reference: https://github.com/bestiejs/punycode.js/blob/master/punycode.js#L101`
+		// Info: https://mathiasbynens.be/notes/javascript-unicode
+		function ucs2length(string) {
+		    var ucs2len = 0,
+		        counter = 0,
+		        length = string.length,
+		        value, extra;
+		
+		    while (counter < length) {
+		        ucs2len++;
+		        value = string.charCodeAt(counter++);
+		
+		        if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+		            // It's a high surrogate, and there is a next character.
+		            extra = string.charCodeAt(counter++);
+		
+		            if ((extra & 0xFC00) !== 0xDC00) { /* Low surrogate. */                 // jshint ignore: line
+		                counter--;
+		            }
+		        }
+		    }
+		
+		    return ucs2len;
+		}
+		
+		module.exports = ucs2length;
+	
 	/***/ }
 	/******/ ])
 	});
@@ -2925,275 +4762,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=models.js.map
 
 /***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var embed = __webpack_require__(2);
-	var utils = __webpack_require__(3);
-	var page_1 = __webpack_require__(6);
-	/**
-	 * A Power BI Report embed component
-	 *
-	 * @export
-	 * @class Report
-	 * @extends {embed.Embed}
-	 * @implements {IReportNode}
-	 * @implements {IFilterable}
-	 */
-	var Report = (function (_super) {
-	    __extends(Report, _super);
-	    /**
-	     * Creates an instance of a Power BI Report.
-	     *
-	     * @param {service.Service} service
-	     * @param {HTMLElement} element
-	     * @param {embed.IEmbedConfiguration} config
-	     */
-	    function Report(service, element, config) {
-	        var filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
-	        var navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
-	        var settings = utils.assign({
-	            filterPaneEnabled: filterPaneEnabled,
-	            navContentPaneEnabled: navContentPaneEnabled
-	        }, config.settings);
-	        var configCopy = utils.assign({ settings: settings }, config);
-	        _super.call(this, service, element, configCopy);
-	        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
-	    }
-	    /**
-	     * This adds backwards compatibility for older config which used the reportId query param to specify report id.
-	     * E.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1
-	     *
-	     * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
-	     *
-	     * @static
-	     * @param {string} url
-	     * @returns {string}
-	     */
-	    Report.findIdFromEmbedUrl = function (url) {
-	        var reportIdRegEx = /reportId="?([^&]+)"?/;
-	        var reportIdMatch = url.match(reportIdRegEx);
-	        var reportId;
-	        if (reportIdMatch) {
-	            reportId = reportIdMatch[1];
-	        }
-	        return reportId;
-	    };
-	    /**
-	     * Get filters that are applied at the report level
-	     *
-	     * ```javascript
-	     * // Get filters applied at report level
-	     * report.getFilters()
-	     *   .then(filters => {
-	     *     ...
-	     *   });
-	     * ```
-	     *
-	     * @returns {Promise<models.IFilter[]>}
-	     */
-	    Report.prototype.getFilters = function () {
-	        return this.service.hpm.get("/report/filters", { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .then(function (response) { return response.body; }, function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Get report id from first available location: options, attribute, embed url.
-	     *
-	     * @returns {string}
-	     */
-	    Report.prototype.getId = function () {
-	        var reportId = this.config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(this.config.embedUrl);
-	        if (typeof reportId !== 'string' || reportId.length === 0) {
-	            throw new Error("Report id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '" + Report.reportIdAttribute + "'.");
-	        }
-	        return reportId;
-	    };
-	    /**
-	     * Get the list of pages within the report
-	     *
-	     * ```javascript
-	     * report.getPages()
-	     *  .then(pages => {
-	     *      ...
-	     *  });
-	     * ```
-	     *
-	     * @returns {Promise<Page[]>}
-	     */
-	    Report.prototype.getPages = function () {
-	        var _this = this;
-	        return this.service.hpm.get('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .then(function (response) {
-	            return response.body
-	                .map(function (page) {
-	                return new page_1.Page(_this, page.name, page.displayName);
-	            });
-	        }, function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Create new Page instance.
-	     *
-	     * Normally you would get Page objects by calling `report.getPages()` but in the case
-	     * that the page name is known and you want to perform an action on a page without having to retrieve it
-	     * you can create it directly.
-	     *
-	     * Note: Since you are creating the page manually there is no guarantee that the page actually exists in the report and the subsequence requests could fail.
-	     *
-	     * ```javascript
-	     * const page = report.page('ReportSection1');
-	     * page.setActive();
-	     * ```
-	     *
-	     * @param {string} name
-	     * @param {string} [displayName]
-	     * @returns {Page}
-	     */
-	    Report.prototype.page = function (name, displayName) {
-	        return new page_1.Page(this, name, displayName);
-	    };
-	    /**
-	     * Print the active page of the report.
-	     * (Invokes window.print() on embed iframe)
-	     */
-	    Report.prototype.print = function () {
-	        return this.service.hpm.post('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .then(function (response) {
-	            return response.body;
-	        })
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Refreshes data sources for report.
-	     *
-	     * ```javascript
-	     * report.refresh();
-	     * ```
-	     */
-	    Report.prototype.refresh = function () {
-	        return this.service.hpm.post('/report/refresh', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .then(function (response) {
-	            return response.body;
-	        })
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Reloads report using existing configuration.
-	     * This can effectively clears all filters and makes the first page active.  This can be used to effectively reset a report back to loaded state.
-	     *
-	     * ```javascript
-	     * report.reload();
-	     * ```
-	     */
-	    Report.prototype.reload = function () {
-	        return this.load(this.config);
-	    };
-	    /**
-	     * Remove all filters at report level
-	     *
-	     * ```javascript
-	     * report.removeFilters();
-	     * ```
-	     *
-	     * @returns {Promise<void>}
-	     */
-	    Report.prototype.removeFilters = function () {
-	        return this.setFilters([]);
-	    };
-	    /**
-	     * Set the active page
-	     *
-	     * ```javascript
-	     * report.setPage("page2")
-	     *  .catch(error => { ... });
-	     * ```
-	     *
-	     * @param {string} pageName
-	     * @returns {Promise<void>}
-	     */
-	    Report.prototype.setPage = function (pageName) {
-	        var page = {
-	            name: pageName,
-	            displayName: null
-	        };
-	        return this.service.hpm.put('/report/pages/active', page, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Sets filters
-	     *
-	     * ```javascript
-	     * const filters: [
-	     *    ...
-	     * ];
-	     *
-	     * report.setFilters(filters)
-	     *  .catch(errors => {
-	     *    ...
-	     *  });
-	     * ```
-	     *
-	     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
-	     * @returns {Promise<void>}
-	     */
-	    Report.prototype.setFilters = function (filters) {
-	        return this.service.hpm.put("/report/filters", filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Update settings of report (filter pane visibility, page navigation visibility)
-	     *
-	     * ```javascript
-	     * const newSettings = {
-	     *   navContentPaneEnabled: true,
-	     *   filterPaneEnabled: false
-	     * };
-	     *
-	     * report.updateSettings(newSettings)
-	     *   .catch(error => { ... });
-	     * ```
-	     *
-	     * @param {models.ISettings} settings
-	     * @returns {Promise<void>}
-	     */
-	    Report.prototype.updateSettings = function (settings) {
-	        return this.service.hpm.patch('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-	            .catch(function (response) {
-	            throw response.body;
-	        });
-	    };
-	    Report.allowedEvents = ["dataSelected", "filtersApplied", "pageChanged", "error"];
-	    Report.reportIdAttribute = 'powerbi-report-id';
-	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
-	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
-	    Report.typeAttribute = 'powerbi-type';
-	    Report.type = "Report";
-	    return Report;
-	}(embed.Embed));
-	exports.Report = Report;
-
-
-/***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	var visual_1 = __webpack_require__(7);
 	/**
 	 * A Power BI report page
 	 *
@@ -3216,14 +4787,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.displayName = displayName;
 	    }
 	    /**
-	     * Gets all page level filters within report
+	     * Gets all page level filters within the report.
 	     *
 	     * ```javascript
 	     * page.getFilters()
 	     *  .then(pages => { ... });
 	     * ```
 	     *
-	     * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
+	     * @returns {(Promise<models.IFilter[]>)}
 	     */
 	    Page.prototype.getFilters = function () {
 	        return this.report.service.hpm.get("/report/pages/" + this.name + "/filters", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
@@ -3232,29 +4803,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    /**
-	     * Gets all the visuals on the page.
-	     *
-	     * ```javascript
-	     * page.getVisuals()
-	     *   .then(visuals => { ... });
-	     * ```
-	     *
-	     * @returns {Promise<Visual[]>}
-	     */
-	    Page.prototype.getVisuals = function () {
-	        var _this = this;
-	        return this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
-	            .then(function (response) {
-	            return response.body
-	                .map(function (visual) {
-	                return new visual_1.Visual(_this, visual.name);
-	            });
-	        }, function (response) {
-	            throw response.body;
-	        });
-	    };
-	    /**
-	     * Remove all filters on this page within the report
+	     * Removes all filters from this page of the report.
 	     *
 	     * ```javascript
 	     * page.removeFilters();
@@ -3266,7 +4815,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this.setFilters([]);
 	    };
 	    /**
-	     * Make the current page the active page of the report.
+	     * Makes the current page the active page of the report.
 	     *
 	     * ```javascripot
 	     * page.setActive();
@@ -3292,7 +4841,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *   .catch(errors => { ... });
 	     * ```
 	     *
-	     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+	     * @param {(models.IFilter[])} filters
 	     * @returns {Promise<void>}
 	     */
 	    Page.prototype.setFilters = function (filters) {
@@ -3301,26 +4850,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
-	    /**
-	     * Creates new Visual object given a name of the visual.
-	     *
-	     * Normally you would get Visual objects by calling `page.getVisuals()` but in the case
-	     * that the visual name is known and you want to perform an action on a visaul such as setting a filters
-	     * without having to retrieve it first you can create it directly.
-	     *
-	     * Note: Since you are creating the visual manually there is no guarantee that the visual actually exists in the report and the subsequence requests could fail.
-	     *
-	     * ```javascript
-	     * const visual = report.page('ReportSection1').visual('BarChart1');
-	     * visual.setFilters(filters);
-	     * ```
-	     *
-	     * @param {string} name
-	     * @returns {Visual}
-	     */
-	    Page.prototype.visual = function (name) {
-	        return new visual_1.Visual(this, name);
-	    };
 	    return Page;
 	}());
 	exports.Page = Page;
@@ -3328,69 +4857,81 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 7 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var embed = __webpack_require__(2);
+	var models = __webpack_require__(5);
 	/**
-	 * A Power BI visual within a page
+	 * A Power BI Dashboard embed component
 	 *
 	 * @export
-	 * @class Visual
-	 * @implements {IVisualNode}
+	 * @class Dashboard
+	 * @extends {embed.Embed}
+	 * @implements {IDashboardNode}
 	 * @implements {IFilterable}
 	 */
-	var Visual = (function () {
-	    function Visual(page, name) {
-	        this.name = name;
-	        this.page = page;
+	var Dashboard = (function (_super) {
+	    __extends(Dashboard, _super);
+	    /**
+	     * Creates an instance of a Power BI Dashboard.
+	     *
+	     * @param {service.Service} service
+	     * @param {HTMLElement} element
+	     */
+	    function Dashboard(service, element, config) {
+	        _super.call(this, service, element, config);
+	        this.loadPath = "/dashboard/load";
+	        Array.prototype.push.apply(this.allowedEvents, Dashboard.allowedEvents);
 	    }
 	    /**
-	     * Gets all page level filters within report
+	     * This adds backwards compatibility for older config which used the dashboardId query param to specify dashboard id.
+	     * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
 	     *
-	     * ```javascript
-	     * visual.getFilters()
-	     *  .then(pages => { ... });
-	     * ```
+	     * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
 	     *
-	     * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
+	     * @static
+	     * @param {string} url
+	     * @returns {string}
 	     */
-	    Visual.prototype.getFilters = function () {
-	        return this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-	            .then(function (response) { return response.body; }, function (response) {
-	            throw response.body;
-	        });
+	    Dashboard.findIdFromEmbedUrl = function (url) {
+	        var dashboardIdRegEx = /dashboardId="?([^&]+)"?/;
+	        var dashboardIdMatch = url.match(dashboardIdRegEx);
+	        var dashboardId;
+	        if (dashboardIdMatch) {
+	            dashboardId = dashboardIdMatch[1];
+	        }
+	        return dashboardId;
 	    };
 	    /**
-	     * Remove all filters on this page within the report
+	     * Get dashboard id from first available location: options, attribute, embed url.
 	     *
-	     * ```javascript
-	     * visual.removeFilters();
-	     * ```
-	     *
-	     * @returns {Promise<void>}
+	     * @returns {string}
 	     */
-	    Visual.prototype.removeFilters = function () {
-	        return this.setFilters([]);
+	    Dashboard.prototype.getId = function () {
+	        var dashboardId = this.config.id || this.element.getAttribute(Dashboard.dashboardIdAttribute) || Dashboard.findIdFromEmbedUrl(this.config.embedUrl);
+	        if (typeof dashboardId !== 'string' || dashboardId.length === 0) {
+	            throw new Error("Dashboard id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '" + Dashboard.dashboardIdAttribute + "'.");
+	        }
+	        return dashboardId;
 	    };
 	    /**
-	     * Set all filters at the visual level of the page
-	     *
-	     * ```javascript
-	     * visual.setFilters(filters)
-	     *  .catch(errors => { ... });
-	     * ```
-	     *
-	     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
-	     * @returns {Promise<void>}
+	     * Validate load configuration.
 	     */
-	    Visual.prototype.setFilters = function (filters) {
-	        return this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-	            .catch(function (response) {
-	            throw response.body;
-	        });
+	    Dashboard.prototype.validate = function (config) {
+	        return models.validateDashboardLoad(config);
 	    };
-	    return Visual;
-	}());
-	exports.Visual = Visual;
+	    Dashboard.allowedEvents = ["tileClicked", "error"];
+	    Dashboard.dashboardIdAttribute = 'powerbi-dashboard-id';
+	    Dashboard.typeAttribute = 'powerbi-type';
+	    Dashboard.type = "Dashboard";
+	    return Dashboard;
+	}(embed.Embed));
+	exports.Dashboard = Dashboard;
 
 
 /***/ },
@@ -3416,12 +4957,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _super.apply(this, arguments);
 	    }
 	    /**
-	     * The the id of the tile
+	     * The ID of the tile
 	     *
 	     * @returns {string}
 	     */
 	    Tile.prototype.getId = function () {
-	        throw Error('Not implemented. Embedding tiles is not supported yet.');
+	        throw new Error('Not implemented. Embedding tiles is not supported yet.');
+	    };
+	    /**
+	     * Validate load configuration.
+	     */
+	    Tile.prototype.validate = function (config) {
+	        throw new Error('Not implemented. Embedding tiles is not supported yet.');
 	    };
 	    Tile.type = "Tile";
 	    return Tile;
@@ -3437,9 +4984,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var wpmp = __webpack_require__(11);
 	var hpm = __webpack_require__(12);
 	var router = __webpack_require__(13);
-	/**
-	 * TODO: Need to get sdk version and settings from package.json, Generate config file via gulp task?
-	 */
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -3470,7 +5014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	var config = {
-	    version: '2.0.0-beta.13',
+	    version: '2.2.1',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -3481,7 +5025,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.3 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -3581,6 +5125,30 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return !!message.error;
 		    };
 		    /**
+		     * Utility to create a deferred object.
+		     */
+		    // TODO: Look to use RSVP library instead of doing this manually.
+		    // From what I searched RSVP would work better because it has .finally and .deferred; however, it doesn't have Typings information. 
+		    WindowPostMessageProxy.createDeferred = function () {
+		        var deferred = {
+		            resolve: null,
+		            reject: null,
+		            promise: null
+		        };
+		        var promise = new Promise(function (resolve, reject) {
+		            deferred.resolve = resolve;
+		            deferred.reject = reject;
+		        });
+		        deferred.promise = promise;
+		        return deferred;
+		    };
+		    /**
+		     * Utility to generate random sequence of characters used as tracking id for promises.
+		     */
+		    WindowPostMessageProxy.createRandomString = function () {
+		        return (Math.random() + 1).toString(36).substring(7);
+		    };
+		    /**
 		     * Adds handler.
 		     * If the first handler whose test method returns true will handle the message and provide a response.
 		     */
@@ -3593,7 +5161,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		     */
 		    WindowPostMessageProxy.prototype.removeHandler = function (handler) {
 		        var handlerIndex = this.handlers.indexOf(handler);
-		        if (handlerIndex == -1) {
+		        if (handlerIndex === -1) {
 		            throw new Error("You attempted to remove a handler but no matching handler was found.");
 		        }
 		        this.handlers.splice(handlerIndex, 1);
@@ -3741,30 +5309,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		            delete this.pendingRequestPromises[trackingProperties.id];
 		        }
 		    };
-		    /**
-		     * Utility to create a deferred object.
-		     */
-		    // TODO: Look to use RSVP library instead of doing this manually.
-		    // From what I searched RSVP would work better because it has .finally and .deferred; however, it doesn't have Typings information. 
-		    WindowPostMessageProxy.createDeferred = function () {
-		        var deferred = {
-		            resolve: null,
-		            reject: null,
-		            promise: null
-		        };
-		        var promise = new Promise(function (resolve, reject) {
-		            deferred.resolve = resolve;
-		            deferred.reject = reject;
-		        });
-		        deferred.promise = promise;
-		        return deferred;
-		    };
-		    /**
-		     * Utility to generate random sequence of characters used as tracking id for promises.
-		     */
-		    WindowPostMessageProxy.createRandomString = function () {
-		        return (Math.random() + 1).toString(36).substring(7);
-		    };
 		    WindowPostMessageProxy.messagePropertyName = "windowPostMessageProxy";
 		    return WindowPostMessageProxy;
 		}());
@@ -3781,7 +5325,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! http-post-message v0.2.2 | (c) 2016 Microsoft Corporation MIT */
+	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -3965,7 +5509,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-router v0.1.2 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();

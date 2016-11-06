@@ -1,7 +1,6 @@
-/*! powerbi-client v2.0.0-beta.13 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.2.1 | (c) 2016 Microsoft Corporation MIT */
 import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
-import { Visual } from './visual';
 import * as models from 'powerbi-models';
 /**
  * A Page node within a report hierarchy
@@ -35,8 +34,7 @@ export declare class Page implements IPageNode, IFilterable {
      */
     name: string;
     /**
-     * The user defined display name of the report page
-     * This can be undefined in cases where page is created manually
+     * The user defined display name of the report page, which is undefined if the page is created manually
      *
      * @type {string}
      */
@@ -50,29 +48,18 @@ export declare class Page implements IPageNode, IFilterable {
      */
     constructor(report: IReportNode, name: string, displayName?: string);
     /**
-     * Gets all page level filters within report
+     * Gets all page level filters within the report.
      *
      * ```javascript
      * page.getFilters()
      *  .then(pages => { ... });
      * ```
      *
-     * @returns {(Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>)}
+     * @returns {(Promise<models.IFilter[]>)}
      */
-    getFilters(): Promise<(models.IBasicFilter | models.IAdvancedFilter)[]>;
+    getFilters(): Promise<models.IFilter[]>;
     /**
-     * Gets all the visuals on the page.
-     *
-     * ```javascript
-     * page.getVisuals()
-     *   .then(visuals => { ... });
-     * ```
-     *
-     * @returns {Promise<Visual[]>}
-     */
-    getVisuals(): Promise<Visual[]>;
-    /**
-     * Remove all filters on this page within the report
+     * Removes all filters from this page of the report.
      *
      * ```javascript
      * page.removeFilters();
@@ -82,7 +69,7 @@ export declare class Page implements IPageNode, IFilterable {
      */
     removeFilters(): Promise<void>;
     /**
-     * Make the current page the active page of the report.
+     * Makes the current page the active page of the report.
      *
      * ```javascripot
      * page.setActive();
@@ -99,26 +86,8 @@ export declare class Page implements IPageNode, IFilterable {
      *   .catch(errors => { ... });
      * ```
      *
-     * @param {((models.IBasicFilter | models.IAdvancedFilter)[])} filters
+     * @param {(models.IFilter[])} filters
      * @returns {Promise<void>}
      */
-    setFilters(filters: (models.IBasicFilter | models.IAdvancedFilter)[]): Promise<void>;
-    /**
-     * Creates new Visual object given a name of the visual.
-     *
-     * Normally you would get Visual objects by calling `page.getVisuals()` but in the case
-     * that the visual name is known and you want to perform an action on a visaul such as setting a filters
-     * without having to retrieve it first you can create it directly.
-     *
-     * Note: Since you are creating the visual manually there is no guarantee that the visual actually exists in the report and the subsequence requests could fail.
-     *
-     * ```javascript
-     * const visual = report.page('ReportSection1').visual('BarChart1');
-     * visual.setFilters(filters);
-     * ```
-     *
-     * @param {string} name
-     * @returns {Visual}
-     */
-    visual(name: string): Visual;
+    setFilters(filters: models.IFilter[]): Promise<void>;
 }
