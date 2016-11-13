@@ -55,4 +55,8 @@ export declare class Dashboard extends embed.Embed implements IDashboardNode {
      * Validate load configuration.
      */
     validate(config: models.IDashboardLoadConfiguration): models.IError[];
+    /**
+     * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
+     */
+    private ValidatePageView(pageView);
 }

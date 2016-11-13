@@ -20,6 +20,34 @@ declare global {
   }
 }
 
+function ValidateDashboardConfigurationWorksAsExpected(pageView: string, exceptionExpected: boolean, powerbi: service.Service) {
+  const embedUrl = `https://app.powerbi.com/dashboardEmbed`;
+  const component = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
+    .appendTo('#powerbi-fixture');
+
+  const dashboardEmbedConfig = {
+    type: "dashboard",
+    id: "fakeReportId",
+    accessToken: "fakeAccessToken",
+    embedUrl: "fakeEmbedUrl",
+    pageView: pageView
+  };
+
+  powerbi.embed(component[0], <any>dashboardEmbedConfig);
+
+  var exceptionThrown = false;
+  // Act
+  try {
+    powerbi.embed(component[0], <any>dashboardEmbedConfig);
+  }
+  catch(e) {
+    exceptionThrown = true;
+  }
+
+  // Assert
+  expect(exceptionThrown).toBe(exceptionExpected);
+}
+
 let logMessages = (window.__karma__.config.args[0] === 'logMessages');
 
 describe('service', function () {
@@ -216,6 +244,26 @@ describe('service', function () {
 
       // Assert
       expect(attemptToEmbed).toThrowError();
+    });
+
+    it('if attempting to embed a dashboard with an invalid pageView, throw error', function () {
+      ValidateDashboardConfigurationWorksAsExpected("notValid", true, powerbi);
+    });
+
+    it('if attempting to embed a dashboard with a pageView equals fitToWidth, don\'t throw error', function () {
+        ValidateDashboardConfigurationWorksAsExpected("fitToWidth", false, powerbi);
+    });
+
+    it('if attempting to embed a dashboard with a pageView equals oneColumn, don\'t throw error', function () {
+        ValidateDashboardConfigurationWorksAsExpected("oneColumn", false, powerbi);
+    });
+
+    it('if attempting to embed a dashboard with a pageView equals actualSize, don\'t throw error', function () {
+        ValidateDashboardConfigurationWorksAsExpected("actualSize", false, powerbi);
+    });
+
+    it('if attempting to embed a dashboard with an undefined pageView, don\'t throw error', function () {
+        ValidateDashboardConfigurationWorksAsExpected(undefined, false, powerbi);
     });
 
     it('should get uqiqueId from config first', function () {

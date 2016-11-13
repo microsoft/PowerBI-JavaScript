@@ -85,6 +85,16 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
      * Validate load configuration.
      */
     validate(config: models.IDashboardLoadConfiguration): models.IError[] {
-      return models.validateDashboardLoad(config);
+      let error = models.validateDashboardLoad(config);
+      return error ? error : this.ValidatePageView(config.pageView);
+    }
+   
+    /**
+     * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
+     */
+    private ValidatePageView(pageView: models.PageView): models.IError[] {
+      if (pageView && pageView !== "fitToWidth" && pageView !== "oneColumn" && pageView !== "actualSize") {
+        return [{message: "pageView must be one of the followings: fitToWidth, oneColumn, actualSize"}];
+      }
     }
 }
