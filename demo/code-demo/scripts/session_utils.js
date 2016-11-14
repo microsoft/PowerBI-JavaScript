@@ -38,22 +38,13 @@ function UpdateSessions() {
 
 function SetAccessTokenFromSession() {
     var sessionAccessToken = GetSession("accessToken");
-    if (sessionAccessToken)
-    {
-        $("#txtAccessToken").val(sessionAccessToken);
-    }
+    $("#txtAccessToken").val(sessionAccessToken);
 }
 
 function SetEmbedUrlFromSession() {    
     var sessionEmbedUrl = GetSession("embedUrl");
-    if (sessionEmbedUrl)
-    {
-        $("#txtReportEmbed").val(sessionEmbedUrl);
-    }
+    $("#txtReportEmbed").val(sessionEmbedUrl);
     
     var sessionEmbedId = GetSession("embedId");
-    if (sessionEmbedId)
-    {
-        $("#txtEmbedReportId").val(sessionEmbedId);
-    }
+    $("#txtEmbedReportId").val(sessionEmbedId);
 }

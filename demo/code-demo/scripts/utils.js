@@ -11,7 +11,10 @@
     if (parts && parts.length > 0)
     {
         var guidParts = parts[parts.length  -1].split("&");
-        id = guidParts[0];
+        if (guidParts && guidParts.length > 0)
+        {
+            id = guidParts[0];
+        }
     }
     
     if (!id)

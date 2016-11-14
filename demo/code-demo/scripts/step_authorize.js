@@ -1,6 +1,6 @@
 var embedWithSpecificReportDivExpanded = false;
 
-function ExpandEmbedWithSpecificReportDiv() {
+function ToggleEmbedWithSpecificReportDiv() {
     if (embedWithSpecificReportDivExpanded == true)
     {
         embedWithSpecificReportDivExpanded = false;
