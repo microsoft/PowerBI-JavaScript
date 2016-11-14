@@ -78,6 +78,18 @@ a:hover, a:visited, a:link, a:active
     height:550px;
 }
 
+#oldSample {
+    float: right;
+    margin-right: 30px;
+    font-weight: bolder;
+}
+
+#oldSample a {
+    color: white;
+    text-decoration: underline;
+    font-size: 20px;
+}
+
 .ms-font-xxl {
     color: #333333;
     font-family: 'Segoe UI Web Light', 'Segoe UI Light', 'Segoe WP Light', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
