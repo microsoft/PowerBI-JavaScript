@@ -5,7 +5,7 @@
         <div id="steps-ul-dev">
             <ul id="steps-ul" class="steps-ul">
                 <li id="steps-auth" class="steps-li-active" onclick="OpenAuthStep();"><a href="#">Authorize</a></li>
-                <li id="steps-embed" onclick="OpenEmbedStepWithSample();"><a href="#">Embed</a></li>
+                <li id="steps-embed" onclick="OpenEmbedStep();"><a href="#">Embed</a></li>
                 <li id="steps-interact" onclick="OpenInteractStep();"><a href="#">Interact</a></li>
             </ul>
         </div>
@@ -26,6 +26,15 @@
 </div>
 
 <script>
-    // Open Authorization Step after this page loads.
-    OpenAuthStep();
+	var embedUrl = GetParameterByName("embedUrl");
+	if (!embedUrl)
+	{
+		// Open Authorization Step after this page loads.
+		OpenAuthStep();
+	}
+	else
+	{
+		OpenEmbedStep();
+	}
+    
 </script>

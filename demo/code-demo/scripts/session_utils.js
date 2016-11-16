@@ -41,6 +41,44 @@ function SetAccessTokenFromSession() {
     $("#txtAccessToken").val(sessionAccessToken);
 }
 
+function SetAccessTokenFromSessionOrUrlParam() {
+	var accessToken = GetParameterByName("accessToken");
+	if (!accessToken)
+	{
+		accessToken = GetSession("accessToken");
+	}
+	
+    $("#txtAccessToken").val(accessToken);
+}
+
+function GetParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function SetEmbedUrlFromSessionOrUrlParam() {
+	var embedUrl = GetParameterByName("embedUrl");
+	if (!embedUrl)
+	{
+		embedUrl = GetSession("embedUrl");
+	}
+    $("#txtReportEmbed").val(embedUrl);
+    
+	var embedId = GetParameterByName("embedId");
+	if (!embedId)
+	{
+		embedId = GetSession("embedId");
+	}
+    $("#txtEmbedReportId").val(embedId);
+}
+
 function SetEmbedUrlFromSession() {    
     var sessionEmbedUrl = GetSession("embedUrl");
     $("#txtReportEmbed").val(sessionEmbedUrl);
@@ -48,3 +86,5 @@ function SetEmbedUrlFromSession() {
     var sessionEmbedId = GetSession("embedId");
     $("#txtEmbedReportId").val(sessionEmbedId);
 }
+
+
