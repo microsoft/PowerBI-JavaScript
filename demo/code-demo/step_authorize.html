@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<div class="line">
+    <h4>Sample report</h4>
+    To embed using a report supplied with the sample, select <b>Embed sample report</b>.<br/>
+    <button id="nextStepWithSample" class="btn btn-primary" onclick="OpenEmbedStepWithSample()">Embed sample report</button><br/><br/><br/>
+    <a href="#" onclick="ToggleEmbedWithSpecificReportDiv()">Embed your own report</a><br/>
+</div>
+<div id="EmbedWithSpecificReportDiv" style="display: none;">
+    <div class="line">
+        <h4>Prerequisites</h4>
+        <ul>
+            <li>A workspace in the <a href="https://azure.microsoft.com/en-us/documentation/articles/power-bi-embedded-get-started/">Power BI embedded service.</a></li>
+            <li>PowerBI report imported to your workspace.</li>
+        </ul>
+    </div>
+    <br/>
+    <div class="line">
+        <h4>Instructions to get embed token</h4>
+        Once you have a report imported to Power BI workspace, you are ready to embed it.<br/>
+        <br/>
+        To embed a report, you need to get an embed-Token. You can create this token in multiple ways.<br/>
+        <ul>
+            <li>Using <a href="https://github.com/Microsoft/PowerBI-cli">PowerBI-Cli</a> tool.<br/></li>
+            <li>From .Net Code using <a href="http://www.nuget.org/packages/Microsoft.PowerBI.Core/">Microsoft.PowerBI.Core</a> package.<br/></li>
+            <li>From NodeJS code using <a href="https://github.com/Microsoft/PowerBI-Node">powerbi-api</a> package.<br/></li>
+        </ul>
+    </div>
+    <br/>
+    <div class="line">
+        <h4>Enter embed details</h4>
+        
+        Enter report embed token<br/>
+        <input type="text" id="txtAccessToken" name="txtAccessToken" onchange="UpdateSessions();" style="width: 100%;" /><br/><br/>
+        
+        Enter report embedded url<br/>
+        <input type="text" id="txtReportEmbed" name="txtReportEmbed" onchange="UpdateSessions();" style="width: 100%;" value="https://embedded.powerbi.com/appTokenReportEmbed" /><br/><br/>
+        
+        Enter report id<br/>
+        <input type="text" id="txtEmbedReportId" name="txtEmbedReportId" onchange="UpdateSessions();" style="width: 100%;" /><br/>
+    </div>
+    <button id="nextStep" class="btn btn-primary" onclick="OpenEmbedStep()">Next step - embed</button>
+</div>
+
+<script>
+    SetEmbedUrlFromSessionOrUrlParam();
+    SetAccessTokenFromSessionOrUrlParam();
+</script>

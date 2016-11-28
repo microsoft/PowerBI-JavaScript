@@ -1,0 +1,238 @@
+body {
+    background-color: #eeeeee;
+    font-family: 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
+}
+
+td {
+    padding-right: 5px;
+}
+
+h3 {
+    margin: 0;
+}
+
+header {
+    padding: 5px 0;
+    display: block;
+    min-width: 460px;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    z-index: 1030;
+    background-color: rgb(0, 170, 160);
+    height: 50px;
+}
+
+pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    height: 300px;
+    overflow: scroll;
+}
+
+a:hover, a:visited, a:link, a:active
+{
+    text-decoration: none;
+}
+
+#mainContent {
+    margin: 10px 50px;
+}
+
+#nextStep {
+    float: right;
+}
+
+#result-wrap {
+    margin-top: 10px;
+}
+
+#embed-and-interact-panel {
+    margin-top: 10px;
+}
+
+#report-embed-table {
+    width: 100%;
+}
+
+#report-embed-table tr {
+    width: 100%;
+}
+
+#report-embed-table  input {
+    width: 100%;
+}
+
+#txtEmbedCode {
+    width: 100%;
+    height:550px;
+}
+
+#oldSample {
+    float: right;
+    margin-right: 30px;
+    font-weight: bolder;
+}
+
+#oldSample a {
+    color: white;
+    text-decoration: underline;
+    font-size: 20px;
+}
+
+.ms-font-xxl {
+    color: #333333;
+    font-family: 'Segoe UI Web Light', 'Segoe UI Light', 'Segoe WP Light', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
+    font-size: 28px;
+    font-weight: normal;
+}
+
+.btn.btn-margin {
+    margin-bottom: 5px;
+}
+
+.halfWidth.right {
+    width: 50%;
+    min-height: 100px;
+    float: right;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 10px;
+}
+
+.halfWidth.left {
+    width: 50%;
+    min-height: 100px;
+    float: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 70px;
+}
+
+.break-float {
+    clear: both;
+    width: 100%;
+}
+
+.line {
+    margin-bottom: 5px;
+}
+
+.logo-text {
+    float: left;
+    text-align: left;
+    width: auto;
+    display: block;
+    font-family: "Segoe UI Condensed", "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: normal;
+    vertical-align: middle;
+    height: 40px;
+    padding-top: 10px;
+    margin-left: 50px;
+    margin-right: 30px;
+}
+
+.logo-text-span {
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.main-ul {
+    list-style-type: none;
+    margin: 0px 30px;
+    padding: 0;
+    overflow: hidden;
+    float: right;
+}
+
+.main-ul .active {
+    background-color: rgb(245, 211, 65);
+}
+
+.main-li {
+    float: left;
+}
+
+.main-li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+}
+
+.main-li a:visited {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+    background-color: rgb(245, 211, 65);
+}
+
+.main-li a:hover {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+    background-color: rgb(245, 211, 65);
+}
+
+.main-li a:active {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+    background-color: rgb(245, 211, 65);
+}
+
+.main-title {
+    font-family: 'Segoe UI Web Light', 'Segoe UI Light', 'Segoe WP Light', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    float: left;
+}
+
+.steps-ul-dev {
+    float: left;
+}
+
+.steps-ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.steps-ul li {
+    float: left;
+    margin-left: 20px;
+}
+
+.steps-li-active {
+    color: darkred;
+    text-decoration: none;
+}
+
+.operations-div {
+    height: 80px;
+}
+
+.td-field-name {
+    width: 100px;
+}
