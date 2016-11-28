@@ -1,0 +1,26 @@
+{
+  "name": "powerbi-client-demo",
+  "homepage": "https://github.com/Microsoft/PowerBI-JavaScript",
+  "authors": [
+    "Microsoft Power BI Team"
+  ],
+  "description": "Demonstration of embedding powerbi using core library.",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "fetch": "^1.0.0",
+    "es6-promise": "^3.2.2",
+    "bootstrap": "^3.3.6",
+    "jquery": "^3.1.0",
+    "powerbi-client": "^2.2.1"
+  },
+  "devDependencies": {}
+}
