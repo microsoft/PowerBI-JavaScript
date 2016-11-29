@@ -1,43 +1,44 @@
 <!DOCTYPE html>
 <div class="line">
     <h4>Sample Report</h4>
-    To Embed using a sample report, you can just move to next step.<br/>
+    To embed using a report supplied with the sample, select <b>Embed Sample Report</b>.<br/>
     <button id="nextStepWithSample" class="btn btn-primary" onclick="OpenEmbedStepWithSample()">Embed Sample Report</button><br/><br/><br/>
-    <a href="#" onclick="ToggleEmbedWithSpecificReportDiv()">Embed Your Own Report</a><br/>
+    <a href="#" onclick="ToggleEmbedWithSpecificReportDiv()">Embed your own report</a><br/>
 </div>
 <div id="EmbedWithSpecificReportDiv" style="display: none;">
     <div class="line">
         <h4>Prerequisites</h4>
         <ul>
-            <li>A workspace in <a href="https://azure.microsoft.com/en-us/documentation/articles/power-bi-embedded-get-started/">Azure PowerBI Embedded Service.</a></li>
-            <li>PowerBI Report imported to your workspace.</li>
+            <li>A workspace in the <a href="https://azure.microsoft.com/en-us/documentation/articles/power-bi-embedded-get-started/">Power BI embedded service.</a></li>
+            <li>Power BI report imported to your workspace.</li>
         </ul>
     </div>
     <br/>
     <div class="line">
-        <h4>Flow</h4>
-        Once you have a report imported to PowerBI Workspace, you are ready to embed it.<br/>
-        To Embed a report you need to get an Embed-Token. You can create this token in multiple ways:<br/>
+        <h4>Instructions to generate an embed App Token</h4>
+        Once you have improted a report into Power BI workspace, you are ready to embed it.<br/>
+        <br/>
+        To embed a report, you need to get an embed App Token. You can create this token in multiple ways.<br/>
         <ul>
             <li>Using <a href="https://github.com/Microsoft/PowerBI-cli">PowerBI-Cli</a> tool.<br/></li>
-            <li>In .Net Code using <a href="http://www.nuget.org/packages/Microsoft.PowerBI.Core/">Microsoft.PowerBI.Core</a> package.<br/></li>
-            <li>In NodeJS code using <a href="https://github.com/Microsoft/PowerBI-Node">powerbi-api</a> package.<br/></li>
+            <li>From .Net Code using <a href="http://www.nuget.org/packages/Microsoft.PowerBI.Core/">Microsoft.PowerBI.Core</a> package.<br/></li>
+            <li>From NodeJS code using <a href="https://github.com/Microsoft/PowerBI-Node">powerbi-api</a> package.<br/></li>
         </ul>
     </div>
     <br/>
     <div class="line">
-        <h4>Enter Embed Details</h4>
+        <h4>Enter embed details</h4>
         
-        Enter Report Embed Token</br>
+        Enter report App Token<br/>
         <input type="text" id="txtAccessToken" name="txtAccessToken" onchange="UpdateSessions();" style="width: 100%;" /><br/><br/>
         
-        Enter Report Embedded Url</br>
+        Enter report embedded URL<br/>
         <input type="text" id="txtReportEmbed" name="txtReportEmbed" onchange="UpdateSessions();" style="width: 100%;" value="https://embedded.powerbi.com/appTokenReportEmbed" /><br/><br/>
         
-        Enter Report Id</br>
+        Enter report ID<br/>
         <input type="text" id="txtEmbedReportId" name="txtEmbedReportId" onchange="UpdateSessions();" style="width: 100%;" /><br/>
     </div>
-    <button id="nextStep" class="btn btn-primary" onclick="OpenEmbedStep()">Next Step - Embed</button>
+    <button id="nextStep" class="btn btn-primary" onclick="OpenEmbedStep()">Next step - Embed</button>
 </div>
 
 <script>
