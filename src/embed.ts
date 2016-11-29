@@ -38,6 +38,7 @@ export interface IEmbedConfiguration {
   settings?: models.ISettings;
   pageName?: string;
   filters?: models.IFilter[];
+  pageView?: models.PageView;
 }
 
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {

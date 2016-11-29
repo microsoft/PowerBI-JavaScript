@@ -17,8 +17,8 @@
       
       <h2>Scenarios:</h2>
       <ul id="navigation" class="nav nav-pills">
-          <li id="pageLinkStatic" class=""><a href="index.html">Scenario 1: Static Embed</a></li>
-          <li id="pageLinkDynamic" class="active"><a href="dynamic.html">Scenario 2: Dynamic Embed</a></li>
+          <li id="pageLinkStatic" class="active"><a href="index.html">Scenario 1: Static Embed</a></li>
+          <li id="pageLinkDynamic" class=""><a href="dynamic.html">Scenario 2: Dynamic Embed</a></li>
           <li id="pageLinkPageNav" class=""><a href="pagenavigation.html">Scenario 3: Custom Page Navigation</a></li>
           <li id="pageLinkFilters" class=""><a href="filters.html">Scenario 4: Custom Filter Pane</a></li>
           <li id="pageLinkDefaults" class=""><a href="defaults.html">Scenario 5: Default Page and/or Filter</a></li>
@@ -26,16 +26,18 @@
           <li id="pageLinkDataSelection" class=""><a href="dataselection.html">Scenario 7: Data Selection</a></li>
       </ul>
 
-      <h2>Dynamic Embed</h2>
-      <p>Report to embed is chosen by the user.</p>
-      <ol id="reportslist">
-      </ol>
-      <p class="text-right">
-          <button type="button" id="resetButton" class="btn btn-danger">Reset</button>
+      <h2>Static Embed</h2>
+      <p>Report to embed is known by the developer.</p>
+
+      <div id="reportstatic" class="powerbi-container"></div>
+
+      <br>
+      <p>
+		<button type="button" id="getId" class="btn btn-warning">Get Report ID</button>
+        <button type="button" id="fullscreen" class="btn btn-warning">Toggle Fullscreen</button>
+		<button type="button" id="reloadReport" class="btn btn-warning">Reload Report</button>
+		<button type="button" id="printReport" class="btn btn-warning">Print Report</button>
       </p>
-
-      <div id="reportdynamic" class="powerbi-container"></div>
-
     </div>
 
     <script src="node_modules/jquery/dist/jquery.js"></script>
@@ -43,7 +45,6 @@
     <script src="node_modules/fetch/lib/fetch.js"></script>
     <script src="node_modules/powerbi-client/dist/powerbi.js"></script>
 
-    <script src="app/dynamic.js"></script>
-
+    <script src="app/index.js"></script>
   </body>
 </html>

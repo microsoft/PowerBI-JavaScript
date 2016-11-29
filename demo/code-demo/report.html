@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<div>
+    <div id="steps-nav-bar">
+        <div class="main-title">Report Embed</div>
+        <div id="steps-ul-dev">
+            <ul id="steps-ul" class="steps-ul">
+                <li id="steps-auth" class="steps-li-active" onclick="OpenAuthStep();"><a href="#">Authorize</a></li>
+                <li id="steps-embed" onclick="OpenEmbedStep();"><a href="#">Embed</a></li>
+                <li id="steps-interact" onclick="OpenInteractStep();"><a href="#">Interact</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div id="embed-and-interact-panel">
+        <div id="right-pane" class="halfWidth left">
+        </div>
+
+        <div id="left-pane" class="halfWidth right">
+            <div id="embedArea">
+                <h3>Embedded Report Area</h3>
+                <h5>The following div id is <b>reportContainer</b>. In code, we embed a report to it.</h5>
+                <div id="reportContainer" style="width: 800px; height: 600px; background: #DDDDDD;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var embedUrl = GetParameterByName("embedUrl");
+    if (!embedUrl)
+    {
+        // Open Authorization Step after this page loads.
+        OpenAuthStep();
+    }
+    else
+    {
+        OpenEmbedStep();
+    }
+    
+</script>
