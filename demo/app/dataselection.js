@@ -29,7 +29,8 @@ $(function () {
 });
 
 function initializeDataSelection(report, $dataSelectedContainer) {
-  report.on('dataSelected', event => {
+  report.on('dataSelected', function(event)
+  {
     console.log('dataSelected: ', event);
 
     var data = event.detail;
