@@ -35,7 +35,7 @@ $(function () {
   var $reloadReport = $('#reloadReport');
   $reloadReport.on('click', function (event) {
     staticReport.reload()
-		.catch(error => { alert(error); });
+		.catch(function(error) { alert(error); });
   });
   
   var $printReport = $('#printReport');
