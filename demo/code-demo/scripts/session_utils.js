@@ -1,55 +1,10 @@
 var _session = {};
 
-function SetSession(key, value) {
-    // This is a temporal solution for session (which is cleared on reload). Should be replaced with a real session.
-    _session[key] = value;
-}
-
-function GetSession(key) {
-    // This is a temporal solution for session (which is cleared on reload). Should be replaced with a real session.
-    return _session[key];
-}
-
-function SetSessions(accessToken, embedReportUrl, embedReprotId) {
-    SetSession("accessToken", accessToken);
-    SetSession("embedUrl", embedReportUrl);
-    SetSession("embedId", embedReprotId);
-}
-
-function UpdateSessions() {
-    var txtAccessToken = $('#txtAccessToken').val();
-    if (txtAccessToken)
-    {
-        SetSession("accessToken", txtAccessToken);
-    }
-
-    var txtEmbedUrl = $('#txtReportEmbed').val();
-    if (txtEmbedUrl)
-    {
-        SetSession("embedUrl", txtEmbedUrl);
-    }
-
-    var txtEmbedReportId = $('#txtEmbedReportId').val();
-    if (txtEmbedReportId)
-    {
-        SetSession("embedId", txtEmbedReportId);
-    }
-}
-
-function SetAccessTokenFromSession() {
-    var sessionAccessToken = GetSession("accessToken");
-    $("#txtAccessToken").val(sessionAccessToken);
-}
-
-function SetAccessTokenFromSessionOrUrlParam() {
-    var accessToken = GetParameterByName("accessToken");
-    if (!accessToken)
-    {
-        accessToken = GetSession("accessToken");
-    }
-
-    $("#txtAccessToken").val(accessToken);
-}
+const SessionKeys = {
+    AccessToken : "accessToken",
+    EmbedUrl : "embedUrl",
+    EmbedId : "embedId",
+};
 
 function GetParameterByName(name, url) {
     if (!url) {
@@ -63,28 +18,44 @@ function GetParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function SetEmbedUrlFromSessionOrUrlParam() {
-    var embedUrl = GetParameterByName("embedUrl");
+function SetSession(key, value) {
+    // This is a temporal solution for session (which is cleared on reload). Should be replaced with a real session.
+    _session[key] = value;
+}
+
+function GetSession(key) {
+    // This is a temporal solution for session (which is cleared on reload). Should be replaced with a real session.
+    return _session[key];
+}
+
+function UpdateSession(button, sessionKey) {
+    var value = $(button).val();
+    if (value)
+    {
+        SetSession(sessionKey, value);
+    }
+}
+
+function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector, embedIdSelector) {
+    var accessToken = GetParameterByName(SessionKeys.AccessToken);
+    if (!accessToken)
+    {
+        accessToken = GetSession(SessionKeys.AccessToken);
+    }
+
+    var embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
     if (!embedUrl)
     {
-        embedUrl = GetSession("embedUrl");
+        embedUrl = GetSession(SessionKeys.EmbedUrl);
     }
-    $("#txtReportEmbed").val(embedUrl);
     
-    var embedId = GetParameterByName("embedId");
+    var embedId = GetParameterByName(SessionKeys.EmbedId);
     if (!embedId)
     {
-        embedId = GetSession("embedId");
+        embedId = GetSession(SessionKeys.EmbedId);
     }
-    $("#txtEmbedReportId").val(embedId);
+
+    $(accessTokenSelector).val(accessToken);
+    $(embedUrlSelector).val(embedUrl);
+    $(embedIdSelector).val(embedId);
 }
-
-function SetEmbedUrlFromSession() {    
-    var sessionEmbedUrl = GetSession("embedUrl");
-    $("#txtReportEmbed").val(sessionEmbedUrl);
-    
-    var sessionEmbedId = GetSession("embedId");
-    $("#txtEmbedReportId").val(sessionEmbedId);
-}
-
-
