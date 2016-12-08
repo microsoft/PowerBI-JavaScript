@@ -1,0 +1,30 @@
+{
+  "name": "powerbi-client",
+  "description": "",
+  "main": "./dist/powerbi.js",
+  "authors": [
+    "Microsoft"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "https://dev.powerbi.com",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "*/.js",
+    "*/.md",
+    "*/.nuspec",
+    "demo",
+    "node_modules",
+    "bower_components",
+    "src",
+    "test",
+    "tests",
+    "tsconfig.json",
+    "typings.json",
+    "webpack.test.tsconfig.json"
+  ],
+  "devDependencies": {
+    "jquery": "~2.2.0"
+  }
+}
