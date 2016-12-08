@@ -3,7 +3,7 @@ $(function () {
 
   console.log('Scenario 5: Default Page and/or Filter');
 
-  var staticReportUrl = 'https://powerbi-embed-api.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
+  var staticReportUrl = 'https://powerbiembedapi.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
   var $defaultPageReportContainer = $('#reportdefaults');
   var defaultPageReport;
   var defaultPageName = 'ReportSection2';

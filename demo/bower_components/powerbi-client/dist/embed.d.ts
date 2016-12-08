@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.2.3 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as models from 'powerbi-models';
 declare global  {
@@ -26,6 +26,7 @@ export interface IEmbedConfiguration {
     settings?: models.ISettings;
     pageName?: string;
     filters?: models.IFilter[];
+    pageView?: models.PageView;
 }
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
     uniqueId: string;

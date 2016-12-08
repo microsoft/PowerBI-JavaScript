@@ -7,7 +7,7 @@
     <title>Power BI - Sample - Client - JavaScript</title>
     <base path="/" />
     
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="styles/app.css" />
   </head>
   <body>
@@ -17,33 +17,34 @@
       
       <h2>Scenarios:</h2>
       <ul id="navigation" class="nav nav-pills">
-          <li id="pageLinkStatic" class=""><a href="index.html">Scenario 1: Static Embed</a></li>
+          <li id="pageLinkStatic" class="active"><a href="index.html">Scenario 1: Static Embed</a></li>
           <li id="pageLinkDynamic" class=""><a href="dynamic.html">Scenario 2: Dynamic Embed</a></li>
           <li id="pageLinkPageNav" class=""><a href="pagenavigation.html">Scenario 3: Custom Page Navigation</a></li>
           <li id="pageLinkFilters" class=""><a href="filters.html">Scenario 4: Custom Filter Pane</a></li>
           <li id="pageLinkDefaults" class=""><a href="defaults.html">Scenario 5: Default Page and/or Filter</a></li>
-          <li id="pageLinkSettings" class="active"><a href="settings.html">Scenario 6: Update Settings</a></li>
+          <li id="pageLinkSettings" class=""><a href="settings.html">Scenario 6: Update Settings</a></li>
           <li id="pageLinkDataSelection" class=""><a href="dataselection.html">Scenario 7: Data Selection</a></li>
       </ul>
 
-      <h2>Update Settings</h2>
-      <p>Change visibility of filter pane or page navigation dynamically</p>
+      <h2>Static Embed</h2>
+      <p>Report to embed is known by the developer.</p>
 
-      <div id="updatesettingsreport" class="powerbi-container"></div>
+      <div id="reportstatic" class="powerbi-container"></div>
 
-      <div>
-        <br />
-        <button type="button" class="btn btn-primary" id="toggleFilterPane">Toggle Filter Pane</button>
-        <button type="button" class="btn btn-primary" id="toggleNavContentPane">Toggle Page Navigation</button>
-      </div>
+      <br>
+      <p>
+		<button type="button" id="getId" class="btn btn-warning">Get Report ID</button>
+        <button type="button" id="fullscreen" class="btn btn-warning">Toggle Fullscreen</button>
+		<button type="button" id="reloadReport" class="btn btn-warning">Reload Report</button>
+		<button type="button" id="printReport" class="btn btn-warning">Print Report</button>
+      </p>
     </div>
 
-      <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/es6-promise/es6-promise.js"></script>
     <script src="bower_components/fetch/fetch.js"></script>
     <script src="bower_components/powerbi-client/dist/powerbi.js"></script>
 
-    <script src="app/settings.js"></script>
-
+    <script src="app/index.js"></script>
   </body>
 </html>

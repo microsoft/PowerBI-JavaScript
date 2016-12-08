@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.2.3 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -929,7 +929,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v0.10.0 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v0.10.1 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1364,6 +1364,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					"messages": {
 						"type": "id must be a string",
 						"required": "id is required"
+					}
+				},
+				"pageView": {
+					"type": "string",
+					"messages": {
+						"type": "pageView must be a string with one of the following values: \"actualSize\", \"fitToWidth\", \"oneColumn\""
 					}
 				}
 			},
@@ -4923,7 +4929,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Validate load configuration.
 	     */
 	    Dashboard.prototype.validate = function (config) {
-	        return models.validateDashboardLoad(config);
+	        var error = models.validateDashboardLoad(config);
+	        return error ? error : this.ValidatePageView(config.pageView);
+	    };
+	    /**
+	     * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
+	     */
+	    Dashboard.prototype.ValidatePageView = function (pageView) {
+	        if (pageView && pageView !== "fitToWidth" && pageView !== "oneColumn" && pageView !== "actualSize") {
+	            return [{ message: "pageView must be one of the followings: fitToWidth, oneColumn, actualSize" }];
+	        }
 	    };
 	    Dashboard.allowedEvents = ["tileClicked", "error"];
 	    Dashboard.dashboardIdAttribute = 'powerbi-dashboard-id';
@@ -5014,7 +5029,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	var config = {
-	    version: '2.2.1',
+	    version: '2.2.3',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
