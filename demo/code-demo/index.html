@@ -7,37 +7,60 @@
     
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="style/style.css">
+    <link rel="stylesheet" type="text/css" href="style/layout.css">
 </head>
 
 <body>
-    <header class="ms-font-xxl">
-        <div class="logo-text">
-            <span class="logo-text-span">Microsoft Power BI JavaScript SDK - Live Sample</span>
-        </div>
-        <div id="oldSample">
-            <a href="/static.html">Old Sample</a>
+    <header>
+        <div id="navbar">
+          <div class="logo-text">
+              <div class="logo-text-span">Microsoft Power BI – Report Embed Sample</div>
+          </div>
+          <div id="steps-nav-bar">
+            <div id="steps-ul-dev">
+                <ul id="steps-ul" class="steps-ul">
+                    <li id="steps-auth" class="steps-li-active" onclick="OpenAuthStep();">
+                        <div><a href="#">Authorize</a></div>
+                        <div class="step-div">
+                        </div>
+                    </li>
+                    <li id="steps-embed" onclick="OpenEmbedStep();">
+                        <div><a href="#">Embed</a></div>
+                        <div class="step-div"></div>
+                    </li>
+                    <li id="steps-interact" onclick="OpenInteractStep();">
+                        <div><a href="#">Interact</a></div>
+                        <div class="step-div"></div>
+                    </li>
+                </ul>
+            </div>
+          </div>
         </div>
     </header>
 
-    <div id="mainContent" class="jumbotron">
+    <div id="mainContent">
+    </div>
+
+    <div id="oldSample">
+        <a href="/static.html">Old Sample</a>
     </div>
 
     <script src="/node_modules/jquery/dist/jquery.js"></script>
     <script src="/node_modules/es6-promise/dist/es6-promise.js"></script>
-    <script src="/node_modules/fetch/lib/fetch.js"></script>
     <script src="/node_modules/powerbi-client/dist/powerbi.js"></script>
     
     <script src="scripts/codesamples.js"></script>
     
     <script src="scripts/index.js"></script>
     <script src="scripts/utils.js"></script>
+    <script src="scripts/logger.js"></script>
     <script src="scripts/session_utils.js"></script>
-    
     
     <script src="scripts/report.js"></script>
     
     <script src="scripts/step_authorize.js"></script>
     <script src="scripts/step_embed.js"></script>
     <script src="scripts/step_interact.js"></script>
+
 </body>
 </html>

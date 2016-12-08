@@ -7,11 +7,20 @@
 // ---- Embed Code ----------------------------------------------------
 
 function _Embed_BasicEmbed() {
+    // Read embed application token from textbox
     var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
     var txtEmbedUrl = $('#txtReportEmbed').val();
+
+    // Read report Id from textbox
     var txtEmbedReportId = $('#txtEmbedReportId').val();
 
-    var embedConfiguration = {
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config= {
         type: 'report',
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
@@ -21,9 +30,20 @@ function _Embed_BasicEmbed() {
             navContentPaneEnabled: true
         }
     };
-    
-    var reportContainer = document.getElementById('reportContainer');
-    powerbi.embed(reportContainer, embedConfiguration);
+
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
+    // Embed the report and display it within the div container.
+    var report = powerbi.embed(reportContainer, config);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("loaded");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("loaded", function() {
+        Log.logText("Loaded");
+    });
 }
 
 function _Embed_EmbedWithDefaultFilter() {
@@ -59,18 +79,27 @@ function _Embed_EmbedWithDefaultFilter() {
 
 // ---- Report Operations ----------------------------------------------------
 
- function _Report_GetId() {
+function _Report_GetId() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
-    $('#result').html(report.getId());
+
+    // Retrieve the report id.
+    var reportId = report.getId();
+
+    Log.logText(reportId);
 }
 
 function _Report_UpdateSettings() {
+    // The new settings that you want to apply to the report.
     const newSettings = {
       navContentPaneEnabled: true,
       filterPaneEnabled: false
     };
 
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
+
+    // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
         .then(function (result) {
             $("#result").html(result);
@@ -81,48 +110,65 @@ function _Report_UpdateSettings() {
 }
 
 function _Report_GetPages() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
-    
+
+    // Retrieve the page collection and loop through to collect the 
+    // page name and display name of each page and display the value.
     report.getPages()
         .then(function (pages) {
-            var result = "";
-            var index = 1;
             pages.forEach(function(page) {
-                result = result + index + ") " + page.name + "(displayName: " + page.displayName + ")" + "<br/>";
-                index++;
+                var log = page.name + " - " + page.displayName;
+                Log.logText(log);
             });
-
-            $("#result").html("Done. <br/>" + result);
         })
-        .catch(function (errors) {
-            $("#result").html("Error. <br/>" + JSON.stringify(errors));
+        .catch(function (error) {
+            Log.log(error);
         });
 }
 
 function _Report_SetPage() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
+
+    // setPage will change the selected view to the page you indicate.
+    // This is the actual page name not the display name.
     report.setPage("ReportSection2")
         .then(function (result) {
-            $("#result").html("Done. <br/>" + JSON.stringify(result));
+            Log.log(result);
         })
         .catch(function (errors) {
-            $("#result").html("Error. <br/>" + JSON.stringify(errors));
+            Log.log(errors);
         });
+
+    // Report.off removes a given event handler if it exists.
+    report.off("pageChanged");
+
+    // Report.on will add an event handler which prints page 
+    // name and display name to Log window.
+    report.on("pageChanged", function(event) {
+        var page = event.detail.newPage;
+        Log.logText(page.name + " - " + page.displayName);
+    });
 }
 
 function _Report_GetFilters() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
     
+    // Get the filters applied to the report.
     report.getFilters()
         .then(function (filters) {
-            $("#result").html("Done. <br/>" + JSON.stringify(filters, null, " "));
+            Log.log(filters);
         })
         .catch(function (errors) {
-            $("#result").html("Error. <br/>" + JSON.stringify(errors));
+            Log.log(errors);
         });
 }
 
 function _Report_SetFilters() {
+    // Build the filter you want to use. For more information, See Constructing
+    // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
     const filter = {
       $schema: "http://powerbi.com/product/schema#basic",
       target: {
@@ -133,100 +179,122 @@ function _Report_SetFilters() {
       values: ["Lindseys"]
     };
 
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
+    
+    // Set the filter for the report.
+    // Pay attention that setFilters receives an array.
     report.setFilters([filter])
         .then(function (result) {
-            $("#result").html("Done. <br/>" + JSON.stringify(result));
+            Log.log(result);
         })
         .catch(function (errors) {
-            $("#result").html("Error. <br/>" + JSON.stringify(errors));
+            Log.log(errors);
         });
 }
 
 function _Report_RemoveFilters() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
+
+    // Remove the filters currently applied to the report.
     report.removeFilters()
         .then(function (result) {
-            $("#result").html("Done. <br/>" + JSON.stringify(result));
+            Log.log(result);
         })
         .catch(function (errors) {
-            $("#result").html("Error. <br/>" + JSON.stringify(errors));
+            Log.log(errors);
         });
 }
 
 function _Report_PrintCurrentReport() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
+
+    // Trigger the print dialog for your browser.
     report.print()
         .then(function (result) {
-            $("#result").html("Done. <br/>" + JSON.stringify(result));
+            Log.log(result);
         })
         .catch(function (errors) {
-            $("#result").html("Error. <br/>" + JSON.stringify(errors));
+            Log.log(errors);
         });
 }
 
 function _Report_Reload() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
+
+    // Reload the displayed report
     report.reload()
         .then(function (result) {
-            $("#result").html("Done. <br/>" + JSON.stringify(result));
+            Log.log(result);
         })
         .catch(function (errors) {
-            $("#result").html("Error. <br/>" + JSON.stringify(errors));
+            Log.log(errors);
         });
 }
 
 function _Report_FullScreen() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
+
+    // Displays the report in full screen mode.
     report.fullscreen();
-    
-    $("#result").html("Done!");
 }
 
 function _Report_ExitFullScreen() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
+
+    // Exits full screen mode.
     report.exitFullscreen();
-    
-    $("#result").html("Done!");
 }
 
 // ---- Page Operations ----------------------------------------------------
 
 function _Page_SetActive() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
     
-    // Set the second page active
+    // Retrieve the page collection, and then set the second page to be active.
     report.getPages()
         .then(function (pages) {
             pages[1].setActive().then(function (result) {
-                $("#result").html("Done. <br/>" + result)
+                Log.log(result);
             });
         })
         .catch(function (errors) {
-            $("#result").html("getPages Error. " + errors);
+           Log.log(errors);
         });
 }
 
 function _Page_GetFilters() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
     
-    // Get Filters of first page
+    // Retrieve the page collection and get the filters for the first page.
     report.getPages()
         .then(function (pages) {
-            pages[1].getFilters()
+            pages[0].getFilters()
                 .then(function (filters) {
-                    $("#result").html("Done. <br/>" + JSON.stringify(filters, null, " "))
+                    Log.log(filters);
                 })
                 .catch(function (errors) {
-                    $("#result").html("Error. <br/>" + JSON.stringify(errors));
+                    Log.log(errors);
                 });
         })
         .catch(function (errors) {
-            $("#result").html("getPages Error. " + errors);
+            Log.log(errors);
         });
 }
 
 function _Page_SetFilters() {
+    // Get a reference to the embedded report.
+    report = powerbi.embeds[0];
+
+    // Build the filter you want to use. For more information, see Constructing 
+    // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
     const filter = {
         $schema: "http://powerbi.com/product/schema#basic",
         target: {
@@ -237,37 +305,79 @@ function _Page_SetFilters() {
         values: ["Lindseys"]
     };
 
-    report = powerbi.embeds[0];
+    // Retrieve the page collection and then set the filters for the first page.
+    // Pay attention that setFilters receives an array.
     report.getPages()
         .then(function (pages) {
-            pages[1].setFilters([filter])
+            pages[0].setFilters([filter])
                 .then(function (result) {
-                    $("#result").html("Done. <br/>" + JSON.stringify(result));
+                    Log.log(result);
                 })
                 .catch(function (errors) {
-                    $("#result").html("Error. <br/>" + JSON.stringify(errors));
+                    Log.log(errors);
                 });
         })
         .catch(function (errors) {
-            $("#result").html("Error. <br/>" + JSON.stringify(errors));
+            Log.log(errors);
         });
 }
 
 function _Page_RemoveFilters() {
+    // Get a reference to the embedded report.
     report = powerbi.embeds[0];
     
-    // Get Filters of first page
+    // Retrieve the page collection and remove the filters for the first page.
     report.getPages()
         .then(function (pages) {
-            pages[1].removeFilters()
+            pages[0].removeFilters()
                 .then(function (result) {
-                    $("#result").html("Done. <br/>" + JSON.stringify(result));
+                    Log.log(result);
                 })
                 .catch(function (errors) {
-                    $("#result").html("Error. <br/>" + JSON.stringify(errors));
+                    Log.log(errors);
                 });
         })
         .catch(function (errors) {
-            $("#result").html("getPages Error. " + errors);
+            Log.log(errors);
         });
+}
+
+// ---- Event Listener ----------------------------------------------------
+
+function _Events_PageChanged() {
+    // Get a reference to the embedded report.
+    report = powerbi.embeds[0];
+
+    // Report.off removes a given event listener if it exists.
+    report.off("pageChanged");
+
+    // Report.on will add an event listener.
+    report.on("pageChanged", function(event) {
+        var page = event.detail.newPage;
+        Log.logText("Page changed to: " + page.name + " - " + page.displayName);
+    });
+
+    // Select Run and change to a different page.
+    // You should see an entry in the Log window.
+
+    Log.logText("Select different page to see events in Log window.");
+}
+
+function _Events_DataSelected() {
+    // Get a reference to the embedded report.
+    report = powerbi.embeds[0];
+
+    // Report.off removes a given event listener if it exists.
+    report.off("dataSelected");
+
+    // Report.on will add an event listener.
+    report.on("dataSelected", function(event) {
+        var data = event.detail;
+        Log.log(data);
+    });
+
+    // Select Run and select an element of a visualization.
+    // For example, a bar in a bar chart. You should see an entry in the Log window.
+
+    Log.logText("Select data to see events in Log window.");
 }
