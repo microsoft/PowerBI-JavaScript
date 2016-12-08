@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<div id="step-interact-wrapper">
+    <div>
+        <div>
+            <h8>The report supports the following functionality. Select an item to give it a try!</h8>
+        </div>
+        <div class="break-float">
+            <ul id="operations-ul">
+                <li id="report-operations-li" class="active" onclick="OpenReportOperations();"><a href="#">Show report operations</a></li>
+                <li id="page-operations-li" onclick="OpenPageOperations();"><a href="#">Show page operations</a></li>
+            </ul>
+        </div>
+        <div id="report-operations-div" class="operations-div">
+            <button class="btn btn-margin" onclick="Report_GetId()">Get id</button>
+            <button class="btn btn-margin" onclick="Report_GetPages()">Get pages</button>
+            <button class="btn btn-margin" onclick="Report_SetPage()">Set page</button>
+            <button class="btn btn-margin" onclick="Report_SetFilters()">Set filters</button>
+            <button class="btn btn-margin" onclick="Report_GetFilters()">Get filters</button>
+            <button class="btn btn-margin" onclick="Report_RemoveFilters()">Remove filters</button>
+            <button class="btn btn-margin" onclick="Report_PrintCurrentReport()">Print</button>
+            <button class="btn btn-margin" onclick="Report_UpdateSettings()">Update settings</button>
+            <button class="btn btn-margin" onclick="Report_Reload()">Reload</button>
+            <button class="btn btn-margin" onclick="Report_FullScreen()">Full screen</button>
+            <button class="btn btn-margin" onclick="Report_ExitFullScreen()">Exit full screen</button>
+        </div>
+        <div id="page-operations-div" class="operations-div" style="display: none;">
+            <button class="btn btn-margin" onclick="Page_SetActive()">Set Active</button>
+            <button class="btn btn-margin" onclick="Page_SetFilters()">Set Filters</button>
+            <button class="btn btn-margin" onclick="Page_GetFilters()">Get Filters</button>
+            <button class="btn btn-margin" onclick="Page_RemoveFilters()">Remove Filters</button>
+        </div>
+    </div>
+    <div id="codeDiv">
+        <h4>Code</h4>
+        <pre id="inputCode" style="width: 100%; height:200px;" /><br/>
+        <button id="btnRunSampleCode" class="btn btn-primary">Run code</button>
+    </div>
+
+    <div id="result-wrap">
+        The following div id is <b>result</b>. You can print to it in code for debugging purposes.
+        <pre id="result"></pre>
+    </div>
+</div>

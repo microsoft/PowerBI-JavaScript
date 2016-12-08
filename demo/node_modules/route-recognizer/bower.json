@@ -1,0 +1,31 @@
+{
+  "name": "route-recognizer",
+  "version": "0.1.9",
+  "homepage": "https://github.com/tildeio/route-recognizer",
+  "authors": [
+    "Yehuda Katz <wycats@gmail.com>"
+  ],
+  "description": "Lightweight JS lib for matching paths against registered routes.",
+  "main": "dist/route-recognizer.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "router",
+    "route"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "qunit": "~1.14.0",
+    "loader.js": "stefanpenner/loader.js#7f79173fd5c61dc256af9aa01c56d50ebfec10fe"
+  }
+}
