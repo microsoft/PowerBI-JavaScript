@@ -3,7 +3,7 @@ $(function () {
 
   console.log('Scenario 6: Update settings');
 
-  var reportUrl = 'https://powerbiembedapi.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
+  var reportUrl = 'https://powerbi-embed-api.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
   var $updateSettingsReport = $('#updatesettingsreport');
   var updateSettingsReport;
   var updateSettingsReportFilterPaneEnabled = false;
