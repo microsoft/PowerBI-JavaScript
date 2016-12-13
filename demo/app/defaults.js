@@ -21,6 +21,8 @@ $(function () {
       }
     ]);
 
+  var defaultFilters = [defaultFilter];
+  
   // Init
   fetch(staticReportUrl)
     .then(function (response) {
@@ -29,7 +31,7 @@ $(function () {
           .then(function (embedConfig) {
             var defaultsEmbedConfig = $.extend({}, embedConfig, {
               pageName: defaultPageName,
-              filter: defaultFilter.toJSON(),
+              filter: defaultFilters,
               settings: {
                 filterPaneEnabled: true,
                 navContentPaneEnabled: true
