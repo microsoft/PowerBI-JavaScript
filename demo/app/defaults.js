@@ -31,7 +31,7 @@ $(function () {
           .then(function (embedConfig) {
             var defaultsEmbedConfig = $.extend({}, embedConfig, {
               pageName: defaultPageName,
-              filters: defaultFilters.toJSON(),
+              filters: defaultFilters,
               settings: {
                 filterPaneEnabled: true,
                 navContentPaneEnabled: true
