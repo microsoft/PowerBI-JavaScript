@@ -21,7 +21,7 @@ $(function () {
       }
     ]);
 
-  var defaultFilters: models.AdvancedFilter[] = [defaultFilter];
+  var defaultFilters = [defaultFilter];
   
   // Init
   fetch(staticReportUrl)
