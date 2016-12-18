@@ -4,7 +4,7 @@ $(function () {
   console.log('Scenario 2: Dynamic Embed');
 
   // Declare Variables
-  var allReportsUrl = 'https://powerbiembedapi.azurewebsites.net/api/reports';
+  var allReportsUrl = 'https://powerbi-embed-api.azurewebsites.net/api/reports';
   var $reportsList = $('#reportslist');
   var $resetButton = $('#resetButton');
   var $dynamicReportContainer = $('#reportdynamic');
