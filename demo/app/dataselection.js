@@ -3,7 +3,7 @@ $(function () {
 
   console.log('Scenario 7: Data Selection');
 
-  var reportUrl = 'https://powerbiembedapi.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
+  var reportUrl = 'https://powerbi-embed-api.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
   var $reportContainer = $('#reportContainer');
   var report;
   var $dataSelectedContainer = $("#dataSelectedContainer");
@@ -29,7 +29,7 @@ $(function () {
 });
 
 function initializeDataSelection(report, $dataSelectedContainer) {
-  report.on('dataSelected', event => {
+  report.on('dataSelected', function (event) {
     console.log('dataSelected: ', event);
 
     var data = event.detail;
