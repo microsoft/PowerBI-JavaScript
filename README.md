@@ -18,6 +18,7 @@ See the [code docs](https://microsoft.github.io/PowerBI-JavaScript) for detailed
 
 ## Demo
 See the [live demo](https://microsoft.github.io/PowerBI-JavaScript/demo) for sample application using the powerbi-client library in scenarios such as page navigation, applying filters, updating settings, and more.
+![image](https://cloud.githubusercontent.com/assets/23071967/21962308/5cf80aac-db2b-11e6-8fd1-af342ab5f198.png)
 
 ## Installation
 
