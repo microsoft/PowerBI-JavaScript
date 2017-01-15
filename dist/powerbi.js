@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.2.4 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -914,7 +914,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Report.prototype.validate = function (config) {
 	        return models.validateReportLoad(config);
 	    };
-	    Report.allowedEvents = ["dataSelected", "filtersApplied", "pageChanged", "error"];
+	    Report.allowedEvents = ["rendered", "dataSelected", "filtersApplied", "pageChanged", "error"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
 	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
@@ -5029,7 +5029,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	var config = {
-	    version: '2.2.3',
+	    version: '2.2.4',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
