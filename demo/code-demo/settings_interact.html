@@ -16,6 +16,9 @@
                     <li id="events-operations-li" onclick="OpenEventOperations();"></span>
                         <span><a href="#">Events listener</a>
                     </li>
+                    <li id="editandsave-operations-li" onclick="OpenEditAndSaveOperations();"></span>
+                        <span><a href="#">Edit and save operations</a>
+                    </li>
                 </ul>
                 <img src="images/arrow_flipped.png" onclick="HideCategoriesList();" />
             </div>
@@ -49,6 +52,15 @@
                     <ul class="function-ul">
                         <li class="active" onclick="Events_PageChanged()">Page Changed</li>
                         <li class="" onclick="Events_DataSelected()">Data Selected</li>
+                    </ul>
+                </div>
+                 <div id="editandsave-operations-div" class="operations-div" style="display: none;">
+                    <ul class="function-ul">
+                        <li class="" onclick="Report_switchModeEdit()">Enter edit mode</li>
+                        <li class="" onclick="Report_switchModeView()">Enter view mode</li>
+                        <li class="" onclick="Report_save()">Save report</li>
+                        <li class="" onclick="Report_saveAs()">SaveAs report</li>
+                        <li class="" onclick="Report_setAccessToken()">Set AccessToken</li>
                     </ul>
                 </div>
             </div>

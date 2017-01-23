@@ -490,3 +490,12 @@ a {
     position: relative;
     top: -1px;
 }
+
+.tabContainer {
+  margin-bottom: 5px;
+  padding-left: 0;
+}
+
+.nav-tabs {
+  border-bottom: 0px;
+}

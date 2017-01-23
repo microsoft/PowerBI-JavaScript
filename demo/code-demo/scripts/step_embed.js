@@ -70,3 +70,25 @@ function Events_PageChanged() {
 function Events_DataSelected() {
     SetCode(_Events_DataSelected);
 }
+
+// ---- Edit and Save Operations ----------------------------------------------------
+
+function Report_switchModeEdit() {
+    SetCode(_Report_switchModeEdit);
+}
+
+function Report_switchModeView() {
+    SetCode(_Report_switchModeView);
+}
+
+function Report_save() {
+    SetCode(_Report_save);
+}
+
+function Report_saveAs() {
+    SetCode(_Report_saveAs);
+}
+
+function Report_setAccessToken() {
+    SetCode(_Report_setAccessToken);
+}

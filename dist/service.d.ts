@@ -84,6 +84,13 @@ export declare class Service implements IService {
      */
     constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IServiceConfiguration);
     /**
+     * Creates new report
+     * @param {HTMLElement} element
+     * @param {embed.IEmbedConfiguration} [config={}]
+     * @returns {embed.Embed}
+     */
+    createReport(element: HTMLElement, config: embed.IEmbedConfiguration): embed.Embed;
+    /**
      * TODO: Add a description here
      *
      * @param {HTMLElement} [container]

@@ -8,6 +8,7 @@ import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as router from 'powerbi-router';
 import * as models from 'powerbi-models';
+import * as create from './create';
 
 export interface IEvent<T> {
   type: string;
@@ -159,6 +160,22 @@ export class Service implements IService {
   }
 
   /**
+   * Creates new report
+   * @param {HTMLElement} element
+   * @param {embed.IEmbedConfiguration} [config={}]
+   * @returns {embed.Embed}
+   */
+  createReport(element: HTMLElement, config: embed.IEmbedConfiguration): embed.Embed{
+    config.type = 'create';
+    let powerBiElement = <IPowerBiElement>element;
+    const component = new create.Create(this, powerBiElement, config);
+    powerBiElement.powerBiEmbed = component;
+    this.embeds.push(component);
+
+    return component;
+  }
+
+  /**
    * TODO: Add a description here
    * 
    * @param {HTMLElement} [container]
@@ -244,6 +261,20 @@ export class Service implements IService {
      * then we can call the embedNew function which would allow setting the proper embedUrl and construction of object based on the new type.
      */
     if (typeof config.type === "string" && config.type !== component.config.type) {
+
+      /**
+       * When loading report after create we want to use existing Iframe to optimize load period
+       */
+      if(config.type === "report" && component.config.type === "create") {
+        const report = new Report(this, element, config, element.powerBiEmbed.iframe);
+        report.load(<embed.IInternalEmbedConfiguration>config);
+        element.powerBiEmbed = report;
+        this.embeds.pop();
+        this.embeds.push(report);
+
+        return report;
+      }
+
       throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
     }
 

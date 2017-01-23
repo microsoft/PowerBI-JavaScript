@@ -25,6 +25,7 @@ function _Embed_BasicEmbed() {
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
+        permissions: 3/*All*/,
         settings: {
             filterPaneEnabled: true,
             navContentPaneEnabled: true
@@ -75,6 +76,39 @@ function _Embed_EmbedWithDefaultFilter() {
     
     var reportContainer = document.getElementById('reportContainer');
     powerbi.embed(reportContainer, embedConfiguration);
+}
+
+function _Embed_Create() {
+    // Read embed application token from textbox
+    var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
+    var txtEmbedUrl = $('#txtReportEmbed').val();
+
+    // Read dataset Id from textbox
+    var txtEmbedDatasetId = $('#txtEmbedDatasetId').val();
+    
+    // Embed create configuration used to describe the what and how to create report.
+    // This object is used when calling powerbi.createReport.
+    var embedCreateConfiguration = {
+        accessToken: txtAccessToken,
+        embedUrl: txtEmbedUrl,
+        datasetId: txtEmbedDatasetId,
+    };
+    
+    // Grab the reference to the div HTML element that will host the report
+    var reportContainer = $('#reportContainer')[0];
+
+    // Create report
+    var report = powerbi.createReport(reportContainer, embedCreateConfiguration);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("loaded");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("loaded", function() {
+        Log.logText("Loaded");
+    });
 }
 
 // ---- Report Operations ----------------------------------------------------
@@ -249,6 +283,82 @@ function _Report_ExitFullScreen() {
 
     // Exits full screen mode.
     report.exitFullscreen();
+}
+
+function _Report_switchModeEdit() {
+    // Get a reference to the embedded report.
+    report = powerbi.embeds[0];
+
+    // Switch to edit mode.
+    report.switchMode("edit");
+}
+
+function _Report_switchModeView() {
+    // Get a reference to the embedded report.
+    report = powerbi.embeds[0];
+
+    // Switch to view mode.
+    report.switchMode("view");
+}
+
+function _Report_save() {
+    // Get a reference to report.
+    report = powerbi.embeds[0];
+
+    // Save report
+    report.save();
+    
+    // report.off removes a given event handler if it exists.
+    report.off("saved");
+
+    // report.on will add an event handler which prints to Log window.
+    report.on("saved", function() {
+        var reportObjectId = event.detail.reportObjectId;
+        var isSaveAs = event.detail.saveAs;
+        Log.logText("Save Report Completed, reportObjectId: " + reportObjectId);
+        Log.logText("Is saveAs: " + isSaveAs.toString());
+    });
+}
+
+function _Report_saveAs() {
+    // Get a reference to report.
+    report = powerbi.embeds[0];
+    
+    var saveAsParameters = {
+        name: "newReport"
+    };
+
+    // SaveAs report
+    report.saveAs(saveAsParameters);
+
+    // report.off removes a given event handler if it exists.
+    report.off("saved");
+
+    // report.on will add an event handler which prints to Log window.
+    report.on("saved", function() {
+        var reportObjectId = event.detail.reportObjectId;
+        var isSaveAs = event.detail.saveAs;
+        var name = event.detail.reportName;
+        Log.logText("Report name " + name);
+        Log.logText("Save Report Completed, new reportObjectId: " + reportObjectId);
+        Log.logText("Is saveAs: " + isSaveAs.toString());
+    });
+}
+
+function _Report_setAccessToken() {
+    // Get a reference to report.
+    report = powerbi.embeds[0];
+    
+    // New AccessToken
+    var newAccessToken = "newAccessToken";
+
+    // Set new AccessToken
+    report.setAccessToken(newAccessToken).then(function (result) {
+            Log.log("AccessToken set");
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
 }
 
 // ---- Page Operations ----------------------------------------------------

@@ -54,3 +54,22 @@ function OpenInteractStep() {
         LoadCodeArea("#embedCodeDiv", _Report_GetId);
     });
 }
+    
+function OpenCreateStep() {
+    $("#steps-auth a").removeClass(active_class);
+    $('#steps-embed a').addClass(active_class);
+    $('#steps-interact a').removeClass(active_class);
+
+    $("#steps-auth .step-div").removeClass(active_div);
+    $('#steps-embed .step-div').addClass(active_div);
+    $('#steps-interact .step-div').removeClass(active_div);
+
+    // Hide Embed view in authorization step.
+    $("#authorize-step-wrapper").hide();
+    $("#embed-and-interact-steps-wrapper").show();
+
+    $("#settings").load("settings_create.html", function() {
+        SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedDatasetId");
+        LoadCodeArea("#embedCodeDiv", _Embed_Create);
+    });
+}
