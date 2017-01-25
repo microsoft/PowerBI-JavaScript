@@ -1,5 +1,6 @@
 import * as embed from './embed';
 import { Report } from './report';
+import { Create } from './create';
 import { Dashboard } from './dashboard';
 import { Tile } from './tile';
 import { Page } from './page';
@@ -8,7 +9,6 @@ import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as router from 'powerbi-router';
 import * as models from 'powerbi-models';
-import * as create from './create';
 
 export interface IEvent<T> {
   type: string;
@@ -165,10 +165,10 @@ export class Service implements IService {
    * @param {embed.IEmbedConfiguration} [config={}]
    * @returns {embed.Embed}
    */
-  createReport(element: HTMLElement, config: embed.IEmbedConfiguration): embed.Embed{
+  createReport(element: HTMLElement, config: embed.IEmbedConfiguration): embed.Embed {
     config.type = 'create';
     let powerBiElement = <IPowerBiElement>element;
-    const component = new create.Create(this, powerBiElement, config);
+    const component = new Create(this, powerBiElement, config);
     powerBiElement.powerBiEmbed = component;
     this.embeds.push(component);
 
@@ -269,7 +269,6 @@ export class Service implements IService {
         const report = new Report(this, element, config, element.powerBiEmbed.iframe);
         report.load(<embed.IInternalEmbedConfiguration>config);
         element.powerBiEmbed = report;
-        this.embeds.pop();
         this.embeds.push(report);
 
         return report;

@@ -71,6 +71,10 @@ function Events_DataSelected() {
     SetCode(_Events_DataSelected);
 }
 
+function Events_SaveAsTriggered() {
+    SetCode(_Events_SaveAsTriggered);
+}
+
 // ---- Edit and Save Operations ----------------------------------------------------
 
 function Report_switchModeEdit() {

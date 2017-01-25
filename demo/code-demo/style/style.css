@@ -48,6 +48,12 @@ a:hover, a:visited, a:link, a:active
     margin-bottom: 5px;
 }
 
+#report-embed-checkbox input {
+    width: auto;
+    border: none;
+    margin-bottom: 5px;
+}
+
 #oldSample {
     display: block;
     float: right;
@@ -498,4 +504,8 @@ a {
 
 .nav-tabs {
   border-bottom: 0px;
+}
+
+.checkbox.input {
+  width: auto;
 }

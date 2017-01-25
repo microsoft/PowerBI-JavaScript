@@ -172,5 +172,5 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      *
      * @returns {Promise<void>}
      */
-    switchMode(viewMode: string): Promise<void>;
+    switchMode(viewMode: models.ViewMode): Promise<void>;
 }

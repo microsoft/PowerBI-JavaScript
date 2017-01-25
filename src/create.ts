@@ -17,7 +17,7 @@ export class Create extends embed.Embed {
     const datasetId = this.createConfig.datasetId || Create.findIdFromEmbedUrl(this.config.embedUrl);
 
     if (typeof datasetId !== 'string' || datasetId.length === 0) {
-      throw new Error(`Dataset id is required, but it was not found. You must provide an id either as part of embed configuration'.`);
+      throw new Error('Dataset id is required, but it was not found. You must provide an id either as part of embed configuration.');
     }
 
     return datasetId;

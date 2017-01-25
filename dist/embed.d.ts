@@ -29,6 +29,7 @@ export interface IEmbedConfiguration {
     pageView?: models.PageView;
     datasetId?: string;
     permissions?: models.Permissions;
+    viewMode?: models.ViewMode;
 }
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
     uniqueId: string;
@@ -95,6 +96,10 @@ export declare abstract class Embed {
      * Url used in the load request.
      */
     loadPath: string;
+    /**
+     * Type of embed
+     */
+    embeType: string;
     /**
      * Creates an instance of Embed.
      *
@@ -216,21 +221,13 @@ export declare abstract class Embed {
      */
     private getAccessToken(globalAccessToken);
     /**
-     * Sets Embed for load
+     * Populate config for create and load
      *
      * @private
-     * @param {}
+     * @param {IEmbedConfiguration}
      * @returns {void}
      */
-    private setEmbedForLoad();
-    /**
-     * Sets Embed for create report
-     *
-     * @private
-     * @param {IEmbedConfiguration} config
-     * @returns {void}
-     */
-    private setEmbedForCreate(config);
+    private populateConfig(config);
     /**
      * Gets an embed url from the first available location: options, attribute.
      *

@@ -63,7 +63,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.models = models;
 	var report_1 = __webpack_require__(4);
 	exports.Report = report_1.Report;
-	var tile_1 = __webpack_require__(8);
+	var tile_1 = __webpack_require__(9);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
@@ -84,11 +84,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(4);
-	var dashboard_1 = __webpack_require__(7);
-	var tile_1 = __webpack_require__(8);
+	var create_1 = __webpack_require__(7);
+	var dashboard_1 = __webpack_require__(8);
+	var tile_1 = __webpack_require__(9);
 	var page_1 = __webpack_require__(6);
 	var utils = __webpack_require__(3);
-	var create = __webpack_require__(9);
 	/**
 	 * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
 	 *
@@ -157,7 +157,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Service.prototype.createReport = function (element, config) {
 	        config.type = 'create';
 	        var powerBiElement = element;
-	        var component = new create.Create(this, powerBiElement, config);
+	        var component = new create_1.Create(this, powerBiElement, config);
 	        powerBiElement.powerBiEmbed = component;
 	        this.embeds.push(component);
 	        return component;
@@ -241,13 +241,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        if (typeof config.type === "string" && config.type !== component.config.type) {
 	            /**
-	             * When loading report after create we want to use existing Iframe ptimize load period
+	             * When loading report after create we want to use existing Iframe to optimize load period
 	             */
 	            if (config.type === "report" && component.config.type === "create") {
 	                var report = new report_1.Report(this, element, config, element.powerBiEmbed.iframe);
 	                report.load(config);
 	                element.powerBiEmbed = report;
-	                this.embeds.pop();
 	                this.embeds.push(report);
 	                return report;
 	            }
@@ -390,15 +389,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.service = service;
 	        this.element = element;
 	        this.iframe = iframe;
-	        // TODO: Change when Object.assign is available.
-	        var settings = utils.assign({}, Embed.defaultSettings, config.settings);
-	        this.config = utils.assign({ settings: settings }, config);
-	        this.config.uniqueId = this.getUniqueId();
-	        if (config.type === 'create') {
-	            this.setEmbedForCreate(config);
+	        this.embeType = config.type.toLowerCase();
+	        this.populateConfig(config);
+	        if (this.embeType === 'create') {
+	            this.setIframe(false /*set EventListener to call create() on 'load' event*/);
 	        }
 	        else {
-	            this.setEmbedForLoad();
+	            this.setIframe(true /*set EventListener to call load() on 'load' event*/);
 	        }
 	    }
 	    /**
@@ -592,30 +589,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return accessToken;
 	    };
 	    /**
-	     * Sets Embed for load
+	     * Populate config for create and load
 	     *
 	     * @private
-	     * @param {}
+	     * @param {IEmbedConfiguration}
 	     * @returns {void}
 	     */
-	    Embed.prototype.setEmbedForLoad = function () {
-	        this.config.id = this.getId();
-	        this.config.accessToken = this.getAccessToken(this.service.accessToken);
-	        this.setIframe(true /*set EventListener to call load() on 'load' event*/);
-	    };
-	    /**
-	     * Sets Embed for create report
-	     *
-	     * @private
-	     * @param {IEmbedConfiguration} config
-	     * @returns {void}
-	     */
-	    Embed.prototype.setEmbedForCreate = function (config) {
-	        this.createConfig = {
-	            datasetId: config.datasetId || this.getId(),
-	            accessToken: this.getAccessToken(this.service.accessToken)
-	        };
-	        this.setIframe(false /*set EventListener to call create() on 'load' event*/);
+	    Embed.prototype.populateConfig = function (config) {
+	        // TODO: Change when Object.assign is available.
+	        var settings = utils.assign({}, Embed.defaultSettings, config.settings);
+	        this.config = utils.assign({ settings: settings }, config);
+	        this.config.uniqueId = this.getUniqueId();
+	        if (this.embeType === 'create') {
+	            this.createConfig = {
+	                datasetId: config.datasetId || this.getId(),
+	                accessToken: this.getAccessToken(this.service.accessToken),
+	                settings: settings
+	            };
+	        }
+	        else {
+	            this.config.id = this.getId();
+	            this.config.accessToken = this.getAccessToken(this.service.accessToken);
+	        }
 	    };
 	    /**
 	     * Gets an embed url from the first available location: options, attribute.
@@ -687,7 +682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.iframe.addEventListener('load', function () { return _this.createReport(_this.createConfig); }, false);
 	        }
 	    };
-	    Embed.allowedEvents = ["loaded", "saved"];
+	    Embed.allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered"];
 	    Embed.accessTokenAttribute = 'powerbi-access-token';
 	    Embed.embedUrlAttribute = 'powerbi-embed-url';
 	    Embed.nameAttribute = 'powerbi-name';
@@ -1064,7 +1059,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
-	    Report.allowedEvents = ["rendered", "dataSelected", "filtersApplied", "pageChanged", "error", "saved"];
+	    Report.allowedEvents = ["rendered", "dataSelected", "filtersApplied", "pageChanged", "error", "saved", "saveAsTriggered"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
 	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
@@ -5198,6 +5193,64 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var models = __webpack_require__(5);
+	var embed = __webpack_require__(2);
+	var Create = (function (_super) {
+	    __extends(Create, _super);
+	    function Create(service, element, config) {
+	        _super.call(this, service, element, config);
+	    }
+	    /**
+	     * Gets the dataset ID from the first available location: createConfig or embed url.
+	     *
+	     * @returns {string}
+	     */
+	    Create.prototype.getId = function () {
+	        var datasetId = this.createConfig.datasetId || Create.findIdFromEmbedUrl(this.config.embedUrl);
+	        if (typeof datasetId !== 'string' || datasetId.length === 0) {
+	            throw new Error('Dataset id is required, but it was not found. You must provide an id either as part of embed configuration.');
+	        }
+	        return datasetId;
+	    };
+	    /**
+	     * Validate create report configuration.
+	     */
+	    Create.prototype.validate = function (config) {
+	        return models.validateCreateReport(config);
+	    };
+	    /**
+	     * Adds the ability to get datasetId from url.
+	     * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
+	     *
+	     * By extracting the ID we can ensure that the ID is always explicitly provided as part of the create configuration.
+	     *
+	     * @static
+	     * @param {string} url
+	     * @returns {string}
+	     */
+	    Create.findIdFromEmbedUrl = function (url) {
+	        var datasetIdRegEx = /datasetId="?([^&]+)"?/;
+	        var datasetIdMatch = url.match(datasetIdRegEx);
+	        var datasetId;
+	        if (datasetIdMatch) {
+	            datasetId = datasetIdMatch[1];
+	        }
+	        return datasetId;
+	    };
+	    return Create;
+	}(embed.Embed));
+	exports.Create = Create;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
 	var embed = __webpack_require__(2);
 	var models = __webpack_require__(5);
 	/**
@@ -5278,7 +5331,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -5317,64 +5370,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Tile;
 	}(embed_1.Embed));
 	exports.Tile = Tile;
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var models = __webpack_require__(5);
-	var embed = __webpack_require__(2);
-	var Create = (function (_super) {
-	    __extends(Create, _super);
-	    function Create(service, element, config) {
-	        _super.call(this, service, element, config);
-	    }
-	    /**
-	     * Gets the dataset ID from the first available location: createConfig or embed url.
-	     *
-	     * @returns {string}
-	     */
-	    Create.prototype.getId = function () {
-	        var datasetId = this.createConfig.datasetId || Create.findIdFromEmbedUrl(this.config.embedUrl);
-	        if (typeof datasetId !== 'string' || datasetId.length === 0) {
-	            throw new Error("Dataset id is required, but it was not found. You must provide an id either as part of embed configuration'.");
-	        }
-	        return datasetId;
-	    };
-	    /**
-	     * Validate create report configuration.
-	     */
-	    Create.prototype.validate = function (config) {
-	        return models.validateCreateReport(config);
-	    };
-	    /**
-	     * Adds the ability to get datasetId from url.
-	     * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
-	     *
-	     * By extracting the ID we can ensure that the ID is always explicitly provided as part of the create configuration.
-	     *
-	     * @static
-	     * @param {string} url
-	     * @returns {string}
-	     */
-	    Create.findIdFromEmbedUrl = function (url) {
-	        var datasetIdRegEx = /datasetId="?([^&]+)"?/;
-	        var datasetIdMatch = url.match(datasetIdRegEx);
-	        var datasetId;
-	        if (datasetIdMatch) {
-	            datasetId = datasetIdMatch[1];
-	        }
-	        return datasetId;
-	    };
-	    return Create;
-	}(embed.Embed));
-	exports.Create = Create;
 
 
 /***/ },

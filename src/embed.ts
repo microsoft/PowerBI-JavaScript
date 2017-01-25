@@ -41,6 +41,7 @@ export interface IEmbedConfiguration {
   pageView?: models.PageView;
   datasetId?: string;
   permissions?: models.Permissions;
+  viewMode?: models.ViewMode;
 }
 
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
@@ -62,7 +63,7 @@ export interface IInternalEventHandler<T> {
  * @class Embed
  */
 export abstract class Embed {
-  static allowedEvents = ["loaded", "saved"];
+  static allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered"];
   static accessTokenAttribute = 'powerbi-access-token';
   static embedUrlAttribute = 'powerbi-embed-url';
   static nameAttribute = 'powerbi-name';
@@ -123,6 +124,11 @@ export abstract class Embed {
   loadPath: string;
 
   /**
+   * Type of embed
+   */
+  embeType: string;
+
+  /**
    * Creates an instance of Embed.
    * 
    * Note: there is circular reference between embeds and the service, because
@@ -138,16 +144,14 @@ export abstract class Embed {
     this.service = service;
     this.element = element;
     this.iframe = iframe;
+    this.embeType = config.type.toLowerCase();
 
-    // TODO: Change when Object.assign is available.
-    const settings = utils.assign({}, Embed.defaultSettings, config.settings);
-    this.config = utils.assign({ settings }, config);
-    this.config.uniqueId = this.getUniqueId();
-
-    if(config.type === 'create'){
-      this.setEmbedForCreate(config);
+    this.populateConfig(config);
+    
+    if(this.embeType === 'create'){
+      this.setIframe(false/*set EventListener to call create() on 'load' event*/);
     } else {
-      this.setEmbedForLoad();
+      this.setIframe(true/*set EventListener to call load() on 'load' event*/);
     }
   }
 
@@ -358,33 +362,30 @@ export abstract class Embed {
   }
 
   /**
-   * Sets Embed for load
+   * Populate config for create and load
    * 
    * @private
-   * @param {}
+   * @param {IEmbedConfiguration}
    * @returns {void}
    */
-  private setEmbedForLoad(): void {
-      this.config.id = this.getId();
-      this.config.accessToken = this.getAccessToken(this.service.accessToken);
-      this.setIframe(true/*set EventListener to call load() on 'load' event*/);
-  }
-  
-  /**
-   * Sets Embed for create report
-   * 
-   * @private
-   * @param {IEmbedConfiguration} config
-   * @returns {void}
-   */
-  private setEmbedForCreate(config: IEmbedConfiguration): void {
-      this.createConfig = {
-        datasetId: config.datasetId || this.getId(),
-        accessToken: this.getAccessToken(this.service.accessToken)
-      }
+  private populateConfig(config: IEmbedConfiguration): void {
+      // TODO: Change when Object.assign is available.
+      const settings = utils.assign({}, Embed.defaultSettings, config.settings);
+      this.config = utils.assign({ settings }, config);
+      this.config.uniqueId = this.getUniqueId();
 
-       this.setIframe(false/*set EventListener to call create() on 'load' event*/);
+      if(this.embeType === 'create') {
+        this.createConfig = {
+          datasetId: config.datasetId || this.getId(),
+          accessToken: this.getAccessToken(this.service.accessToken),
+          settings: settings
+        }
+      } else {
+        this.config.id = this.getId();
+        this.config.accessToken = this.getAccessToken(this.service.accessToken);
+      }  
   }
+
 
   /**
    * Gets an embed url from the first available location: options, attribute.

@@ -29,7 +29,7 @@ export interface IReportNode {
  * @implements {IFilterable}
  */
 export class Report extends embed.Embed implements IReportNode, IFilterable {
-  static allowedEvents = ["rendered", "dataSelected", "filtersApplied", "pageChanged", "error", "saved"];
+  static allowedEvents = ["rendered", "dataSelected", "filtersApplied", "pageChanged", "error", "saved", "saveAsTriggered"];
   static reportIdAttribute = 'powerbi-report-id';
   static filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
   static navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
@@ -269,7 +269,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * 
    * @returns {Promise<void>}
    */
-  switchMode(viewMode: string): Promise<void> {
+  switchMode(viewMode: models.ViewMode): Promise<void> {
     let url = '/report/switchMode/' + viewMode;
     return this.service.hpm.post<models.IError[]>(url, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {

@@ -16,6 +16,10 @@ function _Embed_BasicEmbed() {
     // Read report Id from textbox
     var txtEmbedReportId = $('#txtEmbedReportId').val();
 
+    // Get viewMode
+    var checkd = $('#viewMode:checked').val();
+    var viewMode = checkd ? 1 : 0; 
+
     // Embed configuration used to describe the what and how to embed.
     // This object is used when calling powerbi.embed.
     // This also includes settings and options such as filters.
@@ -26,6 +30,7 @@ function _Embed_BasicEmbed() {
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
         permissions: 3/*All*/,
+        viewMode: viewMode,
         settings: {
             filterPaneEnabled: true,
             navContentPaneEnabled: true
@@ -114,8 +119,12 @@ function _Embed_Create() {
 // ---- Report Operations ----------------------------------------------------
 
 function _Report_GetId() {
+    
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Retrieve the report id.
     var reportId = report.getId();
@@ -130,8 +139,11 @@ function _Report_UpdateSettings() {
       filterPaneEnabled: false
     };
 
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
@@ -144,8 +156,11 @@ function _Report_UpdateSettings() {
 }
 
 function _Report_GetPages() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Retrieve the page collection and loop through to collect the 
     // page name and display name of each page and display the value.
@@ -162,8 +177,11 @@ function _Report_GetPages() {
 }
 
 function _Report_SetPage() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // setPage will change the selected view to the page you indicate.
     // This is the actual page name not the display name.
@@ -187,8 +205,11 @@ function _Report_SetPage() {
 }
 
 function _Report_GetFilters() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
     
     // Get the filters applied to the report.
     report.getFilters()
@@ -213,8 +234,11 @@ function _Report_SetFilters() {
       values: ["Lindseys"]
     };
 
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
     
     // Set the filter for the report.
     // Pay attention that setFilters receives an array.
@@ -228,8 +252,11 @@ function _Report_SetFilters() {
 }
 
 function _Report_RemoveFilters() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Remove the filters currently applied to the report.
     report.removeFilters()
@@ -242,8 +269,11 @@ function _Report_RemoveFilters() {
 }
 
 function _Report_PrintCurrentReport() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Trigger the print dialog for your browser.
     report.print()
@@ -256,8 +286,11 @@ function _Report_PrintCurrentReport() {
 }
 
 function _Report_Reload() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Reload the displayed report
     report.reload()
@@ -270,40 +303,55 @@ function _Report_Reload() {
 }
 
 function _Report_FullScreen() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Displays the report in full screen mode.
     report.fullscreen();
 }
 
 function _Report_ExitFullScreen() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Exits full screen mode.
     report.exitFullscreen();
 }
 
 function _Report_switchModeEdit() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Switch to edit mode.
     report.switchMode("edit");
 }
 
 function _Report_switchModeView() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Switch to view mode.
     report.switchMode("view");
 }
 
 function _Report_save() {
-    // Get a reference to report.
-    report = powerbi.embeds[0];
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(reportContainer);
 
     // Save report
     report.save();
@@ -315,14 +363,19 @@ function _Report_save() {
     report.on("saved", function() {
         var reportObjectId = event.detail.reportObjectId;
         var isSaveAs = event.detail.saveAs;
+        var name = event.detail.reportName;
+        Log.logText("Report name " + name);
         Log.logText("Save Report Completed, reportObjectId: " + reportObjectId);
         Log.logText("Is saveAs: " + isSaveAs.toString());
     });
 }
 
 function _Report_saveAs() {
-    // Get a reference to report.
-    report = powerbi.embeds[0];
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(reportContainer);
     
     var saveAsParameters = {
         name: "newReport"
@@ -346,8 +399,11 @@ function _Report_saveAs() {
 }
 
 function _Report_setAccessToken() {
-    // Get a reference to report.
-    report = powerbi.embeds[0];
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(reportContainer);
     
     // New AccessToken
     var newAccessToken = "newAccessToken";
@@ -364,8 +420,11 @@ function _Report_setAccessToken() {
 // ---- Page Operations ----------------------------------------------------
 
 function _Page_SetActive() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
     
     // Retrieve the page collection, and then set the second page to be active.
     report.getPages()
@@ -380,8 +439,11 @@ function _Page_SetActive() {
 }
 
 function _Page_GetFilters() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
     
     // Retrieve the page collection and get the filters for the first page.
     report.getPages()
@@ -400,8 +462,11 @@ function _Page_GetFilters() {
 }
 
 function _Page_SetFilters() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Build the filter you want to use. For more information, see Constructing 
     // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
@@ -433,8 +498,11 @@ function _Page_SetFilters() {
 }
 
 function _Page_RemoveFilters() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
     
     // Retrieve the page collection and remove the filters for the first page.
     report.getPages()
@@ -455,8 +523,11 @@ function _Page_RemoveFilters() {
 // ---- Event Listener ----------------------------------------------------
 
 function _Events_PageChanged() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Report.off removes a given event listener if it exists.
     report.off("pageChanged");
@@ -474,8 +545,11 @@ function _Events_PageChanged() {
 }
 
 function _Events_DataSelected() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
     // Get a reference to the embedded report.
-    report = powerbi.embeds[0];
+    report = powerbi.get(reportContainer);
 
     // Report.off removes a given event listener if it exists.
     report.off("dataSelected");
@@ -490,4 +564,26 @@ function _Events_DataSelected() {
     // For example, a bar in a bar chart. You should see an entry in the Log window.
 
     Log.logText("Select data to see events in Log window.");
+}
+
+function _Events_SaveAsTriggered() {
+    // Grab the reference to the div HTML element that will host the report.
+    var reportContainer = $('#reportContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(reportContainer);
+
+    // Report.off removes a given event listener if it exists.
+    report.off("saveAsTriggered");
+
+    // Report.on will add an event listener.
+    report.on("saveAsTriggered", function(event) {
+        var eventType = event.type;
+        Log.logText("Event Triggered: " + eventType);
+    });
+
+    // Select Run and change to a different page.
+    // You should see an entry in the Log window.
+
+    Log.logText("Run SaveAs to see events in Log window.");
 }
