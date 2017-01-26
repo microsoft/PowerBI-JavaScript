@@ -373,6 +373,7 @@ export abstract class Embed {
       const settings = utils.assign({}, Embed.defaultSettings, config.settings);
       this.config = utils.assign({ settings }, config);
       this.config.uniqueId = this.getUniqueId();
+      this.config.embedUrl = this.getEmbedUrl();
 
       if(this.embeType === 'create') {
         this.createConfig = {
@@ -466,7 +467,6 @@ export abstract class Embed {
    */
   private setIframe(isLoad: boolean): void {
     if(!this.iframe) {
-      this.config.embedUrl = this.getEmbedUrl();
       const iframeHtml = `<iframe style="width:100%;height:100%;" src="${this.config.embedUrl}" scrolling="no" allowfullscreen="true"></iframe>`;
       this.element.innerHTML = iframeHtml;
       this.iframe = <HTMLIFrameElement>this.element.childNodes[0];

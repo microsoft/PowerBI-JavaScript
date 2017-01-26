@@ -600,6 +600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var settings = utils.assign({}, Embed.defaultSettings, config.settings);
 	        this.config = utils.assign({ settings: settings }, config);
 	        this.config.uniqueId = this.getUniqueId();
+	        this.config.embedUrl = this.getEmbedUrl();
 	        if (this.embeType === 'create') {
 	            this.createConfig = {
 	                datasetId: config.datasetId || this.getId(),
@@ -670,7 +671,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Embed.prototype.setIframe = function (isLoad) {
 	        var _this = this;
 	        if (!this.iframe) {
-	            this.config.embedUrl = this.getEmbedUrl();
 	            var iframeHtml = "<iframe style=\"width:100%;height:100%;\" src=\"" + this.config.embedUrl + "\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>";
 	            this.element.innerHTML = iframeHtml;
 	            this.iframe = this.element.childNodes[0];
