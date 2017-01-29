@@ -914,7 +914,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Report.prototype.validate = function (config) {
 	        return models.validateReportLoad(config);
 	    };
-	    Report.allowedEvents = ["dataSelected", "filtersApplied", "pageChanged", "error"];
+	    Report.allowedEvents = ["rendered", "dataSelected", "filtersApplied", "pageChanged", "error"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
 	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
