@@ -498,14 +498,14 @@ a {
 }
 
 .tabContainer {
-  margin-bottom: 5px;
-  padding-left: 0;
+    margin-bottom: 5px;
+    padding-left: 0;
 }
 
 .nav-tabs {
-  border-bottom: 0px;
+    border-bottom: 0px;
 }
 
 .checkbox.input {
-  width: auto;
+    width: auto;
 }

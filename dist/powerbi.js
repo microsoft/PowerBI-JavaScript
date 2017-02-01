@@ -317,8 +317,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Service.prototype.handleEvent = function (event) {
 	        var embed = utils.find(function (embed) {
-	            return (embed.config.type === event.type
-	                && embed.config.uniqueId === event.id);
+	            return (embed.config.uniqueId === event.id);
 	        }, this.embeds);
 	        if (embed) {
 	            var value = event.value;
@@ -1059,7 +1058,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
-	    Report.allowedEvents = ["rendered", "dataSelected", "filtersApplied", "pageChanged", "error", "saved", "saveAsTriggered"];
+	    Report.allowedEvents = ["dataSelected", "filtersApplied", "pageChanged", "error"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
 	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
@@ -5206,7 +5205,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {string}
 	     */
 	    Create.prototype.getId = function () {
-	        var datasetId = this.createConfig.datasetId || Create.findIdFromEmbedUrl(this.config.embedUrl);
+	        var datasetId = (this.createConfig && this.createConfig.datasetId) ? this.createConfig.datasetId : Create.findIdFromEmbedUrl(this.config.embedUrl);
 	        if (typeof datasetId !== 'string' || datasetId.length === 0) {
 	            throw new Error('Dataset id is required, but it was not found. You must provide an id either as part of embed configuration.');
 	        }

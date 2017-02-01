@@ -351,8 +351,7 @@ export class Service implements IService {
    */
   private handleEvent(event: IEvent<any>): void {
     const embed = utils.find(embed => {
-      return (embed.config.type === event.type
-        && embed.config.uniqueId === event.id);
+      return (embed.config.uniqueId === event.id);
     }, this.embeds);
 
     if (embed) {

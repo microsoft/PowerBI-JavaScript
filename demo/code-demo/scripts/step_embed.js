@@ -92,7 +92,3 @@ function Report_save() {
 function Report_saveAs() {
     SetCode(_Report_saveAs);
 }
-
-function Report_setAccessToken() {
-    SetCode(_Report_setAccessToken);
-}
