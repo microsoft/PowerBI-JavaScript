@@ -490,3 +490,37 @@ a {
     position: relative;
     top: -1px;
 }
+
+#btnRunCode
+{
+    -webkit-animation-name: fadeInFadeOut; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 4s; /* Safari 4.0 - 8.0 */
+    -webkit-animation-iteration-count: 3; /* Safari 4.0 - 8.0 */
+    animation-name: fadeInFadeOut;
+    animation-duration: 4s;
+    animation-iteration-count: 3;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes fadeInFadeOut {    
+    50%  {
+        transform: scale(1.6);
+    	font-weight: bolder;
+    }
+    
+    100%  {
+        transform: scale(1);
+    }
+}
+
+/* Standard syntax */
+@keyframes fadeInFadeOut {
+    50%  {
+        transform: scale(1.6);
+    	font-weight: bolder;
+    }
+    
+    100%  {
+        transform: scale(1);
+    }
+}
