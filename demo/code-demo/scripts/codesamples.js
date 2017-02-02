@@ -364,6 +364,7 @@ function _Report_save() {
     // report.on will add an event handler which prints to Log window.
     report.on("saved", function(event) {
         Log.log(event.detail);
+        report.off("saved");
     });
 }
 
@@ -387,6 +388,7 @@ function _Report_saveAs() {
     // report.on will add an event handler which prints to Log window.
     report.on("saved", function(event) {
         Log.log(event.detail);
+        report.off("saved");
     });
 }
 
