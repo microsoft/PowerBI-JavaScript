@@ -54,6 +54,11 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
     {
         embedId = GetSession(SessionKeys.EmbedId);
     }
+    
+    if (!embedUrl)
+    {
+        embedUrl = "https://embedded.powerbi.com/appTokenReportEmbed";
+    }
 
     $(accessTokenSelector).val(accessToken);
     $(embedUrlSelector).val(embedUrl);
