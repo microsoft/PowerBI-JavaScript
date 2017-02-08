@@ -48,10 +48,14 @@ function _Embed_BasicEmbed() {
 
     // Report.off removes a given event handler if it exists.
     report.off("loaded");
+    report.off("error");
 
     // Report.on will add an event handler which prints to Log window.
     report.on("loaded", function() {
         Log.logText("Loaded");
+    });
+    report.on("error", function(event) {
+        Log.log(event.detail);
     });
 }
 
@@ -110,13 +114,13 @@ function _Embed_Create() {
     // Create report
     var report = powerbi.createReport(reportContainer, embedCreateConfiguration);
 
-    // // Report.off removes a given event handler if it exists.
-    // report.off("loaded");
+    // Report.off removes a given event handler if it exists.
+    report.off("error");
 
-    // // Report.on will add an event handler which prints to Log window.
-    // report.on("loaded", function() {
-    //     Log.logText("Loaded");
-    // });
+    // Report.on will add an event handler which prints to Log window.
+    report.on("error", function(event) {
+        Log.log(event.detail);
+    });
 }
 
 // ---- Report Operations ----------------------------------------------------
@@ -357,13 +361,12 @@ function _Report_save() {
 
     // Save report
     report.save();
-    
-    // report.off removes a given event handler if it exists.
-    report.off("saved");
 
     // report.on will add an event handler which prints to Log window.
     report.on("saved", function(event) {
         Log.log(event.detail);
+
+        // report.off removes a given event handler if it exists.
         report.off("saved");
     });
 }
@@ -382,12 +385,11 @@ function _Report_saveAs() {
     // SaveAs report
     report.saveAs(saveAsParameters);
 
-    // report.off removes a given event handler if it exists.
-    report.off("saved");
-
     // report.on will add an event handler which prints to Log window.
     report.on("saved", function(event) {
         Log.log(event.detail);
+
+        // report.off removes a given event handler if it exists.
         report.off("saved");
     });
 }

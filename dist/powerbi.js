@@ -681,7 +681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.iframe.addEventListener('load', function () { return _this.createReport(_this.createConfig); }, false);
 	        }
 	    };
-	    Embed.allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered"];
+	    Embed.allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected"];
 	    Embed.accessTokenAttribute = 'powerbi-access-token';
 	    Embed.embedUrlAttribute = 'powerbi-embed-url';
 	    Embed.nameAttribute = 'powerbi-name';
@@ -1058,7 +1058,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
-	    Report.allowedEvents = ["dataSelected", "filtersApplied", "pageChanged", "error"];
+	    Report.allowedEvents = ["filtersApplied", "pageChanged"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
 	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
