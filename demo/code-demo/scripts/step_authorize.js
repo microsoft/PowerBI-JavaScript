@@ -37,9 +37,9 @@ function OpenCleanEmbedStepCreate()
 
 function OpenEmbedStepCreateWithSample() {
     // Default values - report with embed token which expires on 1/1/2030.
-    var embedUrl = 'https://dxt.powerbi.com/appTokenReportEmbed?reportEmbedEditingEnabled=true';
-    var datasetId = '56603ccc-e43f-46ad-ba2f-b9e9a145f0b7';
-    var accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3Y24iOiJTYWdlRFhUV0MiLCJ3aWQiOiIwZmI4MGMyNC05ODlmLTQ4NDEtOWU0OS1iOWFjOWNhMzRmZTIiLCJkaWQiOiI1NjYwM2NjYy1lNDNmLTQ2YWQtYmEyZi1iOWU5YTE0NWYwYjciLCJ2ZXIiOiIwLjIuMCIsInR5cGUiOiJlbWJlZCIsInNjcCI6IkRhdGFzZXQuUmVhZCBXb3Jrc3BhY2UuUmVwb3J0LkNyZWF0ZSIsImlzcyI6IlBvd2VyQklTREsiLCJhdWQiOiJodHRwczovL2FuYWx5c2lzLndpbmRvd3MubmV0L3Bvd2VyYmkvYXBpIiwiZXhwIjoxNDkzNzE3MTU2LCJuYmYiOjE0ODUwNzM1NTZ9.3V7S7JinkJygkXaLtyK_StfYSR53Mbc56-VPFJFlETI";
+    var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportEmbedEditingEnabled=true';
+    var datasetId = '8f94aa87-a12b-4afa-9ff3-a0f78cd434b9';
+    var accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3Y24iOiJEYmctV0FCSS1QQUFTLTEtU0NVUyIsIndpZCI6IjhhMGNlZTNlLTc3ZmEtNGM1Ny1hZTQ4LWM4NzliOTkwMjQyNSIsImRpZCI6IjhmOTRhYTg3LWExMmItNGFmYS05ZmYzLWEwZjc4Y2Q0MzRiOSIsInZlciI6IjAuMi4wIiwidHlwZSI6ImVtYmVkIiwic2NwIjoiRGF0YXNldC5SZWFkIiwiaXNzIjoiUG93ZXJCSVNESyIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJleHAiOjE0OTU1MzE5MjEsIm5iZiI6MTQ4Njg4ODMyMX0.Lzug-8hFwPEWNgCJovk338Fc6Y6lrAZOcOruDRzT-Qw";
 
     OpenEmbedStepCreateWithSampleValues(accessToken, embedUrl, datasetId);
 }

@@ -7,8 +7,6 @@
 // ---- Embed Code ----------------------------------------------------
 
 function _Embed_BasicEmbed() {
-    // Get models. models contains enums that can be used.
-    var models = window['powerbi-client'].models;
 
     // Read embed application token from textbox
     var txtAccessToken = $('#txtAccessToken').val();
@@ -19,8 +17,11 @@ function _Embed_BasicEmbed() {
     // Read report Id from textbox
     var txtEmbedReportId = $('#txtEmbedReportId').val();
 
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
     // Embed report in View mode or Edit mode based or checkbox value.
-    var checked = $('#viewMode:checked').val();
+    var checked = $('#viewModeCheckbox')[0].checked;
     var viewMode = checked ? models.ViewMode.Edit : models.ViewMode.View; 
 
     // Embed configuration used to describe the what and how to embed.
@@ -32,7 +33,7 @@ function _Embed_BasicEmbed() {
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
-        permissions: 3 /*models.Permissions.All gives maximum permissions*/,
+        permissions: models.Permissions.All /*gives maximum permissions*/,
         viewMode: viewMode,
         settings: {
             filterPaneEnabled: true,
@@ -48,7 +49,6 @@ function _Embed_BasicEmbed() {
 
     // Report.off removes a given event handler if it exists.
     report.off("loaded");
-    report.off("error");
 
     // Report.on will add an event handler which prints to Log window.
     report.on("loaded", function() {
@@ -56,6 +56,8 @@ function _Embed_BasicEmbed() {
     });
     report.on("error", function(event) {
         Log.log(event.detail);
+        
+        report.off("error");
     });
 }
 
@@ -558,8 +560,8 @@ function _Events_SaveAsTriggered() {
         Log.log(event);
     });
 
-    // Select Run and then run SaveAs.
+    // Select Run and then select SaveAs.
     // You should see an entry in the Log window.
 
-    Log.logText("Run SaveAs to see events in Log window.");
+    Log.logText("Select SaveAs to see events in Log window.");
 }
