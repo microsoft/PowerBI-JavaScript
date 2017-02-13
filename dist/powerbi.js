@@ -1073,7 +1073,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v0.10.4 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v0.11.1 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1542,7 +1542,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						0,
 						1,
 						2,
-						3
+						4,
+						7
 					],
 					"default": 0,
 					"invalidMessage": "permissions property is invalid"

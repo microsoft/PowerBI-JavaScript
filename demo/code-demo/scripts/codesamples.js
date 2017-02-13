@@ -117,11 +117,17 @@ function _Embed_Create() {
     var report = powerbi.createReport(reportContainer, embedCreateConfiguration);
 
     // Report.off removes a given event handler if it exists.
-    report.off("error");
+    report.off("loaded");
 
     // Report.on will add an event handler which prints to Log window.
+    report.on("loaded", function() {
+        Log.logText("Loaded");
+    });
+
     report.on("error", function(event) {
         Log.log(event.detail);
+        
+        report.off("error");
     });
 }
 
