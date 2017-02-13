@@ -18,6 +18,5 @@
     <file src="dist\powerbi.js" target="content\scripts" />
     <file src="dist\powerbi.min.js" target="content\scripts" />
     <file src="dist\powerbi.js.map" target="content\scripts" />
-    <file src="dist\powerbi.d.ts" target="content\scripts\typings" />
   </files>
 </package>
