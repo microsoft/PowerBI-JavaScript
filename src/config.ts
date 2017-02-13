@@ -1,5 +1,5 @@
 const config = {
-  version: '2.2.3',
+  version: '2.2.7',
   type: 'js'
 };
 

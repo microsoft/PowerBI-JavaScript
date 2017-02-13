@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.2.7 | (c) 2016 Microsoft Corporation MIT */
 import * as models from 'powerbi-models';
 import { Embed } from './embed';
 /**
