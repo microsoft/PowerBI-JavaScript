@@ -29,7 +29,7 @@ export interface IReportNode {
  * @implements {IFilterable}
  */
 export class Report extends embed.Embed implements IReportNode, IFilterable {
-  static allowedEvents = ["rendered", "dataSelected", "filtersApplied", "pageChanged", "error"];
+  static allowedEvents = ["filtersApplied", "pageChanged"];
   static reportIdAttribute = 'powerbi-report-id';
   static filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
   static navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
@@ -43,7 +43,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfiguration} config
    */
-  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration) {
+  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, iframe?: HTMLIFrameElement) {
     const filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
     const navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
     const settings = utils.assign({
@@ -52,7 +52,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     }, config.settings);
     const configCopy = utils.assign({ settings }, config);
 
-    super(service, element, configCopy);
+    super(service, element, configCopy, iframe);
     this.loadPath = "/report/load";
     Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
   }
@@ -262,5 +262,21 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    */
   validate(config: models.IReportLoadConfiguration): models.IError[] {
     return models.validateReportLoad(config);
+  }
+
+  /**
+   * Switch Report view mode.
+   * 
+   * @returns {Promise<void>}
+   */
+  switchMode(viewMode: models.ViewMode): Promise<void> {
+    let url = '/report/switchMode/' + viewMode;
+    return this.service.hpm.post<models.IError[]>(url, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
   }
 }

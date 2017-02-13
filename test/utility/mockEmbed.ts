@@ -66,6 +66,30 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
   });
   
   /**
+   * Create Report
+   */
+  router.post('/report/create', (req, res) => {
+    const uniqueId = req.headers['uid'];
+    const createConfig = req.body;
+    return app.validateCreateReport(createConfig)
+      .then(() => {
+        app.reportLoad(createConfig)
+          .then(() => {
+            const initiator = "sdk";
+            hpm.post(`/reports/${uniqueId}/events/loaded`, {
+              initiator
+            });
+          }, error => {
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
+          });
+
+        res.send(202);
+      }, error => {
+        res.send(400, error);
+      });
+  });
+
+  /**
    * Report Embed
    */
   router.post('/report/load', (req, res) => {
@@ -241,6 +265,28 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
 
   router.post('/report/print', (req, res) => {
     app.print();
+    res.send(202);
+  });
+
+   router.post('report/switchMode/Edit', (req, res) => {
+    app.switchMode();
+    res.send(202);
+  });
+
+  router.post('report/save', (req, res) => {
+    app.save();
+    res.send(202);
+  });
+
+  router.post('report/saveAs', (req, res) => {
+    const settings = req.body;
+    app.saveAs(settings);
+    res.send(202);
+  });
+
+  router.post('report/token', (req, res) => {
+    const settings = req.body;
+    app.setAccessToken(settings);
     res.send(202);
   });
 

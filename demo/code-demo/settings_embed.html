@@ -1,4 +1,16 @@
 <div id="report-embed-table">
+
+    <div class="tabContainer">
+        <ul class="nav nav-tabs">
+          <li class="active" id="steps-embed" onclick="OpenEmbedStep();">
+            <a data-toggle="tab" href="#Embed">Embed</a>
+          </li>
+          <li id="steps-embed" onclick="OpenCleanEmbedStepCreate();">
+            <a data-toggle="tab" href="#Create">Create</a>
+          </li>
+        </ul>
+    </div>
+
     <div class="pageTitle">
         <h4>Embed Report</h4>
         <h8>Fill in the fields below to get the code to embed your report.</h8>
@@ -15,5 +27,8 @@
     <div class="inputLine">
         <h8>Report Id</h8>
         <div><input type="text" id="txtEmbedReportId" onchange="UpdateSession(this, SessionKeys.EmbedId);"/></div>
+    </div>
+    <div id="report-embed-checkbox" class="checkbox">
+        <label><input type="checkbox" id="viewModeCheckbox">Embed in Edit mode</label>
     </div>
 </div>
