@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.6 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.2.7 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -38,7 +38,7 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      * @param {HTMLElement} element
      * @param {embed.IEmbedConfiguration} config
      */
-    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration);
+    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, iframe?: HTMLIFrameElement);
     /**
      * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
      * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
@@ -167,4 +167,10 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      * Validate load configuration.
      */
     validate(config: models.IReportLoadConfiguration): models.IError[];
+    /**
+     * Switch Report view mode.
+     *
+     * @returns {Promise<void>}
+     */
+    switchMode(viewMode: models.ViewMode): Promise<void>;
 }
