@@ -148,6 +148,7 @@ export declare class Service implements IService {
      * @returns {(Report | Tile)}
      */
     find(uniqueId: string): Report | Tile | Dashboard;
+    addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void;
     /**
      * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
      *
