@@ -170,7 +170,8 @@ export class Service implements IService {
     let powerBiElement = <IPowerBiElement>element;
     const component = new Create(this, powerBiElement, config);
     powerBiElement.powerBiEmbed = component;
-    this.embeds.push(component);
+    
+    this.addOrOverwriteEmbed(component, element);
 
     return component;
   }
@@ -236,8 +237,8 @@ export class Service implements IService {
 
     const component = new Component(this, element, config);
     element.powerBiEmbed = component;
-    this.embeds.push(component);
 
+    this.addOrOverwriteEmbed(component, element);
     return component;
   }
 
@@ -269,7 +270,8 @@ export class Service implements IService {
         const report = new Report(this, element, config, element.powerBiEmbed.iframe);
         report.load(<embed.IInternalEmbedConfiguration>config);
         element.powerBiEmbed = report;
-        this.embeds.push(report);
+        
+        this.addOrOverwriteEmbed(component, element);
 
         return report;
       }
@@ -317,6 +319,15 @@ export class Service implements IService {
    */
   find(uniqueId: string): Report | Tile | Dashboard {
     return utils.find(x => x.config.uniqueId === uniqueId, this.embeds);
+  }
+
+  addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void {
+    // remove embeds over the same div element.
+    this.embeds = this.embeds.filter(function(embed) {
+      return embed.element.id !== element.id;
+    });
+
+    this.embeds.push(component);
   }
 
   /**

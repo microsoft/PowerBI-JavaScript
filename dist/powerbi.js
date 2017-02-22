@@ -159,7 +159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var powerBiElement = element;
 	        var component = new create_1.Create(this, powerBiElement, config);
 	        powerBiElement.powerBiEmbed = component;
-	        this.embeds.push(component);
+	        this.addOrOverwriteEmbed(component, element);
 	        return component;
 	    };
 	    /**
@@ -218,7 +218,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        var component = new Component(this, element, config);
 	        element.powerBiEmbed = component;
-	        this.embeds.push(component);
+	        this.addOrOverwriteEmbed(component, element);
 	        return component;
 	    };
 	    /**
@@ -247,7 +247,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var report = new report_1.Report(this, element, config, element.powerBiEmbed.iframe);
 	                report.load(config);
 	                element.powerBiEmbed = report;
-	                this.embeds.push(report);
+	                this.addOrOverwriteEmbed(component, element);
 	                return report;
 	            }
 	            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but the existing element contains an embed of type: " + this.config.type + " which does not match the new type: " + config.type);
@@ -287,6 +287,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Service.prototype.find = function (uniqueId) {
 	        return utils.find(function (x) { return x.config.uniqueId === uniqueId; }, this.embeds);
+	    };
+	    Service.prototype.addOrOverwriteEmbed = function (component, element) {
+	        // remove embeds over the same div element.
+	        this.embeds = this.embeds.filter(function (embed) {
+	            return embed.element.id !== element.id;
+	        });
+	        this.embeds.push(component);
 	    };
 	    /**
 	     * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.

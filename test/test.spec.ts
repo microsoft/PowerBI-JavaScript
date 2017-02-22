@@ -78,8 +78,8 @@ describe('service', function () {
     it('embeds all components found in the DOM', function () {
       // Arrange
       const elements = [
-        '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
-        '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
+        '<div id="reportContainer1" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
+        '<div id="reportContainer2" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
       ];
 
       elements.forEach(element => {
@@ -3328,10 +3328,10 @@ describe('SDK-to-MockApp', function () {
       logMessages
     });
 
-    $element = $(`<div class="powerbi-report-container2"></div>`)
+    $element = $(`<div id="reportContainer1" class="powerbi-report-container2"></div>`)
       .appendTo(document.body);
 
-    $element2 = $(`<div class="powerbi-report-container3"></div>`)
+    $element2 = $(`<div id="reportContainer2" class="powerbi-report-container3"></div>`)
       .appendTo(document.body);
 
     const iframeSrc = "base/test/utility/noop.html";
