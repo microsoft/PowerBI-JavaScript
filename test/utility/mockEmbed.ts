@@ -263,6 +263,11 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
       });
   });
 
+  router.post('/report/refresh', (req, res) => {
+    app.refreshData();
+    res.send(202);
+  });
+
   router.post('/report/print', (req, res) => {
     app.print();
     res.send(202);
