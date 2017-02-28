@@ -1,26 +1,21 @@
 <div id="step-interact-wrapper">
     <div>
         <div id="operation-categories">
-            <div id="selected-catogory-button-wrapper" onclick="ToggleCategoriesList();">
-                <button id="selected-catogory-button">Report operations</button>
-                <img src="images/arrow.png" />
-            </div>
             <div id="operations-ul-wrapper" tabindex="-1">
                 <ul id="operations-ul">
                     <li id="report-operations-li" onclick="OpenReportOperations();" class="active">
-                        <span><a href="#">Report operations</a></span>
+                        <a href="#">Report</a>
                     </li>
-                    <li id="page-operations-li" onclick="OpenPageOperations();"></span>
-                        <span><a href="#">Page operations</a>
+                    <li id="page-operations-li" onclick="OpenPageOperations();">
+                        <a href="#">Page</a>
                     </li>
-                    <li id="events-operations-li" onclick="OpenEventOperations();"></span>
-                        <span><a href="#">Events listener</a>
+                    <li id="events-operations-li" onclick="OpenEventOperations();">
+                        <a href="#">Events</a>
                     </li>
-                    <li id="editandsave-operations-li" onclick="OpenEditAndSaveOperations();"></span>
-                        <span><a href="#">Edit and save operations</a>
+                    <li id="editandsave-operations-li" onclick="OpenEditAndSaveOperations();">
+                        <a href="#">Edit&save</a>
                     </li>
                 </ul>
-                <img src="images/arrow_flipped.png" onclick="HideCategoriesList();" />
             </div>
         </div>
         <div id="category-browser">

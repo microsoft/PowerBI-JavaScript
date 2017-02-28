@@ -138,15 +138,6 @@ a {
     color: rgb(0, 174, 239);
 }
 
-#steps-nav-bar {
-    margin-top: 10px;
-    float: left;
-    height: 100%;
-    border-right: 1px solid #E5E5E5;
-    padding-right: 20px;
-    margin-right: 20px;
-}
-
 #steps-nav-bar a {
     color: black;
     display: inline-block;
@@ -255,6 +246,7 @@ a {
 
 #steps-ul-dev {
     float: left;
+    width: 100%;
 }
 
 .steps-ul {
@@ -264,6 +256,7 @@ a {
     -webkit-margin-before: 0;
     -webkit-padding-start: 0;
     line-height: 30px;
+    width: 100%;
 }
 
 .steps-ul li {
@@ -273,7 +266,7 @@ a {
     font-size: 17px;
     font-weight: 400;
     height: 40px;
-    width: 170px;
+    width: 100%;
     margin-bottom: 10px;
     vertical-align: middle;
 }
@@ -304,45 +297,25 @@ a {
     text-align: center;
 }
 
-#operations-ul span {
-    width: 100%;
-    padding: 10px;
-    line-height: 28px;
-}
-
-#operations-ul li:hover a {
-    color: white;
-}
-
 #operations-ul li:hover {
-    background-color: rgb(88, 88, 90);
-}
-
-#operations-ul-wrapper {
-    clear: both;
-    display: none;
-    margin: 0px 0px 0px 0px;
-    padding: 0px 5px 0px 0px;
-    border: solid 1px rgb(227, 227, 227);
-    position: absolute;
-    z-index: 2;
-    background-color: rgb(241, 241, 243);
-    top: -5px;
-    left: -5px;
+    border-bottom:  3px solid #444444;
 }
 
 #operations-ul {
-    float: left;
-    padding: 0px;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-padding-start: 0;
 }
 
 #operations-ul li {
-    list-style-type: none;
-    margin: 0px;
-    padding-left: 10px;
-    overflow: hidden;
-    -webkit-margin-before: 0;
-    -webkit-padding-start: 0;
+    margin: 5px 30px 0px 0px;
+    display: inline-block;
+    font-size: 17px;
+    color: #444444;
+}
+
+#operations-ul > .active {
+    border-bottom: 3px #444444 solid;
 }
 
 #wrapper-operations-div {
@@ -395,7 +368,7 @@ a {
     width: 100%;
     clear: both;
     margin: 0;
-    padding: 0px 20px;
+    padding: 0px 20px 0px 0px;
 }
 
 .function-ul li {
@@ -598,4 +571,15 @@ height: 100%;
 padding: 10px 0px 0px 10px;
 
 line-height: 20px;
+}
+
+.video {
+    width: 90%;
+    height: 500px;
+    max-width: 800px;
+}
+
+.title {
+    font-size: 17px;
+    font-weight: 400px;
 }

@@ -1,5 +1,4 @@
 var sampleContentLoaded = false;
-var tutorialsContentLoaded = false;
 var documentationContentLoaded = false;
 
 
@@ -20,18 +19,6 @@ function OpenSampleSection()
 
     $(".content").hide();
     $("#sampleContent").show();
-}
-
-function OpenTutorialsSection()
-{
-    if (!tutorialsContentLoaded)
-    {
-        $("#tutorialsContent").load("tutorials.html");
-        tutorialsContentLoaded = true;
-    }
-
-    $(".content").hide();
-    $("#tutorialsContent").show();
 }
 
 function OpenDocumentationSection()

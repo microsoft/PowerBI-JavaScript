@@ -16,6 +16,7 @@ header
     color: #404040;
     /* margin: 15px 30px; */
     float: left;
+    width: 100%;
 }
 
 .content {
@@ -56,10 +57,24 @@ header
     float: left;
 }
 
+.topPanel {
+    margin-bottom: 10px;
+}
+
 .bottomPanel {
     width: 100%;
-    margin-top: 10px;
+    margin-bottom: 10px;
     max-width: 100%;
+}
+
+#steps-nav-bar {
+    margin-top: 10px;
+    float: left;
+    height: 100%;
+    border-right: 1px solid #E5E5E5;
+    padding-right: 20px;
+    margin-right: 20px;
+    width: 170px;
 }
 
 @media screen and (max-width: 320px) {
@@ -102,6 +117,10 @@ header
 
     #embedArea {
         padding-left: 0px;
+    }
+
+    #steps-nav-bar {
+        width: 170px;
     }
 }
 
@@ -146,6 +165,10 @@ header
     #embedArea {
         padding-left: 0px;
     }
+
+    #steps-nav-bar {
+        width: 170px;
+    }    
 }
 
 @media screen and (min-width: 551px) {
@@ -189,6 +212,10 @@ header
     #embedArea {
         padding-left: 0px;
     }
+
+    #steps-nav-bar {
+        width: 170px;
+    }
 }
 
 @media screen and (min-width: 551px) {
@@ -223,6 +250,10 @@ header
 
     #embedArea {
         padding-left: 0px;
+    }
+
+    #steps-nav-bar {
+        width: 170px;
     }
 }
 
@@ -259,9 +290,13 @@ header
     #embedArea {
         padding-left: 0px;
     }
+
+    #steps-nav-bar {
+        width: 170px;
+    }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
     header
     {
         padding: 20px 40px;
@@ -287,6 +322,10 @@ header
         margin-right: 1%;
     }
 
+    #operations-ul li {
+        margin: 0px 2px;
+    }
+
     #reportContainer {
         width: 100%;
         height: 380px;
@@ -300,9 +339,13 @@ header
         margin-left: 0;
         width: 100%;
     }
+
+    #steps-nav-bar {
+        width: 170px;
+    }
 }
 
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 1280px) and (max-width: 1419px) {
     header
     {
         padding: 20px 40px;
@@ -330,7 +373,7 @@ header
 
     #embedArea {
         padding-left: 0px;
-        width: 1100px;
+        width: 1220px;
     }
     
     .bottomPanel {
@@ -340,8 +383,12 @@ header
 
     #settings {
         float: left;
-        width: 280px;
+        width: 400px;
         margin-right: 20px;
+    }
+
+    #steps-nav-bar {
+        width: 170px;
     }
 }
 
@@ -373,7 +420,7 @@ header
 
     #embedArea {
         padding-left: 0px;
-        width: 1220px;
+        width: 1340px;
     }
 
     .bottomPanel {
@@ -383,8 +430,19 @@ header
 
     #settings {
         float: left;
-        width: 280px;
+        width: 400px;
         margin-right: 20px;
+    }
+
+    #steps-nav-bar {
+        width: 170px;
+    }
+}
+
+@media screen and (max-width: 1599px) {
+    #steps-nav-bar {
+        background-color: #E5E5E5;
+        margin-bottom: 10px;
     }
 }
 
@@ -399,11 +457,11 @@ header
     }
 
     #embedCodeDiv {
-        width: 530px;
+        width: 440px;
     }
 
     #logWindow {
-        width: 530px;
+        width: 440px;
     }
 
     .content {
@@ -411,11 +469,16 @@ header
     }
 
     #mainContent {
+        width: 1350px;
     }
 
     #embedArea {
         padding-left: 0px;
-        width: 1380px;
+        width: 1320px;
+    }
+
+    #steps-nav-bar {
+        width: 150px;
     }
 }
 
@@ -430,11 +493,11 @@ header
     }
 
     #embedCodeDiv {
-        width: 600px;
+        width: 540px;
     }
 
     #logWindow {
-        width: 600px;
+        width: 540px;
     }
 
     .content {
@@ -442,6 +505,7 @@ header
     }
 
     #mainContent {
+        width: 1520px;
     }
 
     #embedArea {
@@ -451,5 +515,9 @@ header
 
     #reportContainer {
         height: 450px;
+    }
+
+    #steps-nav-bar {
+        width: 170px;
     }
 }
