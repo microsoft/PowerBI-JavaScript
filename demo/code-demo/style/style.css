@@ -1,6 +1,15 @@
+html {
+    margin:0;
+    padding:0;
+    height:100%;
+}
+
 body {
     background-color: rgb(241, 241, 241);
     font-family: 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
+    margin:0;
+    padding:0;
+    height:100%;
 }
 
 h3 {
@@ -112,21 +121,43 @@ a {
     width: 100%;
 }
 
-#steps-nav-bar {
+#top-nav-bar {
     margin-top: 10px;
 }
 
-#steps-nav-bar a {
+#top-nav-bar a {
     color: white;
     display: inline-block;
 }
 
-#steps-nav-bar a:hover {
+#top-nav-bar a:hover {
     color: rgb(8, 122, 165);
 }
 
-#steps-nav-bar .active {
+#top-nav-bar .active {
     color: rgb(0, 174, 239);
+}
+
+#steps-nav-bar {
+    margin-top: 10px;
+    float: left;
+    height: 100%;
+    border-right: 1px solid #E5E5E5;
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
+#steps-nav-bar a {
+    color: black;
+    display: inline-block;
+}
+
+#steps-nav-bar a:hover {
+    font-weight: bold;
+}
+
+#steps-nav-bar .active {
+    color: white;
 }
 
 .main-ul {
@@ -191,6 +222,37 @@ a {
     width: 100%;
 }
 
+#top-ul-dev {
+    float: left;
+}
+
+.top-ul {
+    list-style-type: none;
+    margin: 0px;
+    overflow: hidden;
+    -webkit-margin-before: 0;
+    -webkit-padding-start: 0;
+    line-height: 30px;
+}
+
+.top-ul li {
+    float: left;
+    margin-right: 40px;
+    text-align: center;
+    line-height: 22px;
+    font-size: 17px;
+}
+
+#top-docs {
+    margin-right: 0px;
+}
+
+.top-li-active {
+    color: white;
+    border-bottom: 1px solid white;
+    padding-bottom: 3px;
+}
+
 #steps-ul-dev {
     float: left;
 }
@@ -205,10 +267,15 @@ a {
 }
 
 .steps-ul li {
-    float: left;
-    margin-right: 20px;
-    text-align: center;
+    float: none;
+    text-align: left;
     line-height: 22px;
+    font-size: 17px;
+    font-weight: 400;
+    height: 40px;
+    width: 170px;
+    margin-bottom: 10px;
+    vertical-align: middle;
 }
 
 #steps-interact {
@@ -216,8 +283,9 @@ a {
 }
 
 .steps-li-active {
-    color: rgb(8, 122, 165);
+    color: white;
     text-decoration: none;
+    background-color: #666666;
 }
 
 .operations-div {
@@ -474,6 +542,19 @@ a {
     margin: 0px 0px 5px 0px;
 }
 
+.top-div {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background-color: white;
+    border: solid black 1px;
+}
+
+.active-top {
+    background-color: rgb(36, 169, 225);
+}
+
 .step-div {
     border-radius: 50%;
     width: 10px;
@@ -508,4 +589,13 @@ a {
 
 .checkbox.input {
     width: auto;
+}
+
+.stepsButton {
+
+height: 100%;
+
+padding: 10px 0px 0px 10px;
+
+line-height: 20px;
 }

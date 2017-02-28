@@ -16,21 +16,17 @@
           <div class="logo-text">
               <div class="logo-text-span">Microsoft Power BI – Report Embed Sample</div>
           </div>
-          <div id="steps-nav-bar">
-            <div id="steps-ul-dev">
-                <ul id="steps-ul" class="steps-ul">
-                    <li id="steps-auth" class="steps-li-active" onclick="OpenAuthStep();">
-                        <div><a href="#">Authorize</a></div>
-                        <div class="step-div">
-                        </div>
+          <div id="top-nav-bar">
+            <div id="top-ul-dev">
+                <ul id="top-ul" class="top-ul">
+                    <li id="top-sample" class="top-li-active" onclick="OpenSampleSection();">
+                        <div><a href="#">Sample</a></div>
                     </li>
-                    <li id="steps-embed" onclick="OpenEmbedStep();">
-                        <div><a href="#">Embed</a></div>
-                        <div class="step-div"></div>
+                    <li id="top-tutorials" onclick="OpenTutorialsSection();">
+                        <div><a href="#">Tutorials</a></div>
                     </li>
-                    <li id="steps-interact" onclick="OpenInteractStep();">
-                        <div><a href="#">Interact</a></div>
-                        <div class="step-div"></div>
+                    <li id="top-docs" onclick="OpenDocumentationSection();">
+                        <div><a href="#">Documentation</a></div>
                     </li>
                 </ul>
             </div>
@@ -38,7 +34,16 @@
         </div>
     </header>
 
-    <div id="mainContent">
+    <div id="contentWrapper">
+        <div id ="sampleContent" class="content">
+
+        </div>
+        <div id ="tutorialsContent" class="content">
+
+        </div>
+        <div id ="documentationContent" class="content">
+
+        </div>
     </div>
 
     <div id="oldSample">

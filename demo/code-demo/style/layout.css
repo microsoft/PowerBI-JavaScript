@@ -1,7 +1,7 @@
 
 header
 {
-    padding: 20px 50px;
+    padding: 20px 40px;
 }
 
 .logo-text-span {
@@ -14,7 +14,15 @@ header
 #mainContent {
     position: relative;
     color: #404040;
+    /* margin: 15px 30px; */
+    float: left;
+}
+
+.content {
+    position: relative;
+    color: #404040;
     margin: 15px 30px;
+    height: 100%;
 }
 
 #settings {
@@ -143,7 +151,7 @@ header
 @media screen and (min-width: 551px) {
     header
     {
-        padding: 15px 30px;
+        padding: 15px 10px;
     }
 
     .logo-text-span {
@@ -186,7 +194,7 @@ header
 @media screen and (min-width: 551px) {
     header
     {
-        padding: 20px 30px;
+        padding: 20px 10px;
     }
 
     .logo-text-span {
@@ -221,7 +229,7 @@ header
 @media screen and (min-width: 861px) {
     header
     {
-        padding: 20px 100px;
+        padding: 20px 40px;
     }
 
     .logo-text-span {
@@ -256,7 +264,7 @@ header
 @media screen and (min-width: 1024px) {
     header
     {
-        padding: 20px 100px;
+        padding: 20px 40px;
     }
 
     .logo-text-span {
@@ -297,7 +305,7 @@ header
 @media screen and (min-width: 1280px) {
     header
     {
-        padding: 20px 100px;
+        padding: 20px 40px;
     }
 
     .logo-text-span {
@@ -313,8 +321,11 @@ header
         width: 390px;
     }
 
+    .content {
+        margin: 15px 20px;
+    }
+
     #mainContent {
-        margin: 15px 80px;
     }
 
     #embedArea {
@@ -337,7 +348,7 @@ header
 @media screen and (min-width: 1420px) {
     header
     {
-        padding: 20px 100px;
+        padding: 20px 40px;
     }
 
     .logo-text-span {
@@ -353,8 +364,11 @@ header
         width: 450px;
     }
 
+    .content {
+        margin: 15px 20px;
+    }
+
     #mainContent {
-        margin: 15px 80px;
     }
 
     #embedArea {
@@ -377,7 +391,7 @@ header
 @media screen and (min-width: 1600px) {
     header
     {
-        padding: 20px 100px;
+        padding: 20px 40px;
     }
 
     .logo-text-span {
@@ -392,8 +406,11 @@ header
         width: 530px;
     }
 
+    .content {
+        margin: 15px 40px;
+    }
+
     #mainContent {
-        margin: 15px 100px;
     }
 
     #embedArea {
@@ -405,7 +422,7 @@ header
 @media screen and (min-width: 1800px) {
     header
     {
-        padding: 20px 100px;
+        padding: 20px 40px;
     }
 
     .logo-text-span {
@@ -420,8 +437,11 @@ header
         width: 600px;
     }
 
+    .content {
+        margin: 15px 40px;
+    }
+
     #mainContent {
-        margin: 15px 100px;
     }
 
     #embedArea {

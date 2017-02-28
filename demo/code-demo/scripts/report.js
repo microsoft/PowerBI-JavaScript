@@ -1,14 +1,12 @@
 const active_class = 'active';
-const active_div = 'active-step';
+const active_li = 'steps-li-active';
 
 function OpenAuthStep() {
-    $("#steps-auth a").addClass(active_class);
-    $('#steps-embed a').removeClass(active_class);
-    $('#steps-interact a').removeClass(active_class);
+    $('#steps-ul a').removeClass(active_class);
+    $(".steps-li-active").removeClass(active_li);
 
-    $("#steps-auth .step-div").addClass(active_div);
-    $('#steps-embed .step-div').removeClass(active_div);
-    $('#steps-interact .step-div').removeClass(active_div);
+    $("#steps-auth a").addClass(active_class);
+    $("#steps-auth").addClass(active_li);
 
     // Hide Embed view in authorization step.
     $("#authorize-step-wrapper").show();
@@ -16,13 +14,11 @@ function OpenAuthStep() {
 }
 
 function OpenEmbedStep() {
-    $("#steps-auth a").removeClass(active_class);
-    $('#steps-embed a').addClass(active_class);
-    $('#steps-interact a').removeClass(active_class);
+    $('#steps-ul a').removeClass(active_class);
+    $(".steps-li-active").removeClass(active_li);
 
-    $("#steps-auth .step-div").removeClass(active_div);
-    $('#steps-embed .step-div').addClass(active_div);
-    $('#steps-interact .step-div').removeClass(active_div);
+    $('#steps-embed a').addClass(active_class);
+    $('#steps-embed').addClass(active_li);
 
     // Hide Embed view in authorization step.
     $("#authorize-step-wrapper").hide();
@@ -35,13 +31,11 @@ function OpenEmbedStep() {
 }
 
 function OpenInteractStep() {
-    $("#steps-auth a").removeClass(active_class);
-    $('#steps-embed a').removeClass(active_class);
-    $('#steps-interact a').addClass(active_class);
+    $('#steps-ul a').removeClass(active_class);
+    $(".steps-li-active").removeClass(active_li);
 
-    $("#steps-auth .step-div").removeClass(active_div);
-    $('#steps-embed .step-div').removeClass(active_div);
-    $('#steps-interact .step-div').addClass(active_div);
+    $('#steps-interact a').addClass(active_class);
+    $('#steps-interact').addClass(active_li);
 
     // Hide Embed view in authorization step.
     $("#authorize-step-wrapper").hide();
@@ -56,13 +50,11 @@ function OpenInteractStep() {
 }
     
 function OpenCreateStep() {
-    $("#steps-auth a").removeClass(active_class);
-    $('#steps-embed a').addClass(active_class);
-    $('#steps-interact a').removeClass(active_class);
+    $('#steps-ul a').removeClass(active_class);
+    $(".steps-li-active").removeClass(active_li);
 
-    $("#steps-auth .step-div").removeClass(active_div);
-    $('#steps-embed .step-div').addClass(active_div);
-    $('#steps-interact .step-div').removeClass(active_div);
+    $('#steps-embed a').addClass(active_class);
+    $('#steps-embed').addClass(active_li);
 
     // Hide Embed view in authorization step.
     $("#authorize-step-wrapper").hide();
