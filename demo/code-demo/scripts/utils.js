@@ -51,9 +51,11 @@ function LoadLogWindow(divSelector) {
 
 function SetCode(func) {
     $("#txtCode").val(BodyCodeOfFunction(func));
+
+    var runFunc = mapFunc(func);
     
     $('#btnRunCode').off('click');
-    $('#btnRunCode').click(func);
+    $('#btnRunCode').click(runFunc);
 }
 
 function CopyCode() {
