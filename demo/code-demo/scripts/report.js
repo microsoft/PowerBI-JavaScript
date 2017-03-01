@@ -64,7 +64,7 @@ function setCodeArea(mode)
     }
     else if (mode === EmbedCreateMode)
     {
-        LoadCodeArea("#embedCodeDiv", _Embed_BasicEmbed_CreateMode);
+        LoadCodeArea("#embedCodeDiv", _Embed_Create);
     }
 }
 
