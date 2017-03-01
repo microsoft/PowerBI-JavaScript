@@ -13,7 +13,8 @@ const mockDict = {
     _Page_RemoveFilters: datasetNotSupported,
     _Report_switchModeEdit: datasetNotSupported,
     _Report_switchModeView: datasetNotSupported,
-    _Embed_BasicEmbed: _Mock_Embed_BasicEmbed,
+    _Embed_BasicEmbed: _Mock_Embed_BasicEmbed_ViewMode,
+    _Embed_BasicEmbed_EditMode: _Mock_Embed_BasicEmbed_EditMode,
     _Report_save: _Mock_Report_save,
     _Report_saveAs: _Mock_Report_save,
     _Embed_Create: _Mock_Embed_Create
@@ -30,7 +31,7 @@ function IsSaveMock(func) {
 }
 
 function IsBasicMock(func) {
-    return (func.name === '_Embed_BasicEmbed' && _session.embedId === 'bf33002e-9adc-452d-a0b5-fb649d806358');
+    return ((func.name === '_Embed_BasicEmbed' || func.name === '_Embed_BasicEmbed_EditMode') && _session.embedId === 'bf33002e-9adc-452d-a0b5-fb649d806358');
 }
 
 function IsCreateMock(func) {

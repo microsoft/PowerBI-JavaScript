@@ -4,6 +4,7 @@ const SessionKeys = {
     AccessToken : "accessToken",
     EmbedUrl : "embedUrl",
     EmbedId : "embedId",
+    IsSampleReport: "isSampleReport"
 };
 
 function GetParameterByName(name, url) {
@@ -42,13 +43,13 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
     {
         accessToken = GetSession(SessionKeys.AccessToken);
     }
-
+    
     var embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
     if (!embedUrl)
     {
         embedUrl = GetSession(SessionKeys.EmbedUrl);
     }
-    
+
     var embedId = GetParameterByName(SessionKeys.EmbedId);
     if (!embedId)
     {

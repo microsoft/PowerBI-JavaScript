@@ -12,7 +12,6 @@ function OpenReportOperations() {
     $("#report-operations-div .function-ul li.active").click()
 
     $("#selected-catogory-button").html("Report operations");
-    HideCategoriesList();
 }
 
 function OpenPageOperations() {
@@ -29,7 +28,6 @@ function OpenPageOperations() {
     $("#page-operations-div .function-ul li.active").click();
 
     $("#selected-catogory-button").html("Page operations");
-    HideCategoriesList();
 }
 
 function OpenEventOperations() {
@@ -46,7 +44,6 @@ function OpenEventOperations() {
     $("#events-operations-div .function-ul li.active").click();
 
     $("#selected-catogory-button").html("Events Listener");
-    HideCategoriesList();
 }
 
 function OpenEditAndSaveOperations() {
@@ -63,23 +60,6 @@ function OpenEditAndSaveOperations() {
     $("#editandsave-operations-div .function-ul li.active").click();
 
     $("#selected-catogory-button").html("Edit and save operations");
-    HideCategoriesList();
-}
-
-function HideCategoriesList() {
-    $("#operations-ul-wrapper").hide();
-}
-
-function ToggleCategoriesList(event) {
-    var wrapper = $("#operations-ul-wrapper");
-    if (wrapper.is(":visible"))
-    {
-        wrapper.hide();
-    }
-    else
-    {
-        wrapper.show();
-    }
 }
 
 function SetToggleHandler(devId) {
