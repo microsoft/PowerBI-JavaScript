@@ -1,11 +1,31 @@
+const mockDict = {};
+mockDict['_Report_GetPages'] = datasetNotSupported;
+mockDict['_Report_SetPage'] = datasetNotSupported;
+mockDict['_Report_SetFilters'] = datasetNotSupported;
+mockDict['_Report_GetFilters'] = datasetNotSupported;
+mockDict['_Report_RemoveFilters'] = datasetNotSupported;
+mockDict['_Report_PrintCurrentReport'] = datasetNotSupported;
+mockDict['_Report_UpdateSettings'] = datasetNotSupported;
+mockDict['_Report_Reload'] = datasetNotSupported;
+mockDict['_Page_SetActive'] = datasetNotSupported;
+mockDict['_Page_SetFilters'] = datasetNotSupported;
+mockDict['_Page_GetFilters'] = datasetNotSupported;
+mockDict['_Page_RemoveFilters'] = datasetNotSupported;
+mockDict['_Report_switchModeEdit'] = datasetNotSupported;
+mockDict['_Report_switchModeView'] = datasetNotSupported;
+mockDict['_Embed_BasicEmbed'] = _Mock_Embed_BasicEmbed;
+mockDict['_Report_save'] = _Mock_Report_save;
+mockDict['_Report_saveAs'] = _Mock_Report_save;
+mockDict['_Embed_Create'] = _Mock_Embed_Create;
+
 function datasetNotSupported() {
   Log.logText('Operation not supported for dataset')
 }
 
 function IsSaveMock(func) {
-  return ((func.name === '_Report_save' || func.name === '_Report_saveAs') &&  
-  (_session.embedId  === 'bf33002e-9adc-452d-a0b5-fb649d806358' /*Sample Report*/ ||
-  _session.embedId  === 'dc3974f1-49a5-468a-8484-3e14203d0cbb' /*Sample dataset*/ ));
+  return ((func.name === '_Report_save' || func.name === '_Report_saveAs') && ( 
+    _session.embedId  === 'bf33002e-9adc-452d-a0b5-fb649d806358' /*Sample Report*/ ||
+    _session.embedId  === 'dc3974f1-49a5-468a-8484-3e14203d0cbb' /*Sample dataset*/ ));
 }
 
 function IsBasicMock(func) {
@@ -27,32 +47,13 @@ function IsNotSupported(func) {
     return false;
   }
 
-  return (func.name === '_Report_GetPages' ||
-  func.name === '_Report_SetPage' ||
-  func.name === '_Report_SetFilters' ||
-  func.name === '_Report_GetFilters' ||
-  func.name === '_Report_RemoveFilters' ||
-  func.name === '_Report_PrintCurrentReport' ||
-  func.name === '_Report_UpdateSettings' ||
-  func.name === '_Report_Reload' ||
-  func.name === '_Page_SetActive' ||
-  func.name === '_Page_SetFilters' ||
-  func.name === '_Page_GetFilters' ||
-  func.name === '_Page_RemoveFilters' ||
-  func.name === '_Report_switchModeEdit' ||
-  func.name === '_Report_switchModeView'); 
+  return mockDict[func.name] ? true : false;
+}
+
+function IsMock(func) {
+  return (IsBasicMock(func) || IsSaveMock(func) || IsCreateMock(func) || IsNotSupported(func)); 
 }
 
 function mapFunc(func) {
-  if(IsBasicMock(func)) {
-      return _Mock_Embed_BasicEmbed;
-    } else if (IsSaveMock(func)) {
-      return _Mock_Report_save;
-    } else if (IsCreateMock(func)) {
-      return _Mock_Embed_Create;
-    } else if (IsNotSupported(func)) {
-      return datasetNotSupported;
-    }
-  
-  return func;
+  return IsMock(func) ? mockDict[func.name] : func;
 }
