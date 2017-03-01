@@ -7,7 +7,6 @@
 // ---- Embed Code ----------------------------------------------------
 
 function _Embed_BasicEmbed() {
-
     // Read embed application token from textbox
     var txtAccessToken = $('#txtAccessToken').val();
 
@@ -16,13 +15,6 @@ function _Embed_BasicEmbed() {
 
     // Read report Id from textbox
     var txtEmbedReportId = $('#txtEmbedReportId').val();
-
-    // Get models. models contains enums that can be used.
-    var models = window['powerbi-client'].models;
-
-    // Embed report in View mode or Edit mode based or checkbox value.
-    var checked = $('#viewModeCheckbox')[0].checked;
-    var viewMode = checked ? models.ViewMode.Edit : models.ViewMode.View; 
 
     // Embed configuration used to describe the what and how to embed.
     // This object is used when calling powerbi.embed.
@@ -33,8 +25,6 @@ function _Embed_BasicEmbed() {
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
-        permissions: models.Permissions.All /*gives maximum permissions*/,
-        viewMode: viewMode,
         settings: {
             filterPaneEnabled: true,
             navContentPaneEnabled: true
@@ -54,6 +44,58 @@ function _Embed_BasicEmbed() {
     report.on("loaded", function() {
         Log.logText("Loaded");
     });
+
+    report.on("error", function(event) {
+        Log.log(event.detail);
+        
+        report.off("error");
+    });
+}
+
+function _Embed_BasicEmbed_EditMode() {
+    // Read embed application token from textbox
+    var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
+    var txtEmbedUrl = $('#txtReportEmbed').val();
+
+    // Read report Id from textbox
+    var txtEmbedReportId = $('#txtEmbedReportId').val();
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config= {
+        type: 'report',
+        accessToken: txtAccessToken,
+        embedUrl: txtEmbedUrl,
+        id: txtEmbedReportId,
+        permissions: models.Permissions.All /*gives maximum permissions*/,
+        viewMode: models.ViewMode.Edit,
+        settings: {
+            filterPaneEnabled: true,
+            navContentPaneEnabled: true
+        }
+    };
+
+    // Get a reference to the embedded report HTML element
+    var reportContainer = $('#reportContainer')[0];
+
+    // Embed the report and display it within the div container.
+    var report = powerbi.embed(reportContainer, config);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("loaded");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("loaded", function() {
+        Log.logText("Loaded");
+    });
+
     report.on("error", function(event) {
         Log.log(event.detail);
         
@@ -92,7 +134,7 @@ function _Embed_EmbedWithDefaultFilter() {
     powerbi.embed(reportContainer, embedConfiguration);
 }
 
-function _Embed_Create() {
+function _Embed_BasicEmbed_CreateMode() {
     // Read embed application token from textbox
     var txtAccessToken = $('#txtAccessToken').val();
 

@@ -1,6 +1,10 @@
 const active_class = 'active';
 const active_li = 'steps-li-active';
 
+const EmbedViewMode = "view";
+const EmbedEditMode = "edit";
+const EmbedCreateMode = "create";
+
 function OpenAuthStep() {
     $('#steps-ul a').removeClass(active_class);
     $(".steps-li-active").removeClass(active_li);
@@ -13,7 +17,7 @@ function OpenAuthStep() {
     $("#embed-and-interact-steps-wrapper").hide();
 }
 
-function OpenEmbedStep() {
+function OpenEmbedStep(mode) {
     $('#steps-ul a').removeClass(active_class);
     $(".steps-li-active").removeClass(active_li);
 
@@ -25,8 +29,7 @@ function OpenEmbedStep() {
     $("#embed-and-interact-steps-wrapper").show();
 
     $("#settings").load("settings_embed.html", function() {
-        SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
-        LoadCodeArea("#embedCodeDiv", _Embed_BasicEmbed);
+        OpenEmbedMode(mode);
     });
 }
 
@@ -48,20 +51,77 @@ function OpenInteractStep() {
         LoadCodeArea("#embedCodeDiv", _Report_GetId);
     });
 }
+
+function setCodeArea(mode)
+{
+    if (mode === EmbedViewMode)
+    {
+        LoadCodeArea("#embedCodeDiv", _Embed_BasicEmbed);
+    }
+    else if (mode === EmbedEditMode)
+    {
+        LoadCodeArea("#embedCodeDiv", _Embed_BasicEmbed_EditMode);
+    }
+    else if (mode === EmbedCreateMode)
+    {
+        LoadCodeArea("#embedCodeDiv", _Embed_BasicEmbed_CreateMode);
+    }
+}
+
+function showEmbedSettings(mode)
+{
+    var inputDivToShow = "#embedModeInput";
+    var inputDivToHide = "#createModeInput";
+
+    if (mode === EmbedCreateMode)
+    {
+        inputDivToShow = "#createModeInput";
+        inputDivToHide = "#embedModeInput";
+    }
     
-function OpenCreateStep() {
-    $('#steps-ul a').removeClass(active_class);
-    $(".steps-li-active").removeClass(active_li);
+    $(inputDivToShow).show();
+    $(inputDivToHide).hide();
 
-    $('#steps-embed a').addClass(active_class);
-    $('#steps-embed').addClass(active_li);
+    var embedModeRadios = $('input:radio[name=embedMode]'); 
+    embedModeRadios.filter('[value='+ mode + ']').prop('checked', true);
+}
 
-    // Hide Embed view in authorization step.
-    $("#authorize-step-wrapper").hide();
-    $("#embed-and-interact-steps-wrapper").show();
+function OpenEmbedMode(mode)
+{
+    if (mode == EmbedCreateMode)
+    {
+        if (IsEmbeddingSampleReport())
+        {
+            LoadSampleDatasetIntoSession();
+        }
 
-    $("#settings").load("settings_create.html", function() {
-        SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedDatasetId");
-        LoadCodeArea("#embedCodeDiv", _Embed_Create);
-    });
+        SetTextBoxesFromSessionOrUrlParam("#txtCreateAccessToken", "#txtCreateReportEmbed", "#txtEmbedDatasetId");
+    }
+    else {
+        if (IsEmbeddingSampleReport())
+        {
+            LoadSampleReportIntoSession();
+        }
+
+        SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
+    }
+
+    setCodeArea(mode);
+    showEmbedSettings(mode);
+}
+
+function OpenViewMode() {
+    OpenEmbedMode(EmbedViewMode);
+}
+
+function OpenEditMode() {
+    OpenEmbedMode(EmbedEditMode);
+}
+
+function OpenCreateMode() {
+    OpenEmbedMode(EmbedCreateMode);
+}
+
+function IsEmbeddingSampleReport() {
+    return GetSession(SessionKeys.IsSampleReport) == true;
 }

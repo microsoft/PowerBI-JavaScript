@@ -7,7 +7,6 @@
         </div>
         <div class="settings">
             <button id="GoToEmbedStepButton" class="blueButton" onclick="OpenEmbedStepWithSample()">Embed sample report</button>
-            <button id="GoToEmbedStepButton" class="blueButton" onclick="OpenEmbedStepCreateWithSample()">Create embeded report with sample dataset</button>
         </div>
     </div>
 
@@ -43,7 +42,7 @@
                 <div id="authorizeParameterDiv" class="line">
                     <h5>Enter embed details</h5>
 
-                    <table id="report-embed-table">
+                    <table id="user-embed-details">
                         <tr>
                             <td class="td-field-name">Embed App Token</td>
                             <td><input type="text" id="auth_txtAccessToken" onchange="UpdateSession(this, SessionKeys.AccessToken);" /></td>
@@ -59,7 +58,7 @@
                             <td><input type="text" id="auth_txtEmbedReportId" onchange="UpdateSession(this, SessionKeys.EmbedId);"/></td>
                         </tr>
                     </table>
-                    <button id="nextStep" class="blueButton" onclick="OpenEmbedStep()">Next step - Embed</button>
+                    <button id="nextStep" class="blueButton" onclick="OpenEmbedStepFromUserSettings()">Next step - Embed</button>
                 </div>
                 
             </div>
@@ -70,5 +69,6 @@
 <script>
 $(document).ready(function() {
     SetTextBoxesFromSessionOrUrlParam("#auth_txtAccessToken", "#auth_txtReportEmbed", "#auth_txtEmbedReportId");
+    SetSession(SessionKeys.IsSampleReport, false);
 });
 </script>
