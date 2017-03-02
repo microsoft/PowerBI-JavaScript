@@ -6,8 +6,7 @@ $(function() {
     OpenSampleSection();
 });
 
-function OpenSampleSection()
-{
+function OpenSampleSection() {
     if (!sampleContentLoaded)
     {
         // Open Report Sample.
@@ -21,8 +20,7 @@ function OpenSampleSection()
     $("#sampleContent").show();
 }
 
-function OpenDocumentationSection()
-{
+function OpenDocumentationSection() {
     if (!documentationContentLoaded)
     {
         $("#documentationContent").load("docs.html");
