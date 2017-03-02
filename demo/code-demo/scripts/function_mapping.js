@@ -26,16 +26,16 @@ function datasetNotSupported() {
 
 function IsSaveMock(func) {
     return ((func.name === '_Report_save' || func.name === '_Report_saveAs') && ( 
-        _session.embedId  === 'bf33002e-9adc-452d-a0b5-fb649d806358' /*Sample Report*/ ||
-        _session.embedId  === 'dc3974f1-49a5-468a-8484-3e14203d0cbb' /*Sample dataset*/ ));
+        _session.embedId  === 'b28ddb92-52e1-479b-a9e8-43d1630c9917' /*Sample Report*/ ||
+        _session.embedId  === '78558d3d-5616-4a51-8874-317735d21525' /*Sample dataset*/ ));
 }
 
 function IsBasicMock(func) {
-    return ((func.name === '_Embed_BasicEmbed' || func.name === '_Embed_BasicEmbed_EditMode') && _session.embedId === 'bf33002e-9adc-452d-a0b5-fb649d806358');
+    return ((func.name === '_Embed_BasicEmbed' || func.name === '_Embed_BasicEmbed_EditMode') && _session.embedId === 'b28ddb92-52e1-479b-a9e8-43d1630c9917');
 }
 
 function IsCreateMock(func) {
-    return (func.name === '_Embed_Create' && _session.embedId === 'dc3974f1-49a5-468a-8484-3e14203d0cbb');
+    return (func.name === '_Embed_Create' && _session.embedId === '78558d3d-5616-4a51-8874-317735d21525');
 }
 
 function IsNotSupported(func) {
