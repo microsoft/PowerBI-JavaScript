@@ -19,8 +19,8 @@ function _Embed_BasicEmbed() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
-    // We give permissions of Copy and Read to demonstrate switching between View and Edit mode.
-    var permissions = models.Permissions.Copy | models.Permissions.Read;
+    // We give All permissions to demonstrate switching between View and Edit mode and saving report.
+    var permissions = models.Permissions.All;
 
     // Embed configuration used to describe the what and how to embed.
     // This object is used when calling powerbi.embed.
