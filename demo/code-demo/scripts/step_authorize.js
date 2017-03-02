@@ -1,15 +1,15 @@
 const SampleReport = {
     // Expires on 1.1.2030
-    AccessToken : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3Y24iOiJMaXZlU2FtcGxlV1NDIiwid2lkIjoiODU2YjNmOTktODM2My00ZWRhLWE5OWUtNzJlZTkzZDZkNDcwIiwicmlkIjoiYjI4ZGRiOTItNTJlMS00NzliLWE5ZTgtNDNkMTYzMGM5OTE3IiwidmVyIjoiMC4yLjAiLCJ0eXBlIjoiZW1iZWQiLCJzY3AiOiJSZXBvcnQuUmVhZCIsImlzcyI6IlBvd2VyQklTREsiLCJhdWQiOiJodHRwczovL2FuYWx5c2lzLndpbmRvd3MubmV0L3Bvd2VyYmkvYXBpIiwiZXhwIjoxODkzNDg5ODI1LCJuYmYiOjE0ODg0NDMwMjV9.x0R3fBAwgCo88U6ca2DgK3cj--GZ9oSnbXR_F5XNh9Q",
-    EmbedUrl : "https://msit.powerbi.com/appTokenReportEmbed?reportId=b28ddb92-52e1-479b-a9e8-43d1630c9917",
-    EmbedId : "b28ddb92-52e1-479b-a9e8-43d1630c9917"
+    AccessToken : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjIuMCIsIndjbiI6IlBvd2VyQmlBenVyZVNhbXBsZXMiLCJ3aWQiOiJmODFjMTk2Ni1lZGVlLTQxMWItOGY4YS1mODQ0NjAxOWIwNDQiLCJyaWQiOiJjNTJhZjhhYi0wNDY4LTQxNjUtOTJhZi1kYzM5ODU4ZDY2YWQiLCJpc3MiOiJQb3dlckJJU0RLIiwiYXVkIjoiaHR0cHM6Ly9hbmFseXNpcy53aW5kb3dzLm5ldC9wb3dlcmJpL2FwaSIsImV4cCI6MTg5MzQ0ODgwMCwibmJmIjoxNDgxMDM3MTY5fQ.m4SwqmRWA9rJgfl72lEQ_G-Ijpw9Up5YwmBOfXi00YU",
+    EmbedUrl : "https://embedded.powerbi.com/appTokenReportEmbed?reportId=c52af8ab-0468-4165-92af-dc39858d66ad&reportEmbedEditingEnabled=true",
+    EmbedId : "c52af8ab-0468-4165-92af-dc39858d66ad"
 };
 
 const SampleDataset = {
     // Expires on 1.1.2030
-    AccessToken : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3Y24iOiJMaXZlU2FtcGxlV1NDIiwid2lkIjoiODU2YjNmOTktODM2My00ZWRhLWE5OWUtNzJlZTkzZDZkNDcwIiwiZGlkIjoiNzg1NThkM2QtNTYxNi00YTUxLTg4NzQtMzE3NzM1ZDIxNTI1IiwidmVyIjoiMC4yLjAiLCJ0eXBlIjoiZW1iZWQiLCJzY3AiOiJEYXRhc2V0LlJlYWQiLCJpc3MiOiJQb3dlckJJU0RLIiwiYXVkIjoiaHR0cHM6Ly9hbmFseXNpcy53aW5kb3dzLm5ldC9wb3dlcmJpL2FwaSIsImV4cCI6MTg5MzQ5MDAxMCwibmJmIjoxNDg4NDQzMjEwfQ.snH1_Mez3uMhRluyAy_1aZUo3yEAIpTP1UgmZxTg5BY",
-    EmbedUrl : "https://msit.powerbi.com/appTokenReportEmbed?datasetId=78558d3d-5616-4a51-8874-317735d21525",
-    EmbedId : "78558d3d-5616-4a51-8874-317735d21525"
+    AccessToken : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjIuMCIsInR5cGUiOiJlbWJlZCIsIndjbiI6IlBvd2VyQmlBenVyZVNhbXBsZXMiLCJ3aWQiOiJmODFjMTk2Ni1lZGVlLTQxMWItOGY4YS1mODQ0NjAxOWIwNDQiLCJkaWQiOiIxZWUwYjI2NC1iMjgwLTQzZjEtYmJiNy05ZDhiZDJkMDNhNzgiLCJzY3AiOiJEYXRhc2V0LlJlYWQiLCJpc3MiOiJQb3dlckJJU0RLIiwiYXVkIjoiaHR0cHM6Ly9hbmFseXNpcy53aW5kb3dzLm5ldC9wb3dlcmJpL2FwaSIsImV4cCI6MTk2MTg1NDIzNiwibmJmIjoxNDg4NDY4NjM2fQ.Udv5Y6gMrTKUw0-5mXeCwud8u4JI5Y5loAwJc2jWugQ",
+    EmbedUrl : "https://embedded.powerbi.com/appTokenReportEmbed?reportEmbedEditingEnabled=true",
+    EmbedId : "1ee0b264-b280-43f1-bbb7-9d8bd2d03a78"
 };
 
 function LoadSampleReportIntoSession() {
