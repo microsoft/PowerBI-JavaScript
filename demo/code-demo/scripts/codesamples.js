@@ -216,10 +216,10 @@ function _Embed_EmbedWithDefaultFilter() {
 
 function _Embed_Create() {
     // Read embed application token from textbox
-    var txtAccessToken = $('#txtAccessToken').val();
+    var txtAccessToken = $('#txtCreateAccessToken').val();
 
     // Read embed URL from textbox
-    var txtEmbedUrl = $('#txtReportEmbed').val();
+    var txtEmbedUrl = $('#txtCreateReportEmbed').val();
 
     // Read dataset Id from textbox
     var txtEmbedDatasetId = $('#txtEmbedDatasetId').val();
@@ -261,10 +261,10 @@ function _Embed_Create() {
 
 function _Mock_Embed_Create() {
     // Read embed application token from textbox
-    var txtAccessToken = $('#txtAccessToken').val();
+    var txtAccessToken = $('#txtCreateAccessToken').val();
 
     // Read embed URL from textbox
-    var txtEmbedUrl = $('#txtReportEmbed').val();
+    var txtEmbedUrl = $('#txtCreateReportEmbed').val();
 
     // Read dataset Id from textbox
     var txtEmbedDatasetId = $('#txtEmbedDatasetId').val();

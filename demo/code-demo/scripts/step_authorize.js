@@ -1,13 +1,15 @@
 const SampleReport = {
-    AccessToken : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3Y24iOiJSZXBvcnRFbWJlZE1TSVRTYW1wbGUiLCJ3aWQiOiI1NjM2Yzg5ZS1hMzdkLTQ5YjEtOTk0Zi01MzJkYmY4YTIzYjUiLCJyaWQiOiJiZjMzMDAyZS05YWRjLTQ1MmQtYTBiNS1mYjY0OWQ4MDYzNTgiLCJ2ZXIiOiIwLjIuMCIsInR5cGUiOiJlbWJlZCIsInNjcCI6IlJlcG9ydC5SZWFkIiwiaXNzIjoiUG93ZXJCSVNESyIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJleHAiOjE0OTY5MzE1ODcsIm5iZiI6MTQ4ODI4Nzk4N30.FWl6kKaPgu2JZdp4NuRvtm-Cr7nUuvKlrrKmlimM2mE",
-    EmbedUrl : "https://msit.powerbi.com/appTokenReportEmbed?reportId=bf33002e-9adc-452d-a0b5-fb649d806358",
-    EmbedId : "bf33002e-9adc-452d-a0b5-fb649d806358"
+    // Expires on 1.1.2030
+    AccessToken : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3Y24iOiJMaXZlU2FtcGxlV1NDIiwid2lkIjoiODU2YjNmOTktODM2My00ZWRhLWE5OWUtNzJlZTkzZDZkNDcwIiwicmlkIjoiYjI4ZGRiOTItNTJlMS00NzliLWE5ZTgtNDNkMTYzMGM5OTE3IiwidmVyIjoiMC4yLjAiLCJ0eXBlIjoiZW1iZWQiLCJzY3AiOiJSZXBvcnQuUmVhZCIsImlzcyI6IlBvd2VyQklTREsiLCJhdWQiOiJodHRwczovL2FuYWx5c2lzLndpbmRvd3MubmV0L3Bvd2VyYmkvYXBpIiwiZXhwIjoxODkzNDg5ODI1LCJuYmYiOjE0ODg0NDMwMjV9.x0R3fBAwgCo88U6ca2DgK3cj--GZ9oSnbXR_F5XNh9Q",
+    EmbedUrl : "https://msit.powerbi.com/appTokenReportEmbed?reportId=b28ddb92-52e1-479b-a9e8-43d1630c9917",
+    EmbedId : "b28ddb92-52e1-479b-a9e8-43d1630c9917"
 };
 
 const SampleDataset = {
-    AccessToken : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3Y24iOiJSZXBvcnRFbWJlZE1TSVRTYW1wbGUiLCJ3aWQiOiI1NjM2Yzg5ZS1hMzdkLTQ5YjEtOTk0Zi01MzJkYmY4YTIzYjUiLCJkaWQiOiJkYzM5NzRmMS00OWE1LTQ2OGEtODQ4NC0zZTE0MjAzZDBjYmIiLCJ2ZXIiOiIwLjIuMCIsInR5cGUiOiJlbWJlZCIsInNjcCI6IkRhdGFzZXQuUmVhZCIsImlzcyI6IlBvd2VyQklTREsiLCJhdWQiOiJodHRwczovL2FuYWx5c2lzLndpbmRvd3MubmV0L3Bvd2VyYmkvYXBpIiwiZXhwIjoxNDk2OTMxNjY2LCJuYmYiOjE0ODgyODgwNjZ9.xeWUKm38zhmH9M5i3M4JZz-_csJmPovfRTV_3_POKz0",
-    EmbedUrl : "https://msit.powerbi.com/appTokenReportEmbed?reportEmbedEditingEnabled=true",
-    EmbedId : "dc3974f1-49a5-468a-8484-3e14203d0cbb"
+    // Expires on 1.1.2030
+    AccessToken : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3Y24iOiJMaXZlU2FtcGxlV1NDIiwid2lkIjoiODU2YjNmOTktODM2My00ZWRhLWE5OWUtNzJlZTkzZDZkNDcwIiwiZGlkIjoiNzg1NThkM2QtNTYxNi00YTUxLTg4NzQtMzE3NzM1ZDIxNTI1IiwidmVyIjoiMC4yLjAiLCJ0eXBlIjoiZW1iZWQiLCJzY3AiOiJEYXRhc2V0LlJlYWQiLCJpc3MiOiJQb3dlckJJU0RLIiwiYXVkIjoiaHR0cHM6Ly9hbmFseXNpcy53aW5kb3dzLm5ldC9wb3dlcmJpL2FwaSIsImV4cCI6MTg5MzQ5MDAxMCwibmJmIjoxNDg4NDQzMjEwfQ.snH1_Mez3uMhRluyAy_1aZUo3yEAIpTP1UgmZxTg5BY",
+    EmbedUrl : "https://msit.powerbi.com/appTokenReportEmbed?datasetId=78558d3d-5616-4a51-8874-317735d21525",
+    EmbedId : "78558d3d-5616-4a51-8874-317735d21525"
 };
 
 function LoadSampleReportIntoSession() {
