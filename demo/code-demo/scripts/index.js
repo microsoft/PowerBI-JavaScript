@@ -16,6 +16,8 @@ function OpenSampleSection() {
         });
     }
 
+    SetActiveStyle("#top-sample");
+
     $(".content").hide();
     $("#sampleContent").show();
 }
@@ -27,6 +29,14 @@ function OpenDocumentationSection() {
         documentationContentLoaded = true;
     }
 
+    SetActiveStyle("#top-docs");
+
     $(".content").hide();
     $("#documentationContent").show();
+}
+
+function SetActiveStyle(id)
+{
+    $("#top-ul li").removeClass("top-li-active");
+    $(id).addClass("top-li-active");
 }
