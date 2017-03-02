@@ -70,7 +70,7 @@ a:hover, a:visited, a:link, a:active
 }
 
 #report-embed-table input[type="text"] {
-    width: 74%;
+    width: 73%;
     border: none;
     margin-bottom: 5px;
 }
@@ -281,7 +281,6 @@ a {
     float: none;
     text-align: left;
     line-height: 22px;
-    font-size: 17px;
     font-weight: 400;
     height: 40px;
     width: 100%;
