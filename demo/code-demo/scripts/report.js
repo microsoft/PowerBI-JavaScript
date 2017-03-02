@@ -48,6 +48,7 @@ function OpenInteractStep() {
         SetToggleHandler("report-operations-div");
         SetToggleHandler("page-operations-div");
         SetToggleHandler("events-operations-div");
+        SetToggleHandler("editandsave-operations-div");
         LoadCodeArea("#embedCodeDiv", _Report_GetId);
     });
 }

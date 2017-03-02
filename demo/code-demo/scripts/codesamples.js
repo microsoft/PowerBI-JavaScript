@@ -16,6 +16,12 @@ function _Embed_BasicEmbed() {
     // Read report Id from textbox
     var txtEmbedReportId = $('#txtEmbedReportId').val();
 
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // We give permissions of Copy and Read to demonstrate switching between View and Edit mode.
+    var permissions = models.Permissions.Copy | models.Permissions.Read;
+
     // Embed configuration used to describe the what and how to embed.
     // This object is used when calling powerbi.embed.
     // This also includes settings and options such as filters.
@@ -25,6 +31,7 @@ function _Embed_BasicEmbed() {
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
+        permissions: permissions,
         settings: {
             filterPaneEnabled: true,
             navContentPaneEnabled: true
@@ -64,7 +71,7 @@ function _Mock_Embed_BasicEmbed(isEdit) {
 
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
-    var permissions = isEdit ? models.Permissions.Copy : models.Permissions.Read;
+    var permissions = models.Permissions.Copy | models.Permissions.Read;
     var viewMode = isEdit ? models.ViewMode.Edit : models.ViewMode.View;
 
     // Embed configuration used to describe the what and how to embed.
@@ -107,8 +114,8 @@ function _Mock_Embed_BasicEmbed(isEdit) {
     report.on("error", function(event) {
         Log.log(event.detail);
     });
-	
-	report.off("saved");
+
+    report.off("saved");
     report.on("saved", function(event) {
         Log.log(event.detail);
         if(event.detail.saveAs) {
@@ -169,12 +176,12 @@ function _Embed_BasicEmbed_EditMode() {
         Log.logText("Loaded");
     });
 
-	report.off("error");
+    report.off("error");
     report.on("error", function(event) {
         Log.log(event.detail);
     });
-	
-	report.off("saved");
+
+    report.off("saved");
     report.on("saved", function(event) {
         Log.log(event.detail);
         if(event.detail.saveAs) {
