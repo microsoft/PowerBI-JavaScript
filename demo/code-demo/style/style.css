@@ -610,3 +610,7 @@ line-height: 20px;
     margin-bottom: 20px;
     cursor: default;
 }
+
+#reportContainer iframe {
+    border: none;
+}

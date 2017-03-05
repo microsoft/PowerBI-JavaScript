@@ -30,6 +30,10 @@ function OpenEmbedStep(mode) {
 
     $("#settings").load("settings_embed.html", function() {
         OpenEmbedMode(mode);
+
+        // Fix report size ratio
+        var reportContainer = $("#reportContainer");
+        reportContainer.height(reportContainer.width() * 0.59);
     });
 }
 
