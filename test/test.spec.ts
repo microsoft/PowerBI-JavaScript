@@ -2737,21 +2737,6 @@ describe('SDK-to-HPM', function () {
         // Assert
         expect(spyHpm.post).toHaveBeenCalledWith('/report/refresh', null, { uid: uniqueId }, iframe.contentWindow);
       });
-
-      it('report.refresh() returns promise that resolves if the request is accepted', function (done) {
-        // Arrange
-        spyHpm.post.and.returnValue(Promise.resolve({
-          body: {}
-        }));
-
-        // Act
-        report.refresh()
-          .then(() => {
-            // Assert
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/refresh', null, { uid: uniqueId }, iframe.contentWindow);
-            done();
-          });
-      });
     });
 
     describe('settings', function () {
