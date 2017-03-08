@@ -57,6 +57,14 @@ function _Embed_BasicEmbed() {
         
         report.off("error");
     });
+
+    report.off("saved");
+    report.on("saved", function(event) {
+        Log.log(event.detail);
+        if(event.detail.saveAs) {
+            Log.logText('In order to interact with the new report, create a new token and load the new report');
+         }
+     });
 }
 
 function _Mock_Embed_BasicEmbed(isEdit) {
