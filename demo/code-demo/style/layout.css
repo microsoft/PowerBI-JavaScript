@@ -127,6 +127,16 @@ header
     }
 }
 
+@media screen and (max-width: 500px) {
+    .top-ul li {
+        float: left;
+        margin-right: 15px;
+        text-align: center;
+        line-height: 22px;
+        font-size: 13px;
+    }
+}
+
 @media screen and (min-width: 321px) {
     header
     {
