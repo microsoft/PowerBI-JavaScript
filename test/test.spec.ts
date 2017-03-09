@@ -1390,6 +1390,26 @@ describe('Protocol', function () {
       });
     });
 
+    describe('refresh', function () {
+      it('POST /report/refresh returns 202 if the request is valid', function (done) {
+        // Arrange
+        iframeLoaded
+          .then(() => {
+            spyApp.refreshData.and.returnValue(Promise.resolve(null));
+            // Act
+            hpm.post<void>('/report/refresh', null)
+              .then(response => {
+                // Assert
+                expect(spyApp.refreshData).toHaveBeenCalled();
+                expect(response.statusCode).toEqual(202);
+                // Cleanup
+                spyApp.refreshData.calls.reset();
+                done();
+              });
+          });
+      });
+    });
+
     describe('print', function () {
       it('POST /report/print returns 202 if the request is valid', function (done) {
         // Arrange
@@ -2704,6 +2724,21 @@ describe('SDK-to-HPM', function () {
       });
     });
 
+    describe('refresh', function () {
+      it('report.refresh() sends POST /report/refresh', function () {
+        // Arrange
+        spyHpm.post.and.returnValue(Promise.resolve({
+          body: {}
+        }));
+
+        // Act
+        report.refresh();
+
+        // Assert
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/refresh', null, { uid: uniqueId }, iframe.contentWindow);
+      });
+    });
+
     describe('settings', function () {
       it('report.updateSettings(settings) sends PATCH /report/settings with settings object', function () {
         // Arrange
@@ -3626,6 +3661,24 @@ describe('SDK-to-MockApp', function () {
               .then(response => {
                 // Assert
                 expect(spyApp.print).toHaveBeenCalled();
+                expect(response).toEqual(undefined);
+                done();
+              });
+          });
+      });
+    });
+
+    describe('refresh', function () {
+      it('report.refresh() returns promise that resolves with null if the report refresh command was accepted', function (done) {
+        // Arrange
+        iframeLoaded
+          .then(() => {
+            spyApp.refreshData.and.returnValue(Promise.resolve(null));
+            // Act
+            report.refresh()
+              .then(response => {
+                // Assert
+                expect(spyApp.refreshData).toHaveBeenCalled();
                 expect(response).toEqual(undefined);
                 done();
               });
