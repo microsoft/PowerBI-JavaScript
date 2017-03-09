@@ -49,7 +49,8 @@ function IsNotSupported(func) {
         return false;
     }
 
-    return mockDict[func.name] ? true : false;
+    var runFunc = mockDict[func.name]; 
+    return (runFunc && runFunc === datasetNotSupported) ? true : false;
 }
 
 function IsMock(func) {

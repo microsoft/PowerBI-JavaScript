@@ -134,7 +134,7 @@ a {
     width: 100%;
 }
 
-.line {
+.pbi-line {
     display: inline-block;
     width: 100%;
 }
@@ -509,10 +509,12 @@ a {
     width: 100%;
     height: 300px;
     border: none;
-    padding-top: 40px;
+    padding: 20px;
     position: relative;
     top: -30px;
-    padding-left: 20px;
+    background: #FFFFFF;
+	overflow: auto;
+	white-space: pre-wrap;
 }
 
 #GoToEmbedStepButton {

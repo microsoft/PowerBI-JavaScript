@@ -50,7 +50,9 @@ function LoadLogWindow(divSelector) {
 }
 
 function SetCode(func) {
-    $("#txtCode").val(BodyCodeOfFunction(func));
+	var codeHtml = '<pre id="txtCode" class="brush: js; gutter: false;">';
+	codeHtml = codeHtml + BodyCodeOfFunction(func) + '</pre><script type="text/javascript" src="syntaxhighlighter/syntaxhighlighter.js"></script>';
+	$("#highlighter").html(codeHtml);
 
     var runFunc = mapFunc(func);
     
