@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.7 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.0 | (c) 2016 Microsoft Corporation MIT */
 import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
 import * as models from 'powerbi-models';
