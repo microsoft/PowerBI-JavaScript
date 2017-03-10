@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.7 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.0 | (c) 2016 Microsoft Corporation MIT */
 import * as embed from './embed';
 import { Report } from './report';
 import { Dashboard } from './dashboard';

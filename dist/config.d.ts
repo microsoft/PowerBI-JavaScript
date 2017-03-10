@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.7 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.0 | (c) 2016 Microsoft Corporation MIT */
 declare const config: {
     version: string;
     type: string;
