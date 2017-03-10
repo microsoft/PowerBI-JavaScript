@@ -1,0 +1,2706 @@
+diff --git a/.gitignore b/.gitignore
+index fb97692..31c51d9 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,6 +1,6 @@
+ .DS_Store
++dist
+ node_modules
+ bower_components
+ .sass-cache
+ .projects-cache.json
+-npm-debug.log
+diff --git a/.travis.yml b/.travis.yml
+index 16a4582..a7a72cc 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -1,5 +1,12 @@
+ language: node_js
+ sudo: false
+ node_js:
++  - "0.10"
++  - "0.12"
+   - "4"
+   - "5"
++
++before_script:
++  - export DISPLAY=:99.0
++  - sh -e /etc/init.d/xvfb start bower
++  - bower install
+diff --git a/Gruntfile.coffee b/Gruntfile.coffee
+new file mode 100644
+index 0000000..189b104
+--- /dev/null
++++ b/Gruntfile.coffee
+@@ -0,0 +1,164 @@
++module.exports = (grunt) ->
++  fs = require 'fs'
++
++  grunt.loadNpmTasks 'grunt-contrib-uglify'
++  grunt.loadNpmTasks 'grunt-contrib-watch'
++  grunt.loadNpmTasks 'grunt-karma'
++  grunt.loadNpmTasks 'grunt-browserify'
++  grunt.loadNpmTasks 'grunt-contrib-clean'
++  grunt.loadNpmTasks 'grunt-contrib-copy'
++
++  grunt.config.init
++    clean:
++      build: 'dist'
++
++    copy:
++      build:
++        src: 'index.html'
++        dest: 'dist/index.html'
++
++      brushes:
++        src: 'node_modules/brush-*/lib/brush-*.js'
++        dest: 'dist/brushes/'
++        flatten: true
++        expand: true
++        rename: (dest, src) ->
++          src = src.replace /-javascript/, '-jscript' # a minor exception
++          dest + src.replace /^brush-/, ''
++
++      themes:
++        src: 'node_modules/theme-*/css/theme-*.css'
++        dest: 'dist/css/'
++        flatten: true
++        expand: true
++        rename: (dest, src) -> dest + src.replace /^theme-/, ''
++
++    karma:
++      options: configFile: 'karma.conf.coffee'
++      background: background: true
++      single: singleRun: true
++
++    watch:
++      options: spawn: false
++
++      test:
++        tasks: ['karma:background:run']
++        files: [
++          'dist/**/*.*'
++          'test/**/*.spec.coffee'
++        ]
++
++      js:
++        tasks: ['build:js', 'karma:background:run']
++        files: [
++          'src/**/*.js'
++          '../*/lib/*.js'
++        ]
++
++      css:
++        tasks: ['copy:themes', 'karma:background:run']
++        files: ['../theme-*/css/*.css']
++
++    browserify:
++      core:
++        # files:
++        src: 'src/syntaxhighlighter.js'
++        dest: 'dist/syntaxhighlighter.js'
++          # 'dist/syntaxhighlighter.js': 'src/syntaxhighlighter.js'
++
++    uglify:
++      core:
++        files:
++          'dist/syntaxhighlighter.min.js': 'dist/syntaxhighlighter.js'
++        options:
++          banner: BANNER
++
++      # brushes:
++      #   files: [
++      #     expand: true,
++      #     cwd: 'src/brushes',
++      #     src: '**/*.js',
++      #     dest: 'dist/brushes'
++      #   ]
++      #   options:
++      #     banner: BANNER
++
++  grunt.registerTask 'jssize', ->
++    stats = fs.statSync "#{__dirname}/dist/syntaxhighlighter.min.js"
++    grunt.log.ok "syntaxhighlighter.min.js #{Math.round stats.size / 1024} KB".blue.bold
++
++  grunt.registerTask 'express', 'Launches basic HTTP server for tests', ->
++    express = require 'express'
++    staticMiddleware = require 'serve-static'
++    indexMiddleware = require 'serve-index'
++
++    done = @async()
++    app = express()
++    dir = "#{__dirname}/demos"
++
++    app.use staticMiddleware dir
++    app.use indexMiddleware dir
++    app.use '/dist', staticMiddleware "#{dir}/../dist"
++    app.use '/components', staticMiddleware "#{dir}/../components"
++
++    app.listen 3000
++    grunt.log.ok 'You can access tests on ' + 'http://localhost:3000'.blue + ' (Ctrl+C to stop)'
++
++  grunt.registerTask 'build:js', ['browserify', 'uglify', 'jssize']
++  grunt.registerTask 'build', ['clean', 'copy', 'build:js']
++  grunt.registerTask 'test', ['build', 'karma:single']
++  # grunt.registerTask 'inspect', ['express', 'watch']
++  grunt.registerTask 'dev', ['karma:background:start', 'watch']
++
++TEST = """
++  <!DOCTYPE html>
++  <html lang="en">
++  <head>
++    <meta charset="utf-8">
++    <title>Hello SyntaxHighlighter</title>
++    <script type="text/javascript" src="scripts/shCore.js"></script>
++    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
++    <link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css">
++    <script type="text/javascript">SyntaxHighlighter.all();</script>
++    <style type="text/css">
++      body {
++        background: white;
++        font-family: helvetica;
++      }
++    </style>
++  </head>
++
++  <body>
++
++  <h1>Hello SyntaxHighlighter</h1>
++
++  <pre class="brush: js;">
++    function helloSyntaxHighlighter()
++    {
++      return "hi!";
++    }
++  </pre>
++
++  </html>
++"""
++
++
++BANNER = """
++  /**
++   * SyntaxHighlighter
++   * http://alexgorbatchev.com/SyntaxHighlighter
++   *
++   * SyntaxHighlighter is donationware. If you are using it, please donate.
++   * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
++   *
++   * @version
++   * <%= version %> (<%= date %>)
++   *
++   * @copyright
++   * Copyright (C) 2004-2013 Alex Gorbatchev.
++   *
++   * @license
++   * Dual licensed under the MIT and GPL licenses.
++   */
++
++ """
+diff --git a/README.md b/README.md
+index 8e4b99e..bc49949 100644
+--- a/README.md
++++ b/README.md
+@@ -1,47 +1,37 @@
+-# SyntaxHighlighter v4
++# SyntaxHighlighter
+ 
+-[![GratiPay](https://img.shields.io/gratipay/user/alexgorbatchev.svg)](https://gratipay.com/alexgorbatchev/)
+-[![Build Status](https://travis-ci.org/syntaxhighlighter/theme-swift.svg)](https://travis-ci.org/syntaxhighlighter/syntaxhighlighter)
+-![Downloads](https://img.shields.io/npm/dm/syntaxhighlighter.svg)
+-![Version](https://img.shields.io/npm/v/syntaxhighlighter.svg)
++[![Gittip](http://img.shields.io/gittip/alexgorbatchev.svg)](https://www.gittip.com/syntaxhighlighter/)
+ 
+-SyntaxHighlighter is THE client side highlighter for the web and web-apps! It's been around since 2004 and it's used virtually everywhere to seamlessly highlight code for presentation purposes.
++## NOTE: Version 4 is being developed [here](https://github.com/syntaxhighlighter)
+ 
+-<img src="screenshot.png" width="640"/>
++SyntaxHighlighter is THE client side highlighter for the web and apps! It's been around since
++2004 and it's used virtually everywhere to seamlessly highlight code for presentation.
+ 
+-The history of this project predates majority of the common web technologies and it has been a challenge to dedicate time and effort to keep it up to date. Everything used to be in one file and assign `window` variables... Horrors!
++# Development
+ 
+-SyntaxHighlighter is currently used and has been used in the past by Microsoft, Apache, Mozilla, Yahoo, Wordpress, Bug Labs, Freshbooks and many many other companies and blogs.
++Please note the `master` branch is in active development and **is currently not stable**. I'm working hard to bring up the entire project up to date (all the way from 2004). Alot has changed since then in the JavaScript world.
+ 
+-## :zap: Reporting an issue? See [Filing Issues]. :zap:
++If you are looking for a stable release, please see [v3.0.9](https://github.com/syntaxhighlighter/syntaxhighlighter/releases/tag/v3.0.9).
+ 
+-## Get Started
++**I'm looking for a sponsor to help me spend more time on this project.**
+ 
+-* [Building] instructions
+-* [Usage] instructions
+-* Be sure to read the [Caveats]
++## Roadmap
+ 
+-## FAQ
++### Version 4
+ 
+-* v4 is fully compatible with old brushes and themes, see [Building] instructions.
+-* The `?` was completely removed for cleaner, more seamless experience.
+-* You still have to HTML escape `<` when using `<pre/>` tags.
++Version 4 will bring up the whole project up to date. It will be fully compatible with exiting 3.x brushes and themes.
+ 
+-## Older Version
++- [x] Split up themes into modules
++- [x] Split up brushes into modules
++- [x] Remove autoloader
++- [ ] Update build
+ 
+-If you are looking for v3 documentation and download, you can find it on the [old site](alexgorbatchev.com/SyntaxHighlighter).
++* `XRegExp` now lives in `SyntaxHighlighter.XRegExp`
+ 
+-# Support
++### Version 5
+ 
+-As it always goes with open source, you are welcome to use SyntaxHighlighter free of charge. If you are using and enjoying my work, maybe you could buy me a beer (or if you don’t drink – a coffee and bagel will do just fine, a good kind of bagel though, you know… with wonderful stuff inside to make it glorious, like smoked salmon and creamcheese… not just butter).
+-
+-**Please [click here to donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2930402) and just like they say on TV – give generously! It motivates me to keep working on this (12 years now and counting).**
++Version 5 will be a whole new beast with new features and will most likely be incompatible with v4 and v3 brushes.
+ 
+ # License
+ 
+ MIT
+-
+-[Filing Issues]: https://github.com/syntaxhighlighter/syntaxhighlighter/wiki/Filing-Issues
+-[Building]: https://github.com/syntaxhighlighter/syntaxhighlighter/wiki/Building
+-[Usage]: https://github.com/syntaxhighlighter/syntaxhighlighter/wiki/Usage
+-[Caveats]: https://github.com/syntaxhighlighter/syntaxhighlighter/wiki/Caveats
+diff --git a/TODO.txt b/TODO.txt
+new file mode 100644
+index 0000000..5e33575
+--- /dev/null
++++ b/TODO.txt
+@@ -0,0 +1,5 @@
++utils.eachLine(str, callback) ->
++  // include \r to enable copy-paste on windows (ie8) without getting everything on one line
++  return lines.join('\r\n');
++
++
+diff --git a/bower.json b/bower.json
+new file mode 100644
+index 0000000..ecb3cdd
+--- /dev/null
++++ b/bower.json
+@@ -0,0 +1,30 @@
++{
++  "name": "SyntaxHighlighter",
++  "version": "3.0.9",
++  "main": "./scripts/shCore.js",
++  "author": "Alex Gorbatchev <alex.gorbatchev@gmail.com> (http://alexgorbatchev.com)",
++  "licenses": [
++    {
++      "type": "MIT"
++    },
++    {
++      "type": "LGPL"
++    }
++  ],
++  "ignore": [
++    "**/.*",
++    "node_modules",
++    "components"
++  ],
++  "dependencies": {
++    "xregexp": "2.0.x",
++    "qunit": "~1.12.0"
++  },
++  "devDependencies": {
++    "jquery": "1.9.x",
++    "mocha": "1.9.x",
++    "chai": "1.1.x",
++    "sinon": "http://sinonjs.org/releases/sinon-1.6.0.js",
++    "sinon-chai": "2.4.x"
++  }
++}
+diff --git a/build/brush-v3-loader.js b/build/brush-v3-loader.js
+deleted file mode 100644
+index 609c4ba..0000000
+--- a/build/brush-v3-loader.js
++++ /dev/null
+@@ -1,28 +0,0 @@
+-// This loader adds compatibility header to v3 brushes that are being bundled in.
+-
+-var fs = require('fs');
+-var header = null;
+-
+-function getHeader(callback) {
+-  if (header) {
+-    return setImmediate(function () { callback(null, header) });
+-  }
+-
+-  fs.readFile(__dirname + '/templates/brush-v3-compatibility-header.js', 'utf8', function (err, content) {
+-    callback(err, header = content);
+-  });
+-}
+-
+-module.exports = function (source, map) {
+-  var callback = this.async();
+-
+-  this.cacheable();
+-
+-  getHeader(function (err, header) {
+-    if (source.indexOf("require('shCore').SyntaxHighlighter") !== -1) {
+-      source = header + source;
+-    }
+-
+-    return callback(err, source, map);
+-  });
+-}
+\ No newline at end of file
+diff --git a/build/bundle.js b/build/bundle.js
+deleted file mode 100644
+index 1ec2ca4..0000000
+--- a/build/bundle.js
++++ /dev/null
+@@ -1,204 +0,0 @@
+-class BuildError extends Error {
+-  constructor(message) {
+-    super(message);
+-    this.isBuild = true;
+-  }
+-}
+-
+-function render(filepath, context) {
+-  const ejs = require('ejs');
+-  const fs = require('fs');
+-  return ejs.render(fs.readFileSync(filepath, 'utf8'), context);
+-}
+-
+-function getVersion(rootPath) {
+-  const fs = require('fs');
+-
+-  return fs.promise.readFile(`${rootPath}/package.json`)
+-    .then(JSON.parse)
+-    .then(({version}) => version);
+-}
+-
+-function getAvailableBrushes(rootPath) {
+-  const glob = require('glob');
+-
+-  return glob.promise(`${rootPath}/repos/brush-*`)
+-    .then(brushes => brushes.map(path => path.match(/brush-(.*)$/)[1]));
+-}
+-
+-function getBuildBrushes(rootPath, argv, availableBrushes) {
+-  const fs = require('fs');
+-  const path = require('path');
+-  const Promise = require('songbird');
+-
+-  if (!argv.brushes) {
+-    return Promise.resolve([]);
+-  }
+-
+-  let buildBrushes = (argv.brushes || '').toString().split(',');
+-
+-  if (buildBrushes.length === 0 || buildBrushes[0] === 'true') {
+-    return Promise.reject(new BuildError('Please specify at least one brush or "all".'));
+-  }
+-
+-  if (buildBrushes.length === 1 && buildBrushes[0] === 'all') {
+-    buildBrushes = availableBrushes;
+-  }
+-
+-  return Promise.all(buildBrushes.map(function (name) {
+-    let requirePath = path.resolve(process.cwd(), name);
+-    let sample;
+-
+-    return fs.promise.stat(requirePath)
+-      // handle brushes by full file path
+-      .then(
+-        () => fs.promise.readFile(`${path.dirname(requirePath)}/sample.txt`)
+-          .then(content => sample = content)
+-          .catch(() => null)
+-          .then(() => requirePath = path.relative(`${rootPath}/src`, requirePath))
+-      )
+-
+-      // handle brushes by name only
+-      .catch(function () {
+-        if (availableBrushes.indexOf(name) === -1) {
+-          return Promise.reject(new BuildError(`Unknown brush "${name}".`));
+-        }
+-
+-        requirePath = `brush-${name}`;
+-
+-        return fs.promise.readFile(`${rootPath}/repos/brush-${name}/sample.txt`, 'utf8')
+-          .then(content => sample = content)
+-          .catch(() => null);
+-      })
+-
+-      .then(() => sample = sample || 'no sample.txt found')
+-      .then(() => Promise.props({name, requirePath, sample}));
+-  }));
+-}
+-
+-function buildJavaScript(rootPath, outputPath, buildBrushes, version, compat) {
+-  const fs = require('fs');
+-  const webpack = require('webpack');
+-
+-  const banner = render(`${rootPath}/build/templates/banner.js.ejs`, { version, date: (new Date).toUTCString() });
+-  const registerBrushes = render(`${rootPath}/build/templates/bundle-register-brushes.js.ejs`, { buildBrushes });
+-  const core = render(`${rootPath}/src/core.js`, { registerBrushes });
+-  const corePath = `${rootPath}/src/core.js`;
+-  const backupCorePath = `${rootPath}/src/core.js.bak`;
+-  const config = {
+-    entry: `${rootPath}/src/index.js`,
+-    output: {
+-      path: outputPath,
+-      filename: 'syntaxhighlighter.js'
+-    },
+-    externals: [
+-      'shCore'
+-    ],
+-    resolveLoader: {
+-      modulesDirectories: ['node_modules', 'build'],
+-    },
+-    module: {
+-      loaders: [
+-        {
+-          test: /\.js$/,
+-          loaders: ['babel', 'brush-v3'],
+-        },
+-      ],
+-    },
+-    plugins: [
+-      new webpack.optimize.DedupePlugin(),
+-      // new webpack.optimize.UglifyJsPlugin({ comments: false }),
+-      new webpack.BannerPlugin(banner),
+-      new webpack.SourceMapDevToolPlugin({
+-        filename: 'syntaxhighlighter.js.map',
+-        append: '\n//# sourceMappingURL=[url]',
+-      }),
+-      new webpack.DefinePlugin({
+-        COMPAT: compat === true,
+-      }),
+-    ]
+-  };
+-
+-  return fs.promise.rename(corePath, backupCorePath)
+-    .then(() => fs.promise.writeFile(corePath, core))
+-    .then(() => webpack.promise(config))
+-    .then(stats =>
+-      fs.promise.unlink(corePath)
+-        .then(() => fs.promise.rename(backupCorePath, corePath))
+-        .then(() => stats)
+-    );
+-}
+-
+-function buildCSS(rootPath, outputPath, theme, version) {
+-  const Promise = require('songbird');
+-  const fs = require('fs');
+-  const sass = require('node-sass');
+-
+-  if (!theme) return;
+-
+-  return fs.promise.stat(theme)
+-    .then(() => theme, () => `${rootPath}/repos/theme-${theme}/theme.scss`)
+-    .then(path => fs.promise.readFile(path, 'utf8'))
+-    .then(data => sass.promise.render({ data, includePaths: [`${rootPath}/node_modules/theme-base`] }))
+-    .then(results => fs.promise.writeFile(`${outputPath}/theme.css`, results.css))
+-    ;
+-}
+-
+-function copyHtml(rootPath, outputPath, buildBrushes, version) {
+-  const fs = require('fs');
+-  const Promise = require('songbird');
+-
+-  return fs.promise.writeFile(
+-    `${outputPath}/index.html`,
+-    render(`${rootPath}/build/templates/index.html.ejs`, { buildBrushes, version })
+-  );
+-}
+-
+-export function bundle(rootPath, destPath, argv) {
+-  return Promise.all([
+-    getAvailableBrushes(rootPath),
+-    getVersion(rootPath),
+-  ])
+-  .then(function ([availableBrushes, version]) {
+-    argv = argv || require('yargs')
+-      .describe('brushes', 'Comma separated list of brush names or paths to be bundled.')
+-      .describe('theme', 'Name or path of the CSS theme you want to use.')
+-      .describe('compat', 'Will include v3 brush compatibility feature. See http://bit.ly/1KCaUq6 for complete details.')
+-      .default('output', `${rootPath}/dist`).describe('output', 'Output folder for dist files.')
+-      .epilog(`Available brushes are "all" or ${availableBrushes.join(', ')}.\n\nYou may also pass paths to brush JavaScript files and theme SASS files.`)
+-      .help('help')
+-      .argv;
+-
+-    return getBuildBrushes(rootPath, argv, availableBrushes)
+-      .then(function (buildBrushes) {
+-        return Promise.all([
+-          buildJavaScript(rootPath, argv.output, buildBrushes, version, argv.compat),
+-          buildCSS(rootPath, argv.output, argv.theme, version),
+-          copyHtml(rootPath, argv.output, buildBrushes, version),
+-        ])
+-        .then(([stats]) => ({ theme: argv.theme, stats, buildBrushes }));
+-      });
+-  });
+-}
+-
+-export default function (gulp, rootPath) {
+-  gulp.task(
+-    'build',
+-    'Builds distribution files to be used via `<script/>` tags. $ gulp build --brushes value1,value2 --theme value',
+-    function (done) {
+-      const gulpUtil = require('gulp-util');
+-
+-      bundle(rootPath, null)
+-        .then(function ({ theme, stats, buildBrushes }) {
+-          const gulpUtil = require('gulp-util');
+-
+-          if (theme) gulpUtil.log(`Theme: ${theme}`);
+-          if (buildBrushes) gulpUtil.log(`Brushes: ${buildBrushes.map(brush => brush.name).join(', ')}`);
+-          gulpUtil.log(stats.toString({ colors: true }));
+-
+-          done();
+-        })
+-        .catch(err => gulpUtil.log(gulpUtil.colors.red(err.isBuild ? err.message : err.stack)))
+-    }
+-  );
+-}
+diff --git a/build/setup-project.js b/build/gulpfile/setup-project.js
+similarity index 61%
+rename from build/setup-project.js
+rename to build/gulpfile/setup-project.js
+index 2c201ee..2cf7190 100644
+--- a/build/setup-project.js
++++ b/build/gulpfile/setup-project.js
+@@ -1,17 +1,14 @@
+-export default function (gulp, rootPath) {
+-  const fs = require('fs');
+-  const rimraf = require('rimraf');
+-  const mkdirp = require('mkdirp');
+-  const R = require('ramda');
+-  const Promise = require('songbird');
+-  const childProcess = require('child_process');
++import request from 'request';
++import fs from 'fs';
++import R from 'ramda';
++import Promise from 'songbird';
++import childProcess from 'child_process';
+ 
++export default function (gulp, rootPath) {
+   const REPOS_CACHE = `${rootPath}/.projects-cache.json`;
+   const REPOS_DIR = `${rootPath}/repos`;
+ 
+   function loadReposFromGitHub() {
+-    const request = require('request');
+-
+     const opts = {
+       url: 'https://api.github.com/orgs/syntaxhighlighter/repos?per_page=300',
+       json: true,
+@@ -28,9 +25,14 @@ export default function (gulp, rootPath) {
+     );
+   }
+ 
++  const log = value => {
++    console.log(value);
++    return value;
++  }
++
+   const exec = (cmd, opts) =>
+     Promise.resolve(cmd)
+-      .then(console.log)
++      .then(log)
+       .then(() => childProcess.exec.promise(cmd, opts))
+       .catch(err => { throw new Error(err.message + '\n\n' + cmd) });
+ 
+@@ -39,10 +41,8 @@ export default function (gulp, rootPath) {
+   const loadRepos = () => loadReposFromCache().error(loadReposFromGitHub).then(R.map(R.pick(['ssh_url', 'name'])));
+   const cloneRepo = repo => git(`clone '${repo.ssh_url}'`, REPOS_DIR);
+   const pathToRepo = repo => `${REPOS_DIR}/${repo.name}`;
+-  const ln = (source, dest) => rimraf.promise(dest).finally(() => exec(`ln -s ${source} ${dest} || true`));
+-  const linkNodeModulesIntoRepos = repo => ln(`${rootPath}/node_modules`, `${pathToRepo(repo)}/node_modules`);
+-  const linkReposIntoNodeModules = repo => ln(pathToRepo(repo), `${rootPath}/node_modules/${repo.name}`);
+-  const unlinkReposFromNodeModules = repo => fs.promise.unlink(`${rootPath}/node_modules/${repo.name}`);
++  const linkNodeModulesIntoRepos = repo => exec(`ln -s ${rootPath}/node_modules ${pathToRepo(repo)}/node_modules || true`);
++  const linkReposIntoNodeModules = repo => exec(`ln -s ${pathToRepo(repo)} ${rootPath}/node_modules || true`)
+ 
+   gulp.task('setup-project:clone-repos', 'Clones all repositories from SyntaxHighlighter GitHub organization', () =>
+     loadRepos()
+@@ -52,27 +52,18 @@ export default function (gulp, rootPath) {
+       .then(Promise.all)
+   );
+ 
+-  gulp.task('setup-project:link-node_modules-into-repos', 'Links `./node_modules` into every cloned repository', ['setup-project:clone-repos'], () =>
++  gulp.task('setup-project:link-node_modules-into-repos', 'Links `./node_modules` into every clonned repository', ['setup-project:clone-repos'], () =>
+     loadRepos()
+-      .then(R.filter(repo => repo.name !== 'syntaxhighlighter'))
+       .then(R.map(R.curry(linkNodeModulesIntoRepos)))
+       .then(Promise.all)
+   );
+ 
+-  gulp.task('setup-project:link-repos-into-node_modules', 'Links every cloned repository into `./node_modules`', ['setup-project:clone-repos'], () =>
++  gulp.task('setup-project:link-repos-into-node_modules', 'Links every clonned repository into `./node_modules`', ['setup-project:clone-repos'], () =>
+     loadRepos()
+-      .then(R.filter(repo => repo.name !== 'syntaxhighlighter'))
+       .then(R.map(R.curry(linkReposIntoNodeModules)))
+       .then(Promise.all)
+   );
+ 
+-  gulp.task('setup-project:unlink-repos-from-node_modules', 'Unlinks every cloned repository from `./node_modules`', () =>
+-    loadRepos()
+-      .then(R.filter(repo => repo.name !== 'syntaxhighlighter'))
+-      .then(R.map(R.curry(unlinkReposFromNodeModules)))
+-      .then(Promise.all)
+-  );
+-
+   gulp.task(
+     'setup-project',
+     'Sets up project for development. RUN THIS FIRST!',
+diff --git a/build/templates/banner.js.ejs b/build/templates/banner.js.ejs
+deleted file mode 100644
+index a1b900f..0000000
+--- a/build/templates/banner.js.ejs
++++ /dev/null
+@@ -1,14 +0,0 @@
+-SyntaxHighlighter
+-https://github.com/syntaxhighlighter/syntaxhighlighter
+-
+-SyntaxHighlighter is donationware. If you are using it, please donate.
+-http://alexgorbatchev.com/SyntaxHighlighter/donate.html
+-
+-@version
+-<%= version %> (<%= date %>)
+-
+-@copyright
+-Copyright (C) 2004-2016 Alex Gorbatchev.
+-
+-@license
+-Dual licensed under the MIT and GPL licenses.
+\ No newline at end of file
+diff --git a/build/templates/brush-v3-compatibility-header.js b/build/templates/brush-v3-compatibility-header.js
+deleted file mode 100644
+index 0cff8cf..0000000
+--- a/build/templates/brush-v3-compatibility-header.js
++++ /dev/null
+@@ -1,15 +0,0 @@
+-// This header is prepended to v3 brushes so that they can be bundled in like regular v4 brushes.
+-
+-var SyntaxHighlighter = {
+-  Highlighter: require('brush-base'),
+-  regexLib: require('syntaxhighlighter-regex').commonRegExp,
+-  brushes: {}
+-};
+-
+-class Proxy {
+-  set Brush(value) {
+-    module.exports = value;
+-  }
+-};
+-
+-var exports = new Proxy();
+diff --git a/build/templates/bundle-register-brushes.js.ejs b/build/templates/bundle-register-brushes.js.ejs
+deleted file mode 100644
+index 70fd4d0..0000000
+--- a/build/templates/bundle-register-brushes.js.ejs
++++ /dev/null
+@@ -1,7 +0,0 @@
+-*/
+-
+-<% buildBrushes.forEach(function (brush) { %>
+-  registerBrush(require('<%- brush.requirePath %>'));
+-<% }) %>
+-
+-/*
+diff --git a/build/templates/index.html.ejs b/build/templates/index.html.ejs
+deleted file mode 100644
+index 4f153c2..0000000
+--- a/build/templates/index.html.ejs
++++ /dev/null
+@@ -1,28 +0,0 @@
+-<!DOCTYPE html>
+-<html lang="en">
+-<head>
+-  <meta charset="utf-8">
+-  <title>SyntaxHighlighter</title>
+-  <script type="text/javascript" src="syntaxhighlighter.js"></script>
+-  <link type="text/css" rel="stylesheet" href="theme.css">
+-  <style type="text/css">
+-    body {
+-      background: white;
+-      font-family: helvetica;
+-    }
+-  </style>
+-</head>
+-
+-<body>
+-<h1>SyntaxHighlighter v<%= version %></h1>
+-
+-<% buildBrushes.forEach(function (brush) { %>
+-
+-<h1 style="border-bottom: 2px solid black;"><%- brush.name %></h1>
+-<pre class="brush: <%- brush.name %>;">
+-<%= brush.sample %>
+-</pre>
+-
+-<% }) %>
+-
+-</html>
+\ No newline at end of file
+diff --git a/demos/node.js b/demos/node.js
+new file mode 100644
+index 0000000..d02e657
+--- /dev/null
++++ b/demos/node.js
+@@ -0,0 +1,19 @@
++require.paths.unshift(__dirname + '/../scripts');
++
++var sys = require('sys'),
++	shSyntaxHighlighter = require('shCore').SyntaxHighlighter,
++	shJScript = require('shBrushJScript').Brush,
++	
++	code = '\
++		function helloWorld()\
++		{\
++			// this is great!\
++			for(var i = 0; i <= 1; i++)\
++				alert("yay");\
++		}\
++		',
++	brush = new shJScript()
++	;
++
++brush.init({ toolbar: false });
++sys.puts(brush.getHtml(code));
+diff --git a/demos/older_version.html b/demos/older_version.html
+new file mode 100644
+index 0000000..53d6dae
+--- /dev/null
++++ b/demos/older_version.html
+@@ -0,0 +1,44 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
++<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
++<head>
++	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
++	<title>SyntaxHighlighter Older Version Support</title>
++	<script type="text/javascript" src="../scripts/xregexp.js"></script> <!-- XRegExp is bundled with the final shCore.js during build -->
++	<script type="text/javascript" src="../scripts/shCore.js"></script>
++	<script type="text/javascript" src="../scripts/shLegacy.js"></script>
++	<script type="text/javascript" src="../scripts/shBrushGroovy.js"></script>
++	<link type="text/css" rel="stylesheet" href="../styles/shCore.css"/>
++	<link type="text/css" rel="Stylesheet" href="../styles/shThemeDefault.css" />
++</head>
++
++<body>
++	
++<h1>SyntaxHighlighter Older Version Support</h1>
++<p>
++	SyntaxHighlighter supports older 1.5.1 version through a special file called
++	shLegacy.js. For more information 
++	<a href="http://alexgorbatchev.com/SyntaxHighlighter/manual/older_versions.html">please see the docs</a>.
++</p>
++
++<h2>Basic tests</h2>
++<pre name="code" class="groovy">package free.cafekiwi.gotapi;</pre>
++
++<h2>No controls</h2>
++<pre name="code" class="groovy:nocontrols">package free.cafekiwi.gotapi;</pre>
++
++<h2>No gutter</h2>
++<pre name="code" class="groovy:nogutter">package free.cafekiwi.gotapi;</pre>
++
++<h2>Collapse</h2>
++<pre name="code" class="groovy:collapse">package free.cafekiwi.gotapi;</pre>
++
++<h2>First line</h2>
++<pre name="code" class="groovy:firstline[10]">package free.cafekiwi.gotapi;</pre>
++
++<script type="text/javascript">
++SyntaxHighlighter.config.clipboardSwf = 'Scripts/clipboard.swf';
++dp.SyntaxHighlighter.HighlightAll('code');
++</script>
++
++</body>
++</html>
+diff --git a/demos/server_side.html b/demos/server_side.html
+new file mode 100644
+index 0000000..e845b0d
+--- /dev/null
++++ b/demos/server_side.html
+@@ -0,0 +1,44 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
++<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
++<head>
++	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
++	<title>SyntaxHighlighter Server Side Demo</title>
++	<script type="text/javascript" src="../scripts/xregexp.js"></script> <!-- XRegExp is bundled with the final shCore.js during build -->
++	<script type="text/javascript" src="../scripts/shCore.js"></script>
++	<script type="text/javascript" src="../scripts/shBrushJScript.js"></script>
++	<link type="text/css" rel="stylesheet" href="../styles/shCore.css"/>
++	<link type="text/css" rel="Stylesheet" href="../styles/shThemeDefault.css" />
++</head>
++
++<body>
++
++<h1>SyntaxHighlighter Server Side Demo</h1>
++<p>
++	This page demonstrated ability to run SyntaxHighlighter independently of the browser's DOM,
++	there by allowing execution on the server or through some other means.
++</p>
++
++<script type="text/plain" id="input">
++function helloWorld()
++{
++	// this is great!
++	for(var i = 0; i <= 1; i++)
++		alert("yay");
++}
++</script>
++
++<script type="text/javascript">
++var brush = new SyntaxHighlighter.brushes.JScript(),
++	code = document.getElementById('input').innerHTML,
++	html
++	;
++	
++brush.init({ toolbar: false });
++html = brush.getHtml(code);
++
++document.write(html);
++</script>
++
++</body>
++</html>
++
+diff --git a/dist/.gitignore b/dist/.gitignore
+deleted file mode 100644
+index f59ec20..0000000
+--- a/dist/.gitignore
++++ /dev/null
+@@ -1 +0,0 @@
+-*
+\ No newline at end of file
+diff --git a/gulpfile.babel.js b/gulpfile.babel.js
+index 3b659a8..da05cd0 100644
+--- a/gulpfile.babel.js
++++ b/gulpfile.babel.js
+@@ -1,8 +1,7 @@
++import _gulp from 'gulp';
+ import gulpHelp from 'gulp-help';
+-import setupProject from './build/setup-project.js';
+-import bundle from './build/bundle.js';
++import setupProject from './build/gulpfile/setup-project.js';
+ 
+-const gulp = gulpHelp(require('gulp'), { hideDepsMessage: true });
++const gulp = gulpHelp(_gulp, { hideDepsMessage: true });
+ 
+ setupProject(gulp, __dirname);
+-bundle(gulp, __dirname);
+diff --git a/index.html b/index.html
+new file mode 100644
+index 0000000..ec1cd74
+--- /dev/null
++++ b/index.html
+@@ -0,0 +1,29 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++	<meta charset="utf-8">
++	<title>Hello SyntaxHighlighter</title>
++	<script type="text/javascript" src="syntaxhighlighter.js"></script>
++	<script type="text/javascript" src="brushes/jscript.js"></script>
++	<link type="text/css" rel="stylesheet" href="css/rdark.css">
++	<script type="text/javascript">SyntaxHighlighter.all();</script>
++	<style type="text/css">
++		body {
++			background: white;
++			font-family: helvetica;
++		}
++	</style>
++</head>
++
++<body>
++
++<h1>Hello SyntaxHighlighter</h1>
++
++<pre class="brush: js;">
++function helloSyntaxHighlighter()
++{
++	return "hi!";
++}
++</pre>
++
++</html>
+diff --git a/karma.conf.coffee b/karma.conf.coffee
+new file mode 100644
+index 0000000..9ec7b7a
+--- /dev/null
++++ b/karma.conf.coffee
+@@ -0,0 +1,21 @@
++module.exports = (config) ->
++  config.set
++    frameworks: ['mocha', 'chai-jquery', 'chai', 'jquery-2.1.0']
++    browsers: [process.env.TRAVIS and 'Firefox' or 'Chrome']
++
++    preprocessors:
++      'test/**/*.spec.coffee': ['coffee']
++
++    browserify:
++      transform: ['coffeeify']
++      extensions: ['.coffee']
++      watch: true
++      debug: true
++
++    files: [
++      'dist/syntaxhighlighter.js'
++      'dist/brushes/xml.js'
++      'test/compat_brush.js'
++      'test/compat_html_brush.js'
++      'test/**/*.spec.coffee'
++    ]
+diff --git a/package.json b/package.json
+index f8d8c66..53c8e28 100644
+--- a/package.json
++++ b/package.json
+@@ -5,36 +5,23 @@
+     "name": "Alex Gorbatchev",
+     "url": "https://github.com/alexgorbatchev"
+   },
++  "main": "./src/core.js",
+   "scripts": {
+-    "test": "npm run test-smoke && npm run test-integration && npm run test-integration-compat && npm run test-unit",
+-    "test-smoke": "karma start tests/karma/smoke.conf.js --single-run",
+-    "test-integration": "gulp build --output=tests/build-dest --theme=tests/build-source/theme.scss --brushes=tests/fixtures/test_brush_v4.js,tests/fixtures/html_test_brush_v3.js,tests/fixtures/test_brush_v4_es6.js && karma start tests/karma/integration.conf.js --single-run",
+-    "test-integration-compat": "gulp build --compat --output=tests/build-dest --theme=tests/build-source/theme.scss && karma start tests/karma/integration-compat.conf.js --single-run",
+-    "test-unit": "babel-node --only='src/**,tests/**,syntaxhighlighter-*,brush-*' node_modules/.bin/_mocha --opts tests/mocha.opts tests/unit/*.test.js",
+-    "build": "gulp build --brushes all"
++    "test": "grunt test"
+   },
+-  "main": "./src/core.js",
+   "repository": {
+     "type": "git",
+     "url": "https://github.com/syntaxhighlighter/syntaxhighlighter.git"
+   },
+   "devDependencies": {
+-    "babel-cli": "^6.4.5",
+     "babel-core": "^6.1.21",
+-    "babel-loader": "^6.2.0",
+     "babel-preset-es2015": "^6.1.18",
+-    "babel-register": "^6.4.3",
+     "bluebird": "^3.0.5",
+-    "brush-xml": "^4.0.0",
+     "chai": "^3.4.1",
+-    "cheerio": "^0.19.0",
+-    "codecov": "^1.0.1",
+-    "ejs": "^2.3.4",
++    "decaffeinate": "^1.40.7",
+     "glob": "^6.0.1",
+     "gulp": "^3.8.10",
+     "gulp-help": "^1.6.1",
+-    "gulp-util": "^3.0.7",
+-    "isparta": "^4.0.0",
+     "js-beautify": "^1.5.10",
+     "karma": "^0.13.14",
+     "karma-mocha": "^0.2.0",
+@@ -42,34 +29,24 @@
+     "karma-phantomjs-launcher": "^0.2.1",
+     "karma-sourcemap-loader": "^0.3.6",
+     "karma-webpack": "^1.7.0",
+-    "mkdirp": "^0.5.1",
+     "mocha": "^2.3.4",
+     "node-sass": "^3.4.2",
+-    "phantomjs": "^1.9.19",
+     "ramda": "^0.18.0",
+     "raw-loader": "^0.5.1",
+     "request": "^2.51.0",
+-    "rimraf": "^2.4.4",
+-    "sizzle": "^2.2.1",
+     "songbird": "^1.0.1",
+-    "theme-base": "^4.0.0",
+-    "webpack": "^1.9.6",
+-    "yargs": "^3.30.0"
++    "webpack": "^1.9.6"
+   },
+   "dependencies": {
+-    "brush-base": "^4.0.0",
+-    "syntaxhighlighter-match": "^4.0.0",
+-    "syntaxhighlighter-html-renderer": "^4.0.0",
+-    "syntaxhighlighter-regex": "^4.0.0",
+-    "opts-parser": "^4.0.0",
+-    "retabber": "^4.0.0",
+-    "unindenter": "^4.0.0",
++    "parser": "syntaxhighlighter/parser",
++    "brush-base": "syntaxhighlighter/brush-base",
++    "html-renderer": "syntaxhighlighter/html-renderer",
++    "regex-lib": "syntaxhighlighter/regex-lib",
++    "xregexp": "syntaxhighlighter/xregexp",
++    "opts-parser": "syntaxhighlighter/opts-parser",
++    "retabber": "^0.5.0",
++    "unindenter": "^0.5.0",
+     "domready": "^1.0.5"
+   },
+-  "license": "MIT",
+-  "babel": {
+-    "presets": [
+-      "es2015"
+-    ]
+-  }
++  "license": "MIT"
+ }
+diff --git a/repos/.gitignore b/repos/.gitignore
+index f59ec20..e69de29 100644
+--- a/repos/.gitignore
++++ b/repos/.gitignore
+@@ -1 +0,0 @@
+-*
+\ No newline at end of file
+diff --git a/screenshot.png b/screenshot.png
+deleted file mode 100644
+index 26d47ea..0000000
+Binary files a/screenshot.png and /dev/null differ
+diff --git a/src/about.coffee b/src/about.coffee
+new file mode 100644
+index 0000000..745cae3
+--- /dev/null
++++ b/src/about.coffee
+@@ -0,0 +1,24 @@
++
++module.exports = (opts) -> """
++  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
++  <html xmlns="http://www.w3.org/1999/xhtml">
++  <head>
++    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
++    <title>About SyntaxHighlighter</title>
++  </head>
++
++  <body style="font-family:Geneva,Arial,Helvetica,sans-serif;background-color:#fff;color:#000;font-size:1em;text-align:center;">
++    <div style="text-align:center;margin-top:1.5em;">
++    <div style="font-size:xx-large;">SyntaxHighlighter</div>
++    <div style="font-size:.75em;margin-bottom:3em;">
++      <div>version #{opts.version} (#{opts.date})</div>
++      <div><a href="http://alexgorbatchev.com/SyntaxHighlighter" target="_blank" style="color:#005896">http://alexgorbatchev.com/SyntaxHighlighter</a></div>
++      <div>JavaScript code syntax highlighter.</div>
++      <div>Copyright 2004-2013 Alex Gorbatchev.</div>
++    </div>
++    <div>If you like this script, please <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2930402" style="color:#005896">donate</a> to <br/> keep development active!</div>
++  </div>
++
++  </body>
++  </html>
++"""
+diff --git a/src/compatibility_layer_v3.js b/src/compatibility_layer_v3.js
+deleted file mode 100644
+index 6cd163c..0000000
+--- a/src/compatibility_layer_v3.js
++++ /dev/null
+@@ -1,9 +0,0 @@
+-// Compatability layer to support V3 brushes. This file is only included when `--compat`
+-// flag is passed to the `gulp build` command.
+-
+-import core from './core';
+-window.SyntaxHighlighter = core;
+-
+-if (typeof window.XRegExp === 'undefined') {
+-  window.XRegExp = require('syntaxhighlighter-regex').XRegExp;
+-}
+diff --git a/src/core.js b/src/core.js
+index 66ae62a..2434044 100644
+--- a/src/core.js
++++ b/src/core.js
+@@ -1,21 +1,22 @@
+ var
++  domready = require('domready'),
+   optsParser = require('opts-parser'),
+-  match = require('syntaxhighlighter-match'),
+-  Renderer = require('syntaxhighlighter-html-renderer').default,
++  parser = require('parser'),
++  Renderer = require('html-renderer').Renderer,
+   utils = require('./utils'),
+   transformers = require('./transformers'),
+   dom = require('./dom'),
+   config = require('./config'),
+   defaults = require('./defaults'),
+-  HtmlScript = require('./html_script')
++  HtmlScript = require('./html_script').HtmlScript
+   ;
+ 
+-const sh = {
+-  Match: match.Match,
++var sh = module.exports = {
++  Match: require('parser/lib/match').Match,
+   Highlighter: require('brush-base'),
+ 
+-  config: require('./config'),
+-  regexLib: require('syntaxhighlighter-regex').commonRegExp,
++  config : require('./config'),
++  regexLib: require('regex-lib'),
+ 
+   /** Internal 'global' variables. */
+   vars : {
+@@ -81,9 +82,10 @@ const sh = {
+    */
+   highlight: function(globalParams, element)
+   {
+-    var elements = sh.findElements(globalParams, element),
++    var elements = this.findElements(globalParams, element),
+         propertyName = 'innerHTML',
+         brush = null,
++        // id,
+         renderer,
+         conf = sh.config
+         ;
+@@ -98,7 +100,6 @@ const sh = {
+           params = element.params,
+           brushName = params.brush,
+           brush,
+-          matches,
+           code
+           ;
+ 
+@@ -117,7 +118,7 @@ const sh = {
+       // Instantiate a brush
+       if (params['html-script'] == true || defaults['html-script'] == true)
+       {
+-        brush = new HtmlScript(findBrush('xml'), brush);
++        brush = new HtmlScript(brush);
+         brushName = 'htmlscript';
+       }
+       else
+@@ -138,12 +139,11 @@ const sh = {
+       params['brush'] = brushName;
+ 
+       code = transformers(code, params);
+-      matches = match.applyRegexList(code, brush.regexList, params);
+-      renderer = new Renderer(code, matches, params);
+-
++      matches = parser.parse(code, brush.regexList, params);
+       element = dom.create('div');
+-      element.innerHTML = renderer.getHtml();
+ 
++      renderer = new Renderer(code, matches, params);
++      element.innerHTML = renderer.render();
+       // id = utils.guid();
+       // element.id = highlighters.id(id);
+       // highlighters.set(id, element);
+@@ -157,6 +157,18 @@ const sh = {
+ 
+       target.parentNode.replaceChild(element, target);
+     }
++  },
++
++  /**
++   * Main entry point for the SyntaxHighlighter.
++   * @param {Object} params Optional params to apply to all highlighted elements.
++   */
++  all: function(params)
++  {
++    domready(function()
++    {
++      sh.highlight(params);
++    });
+   }
+ }; // end of sh
+ 
+@@ -187,22 +199,20 @@ function findBrush(alias, showAlert)
+     brushes = {};
+ 
+     // Find all brushes
+-    for (var brushName in sh.brushes)
++    for (var brush in sh.brushes)
+     {
+-      var brush = sh.brushes[brushName],
+-        aliases = brush.aliases
++      var info = sh.brushes[brush],
++        aliases = info.aliases
+         ;
+ 
+-      if (aliases == null) {
++      if (aliases == null)
+         continue;
+-      }
+ 
+-      brush.className = brush.className || brush.aliases[0];
+-      brush.brushName = brush.className || brushName.toLowerCase();
++      // keep the brush name
++      info.brushName = brush.toLowerCase();
+ 
+-      for (var i = 0, l = aliases.length; i < l; i++) {
+-        brushes[aliases[i]] = brushName;
+-      }
++      for (var i = 0, l = aliases.length; i < l; i++)
++        brushes[aliases[i]] = brush;
+     }
+ 
+     sh.vars.discoveredBrushes = brushes;
+@@ -215,6 +225,7 @@ function findBrush(alias, showAlert)
+ 
+   return result;
+ };
++;
+ 
+ /**
+  * Strips <![CDATA[]]> from <SCRIPT /> content because it should be used
+@@ -249,16 +260,3 @@ function stripCData(original)
+ 
+   return changed ? copy : original;
+ };
+-
+-let brushCounter = 0;
+-
+-export default sh;
+-export const registerBrush = brush => sh.brushes['brush' + brushCounter++] = brush.default || brush;
+-export const clearRegisteredBrushes = () => {
+-  sh.brushes = {};
+-  brushCounter = 0;
+-}
+-
+-/* an EJS hook for `gulp build --brushes` command
+- * <%- registerBrushes %>
+- */
+diff --git a/src/dasherize.js b/src/dasherize.js
+deleted file mode 100644
+index 2c73f79..0000000
+--- a/src/dasherize.js
++++ /dev/null
+@@ -1,10 +0,0 @@
+-export const string = value =>
+-  value
+-    .replace(/^([A-Z])/g, (_, character) => character.toLowerCase())
+-    .replace(/([A-Z])/g, (_, character) => '-' + character.toLowerCase());
+-
+-export const object = value => {
+-  const result = {};
+-  Object.keys(value).forEach(key => result[string(key)] = value[key]);
+-  return result;
+-}
+diff --git a/src/html_script.js b/src/html_script.js
+index 7897031..590867f 100644
+--- a/src/html_script.js
++++ b/src/html_script.js
+@@ -1,9 +1,9 @@
+-var applyRegexList = require('syntaxhighlighter-match').applyRegexList;
++var parser = require('parser');
+ 
+-function HtmlScript(BrushXML, brushClass)
++function HtmlScript(brushClass)
+ {
+   var scriptBrush,
+-    xmlBrush = new BrushXML()
++    xmlBrush = new window.SyntaxHighlighter.brushes.Xml()
+     ;
+ 
+   if (brushClass == null)
+@@ -41,14 +41,14 @@ function HtmlScript(BrushXML, brushClass)
+       results = results.concat(matches);
+     }
+ 
+-    matches = applyRegexList(code, regexList);
++    matches = parser.parse(code, regexList);
+     offsetMatches(matches, offset);
+     add(matches);
+ 
+     // add left script bracket
+     if (htmlScript.left != null && match.left != null)
+     {
+-      matches = applyRegexList(match.left, [htmlScript.left]);
++      matches = parser.parse(match.left, [htmlScript.left]);
+       offsetMatches(matches, match.index);
+       add(matches);
+     }
+@@ -56,7 +56,7 @@ function HtmlScript(BrushXML, brushClass)
+     // add right script bracket
+     if (htmlScript.right != null && match.right != null)
+     {
+-      matches = applyRegexList(match.right, [htmlScript.right]);
++      matches = parser.parse(match.right, [htmlScript.right]);
+       offsetMatches(matches, match.index + match[0].lastIndexOf(match.right));
+       add(matches);
+     }
+@@ -68,4 +68,6 @@ function HtmlScript(BrushXML, brushClass)
+   }
+ };
+ 
+-module.exports = HtmlScript;
++module.exports = {
++  HtmlScript: HtmlScript
++};
+\ No newline at end of file
+diff --git a/src/index.js b/src/index.js
+deleted file mode 100644
+index 9d7eca6..0000000
+--- a/src/index.js
++++ /dev/null
+@@ -1,12 +0,0 @@
+-import domready from 'domready';
+-import SyntaxHighlighter from './core';
+-import * as dasherize from './dasherize';
+-
+-// configured through the `--compat` parameter.
+-if (COMPAT) {
+-  require('./compatibility_layer_v3');
+-}
+-
+-domready(() => SyntaxHighlighter.highlight(dasherize.object(window.syntaxhighlighterConfig || {})));
+-
+-export * from './core';
+diff --git a/src/syntaxhighlighter.js b/src/syntaxhighlighter.js
+new file mode 100644
+index 0000000..11c9f6a
+--- /dev/null
++++ b/src/syntaxhighlighter.js
+@@ -0,0 +1,18 @@
++// window.SyntaxHighlighter = {
++//   brushes: {},
++
++//   Highlighter: require('syntaxhighlighter-brush').Brush,
++
++//   highlight: function()
++//   {
++
++//   },
++
++//   all: function()
++//   {
++
++//   }
++// };
++
++window.XRegExp = require('xregexp');
++window.SyntaxHighlighter = require('./core');
+diff --git a/tests/build-dest/test_brush_v3.js b/test/compat_brush.js
+similarity index 94%
+rename from tests/build-dest/test_brush_v3.js
+rename to test/compat_brush.js
+index 579f29e..d8d7cd2 100644
+--- a/tests/build-dest/test_brush_v3.js
++++ b/test/compat_brush.js
+@@ -14,7 +14,7 @@
+   };
+ 
+   Brush.prototype = new SyntaxHighlighter.Highlighter();
+-  Brush.aliases = ['test_brush_v3'];
++  Brush.aliases = ['compat'];
+ 
+   SyntaxHighlighter.brushes.Compat = Brush;
+ 
+diff --git a/tests/fixtures/html_test_brush_v3.js b/test/compat_html_brush.js
+similarity index 86%
+rename from tests/fixtures/html_test_brush_v3.js
+rename to test/compat_html_brush.js
+index 1456ec2..e341f76 100644
+--- a/tests/fixtures/html_test_brush_v3.js
++++ b/test/compat_html_brush.js
+@@ -1,7 +1,7 @@
+ ;(function()
+ {
+   // CommonJS
+-  SyntaxHighlighter = SyntaxHighlighter || (typeof require !== 'undefined' ? require('shCore').SyntaxHighlighter : null);
++  SyntaxHighlighter = SyntaxHighlighter || (typeof require !== 'undefined'? require('shCore').SyntaxHighlighter : null);
+ 
+   function Brush()
+   {
+@@ -15,7 +15,7 @@
+   };
+ 
+   Brush.prototype = new SyntaxHighlighter.Highlighter();
+-  Brush.aliases = ['html_test_brush_v3'];
++  Brush.aliases = ['compat-html'];
+ 
+   SyntaxHighlighter.brushes.CompatHtml = Brush;
+ 
+diff --git a/test/integrations.spec.coffee b/test/integrations.spec.coffee
+new file mode 100644
+index 0000000..019f1c2
+--- /dev/null
++++ b/test/integrations.spec.coffee
+@@ -0,0 +1,82 @@
++describe 'integrations', ->
++  pre = highlighter = null
++
++  cleanup = ->
++    pre?.remove()
++    highlighter?.remove()
++    pre = highlighter = null
++
++  expectSelectorToBePresent = (element, selector, count = 1) ->
++    el = $ selector, element
++    expect(el).to.exist
++    expect(el.length).to.eql count
++
++  render = (html) ->
++    cleanup()
++    pre = $ html
++    $(document.body).append pre
++    SyntaxHighlighter.highlight()
++    highlighter = $ '.syntaxhighlighter'
++
++  itHasCommonElements = ->
++    describe 'highlighted element', ->
++      it 'exists', ->
++        expect(highlighter.length).to.equal 1
++
++      it 'has gutter', ->
++        expectSelectorToBePresent highlighter, 'td.gutter'
++
++      it 'has code', ->
++        expectSelectorToBePresent highlighter, 'td.code'
++
++  before ->
++    cleanup()
++
++  after ->
++    cleanup()
++
++  describe 'element detection', ->
++    describe 'using `pre class="..."`', ->
++      before -> render """<pre class="brush: compat">hello world</pre>"""
++      itHasCommonElements()
++
++    describe 'using `script type="syntaxhighlighter"`', ->
++      before -> render """<script type="syntaxhighlighter" class="brush: compat">hello world</script>"""
++      itHasCommonElements()
++
++    describe 'using `script type="type/syntaxhighlighter"`', ->
++      before -> render """<script type="syntaxhighlighter" class="brush: compat">hello world</script>"""
++      itHasCommonElements()
++
++  describe 'regular brush', ->
++    before ->
++      render """
++        <pre class="brush: compat">
++          hello world
++          how are things?
++        </pre>
++      """
++
++    itHasCommonElements()
++
++    describe 'class names', ->
++      it 'applies brush name', ->
++        expectSelectorToBePresent highlighter, 'td.code .line.number1 > code.compat.keyword:contains(hello)'
++
++  describe 'html-script brush', ->
++    before ->
++      render """
++        <pre class="brush: compat-html; html-script: true">
++          world &lt;script>&lt;?= hello world ?>&lt;/script>
++          how are you?
++        </pre>
++      """
++
++    itHasCommonElements()
++
++    describe 'class names', ->
++      it 'applies htmlscript class name', ->
++        expectSelectorToBePresent highlighter, 'td.code .line.number1 > .htmlscript.keyword:contains(script)', 2
++
++      it 'applies brush name', ->
++        expectSelectorToBePresent highlighter, 'td.code .line.number1 > code.compathtml.keyword:contains(hello)'
+diff --git a/tests/brushes_tests.html b/tests/brushes_tests.html
+new file mode 100644
+index 0000000..2bda178
+--- /dev/null
++++ b/tests/brushes_tests.html
+@@ -0,0 +1,139 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
++<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
++<head>
++	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
++	<title>SyntaxHighlighter Brushes Tests</title>
++	<script type="text/javascript" src="/components/jquery/jquery.min.js"></script>
++
++	<!-- SyntaxHighlighter -->
++	<script type="text/javascript" src="/components/xregexp/xregexp-all.js"></script>
++	<!-- XRegExp is bundled with the final shCore.js during build -->
++	<script type="text/javascript" src="/src/js/shCore.js"></script>
++	<script type="text/javascript" src="/src/js/shAutoloader.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushAppleScript.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushAS3.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushBash.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushColdFusion.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushCpp.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushCSharp.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushCss.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushDelphi.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushDiff.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushErlang.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushGroovy.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushJava.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushJavaFx.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushJScript.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushPerl.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushPhp.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushPlain.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushPowerShell.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushPython.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushRuby.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushSass.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushScala.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushSql.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushVb.js"></script>
++	<script type="text/javascript" src="/src/js/shBrushXml.js"></script>
++
++	<link type="text/css" rel="stylesheet" href="/pkg/styles/shCoreDefault.css"/>
++</head>
++
++<body>
++
++<div id="output"></div>
++
++<style>
++body {
++	background: white;
++	font-family: Helvetica;
++}
++
++.test-wrap {
++	width: 100%;
++	height: 800px;
++	overflow: auto;
++	border: none;
++}
++</style>
++
++<script type="text/javascript">
++var brushes = [
++		'AS3',
++		'AppleScript',
++		'Bash',
++		'CSharp',
++		'ColdFusion',
++		'Cpp',
++		'Css',
++		'Delphi',
++		'Diff',
++		'Erlang',
++		'Groovy',
++		'JScript',
++		'Java',
++		'JavaFX',
++		'Perl',
++		'Php',
++		'Plain',
++		'PowerShell',
++		'Python',
++		'Ruby',
++		'Sass',
++		'Scala',
++		'Sql',
++		'Vb',
++		'Xml'
++	];
++
++$(document).ready(function()
++{
++	var html = '', links = '';
++
++	$.each(brushes, function(index)
++	{
++		var name = this;
++
++		links += '<a href="#theme' + index + '">' + name + '</a> ';
++
++		html += ''
++			+ '<div class="test-wrap">'
++			+ '<h1>'
++				+ '<a href="#theme' + (index + 1) + '">next</a> '
++				+ '<a name="theme' + index + '">'
++					+ name
++				+ '</a>'
++			+ '</h1>'
++			;
++
++		$.ajax({
++			url: 'brushes/' + name.toLowerCase() + '.html',
++			type: 'GET',
++			dataType: 'text',
++			async: false,
++			success: function(data)
++			{
++				html += data;
++			},
++			error: function()
++			{
++				html += '<p>Not found...</p>';
++			}
++		});
++
++		html += '</div>\n';
++
++		if (index % 2 != 0)
++			html += '<div style="clear:both"></div>\n';
++	});
++
++	$('#output')[0].innerHTML = links + '\n' + html;
++	$('#output a[name]:first').attr('name', 'top');
++	$('#output a[href]:last').attr('href', '#top').html('top');
++
++	SyntaxHighlighter.highlight();
++});
++</script>
++
++</body>
++</html>
+diff --git a/tests/build-dest/.gitignore b/tests/build-dest/.gitignore
+deleted file mode 100644
+index 72e8ffc..0000000
+--- a/tests/build-dest/.gitignore
++++ /dev/null
+@@ -1 +0,0 @@
+-*
+diff --git a/tests/build-source/index.html b/tests/build-source/index.html
+deleted file mode 100644
+index 9e73d6c..0000000
+--- a/tests/build-source/index.html
++++ /dev/null
+@@ -1,29 +0,0 @@
+-<link type="text/css" rel="stylesheet" href="/base/tests/build-dest/theme.css">
+-
+-<pre class="brush: test_brush_v3;">
+-/*
+-  Copyright (c) 2009...
+-  All rights reserved.
+-*/ 
+-</pre>
+-
+-<pre class="brush: html_test_brush_v3;">
+-/*
+-  Copyright (c) 2009...
+-  All rights reserved.
+-*/ 
+-</pre>
+-
+-<pre class="brush: test_brush_v4;">
+-/*
+-  Copyright (c) 2009...
+-  All rights reserved.
+-*/ 
+-</pre>
+-
+-<pre class="brush: test_brush_v4_es6;">
+-/*
+-  Copyright (c) 2009...
+-  All rights reserved.
+-*/ 
+-</pre>
+diff --git a/tests/build-source/theme.scss b/tests/build-source/theme.scss
+deleted file mode 100644
+index d3d2f79..0000000
+--- a/tests/build-source/theme.scss
++++ /dev/null
+@@ -1,29 +0,0 @@
+-$background                   : black !default;
+-
+-$line_highlighted_background  : #2A3133 !default;
+-$line_highlighted_number      : white !default;
+-
+-$gutter_text                  : #d3d3d3 !default;
+-$gutter_border_color          : #990000 !default;
+-
+-$toolbar_collapsed_a          : #ebdb8d !default;
+-$toolbar_collapsed_a_hover    : #ff7d27 !default;
+-$toolbar_collapsed_background : black !default;
+-
+-$toolbar_a                    : #fff !default;
+-$toolbar_a_hover              : #9ccff4 !default;
+-
+-$code_plain                   : #d3d3d3 !default;
+-$code_comments                : #ff7d27 !default;
+-$code_string                  : #ff9e7b !default;
+-$code_keyword                 : aqua !default;
+-$code_preprocessor            : #aec4de !default;
+-$code_variable                : #ffaa3e !default;
+-$code_value                   : #009900 !default;
+-$code_functions               : #81cef9 !default;
+-$code_constants               : #ff9e7b !default;
+-$code_color1                  : #ebdb8d !default;
+-$code_color2                  : #ff7d27 !default;
+-$code_color3                  : #aec4de !default;
+-
+-@import "theme-base.scss";
+diff --git a/tests/cases/007_collapse.html b/tests/cases/007_collapse.html
+new file mode 100644
+index 0000000..2643bb5
+--- /dev/null
++++ b/tests/cases/007_collapse.html
+@@ -0,0 +1,60 @@
++<pre id="sh_007_collapse_a" class="brush: groovy; collapse: true" title="This is a title for collapsed block">
++	/**
++	 * Returns an Image object that can then be painted on the screen. 
++	 * The url argument must specify an absolute {@link URL}. The name
++	 * argument is a specifier that is relative to the url argument. 
++	 *
++	 * @param  url  an absolute URL giving the base location of the image
++	 * @param  name the location of the image, relative to the url argument
++	 * @return      the image at the specified URL
++	 * @see         Image
++	 */
++</pre>
++
++<pre id="sh_007_collapse_b" class="brush: groovy; collapse: true">
++	/**
++	 * Returns an Image object that can then be painted on the screen. 
++	 * The url argument must specify an absolute {@link URL}. The name
++	 * argument is a specifier that is relative to the url argument. 
++	 *
++	 * @param  url  an absolute URL giving the base location of the image
++	 * @param  name the location of the image, relative to the url argument
++	 * @return      the image at the specified URL
++	 * @see         Image
++	 */
++</pre>
++
++<script type="text/javascript">
++queue(function()
++{
++	var $sh;
++	
++	module('007_collapse');
++	
++	test('collapsed block with title', function()
++	{
++		$sh = $('#sh_007_collapse_a');
++		
++		ok_sh($sh);
++		ok_toolbar($sh);
++		ok_collapsed($sh);
++		
++		var $title = $sh.find('.toolbar a.toolbar_item.command_expandSource');
++		ok($title.length == 1, 'Expand present');
++		equal($title.text(), 'This is a title for collapsed block', 'Expand text');
++	});
++
++	test('collapsed block without title', function()
++	{
++		$sh = $('#sh_007_collapse_b');
++		
++		ok_sh($sh);
++		ok_toolbar($sh);
++		ok_collapsed($sh);
++		
++		var $title = $sh.find('.toolbar a.toolbar_item.command_expandSource');
++		ok($title.length == 1, 'Expand present');
++		equal($title.text(), SyntaxHighlighter.config.strings.expandSource, 'Expand text');
++	});
++});
++</script>
+diff --git a/tests/cases/007_collapse_interaction.html b/tests/cases/007_collapse_interaction.html
+new file mode 100644
+index 0000000..ea72046
+--- /dev/null
++++ b/tests/cases/007_collapse_interaction.html
+@@ -0,0 +1,44 @@
++<script type="text/javascript">
++queue(function()
++{
++	var $sh;
++	
++	module('007_collapse_interaction');
++	
++	function clickA($a)
++	{
++		SyntaxHighlighter.toolbar.handler({
++			target: $a[0],
++			preventDefault: function() {}
++		});	
++	};
++	
++	test('expand collapsed block with title', function()
++	{
++		$sh = $('#sh_007_collapse_a');
++		
++		ok_sh($sh);
++		ok_toolbar($sh);
++		ok_collapsed($sh);
++		
++		var $a = $sh.find('.toolbar a.toolbar_item.command_expandSource');
++		clickA($a);
++		ok($a.not(':visible'), 'Expand not visible');
++		ok_code($sh);
++	});
++
++	test('expand collapsed block without title', function()
++	{
++		$sh = $('#sh_007_collapse_b');
++		
++		ok_sh($sh);
++		ok_toolbar($sh);
++		ok_collapsed($sh);
++		
++		var $a = $sh.find('.toolbar a.toolbar_item.command_expandSource');
++		clickA($a);
++		ok($a.not(':visible'), 'Expand not visible');
++		ok_code($sh);
++	});
++});
++</script>
+diff --git a/tests/cases/009_class_name.html b/tests/cases/009_class_name.html
+new file mode 100644
+index 0000000..f2437d5
+--- /dev/null
++++ b/tests/cases/009_class_name.html
+@@ -0,0 +1,32 @@
++<pre id="sh_009_class_name" class="brush: java; class-name: 'custom class here'">
++	public Image getImage(URL url, String name) {
++		try {
++			/*
++			   Regular multiline comment.
++			*/
++		    return getImage(new URL(url, name));
++		} catch (MalformedURLException e) {
++		    return null;
++		}
++	}
++</pre>
++
++<script type="text/javascript">
++queue(function()
++{
++	var $sh;
++	
++	module('009_class_name');
++
++	test('check custom classes', function()
++	{
++		$sh = $('#sh_009_class_name');
++		
++		ok_sh($sh);
++		ok_toolbar($sh);
++		ok_gutter($sh);
++		ok_code($sh);
++		ok($sh.find('.syntaxhighlighter').is('.custom.class.here'), 'Check custom classes');
++	});
++});
++</script>
+diff --git a/tests/cases/013_html_script.html b/tests/cases/013_html_script.html
+new file mode 100644
+index 0000000..c0a1201
+--- /dev/null
++++ b/tests/cases/013_html_script.html
+@@ -0,0 +1,34 @@
++<pre id="sh_013_html_script" class="brush: groovy; html-script: true">
++&lt;hello>
++	&lt;%
++		package free.cafekiwi.gotapi;
++	%>
++&lt;/hello>
++
++<!--
++	Comments here
++-->
++&lt;%= print(); %>
++</pre>
++
++<script type="text/javascript">
++queue(function()
++{
++	var $sh;
++	
++	module('013_html_script');
++
++	test('check markup', function()
++	{
++		$sh = $('#sh_013_html_script');
++		
++		ok_sh($sh);
++		ok_gutter($sh);
++		ok_code($sh);
++		
++		ok($sh.find('.code .number1 > .htmlscript').length > 0, 'Has .htmlscript on line 1');
++		ok($sh.find('.code .number3 > .groovy').length > 0, 'Has .groovy on line 3');
++		ok($sh.find('.code .number10 > .groovy').length > 0, 'Has .groovy on line 10');
++	});
++});
++</script>
+\ No newline at end of file
+diff --git a/tests/commonjs_tests.js b/tests/commonjs_tests.js
+new file mode 100644
+index 0000000..cda8162
+--- /dev/null
++++ b/tests/commonjs_tests.js
+@@ -0,0 +1,52 @@
++/**
++ * This is a CommonJS compatibility test. You can run this file with node.
++ */
++require.paths.unshift(__dirname + '/../scripts');
++
++var sys = require('sys'),
++	shSyntaxHighlighter = require('shCore').SyntaxHighlighter,
++	code = 'test',
++	brushes = [
++		'AS3',
++		'AppleScript',
++		'Bash',
++		'CSharp',
++		'ColdFusion',
++		'Cpp',
++		'Css',
++		'Delphi',
++		'Diff',
++		'Erlang',
++		'Groovy',
++		'JScript',
++		'Java',
++		'JavaFX',
++		'Perl',
++		'Php',
++		'Plain',
++		'PowerShell',
++		'Python',
++		'Ruby',
++		'Sass',
++		'Scala',
++		'Sql',
++		'Vb',
++		'Xml'
++	]
++	;
++
++brushes.sort();
++
++for (var i = 0; i < brushes.length; i++)
++{
++	var name = brushes[i],
++		brush = require('shBrush' + name).Brush
++		;
++		
++	brush = new brush();
++	brush.init({ toolbar: false });
++	
++	var result = brush.getHtml(code);
++	
++	sys.puts(name + (result != null ? ': ok' : ': NOT OK'));
++}
+diff --git a/tests/fixtures/html_test_brush_v4.js b/tests/fixtures/html_test_brush_v4.js
+deleted file mode 100644
+index fd41da6..0000000
+--- a/tests/fixtures/html_test_brush_v4.js
++++ /dev/null
+@@ -1,18 +0,0 @@
+-var BrushBase = require('brush-base');
+-var regexLib = require('syntaxhighlighter-regex').commonRegExp;
+-
+-function Brush()
+-{
+-  this.regexList = [
+-    { regex: /'.*$/gm, css: 'comments' },
+-    { regex: /^\s*#.*$/gm, css: 'preprocessor' },
+-    { regex: regexLib.doubleQuotedString, css: 'string' },
+-    { regex: new RegExp(this.getKeywords('hello world'), 'gm'), css: 'keyword' }
+-  ];
+-
+-  this.forHtmlScript(regexLib.phpScriptTags);
+-};
+-
+-Brush.prototype = new BrushBase();
+-Brush.aliases = ['html_test_brush_v4'];
+-module.exports = Brush;
+diff --git a/tests/fixtures/test_brush_v3.js b/tests/fixtures/test_brush_v3.js
+deleted file mode 100644
+index f0960ff..0000000
+--- a/tests/fixtures/test_brush_v3.js
++++ /dev/null
+@@ -1,23 +0,0 @@
+-;(function()
+-{
+-  // CommonJS
+-  SyntaxHighlighter = SyntaxHighlighter || (typeof require !== 'undefined' ? require('shCore').SyntaxHighlighter : null);
+-
+-  function Brush()
+-  {
+-    this.regexList = [
+-      { regex: /'.*$/gm, css: 'comments' },
+-      { regex: /^\s*#.*$/gm, css: 'preprocessor' },
+-      { regex: SyntaxHighlighter.regexLib.doubleQuotedString, css: 'string' },
+-      { regex: new RegExp(this.getKeywords('hello world'), 'gm'), css: 'keyword' }
+-    ];
+-  };
+-
+-  Brush.prototype = new SyntaxHighlighter.Highlighter();
+-  Brush.aliases = ['test_brush_v3'];
+-
+-  SyntaxHighlighter.brushes.Compat = Brush;
+-
+-  // CommonJS
+-  typeof(exports) != 'undefined' ? exports.Brush = Brush : null;
+-})();
+diff --git a/tests/fixtures/test_brush_v4.js b/tests/fixtures/test_brush_v4.js
+deleted file mode 100644
+index 4fca26d..0000000
+--- a/tests/fixtures/test_brush_v4.js
++++ /dev/null
+@@ -1,16 +0,0 @@
+-var BrushBase = require('brush-base');
+-var regexLib = require('syntaxhighlighter-regex').commonRegExp;
+-
+-function Brush()
+-{
+-  this.regexList = [
+-    { regex: /'.*$/gm, css: 'comments' },
+-    { regex: /^\s*#.*$/gm, css: 'preprocessor' },
+-    { regex: regexLib.doubleQuotedString, css: 'string' },
+-    { regex: new RegExp(this.getKeywords('hello world'), 'gm'), css: 'keyword' }
+-  ];
+-};
+-
+-Brush.prototype = new BrushBase();
+-Brush.aliases = ['test_brush_v4'];
+-module.exports = Brush;
+diff --git a/tests/fixtures/test_brush_v4_es6.js b/tests/fixtures/test_brush_v4_es6.js
+deleted file mode 100644
+index 7508c6a..0000000
+--- a/tests/fixtures/test_brush_v4_es6.js
++++ /dev/null
+@@ -1,19 +0,0 @@
+-import BrushBase from 'brush-base';
+-import {commonRegExp} from 'syntaxhighlighter-regex';
+-
+-export default class Brush extends BrushBase {
+-  static get aliases() {
+-    return ['test_brush_v4_es6'];
+-  }
+-
+-  constructor() {
+-    super();
+-
+-    this.regexList = [
+-      { regex: /'.*$/gm, css: 'comments' },
+-      { regex: /^\s*#.*$/gm, css: 'preprocessor' },
+-      { regex: commonRegExp.doubleQuotedString, css: 'string' },
+-      { regex: new RegExp(this.getKeywords('hello world'), 'gm'), css: 'keyword' }
+-    ];
+-  }
+-}
+diff --git a/tests/integration/commonjs.test.js b/tests/integration/commonjs.test.js
+deleted file mode 100644
+index 9f7d780..0000000
+--- a/tests/integration/commonjs.test.js
++++ /dev/null
+@@ -1,46 +0,0 @@
+-import sizzle from 'sizzle';
+-import {expect} from 'chai';
+-import SyntaxHighlighter, {registerBrush, clearRegisteredBrushes} from '../..';
+-import Brush from '../fixtures/test_brush_v4';
+-
+-function setupSyntaxHighlighter(html) {
+-  let div;
+-
+-  before(done => {
+-    registerBrush(Brush);
+-
+-    div = document.createElement('div');
+-    div.innerHTML = html;
+-    document.body.appendChild(div);
+-
+-    SyntaxHighlighter.highlight({gutter: false});
+-
+-    function wait() {
+-      if (sizzle('.syntaxhighlighter').length) {
+-        done();
+-      } else {
+-        setTimeout(wait, 900);
+-      }
+-    }
+-
+-    wait();
+-  });
+-
+-  after(() => {
+-    clearRegisteredBrushes();
+-    document.body.removeChild(div);
+-  });
+-}
+-
+-describe('integration/commonjs', () => {
+-  describe('first render pass', () => {
+-    setupSyntaxHighlighter(`<pre class="brush: test_brush_v4;">first</pre>`);
+-    it('has applied the brush', () => expect(sizzle('.syntaxhighlighter')[0].innerHTML).to.contain(`<code class="test_brush_v4 plain">first</code>`));
+-    it('does not render gutter', () => expect(sizzle('.syntaxhighlighter td.gutter').length).to.equal(0));
+-  });
+-
+-  describe('second render pass', () => {
+-    setupSyntaxHighlighter(`<pre class="brush: test_brush_v4;">second</pre>`);
+-    it('has applied the brush', () => expect(sizzle('.syntaxhighlighter')[0].innerHTML).to.contain(`<code class="test_brush_v4 plain">second</code>`));
+-  });
+-});
+diff --git a/tests/integration/compat.test.js b/tests/integration/compat.test.js
+deleted file mode 100644
+index 5b47308..0000000
+--- a/tests/integration/compat.test.js
++++ /dev/null
+@@ -1,60 +0,0 @@
+-import sizzle from 'sizzle';
+-import {expect} from 'chai';
+-
+-const HTML = require('raw!../build-source/index.html');
+-
+-function createScript(src) {
+-  const script = document.createElement('script');
+-  script.src = src;
+-  return script;
+-}
+-
+-function setupSyntaxHighlighter() {
+-  let div;
+-
+-  before(function (done) {
+-    div = document.createElement('div');
+-    div.innerHTML = HTML;
+-
+-    div.appendChild(createScript('/base/tests/build-dest/syntaxhighlighter.js'));
+-    div.appendChild(createScript('/base/tests/build-dest/test_brush_v3.js'));
+-
+-    document.body.appendChild(div);
+-
+-    function wait() {
+-      if (sizzle('.syntaxhighlighter').length) {
+-        done();
+-      } else {
+-        setTimeout(wait, 900);
+-      }
+-    }
+-
+-    wait();
+-  });
+-
+-  after(() => {
+-    document.body.removeChild(div);
+-  });
+-}
+-
+-describe('integration/compat', function() {
+-  describe('`--compat` features', () => {
+-    setupSyntaxHighlighter();
+-
+-    describe('using <script/> brush', () => {
+-      it('highlights v3 brush', () => expect(sizzle('.syntaxhighlighter.test_brush_v3')[0]).to.be.ok);
+-    });
+-
+-    it('exposes window.SyntaxHighlighter', () => expect(window.SyntaxHighlighter).to.be.ok);
+-  });
+-
+-  describe('when XRegExp is already present', () => {
+-    before(() => {
+-      window.XRegExp = '...';
+-    });
+-
+-    setupSyntaxHighlighter();
+-
+-    it('does not overwrite existing instance of XRegExp', () => expect(window.XRegExp).to.eql('...'));
+-  });
+-});
+diff --git a/tests/integration/no-compat.test.js b/tests/integration/no-compat.test.js
+deleted file mode 100644
+index 00f7039..0000000
+--- a/tests/integration/no-compat.test.js
++++ /dev/null
+@@ -1,71 +0,0 @@
+-import sizzle from 'sizzle';
+-import {expect} from 'chai';
+-
+-const HTML = require('raw!../build-source/index.html');
+-
+-function createScript(src) {
+-  const script = document.createElement('script');
+-  script.src = src;
+-  return script;
+-}
+-
+-function setupSyntaxHighlighter() {
+-  let div;
+-
+-  before(done => {
+-    div = document.createElement('div');
+-    div.innerHTML = HTML;
+-
+-    div.appendChild(createScript('/base/tests/build-dest/syntaxhighlighter.js'));
+-
+-    document.body.appendChild(div);
+-
+-    function wait() {
+-      if (sizzle('.syntaxhighlighter').length) {
+-        done();
+-      } else {
+-        setTimeout(wait, 900);
+-      }
+-    }
+-
+-    wait();
+-  });
+-
+-  after(() => {
+-    document.body.removeChild(div);
+-  });
+-}
+-
+-function testSuite() {
+-  describe('using only the bundle', () => {
+-    it('highlights v3 brush', () => expect(sizzle('.syntaxhighlighter.html_test_brush_v3')[0]).to.be.ok);
+-    it('highlights v4 brush', () => expect(sizzle('.syntaxhighlighter.test_brush_v4')[0]).to.be.ok);
+-    it('highlights v4 ES6 brush', () => expect(sizzle('.syntaxhighlighter.test_brush_v4_es6')[0]).to.be.ok);
+-  });
+-
+-  it('does not expose window.SyntaxHighlighter', () => expect(window.SyntaxHighlighter).to.be.undefined);
+-}
+-
+-describe('integration/no-compat', () => {
+-  describe('default settings', () => {
+-    setupSyntaxHighlighter();
+-    testSuite();
+-  });
+-
+-  describe('user settings', () => {
+-    function test(config) {
+-      before(() => window.syntaxhighlighterConfig = config);
+-      after(() => delete window.syntaxhighlighterConfig);
+-
+-      setupSyntaxHighlighter();
+-      testSuite();
+-
+-      it('applies custom class name from global config variable to all units', () =>
+-         expect(sizzle('.foo-bar.syntaxhighlighter').length).to.equal(3)
+-      );
+-    }
+-
+-    describe('dash-case arguments', () => test({'class-name': 'foo-bar'}));
+-    describe('camel-case arguments', () => test({'className': 'foo-bar'}));
+-  });
+-});
+diff --git a/tests/karma/base.js b/tests/karma/base.js
+deleted file mode 100644
+index 8ca0a91..0000000
+--- a/tests/karma/base.js
++++ /dev/null
+@@ -1,38 +0,0 @@
+-var path = require('path');
+-
+-module.exports = {
+-  colors: true,
+-  basePath: `${__dirname}/../..`,
+-  frameworks: ['mocha'],
+-  reporters: ['mocha'],
+-  browsers: ['PhantomJS'],
+-  singleRun: false,
+-  autoWatchBatchDelay: 500,
+-
+-  preprocessors: {
+-    '**/*.js': ['webpack', 'sourcemap']
+-  },
+-
+-  webpack: {
+-    devtool: '#inline-source-map',
+-    module: {
+-      loaders: [
+-        {
+-          test: /\.js$/,
+-          include: [
+-            /syntaxhighlighter-.*/,
+-            /brush-.*/,
+-            path.resolve(__dirname, '../../src'),
+-            path.resolve(__dirname, '..'),
+-          ],
+-          loader: 'babel',
+-        },
+-      ],
+-    },
+-  },
+-
+-  webpackMiddleware: {
+-    noInfo: true,
+-    quiet: true,
+-  },
+-};
+diff --git a/tests/karma/integration-compat.conf.js b/tests/karma/integration-compat.conf.js
+deleted file mode 100644
+index 9720718..0000000
+--- a/tests/karma/integration-compat.conf.js
++++ /dev/null
+@@ -1,14 +0,0 @@
+-module.exports = function (config) {
+-  const opts = require('./base.js');
+-
+-  opts.files = [
+-    {
+-      pattern: 'tests/build-dest/*',
+-      served: true,
+-      included: false,
+-    },
+-    'tests/integration/compat.test.js',
+-  ];
+-
+-  config.set(opts);
+-}
+\ No newline at end of file
+diff --git a/tests/karma/integration.conf.js b/tests/karma/integration.conf.js
+deleted file mode 100644
+index 93ac70b..0000000
+--- a/tests/karma/integration.conf.js
++++ /dev/null
+@@ -1,15 +0,0 @@
+-module.exports = function (config) {
+-  const opts = require('./base.js');
+-
+-  opts.files = [
+-    {
+-      pattern: 'tests/build-dest/*',
+-      served: true,
+-      included: false,
+-    },
+-    'tests/integration/no-compat.test.js',
+-    'tests/integration/commonjs.test.js',
+-  ];
+-
+-  config.set(opts);
+-}
+\ No newline at end of file
+diff --git a/tests/karma/smoke.conf.js b/tests/karma/smoke.conf.js
+deleted file mode 100644
+index 687890d..0000000
+--- a/tests/karma/smoke.conf.js
++++ /dev/null
+@@ -1,9 +0,0 @@
+-module.exports = function (config) {
+-  const opts = require('./base.js');
+-
+-  opts.files = [
+-    'tests/smoke.test.js',
+-  ];
+-
+-  config.set(opts);
+-}
+\ No newline at end of file
+diff --git a/tests/mocha.opts b/tests/mocha.opts
+deleted file mode 100644
+index c153cee..0000000
+--- a/tests/mocha.opts
++++ /dev/null
+@@ -1,4 +0,0 @@
+---recursive
+---reporter spec
+---ui bdd
+---timeout 3000
+diff --git a/tests/smoke.test.js b/tests/smoke.test.js
+deleted file mode 100644
+index 5188450..0000000
+--- a/tests/smoke.test.js
++++ /dev/null
+@@ -1,140 +0,0 @@
+-import sizzle from 'sizzle';
+-import {expect} from 'chai';
+-import SyntaxHighlighter, {registerBrush} from '..';
+-
+-registerBrush(require('brush-xml'));
+-registerBrush(require('./fixtures/test_brush_v4'));
+-registerBrush(require('./fixtures/html_test_brush_v4'));
+-
+-// Simulates `--compat`
+-window.SyntaxHighlighter = SyntaxHighlighter;
+-
+-require('./fixtures/test_brush_v3');
+-require('./fixtures/html_test_brush_v3');
+-
+-function expectSelectorToBePresent(element, selector, count = 1) {
+-  const el = sizzle(selector, element);
+-  expect(el.length).to.eql(count);
+-}
+-
+-function html2element(html) {
+-  const div = document.createElement('div');
+-  div.innerHTML = html;
+-  return div;
+-}
+-
+-function remove(el) {
+-  if(el.parentNode) el.parentNode.removeChild(el);
+-}
+-
+-describe('integration', function() {
+-  let highlighter;
+-  let pre;
+-
+-  function createHighlighter(html) {
+-    pre = html2element(html);
+-    document.body.appendChild(pre);
+-    SyntaxHighlighter.highlight();
+-    highlighter = sizzle('.syntaxhighlighter')[0];
+-  }
+-
+-  function itHasCommonElements() {
+-    describe('highlighted element', function() {
+-      it('exists', function() {
+-        expect(highlighter).to.be.ok;
+-      });
+-
+-      it('has gutter', function() {
+-        expectSelectorToBePresent(highlighter, 'td.gutter');
+-      });
+-
+-      it('has code', function() {
+-        expectSelectorToBePresent(highlighter, 'td.code');
+-      });
+-    });
+-  }
+-
+-  afterEach(function() {
+-    if (pre) remove(pre);
+-    if (highlighter) remove(highlighter);
+-
+-    pre = highlighter = null;
+-  });
+-
+-  function testElementDetection(brushName) {
+-    describe('element detection', function() {
+-      describe(`using '<pre class="brush: ${brushName}">'`, function() {
+-        beforeEach(() => createHighlighter(`<pre class="brush: ${brushName}">hello world</pre>`));
+-        itHasCommonElements();
+-      });
+-
+-      describe(`using '<script type="syntaxhighlighter" class="brush: ${brushName}">'`, function() {
+-        beforeEach(() => createHighlighter(`<script type="syntaxhighlighter" class="brush: ${brushName}">hello world</script>`));
+-        itHasCommonElements();
+-      });
+-
+-      describe(`using '<script type="text/syntaxhighlighter" class="brush: ${brushName}">'`, function() {
+-        beforeEach(() => createHighlighter(`<script type="text/syntaxhighlighter" class="brush: ${brushName}">hello world</script>`));
+-        itHasCommonElements();
+-      });
+-    });
+-  }
+-
+-  function testRegularBrush(brushName) {
+-    describe(`regular brush '<pre class="brush: ${brushName}">'`, function() {
+-      beforeEach(function() {
+-        createHighlighter(`
+-          <pre class="brush: ${brushName}">
+-            hello world
+-            how are things?
+-          </pre>
+-        `);
+-      });
+-
+-      itHasCommonElements();
+-
+-      describe('class names', function() {
+-        it('applies brush name', function() {
+-          expectSelectorToBePresent(highlighter, `td.code .line.number1 > code.${brushName}.keyword:contains(hello)`);
+-        });
+-      });
+-    });
+-  }
+-
+-  function testHtmlScriptBrush(brushName) {
+-    describe(`html-script brush '<pre class="brush: ${brushName}; html-script: true">'`, function() {
+-      beforeEach(function() {
+-        createHighlighter(`
+-          <pre class="brush: ${brushName}; html-script: true">
+-            world &lt;script>&lt;?= hello world ?>&lt;/script>
+-            how are you?
+-          </pre>
+-        `);
+-      });
+-
+-      itHasCommonElements();
+-
+-      describe('class names', function() {
+-        it('applies htmlscript class name', function() {
+-          expectSelectorToBePresent(highlighter, `td.code .line.number1 > code.htmlscript.keyword:contains(script)`, 2);
+-        });
+-
+-        it('applies brush class name', function() {
+-          expectSelectorToBePresent(highlighter, `td.code .line.number1 > code.${brushName}.keyword:contains(hello)`);
+-        });
+-      });
+-    });
+-  }
+-
+-  describe('v4 brushes', function () {
+-    testElementDetection('test_brush_v4');
+-    testRegularBrush('test_brush_v4');
+-    testHtmlScriptBrush('html_test_brush_v4')
+-  });
+-
+-  describe('v3 brushes', function () {
+-    testElementDetection('test_brush_v3');
+-    testRegularBrush('test_brush_v3');
+-    testHtmlScriptBrush('html_test_brush_v3')
+-  });
+-});
+diff --git a/tests/theme_tests.html b/tests/theme_tests.html
+new file mode 100644
+index 0000000..52428ac
+--- /dev/null
++++ b/tests/theme_tests.html
+@@ -0,0 +1,136 @@
++<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
++<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
++<head>
++	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
++	<title>SyntaxHighlighter Theme Tests</title>
++	<script type="text/javascript" src="/components/jquery/jquery.min.js"></script>
++	<script type="text/javascript" src="/components/qunit/qunit/qunit.js"></script>
++	<link type="text/css" rel="stylesheet" href="/components/qunit/qunit/qunit.css"/>
++</head>
++
++<body>
++
++<div id="output"></div>
++
++<style>
++body {
++	background: white;
++	font-family: Helvetica;
++}
++
++.test-wrap {
++	width: 100%;
++	height: 800px;
++	overflow: auto;
++	border: none;
++}
++</style>
++
++<script id="sample" type="text/plain">
++	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
++	<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
++	<head>
++		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
++		<title>SyntaxHighlighter Theme Tests</title>
++	</head>
++
++	<body>
++		&lt;script>
++		/**
++		 * Looks for a child or parent node which has specified classname.
++		 * Equivalent to jQuery's $(container).find(".className")
++		 * @param {Element} target Target element.
++		 * @param {String} search Class name or node name to look for.
++		 * @param {Boolean} reverse If set to true, will go up the node tree instead of down.
++		 * @return {Element} Returns found child or parent element on null.
++		 */
++		function findElement(target, search, reverse /* optional */)
++		{
++			if (target == null)
++				return null;
++
++			var nodes			= reverse != true ? target.childNodes : [ target.parentNode ],
++				propertyToFind	= { '#' : 'id', '.' : 'className' }[search.substr(0, 1)] || 'nodeName',
++				expectedValue,
++				found
++				;
++
++			// main return of the found node
++			if ((target[propertyToFind] || '').indexOf(expectedValue) != -1)
++				return target;
++
++			return found;
++		};
++		&lt;/script>
++
++	</body>
++	</html>
++</script>
++
++<script type="text/javascript">
++var themes = [
++		['#fff', 'Default'],
++		// ['#000', 'Django'],
++		// ['#fff', 'Eclipse'],
++		// ['#000', 'Emacs'],
++		// ['#000', 'FadeToGrey'],
++		// ['#000', 'MDUltra'],
++		// ['#000', 'Midnight'],
++		// ['#000', 'RDark']
++	];
++
++$(document).ready(function()
++{
++	var sample = $('#sample').text().replace(/</g, '&lt;');
++
++	$.each(themes, function(index)
++	{
++		var $iframe = $('<iframe class="test-wrap" src="about:blank" />'),
++			background = this[0],
++			themeName = this[1]
++			;
++
++		$('#output')
++			.append(''
++				+ '<h1>'
++					+ '<a href="#theme' + (index + 1) + '">next</a> '
++					+ '<a name="theme' + index + '">'
++						+ themeName
++					+ '</a>'
++				+ '</h1>'
++			)
++			.append($iframe)
++			;
++
++		$iframe.ready(function()
++		{
++			var doc = $iframe[0].contentDocument;
++			$iframe.css('background', background);
++
++			doc.write(''
++				+ '<scr' + 'ipt type="text/javascript" src="/components/xregexp/xregexp-all.js"></scr' + 'ipt>'
++				+ '<scr' + 'ipt type="text/javascript" src="/src/js/shCore.js"></scr' + 'ipt>'
++				+ '<scr' + 'ipt type="text/javascript" src="/src/js/shBrushXml.js"></scr' + 'ipt>'
++				+ '<scr' + 'ipt type="text/javascript" src="/src/js/shBrushJScript.js"></scr' + 'ipt>'
++				+ '<link type="text/css" rel="stylesheet" href="/pkg/styles/shCore' + themeName + '.css"/>'
++				+ '<pre type="syntaxhighlighter" class="brush: js; html-script: true; highlight: [5, 20]" title="This is SyntaxHighlighter theme ' + themeName + ' in action!">'
++					+ sample
++				+ '</pre>'
++				+ '<pre type="syntaxhighlighter" class="brush: js; html-script: true; collapse: true">'
++					+ sample
++				+ '</pre>'
++				+ '<scr' + 'ipt type="text/javascript">'
++					+ 'SyntaxHighlighter.highlight();'
++				+ '</scr' + 'ipt>'
++				);
++			doc.close();
++		});
++	});
++
++	$('#output a[name]:first').attr('name', 'top');
++	$('#output a[href]:last').attr('href', '#top').html('top');
++});
++</script>
++
++</body>
++</html>
+diff --git a/tests/unit/commonjs.test.js b/tests/unit/commonjs.test.js
+deleted file mode 100644
+index 9a54021..0000000
+--- a/tests/unit/commonjs.test.js
++++ /dev/null
+@@ -1,19 +0,0 @@
+-import {expect} from 'chai';
+-import Brush from '../fixtures/test_brush_v4';
+-
+-describe('unit/commonjs', () => {
+-  let html;
+-
+-  describe('using a brush', () => {
+-    let brush;
+-
+-    before(() => {
+-      brush = new Brush();
+-      html = brush.getHtml('hello foo bar world!', {gutter: false});
+-    });
+-
+-    it('returns html', () => expect(html).to.be.ok);
+-    it('renders content', () => expect(html).to.contain('<div class="line number1 index0 alt2"><code class="keyword">hello</code> <code class="plain">foo bar </code><code class="keyword">world</code><code class="plain">!</code></div>'));
+-    it('does not render gutter', () => expect(html).to.not.contain('class="gutter'));
+-  });
+-});
+diff --git a/tests/unit/dasherize.test.js b/tests/unit/dasherize.test.js
+deleted file mode 100644
+index 2ac4c23..0000000
+--- a/tests/unit/dasherize.test.js
++++ /dev/null
+@@ -1,13 +0,0 @@
+-import {expect} from 'chai';
+-import {string, object} from '../../src/dasherize';
+-
+-describe('unit/dasherize', () => {
+-  describe('string', () => {
+-    it('works', () => expect(string('helloFooBar')).to.equal('hello-foo-bar'));
+-    it('does not mess up the first character', () => expect(string('HelloFooBar')).to.equal('hello-foo-bar'));
+-  });
+-
+-  describe('object', () => {
+-    it('works', () => expect(object({'helloFooBar': 1})).to.eql({'hello-foo-bar': 1}));
+-  });
+-});

@@ -1,0 +1,42 @@
+{
+  "name": "powerbi-client-demo",
+  "version": "1.0.0",
+  "description": "Demonstration of embedding Power BI using JavaScript library.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/PowerBI-JavaScript.git"
+  },
+  "keywords": [
+    "microsoft",
+    "powerbi",
+    "embedded"
+  ],
+  "author": "Microsoft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/PowerBI-JavaScript/issues"
+  },
+  "homepage": "https://github.com/Microsoft/PowerBI-JavaScript/demo",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "fetch": "^1.0.0",
+    "es6-promise": "^3.2.2",
+    "bootstrap": "^3.3.6",
+    "jquery": "^3.1.0",
+    "powerbi-client": "^2.3.0",
+    "http-server": "^0.9.0",
+    "syntaxhighlighter": "4.0.1"
+  },
+  "devDependencies": {}
+}

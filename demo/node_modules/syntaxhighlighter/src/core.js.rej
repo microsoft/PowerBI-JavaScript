@@ -1,0 +1,16 @@
+***************
+*** 1144,1149 ****
+      code = code.replace(/\u00a0/g, " ");
+  
+  	// inject <textarea/> tag
+  	textarea.appendChild(document.createTextNode(code));
+  	container.appendChild(textarea);
+  
+--- 1144,1150 ----
+      code = code.replace(/\u00a0/g, " ");
+  
+  	// inject <textarea/> tag
++ 	textarea.readOnly = true;
+  	textarea.appendChild(document.createTextNode(code));
+  	container.appendChild(textarea);
+  
