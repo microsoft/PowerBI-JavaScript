@@ -17,7 +17,7 @@ See the [wiki](https://github.com/Microsoft/PowerBI-JavaScript/wiki) for more de
 See the [code docs](https://microsoft.github.io/PowerBI-JavaScript) for detailed information about classes, interfaces, types, etc.
 
 ## Demo
-See the [live demo](https://microsoft.github.io/PowerBI-JavaScript/demo) for sample application using the powerbi-client library in scenarios such as page navigation, applying filters, updating settings, and more.
+New [live demo](https://microsoft.github.io/PowerBI-JavaScript/demo) for sample application using the powerbi-client library in scenarios such as page navigation, applying filters, updating settings, and more.
 
 ## Installation
 
