@@ -3,7 +3,7 @@ $(function () {
 
   console.log('Scenario 5: Default Page and/or Filter');
 
-  var staticReportUrl = 'https://powerbiembedapi.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
+  var staticReportUrl = 'https://powerbi-embed-api.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
   var $defaultPageReportContainer = $('#reportdefaults');
   var defaultPageReport;
   var defaultPageName = 'ReportSection2';
@@ -21,6 +21,8 @@ $(function () {
       }
     ]);
 
+  var defaultFilters = [defaultFilter];
+  
   // Init
   fetch(staticReportUrl)
     .then(function (response) {
@@ -29,7 +31,7 @@ $(function () {
           .then(function (embedConfig) {
             var defaultsEmbedConfig = $.extend({}, embedConfig, {
               pageName: defaultPageName,
-              filter: defaultFilter.toJSON(),
+              filter: defaultFilters,
               settings: {
                 filterPaneEnabled: true,
                 navContentPaneEnabled: true

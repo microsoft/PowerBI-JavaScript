@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.6 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.0 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -57,13 +57,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(9);
+	var factories = __webpack_require__(10);
 	exports.factories = factories;
 	var models = __webpack_require__(5);
 	exports.models = models;
 	var report_1 = __webpack_require__(4);
 	exports.Report = report_1.Report;
-	var tile_1 = __webpack_require__(8);
+	var tile_1 = __webpack_require__(9);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
@@ -84,8 +84,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(4);
-	var dashboard_1 = __webpack_require__(7);
-	var tile_1 = __webpack_require__(8);
+	var create_1 = __webpack_require__(7);
+	var dashboard_1 = __webpack_require__(8);
+	var tile_1 = __webpack_require__(9);
 	var page_1 = __webpack_require__(6);
 	var utils = __webpack_require__(3);
 	/**
@@ -148,6 +149,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 	    /**
+	     * Creates new report
+	     * @param {HTMLElement} element
+	     * @param {embed.IEmbedConfiguration} [config={}]
+	     * @returns {embed.Embed}
+	     */
+	    Service.prototype.createReport = function (element, config) {
+	        config.type = 'create';
+	        var powerBiElement = element;
+	        var component = new create_1.Create(this, powerBiElement, config);
+	        powerBiElement.powerBiEmbed = component;
+	        this.addOrOverwriteEmbed(component, element);
+	        return component;
+	    };
+	    /**
 	     * TODO: Add a description here
 	     *
 	     * @param {HTMLElement} [container]
@@ -203,7 +218,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        var component = new Component(this, element, config);
 	        element.powerBiEmbed = component;
-	        this.embeds.push(component);
+	        this.addOrOverwriteEmbed(component, element);
 	        return component;
 	    };
 	    /**
@@ -225,6 +240,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * then we can call the embedNew function which would allow setting the proper embedUrl and construction of object based on the new type.
 	         */
 	        if (typeof config.type === "string" && config.type !== component.config.type) {
+	            /**
+	             * When loading report after create we want to use existing Iframe to optimize load period
+	             */
+	            if (config.type === "report" && component.config.type === "create") {
+	                var report = new report_1.Report(this, element, config, element.powerBiEmbed.iframe);
+	                report.load(config);
+	                element.powerBiEmbed = report;
+	                this.addOrOverwriteEmbed(component, element);
+	                return report;
+	            }
 	            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but the existing element contains an embed of type: " + this.config.type + " which does not match the new type: " + config.type);
 	        }
 	        component.load(config);
@@ -263,6 +288,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Service.prototype.find = function (uniqueId) {
 	        return utils.find(function (x) { return x.config.uniqueId === uniqueId; }, this.embeds);
 	    };
+	    Service.prototype.addOrOverwriteEmbed = function (component, element) {
+	        // remove embeds over the same div element.
+	        this.embeds = this.embeds.filter(function (embed) {
+	            return embed.element.id !== element.id;
+	        });
+	        this.embeds.push(component);
+	    };
 	    /**
 	     * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
 	     *
@@ -292,8 +324,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Service.prototype.handleEvent = function (event) {
 	        var embed = utils.find(function (embed) {
-	            return (embed.config.type === event.type
-	                && embed.config.uniqueId === event.id);
+	            return (embed.config.uniqueId === event.id);
 	        }, this.embeds);
 	        if (embed) {
 	            var value = event.value;
@@ -357,25 +388,74 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {HTMLElement} element
 	     * @param {IEmbedConfiguration} config
 	     */
-	    function Embed(service, element, config) {
-	        var _this = this;
+	    function Embed(service, element, config, iframe) {
 	        this.allowedEvents = [];
 	        Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
 	        this.eventHandlers = [];
 	        this.service = service;
 	        this.element = element;
-	        // TODO: Change when Object.assign is available.
-	        var settings = utils.assign({}, Embed.defaultSettings, config.settings);
-	        this.config = utils.assign({ settings: settings }, config);
-	        this.config.accessToken = this.getAccessToken(service.accessToken);
-	        this.config.embedUrl = this.getEmbedUrl();
-	        this.config.id = this.getId();
-	        this.config.uniqueId = this.getUniqueId();
-	        var iframeHtml = "<iframe style=\"width:100%;height:100%;\" src=\"" + this.config.embedUrl + "\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>";
-	        this.element.innerHTML = iframeHtml;
-	        this.iframe = this.element.childNodes[0];
-	        this.iframe.addEventListener('load', function () { return _this.load(_this.config); }, false);
+	        this.iframe = iframe;
+	        this.embeType = config.type.toLowerCase();
+	        this.populateConfig(config);
+	        if (this.embeType === 'create') {
+	            this.setIframe(false /*set EventListener to call create() on 'load' event*/);
+	        }
+	        else {
+	            this.setIframe(true /*set EventListener to call load() on 'load' event*/);
+	        }
 	    }
+	    /**
+	     * Sends createReport configuration data.
+	     *
+	     * ```javascript
+	     * createReport({
+	     *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
+	     *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+	     * ```
+	     *
+	     * @param {models.IReportCreateConfiguration} config
+	     * @returns {Promise<void>}
+	     */
+	    Embed.prototype.createReport = function (config) {
+	        var errors = this.validate(config);
+	        if (errors) {
+	            throw errors;
+	        }
+	        return this.service.hpm.post("/report/create", config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Saves Report.
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Embed.prototype.save = function () {
+	        return this.service.hpm.post('/report/save', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * SaveAs Report.
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Embed.prototype.saveAs = function (saveAsParameters) {
+	        return this.service.hpm.post('/report/saveAs', saveAsParameters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
 	    /**
 	     * Sends load configuration data.
 	     *
@@ -487,6 +567,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this.load(this.config);
 	    };
 	    /**
+	     * Set accessToken.
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Embed.prototype.setAccessToken = function (accessToken) {
+	        return this.service.hpm.post('/report/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
 	     * Gets an access token from the first available location: config, attribute, global.
 	     *
 	     * @private
@@ -499,6 +593,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw new Error("No access token was found for element. You must specify an access token directly on the element using attribute '" + Embed.accessTokenAttribute + "' or specify a global token at: powerbi.accessToken.");
 	        }
 	        return accessToken;
+	    };
+	    /**
+	     * Populate config for create and load
+	     *
+	     * @private
+	     * @param {IEmbedConfiguration}
+	     * @returns {void}
+	     */
+	    Embed.prototype.populateConfig = function (config) {
+	        // TODO: Change when Object.assign is available.
+	        var settings = utils.assign({}, Embed.defaultSettings, config.settings);
+	        this.config = utils.assign({ settings: settings }, config);
+	        this.config.uniqueId = this.getUniqueId();
+	        this.config.embedUrl = this.getEmbedUrl();
+	        if (this.embeType === 'create') {
+	            this.createConfig = {
+	                datasetId: config.datasetId || this.getId(),
+	                accessToken: this.getAccessToken(this.service.accessToken),
+	                settings: settings
+	            };
+	        }
+	        else {
+	            this.config.id = this.getId();
+	            this.config.accessToken = this.getAccessToken(this.service.accessToken);
+	        }
 	    };
 	    /**
 	     * Gets an embed url from the first available location: options, attribute.
@@ -552,7 +671,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var options = ['fullscreenElement', 'webkitFullscreenElement', 'mozFullscreenScreenElement', 'msFullscreenElement'];
 	        return options.some(function (option) { return document[option] === iframe; });
 	    };
-	    Embed.allowedEvents = ["loaded"];
+	    /**
+	     * Sets Iframe for embed
+	     */
+	    Embed.prototype.setIframe = function (isLoad) {
+	        var _this = this;
+	        if (!this.iframe) {
+	            var iframeHtml = "<iframe style=\"width:100%;height:100%;\" src=\"" + this.config.embedUrl + "\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>";
+	            this.element.innerHTML = iframeHtml;
+	            this.iframe = this.element.childNodes[0];
+	        }
+	        if (isLoad) {
+	            this.iframe.addEventListener('load', function () { return _this.load(_this.config); }, false);
+	        }
+	        else {
+	            this.iframe.addEventListener('load', function () { return _this.createReport(_this.createConfig); }, false);
+	        }
+	    };
+	    Embed.allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected"];
 	    Embed.accessTokenAttribute = 'powerbi-access-token';
 	    Embed.embedUrlAttribute = 'powerbi-embed-url';
 	    Embed.nameAttribute = 'powerbi-name';
@@ -711,7 +847,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {HTMLElement} element
 	     * @param {embed.IEmbedConfiguration} config
 	     */
-	    function Report(service, element, config) {
+	    function Report(service, element, config, iframe) {
 	        var filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
 	        var navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
 	        var settings = utils.assign({
@@ -719,7 +855,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            navContentPaneEnabled: navContentPaneEnabled
 	        }, config.settings);
 	        var configCopy = utils.assign({ settings: settings }, config);
-	        _super.call(this, service, element, configCopy);
+	        _super.call(this, service, element, configCopy, iframe);
 	        this.loadPath = "/report/load";
 	        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
 	    }
@@ -914,7 +1050,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Report.prototype.validate = function (config) {
 	        return models.validateReportLoad(config);
 	    };
-	    Report.allowedEvents = ["rendered", "dataSelected", "filtersApplied", "pageChanged", "error"];
+	    /**
+	     * Switch Report view mode.
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Report.prototype.switchMode = function (viewMode) {
+	        var url = '/report/switchMode/' + viewMode;
+	        return this.service.hpm.post(url, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	    * Refreshes data sources for the report.
+	    *
+	    * ```javascript
+	    * report.refresh();
+	    * ```
+	    */
+	    Report.prototype.refresh = function () {
+	        return this.service.hpm.post('/report/refresh', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    Report.allowedEvents = ["filtersApplied", "pageChanged"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
 	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
@@ -929,7 +1096,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v0.10.1 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v0.11.1 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -999,8 +1166,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.pageSchema = __webpack_require__(5);
 		exports.settingsSchema = __webpack_require__(6);
 		exports.basicFilterSchema = __webpack_require__(7);
+		exports.createReportSchema = __webpack_require__(8);
+		exports.saveAsParametersSchema = __webpack_require__(9);
 		/* tslint:enable:no-var-requires */
-		var jsen = __webpack_require__(8);
+		var jsen = __webpack_require__(10);
 		function normalizeError(error) {
 		    var message = error.message;
 		    if (!message) {
@@ -1039,6 +1208,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        advancedFilter: exports.advancedFilterSchema
 		    }
 		});
+		exports.validateCreateReport = validate(exports.createReportSchema);
 		exports.validateDashboardLoad = validate(exports.dashboardLoadSchema);
 		exports.validatePage = validate(exports.pageSchema);
 		exports.validateFilter = validate(exports.filterSchema, {
@@ -1053,6 +1223,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		    FilterType[FilterType["Unknown"] = 2] = "Unknown";
 		})(exports.FilterType || (exports.FilterType = {}));
 		var FilterType = exports.FilterType;
+		function isFilterKeyColumnsTarget(target) {
+		    return isColumn(target) && !!target.keys;
+		}
+		exports.isFilterKeyColumnsTarget = isFilterKeyColumnsTarget;
+		function isBasicFilterWithKeys(filter) {
+		    return getFilterType(filter) === FilterType.Basic && !!filter.keyValues;
+		}
+		exports.isBasicFilterWithKeys = isBasicFilterWithKeys;
 		function getFilterType(filter) {
 		    var basicFilter = filter;
 		    var advancedFilter = filter;
@@ -1105,8 +1283,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		        _super.call(this, target);
 		        this.operator = operator;
 		        this.schemaUrl = BasicFilter.schemaUrl;
-		        if (values.length === 0) {
-		            throw new Error("values must be a non-empty array. You passed: " + values);
+		        if (values.length === 0 && operator !== "All") {
+		            throw new Error("values must be a non-empty array unless your operator is \"All\".");
 		        }
 		        /**
 		         * Accept values as array instead of as individual arguments
@@ -1130,6 +1308,36 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return BasicFilter;
 		}(Filter));
 		exports.BasicFilter = BasicFilter;
+		var BasicFilterWithKeys = (function (_super) {
+		    __extends(BasicFilterWithKeys, _super);
+		    function BasicFilterWithKeys(target, operator, values, keyValues) {
+		        _super.call(this, target, operator, values);
+		        this.keyValues = keyValues;
+		        this.target = target;
+		        var numberOfKeys = target.keys ? target.keys.length : 0;
+		        if (numberOfKeys > 0 && !keyValues) {
+		            throw new Error("You shold pass the values to be filtered for each key. You passed: no values and " + numberOfKeys + " keys");
+		        }
+		        if (numberOfKeys === 0 && keyValues && keyValues.length > 0) {
+		            throw new Error("You passed key values but your target object doesn't contain the keys to be filtered");
+		        }
+		        for (var i = 0; i < this.keyValues.length; i++) {
+		            if (this.keyValues[i]) {
+		                var lengthOfArray = this.keyValues[i].length;
+		                if (lengthOfArray !== numberOfKeys) {
+		                    throw new Error("Each tuple of key values should contain a value for each of the keys. You passed: " + lengthOfArray + " values and " + numberOfKeys + " keys");
+		                }
+		            }
+		        }
+		    }
+		    BasicFilterWithKeys.prototype.toJSON = function () {
+		        var filter = _super.prototype.toJSON.call(this);
+		        filter.keyValues = this.keyValues;
+		        return filter;
+		    };
+		    return BasicFilterWithKeys;
+		}(BasicFilter));
+		exports.BasicFilterWithKeys = BasicFilterWithKeys;
 		var AdvancedFilter = (function (_super) {
 		    __extends(AdvancedFilter, _super);
 		    function AdvancedFilter(target, logicalOperator) {
@@ -1178,6 +1386,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return AdvancedFilter;
 		}(Filter));
 		exports.AdvancedFilter = AdvancedFilter;
+		(function (Permissions) {
+		    Permissions[Permissions["Read"] = 0] = "Read";
+		    Permissions[Permissions["ReadWrite"] = 1] = "ReadWrite";
+		    Permissions[Permissions["Copy"] = 2] = "Copy";
+		    Permissions[Permissions["Create"] = 4] = "Create";
+		    Permissions[Permissions["All"] = 7] = "All";
+		})(exports.Permissions || (exports.Permissions = {}));
+		var Permissions = exports.Permissions;
+		(function (ViewMode) {
+		    ViewMode[ViewMode["View"] = 0] = "View";
+		    ViewMode[ViewMode["Edit"] = 1] = "Edit";
+		})(exports.ViewMode || (exports.ViewMode = {}));
+		var ViewMode = exports.ViewMode;
+		exports.validateSaveAsParameters = validate(exports.saveAsParametersSchema);
 	
 	
 	/***/ },
@@ -1336,6 +1558,27 @@ return /******/ (function(modules) { // webpackBootstrap
 						]
 					},
 					"invalidMessage": "filters property is invalid"
+				},
+				"permissions": {
+					"type": "number",
+					"enum": [
+						0,
+						1,
+						2,
+						4,
+						7
+					],
+					"default": 0,
+					"invalidMessage": "permissions property is invalid"
+				},
+				"viewMode": {
+					"type": "number",
+					"enum": [
+						0,
+						1
+					],
+					"default": 0,
+					"invalidMessage": "viewMode property is invalid"
 				}
 			},
 			"required": [
@@ -1419,6 +1662,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					"messages": {
 						"type": "navContentPaneEnabled must be a boolean"
 					}
+				},
+				"useCustomSaveAsDialog": {
+					"type": "boolean",
+					"messages": {
+						"type": "useCustomSaveAsDialog must be a boolean"
+					}
 				}
 			}
 		};
@@ -1477,12 +1726,62 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/***/ },
 	/* 8 */
-	/***/ function(module, exports, __webpack_require__) {
+	/***/ function(module, exports) {
 	
-		module.exports = __webpack_require__(9);
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"accessToken": {
+					"type": "string",
+					"messages": {
+						"type": "accessToken must be a string",
+						"required": "accessToken is required"
+					}
+				},
+				"datasetId": {
+					"type": "string",
+					"messages": {
+						"type": "datasetId must be a string",
+						"required": "datasetId is required"
+					}
+				}
+			},
+			"required": [
+				"accessToken",
+				"datasetId"
+			]
+		};
 	
 	/***/ },
 	/* 9 */
+	/***/ function(module, exports) {
+	
+		module.exports = {
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"type": "object",
+			"properties": {
+				"name": {
+					"type": "string",
+					"messages": {
+						"type": "name must be a string",
+						"required": "name is required"
+					}
+				}
+			},
+			"required": [
+				"name"
+			]
+		};
+	
+	/***/ },
+	/* 10 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		module.exports = __webpack_require__(11);
+	
+	/***/ },
+	/* 11 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		'use strict';
@@ -1493,12 +1792,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		    INVALID_SCHEMA = 'jsen: invalid schema object',
 		    browser = typeof window === 'object' && !!window.navigator,   // jshint ignore: line
 		    regescape = new RegExp('/').source !== '/', // node v0.x does not properly escape '/'s in inline regex
-		    func = __webpack_require__(10),
-		    equal = __webpack_require__(11),
-		    unique = __webpack_require__(12),
-		    SchemaResolver = __webpack_require__(13),
-		    formats = __webpack_require__(21),
-		    ucs2length = __webpack_require__(22),
+		    func = __webpack_require__(12),
+		    equal = __webpack_require__(13),
+		    unique = __webpack_require__(14),
+		    SchemaResolver = __webpack_require__(15),
+		    formats = __webpack_require__(24),
+		    ucs2length = __webpack_require__(25),
 		    types = {},
 		    keywords = {};
 		
@@ -2581,7 +2880,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ },
-	/* 10 */
+	/* 12 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2652,7 +2951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	
 	/***/ },
-	/* 11 */
+	/* 13 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -2729,12 +3028,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports = equal;
 	
 	/***/ },
-	/* 12 */
+	/* 14 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		'use strict';
 		
-		var equal = __webpack_require__(11);
+		var equal = __webpack_require__(13);
 		
 		function findIndex(arr, value, comparator) {
 		    for (var i = 0, len = arr.length; i < len; i++) {
@@ -2755,13 +3054,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports.findIndex = findIndex;
 	
 	/***/ },
-	/* 13 */
+	/* 15 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		'use strict';
 		
-		var url = __webpack_require__(14),
-		    metaschema = __webpack_require__(20),
+		var url = __webpack_require__(16),
+		    metaschema = __webpack_require__(23),
 		    INVALID_SCHEMA_REFERENCE = 'jsen: invalid schema reference',
 		    DUPLICATE_SCHEMA_ID = 'jsen: duplicate schema id',
 		    CIRCULAR_SCHEMA_REFERENCE = 'jsen: circular schema reference';
@@ -3049,7 +3348,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports = SchemaResolver;
 	
 	/***/ },
-	/* 14 */
+	/* 16 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		// Copyright Joyent, Inc. and other Node contributors.
@@ -3073,7 +3372,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 		// USE OR OTHER DEALINGS IN THE SOFTWARE.
 		
-		var punycode = __webpack_require__(15);
+		'use strict';
+		
+		var punycode = __webpack_require__(17);
+		var util = __webpack_require__(19);
 		
 		exports.parse = urlParse;
 		exports.resolve = urlResolve;
@@ -3104,6 +3406,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		var protocolPattern = /^([a-z0-9.+-]+:)/i,
 		    portPattern = /:[0-9]*$/,
 		
+		    // Special case for a simple path URL
+		    simplePathPattern = /^(\/\/?(?!\/)[^\?\s]*)(\?[^\s]*)?$/,
+		
 		    // RFC 2396: characters reserved for delimiting URLs.
 		    // We actually just auto-escape these.
 		    delims = ['<', '>', '"', '`', ' ', '\r', '\n', '\t'],
@@ -3120,8 +3425,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		    nonHostChars = ['%', '/', '?', ';', '#'].concat(autoEscape),
 		    hostEndingChars = ['/', '?', '#'],
 		    hostnameMaxLen = 255,
-		    hostnamePartPattern = /^[a-z0-9A-Z_-]{0,63}$/,
-		    hostnamePartStart = /^([a-z0-9A-Z_-]{0,63})(.*)$/,
+		    hostnamePartPattern = /^[+a-z0-9A-Z_-]{0,63}$/,
+		    hostnamePartStart = /^([+a-z0-9A-Z_-]{0,63})(.*)$/,
 		    // protocols that can allow "unsafe" and "unwise" chars.
 		    unsafeProtocol = {
 		      'javascript': true,
@@ -3145,10 +3450,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		      'gopher:': true,
 		      'file:': true
 		    },
-		    querystring = __webpack_require__(17);
+		    querystring = __webpack_require__(20);
 		
 		function urlParse(url, parseQueryString, slashesDenoteHost) {
-		  if (url && isObject(url) && url instanceof Url) return url;
+		  if (url && util.isObject(url) && url instanceof Url) return url;
 		
 		  var u = new Url;
 		  u.parse(url, parseQueryString, slashesDenoteHost);
@@ -3156,15 +3461,48 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 		
 		Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
-		  if (!isString(url)) {
+		  if (!util.isString(url)) {
 		    throw new TypeError("Parameter 'url' must be a string, not " + typeof url);
 		  }
+		
+		  // Copy chrome, IE, opera backslash-handling behavior.
+		  // Back slashes before the query string get converted to forward slashes
+		  // See: https://code.google.com/p/chromium/issues/detail?id=25916
+		  var queryIndex = url.indexOf('?'),
+		      splitter =
+		          (queryIndex !== -1 && queryIndex < url.indexOf('#')) ? '?' : '#',
+		      uSplit = url.split(splitter),
+		      slashRegex = /\\/g;
+		  uSplit[0] = uSplit[0].replace(slashRegex, '/');
+		  url = uSplit.join(splitter);
 		
 		  var rest = url;
 		
 		  // trim before proceeding.
 		  // This is to support parse stuff like "  http://foo.com  \n"
 		  rest = rest.trim();
+		
+		  if (!slashesDenoteHost && url.split('#').length === 1) {
+		    // Try fast path regexp
+		    var simplePath = simplePathPattern.exec(rest);
+		    if (simplePath) {
+		      this.path = rest;
+		      this.href = rest;
+		      this.pathname = simplePath[1];
+		      if (simplePath[2]) {
+		        this.search = simplePath[2];
+		        if (parseQueryString) {
+		          this.query = querystring.parse(this.search.substr(1));
+		        } else {
+		          this.query = this.search.substr(1);
+		        }
+		      } else if (parseQueryString) {
+		        this.search = '';
+		        this.query = {};
+		      }
+		      return this;
+		    }
+		  }
 		
 		  var proto = protocolPattern.exec(rest);
 		  if (proto) {
@@ -3303,18 +3641,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		    }
 		
 		    if (!ipv6Hostname) {
-		      // IDNA Support: Returns a puny coded representation of "domain".
-		      // It only converts the part of the domain name that
-		      // has non ASCII characters. I.e. it dosent matter if
-		      // you call it with a domain that already is in ASCII.
-		      var domainArray = this.hostname.split('.');
-		      var newOut = [];
-		      for (var i = 0; i < domainArray.length; ++i) {
-		        var s = domainArray[i];
-		        newOut.push(s.match(/[^A-Za-z0-9_-]/) ?
-		            'xn--' + punycode.encode(s) : s);
-		      }
-		      this.hostname = newOut.join('.');
+		      // IDNA Support: Returns a punycoded representation of "domain".
+		      // It only converts parts of the domain name that
+		      // have non-ASCII characters, i.e. it doesn't matter if
+		      // you call it with a domain that already is ASCII-only.
+		      this.hostname = punycode.toASCII(this.hostname);
 		    }
 		
 		    var p = this.port ? ':' + this.port : '';
@@ -3341,6 +3672,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		    // need to be.
 		    for (var i = 0, l = autoEscape.length; i < l; i++) {
 		      var ae = autoEscape[i];
+		      if (rest.indexOf(ae) === -1)
+		        continue;
 		      var esc = encodeURIComponent(ae);
 		      if (esc === ae) {
 		        esc = escape(ae);
@@ -3394,7 +3727,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		  // If it's an obj, this is a no-op.
 		  // this way, you can call url_format() on strings
 		  // to clean up potentially wonky urls.
-		  if (isString(obj)) obj = urlParse(obj);
+		  if (util.isString(obj)) obj = urlParse(obj);
 		  if (!(obj instanceof Url)) return Url.prototype.format.call(obj);
 		  return obj.format();
 		}
@@ -3425,7 +3758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		  }
 		
 		  if (this.query &&
-		      isObject(this.query) &&
+		      util.isObject(this.query) &&
 		      Object.keys(this.query).length) {
 		    query = querystring.stringify(this.query);
 		  }
@@ -3469,16 +3802,18 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 		
 		Url.prototype.resolveObject = function(relative) {
-		  if (isString(relative)) {
+		  if (util.isString(relative)) {
 		    var rel = new Url();
 		    rel.parse(relative, false, true);
 		    relative = rel;
 		  }
 		
 		  var result = new Url();
-		  Object.keys(this).forEach(function(k) {
-		    result[k] = this[k];
-		  }, this);
+		  var tkeys = Object.keys(this);
+		  for (var tk = 0; tk < tkeys.length; tk++) {
+		    var tkey = tkeys[tk];
+		    result[tkey] = this[tkey];
+		  }
 		
 		  // hash is always overridden, no matter what.
 		  // even href="" will remove it.
@@ -3493,10 +3828,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		  // hrefs like //foo/bar always cut to the protocol.
 		  if (relative.slashes && !relative.protocol) {
 		    // take everything except the protocol from relative
-		    Object.keys(relative).forEach(function(k) {
-		      if (k !== 'protocol')
-		        result[k] = relative[k];
-		    });
+		    var rkeys = Object.keys(relative);
+		    for (var rk = 0; rk < rkeys.length; rk++) {
+		      var rkey = rkeys[rk];
+		      if (rkey !== 'protocol')
+		        result[rkey] = relative[rkey];
+		    }
 		
 		    //urlParse appends trailing / to urls like http://www.example.com
 		    if (slashedProtocol[result.protocol] &&
@@ -3518,9 +3855,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		    // because that's known to be hostless.
 		    // anything else is assumed to be absolute.
 		    if (!slashedProtocol[relative.protocol]) {
-		      Object.keys(relative).forEach(function(k) {
+		      var keys = Object.keys(relative);
+		      for (var v = 0; v < keys.length; v++) {
+		        var k = keys[v];
 		        result[k] = relative[k];
-		      });
+		      }
 		      result.href = result.format();
 		      return result;
 		    }
@@ -3609,14 +3948,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		    srcPath = srcPath.concat(relPath);
 		    result.search = relative.search;
 		    result.query = relative.query;
-		  } else if (!isNullOrUndefined(relative.search)) {
+		  } else if (!util.isNullOrUndefined(relative.search)) {
 		    // just pull out the search.
 		    // like href='?foo'.
 		    // Put this after the other two cases because it simplifies the booleans
 		    if (psychotic) {
 		      result.hostname = result.host = srcPath.shift();
 		      //occationaly the auth can get stuck only in host
-		      //this especialy happens in cases like
+		      //this especially happens in cases like
 		      //url.resolveObject('mailto:local1@domain1', 'local2@domain2')
 		      var authInHost = result.host && result.host.indexOf('@') > 0 ?
 		                       result.host.split('@') : false;
@@ -3628,7 +3967,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    result.search = relative.search;
 		    result.query = relative.query;
 		    //to support http.request
-		    if (!isNull(result.pathname) || !isNull(result.search)) {
+		    if (!util.isNull(result.pathname) || !util.isNull(result.search)) {
 		      result.path = (result.pathname ? result.pathname : '') +
 		                    (result.search ? result.search : '');
 		    }
@@ -3655,15 +3994,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		  // then it must NOT get a trailing slash.
 		  var last = srcPath.slice(-1)[0];
 		  var hasTrailingSlash = (
-		      (result.host || relative.host) && (last === '.' || last === '..') ||
-		      last === '');
+		      (result.host || relative.host || srcPath.length > 1) &&
+		      (last === '.' || last === '..') || last === '');
 		
 		  // strip single dots, resolve double dots to parent dir
 		  // if the path tries to go above the root, `up` ends up > 0
 		  var up = 0;
 		  for (var i = srcPath.length; i >= 0; i--) {
 		    last = srcPath[i];
-		    if (last == '.') {
+		    if (last === '.') {
 		      srcPath.splice(i, 1);
 		    } else if (last === '..') {
 		      srcPath.splice(i, 1);
@@ -3698,7 +4037,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    result.hostname = result.host = isAbsolute ? '' :
 		                                    srcPath.length ? srcPath.shift() : '';
 		    //occationaly the auth can get stuck only in host
-		    //this especialy happens in cases like
+		    //this especially happens in cases like
 		    //url.resolveObject('mailto:local1@domain1', 'local2@domain2')
 		    var authInHost = result.host && result.host.indexOf('@') > 0 ?
 		                     result.host.split('@') : false;
@@ -3722,7 +4061,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		  }
 		
 		  //to support request.http
-		  if (!isNull(result.pathname) || !isNull(result.search)) {
+		  if (!util.isNull(result.pathname) || !util.isNull(result.search)) {
 		    result.path = (result.pathname ? result.pathname : '') +
 		                  (result.search ? result.search : '');
 		  }
@@ -3744,25 +4083,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		  }
 		  if (host) this.hostname = host;
 		};
-		
-		function isString(arg) {
-		  return typeof arg === "string";
-		}
-		
-		function isObject(arg) {
-		  return typeof arg === 'object' && arg !== null;
-		}
-		
-		function isNull(arg) {
-		  return arg === null;
-		}
-		function isNullOrUndefined(arg) {
-		  return  arg == null;
-		}
 	
 	
 	/***/ },
-	/* 15 */
+	/* 17 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/punycode v1.3.2 by @mathias */
@@ -4294,10 +4618,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		
 		}(this));
 		
-		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)(module), (function() { return this; }())))
+		/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module), (function() { return this; }())))
 	
 	/***/ },
-	/* 16 */
+	/* 18 */
 	/***/ function(module, exports) {
 	
 		module.exports = function(module) {
@@ -4313,17 +4637,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ },
-	/* 17 */
+	/* 19 */
+	/***/ function(module, exports) {
+	
+		'use strict';
+		
+		module.exports = {
+		  isString: function(arg) {
+		    return typeof(arg) === 'string';
+		  },
+		  isObject: function(arg) {
+		    return typeof(arg) === 'object' && arg !== null;
+		  },
+		  isNull: function(arg) {
+		    return arg === null;
+		  },
+		  isNullOrUndefined: function(arg) {
+		    return arg == null;
+		  }
+		};
+	
+	
+	/***/ },
+	/* 20 */
 	/***/ function(module, exports, __webpack_require__) {
 	
 		'use strict';
 		
-		exports.decode = exports.parse = __webpack_require__(18);
-		exports.encode = exports.stringify = __webpack_require__(19);
+		exports.decode = exports.parse = __webpack_require__(21);
+		exports.encode = exports.stringify = __webpack_require__(22);
 	
 	
 	/***/ },
-	/* 18 */
+	/* 21 */
 	/***/ function(module, exports) {
 	
 		// Copyright Joyent, Inc. and other Node contributors.
@@ -4409,7 +4755,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ },
-	/* 19 */
+	/* 22 */
 	/***/ function(module, exports) {
 	
 		// Copyright Joyent, Inc. and other Node contributors.
@@ -4479,7 +4825,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ },
-	/* 20 */
+	/* 23 */
 	/***/ function(module, exports) {
 	
 		module.exports = {
@@ -4705,7 +5051,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		};
 	
 	/***/ },
-	/* 21 */
+	/* 24 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -4729,7 +5075,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports = formats;
 	
 	/***/ },
-	/* 22 */
+	/* 25 */
 	/***/ function(module, exports) {
 	
 		'use strict';
@@ -4870,6 +5216,64 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var models = __webpack_require__(5);
+	var embed = __webpack_require__(2);
+	var Create = (function (_super) {
+	    __extends(Create, _super);
+	    function Create(service, element, config) {
+	        _super.call(this, service, element, config);
+	    }
+	    /**
+	     * Gets the dataset ID from the first available location: createConfig or embed url.
+	     *
+	     * @returns {string}
+	     */
+	    Create.prototype.getId = function () {
+	        var datasetId = (this.createConfig && this.createConfig.datasetId) ? this.createConfig.datasetId : Create.findIdFromEmbedUrl(this.config.embedUrl);
+	        if (typeof datasetId !== 'string' || datasetId.length === 0) {
+	            throw new Error('Dataset id is required, but it was not found. You must provide an id either as part of embed configuration.');
+	        }
+	        return datasetId;
+	    };
+	    /**
+	     * Validate create report configuration.
+	     */
+	    Create.prototype.validate = function (config) {
+	        return models.validateCreateReport(config);
+	    };
+	    /**
+	     * Adds the ability to get datasetId from url.
+	     * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
+	     *
+	     * By extracting the ID we can ensure that the ID is always explicitly provided as part of the create configuration.
+	     *
+	     * @static
+	     * @param {string} url
+	     * @returns {string}
+	     */
+	    Create.findIdFromEmbedUrl = function (url) {
+	        var datasetIdRegEx = /datasetId="?([^&]+)"?/;
+	        var datasetIdMatch = url.match(datasetIdRegEx);
+	        var datasetId;
+	        if (datasetIdMatch) {
+	            datasetId = datasetIdMatch[1];
+	        }
+	        return datasetId;
+	    };
+	    return Create;
+	}(embed.Embed));
+	exports.Create = Create;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
 	var embed = __webpack_require__(2);
 	var models = __webpack_require__(5);
 	/**
@@ -4950,7 +5354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -4992,13 +5396,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config_1 = __webpack_require__(10);
-	var wpmp = __webpack_require__(11);
-	var hpm = __webpack_require__(12);
-	var router = __webpack_require__(13);
+	var config_1 = __webpack_require__(11);
+	var wpmp = __webpack_require__(12);
+	var hpm = __webpack_require__(13);
+	var router = __webpack_require__(14);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -5025,11 +5429,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	var config = {
-	    version: '2.2.6',
+	    version: '2.3.0',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -5037,7 +5441,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
@@ -5337,7 +5741,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -5521,7 +5925,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */

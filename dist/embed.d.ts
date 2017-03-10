@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.6 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.0 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as models from 'powerbi-models';
 declare global  {
@@ -27,6 +27,9 @@ export interface IEmbedConfiguration {
     pageName?: string;
     filters?: models.IFilter[];
     pageView?: models.PageView;
+    datasetId?: string;
+    permissions?: models.Permissions;
+    viewMode?: models.ViewMode;
 }
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
     uniqueId: string;
@@ -84,9 +87,19 @@ export declare abstract class Embed {
      */
     config: IInternalEmbedConfiguration;
     /**
+     * Gets or sets the configuration settings for creating report.
+     *
+     * @type {models.IReportCreateConfiguration}
+     */
+    createConfig: models.IReportCreateConfiguration;
+    /**
      * Url used in the load request.
      */
     loadPath: string;
+    /**
+     * Type of embed
+     */
+    embeType: string;
     /**
      * Creates an instance of Embed.
      *
@@ -97,7 +110,32 @@ export declare abstract class Embed {
      * @param {HTMLElement} element
      * @param {IEmbedConfiguration} config
      */
-    constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration);
+    constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration, iframe?: HTMLIFrameElement);
+    /**
+     * Sends createReport configuration data.
+     *
+     * ```javascript
+     * createReport({
+     *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
+     *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+     * ```
+     *
+     * @param {models.IReportCreateConfiguration} config
+     * @returns {Promise<void>}
+     */
+    createReport(config: models.IReportCreateConfiguration): Promise<void>;
+    /**
+     * Saves Report.
+     *
+     * @returns {Promise<void>}
+     */
+    save(): Promise<void>;
+    /**
+     * SaveAs Report.
+     *
+     * @returns {Promise<void>}
+     */
+    saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void>;
     /**
      * Sends load configuration data.
      *
@@ -169,6 +207,12 @@ export declare abstract class Embed {
      */
     reload(): Promise<void>;
     /**
+     * Set accessToken.
+     *
+     * @returns {Promise<void>}
+     */
+    setAccessToken(accessToken: string): Promise<void>;
+    /**
      * Gets an access token from the first available location: config, attribute, global.
      *
      * @private
@@ -176,6 +220,14 @@ export declare abstract class Embed {
      * @returns {string}
      */
     private getAccessToken(globalAccessToken);
+    /**
+     * Populate config for create and load
+     *
+     * @private
+     * @param {IEmbedConfiguration}
+     * @returns {void}
+     */
+    private populateConfig(config);
     /**
      * Gets an embed url from the first available location: options, attribute.
      *
@@ -216,7 +268,11 @@ export declare abstract class Embed {
      */
     private isFullscreen(iframe);
     /**
-     * Validate load configuration.
+     * Validate load and create configuration.
      */
-    abstract validate(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration): models.IError[];
+    abstract validate(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration | models.IReportCreateConfiguration): models.IError[];
+    /**
+     * Sets Iframe for embed
+     */
+    private setIframe(isLoad);
 }

@@ -3,7 +3,7 @@ $(function () {
 
   console.log('Scenario 4: Custom Filter Pane');
 
-  var reportUrl = 'https://powerbiembedapi.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
+  var reportUrl = 'https://powerbi-embed-api.azurewebsites.net/api/reports/c52af8ab-0468-4165-92af-dc39858d66ad';
   var $customFilterPaneContainer = $('#reportcustomfilter');
   var customFilterPaneReport;
   var customFilterPaneReportPages;

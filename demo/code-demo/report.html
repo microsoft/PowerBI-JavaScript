@@ -23,10 +23,13 @@ $(document).ready(function() {
     $("#authorize-step-wrapper").load("step_authorize.html");
 
     LoadLogWindow("#logWindow");
+    
+    var modeUrlParam = GetParameterByName("mode");
+    var mode = modeUrlParam ? modeUrlParam : "view";
 
     if (GetParameterByName("embedUrl") || GetParameterByName("embedId") || GetParameterByName("accessToken"))
     {
-        OpenEmbedStep();
+        OpenEmbedStep(mode);
     }
     else
     {

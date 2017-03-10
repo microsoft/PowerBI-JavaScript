@@ -1,7 +1,10 @@
+body {
+    min-width: 300px;
+}
 
 header
 {
-    padding: 20px 50px;
+    padding: 20px 40px;
 }
 
 .logo-text-span {
@@ -14,7 +17,16 @@ header
 #mainContent {
     position: relative;
     color: #404040;
+    /* margin: 15px 30px; */
+    float: left;
+    width: 100%;
+}
+
+.content {
+    position: relative;
+    color: #404040;
     margin: 15px 30px;
+    height: 100%;
 }
 
 #settings {
@@ -48,10 +60,28 @@ header
     float: left;
 }
 
+.topPanel {
+    margin-bottom: 10px;
+}
+
 .bottomPanel {
     width: 100%;
-    margin-top: 10px;
+    margin-bottom: 10px;
     max-width: 100%;
+}
+
+#steps-nav-bar {
+    width: 100%;
+    font-size: 90%;
+    border-bottom: 1px solid #E5E5E5;
+    margin-bottom: 20px;
+    padding-right: 0;
+    margin-right: 0;
+}
+
+#steps-ul li {
+    width: 32%;
+    display: inline-block;
 }
 
 @media screen and (max-width: 320px) {
@@ -97,6 +127,16 @@ header
     }
 }
 
+@media screen and (max-width: 500px) {
+    .top-ul li {
+        float: left;
+        margin-right: 15px;
+        text-align: center;
+        line-height: 22px;
+        font-size: 13px;
+    }
+}
+
 @media screen and (min-width: 321px) {
     header
     {
@@ -137,13 +177,13 @@ header
 
     #embedArea {
         padding-left: 0px;
-    }
+    }   
 }
 
 @media screen and (min-width: 551px) {
     header
     {
-        padding: 15px 30px;
+        padding: 15px 10px;
     }
 
     .logo-text-span {
@@ -183,45 +223,10 @@ header
     }
 }
 
-@media screen and (min-width: 551px) {
+@media screen and (min-width: 861px) and (max-width: 1023px) {
     header
     {
-        padding: 20px 30px;
-    }
-
-    .logo-text-span {
-        font-size: 130%;
-        line-height: 36px;
-    }
-
-    #embedCodeDiv {
-        width: 100%;
-        margin-bottom: 30px;
-    }
-
-    #logWindow {
-        width: 100%;
-    }
-
-    #settings {
-        width: 410px;
-        float: left;
-    }
-
-    #reportContainer {
-        width: 100%;
-        height: 360px;
-    }
-
-    #embedArea {
-        padding-left: 0px;
-    }
-}
-
-@media screen and (min-width: 861px) {
-    header
-    {
-        padding: 20px 100px;
+        padding: 20px 40px;
     }
 
     .logo-text-span {
@@ -256,110 +261,70 @@ header
 @media screen and (min-width: 1024px) {
     header
     {
-        padding: 20px 100px;
+        padding: 20px 40px;
     }
 
     .logo-text-span {
         font-size: 28px;
     }
 
+    #mainContent {
+        width: 90%;
+        margin-left: 0.8%;
+    }
+
     #embedCodeDiv {
-        width: 36%;
+        width: 34%;
         font-size: 90%;
-        margin-right: 2%;
+        margin-right: 1%;
     }
 
     #logWindow {
-        width: 36%;
+        width: 34%;
     }
 
     #settings {
         float: left;
-        width: 25%;
+        width: 30%;
         margin-right: 1%;
+    }
+
+    #operations-ul li {
+        margin: 0px 2px;
     }
 
     #reportContainer {
         width: 100%;
         height: 380px;
     }
-
-    #embedArea {
-        padding-left: 0px;
-    }
-
+    
     .bottomPanel {
         margin-left: 0;
         width: 100%;
     }
+
+    #steps-nav-bar {
+        width: 9%;
+        font-size: 90%;
+        padding-right: 0.8%;
+        border-right: 1px solid #E5E5E5;
+        border-bottom: none;
+        margin-bottom: 0px;
+    }
+
+    #steps-ul li {
+        width: 100%;
+        display: block;
+    }
 }
 
 @media screen and (min-width: 1280px) {
-    header
-    {
-        padding: 20px 100px;
-    }
-
     .logo-text-span {
         font-size: 28px;
     }
 
-    #embedCodeDiv {
-        width: 390px;
-        margin-right: 20px;
-    }
-
-    #logWindow {
-        width: 390px;
-    }
-
-    #mainContent {
-        margin: 15px 80px;
-    }
-
-    #embedArea {
-        padding-left: 0px;
-        width: 1100px;
-    }
-    
-    .bottomPanel {
-        max-width: 100%;
-        margin-left: 0px;
-    }
-
-    #settings {
-        float: left;
-        width: 280px;
-        margin-right: 20px;
-    }
-}
-
-@media screen and (min-width: 1420px) {
-    header
-    {
-        padding: 20px 100px;
-    }
-
-    .logo-text-span {
-        font-size: 28px;
-    }
-
-    #embedCodeDiv {
-        width: 450px;
-        margin-right: 20px;
-    }
-
-    #logWindow {
-        width: 450px;
-    }
-
-    #mainContent {
-        margin: 15px 80px;
-    }
-
-    #embedArea {
-        padding-left: 0px;
-        width: 1220px;
+    .content {
+        margin: 15px 20px;
     }
 
     .bottomPanel {
@@ -367,66 +332,25 @@ header
         margin-left: 0px;
     }
 
-    #settings {
-        float: left;
-        width: 280px;
-        margin-right: 20px;
+    .steps-ul li {
+        font-size: 17px;
     }
 }
+
 
 @media screen and (min-width: 1600px) {
-    header
-    {
-        padding: 20px 100px;
-    }
-
     .logo-text-span {
         font-size: 28px;
     }
 
-    #embedCodeDiv {
-        width: 530px;
-    }
-
-    #logWindow {
-        width: 530px;
-    }
-
-    #mainContent {
-        margin: 15px 100px;
-    }
-
-    #embedArea {
-        padding-left: 0px;
-        width: 1380px;
+    .content {
+        margin: 15px 40px;
     }
 }
 
 @media screen and (min-width: 1800px) {
-    header
-    {
-        padding: 20px 100px;
-    }
-
     .logo-text-span {
         font-size: 28px;
-    }
-
-    #embedCodeDiv {
-        width: 600px;
-    }
-
-    #logWindow {
-        width: 600px;
-    }
-
-    #mainContent {
-        margin: 15px 100px;
-    }
-
-    #embedArea {
-        padding-left: 0px;
-        width: 1520px;
     }
 
     #reportContainer {

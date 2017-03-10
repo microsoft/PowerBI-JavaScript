@@ -19,7 +19,13 @@ export interface IApp {
   validateFilter(filter: models.IFilter): Promise<models.IError[]>;
   // Other
   print(): Promise<void>;
+  refreshData(): Promise<void>;
   exportData(): Promise<void>;
+  validateCreateReport(config: models.IReportCreateConfiguration): Promise<models.IError[]>;
+  switchMode(): Promise<void>;
+  save(): Promise<void>;
+  saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void>;
+  setAccessToken(accessToken: string): Promise<void>;
 }
 
 export const mockAppSpyObj = {
@@ -41,7 +47,13 @@ export const mockAppSpyObj = {
   validateFilter: jasmine.createSpy("validateFilter").and.callFake(models.validateFilter),
   // Other
   print: jasmine.createSpy("print").and.returnValue(Promise.resolve(null)),
+  refreshData: jasmine.createSpy("refreshData").and.returnValue(Promise.resolve(null)),
   exportData: jasmine.createSpy("exportData").and.returnValue(Promise.resolve(null)),
+  validateCreateReport: jasmine.createSpy("validateCreateReport").and.callFake(models.validateCreateReport),
+  switchMode: jasmine.createSpy("switchMode").and.returnValue(Promise.resolve(null)),
+  save: jasmine.createSpy("save").and.returnValue(Promise.resolve(null)),
+  saveAs: jasmine.createSpy("saveAs").and.returnValue(Promise.resolve(null)),
+  setAccessToken: jasmine.createSpy("setAccessToken").and.returnValue(Promise.resolve(null)),
 
   reset() {
     mockAppSpyObj.dashboardLoad.calls.reset();
@@ -57,7 +69,13 @@ export const mockAppSpyObj = {
     mockAppSpyObj.setFilters.calls.reset();
     mockAppSpyObj.validateFilter.calls.reset();
     mockAppSpyObj.print.calls.reset();
+    mockAppSpyObj.refreshData.calls.reset();
     mockAppSpyObj.exportData.calls.reset();
+    mockAppSpyObj.validateCreateReport.calls.reset();
+    mockAppSpyObj.switchMode.calls.reset();
+    mockAppSpyObj.save.calls.reset();
+    mockAppSpyObj.saveAs.calls.reset();
+    mockAppSpyObj.setAccessToken.calls.reset();
   }
 };
 

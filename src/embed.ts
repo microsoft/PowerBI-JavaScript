@@ -39,6 +39,9 @@ export interface IEmbedConfiguration {
   pageName?: string;
   filters?: models.IFilter[];
   pageView?: models.PageView;
+  datasetId?: string;
+  permissions?: models.Permissions;
+  viewMode?: models.ViewMode;
 }
 
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
@@ -60,7 +63,7 @@ export interface IInternalEventHandler<T> {
  * @class Embed
  */
 export abstract class Embed {
-  static allowedEvents = ["loaded"];
+  static allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected"];
   static accessTokenAttribute = 'powerbi-access-token';
   static embedUrlAttribute = 'powerbi-embed-url';
   static nameAttribute = 'powerbi-name';
@@ -109,9 +112,21 @@ export abstract class Embed {
   config: IInternalEmbedConfiguration;
 
   /**
+   * Gets or sets the configuration settings for creating report.
+   * 
+   * @type {models.IReportCreateConfiguration}
+   */
+  createConfig: models.IReportCreateConfiguration;
+
+  /**
    * Url used in the load request.
    */
   loadPath: string;
+
+  /**
+   * Type of embed
+   */
+  embeType: string;
 
   /**
    * Creates an instance of Embed.
@@ -123,25 +138,78 @@ export abstract class Embed {
    * @param {HTMLElement} element
    * @param {IEmbedConfiguration} config
    */
-  constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration) {
+  constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration, iframe?: HTMLIFrameElement) {
     Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
     this.eventHandlers = [];
     this.service = service;
     this.element = element;
+    this.iframe = iframe;
+    this.embeType = config.type.toLowerCase();
 
-    // TODO: Change when Object.assign is available.
-    const settings = utils.assign({}, Embed.defaultSettings, config.settings);
-    this.config = utils.assign({ settings }, config);
-    this.config.accessToken = this.getAccessToken(service.accessToken);
-    this.config.embedUrl = this.getEmbedUrl();
-    this.config.id = this.getId();
-    this.config.uniqueId = this.getUniqueId();
+    this.populateConfig(config);
+    
+    if(this.embeType === 'create'){
+      this.setIframe(false/*set EventListener to call create() on 'load' event*/);
+    } else {
+      this.setIframe(true/*set EventListener to call load() on 'load' event*/);
+    }
+  }
 
-    const iframeHtml = `<iframe style="width:100%;height:100%;" src="${this.config.embedUrl}" scrolling="no" allowfullscreen="true"></iframe>`;
+  /**
+   * Sends createReport configuration data.
+   * 
+   * ```javascript
+   * createReport({
+   *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
+   *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+   * ```
+   * 
+   * @param {models.IReportCreateConfiguration} config
+   * @returns {Promise<void>}
+   */
+  createReport(config: models.IReportCreateConfiguration): Promise<void> {
+    const errors = this.validate(config);
+    if (errors) {
+      throw errors;
+    }
+    
+    return this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      },
+      response => {
+        throw response.body;
+      });
+  }
 
-    this.element.innerHTML = iframeHtml;
-    this.iframe = <HTMLIFrameElement>this.element.childNodes[0];
-    this.iframe.addEventListener('load', () => this.load(this.config), false);
+  /**
+   * Saves Report.
+   * 
+   * @returns {Promise<void>}
+   */
+  save(): Promise<void> {
+    return this.service.hpm.post<models.IError[]>('/report/save', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
+   * SaveAs Report.
+   * 
+   * @returns {Promise<void>}
+   */
+  saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void> {
+    return this.service.hpm.post<models.IError[]>('/report/saveAs', saveAsParameters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
   }
 
   /**
@@ -260,7 +328,22 @@ export abstract class Embed {
   reload(): Promise<void> {
     return this.load(this.config);
   }
-
+  
+  /**
+   * Set accessToken.
+   * 
+   * @returns {Promise<void>}
+   */
+  setAccessToken(accessToken: string): Promise<void> {
+    return this.service.hpm.post<models.IError[]>('/report/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
+  }
+  
   /**
    * Gets an access token from the first available location: config, attribute, global.
    * 
@@ -277,6 +360,33 @@ export abstract class Embed {
 
     return accessToken;
   }
+
+  /**
+   * Populate config for create and load
+   * 
+   * @private
+   * @param {IEmbedConfiguration}
+   * @returns {void}
+   */
+  private populateConfig(config: IEmbedConfiguration): void {
+      // TODO: Change when Object.assign is available.
+      const settings = utils.assign({}, Embed.defaultSettings, config.settings);
+      this.config = utils.assign({ settings }, config);
+      this.config.uniqueId = this.getUniqueId();
+      this.config.embedUrl = this.getEmbedUrl();
+
+      if(this.embeType === 'create') {
+        this.createConfig = {
+          datasetId: config.datasetId || this.getId(),
+          accessToken: this.getAccessToken(this.service.accessToken),
+          settings: settings
+        }
+      } else {
+        this.config.id = this.getId();
+        this.config.accessToken = this.getAccessToken(this.service.accessToken);
+      }  
+  }
+
 
   /**
    * Gets an embed url from the first available location: options, attribute.
@@ -348,7 +458,24 @@ export abstract class Embed {
   }
   
   /**
-   * Validate load configuration.
+   * Validate load and create configuration.
    */
-  abstract validate(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration): models.IError[];
+  abstract validate(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration | models.IReportCreateConfiguration): models.IError[];
+
+  /**
+   * Sets Iframe for embed
+   */
+  private setIframe(isLoad: boolean): void {
+    if(!this.iframe) {
+      const iframeHtml = `<iframe style="width:100%;height:100%;" src="${this.config.embedUrl}" scrolling="no" allowfullscreen="true"></iframe>`;
+      this.element.innerHTML = iframeHtml;
+      this.iframe = <HTMLIFrameElement>this.element.childNodes[0];
+    }
+
+    if(isLoad){
+      this.iframe.addEventListener('load', () => this.load(this.config), false);
+    } else {
+      this.iframe.addEventListener('load', () => this.createReport(this.createConfig), false);
+    }
+  }
 }
