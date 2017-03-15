@@ -467,9 +467,18 @@ export abstract class Embed {
    */
   private setIframe(isLoad: boolean): void {
     if(!this.iframe) {
-      const iframeHtml = `<iframe style="width:100%;height:100%;" src="${this.config.embedUrl}" scrolling="no" allowfullscreen="true"></iframe>`;
-      this.element.innerHTML = iframeHtml;
-      this.iframe = <HTMLIFrameElement>this.element.childNodes[0];
+	  var iframeContent = document.createElement("IFRAME");
+	  var embedUrl = this.config.embedUrl;
+	  iframeContent.setAttribute("style", "width:100%;height:100%;");
+	  iframeContent.setAttribute("src", embedUrl);
+	  iframeContent.setAttribute("scrolling", "no");
+	  iframeContent.setAttribute("allowfullscreen", "true");
+	  var node = this.element;
+	  while(node.firstChild) {
+		  node.removeChild(node.firstChild);
+	  }
+	  node.appendChild(iframeContent);
+	  this.iframe = <HTMLIFrameElement>node.firstChild;
     }
 
     if(isLoad){
