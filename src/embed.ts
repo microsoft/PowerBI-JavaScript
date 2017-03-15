@@ -467,7 +467,7 @@ export abstract class Embed {
    */
   private setIframe(isLoad: boolean): void {
     if(!this.iframe) {
-      var iframeContent = document.createElement("IFRAME");
+      var iframeContent = document.createElement("iframe");
       var embedUrl = this.config.embedUrl;
       iframeContent.setAttribute("style", "width:100%;height:100%;");
       iframeContent.setAttribute("src", embedUrl);
@@ -476,7 +476,7 @@ export abstract class Embed {
       var node = this.element;
       while(node.firstChild) {
           node.removeChild(node.firstChild);
-        }
+      }
       node.appendChild(iframeContent);
       this.iframe = <HTMLIFrameElement>node.firstChild;
     }

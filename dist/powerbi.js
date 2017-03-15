@@ -677,7 +677,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Embed.prototype.setIframe = function (isLoad) {
 	        var _this = this;
 	        if (!this.iframe) {
-	            var iframeContent = document.createElement("IFRAME");
+	            var iframeContent = document.createElement("iframe");
 	            var embedUrl = this.config.embedUrl;
 	            iframeContent.setAttribute("style", "width:100%;height:100%;");
 	            iframeContent.setAttribute("src", embedUrl);
