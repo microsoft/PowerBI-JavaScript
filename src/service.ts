@@ -349,9 +349,14 @@ export class Service implements IService {
     delete powerBiElement.powerBiEmbed;
     /** Removes the iframe from the element. */
     const iframe = element.querySelector('iframe');
-    if (iframe) {
-      iframe.remove();
-    }
+	if (iframe) {
+		if (iframe.remove !== undefined) {
+			iframe.remove();
+		} else {
+			// workaround for IE: Unhandled rejection TypeError: object doesn't support property or method 'remove'
+			iframe.parentElement.removeChild(iframe);
+		}
+	}
   }
 
   /**
