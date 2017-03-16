@@ -13,7 +13,7 @@
   "scripts": {
     "build": "gulp build",
     "start": "http-server ./demo",
-    "version": "gulp build && git add .",
+    "gulpversion": "gulp build && git add .",
     "prepublish": "typings install && gulp build",
     "prestart": "cd demo && npm install",
     "test": "gulp test",
