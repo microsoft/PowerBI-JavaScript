@@ -503,6 +503,23 @@ function _Report_Reload() {
         });
 }
 
+function _Report_Refresh() {
+    // Get a reference to the embedded report HTML element
+    var reportContainer = $('#reportContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(reportContainer);
+
+    // Reload the displayed report
+    report.refresh()
+        .then(function (result) {
+            Log.log(result);
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
 function _Report_FullScreen() {
     // Get a reference to the embedded report HTML element
     var reportContainer = $('#reportContainer')[0];
