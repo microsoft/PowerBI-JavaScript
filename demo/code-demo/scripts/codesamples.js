@@ -510,7 +510,7 @@ function _Report_Refresh() {
     // Get a reference to the embedded report.
     report = powerbi.get(reportContainer);
 
-    // Reload the displayed report
+    // Refresh the displayed report
     report.refresh()
         .then(function (result) {
             Log.log(result);
