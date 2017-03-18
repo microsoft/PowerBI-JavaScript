@@ -616,3 +616,9 @@ line-height: 20px;
 #reportContainer iframe {
     border: none;
 }
+
+#txtCodeCopy {
+	position: absolute;
+	left: -1000px;
+	top: -1000px;
+}
