@@ -50,14 +50,14 @@ function LoadLogWindow(divSelector) {
 }
 
 function SetCode(func) {
-	var codeHtml = '<pre id="txtCode" class="brush: js; gutter: false;">';
-	codeHtml = codeHtml + BodyCodeOfFunction(func) + '</pre><script type="text/javascript" src="syntaxHighlighter/syntaxhighlighter.js"></script>';
-	$("#highlighter").html(codeHtml);
+    var codeHtml = '<pre id="txtCode" class="brush: js; gutter: false;">';
+    codeHtml = codeHtml + BodyCodeOfFunction(func) + '</pre><script type="text/javascript" src="syntaxHighlighter/syntaxhighlighter.js"></script>';
+    $("#highlighter").html(codeHtml);
 
-	$("#txtCodeCopy").val(BodyCodeOfFunction(func));
+    $("#txtCodeCopy").val(BodyCodeOfFunction(func));
 	
     var runFunc = mapFunc(func);
-    
+
     $('#btnRunCode').off('click');
     $('#btnRunCode').click(runFunc);
 }
