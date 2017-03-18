@@ -54,6 +54,8 @@ function SetCode(func) {
 	codeHtml = codeHtml + BodyCodeOfFunction(func) + '</pre><script type="text/javascript" src="syntaxHighlighter/syntaxhighlighter.js"></script>';
 	$("#highlighter").html(codeHtml);
 
+	$("#txtCodeCopy").val(BodyCodeOfFunction(func));
+	
     var runFunc = mapFunc(func);
     
     $('#btnRunCode').off('click');
@@ -61,7 +63,7 @@ function SetCode(func) {
 }
 
 function CopyCode() {
-    CopyTextArea("#txtCode", "#btnRunCopyCode");
+    CopyTextArea("#txtCodeCopy", "#btnRunCopyCode");
 }
 
 function CopyResponseWindow() {
