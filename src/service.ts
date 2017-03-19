@@ -1,5 +1,6 @@
 import * as embed from './embed';
 import { Report } from './report';
+import { Create } from './create';
 import { Dashboard } from './dashboard';
 import { Tile } from './tile';
 import { Page } from './page';
@@ -159,6 +160,23 @@ export class Service implements IService {
   }
 
   /**
+   * Creates new report
+   * @param {HTMLElement} element
+   * @param {embed.IEmbedConfiguration} [config={}]
+   * @returns {embed.Embed}
+   */
+  createReport(element: HTMLElement, config: embed.IEmbedConfiguration): embed.Embed {
+    config.type = 'create';
+    let powerBiElement = <IPowerBiElement>element;
+    const component = new Create(this, powerBiElement, config);
+    powerBiElement.powerBiEmbed = component;
+    
+    this.addOrOverwriteEmbed(component, element);
+
+    return component;
+  }
+
+  /**
    * TODO: Add a description here
    * 
    * @param {HTMLElement} [container]
@@ -219,8 +237,8 @@ export class Service implements IService {
 
     const component = new Component(this, element, config);
     element.powerBiEmbed = component;
-    this.embeds.push(component);
 
+    this.addOrOverwriteEmbed(component, element);
     return component;
   }
 
@@ -244,6 +262,20 @@ export class Service implements IService {
      * then we can call the embedNew function which would allow setting the proper embedUrl and construction of object based on the new type.
      */
     if (typeof config.type === "string" && config.type !== component.config.type) {
+
+      /**
+       * When loading report after create we want to use existing Iframe to optimize load period
+       */
+      if(config.type === "report" && component.config.type === "create") {
+        const report = new Report(this, element, config, element.powerBiEmbed.iframe);
+        report.load(<embed.IInternalEmbedConfiguration>config);
+        element.powerBiEmbed = report;
+        
+        this.addOrOverwriteEmbed(component, element);
+
+        return report;
+      }
+
       throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
     }
 
@@ -289,6 +321,15 @@ export class Service implements IService {
     return utils.find(x => x.config.uniqueId === uniqueId, this.embeds);
   }
 
+  addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void {
+    // remove embeds over the same div element.
+    this.embeds = this.embeds.filter(function(embed) {
+      return embed.element.id !== element.id;
+    });
+
+    this.embeds.push(component);
+  }
+
   /**
    * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
    * 
@@ -321,8 +362,7 @@ export class Service implements IService {
    */
   private handleEvent(event: IEvent<any>): void {
     const embed = utils.find(embed => {
-      return (embed.config.type === event.type
-        && embed.config.uniqueId === event.id);
+      return (embed.config.uniqueId === event.id);
     }, this.embeds);
 
     if (embed) {

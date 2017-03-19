@@ -1,6 +1,15 @@
+html {
+    margin:0;
+    padding:0;
+    height:100%;
+}
+
 body {
     background-color: rgb(241, 241, 241);
     font-family: 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
+    margin:0;
+    padding:0;
+    height:100%;
 }
 
 h3 {
@@ -34,6 +43,20 @@ a:hover, a:visited, a:link, a:active
     margin-top: 10px;
 }
 
+#user-embed-details {
+    width: 100%;
+}
+
+#user-embed-details tr {
+    width: 100%;
+}
+
+#user-embed-details input[type="text"] {
+    width: 100%;
+    border: none;
+    margin-bottom: 5px;
+}
+
 #report-embed-table {
     width: 100%;
 }
@@ -42,8 +65,18 @@ a:hover, a:visited, a:link, a:active
     width: 100%;
 }
 
-#report-embed-table input {
-    width: 100%;
+.inputLine > span {
+    width: 30%;
+}
+
+#report-embed-table input[type="text"] {
+    width: 73%;
+    border: none;
+    margin-bottom: 5px;
+}
+
+#report-embed-checkbox input {
+    width: auto;
     border: none;
     margin-bottom: 5px;
 }
@@ -101,26 +134,39 @@ a {
     width: 100%;
 }
 
-.line {
+.pbi-line {
     display: inline-block;
     width: 100%;
 }
 
-#steps-nav-bar {
+#top-nav-bar {
     margin-top: 10px;
 }
 
-#steps-nav-bar a {
+#top-nav-bar a {
     color: white;
     display: inline-block;
 }
 
-#steps-nav-bar a:hover {
+#top-nav-bar a:hover {
     color: rgb(8, 122, 165);
 }
 
-#steps-nav-bar .active {
+#top-nav-bar .active {
     color: rgb(0, 174, 239);
+}
+
+#steps-nav-bar a {
+    color: black;
+    display: inline-block;
+}
+
+#steps-nav-bar a:hover {
+    font-weight: bold;
+}
+
+#steps-nav-bar .active {
+    color: white;
 }
 
 .main-ul {
@@ -185,8 +231,40 @@ a {
     width: 100%;
 }
 
+#top-ul-dev {
+    float: left;
+}
+
+.top-ul {
+    list-style-type: none;
+    margin: 0px;
+    overflow: hidden;
+    -webkit-margin-before: 0;
+    -webkit-padding-start: 0;
+    line-height: 30px;
+}
+
+.top-ul li {
+    float: left;
+    margin-right: 40px;
+    text-align: center;
+    line-height: 22px;
+    font-size: 17px;
+}
+
+#top-docs {
+    margin-right: 0px;
+}
+
+.top-li-active {
+    color: white;
+    border-bottom: 1px solid white;
+    padding-bottom: 3px;
+}
+
 #steps-ul-dev {
     float: left;
+    width: 100%;
 }
 
 .steps-ul {
@@ -196,13 +274,18 @@ a {
     -webkit-margin-before: 0;
     -webkit-padding-start: 0;
     line-height: 30px;
+    width: 100%;
 }
 
 .steps-ul li {
-    float: left;
-    margin-right: 20px;
-    text-align: center;
+    float: none;
+    text-align: left;
     line-height: 22px;
+    font-weight: 400;
+    height: 40px;
+    width: 100%;
+    margin-bottom: 10px;
+    vertical-align: middle;
 }
 
 #steps-interact {
@@ -210,8 +293,9 @@ a {
 }
 
 .steps-li-active {
-    color: rgb(8, 122, 165);
+    color: white;
     text-decoration: none;
+    background-color: #666666;
 }
 
 .operations-div {
@@ -230,52 +314,32 @@ a {
     text-align: center;
 }
 
-#operations-ul span {
-    width: 100%;
-    padding: 10px;
-    line-height: 28px;
-}
-
-#operations-ul li:hover a {
-    color: white;
-}
-
 #operations-ul li:hover {
-    background-color: rgb(88, 88, 90);
-}
-
-#operations-ul-wrapper {
-    clear: both;
-    display: none;
-    margin: 0px 0px 0px 0px;
-    padding: 0px 5px 0px 0px;
-    border: solid 1px rgb(227, 227, 227);
-    position: absolute;
-    z-index: 2;
-    background-color: rgb(241, 241, 243);
-    top: -5px;
-    left: -5px;
+    border-bottom:  3px solid #444444;
 }
 
 #operations-ul {
-    float: left;
-    padding: 0px;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-padding-start: 0;
 }
 
 #operations-ul li {
-    list-style-type: none;
-    margin: 0px;
-    padding-left: 10px;
-    overflow: hidden;
-    -webkit-margin-before: 0;
-    -webkit-padding-start: 0;
+    margin: 0px 30px 0px 0px;
+    display: inline-block;
+    /* font-size: 14px; */
+    color: #444444;
+}
+
+#operations-ul > .active {
+    border-bottom: 3px #444444 solid;
 }
 
 #wrapper-operations-div {
     padding: 10px 20px 15px 20px;
     background-color: rgb(231, 232, 233);
     width: 100%;
-    height: 295px;
+    height: 300px;
     overflow: hidden;
     display: inline-block;
 }
@@ -306,7 +370,7 @@ a {
 }
 
 #operation-categories {
-    margin-bottom: 5px;
+    margin-bottom: 0px;
 }
 
 #selected-catogory-button {
@@ -321,7 +385,7 @@ a {
     width: 100%;
     clear: both;
     margin: 0;
-    padding: 0px 20px;
+    padding: 0px 20px 0px 0px;
 }
 
 .function-ul li {
@@ -386,6 +450,7 @@ a {
     z-index: 1;
     height: 30px;
     padding: 10px 20px;
+    font-size: 14px;
 }
 
 .textAreaControl {
@@ -444,10 +509,12 @@ a {
     width: 100%;
     height: 300px;
     border: none;
-    padding-top: 40px;
+    padding: 20px;
     position: relative;
     top: -30px;
-    padding-left: 20px;
+    background: #FFFFFF;
+	overflow: auto;
+	white-space: pre-wrap;
 }
 
 #GoToEmbedStepButton {
@@ -466,6 +533,19 @@ a {
     font-size: 18px;
     font-weight: normal;
     margin: 0px 0px 5px 0px;
+}
+
+.top-div {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background-color: white;
+    border: solid black 1px;
+}
+
+.active-top {
+    background-color: rgb(36, 169, 225);
 }
 
 .step-div {
@@ -489,4 +569,50 @@ a {
     width: 20px;
     position: relative;
     top: -1px;
+}
+
+.checkbox.input {
+    width: auto;
+}
+
+.stepsButton {
+
+height: 100%;
+
+padding: 10px 0px 0px 10px;
+
+line-height: 20px;
+}
+
+.video {
+    width: 90%;
+    height: 500px;
+    max-width: 800px;
+}
+
+.title {
+    font-size: 17px;
+    font-weight: 400px;
+}
+
+#embedModeInput {
+
+}
+
+#createModeInput {
+    display: none;
+}
+
+.inputLineTitle {
+    width: 25%;
+    display: inline-block;
+}
+
+#modeSelector {
+    margin-bottom: 20px;
+    cursor: default;
+}
+
+#reportContainer iframe {
+    border: none;
 }

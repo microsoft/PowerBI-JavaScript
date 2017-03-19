@@ -1,4 +1,4 @@
-/*! powerbi-client v2.2.6 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.0 | (c) 2016 Microsoft Corporation MIT */
 import * as embed from './embed';
 import { Report } from './report';
 import { Dashboard } from './dashboard';
@@ -84,6 +84,13 @@ export declare class Service implements IService {
      */
     constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IServiceConfiguration);
     /**
+     * Creates new report
+     * @param {HTMLElement} element
+     * @param {embed.IEmbedConfiguration} [config={}]
+     * @returns {embed.Embed}
+     */
+    createReport(element: HTMLElement, config: embed.IEmbedConfiguration): embed.Embed;
+    /**
      * TODO: Add a description here
      *
      * @param {HTMLElement} [container]
@@ -141,6 +148,7 @@ export declare class Service implements IService {
      * @returns {(Report | Tile)}
      */
     find(uniqueId: string): Report | Tile | Dashboard;
+    addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void;
     /**
      * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
      *
