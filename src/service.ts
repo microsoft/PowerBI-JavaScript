@@ -69,7 +69,7 @@ export class Service implements IService {
   /**
    * A list of components that this service can embed
    */
-    private static components: (typeof Report | typeof Tile | typeof Dashboard)[] = [
+  private static components: (typeof Report | typeof Tile | typeof Dashboard)[] = [
     Tile,
     Report,
     Dashboard
@@ -170,7 +170,7 @@ export class Service implements IService {
     let powerBiElement = <IPowerBiElement>element;
     const component = new Create(this, powerBiElement, config);
     powerBiElement.powerBiEmbed = component;
-    
+
     this.addOrOverwriteEmbed(component, element);
 
     return component;
@@ -266,11 +266,11 @@ export class Service implements IService {
       /**
        * When loading report after create we want to use existing Iframe to optimize load period
        */
-      if(config.type === "report" && component.config.type === "create") {
+      if (config.type === "report" && component.config.type === "create") {
         const report = new Report(this, element, config, element.powerBiEmbed.iframe);
         report.load(<embed.IInternalEmbedConfiguration>config);
         element.powerBiEmbed = report;
-        
+
         this.addOrOverwriteEmbed(component, element);
 
         return report;
@@ -323,7 +323,7 @@ export class Service implements IService {
 
   addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void {
     // remove embeds over the same div element.
-    this.embeds = this.embeds.filter(function(embed) {
+    this.embeds = this.embeds.filter(function (embed) {
       return embed.element.id !== element.id;
     });
 
@@ -350,7 +350,12 @@ export class Service implements IService {
     /** Removes the iframe from the element. */
     const iframe = element.querySelector('iframe');
     if (iframe) {
-      iframe.remove();
+      if (iframe.remove !== undefined) {
+        iframe.remove();
+      } else {
+        // workaround for IE: Unhandled rejection TypeError: object doesn't support property or method 'remove'
+        iframe.parentElement.removeChild(iframe);
+      }
     }
   }
 
