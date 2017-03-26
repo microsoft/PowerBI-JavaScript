@@ -69,7 +69,7 @@ export class Service implements IService {
   /**
    * A list of components that this service can embed
    */
-    private static components: (typeof Report | typeof Tile | typeof Dashboard)[] = [
+   private static components: (typeof Report | typeof Tile | typeof Dashboard)[] = [
     Tile,
     Report,
     Dashboard
@@ -170,7 +170,6 @@ export class Service implements IService {
     let powerBiElement = <IPowerBiElement>element;
     const component = new Create(this, powerBiElement, config);
     powerBiElement.powerBiEmbed = component;
-    
     this.addOrOverwriteEmbed(component, element);
 
     return component;
@@ -270,7 +269,7 @@ export class Service implements IService {
         const report = new Report(this, element, config, element.powerBiEmbed.iframe);
         report.load(<embed.IInternalEmbedConfiguration>config);
         element.powerBiEmbed = report;
-        
+
         this.addOrOverwriteEmbed(component, element);
 
         return report;
@@ -350,7 +349,13 @@ export class Service implements IService {
     /** Removes the iframe from the element. */
     const iframe = element.querySelector('iframe');
     if (iframe) {
-      iframe.remove();
+      if(iframe.remove !== undefined) {
+          iframe.remove();
+	  }
+      else {
+          /** Workaround for IE: unhandled rejection TypeError: object doesn't support propert or method 'remove' */
+          iframe.parentElement.removeChild(iframe);
+      }
     }
   }
 

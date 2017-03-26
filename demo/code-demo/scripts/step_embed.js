@@ -35,6 +35,10 @@ function Report_Reload() {
     SetCode(_Report_Reload);
 }
 
+function Report_Refresh() {
+    SetCode(_Report_Refresh);
+}
+
 function Report_FullScreen() {
     SetCode(_Report_FullScreen);
 }

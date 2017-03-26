@@ -313,7 +313,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /** Removes the iframe from the element. */
 	        var iframe = element.querySelector('iframe');
 	        if (iframe) {
-	            iframe.remove();
+	            if (iframe.remove !== undefined) {
+	                iframe.remove();
+	            }
+	            else {
+	                /** Workaround for IE: unhandled rejection TypeError: object doesn't support propert or method 'remove' */
+	                iframe.parentElement.removeChild(iframe);
+	            }
 	        }
 	    };
 	    /**
