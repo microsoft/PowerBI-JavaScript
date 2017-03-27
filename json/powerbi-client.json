@@ -12,7 +12,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/node_modules/powerbi-models/dist/models.d.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/node_modules/powerbi-models/dist/models.d.ts",
 			"children": [
 				{
 					"id": 254,
@@ -5769,7 +5769,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/config.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/config.ts",
 			"children": [
 				{
 					"id": 409,
@@ -5865,7 +5865,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/create.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/create.ts",
 			"children": [
 				{
 					"id": 2689,
@@ -7301,7 +7301,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/dashboard.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/dashboard.ts",
 			"children": [
 				{
 					"id": 685,
@@ -8984,7 +8984,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/embed.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/embed.ts",
 			"children": [
 				{
 					"id": 548,
@@ -11271,7 +11271,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/factories.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/factories.ts",
 			"children": [
 				{
 					"id": 2749,
@@ -11490,7 +11490,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/ifilterable.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/ifilterable.ts",
 			"children": [
 				{
 					"id": 556,
@@ -11708,7 +11708,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/page.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/page.ts",
 			"children": [
 				{
 					"id": 568,
@@ -12295,7 +12295,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/powerbi.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/powerbi.ts",
 			"children": [
 				{
 					"id": 2765,
@@ -12428,7 +12428,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/report.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/report.ts",
 			"children": [
 				{
 					"id": 591,
@@ -14654,7 +14654,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/service.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/service.ts",
 			"children": [
 				{
 					"id": 2631,
@@ -14947,7 +14947,7 @@
 								{
 									"fileName": "src/service.ts",
 									"line": 72,
-									"character": 29
+									"character": 27
 								}
 							],
 							"type": {
@@ -15022,7 +15022,7 @@
 							"sources": [
 								{
 									"fileName": "src/service.ts",
-									"line": 324,
+									"line": 323,
 									"character": 21
 								}
 							]
@@ -15143,7 +15143,7 @@
 							"sources": [
 								{
 									"fileName": "src/service.ts",
-									"line": 202,
+									"line": 201,
 									"character": 7
 								}
 							]
@@ -15208,7 +15208,7 @@
 							"sources": [
 								{
 									"fileName": "src/service.ts",
-									"line": 253,
+									"line": 252,
 									"character": 23
 								}
 							]
@@ -15273,7 +15273,7 @@
 							"sources": [
 								{
 									"fileName": "src/service.ts",
-									"line": 224,
+									"line": 223,
 									"character": 18
 								}
 							]
@@ -15306,7 +15306,7 @@
 							"sources": [
 								{
 									"fileName": "src/service.ts",
-									"line": 294,
+									"line": 293,
 									"character": 17
 								}
 							]
@@ -15369,7 +15369,7 @@
 							"sources": [
 								{
 									"fileName": "src/service.ts",
-									"line": 320,
+									"line": 319,
 									"character": 6
 								}
 							]
@@ -15432,7 +15432,7 @@
 							"sources": [
 								{
 									"fileName": "src/service.ts",
-									"line": 304,
+									"line": 303,
 									"character": 5
 								}
 							]
@@ -15490,7 +15490,7 @@
 							"sources": [
 								{
 									"fileName": "src/service.ts",
-									"line": 363,
+									"line": 368,
 									"character": 21
 								}
 							]
@@ -15553,7 +15553,7 @@
 							"sources": [
 								{
 									"fileName": "src/service.ts",
-									"line": 186,
+									"line": 185,
 									"character": 6
 								}
 							]
@@ -15600,7 +15600,7 @@
 							"sources": [
 								{
 									"fileName": "src/service.ts",
-									"line": 339,
+									"line": 338,
 									"character": 7
 								}
 							]
@@ -46206,7 +46206,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/tile.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/tile.ts",
 			"children": [
 				{
 					"id": 749,
@@ -47630,7 +47630,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/src/util.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/src/util.ts",
 			"children": [
 				{
 					"id": 442,
@@ -48179,7 +48179,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/PowerBI/PowerBI-javascript/typings/globals/es6-promise/index.d.ts",
+			"originalName": "F:/Automations/Public/PowerBI-javascript/typings/globals/es6-promise/index.d.ts",
 			"children": [
 				{
 					"id": 165,
