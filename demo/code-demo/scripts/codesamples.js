@@ -496,7 +496,7 @@ function _Report_Reload() {
     // Reload the displayed report
     report.reload()
         .then(function (result) {
-            Log.log(result);
+            Log.logText("Reloaded.");
         })
         .catch(function (errors) {
             Log.log(errors);
@@ -513,7 +513,7 @@ function _Report_Refresh() {
     // Refresh the displayed report
     report.refresh()
         .then(function (result) {
-            Log.log(result);
+            Log.logText("Refreshed.");
         })
         .catch(function (errors) {
             Log.log(errors);
