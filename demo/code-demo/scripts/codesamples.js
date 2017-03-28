@@ -504,10 +504,10 @@ function _Report_Reload() {
 }
 
 function _Report_Refresh() {
-   // Get a reference to the embedded report HTML element
-   var reportContainer = $('#reportContainer')[0];
+    // Get a reference to the embedded report HTML element
+    var reportContainer = $('#reportContainer')[0];
 
-   // Get a reference to the embedded report.
+    // Get a reference to the embedded report.
     report = powerbi.get(reportContainer);
 
     // Refresh the displayed report
@@ -517,7 +517,7 @@ function _Report_Refresh() {
         })
         .catch(function (errors) {
             Log.log(errors);
-       });
+        });
 }
 
 function _Report_FullScreen() {
