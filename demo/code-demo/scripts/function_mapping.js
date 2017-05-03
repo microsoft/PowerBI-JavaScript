@@ -24,21 +24,21 @@ function datasetNotSupported() {
     Log.logText('Operation not supported for dataset')
 }
 
-function IsSaveMock(func) {
-    return ((func.name === '_Report_save' || func.name === '_Report_saveAs') && ( 
+function IsSaveMock(funcName) {
+    return ((funcName === '_Report_save' || funcName === '_Report_saveAs') && ( 
         _session.embedId  === 'c52af8ab-0468-4165-92af-dc39858d66ad' /*Sample Report*/ ||
         _session.embedId  === '1ee0b264-b280-43f1-bbb7-9d8bd2d03a78' /*Sample dataset*/ ));
 }
 
-function IsBasicMock(func) {
-    return ((func.name === '_Embed_BasicEmbed' || func.name === '_Embed_BasicEmbed_EditMode') && _session.embedId === 'c52af8ab-0468-4165-92af-dc39858d66ad');
+function IsBasicMock(funcName) {
+    return ((funcName === '_Embed_BasicEmbed' || funcName === '_Embed_BasicEmbed_EditMode') && _session.embedId === 'c52af8ab-0468-4165-92af-dc39858d66ad');
 }
 
-function IsCreateMock(func) {
-    return (func.name === '_Embed_Create' && _session.embedId === '1ee0b264-b280-43f1-bbb7-9d8bd2d03a78');
+function IsCreateMock(funcName) {
+    return (funcName === '_Embed_Create' && _session.embedId === '1ee0b264-b280-43f1-bbb7-9d8bd2d03a78');
 }
 
-function IsNotSupported(func) {
+function IsNotSupported(funcName) {
     if (powerbi.embeds.length === 0) {
         return false
     }
@@ -49,14 +49,27 @@ function IsNotSupported(func) {
         return false;
     }
 
-    var runFunc = mockDict[func.name]; 
+    var runFunc = mockDict[funcName]; 
     return (runFunc && runFunc === datasetNotSupported) ? true : false;
 }
 
-function IsMock(func) {
-    return (IsBasicMock(func) || IsSaveMock(func) || IsCreateMock(func) || IsNotSupported(func)); 
+function IsMock(funcName) {
+    return (IsBasicMock(funcName) || IsSaveMock(funcName) || IsCreateMock(funcName) || IsNotSupported(funcName)); 
 }
 
 function mapFunc(func) {
-    return IsMock(func) ? mockDict[func.name] : func;
+    var funcName = getFuncName(func);
+    return IsMock(funcName) ? mockDict[funcName] : func;
+}
+
+function getFuncName(func) {
+    var funcName = func.name;
+    
+    if (!funcName)
+    {
+        // in IE, func.name is invalid method. so, function name should be extracted manually.
+        funcName = func.toString().match(/^function\s*([^\s(]+)/)[1];
+    }
+
+    return funcName;
 }
