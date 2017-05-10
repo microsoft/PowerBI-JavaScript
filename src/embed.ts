@@ -42,6 +42,7 @@ export interface IEmbedConfiguration {
   datasetId?: string;
   permissions?: models.Permissions;
   viewMode?: models.ViewMode;
+  tokenType?: models.TokenType;
 }
 
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
@@ -379,6 +380,7 @@ export abstract class Embed {
         this.createConfig = {
           datasetId: config.datasetId || this.getId(),
           accessToken: this.getAccessToken(this.service.accessToken),
+          tokenType: config.tokenType,
           settings: settings
         }
       } else {

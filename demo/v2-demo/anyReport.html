@@ -1,0 +1,52 @@
+<div id="userReport" class="line">
+    <div class="pageTitle">
+        <h3>Embed your own report</h3>
+        <h8>You can also embed your own report by following the instructions below.</h8>
+    </div>
+    <div class="settings">
+        <div id="EmbedWithSpecificReportDiv">
+            <div class="line">
+                <h5>Prerequisites:</h5>
+                <ul>
+                    <li>A workspace in the <a href="https://azure.microsoft.com/en-us/documentation/articles/power-bi-embedded-get-started/">Power BI embedded service.</a></li>
+                    <li>Power BI report imported to your workspace.</li>
+                </ul>
+            </div>
+            
+            <div class="line">
+                <h5>Instructions to generate an Embed Token</h5>
+                Once you have imported a report into Power BI workspace, you are ready to embed it.
+                
+                To embed a report, you need to get an Embed Token. You can create this token in multiple ways.
+                <ul>
+                    <li>Using <a href="https://github.com/Microsoft/PowerBI-cli">PowerBI-Cli</a> tool.</li>
+                    <li>From .Net Code using <a href="http://www.nuget.org/packages/Microsoft.PowerBI.Core/">Microsoft.PowerBI.Core</a> package.</li>
+                    <li>From NodeJS code using <a href="https://github.com/Microsoft/PowerBI-Node">powerbi-api</a> package.</li>
+                </ul>
+            </div>
+            
+            <div id="authorizeParameterDiv" class="line">
+                <h5>Enter embed details:</h5>
+
+                <table id="user-embed-details">
+                    <tr>
+                        <td class="td-field-name">Embed Token</td>
+                        <td><input type="text" id="auth_txtAccessToken" onchange="UpdateSession(this, SessionKeys.AccessToken);" /></td>
+                    </tr>
+                    <tr>
+                        <td class="td-field-name">Embed URL</td>
+                        <td>
+                            <input type="text" id="auth_txtReportEmbed" onchange="UpdateSession(this, SessionKeys.EmbedUrl);" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-field-name">Report Id</td>
+                        <td><input type="text" id="auth_txtEmbedReportId" onchange="UpdateSession(this, SessionKeys.EmbedId);"/></td>
+                    </tr>
+                </table>
+                <button id="nextStep" class="blueButton" onclick="OpenEmbedStepFromUserSettings()">Next step - Embed</button>
+            </div>
+            
+        </div>
+    </div>
+</div>

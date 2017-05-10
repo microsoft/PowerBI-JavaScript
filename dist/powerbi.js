@@ -617,6 +617,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.createConfig = {
 	                datasetId: config.datasetId || this.getId(),
 	                accessToken: this.getAccessToken(this.service.accessToken),
+	                tokenType: config.tokenType,
 	                settings: settings
 	            };
 	        }

@@ -30,6 +30,7 @@ export interface IEmbedConfiguration {
     datasetId?: string;
     permissions?: models.Permissions;
     viewMode?: models.ViewMode;
+    tokenType?: models.TokenType;
 }
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
     uniqueId: string;
