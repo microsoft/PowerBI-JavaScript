@@ -26,17 +26,20 @@ function datasetNotSupported() {
 
 function IsSaveMock(funcName) {
     var sampleId = GetSession(SessionKeys.SampleId);
-    return ((funcName === '_Report_save' || funcName === '_Report_saveAs') && (_session.embedId  === sampleId));
+    var isSample = sampleId && (_session.embedId  === sampleId);
+    return ((funcName === '_Report_save' || funcName === '_Report_saveAs') && isSample);
 }
 
 function IsBasicMock(funcName) {
     var sampleId = GetSession(SessionKeys.SampleId);
-    return ((funcName === '_Embed_BasicEmbed' || funcName === '_Embed_BasicEmbed_EditMode') && _session.embedId === sampleId);
+    var isSample = sampleId && (_session.embedId  === sampleId);
+    return ((funcName === '_Embed_BasicEmbed' || funcName === '_Embed_BasicEmbed_EditMode') && isSample);
 }
 
 function IsCreateMock(funcName) {
     var sampleId = GetSession(SessionKeys.SampleId);
-    return (funcName === '_Embed_Create' && _session.embedId === sampleId);
+    var isSample = sampleId && (_session.embedId  === sampleId);
+    return (funcName === '_Embed_Create' && isSample);
 }
 
 function IsNotSupported(funcName) {
