@@ -1,0 +1,32 @@
+<div id="step-interact-wrapper">
+    <div>
+        <div id="operation-categories">
+            <div id="operations-ul-wrapper" tabindex="-1">
+                <ul id="operations-ul">
+                    <li id="dashboard-operations-li" onclick="OpenDashboardOperations();" class="active">
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li id="dashboard-events-operations-li" onclick="OpenDashboardEventOperations();">
+                        <a href="#">Events</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="category-browser">
+            <div id="wrapper-operations-div" class="operations-div">
+                <div id="dashboard-operations-div" class="operations-div">
+                    <ul class="function-ul">
+                        <li class="active" onclick="Dashboard_GetId()">Get Id</li>
+                        <li class="" onclick="Dashboard_FullScreen()">Full screen</li>
+                        <li class="" onclick="Dashboard_ExitFullScreen()">Exit full screen</li>
+                    </ul>
+                </div>
+                <div id="dashboard-events-operations-div" class="operations-div" style="display: none;">
+                    <ul class="function-ul">
+                        <li class="active" onclick="DashboardEvents_TileClicked()">Tile Clicked</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

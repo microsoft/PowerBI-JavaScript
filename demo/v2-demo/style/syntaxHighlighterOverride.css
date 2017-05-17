@@ -1,0 +1,10 @@
+.syntaxhighlighter {
+    overflow: hidden !important;
+    margin: 0em !important;
+    padding: 0em !important;
+    top: -85px !important;
+}
+
+.syntaxhighlighter .line {
+    white-space: pre-wrap !important;
+}
