@@ -28,7 +28,7 @@ function _Embed_BasicEmbed() {
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config= {
         type: 'report',
-        tokenType: models.TokenType.Embed,
+        tokenType: 1, // models.TokenType.Embed
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
