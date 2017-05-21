@@ -167,6 +167,7 @@ function _Mock_Embed_BasicEmbed(isEdit) {
         Log.logText("Loaded");
     });
 
+    report.off("saveAsTriggered");
     report.on("saveAsTriggered", function() {
         Log.logText("Cannot save sample report");
     });
@@ -374,6 +375,8 @@ function _Mock_Embed_Create() {
     report.on("loaded", function() {
         Log.logText("Loaded");
     });
+
+    report.off("saveAsTriggered");
     report.on("saveAsTriggered", function() {
         Log.logText("Cannot save sample report");
     });
