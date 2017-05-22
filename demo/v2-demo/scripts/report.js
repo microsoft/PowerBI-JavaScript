@@ -156,11 +156,13 @@ function OpenEmbedMode(mode, entityType)
             {
                 LoadSampleDatasetIntoSession().then(function (response) {
                     SetTextBoxesFromSessionOrUrlParam("#txtCreateAccessToken", "#txtCreateReportEmbed", "#txtEmbedDatasetId");
+                    setCodeAndShowEmbedSettings(mode, entityType);
                 });
             }
             else
             {
                 SetTextBoxesFromSessionOrUrlParam("#txtCreateAccessToken", "#txtCreateReportEmbed", "#txtEmbedDatasetId");
+                setCodeAndShowEmbedSettings(mode, entityType);
             }
         }
         else
@@ -169,11 +171,13 @@ function OpenEmbedMode(mode, entityType)
             {
                 LoadSampleReportIntoSession().then(function (response) {
                     SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
+                    setCodeAndShowEmbedSettings(mode, entityType);
                 });
             }
             else
             {
                 SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
+                setCodeAndShowEmbedSettings(mode, entityType);
             }
         }
     }
@@ -183,15 +187,18 @@ function OpenEmbedMode(mode, entityType)
         {
             LoadSampleDashboardIntoSession().then(function (response) {
                 SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtDashboardEmbed", "#txtEmbedDashboardId");
+                setCodeAndShowEmbedSettings(mode, entityType);
             });
         }
         else
         {
             SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtDashboardEmbed", "#txtEmbedDashboardId");
+            setCodeAndShowEmbedSettings(mode, entityType);
         }
     }
-    
+}
 
+function setCodeAndShowEmbedSettings(mode, entityType) {
     setCodeArea(mode, entityType);
     showEmbedSettings(mode, entityType);
 }

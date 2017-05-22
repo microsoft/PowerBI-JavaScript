@@ -884,6 +884,6 @@ function _DashboardEvents_TileClicked() {
 
     // dashboard.on will add an event listener.
     dashboard.on("tileClicked", function(event) {
-        Log.log(event);
+        Log.log(event.detail);
     });
 }
