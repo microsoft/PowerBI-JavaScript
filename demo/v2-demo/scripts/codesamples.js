@@ -28,7 +28,7 @@ function _Embed_BasicEmbed() {
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config= {
         type: 'report',
-        tokenType: models.TokenType.Embed,
+        tokenType: 1,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
@@ -87,7 +87,7 @@ function _Embed_DashboardEmbed() {
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config = {
         type: 'dashboard',
-        tokenType: models.TokenType.Embed,
+        tokenType: 1,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedDashboardId
@@ -140,7 +140,7 @@ function _Mock_Embed_BasicEmbed(isEdit) {
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config= {
         type: 'report',
-        tokenType: models.TokenType.Embed,
+        tokenType: 1,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
@@ -213,7 +213,7 @@ function _Embed_BasicEmbed_EditMode() {
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config = {
         type: 'report',
-        tokenType: models.TokenType.Embed,
+        tokenType: 1,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
@@ -273,7 +273,7 @@ function _Embed_EmbedWithDefaultFilter() {
     
     var embedConfiguration = {
         type: 'report',
-        tokenType: models.TokenType.Embed,
+        tokenType: 1,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
@@ -304,7 +304,7 @@ function _Embed_Create() {
     // Embed create configuration used to describe the what and how to create report.
     // This object is used when calling powerbi.createReport.
     var embedCreateConfiguration = {
-        tokenType: models.TokenType.Embed,
+        tokenType: 1,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         datasetId: txtEmbedDatasetId,
@@ -353,7 +353,7 @@ function _Mock_Embed_Create() {
     // Embed create configuration used to describe the what and how to create report.
     // This object is used when calling powerbi.createReport.
     var embedCreateConfiguration = {
-        tokenType: models.TokenType.Embed,
+        tokenType: 1,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         datasetId: txtEmbedDatasetId,
