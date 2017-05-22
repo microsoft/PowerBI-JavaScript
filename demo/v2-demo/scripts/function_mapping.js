@@ -47,10 +47,14 @@ function IsNotSupported(funcName) {
         return false
     }
 
-    // Get a reference to the embedded element
     const dashboardRegEx = /Dashboard/
     const dashboardMatch = funcName.match(dashboardRegEx)
-    var container = dashboardMatch ? '#dashboardContainer' : '#embedContainer';
+    if (dashboardMatch) {
+      return false;
+    }
+
+     // Get a reference to the embedded element
+    var container = '#embedContainer';
     var embed = powerbi.get($(container)[0]);
     if (embed.config.type !== 'create') {
         return false;

@@ -167,6 +167,7 @@ function _Mock_Embed_BasicEmbed(isEdit) {
         Log.logText("Loaded");
     });
 
+    report.off("saveAsTriggered");
     report.on("saveAsTriggered", function() {
         Log.logText("Cannot save sample report");
     });
@@ -374,6 +375,8 @@ function _Mock_Embed_Create() {
     report.on("loaded", function() {
         Log.logText("Loaded");
     });
+
+    report.off("saveAsTriggered");
     report.on("saveAsTriggered", function() {
         Log.logText("Cannot save sample report");
     });
@@ -881,6 +884,6 @@ function _DashboardEvents_TileClicked() {
 
     // dashboard.on will add an event listener.
     dashboard.on("tileClicked", function(event) {
-        Log.log(event);
+        Log.log(event.detail);
     });
 }
