@@ -38,6 +38,7 @@ function OpenEmbedStep(mode, entityType) {
 
     var embedContainer = $("#embedContainer");
     var dashboardContainer = $("#dashboardContainer");
+    var tileContainer = $("#tileContainer");
 
     if (entityType == EntityType.Report)
     {
@@ -49,9 +50,10 @@ function OpenEmbedStep(mode, entityType) {
 
             embedContainer.show();
             dashboardContainer.hide();
+            tileContainer.hide();
         });
     }
-    else
+    else if (entityType == EntityType.Dashboard)
     {
         $("#settings").load("settings_embed_dashboard.html", function() {
             OpenEmbedMode(mode, entityType);
@@ -61,6 +63,19 @@ function OpenEmbedStep(mode, entityType) {
 
             embedContainer.hide();
             dashboardContainer.show();
+            tileContainer.hide();
+        });
+    }
+    else
+    {
+        $("#settings").load("settings_embed_tile.html", function() {
+            OpenEmbedMode(mode, entityType);
+
+            tileContainer.height(tileContainer.width() * 0.59);
+
+            embedContainer.hide();
+            dashboardContainer.hide();
+            tileContainer.show();
         });
     }
 }
@@ -78,7 +93,14 @@ function OpenInteractStep() {
 
     var entityType = GetSession(SessionKeys.EntityType);
 
-    if (entityType == EntityType.Dashboard)
+    if (entityType == EntityType.Tile) 
+    {
+        $("#settings").load("settings_interact_tile.html", function() {
+            SetToggleHandler("tile-operations-div");
+            LoadCodeArea("#embedCodeDiv", "");
+        });
+    }
+    else if (entityType == EntityType.Dashboard)
     {
         $("#settings").load("settings_interact_dashboard.html", function() {
             SetToggleHandler("dashboard-operations-div");
@@ -118,6 +140,10 @@ function setCodeArea(mode, entityType)
     else if (entityType == EntityType.Dashboard)
     {
         LoadCodeArea("#embedCodeDiv", _Embed_DashboardEmbed);
+    }
+    else
+    {
+        LoadCodeArea("#embedCodeDiv", _Embed_TileEmbed);
     }
 }
 
@@ -196,6 +222,21 @@ function OpenEmbedMode(mode, entityType)
             setCodeAndShowEmbedSettings(mode, entityType);
         }
     }
+    else
+    {
+        if (IsEmbeddingSampleTile())
+        {
+            LoadSampleTileIntoSession().then(function (response) {
+                SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtTileEmbed", "#txtEmbedTileId", "#txtEmbedDashboardId");
+                setCodeAndShowEmbedSettings(mode, entityType);
+            });
+        }
+        else
+        {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtTileEmbed", "#txtEmbedTileId", "#txtEmbedDashboardId");
+            setCodeAndShowEmbedSettings(mode, entityType);
+        }
+    }
 }
 
 function setCodeAndShowEmbedSettings(mode, entityType) {
@@ -224,4 +265,8 @@ function IsEmbeddingSampleReport() {
 
 function IsEmbeddingSampleDashboard() {
     return GetSession(SessionKeys.IsSampleDashboard) == true;
+}
+
+function IsEmbeddingSampleTile() {
+    return GetSession(SessionKeys.IsSampleTile) == true;
 }

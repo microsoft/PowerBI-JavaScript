@@ -47,9 +47,8 @@ function IsNotSupported(funcName) {
         return false
     }
 
-    const dashboardRegEx = /Dashboard/
-    const dashboardMatch = funcName.match(dashboardRegEx)
-    if (dashboardMatch) {
+    const dashboardOrTileMatch = funcName.match(/Dashboard|Tile/);
+    if (dashboardOrTileMatch) {
       return false;
     }
 

@@ -73,6 +73,14 @@ a:hover, a:visited, a:link, a:active
     width: 100%;
 }
 
+#tile-embed-table {
+    width: 100%;
+}
+
+#tile-embed-table tr {
+    width: 100%;
+}
+
 .inputLine > span {
     width: 30%;
 }
@@ -84,6 +92,12 @@ a:hover, a:visited, a:link, a:active
 }
 
 #dashboard-embed-table input[type="text"] {
+    width: 73%;
+    border: none;
+    margin-bottom: 5px;
+}
+
+#tile-embed-table input[type="text"] {
     width: 73%;
     border: none;
     margin-bottom: 5px;
@@ -638,4 +652,8 @@ line-height: 20px;
 
 #dashboardContainer iframe {
     border: none;    
+}
+
+#tileContainer iframe {
+    border: none;
 }

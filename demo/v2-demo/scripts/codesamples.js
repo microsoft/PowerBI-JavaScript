@@ -288,6 +288,59 @@ function _Embed_EmbedWithDefaultFilter() {
     powerbi.embed(embedContainer, embedConfiguration);
 }
 
+function _Embed_TileEmbed() {
+    // Read embed application token from textbox
+    var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
+    var txtEmbedUrl = $('#txtTileEmbed').val();
+
+    // Read dashboard Id from textbox
+    var txtEmbedDashboardId = $('#txtEmbedDashboardId').val();
+
+    // Read tile Id from textbox
+    var txtEmbedTileId = $('#txtEmbedTileId').val();
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config= {
+        type: 'tile',
+        tokenType: models.TokenType.Embed,
+        accessToken: txtAccessToken,
+        embedUrl: txtEmbedUrl,
+        id: txtEmbedTileId,
+        dashboardId: txtEmbedDashboardId
+    };
+
+    // Get a reference to the embedded tile HTML element
+    var tileContainer = $('#tileContainer')[0];
+
+    // Embed the tile and display it within the div container.
+    var tile = powerbi.embed(tileContainer, config);
+
+    // Tile.off removes a given event handler if it exists.
+    tile.off("tileLoaded");
+
+    // Tile.on will add an event handler which prints to Log window.
+    tile.on("tileLoaded", function(event) {
+        Log.logText("Tile loaded event");
+        Log.log(event.detail);
+    });
+
+    // Tile.off removes a given event handler if it exists.
+    tile.off("tileClicked");
+
+    // Tile.on will add an event handler which prints to Log window.
+    tile.on("tileClicked", function(event) {
+        Log.logText("Tile clicked event");
+        Log.log(event.detail);
+    });
+}
+
 function _Embed_Create() {
     // Read embed application token from textbox
     var txtAccessToken = $('#txtCreateAccessToken').val();

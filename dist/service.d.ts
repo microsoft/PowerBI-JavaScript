@@ -1,8 +1,5 @@
 /*! powerbi-client v2.3.1 | (c) 2016 Microsoft Corporation MIT */
 import * as embed from './embed';
-import { Report } from './report';
-import { Dashboard } from './dashboard';
-import { Tile } from './tile';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as router from 'powerbi-router';
@@ -140,14 +137,14 @@ export declare class Service implements IService {
      * @param {HTMLElement} element
      * @returns {(Report | Tile)}
      */
-    get(element: HTMLElement): Report | Tile | Dashboard;
+    get(element: HTMLElement): embed.Embed;
     /**
      * Finds an embed instance by the name or unique ID that is provided.
      *
      * @param {string} uniqueId
      * @returns {(Report | Tile)}
      */
-    find(uniqueId: string): Report | Tile | Dashboard;
+    find(uniqueId: string): embed.Embed;
     addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void;
     /**
      * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
@@ -156,6 +153,12 @@ export declare class Service implements IService {
      * @returns {void}
      */
     reset(element: HTMLElement): void;
+    /**
+     * handles tile events
+     *
+     * @param {IEvent<any>} event
+     */
+    handleTileEvents(event: IEvent<any>): void;
     /**
      * Given an event object, finds the embed component with the matching type and ID, and invokes its handleEvent method with the event object.
      *

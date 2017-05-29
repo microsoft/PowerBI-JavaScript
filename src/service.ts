@@ -127,6 +127,7 @@ export class Service implements IService {
 
       this.handleEvent(event);
     });
+
     this.router.post(`/reports/:uniqueId/pages/:pageName/events/:eventName`, (req, res) => {
       const event: IEvent<any> = {
         type: 'report',
@@ -300,7 +301,7 @@ export class Service implements IService {
    * @param {HTMLElement} element
    * @returns {(Report | Tile)}
    */
-  get(element: HTMLElement): Report | Tile | Dashboard {
+  get(element: HTMLElement): embed.Embed {
     const powerBiElement = <IPowerBiElement>element;
 
     if (!powerBiElement.powerBiEmbed) {
@@ -316,7 +317,7 @@ export class Service implements IService {
    * @param {string} uniqueId
    * @returns {(Report | Tile)}
    */
-  find(uniqueId: string): Report | Tile | Dashboard {
+  find(uniqueId: string): embed.Embed {
     return utils.find(x => x.config.uniqueId === uniqueId, this.embeds);
   }
 
@@ -357,6 +358,17 @@ export class Service implements IService {
           iframe.parentElement.removeChild(iframe);
       }
     }
+  }
+
+  /**
+   * handles tile events
+   * 
+   * @param {IEvent<any>} event 
+   */ 
+  handleTileEvents (event: IEvent<any>): void {
+      if (event.type === 'tile'){
+          this.handleEvent(event);
+      }
   }
 
   /**

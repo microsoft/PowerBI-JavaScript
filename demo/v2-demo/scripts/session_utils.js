@@ -4,9 +4,11 @@ const SessionKeys = {
     AccessToken : "accessToken",
     EmbedUrl : "embedUrl",
     EmbedId : "embedId",
+    DashboardId : "dashboardId",
     GroupId : "groupId",
     IsSampleReport: "isSampleReport",
     IsSampleDashboard: "IsSampleDashboard",
+    IsSampleTile: "IsSampleTile",
     EmbedMode: "embedMode",
     EntityType: "entityType",
     SampleId: "SampleId"
@@ -42,7 +44,7 @@ function UpdateSession(button, sessionKey) {
     }
 }
 
-function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector, embedIdSelector) {
+function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector, embedIdSelector, dashboardIdSelector) {
     var accessToken = GetParameterByName(SessionKeys.AccessToken);
     if (!accessToken)
     {
@@ -72,7 +74,13 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
         embedId = GetSession(SessionKeys.EmbedId);
     }
 
+    var dashboardId = GetParameterByName(SessionKeys.DashboardId);
+    if (!dashboardId) {
+        dashboardId = GetSession(SessionKeys.DashboardId);
+    }
+
     $(accessTokenSelector).val(accessToken);
     $(embedUrlSelector).val(embedUrl);
     $(embedIdSelector).val(embedId);
+    $(dashboardIdSelector).val(dashboardId);
 }

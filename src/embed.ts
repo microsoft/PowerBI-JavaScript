@@ -43,12 +43,19 @@ export interface IEmbedConfiguration {
   permissions?: models.Permissions;
   viewMode?: models.ViewMode;
   tokenType?: models.TokenType;
+  action?: string;
+  dashboardId?: string;
+  height?: number;
+  width?: number;
 }
 
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
   uniqueId: string;
   type: string;
   embedUrl: string;
+  height?: number;
+  width?: number;
+  action?: string;
 }
 
 export interface IInternalEventHandler<T> {
@@ -377,15 +384,20 @@ export abstract class Embed {
       this.config.embedUrl = this.getEmbedUrl();
 
       if(this.embeType === 'create') {
-        this.createConfig = {
-          datasetId: config.datasetId || this.getId(),
-          accessToken: this.getAccessToken(this.service.accessToken),
-          tokenType: config.tokenType,
-          settings: settings
+          this.createConfig = {
+              datasetId: config.datasetId || this.getId(),
+              accessToken: this.getAccessToken(this.service.accessToken),
+              tokenType: config.tokenType,
+              settings: settings
         }
       } else {
-        this.config.id = this.getId();
-        this.config.accessToken = this.getAccessToken(this.service.accessToken);
+          this.config.id = this.getId();
+          this.config.accessToken = this.getAccessToken(this.service.accessToken);
+          if (this.embeType == 'tile') {
+              this.config.action = config.action;
+              this.config.height = config.height;
+              this.config.width = config.width;
+          }
       }  
   }
 

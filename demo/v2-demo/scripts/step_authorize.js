@@ -1,14 +1,17 @@
 var reportUrl = 'http://powerbiembedapiv2.azurewebsites.net/api/Reports/SampleReport';
 var datasetUrl = 'http://powerbiembedapiv2.azurewebsites.net/api/Reports/SampleCreate';
 var dashboardUrl = 'http://powerbiembedapiv2.azurewebsites.net/api/Dashboards/SampleDashboard';
+var tileUrl = 'http://powerbiembedapiv2.azurewebsites.net/api/Tiles/SampleTile';
 
 var LastReportSampleUrl = null;
 var ReportRefreshTokenTimer = 0;
 var DashboardRefreshTokenTimer = 0;
+var TileRefreshTokenTimer = 0;
 
 const EntityType = {
     Report : "Report",
     Dashboard : "Dashboard",
+    Tile : "Tile"
 };
 
 function FetchUrlIntoSession(url, updateCurrentToken) {
@@ -16,12 +19,20 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
         if (response.ok) {
             return response.json()
             .then(function (embedConfig) {
-                setSession(embedConfig.embedToken.token, embedConfig.embedUrl, embedConfig.id);
+                setSession(embedConfig.embedToken.token, embedConfig.embedUrl, embedConfig.id, embedConfig.dashboardId);
                 SetSession(SessionKeys.SampleId, embedConfig.id);
 
                 if (updateCurrentToken)
                 {
-                    var embedContainerId = (embedConfig.type === "report") ? "embedContainer" : "dashboardContainer";
+                    var embedContainerId;
+                    if (embedConfig.type === "dashboard") {
+                        embedContainerId = "dashboardContainer";
+                    } else if (embedConfig.type === "report") {
+                        embedContainerId = "embedContainer";
+                    } else {
+                        embedContainerId = "tileContainer"
+                    }
+
                     var embedContainer = powerbi.embeds.find(function(embedElement) {return (embedElement.element.id == embedContainerId)});
                     if (embedContainer)
                     {
@@ -34,9 +45,13 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
                     LastReportSampleUrl = url;
                     TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Report);
                 }
-                else
+                else if (embedConfig.type === "dashboard")
                 {
                     TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Dashboard);
+                }
+                else 
+                {
+                    TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Tile);
                 }
             });
         }
@@ -81,6 +96,19 @@ function TokenExpirationRefreshListener(minutesToExpiration, entityType) {
             FetchUrlIntoSession(dashboardUrl, true /* updateCurrentToken */);
         }, updateAfterMilliSeconds);
     }
+    else 
+    {
+      if (TileRefreshTokenTimer)
+        {
+            console.log("step current Tile Embed Token update threads.");
+            clearTimeout(TileRefreshTokenTimer);
+        }
+
+        console.log("Tile Embed Token will be updated in " + updateAfterMilliSeconds + " milliseconds.");
+        TileRefreshTokenTimer = setTimeout(function() {
+            FetchUrlIntoSession(tileUrl, true /* updateCurrentToken */);
+        }, updateAfterMilliSeconds);
+    }
 }
 
 function LoadSampleReportIntoSession() {
@@ -98,6 +126,11 @@ function LoadSampleDashboardIntoSession() {
     return FetchUrlIntoSession(dashboardUrl, false /* updateCurrentToken */);
 }
 
+function LoadSampleTileIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Tile);
+    return FetchUrlIntoSession(tileUrl, false /* updateCurrentToken */);
+}
+
 function OpenEmbedStepWithSample(entityType) {
     SetSession(SessionKeys.EntityType, entityType);
 
@@ -110,6 +143,11 @@ function OpenEmbedStepWithSample(entityType) {
     {
         SetSession(SessionKeys.IsSampleDashboard, true);
         OpenEmbedStep(EmbedViewMode, EntityType.Dashboard);
+    }
+    else
+    {
+      SetSession(SessionKeys.IsSampleTile, true);
+      OpenEmbedStep(EmbedViewMode, EntityType.Tile)
     }
 }
 
@@ -127,9 +165,10 @@ function OpenEmbedStepFromUserSettings() {
     OpenEmbedStep(EmbedViewMode, EntityType.Report);
 }
 
-function setSession(accessToken, embedUrl, embedId)
+function setSession(accessToken, embedUrl, embedId, dashboardId)
 {
     SetSession(SessionKeys.AccessToken, accessToken);
     SetSession(SessionKeys.EmbedUrl, embedUrl);
     SetSession(SessionKeys.EmbedId, embedId);
+    SetSession(SessionKeys.DashboardId, dashboardId);
 }

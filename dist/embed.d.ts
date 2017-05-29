@@ -31,11 +31,18 @@ export interface IEmbedConfiguration {
     permissions?: models.Permissions;
     viewMode?: models.ViewMode;
     tokenType?: models.TokenType;
+    action?: string;
+    dashboardId?: string;
+    height?: number;
+    width?: number;
 }
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
     uniqueId: string;
     type: string;
     embedUrl: string;
+    height?: number;
+    width?: number;
+    action?: string;
 }
 export interface IInternalEventHandler<T> {
     test(event: service.IEvent<T>): boolean;

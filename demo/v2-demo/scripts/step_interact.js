@@ -61,6 +61,13 @@ function OpenEditAndSaveOperations() {
     $("#selected-catogory-button").html("Edit and save operations");
 }
 
+function OpenTileOperations() {
+    $("#tile-operations-div").show();
+    $("#tile-operations-li").addClass('active');
+    
+    $("#tile-operations-div .function-ul li.active").click()
+    $("#selected-catogory-button").html("Tile operations");
+}
 
 function OpenDashboardOperations() {
     $("#dashboard-operations-div").show();
