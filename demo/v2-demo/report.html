@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<div id="authorize-step-wrapper">
+</div>
+<div id="embed-and-interact-steps-wrapper">
+    <div class="topPanel">
+        <div id="settings"></div>
+        <div id="embedCodeDiv"></div>
+        <div id="logWindow"></div>
+    </div>
+
+    <div class="bottomPanel">
+        <div id="embedArea">
+            <div class="editorTitle">
+                <div class="editorTitleText">Embedded view</div>
+            </div>
+            <div id="embedContainer"></div>
+            <div id="dashboardContainer"></div>
+            <div id="tileContainer"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $("#authorize-step-wrapper").load("step_authorize.html");
+
+    LoadLogWindow("#logWindow");
+    
+    var modeUrlParam = GetParameterByName("mode");
+    var mode = modeUrlParam ? modeUrlParam : "view";
+
+    var entityTypeUrlParam = GetParameterByName("entityType");
+    var entityType = entityTypeUrlParam == "dashboard" ? EntityType.Dashboard : EntityType.Report;
+    
+    // set mode and type in session.
+    SetSession(SessionKeys.EntityType, entityType);
+    SetSession(SessionKeys.EmbedMode, mode);
+
+    if (GetParameterByName("embedUrl") || GetParameterByName("embedId") || GetParameterByName("accessToken") || GetParameterByName("entityType"))
+    {
+        OpenEmbedStep(mode, entityType);
+    }
+    else
+    {
+        // Open Authorization Step after this page loads.
+        OpenAuthStep();
+    }
+
+    Log = InitLogger("txtResponse");
+});
+</script>

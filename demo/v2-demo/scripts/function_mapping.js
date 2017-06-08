@@ -25,17 +25,21 @@ function datasetNotSupported() {
 }
 
 function IsSaveMock(funcName) {
-    return ((funcName === '_Report_save' || funcName === '_Report_saveAs') && ( 
-        _session.embedId  === 'c52af8ab-0468-4165-92af-dc39858d66ad' /*Sample Report*/ ||
-        _session.embedId  === '1ee0b264-b280-43f1-bbb7-9d8bd2d03a78' /*Sample dataset*/ ));
+    var sampleId = GetSession(SessionKeys.SampleId);
+    var isSample = sampleId && (_session.embedId  === sampleId);
+    return ((funcName === '_Report_save' || funcName === '_Report_saveAs') && isSample);
 }
 
 function IsBasicMock(funcName) {
-    return ((funcName === '_Embed_BasicEmbed' || funcName === '_Embed_BasicEmbed_EditMode') && _session.embedId === 'c52af8ab-0468-4165-92af-dc39858d66ad');
+    var sampleId = GetSession(SessionKeys.SampleId);
+    var isSample = sampleId && (_session.embedId  === sampleId);
+    return ((funcName === '_Embed_BasicEmbed' || funcName === '_Embed_BasicEmbed_EditMode') && isSample);
 }
 
 function IsCreateMock(funcName) {
-    return (funcName === '_Embed_Create' && _session.embedId === '1ee0b264-b280-43f1-bbb7-9d8bd2d03a78');
+    var sampleId = GetSession(SessionKeys.SampleId);
+    var isSample = sampleId && (_session.embedId  === sampleId);
+    return (funcName === '_Embed_Create' && isSample);
 }
 
 function IsNotSupported(funcName) {
@@ -43,8 +47,14 @@ function IsNotSupported(funcName) {
         return false
     }
 
-    // Get a reference to the embedded element
-    var embed = powerbi.get($('#reportContainer')[0]);
+    const dashboardOrTileMatch = funcName.match(/Dashboard|Tile/);
+    if (dashboardOrTileMatch) {
+      return false;
+    }
+
+     // Get a reference to the embedded element
+    var container = '#embedContainer';
+    var embed = powerbi.get($(container)[0]);
     if (embed.config.type !== 'create') {
         return false;
     }
