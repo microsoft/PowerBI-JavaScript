@@ -1,7 +1,7 @@
-var reportUrl = 'http://powerbilivedemobe.azurewebsites.net/api/Reports/SampleReport';
-var datasetUrl = 'http://powerbilivedemobe.azurewebsites.net/api/Reports/SampleCreate';
-var dashboardUrl = 'http://powerbilivedemobe.azurewebsites.net/api/Dashboards/SampleDashboard';
-var tileUrl = 'http://powerbilivedemobe.azurewebsites.net/api/Tiles/SampleTile';
+var reportUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/SampleReport';
+var datasetUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/SampleCreate';
+var dashboardUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Dashboards/SampleDashboard';
+var tileUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Tiles/SampleTile';
 
 var LastReportSampleUrl = null;
 var ReportRefreshTokenTimer = 0;
