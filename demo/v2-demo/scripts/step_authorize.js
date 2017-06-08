@@ -1,7 +1,7 @@
-var reportUrl = 'http://powerbiembedapiv2.azurewebsites.net/api/Reports/SampleReport';
-var datasetUrl = 'http://powerbiembedapiv2.azurewebsites.net/api/Reports/SampleCreate';
-var dashboardUrl = 'http://powerbiembedapiv2.azurewebsites.net/api/Dashboards/SampleDashboard';
-var tileUrl = 'http://powerbiembedapiv2.azurewebsites.net/api/Tiles/SampleTile';
+var reportUrl = 'http://powerbilivedemobe.azurewebsites.net/api/Reports/SampleReport';
+var datasetUrl = 'http://powerbilivedemobe.azurewebsites.net/api/Reports/SampleCreate';
+var dashboardUrl = 'http://powerbilivedemobe.azurewebsites.net/api/Dashboards/SampleDashboard';
+var tileUrl = 'http://powerbilivedemobe.azurewebsites.net/api/Tiles/SampleTile';
 
 var LastReportSampleUrl = null;
 var ReportRefreshTokenTimer = 0;
