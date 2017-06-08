@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.1 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as models from 'powerbi-models';
 declare global  {
@@ -30,11 +30,19 @@ export interface IEmbedConfiguration {
     datasetId?: string;
     permissions?: models.Permissions;
     viewMode?: models.ViewMode;
+    tokenType?: models.TokenType;
+    action?: string;
+    dashboardId?: string;
+    height?: number;
+    width?: number;
 }
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
     uniqueId: string;
     type: string;
     embedUrl: string;
+    height?: number;
+    width?: number;
+    action?: string;
 }
 export interface IInternalEventHandler<T> {
     test(event: service.IEvent<T>): boolean;
