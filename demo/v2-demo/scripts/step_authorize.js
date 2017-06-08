@@ -15,51 +15,40 @@ const EntityType = {
 };
 
 function FetchUrlIntoSession(url, updateCurrentToken) {
-    return fetch(url).then(function (response) {
-        if (response.ok) {
-            return response.json()
-            .then(function (embedConfig) {
-                setSession(embedConfig.embedToken.token, embedConfig.embedUrl, embedConfig.id, embedConfig.dashboardId);
-                SetSession(SessionKeys.SampleId, embedConfig.id);
+    return $.getJSON(url, function (embedConfig) {
+        setSession(embedConfig.embedToken.token, embedConfig.embedUrl, embedConfig.id, embedConfig.dashboardId);
+        SetSession(SessionKeys.SampleId, embedConfig.id);
 
-                if (updateCurrentToken)
-                {
-                    var embedContainerId;
-                    if (embedConfig.type === "dashboard") {
-                        embedContainerId = "dashboardContainer";
-                    } else if (embedConfig.type === "report") {
-                        embedContainerId = "embedContainer";
-                    } else {
-                        embedContainerId = "tileContainer"
-                    }
+        if (updateCurrentToken)
+        {
+            var embedContainerId;
+            if (embedConfig.type === "dashboard") {
+                embedContainerId = "dashboardContainer";
+            } else if (embedConfig.type === "report") {
+                embedContainerId = "embedContainer";
+            } else {
+                embedContainerId = "tileContainer"
+            }
 
-                    var embedContainer = powerbi.embeds.find(function(embedElement) {return (embedElement.element.id == embedContainerId)});
-                    if (embedContainer)
-                    {
-                        embedContainer.setAccessToken(embedConfig.embedToken.token);
-                    }
-                }
-
-                if (embedConfig.type === "report")
-                {
-                    LastReportSampleUrl = url;
-                    TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Report);
-                }
-                else if (embedConfig.type === "dashboard")
-                {
-                    TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Dashboard);
-                }
-                else 
-                {
-                    TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Tile);
-                }
-            });
+            var embedContainer = powerbi.embeds.find(function(embedElement) {return (embedElement.element.id == embedContainerId)});
+            if (embedContainer)
+            {
+                embedContainer.setAccessToken(embedConfig.embedToken.token);
+            }
         }
-        else {
-            return response.json()
-            .then(function (error) {
-                throw new Error(error);
-            });
+
+        if (embedConfig.type === "report")
+        {
+            LastReportSampleUrl = url;
+            TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Report);
+        }
+        else if (embedConfig.type === "dashboard")
+        {
+            TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Dashboard);
+        }
+        else 
+        {
+            TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Tile);
         }
     });
 }
