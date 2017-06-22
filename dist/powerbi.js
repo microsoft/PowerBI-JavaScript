@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.2 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -350,7 +350,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (!page) {
 	                    throw new Error("Page model not found at 'event.value." + pageKey + "'.");
 	                }
-	                value[pageKey] = new page_1.Page(embed, page.name, page.displayName);
+	                value[pageKey] = new page_1.Page(embed, page.name, page.displayName, true /* isActive */);
 	            }
 	            utils.raiseCustomEvent(embed.element, event.name, value);
 	        }
@@ -958,7 +958,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            .then(function (response) {
 	            return response.body
 	                .map(function (page) {
-	                return new page_1.Page(_this, page.name, page.displayName);
+	                return new page_1.Page(_this, page.name, page.displayName, page.isActive);
 	            });
 	        }, function (response) {
 	            throw response.body;
@@ -980,10 +980,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {string} name
 	     * @param {string} [displayName]
+	     * @param {boolean} [isActive]
 	     * @returns {Page}
 	     */
-	    Report.prototype.page = function (name, displayName) {
-	        return new page_1.Page(this, name, displayName);
+	    Report.prototype.page = function (name, displayName, isActive) {
+	        return new page_1.Page(this, name, displayName, isActive);
 	    };
 	    /**
 	     * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
@@ -1023,7 +1024,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Report.prototype.setPage = function (pageName) {
 	        var page = {
 	            name: pageName,
-	            displayName: null
+	            displayName: null,
+	            isActive: true
 	        };
 	        return this.service.hpm.put('/report/pages/active', page, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
@@ -5204,11 +5206,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {IReportNode} report
 	     * @param {string} name
 	     * @param {string} [displayName]
+	     * @param {boolean} [isActivePage]
 	     */
-	    function Page(report, name, displayName) {
+	    function Page(report, name, displayName, isActivePage) {
 	        this.report = report;
 	        this.name = name;
 	        this.displayName = displayName;
+	        this.isActive = isActivePage;
 	    }
 	    /**
 	     * Gets all page level filters within the report.
@@ -5250,7 +5254,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Page.prototype.setActive = function () {
 	        var page = {
 	            name: this.name,
-	            displayName: null
+	            displayName: null,
+	            isActive: true
 	        };
 	        return this.report.service.hpm.put('/report/pages/active', page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
 	            .catch(function (response) {
@@ -5593,7 +5598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.3.1',
+	    version: '2.3.2',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });

@@ -132,7 +132,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       .then(response => {
         return response.body
           .map(page => {
-            return new Page(this, page.name, page.displayName);
+            return new Page(this, page.name, page.displayName, page.isActive);
           });
       }, response => {
         throw response.body;
@@ -155,10 +155,11 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * 
    * @param {string} name
    * @param {string} [displayName]
+   * @param {boolean} [isActive]
    * @returns {Page}
    */
-  page(name: string, displayName?: string): Page {
-    return new Page(this, name, displayName);
+  page(name: string, displayName?: string, isActive?: boolean): Page {
+    return new Page(this, name, displayName, isActive);
   }
 
   /**
@@ -201,7 +202,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   setPage(pageName: string): Promise<void> {
     const page: models.IPage = {
       name: pageName,
-      displayName: null
+      displayName: null,
+      isActive: true
     };
 
     return this.service.hpm.put<models.IError[]>('/report/pages/active', page, { uid: this.config.uniqueId }, this.iframe.contentWindow)

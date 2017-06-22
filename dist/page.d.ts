@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.2 | (c) 2016 Microsoft Corporation MIT */
 import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
 import * as models from 'powerbi-models';
@@ -40,13 +40,20 @@ export declare class Page implements IPageNode, IFilterable {
      */
     displayName: string;
     /**
+     * Is this page is the active page
+     *
+     * @type {boolean}
+     */
+    isActive: boolean;
+    /**
      * Creates an instance of a Power BI report page.
      *
      * @param {IReportNode} report
      * @param {string} name
      * @param {string} [displayName]
+     * @param {boolean} [isActivePage]
      */
-    constructor(report: IReportNode, name: string, displayName?: string);
+    constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean);
     /**
      * Gets all page level filters within the report.
      *

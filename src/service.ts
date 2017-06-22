@@ -391,7 +391,7 @@ export class Service implements IService {
         if (!page) {
           throw new Error(`Page model not found at 'event.value.${pageKey}'.`);
         }
-        value[pageKey] = new Page(embed, page.name, page.displayName);
+        value[pageKey] = new Page(embed, page.name, page.displayName, true /* isActive */);
       }
 
       utils.raiseCustomEvent(embed.element, event.name, value);
