@@ -87,6 +87,17 @@ a:hover, a:visited, a:link, a:active
     margin-right: 30px;
 }
 
+#deprecationNote {
+    margin-top: 30px;
+}
+
+#deprecationNote .title {
+    font-family: 'Segoe UI Web Light', 'Segoe UI Light', 'Segoe WP Light', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bolder;
+    color: red;
+}
+
 #sampleReportImgDiv img {
     width: 265px;
     height: 180px;
