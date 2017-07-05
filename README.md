@@ -23,7 +23,7 @@ New [live demo](https://microsoft.github.io/PowerBI-JavaScript/demo) for sample 
 
 Install via Nuget:
 
-`Install-Package Microsoft.PowerBI.JavaScript -Pre`
+`Install-Package Microsoft.PowerBI.JavaScript`
 
 Install from NPM:
 
