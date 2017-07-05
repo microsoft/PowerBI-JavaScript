@@ -88,13 +88,12 @@ a:hover, a:visited, a:link, a:active
 }
 
 #deprecationNote {
-    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
-#deprecationNote .title {
-    font-family: 'Segoe UI Web Light', 'Segoe UI Light', 'Segoe WP Light', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
-    font-size: 16px;
-    font-weight: bolder;
+#deprecationNote .pageTitle {
+    margin-bottom: 15px;
+    font-weight: normal;
     color: red;
 }
 
