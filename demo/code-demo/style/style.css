@@ -87,6 +87,16 @@ a:hover, a:visited, a:link, a:active
     margin-right: 30px;
 }
 
+#deprecationNote {
+    margin-bottom: 30px;
+}
+
+#deprecationNote .pageTitle {
+    margin-bottom: 15px;
+    font-weight: normal;
+    color: red;
+}
+
 #sampleReportImgDiv img {
     width: 265px;
     height: 180px;
