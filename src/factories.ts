@@ -27,6 +27,7 @@ export const wpmpFactory: IWpmpFactory = (name?: string, logMessages?: boolean, 
       getTrackingProperties: hpm.HttpPostMessage.getTrackingProperties,
     },
     isErrorMessage: hpm.HttpPostMessage.isErrorMessage,
+    suppressWarnings: true,
     name,
     logMessages,
     eventSourceOverrideWindow

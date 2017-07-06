@@ -1,9 +1,9 @@
 {
   "extends": "tslint:recommended",
   "rules": {
-    "max-line-length": false,
+    "max-line-length": [false],
     "member-access": false,
-    "no-console": false,
+    "no-console": [false],
     "one-line": [
       "check-whitespace",
       "check-open-brace"
@@ -12,7 +12,7 @@
       "single",
       "avoid-escape"
     ],
-    "trailing-comma": false,
+    "trailing-comma": [false],
     "whitespace": [
       "check-branch",
       "check-decl",

@@ -69,7 +69,7 @@ export class Service implements IService {
   /**
    * A list of components that this service can embed
    */
-   private static components: (typeof Report | typeof Tile | typeof Dashboard)[] = [
+  private static components: (typeof Report | typeof Tile | typeof Dashboard)[] = [
     Tile,
     Report,
     Dashboard
@@ -351,8 +351,8 @@ export class Service implements IService {
     const iframe = element.querySelector('iframe');
     if (iframe) {
       if(iframe.remove !== undefined) {
-          iframe.remove();
-	  }
+        iframe.remove();
+      }
       else {
           /** Workaround for IE: unhandled rejection TypeError: object doesn't support propert or method 'remove' */
           iframe.parentElement.removeChild(iframe);
