@@ -3065,7 +3065,8 @@ describe('SDK-to-HPM', function () {
         const testData = {
           page: {
             name: page1.name,
-            displayName: null
+            displayName: null,
+            isActive: true,
           }
         };
 
@@ -3083,7 +3084,8 @@ describe('SDK-to-HPM', function () {
         const testData = {
           page: {
             name: page1.name,
-            displayName: null
+            displayName: null,
+            isActive: true,
           },
           response: {
             body: [
@@ -3111,7 +3113,8 @@ describe('SDK-to-HPM', function () {
         const testData = {
           page: {
             name: page1.name,
-            displayName: null
+            displayName: null,
+            isActive: true,
           }
         };
 
@@ -3510,7 +3513,8 @@ describe('SDK-to-MockApp', function () {
           pages: [
             {
               name: "page1",
-              displayName: "Page 1"
+              displayName: "Page 1",
+              isActive: true
             }
           ]
         };
@@ -3529,6 +3533,7 @@ describe('SDK-to-MockApp', function () {
                     const testPage = util.find(p => p.name === page.name, testData.pages);
                     if (testPage) {
                       expect(page.name).toEqual(testPage.name);
+                      expect(page.isActive).toEqual(testPage.isActive)
                     }
                     else {
                       expect(true).toBe(false);

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.2 | (c) 2016 Microsoft Corporation MIT */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -99,9 +99,10 @@ export declare class Report extends embed.Embed implements IReportNode, IFiltera
      *
      * @param {string} name
      * @param {string} [displayName]
+     * @param {boolean} [isActive]
      * @returns {Page}
      */
-    page(name: string, displayName?: string): Page;
+    page(name: string, displayName?: string, isActive?: boolean): Page;
     /**
      * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
      */

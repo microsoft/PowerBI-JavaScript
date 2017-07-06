@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.2 | (c) 2016 Microsoft Corporation MIT */
 import * as embed from './embed';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';

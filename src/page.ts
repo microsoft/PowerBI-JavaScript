@@ -43,16 +43,25 @@ export class Page implements IPageNode, IFilterable {
   displayName: string;
 
   /**
+   * Is this page is the active page
+   * 
+   * @type {boolean}
+   */
+  isActive: boolean; 
+
+  /**
    * Creates an instance of a Power BI report page.
    * 
    * @param {IReportNode} report
    * @param {string} name
    * @param {string} [displayName]
+   * @param {boolean} [isActivePage]
    */
-  constructor(report: IReportNode, name: string, displayName?: string) {
+  constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean) {
     this.report = report;
     this.name = name;
     this.displayName = displayName;
+    this.isActive = isActivePage;
   }
 
   /**
@@ -98,7 +107,8 @@ export class Page implements IPageNode, IFilterable {
   setActive(): Promise<void> {
     const page: models.IPage = {
       name: this.name,
-      displayName: null
+      displayName: null,
+      isActive: true
     };
 
     return this.report.service.hpm.put<models.IError[]>('/report/pages/active', page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
