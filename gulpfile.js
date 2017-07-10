@@ -172,14 +172,19 @@ gulp.task('compile:ts', 'Compile typescript for powerbi library', function () {
     .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('compile:dts', 'Generate dts files from modules', function () {
+gulp.task('compile:dts', 'Generate one dts file from modules', function () {
   var tsProject = ts.createProject('tsconfig.json', {
     declaration: true,
     sourceMap: false
   });
 
+  var settings = {
+    out: "powerbi-client.js",
+    declaration: true
+  };
+
   var tsResult = tsProject.src()
-    .pipe(ts(tsProject));
+    .pipe(ts(settings));
 
   return tsResult.dts
     .pipe(flatten())

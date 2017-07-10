@@ -6,4 +6,5 @@ typings/
 tmp
 .publish
 npm-debug.log*
-dist/*.js.map
+dist/powerbi.js.map
+
