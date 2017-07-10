@@ -5583,6 +5583,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            getTrackingProperties: hpm.HttpPostMessage.getTrackingProperties,
 	        },
 	        isErrorMessage: hpm.HttpPostMessage.isErrorMessage,
+	        suppressWarnings: true,
 	        name: name,
 	        logMessages: logMessages,
 	        eventSourceOverrideWindow: eventSourceOverrideWindow
