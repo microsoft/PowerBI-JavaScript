@@ -107,3 +107,18 @@ export function assign(...args) {
 export function createRandomString(): string {
   return (Math.random() + 1).toString(36).substring(7);
 }
+
+/**
+ * Adds a parameter to the given url
+ * 
+ * @export
+ * @param {string} url
+ * @param {string} paramName
+ * @param {string} value
+ * @returns {string}
+ */
+export function addParamToUrl(url: string, paramName: string, value: string): string {
+  let parameterPrefix = url.indexOf('?') > 0 ? '&' : '?';
+  url += parameterPrefix + paramName + '=' + value;
+  return url;
+}

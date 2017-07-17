@@ -15,11 +15,8 @@ export class Tile extends embed.Embed {
     static allowedEvents = ["tileClicked", "tileLoaded"];
 
     constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration) {
-        let url = config.embedUrl;
-        const urlParamMatch = url.indexOf("?") > 0;
-        let firstParamSign = urlParamMatch ? '&' : '?';
-        url = url + firstParamSign + 'dashboardId=' + config.dashboardId + '&tileId=' + config.id;
-        config.embedUrl = url;
+        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'dashboardId', config.dashboardId);
+        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'tileId', config.id);
 
         super(service, element, config);
         Array.prototype.push.apply(this.allowedEvents, Tile.allowedEvents);
