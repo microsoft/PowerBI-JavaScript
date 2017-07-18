@@ -63,6 +63,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.models = models;
 	var report_1 = __webpack_require__(4);
 	exports.Report = report_1.Report;
+	var dashboard_1 = __webpack_require__(8);
+	exports.Dashboard = dashboard_1.Dashboard;
 	var tile_1 = __webpack_require__(9);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);

@@ -1010,6 +1010,7 @@ declare module "powerbi" {
     import { IFilterable } from "ifilterable";
     export { IFilterable, service, factories, models };
     export { Report } from "report";
+    export { Dashboard } from "dashboard";
     export { Tile } from "tile";
     export { IEmbedConfiguration, Embed } from "embed";
     export { Page } from "page";

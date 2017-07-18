@@ -13,6 +13,9 @@ export {
   Report
 } from './report';
 export {
+  Dashboard
+} from './dashboard';
+export {
   Tile
 } from './tile';
 export {
