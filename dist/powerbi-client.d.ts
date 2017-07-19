@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.3 | (c) 2016 Microsoft Corporation MIT */
 declare module "config" {
     const config: {
         version: string;
@@ -52,6 +52,16 @@ declare module "util" {
      * @returns {string}
      */
     export function createRandomString(): string;
+    /**
+     * Adds a parameter to the given url
+     *
+     * @export
+     * @param {string} url
+     * @param {string} paramName
+     * @param {string} value
+     * @returns {string}
+     */
+    export function addParamToUrl(url: string, paramName: string, value: string): string;
 }
 declare module "embed" {
     import * as service from "service";
@@ -78,7 +88,7 @@ declare module "embed" {
         uniqueId?: string;
         embedUrl?: string;
         accessToken?: string;
-        settings?: models.ISettings;
+        settings?: IEmbedSettings;
         pageName?: string;
         filters?: models.IFilter[];
         pageView?: models.PageView;
@@ -90,6 +100,13 @@ declare module "embed" {
         dashboardId?: string;
         height?: number;
         width?: number;
+    }
+    export interface ILocaleSettings {
+        language?: string;
+        formatLocale?: string;
+    }
+    export interface IEmbedSettings extends models.ISettings {
+        localeSettings?: ILocaleSettings;
     }
     export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
         uniqueId: string;
@@ -291,6 +308,13 @@ declare module "embed" {
          * @returns {void}
          */
         private populateConfig(config);
+        /**
+         * Adds locale parameters to embedUrl
+         *
+         * @private
+         * @param {IEmbedConfiguration} config
+         */
+        private addLocaleToEmbedUrl(config);
         /**
          * Gets an embed url from the first available location: options, attribute.
          *
@@ -986,6 +1010,7 @@ declare module "powerbi" {
     import { IFilterable } from "ifilterable";
     export { IFilterable, service, factories, models };
     export { Report } from "report";
+    export { Dashboard } from "dashboard";
     export { Tile } from "tile";
     export { IEmbedConfiguration, Embed } from "embed";
     export { Page } from "page";

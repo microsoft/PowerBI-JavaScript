@@ -228,6 +228,29 @@ describe('service', function () {
       expect(component2).toBe(component3);
     });
 
+    it('Create embed url with correct locale parameters', function () {
+      // Arrange
+      const $reportContainer = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+        .appendTo('#powerbi-fixture');
+
+      const testConfiguration: embed.IEmbedConfiguration = {
+        accessToken: "fakeAccessToken",
+        embedUrl: 'fakeUrl?reportId=1',
+        id: 'report2',
+        type: 'report',
+        settings: {
+          localeSettings: {
+            language: 'languageName',
+            formatLocale: 'formatName'
+          }
+        }
+      };
+
+      powerbi.embed($reportContainer[0], testConfiguration);
+      var iframe = $reportContainer.find('iframe');
+      expect(iframe.attr('src')).toEqual('fakeUrl?reportId=1&language=languageName&formatLocale=formatName');
+    });
+
     it('if attempting to embed without specifying an embed url, throw error', function () {
       // Arrange
       const component = $('<div></div>')

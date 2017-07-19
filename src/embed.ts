@@ -35,7 +35,7 @@ export interface IEmbedConfiguration {
   uniqueId?: string;
   embedUrl?: string;
   accessToken?: string;
-  settings?: models.ISettings;
+  settings?: IEmbedSettings;
   pageName?: string;
   filters?: models.IFilter[];
   pageView?: models.PageView;
@@ -47,6 +47,15 @@ export interface IEmbedConfiguration {
   dashboardId?: string;
   height?: number;
   width?: number;
+}
+
+export interface ILocaleSettings {
+  language?: string;
+  formatLocale?: string;
+}
+
+export interface IEmbedSettings extends models.ISettings {
+  localeSettings?: ILocaleSettings;
 }
 
 export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
@@ -382,7 +391,7 @@ export abstract class Embed {
       this.config = utils.assign({ settings }, config);
       this.config.uniqueId = this.getUniqueId();
       this.config.embedUrl = this.getEmbedUrl();
-
+      this.addLocaleToEmbedUrl(config);
       if(this.embeType === 'create') {
           this.createConfig = {
               datasetId: config.datasetId || this.getId(),
@@ -401,6 +410,24 @@ export abstract class Embed {
       }  
   }
 
+  /**
+   * Adds locale parameters to embedUrl
+   * 
+   * @private
+   * @param {IEmbedConfiguration} config
+   */
+  private addLocaleToEmbedUrl(config: IEmbedConfiguration): void {
+      if (!config.settings) {
+        return;
+      }
+      let localeSettings = config.settings.localeSettings
+      if (localeSettings && localeSettings.language) {
+        this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'language', localeSettings.language);
+      }
+      if (localeSettings && localeSettings.formatLocale) {
+        this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'formatLocale', localeSettings.formatLocale);
+      }
+  }
 
   /**
    * Gets an embed url from the first available location: options, attribute.

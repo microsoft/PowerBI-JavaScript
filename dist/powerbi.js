@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.3 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -63,6 +63,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.models = models;
 	var report_1 = __webpack_require__(4);
 	exports.Report = report_1.Report;
+	var dashboard_1 = __webpack_require__(8);
+	exports.Dashboard = dashboard_1.Dashboard;
 	var tile_1 = __webpack_require__(9);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
@@ -623,6 +625,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.config = utils.assign({ settings: settings }, config);
 	        this.config.uniqueId = this.getUniqueId();
 	        this.config.embedUrl = this.getEmbedUrl();
+	        this.addLocaleToEmbedUrl(config);
 	        if (this.embeType === 'create') {
 	            this.createConfig = {
 	                datasetId: config.datasetId || this.getId(),
@@ -639,6 +642,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	                this.config.height = config.height;
 	                this.config.width = config.width;
 	            }
+	        }
+	    };
+	    /**
+	     * Adds locale parameters to embedUrl
+	     *
+	     * @private
+	     * @param {IEmbedConfiguration} config
+	     */
+	    Embed.prototype.addLocaleToEmbedUrl = function (config) {
+	        if (!config.settings) {
+	            return;
+	        }
+	        var localeSettings = config.settings.localeSettings;
+	        if (localeSettings && localeSettings.language) {
+	            this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'language', localeSettings.language);
+	        }
+	        if (localeSettings && localeSettings.formatLocale) {
+	            this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'formatLocale', localeSettings.formatLocale);
 	        }
 	    };
 	    /**
@@ -845,6 +866,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return (Math.random() + 1).toString(36).substring(7);
 	}
 	exports.createRandomString = createRandomString;
+	/**
+	 * Adds a parameter to the given url
+	 *
+	 * @export
+	 * @param {string} url
+	 * @param {string} paramName
+	 * @param {string} value
+	 * @returns {string}
+	 */
+	function addParamToUrl(url, paramName, value) {
+	    var parameterPrefix = url.indexOf('?') > 0 ? '&' : '?';
+	    url += parameterPrefix + paramName + '=' + value;
+	    return url;
+	}
+	exports.addParamToUrl = addParamToUrl;
 
 
 /***/ }),
@@ -5441,6 +5477,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	var models = __webpack_require__(5);
 	var embed = __webpack_require__(2);
+	var utils = __webpack_require__(3);
 	/**
 	 * The Power BI tile embed component
 	 *
@@ -5451,11 +5488,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Tile = (function (_super) {
 	    __extends(Tile, _super);
 	    function Tile(service, element, config) {
-	        var url = config.embedUrl;
-	        var urlParamMatch = url.indexOf("?") > 0;
-	        var firstParamSign = urlParamMatch ? '&' : '?';
-	        url = url + firstParamSign + 'dashboardId=' + config.dashboardId + '&tileId=' + config.id;
-	        config.embedUrl = url;
+	        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'dashboardId', config.dashboardId);
+	        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'tileId', config.id);
 	        _super.call(this, service, element, config);
 	        Array.prototype.push.apply(this.allowedEvents, Tile.allowedEvents);
 	        window.addEventListener("message", this.receiveMessage.bind(this), false);
@@ -5599,7 +5633,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.3.2',
+	    version: '2.3.3',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
