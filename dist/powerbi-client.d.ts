@@ -1003,7 +1003,7 @@ declare module "factories" {
     export const wpmpFactory: IWpmpFactory;
     export const routerFactory: IRouterFactory;
 }
-declare module "powerbi" {
+declare module "powerbi-client" {
     import * as service from "service";
     import * as factories from "factories";
     import * as models from 'powerbi-models';
