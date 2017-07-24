@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.4 | (c) 2016 Microsoft Corporation MIT */
 declare module "config" {
     const config: {
         version: string;
@@ -1003,7 +1003,7 @@ declare module "factories" {
     export const wpmpFactory: IWpmpFactory;
     export const routerFactory: IRouterFactory;
 }
-declare module "powerbi" {
+declare module "powerbi-client" {
     import * as service from "service";
     import * as factories from "factories";
     import * as models from 'powerbi-models';

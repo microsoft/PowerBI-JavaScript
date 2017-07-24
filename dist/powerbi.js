@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.4 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -5633,7 +5633,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.3.3',
+	    version: '2.3.4',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });

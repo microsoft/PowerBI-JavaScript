@@ -162,12 +162,12 @@ gulp.task('min:js', 'Creates minified JavaScript file', function () {
     .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('compile:ts', 'Compile typescript for powerbi library', function () {
+gulp.task('compile:ts', 'Compile typescript for powerbi-client library', function () {
   webpackConfig.plugins = [
     new webpack.BannerPlugin(webpackBanner)
   ];
 
-  return gulp.src(['./src/powerbi.ts'])
+  return gulp.src(['./src/powerbi-client.ts'])
     .pipe(webpackStream(webpackConfig))
     .pipe(gulp.dest('dist/'));
 });

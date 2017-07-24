@@ -2,7 +2,7 @@ var package = require('./package.json');
 
 module.exports = {
   entry: {
-    'powerbi': './src/powerbi.ts'
+    'powerbi': './src/powerbi-client.ts'
   },
   output: {
     path: __dirname + "/dist",
