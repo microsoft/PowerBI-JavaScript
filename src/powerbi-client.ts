@@ -20,7 +20,9 @@ export {
 } from './tile';
 export {
   IEmbedConfiguration,
-  Embed
+  Embed,
+  ILocaleSettings,
+  IEmbedSettings
 } from './embed';
 export {
   Page
