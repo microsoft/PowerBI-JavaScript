@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.4 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.3.5 | (c) 2016 Microsoft Corporation MIT */
 declare module "config" {
     const config: {
         version: string;
@@ -1012,7 +1012,7 @@ declare module "powerbi-client" {
     export { Report } from "report";
     export { Dashboard } from "dashboard";
     export { Tile } from "tile";
-    export { IEmbedConfiguration, Embed } from "embed";
+    export { IEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings } from "embed";
     export { Page } from "page";
     global  {
         interface Window {
