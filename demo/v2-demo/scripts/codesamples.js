@@ -131,7 +131,7 @@ function _Mock_Embed_BasicEmbed(isEdit) {
 
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
-    var permissions = models.Permissions.Copy | models.Permissions.Read;
+    var permissions = models.Permissions.All;
     var viewMode = isEdit ? models.ViewMode.Edit : models.ViewMode.View;
 
     // Embed configuration used to describe the what and how to embed.
