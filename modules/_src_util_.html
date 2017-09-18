@@ -73,6 +73,7 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_src_util_.html#addparamtourl" class="tsd-kind-icon">add<wbr>Param<wbr>ToUrl</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_src_util_.html#assign" class="tsd-kind-icon">assign</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_src_util_.html#createrandomstring" class="tsd-kind-icon">create<wbr>Random<wbr>String</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_src_util_.html#find" class="tsd-kind-icon">find</a></li>
@@ -87,16 +88,54 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="assign" class="tsd-anchor"></a>
-					<h3>assign</h3>
+					<a name="addparamtourl" class="tsd-anchor"></a>
+					<h3>add<wbr>Param<wbr>ToUrl</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">assign<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Param<wbr>ToUrl<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, paramName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/util.ts:79</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/util.ts#L120">src/util.ts:120</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Adds a parameter to the given url</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>export</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>url: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>paramName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>value: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="assign" class="tsd-anchor"></a>
+					<h3>assign</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">assign<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/util.ts#L79">src/util.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -111,7 +150,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
@@ -128,7 +167,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/util.ts:107</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/util.ts#L107">src/util.ts:107</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -154,7 +193,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/util.ts:60</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/util.ts#L60">src/util.ts:60</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -216,7 +255,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/util.ts:35</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/util.ts#L35">src/util.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -278,7 +317,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/util.ts:10</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/util.ts#L10">src/util.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -318,7 +357,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/util.ts:65</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/util.ts#L65">src/util.ts:65</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -366,52 +405,16 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_node_modules_powerbi_models_dist_models_d_.html">"node_<wbr>modules/powerbi-<wbr>models/dist/models.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_config_.html">"src/config"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_create_.html">"src/create"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_dashboard_.html">"src/dashboard"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_embed_.html">"src/embed"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_factories_.html">"src/factories"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_ifilterable_.html">"src/ifilterable"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_page_.html">"src/page"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_powerbi_.html">"src/powerbi"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_report_.html">"src/report"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_service_.html">"src/service"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_src_tile_.html">"src/tile"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="_src_util_.html">"src/util"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_typings_globals_es6_promise_index_d_.html">"typings/globals/es6-<wbr>promise/index.d"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_src_util_.html#addparamtourl" class="tsd-kind-icon">add<wbr>Param<wbr>ToUrl</a>
+					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_src_util_.html#assign" class="tsd-kind-icon">assign</a>
 					</li>
