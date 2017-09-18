@@ -30,8 +30,15 @@ $(document).ready(function() {
     var mode = modeUrlParam ? modeUrlParam : "view";
 
     var entityTypeUrlParam = GetParameterByName("entityType");
-    var entityType = entityTypeUrlParam == "dashboard" ? EntityType.Dashboard : EntityType.Report;
-    
+    var entityType;
+    if (entityTypeUrlParam == "dashboard") {
+        entityType = EntityType.Dashboard;
+    } else if (entityTypeUrlParam == "tile") {
+        entityType = EntityType.Tile;
+    } else {
+        entityType = EntityType.Report;
+    }
+
     // set mode and type in session.
     SetSession(SessionKeys.EntityType, entityType);
     SetSession(SessionKeys.EmbedMode, mode);

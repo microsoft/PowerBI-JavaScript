@@ -24,6 +24,58 @@ describe('type: integer', function () {
         assert(validate(123));
     });
 
+    it('boolean-able', function () {
+        var schema = { type: ['integer', 'boolean'] },
+            validate = jsen(schema);
+
+        assert(!validate(undefined));
+
+        assert(validate(true));
+        assert(validate(false));
+        assert(validate(123));
+        assert(!validate(123.123));
+    });
+
+    it('boolean-able with minimum', function () {
+        var schema = { type: ['integer', 'boolean'], minimum: 0 },
+            validate = jsen(schema);
+
+        assert(!validate(undefined));
+
+        assert(validate(true));
+        assert(validate(false));
+        assert(validate(123));
+        assert(!validate(123.123));
+        assert(!validate(-10));
+    });
+
+    it('boolean-able with maximum', function () {
+        var schema = { type: ['integer', 'boolean'], maximum: 124 },
+            validate = jsen(schema);
+
+        assert(!validate(undefined));
+
+        assert(validate(true));
+        assert(validate(false));
+        assert(validate(123));
+        assert(!validate(123.123));
+        assert(!validate(125));
+    });
+
+    it('boolean-able with maximum and minimum', function () {
+        var schema = { type: ['integer', 'boolean'], maximum: 124, minimum: 0 },
+            validate = jsen(schema);
+
+        assert(!validate(undefined));
+
+        assert(validate(true));
+        assert(validate(false));
+        assert(validate(123));
+        assert(!validate(123.123));
+        assert(!validate(125));
+        assert(!validate(-10));
+    });
+
     it('type', function () {
         var schema = { type: 'integer' },
             validate = jsen(schema);
@@ -54,6 +106,7 @@ describe('type: integer', function () {
 
         assert(validate(7));
         assert(validate(999));
+        assert(!validate(7.7));
     });
 
     it('exclusiveMinimum', function () {
@@ -80,6 +133,7 @@ describe('type: integer', function () {
         assert(validate(-12));
         assert(validate(76));
         assert(validate(77));
+        assert(!validate(76.77));
     });
 
     it('exclusiveMaximum', function () {
@@ -96,6 +150,7 @@ describe('type: integer', function () {
         assert(validate(-12));
         assert(validate(75));
         assert(validate(76));
+        assert(!validate(75.123));
     });
 
     it('multipleOf', function () {
@@ -107,5 +162,6 @@ describe('type: integer', function () {
         assert(validate(14));
         assert(validate(-49));
         assert(validate(77));
+        assert(!validate(77.000000000001));
     });
 });

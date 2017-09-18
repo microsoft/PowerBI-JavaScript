@@ -331,4 +331,15 @@ describe('fixes', function () {
         assert(!validate(data));
         assert.strictEqual(validate.errors[0].path, 'first_name');
     });
+
+    it('Fix broken required field validation when schema contains properties, but no sub-schema for required property (#81)', function () {
+        var schema = {
+                required: ['b'],
+                properties: { }
+            },
+            validate = jsen(schema),
+            valid = validate({ a: '123' });
+
+        assert(!valid);
+    });
 });
