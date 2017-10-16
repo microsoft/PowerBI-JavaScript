@@ -21,6 +21,21 @@ declare global {
   }
 }
 
+/**
+ * Base Configuration settings for Power BI embed components
+ * 
+ * @export
+ * @interface IEmbedConfigurationBase
+ */
+export interface IEmbedConfigurationBase {
+  settings?: ISettings;
+  embedUrl?: string;
+  uniqueId?: string;
+  type?: string;
+  accessToken?: string;
+  tokenType?: models.TokenType;
+}
+
 // TODO: Re-use ILoadConfiguration interface to prevent duplicating properties.
 // Current issue is that they are optional when embedding since they can be specificed as attributes but they are required when loading.
 /**
@@ -29,12 +44,8 @@ declare global {
  * @export
  * @interface IEmbedConfiguration
  */
-export interface IEmbedConfiguration {
-  type?: string;
+export interface IEmbedConfiguration extends IEmbedConfigurationBase {
   id?: string;
-  uniqueId?: string;
-  embedUrl?: string;
-  accessToken?: string;
   settings?: IEmbedSettings;
   pageName?: string;
   filters?: models.IFilter[];
@@ -42,11 +53,22 @@ export interface IEmbedConfiguration {
   datasetId?: string;
   permissions?: models.Permissions;
   viewMode?: models.ViewMode;
-  tokenType?: models.TokenType;
   action?: string;
   dashboardId?: string;
   height?: number;
   width?: number;
+}
+
+/**
+ * Configuration settings for Power BI QNA embed component
+ * 
+ * @export
+ * @interface IEmbedConfiguration
+ */
+export interface IQnaEmbedConfiguration extends IEmbedConfigurationBase {
+  datasetIds: string[];
+  question?: string;
+  viewMode?: models.QnaMode;
 }
 
 export interface ILocaleSettings {
@@ -54,17 +76,14 @@ export interface ILocaleSettings {
   formatLocale?: string;
 }
 
-export interface IEmbedSettings extends models.ISettings {
+export interface ISettings {
   localeSettings?: ILocaleSettings;
 }
 
-export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
-  uniqueId: string;
-  type: string;
-  embedUrl: string;
-  height?: number;
-  width?: number;
-  action?: string;
+export interface IEmbedSettings extends models.ISettings, ISettings {
+}
+
+export interface IQnaSettings extends models.IQnaSettings, ISettings {
 }
 
 export interface IInternalEventHandler<T> {
@@ -86,10 +105,6 @@ export abstract class Embed {
   static nameAttribute = 'powerbi-name';
   static typeAttribute = 'powerbi-type';
   static type: string;
-
-  private static defaultSettings: models.ISettings = {
-    filterPaneEnabled: true
-  };
 
   allowedEvents = [];
 
@@ -124,9 +139,9 @@ export abstract class Embed {
   /**
    * Gets or sets the configuration settings for the Power BI embed component.
    * 
-   * @type {IInternalEmbedConfiguration}
+   * @type {IEmbedConfigurationBase}
    */
-  config: IInternalEmbedConfiguration;
+  config: IEmbedConfigurationBase;
 
   /**
    * Gets or sets the configuration settings for creating report.
@@ -153,9 +168,9 @@ export abstract class Embed {
    * 
    * @param {service.Service} service
    * @param {HTMLElement} element
-   * @param {IEmbedConfiguration} config
+   * @param {IEmbedConfigurationBase} config
    */
-  constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration, iframe?: HTMLIFrameElement) {
+  constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement) {
     Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
     this.eventHandlers = [];
     this.service = service;
@@ -185,7 +200,7 @@ export abstract class Embed {
    * @returns {Promise<void>}
    */
   createReport(config: models.IReportCreateConfiguration): Promise<void> {
-    const errors = this.validate(config);
+    const errors = models.validateCreateReport(config);
     if (errors) {
       throw errors;
     }
@@ -253,7 +268,7 @@ export abstract class Embed {
    * @param {models.ILoadConfiguration} config
    * @returns {Promise<void>}
    */
-  load(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration): Promise<void> {
+  load(config: IEmbedConfigurationBase): Promise<void> {
     const errors = this.validate(config);
     if (errors) {
       throw errors;
@@ -381,33 +396,17 @@ export abstract class Embed {
   /**
    * Populate config for create and load
    * 
-   * @private
    * @param {IEmbedConfiguration}
    * @returns {void}
    */
-  private populateConfig(config: IEmbedConfiguration): void {
-      // TODO: Change when Object.assign is available.
-      const settings = utils.assign({}, Embed.defaultSettings, config.settings);
-      this.config = utils.assign({ settings }, config);
-      this.config.uniqueId = this.getUniqueId();
-      this.config.embedUrl = this.getEmbedUrl();
-      this.addLocaleToEmbedUrl(config);
-      if(this.embeType === 'create') {
-          this.createConfig = {
-              datasetId: config.datasetId || this.getId(),
-              accessToken: this.getAccessToken(this.service.accessToken),
-              tokenType: config.tokenType,
-              settings: settings
-        }
-      } else {
-          this.config.id = this.getId();
-          this.config.accessToken = this.getAccessToken(this.service.accessToken);
-          if (this.embeType == 'tile') {
-              this.config.action = config.action;
-              this.config.height = config.height;
-              this.config.width = config.width;
-          }
-      }  
+  populateConfig(config: IEmbedConfigurationBase): void {
+    this.config = config;
+    
+    // TODO: Change when Object.assign is available.
+    this.config.uniqueId = this.getUniqueId();
+    this.config.embedUrl = this.getEmbedUrl();
+    this.config.accessToken = this.getAccessToken(this.service.accessToken);
+    this.addLocaleToEmbedUrl(config);
   }
 
   /**
@@ -501,7 +500,7 @@ export abstract class Embed {
   /**
    * Validate load and create configuration.
    */
-  abstract validate(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration | models.IReportCreateConfiguration): models.IError[];
+  abstract validate(config: IEmbedConfigurationBase): models.IError[];
 
   /**
    * Sets Iframe for embed

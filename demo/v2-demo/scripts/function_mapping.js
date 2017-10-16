@@ -47,8 +47,8 @@ function IsNotSupported(funcName) {
         return false
     }
 
-    const dashboardOrTileMatch = funcName.match(/Dashboard|Tile/);
-    if (dashboardOrTileMatch) {
+    const dashboardOrTileOrQnaMatch = funcName.match(/Dashboard|Tile|Qna/);
+    if (dashboardOrTileOrQnaMatch) {
       return false;
     }
 

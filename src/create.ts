@@ -1,6 +1,8 @@
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
+import * as utils from './util';
+import { Defaults } from './defaults';
 
 export class Create extends embed.Embed {
 
@@ -26,8 +28,31 @@ export class Create extends embed.Embed {
   /**
    * Validate create report configuration.
    */
-  validate(config: models.IReportCreateConfiguration): models.IError[] {
+  validate(config: embed.IEmbedConfigurationBase): models.IError[] {
     return models.validateCreateReport(config);
+  }
+
+  /**
+   * Populate config for create
+   * 
+   * @param {IEmbedConfigurationBase}
+   * @returns {void}
+   */
+  populateConfig(baseConfig: embed.IEmbedConfigurationBase): void {
+      super.populateConfig(baseConfig);
+
+      // TODO: Change when Object.assign is available.
+      const settings = utils.assign({}, Defaults.defaultSettings, baseConfig.settings);
+      this.config = utils.assign({ settings }, baseConfig);
+
+      const config = <embed.IEmbedConfiguration>this.config;
+
+      this.createConfig = {
+          datasetId: config.datasetId || this.getId(),
+          accessToken: config.accessToken,
+          tokenType: config.tokenType,
+          settings: settings
+      }
   }
 
   /**

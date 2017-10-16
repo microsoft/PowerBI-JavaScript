@@ -118,3 +118,13 @@ function Dashboard_ExitFullScreen() {
 function DashboardEvents_TileClicked() {
     SetCode(_DashboardEvents_TileClicked);
 }
+
+// ---- Q&A Events Listener ----------------------------------------------------
+
+function Qna_SetQuestion() {
+    SetCode(_Qna_SetQuestion);
+}
+
+function Qna_QuestionChanged() {
+    SetCode(_Qna_QuestionChanged);
+}

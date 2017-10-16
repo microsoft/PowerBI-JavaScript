@@ -5,7 +5,8 @@ const SessionKeys = {
     EmbedUrl : "embedUrl",
     EmbedId : "embedId",
     GroupId : "groupId",
-    IsSampleReport: "isSampleReport"
+    IsSampleReport: "isSampleReport",
+    QnaQuestion: "qnaQuestion"
 };
 
 function GetParameterByName(name, url) {
