@@ -57,11 +57,11 @@ a:hover, a:visited, a:link, a:active
     margin-bottom: 5px;
 }
 
-#report-embed-table {
+#report-embed-table, #qna-embed-table {
     width: 100%;
 }
 
-#report-embed-table tr {
+#report-embed-table tr, #qna-embed-table tr {
     width: 100%;
 }
 
@@ -86,6 +86,12 @@ a:hover, a:visited, a:link, a:active
 }
 
 #report-embed-table input[type="text"] {
+    width: 73%;
+    border: none;
+    margin-bottom: 5px;
+}
+
+#qna-embed-table input[type="text"] {
     width: 73%;
     border: none;
     margin-bottom: 5px;
@@ -562,6 +568,14 @@ a {
     margin: 5px 0px;
 }
 
+#tile-embed-table .inputLine {
+    margin: 5px 0px;    
+}
+
+#qna-embed-table .inputLine {
+    margin: 5px 0px;    
+}
+
 .pageTitle h4 {
     font-size: 18px;
     font-weight: normal;
@@ -628,10 +642,6 @@ line-height: 20px;
     font-weight: 400px;
 }
 
-#embedModeInput {
-
-}
-
 #createModeInput {
     display: none;
 }
@@ -639,10 +649,15 @@ line-height: 20px;
 .inputLineTitle {
     width: 25%;
     display: inline-block;
+    vertical-align: top;
+}
+
+.inputLineBody {
+    display: inline-block;  
 }
 
 #modeSelector {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     cursor: default;
 }
 
@@ -656,4 +671,12 @@ line-height: 20px;
 
 #tileContainer iframe {
     border: none;
+}
+
+#qna-embed-table .spacer {
+    height: 5px;
+}
+
+#questionDiv {
+    margin-bottom: 10px;
 }

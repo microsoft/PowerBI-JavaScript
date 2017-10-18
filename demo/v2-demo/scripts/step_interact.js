@@ -69,6 +69,14 @@ function OpenTileOperations() {
     $("#selected-catogory-button").html("Tile operations");
 }
 
+function OpenQnaOperations() {
+    $("#qna-operations-div").show();
+    $("#qna-operations-li").addClass('active');
+    
+    $("#qna-operations-div .function-ul li.active").click()
+    $("#selected-catogory-button").html("QNA operations");
+}
+
 function OpenDashboardOperations() {
     $("#dashboard-operations-div").show();
     $("#dashboard-events-operations-div").hide();

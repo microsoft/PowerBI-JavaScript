@@ -440,6 +440,54 @@ function _Mock_Embed_Create() {
     });
 }
 
+function _Embed_QnaEmbed() {
+    // Read embed application token from textbox
+    var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
+    var txtEmbedUrl = $('#txtQnaEmbed').val();
+
+    // Read dataset Id from textbox
+    var txtDatasetId = $('#txtDatasetId').val();
+
+    // Read question from textbox
+    var txtQuestion = $('#txtQuestion').val();
+
+    // Read Qna mode
+    var qnaMode = $("input[name='qnaMode']:checked").val();
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config= {
+        type: 'qna',
+        tokenType: models.TokenType.Embed,
+        accessToken: txtAccessToken,
+        embedUrl: txtEmbedUrl,
+        datasetIds: [txtDatasetId],
+        viewMode: models.QnaMode[qnaMode],
+        question: txtQuestion
+    };
+
+    // Get a reference to the embedded QNA HTML element
+    var qnaContainer = $('#qnaContainer')[0];
+
+    // Embed the QNA and display it within the div container.
+    var qna = powerbi.embed(qnaContainer, config);
+
+    // qna.off removes a given event handler if it exists.
+    qna.off("loaded");
+
+    // qna.on will add an event handler which prints to Log window.
+    qna.on("loaded", function(event) {
+        Log.logText("QNA loaded event");
+        Log.log(event.detail);
+    });
+}
+
 // ---- Report Operations ----------------------------------------------------
 
 function _Report_GetId() {
@@ -937,6 +985,40 @@ function _DashboardEvents_TileClicked() {
 
     // dashboard.on will add an event listener.
     dashboard.on("tileClicked", function(event) {
+        Log.log(event.detail);
+    });
+}
+
+// ---- Qna Events Listener ----------------------------------------------------
+
+function _Qna_SetQuestion() {
+    // Get a reference to the embedded Q&A HTML element
+    var qnaContainer = $('#qnaContainer')[0];
+    
+    // Get a reference to the embedded Q&A.
+    qna = powerbi.get(qnaContainer);
+
+    qna.setQuestion("This year sales")
+        .then(function (result) {
+            log.log(result);
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _Qna_QuestionChanged() {
+    // Get a reference to the embedded Q&A HTML element
+    var qnaContainer = $('#qnaContainer')[0];
+    
+    // Get a reference to the embedded Q&A.
+    qna = powerbi.get(qnaContainer);
+
+    // qna.off removes a given event listener if it exists.
+    qna.off("visualRendered");
+
+    // qna.on will add an event listener.
+    qna.on("visualRendered", function(event) {
         Log.log(event.detail);
     });
 }

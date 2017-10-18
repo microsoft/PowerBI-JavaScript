@@ -158,6 +158,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="_src_report_.report.html#off" class="tsd-kind-icon">off</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="_src_report_.report.html#on" class="tsd-kind-icon">on</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_report_.report.html#page" class="tsd-kind-icon">page</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_report_.report.html#populateconfig" class="tsd-kind-icon">populate<wbr>Config</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_report_.report.html#print" class="tsd-kind-icon">print</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_report_.report.html#refresh" class="tsd-kind-icon">refresh</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_report_.report.html#reload" class="tsd-kind-icon">reload</a></li>
@@ -182,14 +183,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Report<span class="tsd-signature-symbol">(</span>service<span class="tsd-signature-symbol">: </span><a href="_src_service_.service.html" class="tsd-signature-type">Service</a>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfiguration.html" class="tsd-signature-type">IEmbedConfiguration</a>, iframe<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">HTMLIFrameElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_report_.report.html" class="tsd-signature-type">Report</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Report<span class="tsd-signature-symbol">(</span>service<span class="tsd-signature-symbol">: </span><a href="_src_service_.service.html" class="tsd-signature-type">Service</a>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, baseConfig<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, iframe<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">HTMLIFrameElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_report_.report.html" class="tsd-signature-type">Report</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L37">src/report.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L38">src/report.ts:38</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -206,11 +207,7 @@
 									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
 								</li>
 								<li>
-									<h5>config: <a href="../interfaces/_src_embed_.iembedconfiguration.html" class="tsd-signature-type">IEmbedConfiguration</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<div class="lead">
-										</div>
-									</div>
+									<h5>baseConfig: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> iframe: <span class="tsd-signature-type">HTMLIFrameElement</span></h5>
@@ -226,23 +223,23 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 					<a name="allowedevents" class="tsd-anchor"></a>
 					<h3>allowed<wbr>Events</h3>
-					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#allowedevents">allowedEvents</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L94">src/embed.ts:94</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L109">src/embed.ts:109</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 					<a name="config" class="tsd-anchor"></a>
 					<h3>config</h3>
-					<div class="tsd-signature tsd-kind-icon">config<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_embed_.iinternalembedconfiguration.html" class="tsd-signature-type">IInternalEmbedConfiguration</a></div>
+					<div class="tsd-signature tsd-kind-icon">config<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></div>
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_report_.ireportnode.html">IReportNode</a>.<a href="../interfaces/_src_report_.ireportnode.html#config">config</a></p>
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#config">config</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L129">src/embed.ts:129</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L144">src/embed.ts:144</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -251,7 +248,7 @@
 						</div>
 						<dl class="tsd-comment-tags">
 							<dt>type</dt>
-							<dd><p>{IInternalEmbedConfiguration}</p>
+							<dd><p>{IEmbedConfigurationBase}</p>
 							</dd>
 						</dl>
 					</div>
@@ -263,7 +260,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#createconfig">createConfig</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L136">src/embed.ts:136</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L151">src/embed.ts:151</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -284,7 +281,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#element">element</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L115">src/embed.ts:115</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L130">src/embed.ts:130</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -305,7 +302,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#embetype">embeType</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L146">src/embed.ts:146</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L161">src/embed.ts:161</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -321,7 +318,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#eventhandlers">eventHandlers</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L101">src/embed.ts:101</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L116">src/embed.ts:116</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -343,7 +340,7 @@
 						<p>Implementation of <a href="../interfaces/_src_report_.ireportnode.html">IReportNode</a>.<a href="../interfaces/_src_report_.ireportnode.html#iframe">iframe</a></p>
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#iframe">iframe</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L122">src/embed.ts:122</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L137">src/embed.ts:137</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -364,7 +361,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#loadpath">loadPath</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L141">src/embed.ts:141</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L156">src/embed.ts:156</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -381,7 +378,7 @@
 						<p>Implementation of <a href="../interfaces/_src_report_.ireportnode.html">IReportNode</a>.<a href="../interfaces/_src_report_.ireportnode.html#service">service</a></p>
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#service">service</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L108">src/embed.ts:108</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L123">src/embed.ts:123</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -402,18 +399,18 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#accesstokenattribute">accessTokenAttribute</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L84">src/embed.ts:84</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L103">src/embed.ts:103</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-static">
 					<a name="allowedevents-1" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> allowed<wbr>Events</h3>
-					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;filtersApplied&quot;, &quot;pageChanged&quot;]</span></div>
+					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;filtersApplied&quot;, &quot;pageChanged&quot;]</span></div>
 					<aside class="tsd-sources">
 						<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#allowedevents-1">allowedEvents</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L32">src/report.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L33">src/report.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -424,7 +421,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#embedurlattribute">embedUrlAttribute</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L85">src/embed.ts:85</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L104">src/embed.ts:104</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -434,7 +431,7 @@
 					<div class="tsd-signature tsd-kind-icon">filter<wbr>Pane<wbr>Enabled<wbr>Attribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-settings-filter-pane-enabled&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L34">src/report.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L35">src/report.ts:35</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -445,7 +442,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#nameattribute">nameAttribute</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L86">src/embed.ts:86</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L105">src/embed.ts:105</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -455,7 +452,7 @@
 					<div class="tsd-signature tsd-kind-icon">nav<wbr>Content<wbr>Pane<wbr>Enabled<wbr>Attribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-settings-nav-content-pane-enabled&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L35">src/report.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L36">src/report.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -465,7 +462,7 @@
 					<div class="tsd-signature tsd-kind-icon">report<wbr>IdAttribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-report-id&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L33">src/report.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L34">src/report.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -476,7 +473,7 @@
 					<aside class="tsd-sources">
 						<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#type">type</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L37">src/report.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L38">src/report.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -487,7 +484,7 @@
 					<aside class="tsd-sources">
 						<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#typeattribute">typeAttribute</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L36">src/report.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L37">src/report.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -498,14 +495,14 @@
 					<a name="createreport" class="tsd-anchor"></a>
 					<h3>create<wbr>Report</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Report<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IReportCreateConfiguration</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Report<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IReportCreateConfiguration</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#createreport">createReport</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L187">src/embed.ts:187</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L202">src/embed.ts:202</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -523,7 +520,7 @@
 									<h5>config: <span class="tsd-signature-type">models.IReportCreateConfiguration</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -538,7 +535,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#exitfullscreen">exitFullscreen</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L478">src/embed.ts:478</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L477">src/embed.ts:477</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -561,7 +558,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#fullscreen">fullscreen</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L470">src/embed.ts:470</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L469">src/embed.ts:469</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -577,14 +574,14 @@
 					<a name="getfilters" class="tsd-anchor"></a>
 					<h3>get<wbr>Filters</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Filters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Filters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#getfilters">getFilters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L95">src/report.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L98">src/report.ts:98</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -598,7 +595,7 @@ report.getFilters()
   });
 </code></pre>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -613,7 +610,7 @@ report.getFilters()
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#getid">getId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L108">src/report.ts:108</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L111">src/report.ts:111</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -629,13 +626,13 @@ report.getFilters()
 					<a name="getpages" class="tsd-anchor"></a>
 					<h3>get<wbr>Pages</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Pages<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Pages<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L130">src/report.ts:130</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L134">src/report.ts:134</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -648,7 +645,7 @@ report.getFilters()
  });
 </code></pre>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -656,14 +653,14 @@ report.getFilters()
 					<a name="load" class="tsd-anchor"></a>
 					<h3>load</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IReportLoadConfiguration</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">models.IDashboardLoadConfiguration</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#load">load</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L256">src/embed.ts:256</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L271">src/embed.ts:271</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -690,10 +687,10 @@ report.getFilters()
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>config: <span class="tsd-signature-type">models.IReportLoadConfiguration</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">models.IDashboardLoadConfiguration</span></h5>
+									<h5>config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -708,7 +705,7 @@ report.getFilters()
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#off">off</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L293">src/embed.ts:293</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L308">src/embed.ts:308</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -763,7 +760,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#on">on</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L324">src/embed.ts:324</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L339">src/embed.ts:339</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -811,7 +808,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L161">src/report.ts:161</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L165">src/report.ts:165</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -842,17 +839,46 @@ page.setActive();
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="populateconfig" class="tsd-anchor"></a>
+					<h3>populate<wbr>Config</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">populate<wbr>Config<span class="tsd-signature-symbol">(</span>baseConfig<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#populateconfig">populateConfig</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L279">src/report.ts:279</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Populate config for load config</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>baseConfig: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="print" class="tsd-anchor"></a>
 					<h3>print</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">print<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">print<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L168">src/report.ts:168</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L172">src/report.ts:172</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -860,7 +886,7 @@ page.setActive();
 									<p>Prints the active page of the report by invoking <code>window.print()</code> on the embed iframe component.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -868,13 +894,13 @@ page.setActive();
 					<a name="refresh" class="tsd-anchor"></a>
 					<h3>refresh</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">refresh<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">refresh<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L292">src/report.ts:292</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L315">src/report.ts:315</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -884,7 +910,7 @@ page.setActive();
 								<pre><code class="lang-javascript">report.refresh();
 </code></pre>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -892,14 +918,14 @@ page.setActive();
 					<a name="reload" class="tsd-anchor"></a>
 					<h3>reload</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">reload<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">reload<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#reload">reload</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L345">src/embed.ts:345</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L360">src/embed.ts:360</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -910,7 +936,7 @@ page.setActive();
 								<pre><code class="lang-javascript">report.reload();
 </code></pre>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -918,14 +944,14 @@ page.setActive();
 					<a name="removefilters" class="tsd-anchor"></a>
 					<h3>remove<wbr>Filters</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Filters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Filters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#removefilters">removeFilters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L187">src/report.ts:187</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L191">src/report.ts:191</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -935,7 +961,7 @@ page.setActive();
 								<pre><code class="lang-javascript">report.removeFilters();
 </code></pre>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -943,14 +969,14 @@ page.setActive();
 					<a name="save" class="tsd-anchor"></a>
 					<h3>save</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">save<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">save<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#save">save</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L207">src/embed.ts:207</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L222">src/embed.ts:222</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -958,7 +984,7 @@ page.setActive();
 									<p>Saves Report.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -966,14 +992,14 @@ page.setActive();
 					<a name="saveas" class="tsd-anchor"></a>
 					<h3>save<wbr>As</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">save<wbr>As<span class="tsd-signature-symbol">(</span>saveAsParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.ISaveAsParameters</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">save<wbr>As<span class="tsd-signature-symbol">(</span>saveAsParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.ISaveAsParameters</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#saveas">saveAs</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L222">src/embed.ts:222</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L237">src/embed.ts:237</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -987,7 +1013,7 @@ page.setActive();
 									<h5>saveAsParameters: <span class="tsd-signature-type">models.ISaveAsParameters</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -995,14 +1021,14 @@ page.setActive();
 					<a name="setaccesstoken" class="tsd-anchor"></a>
 					<h3>set<wbr>Access<wbr>Token</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Access<wbr>Token<span class="tsd-signature-symbol">(</span>accessToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Access<wbr>Token<span class="tsd-signature-symbol">(</span>accessToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#setaccesstoken">setAccessToken</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/embed.ts#L354">src/embed.ts:354</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/embed.ts#L369">src/embed.ts:369</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1016,7 +1042,7 @@ page.setActive();
 									<h5>accessToken: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1024,14 +1050,14 @@ page.setActive();
 					<a name="setfilters" class="tsd-anchor"></a>
 					<h3>set<wbr>Filters</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Filters<span class="tsd-signature-symbol">(</span>filters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Filters<span class="tsd-signature-symbol">(</span>filters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#setfilters">setFilters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L232">src/report.ts:232</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L236">src/report.ts:236</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1054,7 +1080,7 @@ report.setFilters(filters)
 									<h5>filters: <span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1062,13 +1088,13 @@ report.setFilters(filters)
 					<a name="setpage" class="tsd-anchor"></a>
 					<h3>set<wbr>Page</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Page<span class="tsd-signature-symbol">(</span>pageName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Page<span class="tsd-signature-symbol">(</span>pageName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L202">src/report.ts:202</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L206">src/report.ts:206</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1085,7 +1111,7 @@ report.setFilters(filters)
 									<h5>pageName: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1093,13 +1119,13 @@ report.setFilters(filters)
 					<a name="switchmode" class="tsd-anchor"></a>
 					<h3>switch<wbr>Mode</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">switch<wbr>Mode<span class="tsd-signature-symbol">(</span>viewMode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.ViewMode</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">switch<wbr>Mode<span class="tsd-signature-symbol">(</span>viewMode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.ViewMode</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L274">src/report.ts:274</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L297">src/report.ts:297</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1113,7 +1139,7 @@ report.setFilters(filters)
 									<h5>viewMode: <span class="tsd-signature-type">models.ViewMode</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1121,13 +1147,13 @@ report.setFilters(filters)
 					<a name="updatesettings" class="tsd-anchor"></a>
 					<h3>update<wbr>Settings</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">update<wbr>Settings<span class="tsd-signature-symbol">(</span>settings<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.ISettings</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Settings<span class="tsd-signature-symbol">(</span>settings<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.ISettings</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L255">src/report.ts:255</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L259">src/report.ts:259</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1149,7 +1175,7 @@ report.updateSettings(newSettings)
 									<h5>settings: <span class="tsd-signature-type">models.ISettings</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1157,14 +1183,14 @@ report.updateSettings(newSettings)
 					<a name="validate" class="tsd-anchor"></a>
 					<h3>validate</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">validate<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IReportLoadConfiguration</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IError</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">validate<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IError</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#validate">validate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L265">src/report.ts:265</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L269">src/report.ts:269</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1175,7 +1201,7 @@ report.updateSettings(newSettings)
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>config: <span class="tsd-signature-type">models.IReportLoadConfiguration</span></h5>
+									<h5>config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">models.IError</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -1192,7 +1218,7 @@ report.updateSettings(newSettings)
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/1937647/src/report.ts#L70">src/report.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/3002552/src/report.ts#L73">src/report.ts:73</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1224,8 +1250,53 @@ report.updateSettings(newSettings)
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_node_modules_powerbi_models_dist_models_d_.html">"node_<wbr>modules/powerbi-<wbr>models/dist/models.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_config_.html">"src/config"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_create_.html">"src/create"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_dashboard_.html">"src/dashboard"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_defaults_.html">"src/defaults"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_embed_.html">"src/embed"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_factories_.html">"src/factories"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_ifilterable_.html">"src/ifilterable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_page_.html">"src/page"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_powerbi_client_.html">"src/powerbi-<wbr>client"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_qna_.html">"src/qna"</a>
+					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_src_report_.html">"src/report"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_service_.html">"src/service"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_tile_.html">"src/tile"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_util_.html">"src/util"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_typings_globals_es6_promise_index_d_.html">"typings/globals/es6-<wbr>promise/index.d"</a>
 					</li>
 				</ul>
 			</nav>
@@ -1322,6 +1393,9 @@ report.updateSettings(newSettings)
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_report_.report.html#page" class="tsd-kind-icon">page</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="_src_report_.report.html#populateconfig" class="tsd-kind-icon">populate<wbr>Config</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_report_.report.html#print" class="tsd-kind-icon">print</a>

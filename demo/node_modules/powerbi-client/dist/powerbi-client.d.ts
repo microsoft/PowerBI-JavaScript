@@ -1,4 +1,4 @@
-/*! powerbi-client v2.3.5 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.0 | (c) 2016 Microsoft Corporation MIT */
 declare module "config" {
     const config: {
         version: string;
@@ -77,17 +77,27 @@ declare module "embed" {
         }
     }
     /**
+     * Base Configuration settings for Power BI embed components
+     *
+     * @export
+     * @interface IEmbedConfigurationBase
+     */
+    export interface IEmbedConfigurationBase {
+        settings?: ISettings;
+        embedUrl?: string;
+        uniqueId?: string;
+        type?: string;
+        accessToken?: string;
+        tokenType?: models.TokenType;
+    }
+    /**
      * Configuration settings for Power BI embed components
      *
      * @export
      * @interface IEmbedConfiguration
      */
-    export interface IEmbedConfiguration {
-        type?: string;
+    export interface IEmbedConfiguration extends IEmbedConfigurationBase {
         id?: string;
-        uniqueId?: string;
-        embedUrl?: string;
-        accessToken?: string;
         settings?: IEmbedSettings;
         pageName?: string;
         filters?: models.IFilter[];
@@ -95,26 +105,32 @@ declare module "embed" {
         datasetId?: string;
         permissions?: models.Permissions;
         viewMode?: models.ViewMode;
-        tokenType?: models.TokenType;
         action?: string;
         dashboardId?: string;
         height?: number;
         width?: number;
     }
+    /**
+     * Configuration settings for Power BI QNA embed component
+     *
+     * @export
+     * @interface IEmbedConfiguration
+     */
+    export interface IQnaEmbedConfiguration extends IEmbedConfigurationBase {
+        datasetIds: string[];
+        question?: string;
+        viewMode?: models.QnaMode;
+    }
     export interface ILocaleSettings {
         language?: string;
         formatLocale?: string;
     }
-    export interface IEmbedSettings extends models.ISettings {
+    export interface ISettings {
         localeSettings?: ILocaleSettings;
     }
-    export interface IInternalEmbedConfiguration extends models.IReportLoadConfiguration {
-        uniqueId: string;
-        type: string;
-        embedUrl: string;
-        height?: number;
-        width?: number;
-        action?: string;
+    export interface IEmbedSettings extends models.ISettings, ISettings {
+    }
+    export interface IQnaSettings extends models.IQnaSettings, ISettings {
     }
     export interface IInternalEventHandler<T> {
         test(event: service.IEvent<T>): boolean;
@@ -134,7 +150,6 @@ declare module "embed" {
         static nameAttribute: string;
         static typeAttribute: string;
         static type: string;
-        private static defaultSettings;
         allowedEvents: any[];
         /**
          * Gets or sets the event handler registered for this embed component.
@@ -163,9 +178,9 @@ declare module "embed" {
         /**
          * Gets or sets the configuration settings for the Power BI embed component.
          *
-         * @type {IInternalEmbedConfiguration}
+         * @type {IEmbedConfigurationBase}
          */
-        config: IInternalEmbedConfiguration;
+        config: IEmbedConfigurationBase;
         /**
          * Gets or sets the configuration settings for creating report.
          *
@@ -188,9 +203,9 @@ declare module "embed" {
          *
          * @param {service.Service} service
          * @param {HTMLElement} element
-         * @param {IEmbedConfiguration} config
+         * @param {IEmbedConfigurationBase} config
          */
-        constructor(service: service.Service, element: HTMLElement, config: IEmbedConfiguration, iframe?: HTMLIFrameElement);
+        constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement);
         /**
          * Sends createReport configuration data.
          *
@@ -240,7 +255,7 @@ declare module "embed" {
          * @param {models.ILoadConfiguration} config
          * @returns {Promise<void>}
          */
-        load(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration): Promise<void>;
+        load(config: IEmbedConfigurationBase): Promise<void>;
         /**
          * Removes one or more event handlers from the list of handlers.
          * If a reference to the existing handle function is specified, remove the specific handler.
@@ -303,11 +318,10 @@ declare module "embed" {
         /**
          * Populate config for create and load
          *
-         * @private
          * @param {IEmbedConfiguration}
          * @returns {void}
          */
-        private populateConfig(config);
+        populateConfig(config: IEmbedConfigurationBase): void;
         /**
          * Adds locale parameters to embedUrl
          *
@@ -357,7 +371,7 @@ declare module "embed" {
         /**
          * Validate load and create configuration.
          */
-        abstract validate(config: models.IReportLoadConfiguration | models.IDashboardLoadConfiguration | models.IReportCreateConfiguration): models.IError[];
+        abstract validate(config: IEmbedConfigurationBase): models.IError[];
         /**
          * Sets Iframe for embed
          */
@@ -496,6 +510,13 @@ declare module "page" {
         setFilters(filters: models.IFilter[]): Promise<void>;
     }
 }
+declare module "defaults" {
+    import * as models from 'powerbi-models';
+    export abstract class Defaults {
+        static defaultSettings: models.ISettings;
+        static defaultQnaSettings: models.IQnaSettings;
+    }
+}
 declare module "report" {
     import * as service from "service";
     import * as embed from "embed";
@@ -511,7 +532,7 @@ declare module "report" {
     export interface IReportNode {
         iframe: HTMLIFrameElement;
         service: service.IService;
-        config: embed.IInternalEmbedConfiguration;
+        config: embed.IEmbedConfiguration;
     }
     /**
      * The Power BI Report embed component
@@ -536,7 +557,7 @@ declare module "report" {
          * @param {HTMLElement} element
          * @param {embed.IEmbedConfiguration} config
          */
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, iframe?: HTMLIFrameElement);
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, iframe?: HTMLIFrameElement);
         /**
          * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
          * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
@@ -665,7 +686,14 @@ declare module "report" {
         /**
          * Validate load configuration.
          */
-        validate(config: models.IReportLoadConfiguration): models.IError[];
+        validate(config: embed.IEmbedConfigurationBase): models.IError[];
+        /**
+         * Populate config for load config
+         *
+         * @param {IEmbedConfigurationBase}
+         * @returns {void}
+         */
+        populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
         /**
          * Switch Report view mode.
          *
@@ -695,7 +723,7 @@ declare module "dashboard" {
     export interface IDashboardNode {
         iframe: HTMLIFrameElement;
         service: service.IService;
-        config: embed.IInternalEmbedConfiguration;
+        config: embed.IEmbedConfigurationBase;
     }
     /**
      * A Power BI Dashboard embed component
@@ -717,7 +745,7 @@ declare module "dashboard" {
          * @param {service.Service} service
          * @param {HTMLElement} element
          */
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration);
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase);
         /**
          * This adds backwards compatibility for older config which used the dashboardId query param to specify dashboard id.
          * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
@@ -738,7 +766,14 @@ declare module "dashboard" {
         /**
          * Validate load configuration.
          */
-        validate(config: models.IDashboardLoadConfiguration): models.IError[];
+        validate(baseConfig: embed.IEmbedConfigurationBase): models.IError[];
+        /**
+         * Populate config for load config
+         *
+         * @param {IEmbedConfigurationBase}
+         * @returns {void}
+         */
+        populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
         /**
          * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
          */
@@ -759,7 +794,7 @@ declare module "tile" {
     export class Tile extends embed.Embed {
         static type: string;
         static allowedEvents: string[];
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration);
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase);
         /**
          * The ID of the tile
          *
@@ -769,14 +804,21 @@ declare module "tile" {
         /**
          * Validate load configuration.
          */
-        validate(config: models.IReportLoadConfiguration): models.IError[];
+        validate(config: embed.IEmbedConfigurationBase): models.IError[];
+        /**
+         * Populate config for load config
+         *
+         * @param {IEmbedConfigurationBase}
+         * @returns {void}
+         */
+        populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
         /**
          * Sends load configuration data for tile
          *
          * @param {models.ILoadConfiguration} config
          * @returns {Promise<void>}
          */
-        load(config: embed.IInternalEmbedConfiguration): Promise<void>;
+        load(baseConfig: embed.IEmbedConfigurationBase): Promise<void>;
         /**
          * Adds the ability to get tileId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
@@ -792,6 +834,40 @@ declare module "tile" {
          * @param event: MessageEvent
          */
         private receiveMessage(event);
+    }
+}
+declare module "qna" {
+    import * as service from "service";
+    import * as models from 'powerbi-models';
+    import * as embed from "embed";
+    /**
+     * The Power BI Qna embed component
+     *
+     * @export
+     * @class Qna
+     * @extends {Embed}
+     */
+    export class Qna extends embed.Embed {
+        static type: string;
+        static allowedEvents: string[];
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase);
+        /**
+         * The ID of the Qna embed component
+         *
+         * @returns {string}
+         */
+        getId(): string;
+        /**
+         * Change the question of the Q&A embed component
+         *
+         * @param question - question which will render Q&A data
+         * @returns {string}
+         */
+        setQuestion(question: string): Promise<void>;
+        /**
+         * Validate load configuration.
+         */
+        validate(config: embed.IEmbedConfigurationBase): models.IError[];
     }
 }
 declare module "service" {
@@ -897,16 +973,17 @@ declare module "service" {
          * otherwise creates a new component instance.
          *
          * @param {HTMLElement} element
-         * @param {embed.IEmbedConfiguration} [config={}]
+         * @param {embed.IEmbedConfigurationBase} [config={}]
          * @returns {embed.Embed}
          */
-        embed(element: HTMLElement, config?: embed.IEmbedConfiguration): embed.Embed;
+        embed(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
+        embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
         /**
          * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
          *
          * @private
          * @param {IPowerBiElement} element
-         * @param {embed.IEmbedConfiguration} config
+         * @param {embed.IEmbedConfigurationBase} config
          * @returns {embed.Embed}
          */
         private embedNew(element, config);
@@ -915,7 +992,7 @@ declare module "service" {
          *
          * @private
          * @param {IPowerBiElement} element
-         * @param {embed.IEmbedConfiguration} config
+         * @param {embed.IEmbedConfigurationBase} config
          * @returns {embed.Embed}
          */
         private embedExisting(element, config);
@@ -979,7 +1056,14 @@ declare module "create" {
         /**
          * Validate create report configuration.
          */
-        validate(config: models.IReportCreateConfiguration): models.IError[];
+        validate(config: embed.IEmbedConfigurationBase): models.IError[];
+        /**
+         * Populate config for create
+         *
+         * @param {IEmbedConfigurationBase}
+         * @returns {void}
+         */
+        populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
         /**
          * Adds the ability to get datasetId from url.
          * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
