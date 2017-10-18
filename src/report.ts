@@ -6,6 +6,7 @@ import * as hpm from 'http-post-message';
 import * as utils from './util';
 import { IFilterable } from './ifilterable';
 import { IPageNode, Page } from './page';
+import { Defaults } from './defaults';
 
 /**
  * A Report node within a report hierarchy
@@ -16,7 +17,7 @@ import { IPageNode, Page } from './page';
 export interface IReportNode {
   iframe: HTMLIFrameElement;
   service: service.IService;
-  config: embed.IInternalEmbedConfiguration
+  config: embed.IEmbedConfiguration
 }
 
 /**
@@ -43,7 +44,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfiguration} config
    */
-  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, iframe?: HTMLIFrameElement) {
+  constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, iframe?: HTMLIFrameElement) {
+    const config = <embed.IEmbedConfiguration>baseConfig;
+
     const filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
     const navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
     const settings = utils.assign({
@@ -106,7 +109,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {string}
    */
   getId(): string {
-    const reportId = this.config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(this.config.embedUrl);
+    let config = <embed.IEmbedConfiguration>this.config;
+    const reportId = config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(config.embedUrl);
 
     if (typeof reportId !== 'string' || reportId.length === 0) {
       throw new Error(`Report id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '${Report.reportIdAttribute}'.`);
@@ -262,8 +266,27 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   /**
    * Validate load configuration.
    */
-  validate(config: models.IReportLoadConfiguration): models.IError[] {
+  validate(config: embed.IEmbedConfigurationBase): models.IError[] {
     return models.validateReportLoad(config);
+  }
+
+  /**
+   * Populate config for load config
+   * 
+   * @param {IEmbedConfigurationBase}
+   * @returns {void}
+   */
+  populateConfig(baseConfig: embed.IEmbedConfigurationBase): void {
+    let config = <embed.IEmbedConfiguration>baseConfig;
+
+    super.populateConfig(config);
+
+    // TODO: Change when Object.assign is available.
+    const settings = utils.assign({}, Defaults.defaultSettings, config.settings);
+    config = utils.assign({ settings }, config);
+
+    config.id = this.getId();
+    this.config = config;
   }
 
   /**

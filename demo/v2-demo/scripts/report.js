@@ -39,6 +39,7 @@ function OpenEmbedStep(mode, entityType) {
     var embedContainer = $("#embedContainer");
     var dashboardContainer = $("#dashboardContainer");
     var tileContainer = $("#tileContainer");
+    var qnaContainer = $("#qnaContainer");
 
     if (entityType == EntityType.Report)
     {
@@ -51,6 +52,7 @@ function OpenEmbedStep(mode, entityType) {
             embedContainer.show();
             dashboardContainer.hide();
             tileContainer.hide();
+            qnaContainer.hide();
         });
     }
     else if (entityType == EntityType.Dashboard)
@@ -64,9 +66,10 @@ function OpenEmbedStep(mode, entityType) {
             embedContainer.hide();
             dashboardContainer.show();
             tileContainer.hide();
+            qnaContainer.hide();
         });
     }
-    else
+    else if (entityType == EntityType.Tile)
     {
         $("#settings").load("settings_embed_tile.html", function() {
             OpenEmbedMode(mode, entityType);
@@ -76,6 +79,20 @@ function OpenEmbedStep(mode, entityType) {
             embedContainer.hide();
             dashboardContainer.hide();
             tileContainer.show();
+            qnaContainer.hide();
+        });
+    }
+    else if (entityType == EntityType.Qna)
+    {
+        $("#settings").load("settings_embed_qna.html", function() {
+            OpenEmbedMode(mode, entityType);
+
+            qnaContainer.height(qnaContainer.width() * 0.59);
+
+            embedContainer.hide();
+            dashboardContainer.hide();
+            tileContainer.hide();
+            qnaContainer.show();
         });
     }
 }
@@ -106,6 +123,14 @@ function OpenInteractStep() {
             SetToggleHandler("dashboard-operations-div");
             SetToggleHandler("dashboard-events-operations-div");
             LoadCodeArea("#embedCodeDiv", _Dashboard_GetId);
+        });
+    }
+    else if (entityType == EntityType.Qna)
+    {
+        $("#settings").load("settings_interact_qna.html", function() {
+            SetToggleHandler("qna-operations-div");
+            SetToggleHandler("qna-events-operations-div");
+            LoadCodeArea("#embedCodeDiv", _Qna_SetQuestion);
         });
     }
     else
@@ -141,9 +166,13 @@ function setCodeArea(mode, entityType)
     {
         LoadCodeArea("#embedCodeDiv", _Embed_DashboardEmbed);
     }
-    else
+    else if (entityType == EntityType.Tile)
     {
         LoadCodeArea("#embedCodeDiv", _Embed_TileEmbed);
+    }
+    else if (entityType == EntityType.Qna)
+    {
+        LoadCodeArea("#embedCodeDiv", _Embed_QnaEmbed);
     }
 }
 
@@ -222,7 +251,7 @@ function OpenEmbedMode(mode, entityType)
             setCodeAndShowEmbedSettings(mode, entityType);
         }
     }
-    else
+    else if (entityType == EntityType.Tile)
     {
         if (IsEmbeddingSampleTile())
         {
@@ -234,6 +263,21 @@ function OpenEmbedMode(mode, entityType)
         else
         {
             SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtTileEmbed", "#txtEmbedTileId", "#txtEmbedDashboardId");
+            setCodeAndShowEmbedSettings(mode, entityType);
+        }
+    }
+    else if (entityType == EntityType.Qna)
+    {
+        if (IsEmbeddingSampleQna())
+        {
+            LoadSampleQnaIntoSession().then(function (response) {
+                SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
+                setCodeAndShowEmbedSettings(mode, entityType);
+            });
+        }
+        else
+        {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
             setCodeAndShowEmbedSettings(mode, entityType);
         }
     }
@@ -269,4 +313,20 @@ function IsEmbeddingSampleDashboard() {
 
 function IsEmbeddingSampleTile() {
     return GetSession(SessionKeys.IsSampleTile) == true;
+}
+
+function IsEmbeddingSampleQna() {
+    return GetSession(SessionKeys.IsSampleQna) == true;
+}
+
+function ToggleQuestionBox(enabled) {
+    let txtQuestion = $("#txtQuestion");
+    if (enabled === true) {
+        txtQuestion.val("This year sales by store type by postal code as map");
+        txtQuestion.prop('disabled', false);
+    }
+    else {
+        txtQuestion.val("");
+        txtQuestion.prop('disabled', true);
+    }
 }

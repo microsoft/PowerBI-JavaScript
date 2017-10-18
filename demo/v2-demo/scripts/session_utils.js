@@ -9,6 +9,7 @@ const SessionKeys = {
     IsSampleReport: "isSampleReport",
     IsSampleDashboard: "IsSampleDashboard",
     IsSampleTile: "IsSampleTile",
+    IsSampleQna: "IsSampleQna",
     EmbedMode: "embedMode",
     EntityType: "entityType",
     SampleId: "SampleId"

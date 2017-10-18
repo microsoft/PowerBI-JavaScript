@@ -4,6 +4,7 @@ import * as models from 'powerbi-models';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as utils from './util';
+import { Defaults } from './defaults';
 
 /**
  * A Dashboard node within a dashboard hierarchy
@@ -14,7 +15,7 @@ import * as utils from './util';
 export interface IDashboardNode {
     iframe: HTMLIFrameElement;
     service: service.IService;
-    config: embed.IInternalEmbedConfiguration
+    config: embed.IEmbedConfigurationBase
 }
 
 /**
@@ -38,7 +39,7 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
      * @param {service.Service} service
      * @param {HTMLElement} element
      */
-    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration) {
+    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase) {
         super(service, element, config);
         this.loadPath = "/dashboard/load";
         Array.prototype.push.apply(this.allowedEvents, Dashboard.allowedEvents);
@@ -72,7 +73,8 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
      * @returns {string}
      */
     getId(): string {
-        const dashboardId = this.config.id || this.element.getAttribute(Dashboard.dashboardIdAttribute) || Dashboard.findIdFromEmbedUrl(this.config.embedUrl);
+        let config = <embed.IEmbedConfiguration>this.config;
+        const dashboardId = config.id || this.element.getAttribute(Dashboard.dashboardIdAttribute) || Dashboard.findIdFromEmbedUrl(config.embedUrl);
 
         if (typeof dashboardId !== 'string' || dashboardId.length === 0) {
             throw new Error(`Dashboard id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '${Dashboard.dashboardIdAttribute}'.`);
@@ -84,9 +86,29 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
     /**
      * Validate load configuration.
      */
-    validate(config: models.IDashboardLoadConfiguration): models.IError[] {
+    validate(baseConfig: embed.IEmbedConfigurationBase): models.IError[] {
+      const config = baseConfig as embed.IEmbedConfiguration;
       let error = models.validateDashboardLoad(config);
       return error ? error : this.ValidatePageView(config.pageView);
+    }
+
+    /**
+     * Populate config for load config
+     * 
+     * @param {IEmbedConfigurationBase}
+     * @returns {void}
+     */
+    populateConfig(baseConfig: embed.IEmbedConfigurationBase): void {
+      let config = <embed.IEmbedConfiguration>baseConfig;
+
+      super.populateConfig(config);
+
+      // TODO: Change when Object.assign is available.
+      const settings = utils.assign({}, Defaults.defaultSettings, config.settings);
+      config = utils.assign({ settings }, config);
+
+      config.id = this.getId();
+      this.config = config;
     }
    
     /**

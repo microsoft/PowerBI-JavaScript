@@ -2,16 +2,19 @@ var reportUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/SampleR
 var datasetUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/SampleCreate';
 var dashboardUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Dashboards/SampleDashboard';
 var tileUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Tiles/SampleTile';
+var qnaUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Datasets/SampleQna';
 
 var LastReportSampleUrl = null;
 var ReportRefreshTokenTimer = 0;
 var DashboardRefreshTokenTimer = 0;
 var TileRefreshTokenTimer = 0;
+var QnaRefreshTokenTimer = 0;
 
 const EntityType = {
     Report : "Report",
     Dashboard : "Dashboard",
-    Tile : "Tile"
+    Tile : "Tile",
+    Qna: "Qna"
 };
 
 function FetchUrlIntoSession(url, updateCurrentToken) {
@@ -45,6 +48,10 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
         else if (embedConfig.type === "dashboard")
         {
             TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Dashboard);
+        }
+        else if (embedConfig.type === "qna")
+        {
+            TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Qna);
         }
         else 
         {
@@ -85,7 +92,20 @@ function TokenExpirationRefreshListener(minutesToExpiration, entityType) {
             FetchUrlIntoSession(dashboardUrl, true /* updateCurrentToken */);
         }, updateAfterMilliSeconds);
     }
-    else 
+    else if (entityType == EntityType.Qna)
+    {
+        if (QnaRefreshTokenTimer)
+        {
+            console.log("step current Q&A Embed Token update threads.");
+            clearTimeout(QnaRefreshTokenTimer);
+        }
+
+        console.log("Q&A Embed Token will be updated in " + updateAfterMilliSeconds + " milliseconds.");
+        QnaRefreshTokenTimer = setTimeout(function() {
+            FetchUrlIntoSession(qnaUrl, true /* updateCurrentToken */);
+        }, updateAfterMilliSeconds);
+    }
+    else
     {
       if (TileRefreshTokenTimer)
         {
@@ -120,6 +140,11 @@ function LoadSampleTileIntoSession() {
     return FetchUrlIntoSession(tileUrl, false /* updateCurrentToken */);
 }
 
+function LoadSampleQnaIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Qna);
+    return FetchUrlIntoSession(qnaUrl, false /* updateCurrentToken */);
+}
+
 function OpenEmbedStepWithSample(entityType) {
     SetSession(SessionKeys.EntityType, entityType);
 
@@ -133,10 +158,15 @@ function OpenEmbedStepWithSample(entityType) {
         SetSession(SessionKeys.IsSampleDashboard, true);
         OpenEmbedStep(EmbedViewMode, EntityType.Dashboard);
     }
-    else
+    else if (entityType == EntityType.Tile)
     {
       SetSession(SessionKeys.IsSampleTile, true);
       OpenEmbedStep(EmbedViewMode, EntityType.Tile)
+    }
+    else if (entityType == EntityType.Qna)
+    {
+      SetSession(SessionKeys.IsSampleQna, true);
+      OpenEmbedStep(EmbedViewMode, EntityType.Qna)
     }
 }
 

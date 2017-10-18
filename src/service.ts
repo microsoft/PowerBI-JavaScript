@@ -4,6 +4,7 @@ import { Create } from './create';
 import { Dashboard } from './dashboard';
 import { Tile } from './tile';
 import { Page } from './page';
+import { Qna } from './qna';
 import * as utils from './util';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
@@ -69,10 +70,11 @@ export class Service implements IService {
   /**
    * A list of components that this service can embed
    */
-  private static components: (typeof Report | typeof Tile | typeof Dashboard)[] = [
+  private static components: (typeof Report | typeof Tile | typeof Dashboard | typeof Qna)[] = [
     Tile,
     Report,
-    Dashboard
+    Dashboard,
+    Qna
   ];
 
   /**
@@ -150,6 +152,20 @@ export class Service implements IService {
       this.handleEvent(event);
     });
 
+    /**
+     * Adds handler for Q&A events.
+     */
+    this.router.post(`/qna/:uniqueId/events/:eventName`, (req, res) => {
+      const event: IEvent<any> = {
+        type: 'qna',
+        id: req.params.uniqueId,
+        name: req.params.eventName,
+        value: req.body
+      };
+
+      this.handleEvent(event);
+    });
+
     this.embeds = [];
 
     // TODO: Change when Object.assign is available.
@@ -196,10 +212,14 @@ export class Service implements IService {
    * otherwise creates a new component instance.
    * 
    * @param {HTMLElement} element
-   * @param {embed.IEmbedConfiguration} [config={}]
+   * @param {embed.IEmbedConfigurationBase} [config={}]
    * @returns {embed.Embed}
    */
-  embed(element: HTMLElement, config: embed.IEmbedConfiguration = {}): embed.Embed {
+  embed(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}): embed.Embed {
+    return this.embedInternal(element, config);
+  }
+
+  embedInternal(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}): embed.Embed {
     let component: embed.Embed;
     let powerBiElement = <IPowerBiElement>element;
 
@@ -218,10 +238,10 @@ export class Service implements IService {
    * 
    * @private
    * @param {IPowerBiElement} element
-   * @param {embed.IEmbedConfiguration} config
+   * @param {embed.IEmbedConfigurationBase} config
    * @returns {embed.Embed}
    */
-  private embedNew(element: IPowerBiElement, config: embed.IEmbedConfiguration): embed.Embed {
+  private embedNew(element: IPowerBiElement, config: embed.IEmbedConfigurationBase): embed.Embed {
     const componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
     if (!componentType) {
       throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${embed.Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
@@ -234,7 +254,7 @@ export class Service implements IService {
     if (!Component) {
       throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
     }
-
+    
     const component = new Component(this, element, config);
     element.powerBiEmbed = component;
 
@@ -247,13 +267,18 @@ export class Service implements IService {
    * 
    * @private
    * @param {IPowerBiElement} element
-   * @param {embed.IEmbedConfiguration} config
+   * @param {embed.IEmbedConfigurationBase} config
    * @returns {embed.Embed}
    */
-  private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfiguration): embed.Embed {
+  private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfigurationBase): embed.Embed {
     const component = utils.find(x => x.element === element, this.embeds);
     if (!component) {
       throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
+    }
+
+    // TODO: Multiple embedding to the same iframe is not supported in QnA
+    if (config.type.toLowerCase() === "qna") {
+      return this.embedNew(element, config);
     }
 
     /**
@@ -268,7 +293,7 @@ export class Service implements IService {
        */
       if(config.type === "report" && component.config.type === "create") {
         const report = new Report(this, element, config, element.powerBiEmbed.iframe);
-        report.load(<embed.IInternalEmbedConfiguration>config);
+        report.load(config);
         element.powerBiEmbed = report;
 
         this.addOrOverwriteEmbed(component, element);
@@ -279,7 +304,7 @@ export class Service implements IService {
       throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
     }
 
-    component.load(<embed.IInternalEmbedConfiguration>config);
+    component.load(config);
 
     return component;
   }

@@ -2,6 +2,7 @@ import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
 import * as utils from './util';
+import { Defaults } from './defaults';
 
 /**
  * The Power BI tile embed component
@@ -14,14 +15,15 @@ export class Tile extends embed.Embed {
     static type = "Tile";
     static allowedEvents = ["tileClicked", "tileLoaded"];
 
-    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration) {
-        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'dashboardId', config.dashboardId);
-        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'tileId', config.id);
+    constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase) {
+      let config = <embed.IEmbedConfiguration>baseConfig;
+      config.embedUrl = utils.addParamToUrl(config.embedUrl, 'dashboardId', config.dashboardId);
+      config.embedUrl = utils.addParamToUrl(config.embedUrl, 'tileId', config.id);
 
-        super(service, element, config);
-        Array.prototype.push.apply(this.allowedEvents, Tile.allowedEvents);
+      super(service, element, config);
+      Array.prototype.push.apply(this.allowedEvents, Tile.allowedEvents);
 
-        window.addEventListener("message", this.receiveMessage.bind(this), false);
+      window.addEventListener("message", this.receiveMessage.bind(this), false);
     }
 
     /**
@@ -30,7 +32,8 @@ export class Tile extends embed.Embed {
      * @returns {string}
      */
     getId(): string {
-        const tileId = this.config.id || Tile.findIdFromEmbedUrl(this.config.embedUrl);
+        let config = <embed.IEmbedConfiguration>this.config;
+        const tileId = config.id || Tile.findIdFromEmbedUrl(this.config.embedUrl);
 
         if (typeof tileId !== 'string' || tileId.length === 0) {
             throw new Error(`Tile id is required, but it was not found. You must provide an id either as part of embed configuration.`);
@@ -42,10 +45,28 @@ export class Tile extends embed.Embed {
     /**
      * Validate load configuration.
      */
-    validate(config: models.IReportLoadConfiguration): models.IError[] {
-        // we create load tile configuration from report load configuration
-        // so we need to validate it
-        return models.validateReportLoad(config);
+    validate(config: embed.IEmbedConfigurationBase): models.IError[] {
+        let embedConfig = <embed.IEmbedConfiguration>config;
+        return models.validateTileLoad(embedConfig);
+    }
+
+    /**
+     * Populate config for load config
+     * 
+     * @param {IEmbedConfigurationBase}
+     * @returns {void}
+     */
+    populateConfig(baseConfig: embed.IEmbedConfigurationBase): void {
+      let config = <embed.IEmbedConfiguration>baseConfig;
+
+      super.populateConfig(config);
+
+      // TODO: Change when Object.assign is available.
+      const settings = utils.assign({}, Defaults.defaultSettings, config.settings);
+      config = utils.assign({ settings }, config);
+
+      config.id = this.getId();
+      this.config = config;
     }
 
     /**
@@ -54,7 +75,8 @@ export class Tile extends embed.Embed {
      * @param {models.ILoadConfiguration} config
      * @returns {Promise<void>}
      */
-    load(config: embed.IInternalEmbedConfiguration): Promise<void> {
+    load(baseConfig: embed.IEmbedConfigurationBase): Promise<void> {
+        let config = <embed.IEmbedConfiguration>baseConfig;
         const errors = this.validate(config);
         if (errors) {
             throw errors;
