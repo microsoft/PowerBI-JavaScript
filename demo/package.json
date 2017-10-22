@@ -30,12 +30,12 @@
     "tests"
   ],
   "dependencies": {
-    "fetch": "^1.0.0",
-    "es6-promise": "^3.2.2",
     "bootstrap": "^3.3.6",
-    "jquery": "^3.1.0",
-    "powerbi-client": "^2.3",
+    "es6-promise": "^3.2.2",
+    "fetch": "^1.0.0",
     "http-server": "^0.9.0",
+    "jquery": "^3.1.0",
+    "powerbi-client": "^2.4.1",
     "syntaxhighlighter": "4.0.1"
   },
   "devDependencies": {}
