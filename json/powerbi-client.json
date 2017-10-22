@@ -10920,7 +10920,7 @@
 								"type": "instrinct",
 								"name": "string"
 							},
-							"defaultValue": "\"2.4.0\""
+							"defaultValue": "\"2.4.1\""
 						}
 					],
 					"groups": [
@@ -20605,7 +20605,7 @@
 									}
 								]
 							},
-							"defaultValue": " [\"filtersApplied\", \"pageChanged\"]",
+							"defaultValue": " [\"filtersApplied\", \"pageChanged\", \"commandTriggered\"]",
 							"overwrites": {
 								"type": "reference",
 								"name": "Embed.allowedEvents",

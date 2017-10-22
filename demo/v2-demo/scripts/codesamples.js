@@ -764,6 +764,105 @@ function _Report_saveAs() {
     report.saveAs(saveAsParameters);
 }
 
+function _Report_Extensions_OptionsMenu() {
+    const base64Icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAu9JREFUeJzt3U9OE2Ech/FnSiKsXbh340pg5Qk8gofAY3gGtBqWXsKNIR5BF0ZkQ9h6A2pC62LAEP5ITdv3R+f7fJJ3QUh4ZzpPmaaZmReGZxf4ABwDE2C24Jhc/K33wE7D/dB/2gIOgCmLH/S7xhQYA5uN9klz2gK+sLoDf30cXsypB+KAdgf/coyb7Jnutctq/+3/63Sw3WD/VmpUvQFL8BroCubtgL2CeXXNMe3f/ZfjqMH+rVTFO2fZJsCjwrnX+sPgEAKYFc+/1q/hED4DaAEGEM4AwhlAOAMIZwDhDCCcAYQzgHAGEM4AwhlAOAMIZwDhDCCcAYQzgHAGEM4AwhlAOAMIZwDhDCCcAYQzgHAGEM4AwhlAOAMIZwDhDCCcAYQzgHAGEM4AwhlAOAMIZwDhDCDcbQEs+3n7qx7Vqvf/vjH3egctnrfvqB13rnfQ+nn7jtrxd72DDXpj4BVK8RR4DHzq6M/5X1nzZ97qv82A3Q3gDfCidltUoAOmHf0nxGfFG6MaPztqn7evWpOO/lygUH4TGM4AwhlAOAMIZwDhDCCcAYQzgHAGEM4AwhlAOAMIZwDhDCCcAYQbAb+rN0JlJiPgtHorVOZkRH+NuDIddvS3C33Dy8LTTLm4LPwX8AQvDU/zDvh4+cMm/amg+pYlR5vxmVuuBN+iv0XMm0OHO86Bfa4c/NvO+9vAHvCS/h6yG3eSaq1MgBP6//AHwPervxzCB79Z8fxr/Rr6TWA4AwhnAOEMIJwBhDOAcAYQzgDCGUA4AwhnAOEMIJwBhDOAcAYQzgDCGUA4AwhnAOEMIJwBhDOAcAYQzgDCGUA4AwhnAOEMIJwBhDOAcAYQzgDCGUA4AwhnAOEMIJwBhDOAcAYQbggBVK53MCmceymGEMBp4dwnhXMvxRACqFzvwLUWHoAdah5wfQ48b7B/msOY9gHsN9kzzaX1ege3Pm9ftVqsd3Djeft6eLbpl0M5As5Y/KCfAT+AtwzwnP8HNwiKJyPkCoYAAAAASUVORK5CYII=";
+
+    // The new settings that you want to apply to the report.
+    const newSettings = {
+      extensions: [
+        {
+          command: {
+            name: "extension command",
+            title: "Extend commands",
+            icon: base64Icon,
+            extend: {
+              // Define visualOptionsMenu to extend options menu
+              visualOptionsMenu: {
+                // Define title to override default title.
+                // You can override default icon as well.
+                title: "Extend options menu",
+              }
+            }
+          }
+        }
+      ]
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    report.updateSettings(newSettings)
+        .then(function (result) {
+            $("#result").html(result);
+        })
+        .catch(function (error) {
+            $("#result").html(error);
+        });
+
+    // Report.on will add an event handler to commandTriggered event which prints to console window.
+    report.on("commandTriggered", function(event) {
+        var commandDetails = event.detail;
+        Log.log(commandDetails);
+    });
+
+    // Select Run and open options menu to see new added items.
+    // Click on menu items added and you should see an entry in the Log window.
+
+    Log.logText("Open visual options menu by clicking the three dots icon and click on added items to see events in Log window.");
+}
+
+function _Report_Extensions_ContextMenu() {
+    // The new settings that you want to apply to the report.
+    const newSettings = {
+      extensions: [
+        {
+          command: {
+            name: "extension command",
+            title: "Extend command",
+            extend: {
+              // Define visualContextMenu to extend context menu.
+              visualContextMenu: {
+                // Define title to override default title.
+                //You can override default icon as well.
+                title: "Extend context menu",
+              }
+            }
+          }
+        }
+      ]
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    report.updateSettings(newSettings)
+        .then(function (result) {
+            $("#result").html(result);
+        })
+        .catch(function (error) {
+            $("#result").html(error);
+        });
+
+    // Report.on will add an event handler to commandTriggered event which prints to console window.
+    report.on("commandTriggered", function(event) {
+        var commandDetails = event.detail;
+        Log.log(commandDetails);
+    });
+
+    // Select Run and context menu (i.e. by right click on data points) to see new added items.
+    // Click on menu items added and you should see an entry in the Log window.
+
+    Log.logText("Open visual context menu by right click on data points and click on added items to see events in Log window.");
+}
+
 // ---- Page Operations ----------------------------------------------------
 
 function _Page_SetActive() {

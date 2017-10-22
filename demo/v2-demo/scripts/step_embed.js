@@ -47,6 +47,14 @@ function Report_ExitFullScreen() {
     SetCode(_Report_ExitFullScreen);
 }
 
+function Report_Extensions_ContextMenu() {
+    SetCode(_Report_Extensions_ContextMenu);
+}
+
+function Report_Extensions_OptionsMenu() {
+    SetCode(_Report_Extensions_OptionsMenu);
+}
+
 // ---- Page Operations ----------------------------------------------------
 
 function Page_SetActive() {

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.1 | (c) 2016 Microsoft Corporation MIT */
 declare module "config" {
     const config: {
         version: string;
