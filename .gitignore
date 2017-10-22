@@ -8,3 +8,4 @@ tmp
 npm-debug.log*
 dist/powerbi.js.map
 *.js.map
+package-lock.json
