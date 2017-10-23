@@ -254,7 +254,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
 	        }
 	        // TODO: Multiple embedding to the same iframe is not supported in QnA
-	        if (config.type.toLowerCase() === "qna") {
+	        if (config.type && config.type.toLowerCase() === "qna") {
 	            return this.embedNew(element, config);
 	        }
 	        /**

@@ -258,7 +258,8 @@ describe('service', function () {
 
       // Act
       const attemptEmbed = () => {
-        powerbi.embed(component[0], { type: "report", embedUrl: null, accessToken: null, id: null });
+        const configuration: embed.IEmbedConfiguration = { type: "report", embedUrl: null, accessToken: null, id: null };
+        powerbi.embed(component[0], configuration);
       };
 
       // Assert
@@ -275,7 +276,8 @@ describe('service', function () {
 
       // Act
       const attemptEmbed = () => {
-        powerbi.embed(component[0], { type: "report", embedUrl: null, accessToken: null, id: null });
+        const configuration: embed.IEmbedConfiguration = { type: "report", embedUrl: null, accessToken: null, id: null };
+        powerbi.embed(component[0], configuration);
       };
 
       // Assert
@@ -373,7 +375,7 @@ describe('service', function () {
       const report = powerbi.embed($reportContainer[0]);
 
       // Assert
-      expect(report.config.settings.filterPaneEnabled).toEqual(false);
+      expect((<embed.IEmbedSettings>report.config.settings).filterPaneEnabled).toEqual(false);
     });
 
     it('should get navContentPaneEnabled setting from attribute from config and then attribute', function () {
@@ -387,7 +389,7 @@ describe('service', function () {
       const report = powerbi.embed($reportContainer[0]);
 
       // Assert
-      expect(report.config.settings.navContentPaneEnabled).toEqual(false);
+      expect((<embed.IEmbedSettings>report.config.settings).navContentPaneEnabled).toEqual(false);
     });
 
     it('if component is already embedded in element re-use the existing component by calling load with the new information', function () {
@@ -633,11 +635,13 @@ describe('service', function () {
         const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
           .appendTo('#powerbi-fixture');
 
-        // Act
-        const report = powerbi.embed($reportContainer[0], { id: testReportId });
+        const configuration: embed.IEmbedConfiguration = { id: testReportId };
 
+        // Act
+        const report = powerbi.embed($reportContainer[0], configuration);
+        
         // Assert
-        expect(report.config.id).toEqual(testReportId);
+        expect((<embed.IEmbedConfiguration>report.config).id).toEqual(testReportId);
       });
 
       it('should fallback to using id from attribute if not supplied in embed/load configuration', function () {
@@ -649,9 +653,9 @@ describe('service', function () {
 
         // Act
         const report = powerbi.embed($reportContainer[0]);
-
+        const config: embed.IEmbedConfiguration = report.config;
         // Assert
-        expect(report.config.id).toEqual(testReportId);
+        expect(config.id).toEqual(testReportId);
       });
 
       it('should fallback to using id from embedUrl if not supplied in embed/load configuration or attribute', function () {
@@ -665,7 +669,7 @@ describe('service', function () {
         const report = powerbi.embed($reportContainer[0]);
 
         // Assert
-        expect(report.config.id).toEqual(testReportId);
+        expect((<embed.IEmbedConfiguration>report.config).id).toEqual(testReportId);
       });
     });
 
@@ -691,12 +695,15 @@ describe('service', function () {
     it('deletes the powerBiEmbed property on the element', function () {
       // Arrange
       const $element = $('<div></div>');
-      powerbi.embed($element.get(0), {
+
+      const config: embed.IEmbedConfiguration = {
         type: 'report',
         embedUrl: 'fakeUrl',
         id: 'fakeId',
         accessToken: 'fakeToken'
-      });
+      };
+
+      powerbi.embed($element.get(0), config);
 
       // Act
       expect((<service.IPowerBiElement>$element.get(0)).powerBiEmbed).toBeDefined();
@@ -709,12 +716,15 @@ describe('service', function () {
     it('clears the innerHTML of the element', function () {
       // Arrange
       const $element = $('<div></div>');
-      powerbi.embed($element.get(0), {
+
+      const config: embed.IEmbedConfiguration = {
         type: 'report',
         embedUrl: 'fakeUrl',
         id: 'fakeReportId',
         accessToken: 'fakeToken'
-      });
+      };
+
+      powerbi.embed($element.get(0), config);
 
       // Act
       var iframe = $element.find('iframe');

@@ -277,7 +277,7 @@ export class Service implements IService {
     }
 
     // TODO: Multiple embedding to the same iframe is not supported in QnA
-    if (config.type.toLowerCase() === "qna") {
+    if (config.type && config.type.toLowerCase() === "qna") {
       return this.embedNew(element, config);
     }
 
