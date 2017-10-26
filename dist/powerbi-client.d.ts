@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "config" {
     const config: {
         version: string;
@@ -1098,6 +1098,7 @@ declare module "powerbi-client" {
     export { Tile } from "tile";
     export { IEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings } from "embed";
     export { Page } from "page";
+    export { Qna } from "qna";
     global  {
         interface Window {
             powerbi: service.Service;
