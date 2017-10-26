@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.2 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -71,6 +71,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Embed = embed_1.Embed;
 	var page_1 = __webpack_require__(6);
 	exports.Page = page_1.Page;
+	var qna_1 = __webpack_require__(11);
+	exports.Qna = qna_1.Qna;
 	/**
 	 * Makes Power BI available to the global object for use in applications that don't have module loading support.
 	 *
@@ -3944,7 +3946,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.4.1',
+	    version: '2.4.2',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
