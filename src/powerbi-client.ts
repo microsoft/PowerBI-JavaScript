@@ -27,6 +27,9 @@ export {
 export {
   Page
 } from './page';
+export {
+  Qna
+} from './qna';
 
 declare var powerbi: service.Service;
 declare global {
