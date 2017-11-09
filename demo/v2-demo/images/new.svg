@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="24px" viewBox="0 0 40 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>Artboard Copy 7</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-Copy-7">
+            <g id="Badge---Neutral-background---Yellow-Copy-4">
+                <path d="M36,24 L4,24 C1.8,24 0,22.2 0,20 L0,4 C0,1.8 1.8,0 4,0 L36,0 C38.2,0 40,1.8 40,4 L40,20 C40,22.2 38.2,24 36,24" id="Fill-9" fill="#B3D6F2"></path>
+                <text id="NEW" font-family="Segoe UI" font-size="11" font-weight="600" fill="#333333">
+                    <tspan x="8" y="16">NEW</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>
