@@ -135,14 +135,15 @@ function OpenInteractStep() {
     }
     else
     {
-        $("#settings").load("settings_interact.html", function() {
+        $("#settings").load("settings_interact.html", function() {            
             SetToggleHandler("report-operations-div");
             SetToggleHandler("page-operations-div");
             SetToggleHandler("events-operations-div");
             SetToggleHandler("editandsave-operations-div");
             LoadCodeArea("#embedCodeDiv", _Report_GetId);
+            AddImgToNewOperations();
         });
-    }
+      }
 }
 
 function setCodeArea(mode, entityType)
