@@ -141,8 +141,9 @@ function OpenInteractStep() {
             SetToggleHandler("events-operations-div");
             SetToggleHandler("editandsave-operations-div");
             LoadCodeArea("#embedCodeDiv", _Report_GetId);
+            AddImgToNewOperations();
         });
-    }
+      }
 }
 
 function setCodeArea(mode, entityType)

@@ -423,6 +423,14 @@ a {
     padding: 0px 20px 0px 0px;
 }
 
+.newOperation span {
+    padding-right: 10px;
+}
+
+.newOperation img {
+    vertical-align: center;
+}
+
 .function-ul li {
     width: 100%;
     clear: both;
@@ -468,6 +476,14 @@ a {
 .pageTitle h3 {
     margin-bottom: 15px;
     font-weight: normal;
+}
+
+.newItem h3 {
+    display: inline-block;
+}
+
+.newItem img {
+    margin: 0 0 10px 5px;
 }
 
 .editorTitle {
