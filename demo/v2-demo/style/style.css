@@ -423,14 +423,8 @@ a {
     padding: 0px 20px 0px 0px;
 }
 
-.newOperation {
-    display: flex;
-}
-
-.newOperation p {
-    display: inline-block;
+.newOperation span {
     padding-right: 10px;
-    margin-bottom: 0px;
 }
 
 .newOperation img {

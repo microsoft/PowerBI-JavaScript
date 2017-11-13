@@ -85,14 +85,14 @@ function AddImgToNewOperations(){
   var newListItems = $('.newOperation');
   newListItems.each(function(index, value)
   {
-      var pElement = document.createElement("p");
-      pElement.innerText = value.innerText;
+      var spanElement = document.createElement("span");
+      spanElement.innerText = value.innerText;
 
       var newImgElement = document.createElement("img");
       newImgElement.src = "images\\new.svg";
       
       value.innerText = '';
-      value.appendChild(pElement);
+      value.appendChild(spanElement);
       value.appendChild(newImgElement);
       
   });
