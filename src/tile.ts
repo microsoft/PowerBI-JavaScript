@@ -17,6 +17,9 @@ export class Tile extends embed.Embed {
 
     constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase) {
       let config = <embed.IEmbedConfiguration>baseConfig;
+      if (config.groupId) {
+        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'groupId', config.groupId);
+      }
       config.embedUrl = utils.addParamToUrl(config.embedUrl, 'dashboardId', config.dashboardId);
       config.embedUrl = utils.addParamToUrl(config.embedUrl, 'tileId', config.id);
 

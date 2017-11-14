@@ -54,6 +54,7 @@ export interface IEmbedConfiguration extends IEmbedConfigurationBase {
   permissions?: models.Permissions;
   viewMode?: models.ViewMode;
   action?: string;
+  groupId?: string;
   dashboardId?: string;
   height?: number;
   width?: number;
