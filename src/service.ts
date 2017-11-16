@@ -103,6 +103,8 @@ export class Service implements IService {
   wpmp: wpmp.WindowPostMessageProxy;
   private router: router.Router;
 
+  private static DefaultInitEmbedUrl: string = "http://app.powerbi.com/reportEmbed";
+
   /**
    * Creates an instance of a Power BI Service.
    * 
@@ -421,5 +423,33 @@ export class Service implements IService {
 
       utils.raiseCustomEvent(embed.element, event.name, value);
     }
+  }
+
+  /**
+   * API for warm starting powerbi embedded endpoints.
+   * Use this API to preload Power BI Embedded in the background.
+   * 
+   * @public
+   * @param {embed.IEmbedConfigurationBase} [config={}]
+   * @param {HTMLElement} [element=undefined]
+   */
+  preload(config: embed.IEmbedConfigurationBase, element?: HTMLElement) {
+    var iframeContent = document.createElement("iframe");
+    iframeContent.setAttribute("style", "display:none;");
+    iframeContent.setAttribute("src", config.embedUrl);
+    iframeContent.setAttribute("scrolling", "no");
+    iframeContent.setAttribute("allowfullscreen", "false");
+
+    var node = element;
+    if (!node) {
+      node = document.getElementsByTagName("body")[0];
+    }
+
+    node.appendChild(iframeContent);
+    iframeContent.onload = () => {
+      utils.raiseCustomEvent(iframeContent, "preloaded", {});
+    };
+
+    return iframeContent;
   }
 }

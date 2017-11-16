@@ -943,6 +943,7 @@ declare module "service" {
         /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
         wpmp: wpmp.WindowPostMessageProxy;
         private router;
+        private static DefaultInitEmbedUrl;
         /**
          * Creates an instance of a Power BI Service.
          *
@@ -1039,6 +1040,15 @@ declare module "service" {
          * @param {IEvent<any>} event
          */
         private handleEvent(event);
+        /**
+         * API for warm starting powerbi embedded endpoints.
+         * Use this API to preload Power BI Embedded in the background.
+         *
+         * @public
+         * @param {embed.IEmbedConfigurationBase} [config={}]
+         * @param {HTMLElement} [element=undefined]
+         */
+        preload(config: embed.IEmbedConfigurationBase, element?: HTMLElement): HTMLIFrameElement;
     }
 }
 declare module "create" {
