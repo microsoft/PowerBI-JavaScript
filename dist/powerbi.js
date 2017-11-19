@@ -381,6 +381,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	    /**
+	     * API for warm starting powerbi embedded endpoints.
+	     * Use this API to preload Power BI Embedded in the background.
+	     *
+	     * @public
+	     * @param {embed.IEmbedConfigurationBase} [config={}]
+	     * @param {HTMLElement} [element=undefined]
+	     */
+	    Service.prototype.preload = function (config, element) {
+	        var iframeContent = document.createElement("iframe");
+	        iframeContent.setAttribute("style", "display:none;");
+	        iframeContent.setAttribute("src", config.embedUrl);
+	        iframeContent.setAttribute("scrolling", "no");
+	        iframeContent.setAttribute("allowfullscreen", "false");
+	        var node = element;
+	        if (!node) {
+	            node = document.getElementsByTagName("body")[0];
+	        }
+	        node.appendChild(iframeContent);
+	        iframeContent.onload = function () {
+	            utils.raiseCustomEvent(iframeContent, "preloaded", {});
+	        };
+	        return iframeContent;
+	    };
+	    /**
 	     * A list of components that this service can embed
 	     */
 	    Service.components = [
@@ -402,6 +426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return console.log(args[0], args.slice(1));
 	        }
 	    };
+	    Service.DefaultInitEmbedUrl = "http://app.powerbi.com/reportEmbed";
 	    return Service;
 	}());
 	exports.Service = Service;
