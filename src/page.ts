@@ -1,5 +1,6 @@
 import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
+import { Visual } from './visual';
 import * as models from 'powerbi-models';
 
 /**
@@ -131,6 +132,28 @@ export class Page implements IPageNode, IFilterable {
   setFilters(filters: models.IFilter[]): Promise<void> {
     return this.report.service.hpm.put<models.IError[]>(`/report/pages/${this.name}/filters`, filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
+   * Gets all the visuals on the page.
+   * 
+   * ```javascript
+   * page.getVisuals()
+   *   .then(visuals => { ... });
+   * ```
+   * 
+   * @returns {Promise<Visual[]>}
+   */
+  getVisuals(): Promise<Visual[]> {
+    return this.report.service.hpm.get<models.IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+      .then(response => {
+        return response.body
+          .map(visual => {
+            return new Visual(this, visual.name, visual.title, visual.type, visual.layout);
+          });
+      }, response => {
         throw response.body;
       });
   }

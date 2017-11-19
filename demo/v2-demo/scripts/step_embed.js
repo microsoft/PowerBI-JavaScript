@@ -65,6 +65,10 @@ function Page_GetFilters() {
     SetCode(_Page_GetFilters);
 }
 
+function Page_GetVisuals() {
+  SetCode(_Page_GetVisuals);
+}
+
 function Page_SetFilters() {
     SetCode(_Page_SetFilters);
 }

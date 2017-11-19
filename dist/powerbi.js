@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.4 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -57,22 +57,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(12);
+	var factories = __webpack_require__(13);
 	exports.factories = factories;
 	var models = __webpack_require__(4);
 	exports.models = models;
 	var report_1 = __webpack_require__(5);
 	exports.Report = report_1.Report;
-	var dashboard_1 = __webpack_require__(9);
+	var dashboard_1 = __webpack_require__(10);
 	exports.Dashboard = dashboard_1.Dashboard;
-	var tile_1 = __webpack_require__(10);
+	var tile_1 = __webpack_require__(11);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
 	var page_1 = __webpack_require__(6);
 	exports.Page = page_1.Page;
-	var qna_1 = __webpack_require__(11);
+	var qna_1 = __webpack_require__(12);
 	exports.Qna = qna_1.Qna;
+	var visual_1 = __webpack_require__(7);
+	exports.Visual = visual_1.Visual;
 	/**
 	 * Makes Power BI available to the global object for use in applications that don't have module loading support.
 	 *
@@ -88,11 +90,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(5);
-	var create_1 = __webpack_require__(8);
-	var dashboard_1 = __webpack_require__(9);
-	var tile_1 = __webpack_require__(10);
+	var create_1 = __webpack_require__(9);
+	var dashboard_1 = __webpack_require__(10);
+	var tile_1 = __webpack_require__(11);
 	var page_1 = __webpack_require__(6);
-	var qna_1 = __webpack_require__(11);
+	var qna_1 = __webpack_require__(12);
 	var utils = __webpack_require__(3);
 	/**
 	 * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
@@ -916,7 +918,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.0.0 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.0.1 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1484,7 +1486,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    function ObjectValidator() {
 		    }
 		    ObjectValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        if (typeof input !== "object" || Array.isArray(input)) {
@@ -1504,7 +1506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        this.itemValidators = itemValidators;
 		    }
 		    ArrayValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        if (!(Array.isArray(input))) {
@@ -1538,7 +1540,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        this.expectedType = expectedType;
 		    }
 		    TypeValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        if (!(typeof input === this.expectedType)) {
@@ -1582,7 +1584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        this.possibleValues = possibleValues;
 		    }
 		    ValueValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        if (this.possibleValues.indexOf(input) < 0) {
@@ -1605,7 +1607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _this;
 		    }
 		    EnumValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -1701,7 +1703,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    MenuExtensionValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -1730,7 +1732,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    ExtensionPointsValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -1759,7 +1761,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    ExtensionItemValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -1788,7 +1790,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    CommandExtensionValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -1817,7 +1819,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    ExtensionValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -1893,7 +1895,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    SettingsValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -1958,7 +1960,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    FilterColumnTargetValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -1987,7 +1989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    FilterHierarchyTargetValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2020,7 +2022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    FilterMeasureTargetValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2049,7 +2051,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    BasicFilterValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2086,7 +2088,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    AdvancedFilterValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2123,7 +2125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    RelativeDateFilterValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2168,7 +2170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    TopNFilterValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2205,7 +2207,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    NotSupportedFilterValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2242,7 +2244,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    IncludeExcludeFilterValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2279,7 +2281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    FilterValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        return validator_1.Validators.anyFilterValidator.validate(input, path, field);
@@ -2293,7 +2295,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    ConditionItemValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2327,7 +2329,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    function FieldRequiredValidator() {
 		    }
 		    FieldRequiredValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return [{
 		                    message: field + " is required",
 		                    path: (path ? path + "." : "") + field,
@@ -2351,7 +2353,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        this.validators = validators;
 		    }
 		    AnyOfValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var valid = false;
@@ -2401,7 +2403,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    ReportLoadValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2474,7 +2476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    ReportCreateValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2527,7 +2529,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    DashboardLoadValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2584,7 +2586,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    TileLoadValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2653,7 +2655,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    PageSizeValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2678,7 +2680,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    CustomPageSizeValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2707,7 +2709,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    PageValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2732,7 +2734,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    PageViewFieldValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2776,7 +2778,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    LoadQnaValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2821,7 +2823,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    QnaSettingsValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2846,7 +2848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    QnaInterpretInputDataValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2895,7 +2897,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    SaveAsParametersValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2941,7 +2943,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _this;
 		    }
 		    MapValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -2998,7 +3000,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    CustomLayoutValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -3031,7 +3033,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    VisualLayoutValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -3076,7 +3078,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    DisplayStateValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -3101,7 +3103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        return _super !== null && _super.apply(this, arguments) || this;
 		    }
 		    PageLayoutValidator.prototype.validate = function (input, path, field) {
-		        if (input === undefined || input === null) {
+		        if (input == null) {
 		            return null;
 		        }
 		        var errors = _super.prototype.validate.call(this, input, path, field);
@@ -3111,7 +3113,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		        var fields = [
 		            {
 		                field: "visualsLayout",
-		                validators: [validator_1.Validators.pageLayoutValidator]
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.pageLayoutValidator]
+		            },
+		            {
+		                field: "defaultLayout",
+		                validators: [validator_1.Validators.visualLayoutValidator]
 		            }
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
@@ -3141,7 +3147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var models = __webpack_require__(4);
 	var utils = __webpack_require__(3);
 	var page_1 = __webpack_require__(6);
-	var defaults_1 = __webpack_require__(7);
+	var defaults_1 = __webpack_require__(8);
 	/**
 	 * The Power BI Report embed component
 	 *
@@ -3426,8 +3432,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
+	var visual_1 = __webpack_require__(7);
 	/**
 	 * A Power BI report page
 	 *
@@ -3516,6 +3523,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
+	    /**
+	     * Gets all the visuals on the page.
+	     *
+	     * ```javascript
+	     * page.getVisuals()
+	     *   .then(visuals => { ... });
+	     * ```
+	     *
+	     * @returns {Promise<Visual[]>}
+	     */
+	    Page.prototype.getVisuals = function () {
+	        var _this = this;
+	        return this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body
+	                .map(function (visual) {
+	                return new visual_1.Visual(_this, visual.name, visual.title, visual.type, visual.layout);
+	            });
+	        }, function (response) {
+	            throw response.body;
+	        });
+	    };
 	    return Page;
 	}());
 	exports.Page = Page;
@@ -3523,6 +3552,30 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports) {
+
+	/**
+	 * A Power BI visual within a page
+	 *
+	 * @export
+	 * @class Visual
+	 * @implements {IVisualNode}
+	 */
+	var Visual = (function () {
+	    function Visual(page, name, title, type, layout) {
+	        this.name = name;
+	        this.title = title;
+	        this.type = type;
+	        this.layout = layout;
+	        this.page = page;
+	    }
+	    return Visual;
+	}());
+	exports.Visual = Visual;
+
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports) {
 
 	var Defaults = (function () {
@@ -3540,7 +3593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3551,7 +3604,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var models = __webpack_require__(4);
 	var embed = __webpack_require__(2);
 	var utils = __webpack_require__(3);
-	var defaults_1 = __webpack_require__(7);
+	var defaults_1 = __webpack_require__(8);
 	var Create = (function (_super) {
 	    __extends(Create, _super);
 	    function Create(service, element, config) {
@@ -3619,7 +3672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3630,7 +3683,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var embed = __webpack_require__(2);
 	var models = __webpack_require__(4);
 	var utils = __webpack_require__(3);
-	var defaults_1 = __webpack_require__(7);
+	var defaults_1 = __webpack_require__(8);
 	/**
 	 * A Power BI Dashboard embed component
 	 *
@@ -3726,7 +3779,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3737,7 +3790,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var models = __webpack_require__(4);
 	var embed = __webpack_require__(2);
 	var utils = __webpack_require__(3);
-	var defaults_1 = __webpack_require__(7);
+	var defaults_1 = __webpack_require__(8);
 	/**
 	 * The Power BI tile embed component
 	 *
@@ -3872,7 +3925,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3933,13 +3986,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var config_1 = __webpack_require__(13);
-	var wpmp = __webpack_require__(14);
-	var hpm = __webpack_require__(15);
-	var router = __webpack_require__(16);
+	var config_1 = __webpack_require__(14);
+	var wpmp = __webpack_require__(15);
+	var hpm = __webpack_require__(16);
+	var router = __webpack_require__(17);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -3967,11 +4020,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.4.2',
+	    version: '2.4.4',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -3979,7 +4032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
@@ -4279,7 +4332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -4463,7 +4516,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */

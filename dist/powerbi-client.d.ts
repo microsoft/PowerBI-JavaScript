@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.4 | (c) 2016 Microsoft Corporation MIT */
 declare module "config" {
     const config: {
         version: string;
@@ -409,9 +409,67 @@ declare module "ifilterable" {
         removeFilters(): Promise<void>;
     }
 }
+declare module "visual" {
+    import * as models from 'powerbi-models';
+    import { IPageNode } from "page";
+    /**
+     * A Visual node within a report hierarchy
+     *
+     * @export
+     * @interface IVisualNode
+     */
+    export interface IVisualNode {
+        name: string;
+        title: string;
+        type: string;
+        layout: models.IVisualLayout;
+        page: IPageNode;
+    }
+    /**
+     * A Power BI visual within a page
+     *
+     * @export
+     * @class Visual
+     * @implements {IVisualNode}
+     */
+    export class Visual implements IVisualNode {
+        /**
+         * The visual name
+         *
+         * @type {string}
+         */
+        name: string;
+        /**
+         * The visual title
+         *
+         * @type {string}
+         */
+        title: string;
+        /**
+         * The visual type
+         *
+         * @type {string}
+         */
+        type: string;
+        /**
+         * The visual layout: position, size and visiblity.
+         *
+         * @type {string}
+         */
+        layout: models.IVisualLayout;
+        /**
+         * The parent Power BI page that contains this visual
+         *
+         * @type {IPageNode}
+         */
+        page: IPageNode;
+        constructor(page: IPageNode, name: string, title: string, type: string, layout: models.IVisualLayout);
+    }
+}
 declare module "page" {
     import { IFilterable } from "ifilterable";
     import { IReportNode } from "report";
+    import { Visual } from "visual";
     import * as models from 'powerbi-models';
     /**
      * A Page node within a report hierarchy
@@ -508,6 +566,17 @@ declare module "page" {
          * @returns {Promise<void>}
          */
         setFilters(filters: models.IFilter[]): Promise<void>;
+        /**
+         * Gets all the visuals on the page.
+         *
+         * ```javascript
+         * page.getVisuals()
+         *   .then(visuals => { ... });
+         * ```
+         *
+         * @returns {Promise<Visual[]>}
+         */
+        getVisuals(): Promise<Visual[]>;
     }
 }
 declare module "defaults" {
@@ -1109,6 +1178,7 @@ declare module "powerbi-client" {
     export { IEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings } from "embed";
     export { Page } from "page";
     export { Qna } from "qna";
+    export { Visual } from "visual";
     global  {
         interface Window {
             powerbi: service.Service;

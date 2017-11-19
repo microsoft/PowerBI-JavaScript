@@ -30,6 +30,9 @@ export {
 export {
   Qna
 } from './qna';
+export {
+  Visual
+} from './visual';
 
 declare var powerbi: service.Service;
 declare global {

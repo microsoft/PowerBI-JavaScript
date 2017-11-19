@@ -894,17 +894,58 @@ function _Page_GetFilters() {
     // Retrieve the page collection and get the filters for the first page.
     report.getPages()
         .then(function (pages) {
-            pages[0].getFilters()
-                .then(function (filters) {
-                    Log.log(filters);
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
+          // Retrieve active page.
+          var activePage = pages.find(function(page) {
+            return page.isActive
+          });
+
+          activePage.getFilters()
+            .then(function (filters) {
+                Log.log(filters);
+            })
+            .catch(function (errors) {
+                Log.log(errors);
+            });
         })
         .catch(function (errors) {
             Log.log(errors);
         });
+}
+
+function _Page_GetVisuals() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Retrieve the page collection and get the visuals for the first page.
+    report.getPages()
+      .then(function (pages) {
+        // Retrieve active page.
+        var activePage = pages.find(function(page) {
+          return page.isActive
+        });
+
+        activePage.getVisuals()
+          .then(function (visuals) {
+            Log.log(
+              visuals.map(function(visual) {
+                return {
+                  name: visual.name,
+                  type: visual.type,
+                  title: visual.title,
+                  layout: visual.layout
+                };
+            }));
+          })
+          .catch(function (errors) {
+              Log.log(errors);
+          });
+      })
+      .catch(function (errors) {
+          Log.log(errors);
+      });
 }
 
 function _Page_SetFilters() {
@@ -930,13 +971,18 @@ function _Page_SetFilters() {
     // Pay attention that setFilters receives an array.
     report.getPages()
         .then(function (pages) {
-            pages[0].setFilters([filter])
-                .then(function (result) {
-                    Log.log(result);
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
+          // Retrieve active page.
+          var activePage = pages.find(function(page) {
+            return page.isActive
+          });
+
+          activePage.setFilters([filter])
+            .then(function (result) {
+                Log.log(result);
+            })
+            .catch(function (errors) {
+                Log.log(errors);
+            });
         })
         .catch(function (errors) {
             Log.log(errors);
@@ -953,13 +999,18 @@ function _Page_RemoveFilters() {
     // Retrieve the page collection and remove the filters for the first page.
     report.getPages()
         .then(function (pages) {
-            pages[0].removeFilters()
-                .then(function (result) {
-                    Log.log(result);
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
+          // Retrieve active page.
+          var activePage = pages.find(function(page) {
+            return page.isActive
+          });
+
+          activePage.removeFilters()
+            .then(function (result) {
+                Log.log(result);
+            })
+            .catch(function (errors) {
+                Log.log(errors);
+            });
         })
         .catch(function (errors) {
             Log.log(errors);
