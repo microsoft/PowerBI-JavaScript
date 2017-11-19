@@ -4,6 +4,7 @@ var anyReportSectionLoaded = false;
 
 $(function() {
     OpenSampleSection();
+    WarmStartSampleReportEmbed();
 });
 
 function OpenSampleSection() {

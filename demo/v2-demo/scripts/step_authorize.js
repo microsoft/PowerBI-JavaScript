@@ -184,6 +184,23 @@ function OpenEmbedStepFromUserSettings() {
     OpenEmbedStep(EmbedViewMode, EntityType.Report);
 }
 
+function WarmStartSampleReportEmbed() {
+  FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */).then((response) => {
+    var embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
+    if (!embedUrl)
+    {
+        embedUrl = GetSession(SessionKeys.EmbedUrl);
+    }
+    const config= {
+      type: 'report',
+      embedUrl: embedUrl
+    };
+  
+    // Preload sample report
+    powerbi.preload(config);
+  });
+}
+
 function setSession(accessToken, embedUrl, embedId, dashboardId)
 {
     SetSession(SessionKeys.AccessToken, accessToken);
