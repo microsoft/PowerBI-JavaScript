@@ -185,7 +185,7 @@ function OpenEmbedStepFromUserSettings() {
 }
 
 function WarmStartSampleReportEmbed() {
-  FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */).then((response) => {
+  FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */).then(function (response) {
     var embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
     if (!embedUrl)
     {
