@@ -367,7 +367,8 @@ export abstract class Embed {
    * @returns {Promise<void>}
    */
   setAccessToken(accessToken: string): Promise<void> {
-    return this.service.hpm.post<models.IError[]>('/report/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    var embedType = this.config.type;
+    return this.service.hpm.post<models.IError[]>('/' + embedType + '/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body;
       })
