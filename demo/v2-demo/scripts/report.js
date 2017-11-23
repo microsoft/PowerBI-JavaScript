@@ -115,6 +115,7 @@ function OpenInteractStep() {
         $("#settings").load("settings_interact_tile.html", function() {
             SetToggleHandler("tile-operations-div");
             LoadCodeArea("#embedCodeDiv", "");
+            AddImgToNewOperations();
         });
     }
     else if (entityType == EntityType.Dashboard)
@@ -123,6 +124,7 @@ function OpenInteractStep() {
             SetToggleHandler("dashboard-operations-div");
             SetToggleHandler("dashboard-events-operations-div");
             LoadCodeArea("#embedCodeDiv", _Dashboard_GetId);
+            AddImgToNewOperations();
         });
     }
     else if (entityType == EntityType.Qna)
@@ -131,6 +133,7 @@ function OpenInteractStep() {
             SetToggleHandler("qna-operations-div");
             SetToggleHandler("qna-events-operations-div");
             LoadCodeArea("#embedCodeDiv", _Qna_SetQuestion);
+            AddImgToNewOperations();
         });
     }
     else
