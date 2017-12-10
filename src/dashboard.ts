@@ -39,9 +39,11 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
      * @param {service.Service} service
      * @param {HTMLElement} element
      */
-    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase) {
-        super(service, element, config);
+    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean) {
+        super(service, element, config, /* iframe */ undefined, phasedRender);
         this.loadPath = "/dashboard/load";
+        this.phasedLoadPath = "/dashboard/prepare";
+
         Array.prototype.push.apply(this.allowedEvents, Dashboard.allowedEvents);
     }
 

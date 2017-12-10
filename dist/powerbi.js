@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.4 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.5 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -208,15 +208,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (config === void 0) { config = {}; }
 	        return this.embedInternal(element, config);
 	    };
-	    Service.prototype.embedInternal = function (element, config) {
+	    /**
+	     * Given a configuration based on an HTML element,
+	     * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
+	     * otherwise creates a new component instance.
+	     * This is used for the phased embedding API, once element is loaded successfully, one can call 'render' on it.
+	     *
+	     * @param {HTMLElement} element
+	     * @param {embed.IEmbedConfigurationBase} [config={}]
+	     * @returns {embed.Embed}
+	     */
+	    Service.prototype.load = function (element, config) {
+	        if (config === void 0) { config = {}; }
+	        return this.embedInternal(element, config, /* phasedRender */ true);
+	    };
+	    Service.prototype.embedInternal = function (element, config, phasedRender) {
 	        if (config === void 0) { config = {}; }
 	        var component;
 	        var powerBiElement = element;
 	        if (powerBiElement.powerBiEmbed) {
-	            component = this.embedExisting(powerBiElement, config);
+	            component = this.embedExisting(powerBiElement, config, phasedRender);
 	        }
 	        else {
-	            component = this.embedNew(powerBiElement, config);
+	            component = this.embedNew(powerBiElement, config, phasedRender);
 	        }
 	        return component;
 	    };
@@ -228,7 +242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {embed.IEmbedConfigurationBase} config
 	     * @returns {embed.Embed}
 	     */
-	    Service.prototype.embedNew = function (element, config) {
+	    Service.prototype.embedNew = function (element, config, phasedRender) {
 	        var componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
 	        if (!componentType) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed.Embed.typeAttribute + "=\"" + report_1.Report.type.toLowerCase() + "\"'.");
@@ -239,7 +253,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!Component) {
 	            throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
 	        }
-	        var component = new Component(this, element, config);
+	        var component = new Component(this, element, config, phasedRender);
 	        element.powerBiEmbed = component;
 	        this.addOrOverwriteEmbed(component, element);
 	        return component;
@@ -252,7 +266,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {embed.IEmbedConfigurationBase} config
 	     * @returns {embed.Embed}
 	     */
-	    Service.prototype.embedExisting = function (element, config) {
+	    Service.prototype.embedExisting = function (element, config, phasedRender) {
 	        var component = utils.find(function (x) { return x.element === element; }, this.embeds);
 	        if (!component) {
 	            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
@@ -271,7 +285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	             * When loading report after create we want to use existing Iframe to optimize load period
 	             */
 	            if (config.type === "report" && component.config.type === "create") {
-	                var report = new report_1.Report(this, element, config, element.powerBiEmbed.iframe);
+	                var report = new report_1.Report(this, element, config, /* phasedRender */ false, element.powerBiEmbed.iframe);
 	                report.load(config);
 	                element.powerBiEmbed = report;
 	                this.addOrOverwriteEmbed(component, element);
@@ -279,7 +293,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but the existing element contains an embed of type: " + this.config.type + " which does not match the new type: " + config.type);
 	        }
-	        component.load(config);
+	        component.load(config, phasedRender);
 	        return component;
 	    };
 	    /**
@@ -458,7 +472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {HTMLElement} element
 	     * @param {IEmbedConfigurationBase} config
 	     */
-	    function Embed(service, element, config, iframe) {
+	    function Embed(service, element, config, iframe, phasedRender) {
 	        this.allowedEvents = [];
 	        Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
 	        this.eventHandlers = [];
@@ -471,7 +485,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.setIframe(false /*set EventListener to call create() on 'load' event*/);
 	        }
 	        else {
-	            this.setIframe(true /*set EventListener to call load() on 'load' event*/);
+	            this.setIframe(true /*set EventListener to call load() on 'load' event*/, phasedRender);
 	        }
 	    }
 	    /**
@@ -548,15 +562,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * ```
 	     *
 	     * @param {models.ILoadConfiguration} config
+	     * @param {boolean} phasedRender
 	     * @returns {Promise<void>}
 	     */
-	    Embed.prototype.load = function (config) {
+	    Embed.prototype.load = function (config, phasedRender) {
 	        var _this = this;
 	        var errors = this.validate(config);
 	        if (errors) {
 	            throw errors;
 	        }
-	        return this.service.hpm.post(this.loadPath, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	        var path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
+	        return this.service.hpm.post(path, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
 	            utils.assign(_this.config, config);
 	            return response.body;
@@ -751,7 +767,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Sets Iframe for embed
 	     */
-	    Embed.prototype.setIframe = function (isLoad) {
+	    Embed.prototype.setIframe = function (isLoad, phasedRender) {
 	        var _this = this;
 	        if (!this.iframe) {
 	            var iframeContent = document.createElement("iframe");
@@ -768,7 +784,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.iframe = node.firstChild;
 	        }
 	        if (isLoad) {
-	            this.iframe.addEventListener('load', function () { return _this.load(_this.config); }, false);
+	            this.iframe.addEventListener('load', function () { return _this.load(_this.config, phasedRender); }, false);
 	        }
 	        else {
 	            this.iframe.addEventListener('load', function () { return _this.createReport(_this.createConfig); }, false);
@@ -3166,7 +3182,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {HTMLElement} element
 	     * @param {embed.IEmbedConfiguration} config
 	     */
-	    function Report(service, element, baseConfig, iframe) {
+	    function Report(service, element, baseConfig, phasedRender, iframe) {
 	        var config = baseConfig;
 	        var filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
 	        var navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
@@ -3175,8 +3191,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            navContentPaneEnabled: navContentPaneEnabled
 	        }, config.settings);
 	        var configCopy = utils.assign({ settings: settings }, config);
-	        _super.call(this, service, element, configCopy, iframe);
+	        _super.call(this, service, element, configCopy, iframe, phasedRender);
 	        this.loadPath = "/report/load";
+	        this.phasedLoadPath = "/report/prepare";
 	        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
 	    }
 	    /**
@@ -3197,6 +3214,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	            reportId = reportIdMatch[1];
 	        }
 	        return reportId;
+	    };
+	    /**
+	     * Render a preloaded report, using phased embedding API
+	     *
+	     * ```javascript
+	     * // Load report
+	     * var report = powerbi.load(element, config);
+	     *
+	     * ...
+	     *
+	     * // Render report
+	     * report.render()
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Report.prototype.render = function (config) {
+	        return this.service.hpm.post("/report/render", config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
 	    };
 	    /**
 	     * Gets filters that are applied at the report level.
@@ -3607,8 +3648,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var defaults_1 = __webpack_require__(8);
 	var Create = (function (_super) {
 	    __extends(Create, _super);
-	    function Create(service, element, config) {
-	        _super.call(this, service, element, config);
+	    function Create(service, element, config, phasedRender) {
+	        _super.call(this, service, element, config, /* iframe */ undefined, phasedRender);
 	    }
 	    /**
 	     * Gets the dataset ID from the first available location: createConfig or embed url.
@@ -3701,9 +3742,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {service.Service} service
 	     * @param {HTMLElement} element
 	     */
-	    function Dashboard(service, element, config) {
-	        _super.call(this, service, element, config);
+	    function Dashboard(service, element, config, phasedRender) {
+	        _super.call(this, service, element, config, /* iframe */ undefined, phasedRender);
 	        this.loadPath = "/dashboard/load";
+	        this.phasedLoadPath = "/dashboard/prepare";
 	        Array.prototype.push.apply(this.allowedEvents, Dashboard.allowedEvents);
 	    }
 	    /**
@@ -3800,11 +3842,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var Tile = (function (_super) {
 	    __extends(Tile, _super);
-	    function Tile(service, element, baseConfig) {
+	    function Tile(service, element, baseConfig, phasedRender) {
 	        var config = baseConfig;
 	        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'dashboardId', config.dashboardId);
 	        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'tileId', config.id);
-	        _super.call(this, service, element, config);
+	        _super.call(this, service, element, config, /* iframe */ undefined, phasedRender);
 	        Array.prototype.push.apply(this.allowedEvents, Tile.allowedEvents);
 	        window.addEventListener("message", this.receiveMessage.bind(this), false);
 	    }
@@ -3944,9 +3986,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var Qna = (function (_super) {
 	    __extends(Qna, _super);
-	    function Qna(service, element, config) {
-	        _super.call(this, service, element, config);
+	    function Qna(service, element, config, phasedRender) {
+	        _super.call(this, service, element, config, /* iframe */ undefined, phasedRender);
 	        this.loadPath = "/qna/load";
+	        this.phasedLoadPath = "/qna/prepare";
 	        Array.prototype.push.apply(this.allowedEvents, Qna.allowedEvents);
 	    }
 	    /**
@@ -4024,7 +4067,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.4.4',
+	    version: '2.4.5',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });

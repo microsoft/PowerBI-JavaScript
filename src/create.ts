@@ -6,8 +6,8 @@ import { Defaults } from './defaults';
 
 export class Create extends embed.Embed {
 
-  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration) {
-    super(service, element, config);
+  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean) {
+    super(service, element, config, /* iframe */ undefined, phasedRender);
   }
 
   /**

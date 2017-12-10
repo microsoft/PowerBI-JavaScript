@@ -6,6 +6,7 @@ export interface IApp {
   validateDashboardLoad(config: models.IDashboardLoadConfiguration): Promise<models.IError[]>;
   reportLoad(config: models.IReportLoadConfiguration): Promise<void>;
   validateReportLoad(config: models.IReportLoadConfiguration): Promise<models.IError[]>;
+  render(): Promise<void>;
   // Settings
   updateSettings(settings: models.ISettings): Promise<void>;
   validateSettings(settigns: models.ISettings): Promise<models.IError[]>;
@@ -34,6 +35,7 @@ export const mockAppSpyObj = {
   validateDashboardLoad: jasmine.createSpy("validateDashboardLoad").and.callFake(models.validateDashboardLoad),
   reportLoad: jasmine.createSpy("reportLoad").and.returnValue(Promise.resolve(null)),
   validateReportLoad: jasmine.createSpy("validateReportLoad").and.callFake(models.validateReportLoad),
+  render: jasmine.createSpy("render").and.returnValue(Promise.resolve(null)),
   // Settings
   updateSettings: jasmine.createSpy("updateSettings").and.returnValue(Promise.resolve(null)),
   validateSettings: jasmine.createSpy("validateSettings").and.callFake(models.validateSettings),

@@ -221,15 +221,29 @@ export class Service implements IService {
     return this.embedInternal(element, config);
   }
 
-  embedInternal(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}): embed.Embed {
+  /**
+   * Given a configuration based on an HTML element,
+   * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
+   * otherwise creates a new component instance.
+   * This is used for the phased embedding API, once element is loaded successfully, one can call 'render' on it.
+   * 
+   * @param {HTMLElement} element
+   * @param {embed.IEmbedConfigurationBase} [config={}]
+   * @returns {embed.Embed}
+   */
+  load(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}): embed.Embed {
+    return this.embedInternal(element, config, /* phasedRender */ true);
+  }
+
+  embedInternal(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}, phasedRender?: boolean): embed.Embed {
     let component: embed.Embed;
     let powerBiElement = <IPowerBiElement>element;
 
     if (powerBiElement.powerBiEmbed) {
-      component = this.embedExisting(powerBiElement, config);
+      component = this.embedExisting(powerBiElement, config, phasedRender);
     }
     else {
-      component = this.embedNew(powerBiElement, config);
+      component = this.embedNew(powerBiElement, config, phasedRender);
     }
 
     return component;
@@ -243,7 +257,7 @@ export class Service implements IService {
    * @param {embed.IEmbedConfigurationBase} config
    * @returns {embed.Embed}
    */
-  private embedNew(element: IPowerBiElement, config: embed.IEmbedConfigurationBase): embed.Embed {
+  private embedNew(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed {
     const componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
     if (!componentType) {
       throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${embed.Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
@@ -257,7 +271,7 @@ export class Service implements IService {
       throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
     }
     
-    const component = new Component(this, element, config);
+    const component = new Component(this, element, config, phasedRender);
     element.powerBiEmbed = component;
 
     this.addOrOverwriteEmbed(component, element);
@@ -272,7 +286,7 @@ export class Service implements IService {
    * @param {embed.IEmbedConfigurationBase} config
    * @returns {embed.Embed}
    */
-  private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfigurationBase): embed.Embed {
+  private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed {
     const component = utils.find(x => x.element === element, this.embeds);
     if (!component) {
       throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
@@ -294,7 +308,7 @@ export class Service implements IService {
        * When loading report after create we want to use existing Iframe to optimize load period
        */
       if(config.type === "report" && component.config.type === "create") {
-        const report = new Report(this, element, config, element.powerBiEmbed.iframe);
+        const report = new Report(this, element, config, /* phasedRender */ false, element.powerBiEmbed.iframe);
         report.load(config);
         element.powerBiEmbed = report;
 
@@ -306,7 +320,7 @@ export class Service implements IService {
       throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
     }
 
-    component.load(config);
+    component.load(config, phasedRender);
 
     return component;
   }
@@ -405,7 +419,7 @@ export class Service implements IService {
    * @param {IEvent<any>} event
    */
   private handleEvent(event: IEvent<any>): void {
-    const embed = utils.find(embed => {
+    let embed = utils.find(embed => {
       return (embed.config.uniqueId === event.id);
     }, this.embeds);
 

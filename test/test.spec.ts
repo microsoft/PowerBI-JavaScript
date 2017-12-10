@@ -410,7 +410,8 @@ describe('service', function () {
       const component2 = powerbi.embed($element[0], testConfiguration);
 
       // Assert
-      expect(component.load).toHaveBeenCalledWith(testConfiguration);
+      expect(component.load).toHaveBeenCalled();
+      expect((<jasmine.Spy>component.load).calls.mostRecent().args[0]).toEqual(testConfiguration);
       expect(component2).toBe(component);
     });
 
@@ -1016,155 +1017,157 @@ describe('Protocol', function () {
         });
       });
     });
-    
-    describe('load', function () {
+
+    describe('load & prepare', function () {
       describe('report', function () {
-        it('POST /report/load returns 400 if the request is invalid', function (done) {
-        // Arrange
-        const testData = {
-          uniqueId: 'uniqueId',
-          load: {
-            reportId: "fakeId",
-            accessToken: "fakeToken",
-            options: {
+        for (var action of ['load', 'prepare']) {
+          it(`POST /report/${action} returns 400 if the request is invalid`, function (done) {
+          // Arrange
+          const testData = {
+            uniqueId: 'uniqueId',
+            load: {
+              reportId: "fakeId",
+              accessToken: "fakeToken",
+              options: {
+              }
             }
-          }
-        };
+          };
 
-        iframeLoaded
-          .then(() => {
-            spyApp.validateReportLoad.and.returnValue(Promise.reject(null));
+          iframeLoaded
+            .then(() => {
+              spyApp.validateReportLoad.and.returnValue(Promise.reject(null));
 
-            // Act
-            hpm.post<models.IError>('/report/load', testData.load, { uid: testData.uniqueId })
-              .then(() => {
-                expect(false).toBe(true);
-                spyApp.validateReportLoad.calls.reset();
-                done();
-              })
-              .catch(response => {
-                // Assert
-                expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
-                expect(spyApp.reportLoad).not.toHaveBeenCalledWith(testData.load);
-                expect(response.statusCode).toEqual(400);
-                // Cleanup
-                spyApp.validateReportLoad.calls.reset();
-                done();
-              });
-          });
-      });
-      
-        it('POST /report/load returns 202 if the request is valid', function (done) {
-        // Arrange
-        const testData = {
-          load: {
-            reportId: "fakeId",
-            accessToken: "fakeToken",
-            options: {
+              // Act
+              hpm.post<models.IError>(`/report/${action}`, testData.load, { uid: testData.uniqueId })
+                .then(() => {
+                  expect(false).toBe(true);
+                  spyApp.validateReportLoad.calls.reset();
+                  done();
+                })
+                .catch(response => {
+                  // Assert
+                  expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                  expect(spyApp.reportLoad).not.toHaveBeenCalledWith(testData.load);
+                  expect(response.statusCode).toEqual(400);
+                  // Cleanup
+                  spyApp.validateReportLoad.calls.reset();
+                  done();
+                });
+            });
+        });
+        
+          it(`POST /report/${action} returns 202 if the request is valid`, function (done) {
+          // Arrange
+          const testData = {
+            load: {
+              reportId: "fakeId",
+              accessToken: "fakeToken",
+              options: {
+              }
             }
-          }
-        };
+          };
 
-        iframeLoaded
-          .then(() => {
-            spyApp.validateReportLoad.and.returnValue(Promise.resolve(null));
-            // Act
-            hpm.post<void>('/report/load', testData.load)
-              .then(response => {
-                // Assert
-                expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
-                expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
-                expect(response.statusCode).toEqual(202);
-                // Cleanup
-                spyApp.validateReportLoad.calls.reset();
-                spyApp.reportLoad.calls.reset();
-                done();
-              });
-          });
-      });
-      
-        it('POST /report/load causes POST /reports/:uniqueId/events/loaded', function (done) {
-        // Arrange
-        const testData = {
-          uniqueId: 'uniqueId',
-          load: {
-            reportId: "fakeId",
-            accessToken: "fakeToken",
-            options: {
-              navContentPaneEnabled: false
-            }
-          },
-        };
-        const testExpectedEvent = {
-          method: 'POST',
-          url: `/reports/${testData.uniqueId}/events/loaded`,
-          body: {
-            initiator: 'sdk'
-          }
-        };
-
-        iframeLoaded
-          .then(() => {
-            spyApp.reportLoad.and.returnValue(Promise.resolve(testData.load));
-
-            // Act
-            hpm.post<void>('/report/load', testData.load, { uid: testData.uniqueId })
-              .then(response => {
-                setTimeout(() => {
+          iframeLoaded
+            .then(() => {
+              spyApp.validateReportLoad.and.returnValue(Promise.resolve(null));
+              // Act
+              hpm.post<void>(`/report/${action}`, testData.load)
+                .then(response => {
                   // Assert
                   expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
                   expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
-                  expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
+                  expect(response.statusCode).toEqual(202);
                   // Cleanup
                   spyApp.validateReportLoad.calls.reset();
                   spyApp.reportLoad.calls.reset();
                   done();
                 });
-              });
-          });
-      });
-
-        it('POST /report/load causes POST /reports/:uniqueId/events/error', function (done) {
-        // Arrange
-        const testData = {
-          uniqueId: 'uniqueId',
-          load: {
-            reportId: "fakeId",
-            accessToken: "fakeToken",
-            options: {
-              navContentPaneEnabled: false
+            });
+        });
+        
+          it(`POST /report/${action} causes POST /reports/:uniqueId/events/loaded`, function (done) {
+          // Arrange
+          const testData = {
+            uniqueId: 'uniqueId',
+            load: {
+              reportId: "fakeId",
+              accessToken: "fakeToken",
+              options: {
+                navContentPaneEnabled: false
+              }
+            },
+          };
+          const testExpectedEvent = {
+            method: 'POST',
+            url: `/reports/${testData.uniqueId}/events/loaded`,
+            body: {
+              initiator: 'sdk'
             }
-          },
-          error: {
-            message: "error message"
-          }
-        };
-        const testExpectedEvent = {
-          method: 'POST',
-          url: `/reports/${testData.uniqueId}/events/error`,
-          body: testData.error
-        };
+          };
 
-        iframeLoaded
-          .then(() => {
-            spyApp.reportLoad.and.returnValue(Promise.reject(testData.error));
+          iframeLoaded
+            .then(() => {
+              spyApp.reportLoad.and.returnValue(Promise.resolve(testData.load));
 
-            // Act
-            hpm.post<void>('/report/load', testData.load, { uid: testData.uniqueId })
-              .then(response => {
-                setTimeout(() => {
-                  // Assert
-                  expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
-                  expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
-                  expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
-                  // Cleanup
-                  spyApp.validateReportLoad.calls.reset();
-                  spyApp.reportLoad.calls.reset();
-                  done();
+              // Act
+              hpm.post<void>(`/report/${action}`, testData.load, { uid: testData.uniqueId })
+                .then(response => {
+                  setTimeout(() => {
+                    // Assert
+                    expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                    expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
+                    expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
+                    // Cleanup
+                    spyApp.validateReportLoad.calls.reset();
+                    spyApp.reportLoad.calls.reset();
+                    done();
+                  });
                 });
-              });
+            });
+        });
+
+          it(`POST /report/${action} causes POST /reports/:uniqueId/events/error`, function (done) {
+          // Arrange
+          const testData = {
+            uniqueId: 'uniqueId',
+            load: {
+              reportId: "fakeId",
+              accessToken: "fakeToken",
+              options: {
+                navContentPaneEnabled: false
+              }
+            },
+            error: {
+              message: "error message"
+            }
+          };
+          const testExpectedEvent = {
+            method: 'POST',
+            url: `/reports/${testData.uniqueId}/events/error`,
+            body: testData.error
+          };
+
+          iframeLoaded
+            .then(() => {
+              spyApp.reportLoad.and.returnValue(Promise.reject(testData.error));
+
+              // Act
+              hpm.post<void>(`/report/${action}`, testData.load, { uid: testData.uniqueId })
+                .then(response => {
+                  setTimeout(() => {
+                    // Assert
+                    expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                    expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
+                    expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
+                    // Cleanup
+                    spyApp.validateReportLoad.calls.reset();
+                    spyApp.reportLoad.calls.reset();
+                    done();
+                  });
+                });
+            });
           });
-      });
+        }
       });
       
       describe('dashboard', function () {
@@ -1233,6 +1236,26 @@ describe('Protocol', function () {
               });
           });
       });
+      });
+    });
+
+    describe('render', function () {
+      it('POST /report/render returns 202 if the request is valid', function (done) {
+        // Arrange
+        iframeLoaded
+          .then(() => {
+            spyApp.render.and.returnValue(Promise.resolve(null));
+            // Act
+            hpm.post<void>('/report/render', null)
+              .then(response => {
+                // Assert
+                expect(spyApp.render).toHaveBeenCalled();
+                expect(response.statusCode).toEqual(202);
+                // Cleanup
+                spyApp.render.calls.reset();
+                done();
+              });
+          });
       });
     });
 

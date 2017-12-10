@@ -156,6 +156,11 @@ export abstract class Embed {
   loadPath: string;
 
   /**
+   * Url used in the load request.
+   */
+  phasedLoadPath: string;
+
+  /**
    * Type of embed
    */
   embeType: string;
@@ -170,7 +175,7 @@ export abstract class Embed {
    * @param {HTMLElement} element
    * @param {IEmbedConfigurationBase} config
    */
-  constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement) {
+  constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean) {
     Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
     this.eventHandlers = [];
     this.service = service;
@@ -183,7 +188,7 @@ export abstract class Embed {
     if(this.embeType === 'create'){
       this.setIframe(false/*set EventListener to call create() on 'load' event*/);
     } else {
-      this.setIframe(true/*set EventListener to call load() on 'load' event*/);
+      this.setIframe(true/*set EventListener to call load() on 'load' event*/, phasedRender);
     }
   }
 
@@ -266,15 +271,17 @@ export abstract class Embed {
    * ```
    * 
    * @param {models.ILoadConfiguration} config
+   * @param {boolean} phasedRender
    * @returns {Promise<void>}
    */
-  load(config: IEmbedConfigurationBase): Promise<void> {
+  load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void> {
     const errors = this.validate(config);
     if (errors) {
       throw errors;
     }
 
-    return this.service.hpm.post<void>(this.loadPath, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    const path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
+    return this.service.hpm.post<void>(path, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         utils.assign(this.config, config);
         return response.body;
@@ -506,7 +513,7 @@ export abstract class Embed {
   /**
    * Sets Iframe for embed
    */
-  private setIframe(isLoad: boolean): void {
+  private setIframe(isLoad: boolean, phasedRender?: boolean): void {
     if(!this.iframe) {
       var iframeContent = document.createElement("iframe");
       var embedUrl = this.config.embedUrl;
@@ -523,7 +530,7 @@ export abstract class Embed {
     }
 
     if(isLoad){
-      this.iframe.addEventListener('load', () => this.load(this.config), false);
+      this.iframe.addEventListener('load', () => this.load(this.config, phasedRender), false);
     } else {
       this.iframe.addEventListener('load', () => this.createReport(this.createConfig), false);
     }

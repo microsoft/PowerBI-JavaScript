@@ -7,6 +7,7 @@ import * as utils from './util';
 import { IFilterable } from './ifilterable';
 import { IPageNode, Page } from './page';
 import { Defaults } from './defaults';
+import { IReportLoadConfiguration } from 'powerbi-models';
 
 /**
  * A Report node within a report hierarchy
@@ -44,7 +45,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfiguration} config
    */
-  constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, iframe?: HTMLIFrameElement) {
+  constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, iframe?: HTMLIFrameElement) {
     const config = <embed.IEmbedConfiguration>baseConfig;
 
     const filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
@@ -55,8 +56,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     }, config.settings);
     const configCopy = utils.assign({ settings }, config);
 
-    super(service, element, configCopy, iframe);
+    super(service, element, configCopy, iframe, phasedRender);
     this.loadPath = "/report/load";
+    this.phasedLoadPath = "/report/prepare";
     Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
   }
 
@@ -80,6 +82,32 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     }
 
     return reportId;
+  }
+
+  
+  /**
+   * Render a preloaded report, using phased embedding API
+   * 
+   * ```javascript
+   * // Load report
+   * var report = powerbi.load(element, config);
+   * 
+   * ...
+   * 
+   * // Render report
+   * report.render()
+   * ```
+   * 
+   * @returns {Promise<void>}
+   */
+  render(config?: IReportLoadConfiguration): Promise<void> {
+    return this.service.hpm.post<models.IError[]>(`/report/render`, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    .then(response => {
+      return response.body;
+    })
+    .catch(response => {
+      throw response.body;
+    });
   }
 
   /**

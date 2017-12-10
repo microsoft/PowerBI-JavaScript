@@ -113,6 +113,35 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
       });
   });
 
+  /**
+   * Report Embed
+   */
+  router.post('/report/prepare', (req, res) => {
+    const uniqueId = req.headers['uid'];
+    const loadConfig = req.body;
+    return app.validateReportLoad(loadConfig)
+      .then(() => {
+        app.reportLoad(loadConfig)
+          .then(() => {
+            const initiator = "sdk";
+            hpm.post(`/reports/${uniqueId}/events/loaded`, {
+              initiator
+            });
+          }, error => {
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
+          });
+
+        res.send(202);
+      }, error => {
+        res.send(400, error);
+      });
+  });
+
+  router.post('/report/render', (req, res) => {
+    app.render();
+    res.send(202);
+  });
+
   router.get('/report/pages', (req, res) => {
     return app.getPages()
       .then(pages => {

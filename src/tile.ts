@@ -15,12 +15,12 @@ export class Tile extends embed.Embed {
     static type = "Tile";
     static allowedEvents = ["tileClicked", "tileLoaded"];
 
-    constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase) {
+    constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean) {
       let config = <embed.IEmbedConfiguration>baseConfig;
       config.embedUrl = utils.addParamToUrl(config.embedUrl, 'dashboardId', config.dashboardId);
       config.embedUrl = utils.addParamToUrl(config.embedUrl, 'tileId', config.id);
 
-      super(service, element, config);
+      super(service, element, config, /* iframe */ undefined, phasedRender);
       Array.prototype.push.apply(this.allowedEvents, Tile.allowedEvents);
 
       window.addEventListener("message", this.receiveMessage.bind(this), false);

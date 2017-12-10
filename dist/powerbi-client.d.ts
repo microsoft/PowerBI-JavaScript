@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.4 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.5 | (c) 2016 Microsoft Corporation MIT */
 declare module "config" {
     const config: {
         version: string;
@@ -192,6 +192,10 @@ declare module "embed" {
          */
         loadPath: string;
         /**
+         * Url used in the load request.
+         */
+        phasedLoadPath: string;
+        /**
          * Type of embed
          */
         embeType: string;
@@ -205,7 +209,7 @@ declare module "embed" {
          * @param {HTMLElement} element
          * @param {IEmbedConfigurationBase} config
          */
-        constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement);
+        constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean);
         /**
          * Sends createReport configuration data.
          *
@@ -253,9 +257,10 @@ declare module "embed" {
          * ```
          *
          * @param {models.ILoadConfiguration} config
+         * @param {boolean} phasedRender
          * @returns {Promise<void>}
          */
-        load(config: IEmbedConfigurationBase): Promise<void>;
+        load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void>;
         /**
          * Removes one or more event handlers from the list of handlers.
          * If a reference to the existing handle function is specified, remove the specific handler.
@@ -375,7 +380,7 @@ declare module "embed" {
         /**
          * Sets Iframe for embed
          */
-        private setIframe(isLoad);
+        private setIframe(isLoad, phasedRender?);
     }
 }
 declare module "ifilterable" {
@@ -592,6 +597,7 @@ declare module "report" {
     import * as models from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { Page } from "page";
+    import { IReportLoadConfiguration } from 'powerbi-models';
     /**
      * A Report node within a report hierarchy
      *
@@ -626,7 +632,7 @@ declare module "report" {
          * @param {HTMLElement} element
          * @param {embed.IEmbedConfiguration} config
          */
-        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, iframe?: HTMLIFrameElement);
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, iframe?: HTMLIFrameElement);
         /**
          * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
          * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
@@ -638,6 +644,22 @@ declare module "report" {
          * @returns {string}
          */
         static findIdFromEmbedUrl(url: string): string;
+        /**
+         * Render a preloaded report, using phased embedding API
+         *
+         * ```javascript
+         * // Load report
+         * var report = powerbi.load(element, config);
+         *
+         * ...
+         *
+         * // Render report
+         * report.render()
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        render(config?: IReportLoadConfiguration): Promise<void>;
         /**
          * Gets filters that are applied at the report level.
          *
@@ -814,7 +836,7 @@ declare module "dashboard" {
          * @param {service.Service} service
          * @param {HTMLElement} element
          */
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase);
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean);
         /**
          * This adds backwards compatibility for older config which used the dashboardId query param to specify dashboard id.
          * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
@@ -863,7 +885,7 @@ declare module "tile" {
     export class Tile extends embed.Embed {
         static type: string;
         static allowedEvents: string[];
-        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase);
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean);
         /**
          * The ID of the tile
          *
@@ -919,7 +941,7 @@ declare module "qna" {
     export class Qna extends embed.Embed {
         static type: string;
         static allowedEvents: string[];
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase);
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean);
         /**
          * The ID of the Qna embed component
          *
@@ -1047,7 +1069,18 @@ declare module "service" {
          * @returns {embed.Embed}
          */
         embed(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
-        embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
+        /**
+         * Given a configuration based on an HTML element,
+         * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
+         * otherwise creates a new component instance.
+         * This is used for the phased embedding API, once element is loaded successfully, one can call 'render' on it.
+         *
+         * @param {HTMLElement} element
+         * @param {embed.IEmbedConfigurationBase} [config={}]
+         * @returns {embed.Embed}
+         */
+        load(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
+        embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed;
         /**
          * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
          *
@@ -1056,7 +1089,7 @@ declare module "service" {
          * @param {embed.IEmbedConfigurationBase} config
          * @returns {embed.Embed}
          */
-        private embedNew(element, config);
+        private embedNew(element, config, phasedRender?);
         /**
          * Given an element that already contains an embed component, load with a new configuration.
          *
@@ -1065,7 +1098,7 @@ declare module "service" {
          * @param {embed.IEmbedConfigurationBase} config
          * @returns {embed.Embed}
          */
-        private embedExisting(element, config);
+        private embedExisting(element, config, phasedRender?);
         /**
          * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
          * and automatically attempts to embed a powerbi component based on information from other powerbi-* attributes.
@@ -1125,7 +1158,7 @@ declare module "create" {
     import * as models from 'powerbi-models';
     import * as embed from "embed";
     export class Create extends embed.Embed {
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration);
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean);
         /**
          * Gets the dataset ID from the first available location: createConfig or embed url.
          *

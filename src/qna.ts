@@ -14,10 +14,11 @@ export class Qna extends embed.Embed {
     static type = "Qna";
     static allowedEvents = ["loaded", "visualRendered"];
 
-    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase) {
-        super(service, element, config);
+    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean) {
+      super(service, element, config, /* iframe */ undefined, phasedRender);
 
         this.loadPath = "/qna/load";
+        this.phasedLoadPath = "/qna/prepare";
         Array.prototype.push.apply(this.allowedEvents, Qna.allowedEvents);
     }
 
