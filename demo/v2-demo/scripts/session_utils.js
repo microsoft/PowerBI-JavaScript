@@ -11,6 +11,7 @@ const SessionKeys = {
     IsSampleTile: "IsSampleTile",
     IsSampleQna: "IsSampleQna",
     EmbedMode: "embedMode",
+    TokenType: "tokenType",
     EntityType: "entityType",
     SampleId: "SampleId"
 };
@@ -75,6 +76,12 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
         embedId = GetSession(SessionKeys.EmbedId);
     }
 
+    var tokenType = GetParameterByName(SessionKeys.TokenType);
+    if (!tokenType)
+    {
+        tokenType = GetSession(SessionKeys.TokenType);
+    }
+
     var dashboardId = GetParameterByName(SessionKeys.DashboardId);
     if (!dashboardId) {
         dashboardId = GetSession(SessionKeys.DashboardId);
@@ -84,4 +91,10 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
     $(embedUrlSelector).val(embedUrl);
     $(embedIdSelector).val(embedId);
     $(dashboardIdSelector).val(dashboardId);
+
+    //
+    // Set the embed type (Saas or Embed token)
+    //
+    var embedTypeRadios = $('input:radio[name=tokenType]');
+    embedTypeRadios.filter('[value=' + tokenType + ']').prop('checked', true);
 }

@@ -16,6 +16,9 @@ function _Embed_BasicEmbed() {
     // Read report Id from textbox
     var txtEmbedReportId = $('#txtEmbedReportId').val();
 
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -28,7 +31,7 @@ function _Embed_BasicEmbed() {
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config= {
         type: 'report',
-        tokenType: models.TokenType.Embed,
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
@@ -78,6 +81,9 @@ function _Embed_DashboardEmbed() {
     // Read dashboard Id from textbox
     var txtEmbedDashboardId = $('#txtEmbedDashboardId').val();
 
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -87,7 +93,7 @@ function _Embed_DashboardEmbed() {
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config = {
         type: 'dashboard',
-        tokenType: models.TokenType.Embed,
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedDashboardId
@@ -129,6 +135,9 @@ function _Mock_Embed_BasicEmbed(isEdit) {
     // Read report Id from textbox
     var txtEmbedReportId = $('#txtEmbedReportId').val();
 
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
     var permissions = models.Permissions.All;
@@ -140,7 +149,7 @@ function _Mock_Embed_BasicEmbed(isEdit) {
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config= {
         type: 'report',
-        tokenType: models.TokenType.Embed,
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
@@ -204,6 +213,9 @@ function _Embed_BasicEmbed_EditMode() {
     // Read report Id from textbox
     var txtEmbedReportId = $('#txtEmbedReportId').val();
 
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -213,7 +225,7 @@ function _Embed_BasicEmbed_EditMode() {
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config = {
         type: 'report',
-        tokenType: models.TokenType.Embed,
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
@@ -301,6 +313,9 @@ function _Embed_TileEmbed() {
     // Read tile Id from textbox
     var txtEmbedTileId = $('#txtEmbedTileId').val();
 
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -309,7 +324,7 @@ function _Embed_TileEmbed() {
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config= {
         type: 'tile',
-        tokenType: models.TokenType.Embed,
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedTileId,
@@ -350,6 +365,9 @@ function _Embed_Create() {
 
     // Read dataset Id from textbox
     var txtEmbedDatasetId = $('#txtEmbedDatasetId').val();
+
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
     
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
@@ -357,7 +375,7 @@ function _Embed_Create() {
     // Embed create configuration used to describe the what and how to create report.
     // This object is used when calling powerbi.createReport.
     var embedCreateConfiguration = {
-        tokenType: models.TokenType.Embed,
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         datasetId: txtEmbedDatasetId,
@@ -399,6 +417,9 @@ function _Mock_Embed_Create() {
 
     // Read dataset Id from textbox
     var txtEmbedDatasetId = $('#txtEmbedDatasetId').val();
+
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
     
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
@@ -406,7 +427,7 @@ function _Mock_Embed_Create() {
     // Embed create configuration used to describe the what and how to create report.
     // This object is used when calling powerbi.createReport.
     var embedCreateConfiguration = {
-        tokenType: models.TokenType.Embed,
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         datasetId: txtEmbedDatasetId,

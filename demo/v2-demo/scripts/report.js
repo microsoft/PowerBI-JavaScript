@@ -21,11 +21,12 @@ function OpenEmbedStepFromNavPane()
 {
     var mode = GetSession(SessionKeys.EmbedMode);
     var entityType = GetSession(SessionKeys.EntityType);
+    var tokenType = GetSession(SessionKeys.TokenType);
 
-    OpenEmbedStep(mode, entityType);
+    OpenEmbedStep(mode, entityType, tokenType);
 }
 
-function OpenEmbedStep(mode, entityType) {
+function OpenEmbedStep(mode, entityType, tokenType) {
     $('#steps-ul a').removeClass(active_class);
     $(".steps-li-active").removeClass(active_li);
 
@@ -44,7 +45,7 @@ function OpenEmbedStep(mode, entityType) {
     if (entityType == EntityType.Report)
     {
         $("#settings").load("settings_embed.html", function() {
-            OpenEmbedMode(mode, entityType);
+            OpenEmbedMode(mode, entityType, tokenType);
 
             // Fix report size ratio
             embedContainer.height(embedContainer.width() * 0.59);
@@ -58,7 +59,7 @@ function OpenEmbedStep(mode, entityType) {
     else if (entityType == EntityType.Dashboard)
     {
         $("#settings").load("settings_embed_dashboard.html", function() {
-            OpenEmbedMode(mode, entityType);
+            OpenEmbedMode(mode, entityType, tokenType);
 
             // Fix report size ratio
             dashboardContainer.height(dashboardContainer.width() * 0.59);
@@ -72,7 +73,7 @@ function OpenEmbedStep(mode, entityType) {
     else if (entityType == EntityType.Tile)
     {
         $("#settings").load("settings_embed_tile.html", function() {
-            OpenEmbedMode(mode, entityType);
+            OpenEmbedMode(mode, entityType, tokenType);
 
             tileContainer.height(tileContainer.width() * 0.59);
 
@@ -85,7 +86,7 @@ function OpenEmbedStep(mode, entityType) {
     else if (entityType == EntityType.Qna)
     {
         $("#settings").load("settings_embed_qna.html", function() {
-            OpenEmbedMode(mode, entityType);
+            OpenEmbedMode(mode, entityType,tokenType);
 
             qnaContainer.height(qnaContainer.width() * 0.59);
 
@@ -180,7 +181,7 @@ function setCodeArea(mode, entityType)
     }
 }
 
-function showEmbedSettings(mode, entityType)
+function showEmbedSettings(mode, entityType, tokenType)
 {
     if (entityType == EntityType.Report)
     {
@@ -197,7 +198,10 @@ function showEmbedSettings(mode, entityType)
         $(inputDivToHide).hide();
 
         var embedModeRadios = $('input:radio[name=embedMode]'); 
-        embedModeRadios.filter('[value='+ mode + ']').prop('checked', true);
+        embedModeRadios.filter('[value=' + mode + ']').prop('checked', true);
+
+        var embedTypeRadios = $('input:radio[name=tokenType]');
+        embedTypeRadios.filter('[value=' + tokenType + ']').prop('checked', true);
     }
     else if (entityType == EntityType.Dashboard)
     {
@@ -205,7 +209,12 @@ function showEmbedSettings(mode, entityType)
     }
 }
 
-function OpenEmbedMode(mode, entityType)
+function SetEmbedTypeToEmbedToken(tokenType)
+{
+    SetSession(SessionKeys.TokenType, tokenType);
+}
+
+function OpenEmbedMode(mode, entityType, tokenType)
 {
     if (entityType == EntityType.Report)
     {
@@ -215,13 +224,13 @@ function OpenEmbedMode(mode, entityType)
             {
                 LoadSampleDatasetIntoSession().then(function (response) {
                     SetTextBoxesFromSessionOrUrlParam("#txtCreateAccessToken", "#txtCreateReportEmbed", "#txtEmbedDatasetId");
-                    setCodeAndShowEmbedSettings(mode, entityType);
+                    setCodeAndShowEmbedSettings(mode, entityType, tokenType);
                 });
             }
             else
             {
                 SetTextBoxesFromSessionOrUrlParam("#txtCreateAccessToken", "#txtCreateReportEmbed", "#txtEmbedDatasetId");
-                setCodeAndShowEmbedSettings(mode, entityType);
+                setCodeAndShowEmbedSettings(mode, entityType, tokenType);
             }
         }
         else
@@ -230,13 +239,13 @@ function OpenEmbedMode(mode, entityType)
             {
                 LoadSampleReportIntoSession().then(function (response) {
                     SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
-                    setCodeAndShowEmbedSettings(mode, entityType);
+                    setCodeAndShowEmbedSettings(mode, entityType, tokenType);
                 });
             }
             else
             {
                 SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
-                setCodeAndShowEmbedSettings(mode, entityType);
+                setCodeAndShowEmbedSettings(mode, entityType, tokenType);
             }
         }
     }
@@ -246,13 +255,13 @@ function OpenEmbedMode(mode, entityType)
         {
             LoadSampleDashboardIntoSession().then(function (response) {
                 SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtDashboardEmbed", "#txtEmbedDashboardId");
-                setCodeAndShowEmbedSettings(mode, entityType);
+                setCodeAndShowEmbedSettings(mode, entityType, tokenType);
             });
         }
         else
         {
             SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtDashboardEmbed", "#txtEmbedDashboardId");
-            setCodeAndShowEmbedSettings(mode, entityType);
+            setCodeAndShowEmbedSettings(mode, entityType, tokenType);
         }
     }
     else if (entityType == EntityType.Tile)
@@ -261,13 +270,13 @@ function OpenEmbedMode(mode, entityType)
         {
             LoadSampleTileIntoSession().then(function (response) {
                 SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtTileEmbed", "#txtEmbedTileId", "#txtEmbedDashboardId");
-                setCodeAndShowEmbedSettings(mode, entityType);
+                setCodeAndShowEmbedSettings(mode, entityType, tokenType);
             });
         }
         else
         {
             SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtTileEmbed", "#txtEmbedTileId", "#txtEmbedDashboardId");
-            setCodeAndShowEmbedSettings(mode, entityType);
+            setCodeAndShowEmbedSettings(mode, entityType, tokenType);
         }
     }
     else if (entityType == EntityType.Qna)
@@ -276,20 +285,20 @@ function OpenEmbedMode(mode, entityType)
         {
             LoadSampleQnaIntoSession().then(function (response) {
                 SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
-                setCodeAndShowEmbedSettings(mode, entityType);
+                setCodeAndShowEmbedSettings(mode, entityType, tokenType);
             });
         }
         else
         {
             SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
-            setCodeAndShowEmbedSettings(mode, entityType);
+            setCodeAndShowEmbedSettings(mode, entityType, tokenType);
         }
     }
 }
 
-function setCodeAndShowEmbedSettings(mode, entityType) {
+function setCodeAndShowEmbedSettings(mode, entityType, tokenType) {
     setCodeArea(mode, entityType);
-    showEmbedSettings(mode, entityType);
+    showEmbedSettings(mode, entityType, tokenType);
 }
 
 function OpenViewMode() {

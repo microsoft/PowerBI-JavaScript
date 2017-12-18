@@ -2,7 +2,12 @@
     <div class="pageTitle">
         <h4>Embed Tile</h4>
     </div>
+    <h8>Select token type:</h8>
 
+    <div id="typeSelector">
+        <div onclick="SetSession(SessionKeys.TokenType, 1);"><input type="radio" name="tokenType" value="1" checked="checked"> Embed token </input></div>
+        <div onclick="SetSession(SessionKeys.TokenType, 0);"><input type="radio" name="tokenType" value="0"> Aad token </input></div>
+    </div>
     <div id="embedModeInput">
         <h8>Fill in the fields below to get the code to embed your tile.</h8>
         <div class="spacer" />
