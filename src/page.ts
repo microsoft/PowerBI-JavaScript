@@ -1,6 +1,6 @@
 import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
-import { Visual } from './visual';
+import { VisualDescriptor } from './visualDescriptor';
 import * as models from 'powerbi-models';
 
 /**
@@ -144,14 +144,14 @@ export class Page implements IPageNode, IFilterable {
    *   .then(visuals => { ... });
    * ```
    * 
-   * @returns {Promise<Visual[]>}
+   * @returns {Promise<VisualDescriptor[]>}
    */
-  getVisuals(): Promise<Visual[]> {
+  getVisuals(): Promise<VisualDescriptor[]> {
     return this.report.service.hpm.get<models.IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .then(response => {
         return response.body
           .map(visual => {
-            return new Visual(this, visual.name, visual.title, visual.type, visual.layout);
+            return new VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout);
           });
       }, response => {
         throw response.body;

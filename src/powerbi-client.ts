@@ -33,6 +33,9 @@ export {
 export {
   Visual
 } from './visual';
+export {
+  VisualDescriptor
+} from './visualDescriptor';
 
 declare var powerbi: service.Service;
 declare global {

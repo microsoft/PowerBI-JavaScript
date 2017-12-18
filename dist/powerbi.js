@@ -57,7 +57,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(13);
+	var factories = __webpack_require__(14);
 	exports.factories = factories;
 	var models = __webpack_require__(4);
 	exports.models = models;
@@ -73,8 +73,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Page = page_1.Page;
 	var qna_1 = __webpack_require__(12);
 	exports.Qna = qna_1.Qna;
-	var visual_1 = __webpack_require__(7);
+	var visual_1 = __webpack_require__(13);
 	exports.Visual = visual_1.Visual;
+	var visualDescriptor_1 = __webpack_require__(7);
+	exports.VisualDescriptor = visualDescriptor_1.VisualDescriptor;
 	/**
 	 * Makes Power BI available to the global object for use in applications that don't have module loading support.
 	 *
@@ -95,6 +97,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var tile_1 = __webpack_require__(11);
 	var page_1 = __webpack_require__(6);
 	var qna_1 = __webpack_require__(12);
+	var visual_1 = __webpack_require__(13);
 	var utils = __webpack_require__(3);
 	/**
 	 * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
@@ -427,7 +430,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        tile_1.Tile,
 	        report_1.Report,
 	        dashboard_1.Dashboard,
-	        qna_1.Qna
+	        qna_1.Qna,
+	        visual_1.Visual
 	    ];
 	    /**
 	     * The default configuration for the service
@@ -658,7 +662,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    Embed.prototype.setAccessToken = function (accessToken) {
-	        return this.service.hpm.post('/report/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	        var embedType = this.config.type;
+	        return this.service.hpm.post('/' + embedType + '/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
 	            return response.body;
 	        })
@@ -3475,7 +3480,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var visual_1 = __webpack_require__(7);
+	var visualDescriptor_1 = __webpack_require__(7);
 	/**
 	 * A Power BI report page
 	 *
@@ -3572,7 +3577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *   .then(visuals => { ... });
 	     * ```
 	     *
-	     * @returns {Promise<Visual[]>}
+	     * @returns {Promise<VisualDescriptor[]>}
 	     */
 	    Page.prototype.getVisuals = function () {
 	        var _this = this;
@@ -3580,7 +3585,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            .then(function (response) {
 	            return response.body
 	                .map(function (visual) {
-	                return new visual_1.Visual(_this, visual.name, visual.title, visual.type, visual.layout);
+	                return new visualDescriptor_1.VisualDescriptor(_this, visual.name, visual.title, visual.type, visual.layout);
 	            });
 	        }, function (response) {
 	            throw response.body;
@@ -3599,20 +3604,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * A Power BI visual within a page
 	 *
 	 * @export
-	 * @class Visual
+	 * @class VisualDescriptor
 	 * @implements {IVisualNode}
 	 */
-	var Visual = (function () {
-	    function Visual(page, name, title, type, layout) {
+	var VisualDescriptor = (function () {
+	    function VisualDescriptor(page, name, title, type, layout) {
 	        this.name = name;
 	        this.title = title;
 	        this.type = type;
 	        this.layout = layout;
 	        this.page = page;
 	    }
-	    return Visual;
+	    return VisualDescriptor;
 	}());
-	exports.Visual = Visual;
+	exports.VisualDescriptor = VisualDescriptor;
 
 
 /***/ }),
@@ -4032,10 +4037,148 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var config_1 = __webpack_require__(14);
-	var wpmp = __webpack_require__(15);
-	var hpm = __webpack_require__(16);
-	var router = __webpack_require__(17);
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var models = __webpack_require__(4);
+	var report_1 = __webpack_require__(5);
+	/**
+	 * The Power BI Visual embed component
+	 *
+	 * @export
+	 * @class Visual
+	 */
+	var Visual = (function (_super) {
+	    __extends(Visual, _super);
+	    /**
+	     * Creates an instance of a Power BI Single Visual.
+	     *
+	     * @param {service.Service} service
+	     * @param {HTMLElement} element
+	     * @param {embed.IEmbedConfiguration} config
+	     */
+	    function Visual(service, element, baseConfig, phasedRender, iframe) {
+	        _super.call(this, service, element, baseConfig, phasedRender, iframe);
+	    }
+	    Visual.prototype.load = function (baseConfig, phasedRender) {
+	        var config = baseConfig;
+	        if (typeof config.pageName !== 'string' || config.pageName.length === 0) {
+	            throw new Error("Page name is required when embedding a visual.");
+	        }
+	        if (typeof config.visualName !== 'string' || config.visualName.length === 0) {
+	            throw new Error("Visual name is required, but it was not found. You must provide a visual name as part of embed configuration.");
+	        }
+	        // calculate custom layout settings and override config.
+	        var width = config.width ? config.width : this.iframe.offsetWidth;
+	        var height = config.height ? config.height : this.iframe.offsetHeight;
+	        var pageSize = {
+	            type: models.PageSizeType.Custom,
+	            width: width,
+	            height: height,
+	        };
+	        var pagesLayout = {};
+	        pagesLayout[config.pageName] = {
+	            defaultLayout: {
+	                displayState: {
+	                    mode: models.VisualContainerDisplayMode.Hidden
+	                }
+	            },
+	            visualsLayout: {}
+	        };
+	        pagesLayout[config.pageName].visualsLayout[config.visualName] = {
+	            displayState: {
+	                mode: models.VisualContainerDisplayMode.Visible
+	            },
+	            x: 1,
+	            y: 1,
+	            z: 1,
+	            width: pageSize.width,
+	            height: pageSize.height
+	        };
+	        config.settings = config.settings || {};
+	        config.settings.filterPaneEnabled = false;
+	        config.settings.navContentPaneEnabled = false;
+	        config.settings.layoutType = models.LayoutType.Custom;
+	        config.settings.customLayout = {
+	            displayOption: models.DisplayOption.FitToPage,
+	            pageSize: pageSize,
+	            pagesLayout: pagesLayout
+	        };
+	        return _super.prototype.load.call(this, config, phasedRender);
+	    };
+	    /**
+	     * Gets the list of pages within the report - not supported in visual embed.
+	     *
+	     * @returns {Promise<Page[]>}
+	     */
+	    Visual.prototype.getPages = function () {
+	        throw Visual.GetPagesNotSupportedError;
+	    };
+	    /**
+	     * Sets the active page of the report - not supported in visual embed.
+	     *
+	     * @param {string} pageName
+	     * @returns {Promise<void>}
+	     */
+	    Visual.prototype.setPage = function (pageName) {
+	        throw Visual.SetPageNotSupportedError;
+	    };
+	    /**
+	     * Gets filters that are applied at the visual level.
+	     *
+	     * ```javascript
+	     * // Get filters applied at visual level
+	     * visual.getFilters()
+	     *   .then(filters => {
+	     *     ...
+	     *   });
+	     * ```
+	     *
+	     * @returns {Promise<models.IFilter[]>}
+	     */
+	    Visual.prototype.getFilters = function () {
+	        throw Visual.GetFiltersNotSupportedError;
+	    };
+	    /**
+	     * Sets filters at the visual level.
+	     *
+	     * ```javascript
+	     * const filters: [
+	     *    ...
+	     * ];
+	     *
+	     * visual.setFilters(filters)
+	     *  .catch(errors => {
+	     *    ...
+	     *  });
+	     * ```
+	     *
+	     * @param {(models.IFilter[])} filters
+	     * @returns {Promise<void>}
+	     */
+	    Visual.prototype.setFilters = function (filters) {
+	        throw Visual.SetFiltersNotSupportedError;
+	    };
+	    Visual.type = "visual";
+	    Visual.GetFiltersNotSupportedError = "Getting visual level filters is not supported.";
+	    Visual.SetFiltersNotSupportedError = "Setting visual level filters is not supported.";
+	    Visual.GetPagesNotSupportedError = "Get pages is not supported while embedding a visual.";
+	    Visual.SetPageNotSupportedError = "Set page is not supported while embedding a visual.";
+	    return Visual;
+	}(report_1.Report));
+	exports.Visual = Visual;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var config_1 = __webpack_require__(15);
+	var wpmp = __webpack_require__(16);
+	var hpm = __webpack_require__(17);
+	var router = __webpack_require__(18);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -4063,7 +4206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 	var config = {
@@ -4075,7 +4218,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
@@ -4375,7 +4518,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -4559,7 +4702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */

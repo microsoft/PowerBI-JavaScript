@@ -5,6 +5,7 @@ import { Dashboard } from './dashboard';
 import { Tile } from './tile';
 import { Page } from './page';
 import { Qna } from './qna';
+import { Visual } from './visual';
 import * as utils from './util';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
@@ -70,11 +71,12 @@ export class Service implements IService {
   /**
    * A list of components that this service can embed
    */
-  private static components: (typeof Report | typeof Tile | typeof Dashboard | typeof Qna)[] = [
+  private static components: (typeof Report | typeof Tile | typeof Dashboard | typeof Qna | typeof Visual)[] = [
     Tile,
     Report,
     Dashboard,
-    Qna
+    Qna,
+    Visual
   ];
 
   /**
@@ -270,7 +272,7 @@ export class Service implements IService {
     if (!Component) {
       throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
     }
-    
+
     const component = new Component(this, element, config, phasedRender);
     element.powerBiEmbed = component;
 

@@ -48,6 +48,11 @@ These are often combined and typical command for debugging tests is:
 npm test -- --chrome --debug --watch
 ```
 
+You can debug by directly calling karma:
+```
+node node_modules/karma/bin/karma start --browsers=Firefox --single-run=false --watch
+```
+
 The build and tests use webpack to compile all the source modules into one bundled module that can execute in the browser.
 
 ## Running the demo

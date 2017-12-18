@@ -110,6 +110,9 @@ declare module "embed" {
         height?: number;
         width?: number;
     }
+    export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
+        visualName: string;
+    }
     /**
      * Configuration settings for Power BI QNA embed component
      *
@@ -414,7 +417,7 @@ declare module "ifilterable" {
         removeFilters(): Promise<void>;
     }
 }
-declare module "visual" {
+declare module "visualDescriptor" {
     import * as models from 'powerbi-models';
     import { IPageNode } from "page";
     /**
@@ -434,10 +437,10 @@ declare module "visual" {
      * A Power BI visual within a page
      *
      * @export
-     * @class Visual
+     * @class VisualDescriptor
      * @implements {IVisualNode}
      */
-    export class Visual implements IVisualNode {
+    export class VisualDescriptor implements IVisualNode {
         /**
          * The visual name
          *
@@ -474,7 +477,7 @@ declare module "visual" {
 declare module "page" {
     import { IFilterable } from "ifilterable";
     import { IReportNode } from "report";
-    import { Visual } from "visual";
+    import { VisualDescriptor } from "visualDescriptor";
     import * as models from 'powerbi-models';
     /**
      * A Page node within a report hierarchy
@@ -579,9 +582,9 @@ declare module "page" {
          *   .then(visuals => { ... });
          * ```
          *
-         * @returns {Promise<Visual[]>}
+         * @returns {Promise<VisualDescriptor[]>}
          */
-        getVisuals(): Promise<Visual[]>;
+        getVisuals(): Promise<VisualDescriptor[]>;
     }
 }
 declare module "defaults" {
@@ -961,6 +964,80 @@ declare module "qna" {
         validate(config: embed.IEmbedConfigurationBase): models.IError[];
     }
 }
+declare module "visual" {
+    import * as service from "service";
+    import * as embed from "embed";
+    import * as models from 'powerbi-models';
+    import { Report } from "report";
+    import { Page } from "page";
+    /**
+     * The Power BI Visual embed component
+     *
+     * @export
+     * @class Visual
+     */
+    export class Visual extends Report {
+        static type: string;
+        static GetFiltersNotSupportedError: string;
+        static SetFiltersNotSupportedError: string;
+        static GetPagesNotSupportedError: string;
+        static SetPageNotSupportedError: string;
+        /**
+         * Creates an instance of a Power BI Single Visual.
+         *
+         * @param {service.Service} service
+         * @param {HTMLElement} element
+         * @param {embed.IEmbedConfiguration} config
+         */
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, iframe?: HTMLIFrameElement);
+        load(baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean): Promise<void>;
+        /**
+         * Gets the list of pages within the report - not supported in visual embed.
+         *
+         * @returns {Promise<Page[]>}
+         */
+        getPages(): Promise<Page[]>;
+        /**
+         * Sets the active page of the report - not supported in visual embed.
+         *
+         * @param {string} pageName
+         * @returns {Promise<void>}
+         */
+        setPage(pageName: string): Promise<void>;
+        /**
+         * Gets filters that are applied at the visual level.
+         *
+         * ```javascript
+         * // Get filters applied at visual level
+         * visual.getFilters()
+         *   .then(filters => {
+         *     ...
+         *   });
+         * ```
+         *
+         * @returns {Promise<models.IFilter[]>}
+         */
+        getFilters(): Promise<models.IFilter[]>;
+        /**
+         * Sets filters at the visual level.
+         *
+         * ```javascript
+         * const filters: [
+         *    ...
+         * ];
+         *
+         * visual.setFilters(filters)
+         *  .catch(errors => {
+         *    ...
+         *  });
+         * ```
+         *
+         * @param {(models.IFilter[])} filters
+         * @returns {Promise<void>}
+         */
+        setFilters(filters: models.IFilter[]): Promise<void>;
+    }
+}
 declare module "service" {
     import * as embed from "embed";
     import * as wpmp from 'window-post-message-proxy';
@@ -1212,6 +1289,7 @@ declare module "powerbi-client" {
     export { Page } from "page";
     export { Qna } from "qna";
     export { Visual } from "visual";
+    export { VisualDescriptor } from "visualDescriptor";
     global  {
         interface Window {
             powerbi: service.Service;

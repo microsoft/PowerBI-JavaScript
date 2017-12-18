@@ -59,6 +59,10 @@ export interface IEmbedConfiguration extends IEmbedConfigurationBase {
   width?: number;
 }
 
+export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
+  visualName: string;
+}
+
 /**
  * Configuration settings for Power BI QNA embed component
  * 

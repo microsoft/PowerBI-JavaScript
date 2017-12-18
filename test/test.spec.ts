@@ -1,6 +1,7 @@
 import * as service from '../src/service';
 import * as embed from '../src/embed';
 import * as report from '../src/report';
+import * as visual from '../src/visual';
 import * as create from '../src/create';
 import * as dashboard from '../src/dashboard';
 import * as page from '../src/page';
@@ -426,7 +427,7 @@ describe('service', function () {
       // Assert
       expect(report).toBeDefined();
     });
-    
+
     it('if dashboard embed component was not previously created, creates an instance and return it', function () {
       // Arrange
       var component = $('<div powerbi-embed-url="https://app.powerbi.com/dashboardEmbed?dashboardId=ABC123" powerbi-type="dashboard"></div>')
@@ -640,7 +641,7 @@ describe('service', function () {
 
         // Act
         const report = powerbi.embed($reportContainer[0], configuration);
-        
+
         // Assert
         expect((<embed.IEmbedConfiguration>report.config).id).toEqual(testReportId);
       });
@@ -977,14 +978,14 @@ describe('Protocol', function () {
                 // Assert
                 expect(spyApp.validateCreateReport).toHaveBeenCalledWith(testData.create);
                 expect(response.statusCode).toEqual(400);
-                
+
                 // Cleanup
                 spyApp.validateCreateReport.calls.reset();
                 done();
               });
           });
         });
-      
+
         it('POST /report/create returns 202 if the request is valid', function (done) {
         // Arrange
         const testData = {
@@ -1055,7 +1056,7 @@ describe('Protocol', function () {
                 });
             });
         });
-        
+
           it(`POST /report/${action} returns 202 if the request is valid`, function (done) {
           // Arrange
           const testData = {
@@ -1084,7 +1085,7 @@ describe('Protocol', function () {
                 });
             });
         });
-        
+
           it(`POST /report/${action} causes POST /reports/:uniqueId/events/loaded`, function (done) {
           // Arrange
           const testData = {
@@ -1169,10 +1170,10 @@ describe('Protocol', function () {
           });
         }
       });
-      
+
       describe('dashboard', function () {
         it('POST /dashboard/load returns 202 if the request is valid', function (done) {
-          
+
         // Arrange
         const testData = {
           load: {
@@ -1200,9 +1201,9 @@ describe('Protocol', function () {
               });
           });
       });
-      
+
         it('POST /dashboard/load returns 400 if the request is invalid', function (done) {
-            
+
         // Arrange
         const testData = {
           uniqueId: 'uniqueId',
@@ -2179,17 +2180,23 @@ describe('SDK-to-HPM', function () {
   let iframe: HTMLIFrameElement;
   let dashboardIframe: HTMLIFrameElement;
   let createIframe: HTMLIFrameElement;
+  let visualFrame: HTMLIFrameElement;
   let powerbi: service.Service;
   let report: report.Report;
   let create: create.Create;
   let dashboard: dashboard.Dashboard;
+  let embeddedVisual: visual.Visual;
   let page1: page.Page;
   let uniqueId = 'uniqueId';
   let createUniqueId = 'uniqueId';
   let dashboardUniqueId = 'uniqueId';
+  let visualUniqueId = 'uniqueId';
   let embedConfiguration: embed.IEmbedConfiguration;
   let dashboardEmbedConfiguration: embed.IEmbedConfiguration;
   let embedCreateConfiguration: embed.IEmbedConfiguration;
+  let visualEmbedConfiguration: embed.IVisualEmbedConfiguration;
+
+  const iframeSrc = "base/test/utility/noop.html";
 
   beforeAll(function () {
     const spyHpmFactory: factories.IHpmFactory = () => {
@@ -2211,8 +2218,9 @@ describe('SDK-to-HPM', function () {
       .appendTo(document.body);
     $dashboardElement = $(`<div class="powerbi-dashboard-container"></div>`)
       .appendTo(document.body);
+    let $visualElement = $(`<div class="powerbi-report-container"></div>`)
+      .appendTo(document.body);
 
-    const iframeSrc = "base/test/utility/noop.html";
     embedConfiguration = {
       type: "report",
       id: "fakeReportId",
@@ -2230,17 +2238,29 @@ describe('SDK-to-HPM', function () {
       accessToken: 'fakeToken',
       embedUrl: iframeSrc
     };
+    visualEmbedConfiguration = {
+      id: "visual1",
+      accessToken: 'fakeToken',
+      embedUrl: iframeSrc,
+      type: "visual",
+      pageName: "ReportSection1",
+      visualName: "VisualContainer1",
+      width: 1200,
+      height: 1000
+    };
     report = <report.Report>powerbi.embed($reportElement[0], embedConfiguration);
     create = <create.Create>powerbi.createReport($createElement[0], embedCreateConfiguration);
     dashboard = <dashboard.Dashboard>powerbi.embed($dashboardElement[0], dashboardEmbedConfiguration);
+    embeddedVisual = <visual.Visual>powerbi.embed($visualElement[0], visualEmbedConfiguration);
     page1 = new page.Page(report, 'xyz');
     uniqueId = report.config.uniqueId;
     createUniqueId = create.config.uniqueId;
     dashboardUniqueId = dashboard.config.uniqueId;
-    
+    visualUniqueId = embeddedVisual.config.uniqueId;
     iframe = <HTMLIFrameElement>$reportElement.find('iframe')[0];
     createIframe = <HTMLIFrameElement>$createElement.find('iframe')[0];
     dashboardIframe = <HTMLIFrameElement>$dashboardElement.find('iframe')[0];
+    visualFrame = <HTMLIFrameElement>$visualElement.find('iframe')[0];
 
     // Reset load handler
     spyHpm.post.calls.reset();
@@ -2363,6 +2383,115 @@ describe('SDK-to-HPM', function () {
             // Assert
             done();
           });
+      });
+
+      it('powerbi.embed with visual name sends POST /report/load with custom layout configuration in body', function () {
+
+        let testData = {
+          loadConfiguration: visualEmbedConfiguration,
+          response: {
+            body: null
+          }
+        };
+
+        let expectedConfiguration = {
+          id: visualEmbedConfiguration.id,
+          accessToken: visualEmbedConfiguration.accessToken,
+          embedUrl: visualEmbedConfiguration.embedUrl,
+          type: visualEmbedConfiguration.type,
+          pageName: visualEmbedConfiguration.pageName,
+          visualName: visualEmbedConfiguration.visualName,
+          width: visualEmbedConfiguration.width,
+          height: visualEmbedConfiguration.height,
+          settings: {
+            filterPaneEnabled: false,
+            navContentPaneEnabled: false,
+            layoutType: models.LayoutType.Custom,
+            customLayout: {
+              displayOption: models.DisplayOption.FitToPage,
+              pageSize: {
+                type: models.PageSizeType.Custom,
+                width: testData.loadConfiguration.width,
+                height: testData.loadConfiguration.height,
+              },
+              pagesLayout: {
+                "ReportSection1": {
+                  defaultLayout: {
+                    displayState: {
+                      mode: models.VisualContainerDisplayMode.Hidden
+                    }
+                  },
+                  visualsLayout: {
+                    "VisualContainer1": {
+                      displayState: {
+                        mode: models.VisualContainerDisplayMode.Visible
+                      },
+                      x: 1,
+                      y: 1,
+                      z: 1,
+                      width: testData.loadConfiguration.width,
+                      height: testData.loadConfiguration.height
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        spyHpm.post.and.returnValue(Promise.resolve(testData.response));
+
+        // Act
+        embeddedVisual.load(visualEmbedConfiguration);
+
+        // Assert
+        expect(spyHpm.post).toHaveBeenCalled();
+
+        let spyArgs = spyHpm.post.calls.mostRecent().args;
+        expect(spyArgs[0]).toEqual('/report/load');
+        expect(spyArgs[1]).toEqual(expectedConfiguration);
+        expect(spyArgs[2]).toEqual({ uid: visualUniqueId });
+        expect(spyArgs[3]).toEqual(visualFrame.contentWindow);
+      });
+
+      it('Not supported visual method: getFilters', function () {
+          // Act
+        const attempt = () => {
+          embeddedVisual.getFilters()
+        };
+
+        // Assert
+        expect(attempt).toThrow(visual.Visual.GetFiltersNotSupportedError);
+      });
+
+      it('Not supported visual method: setFilters', function () {
+        // Act
+        const attempt = () => {
+          embeddedVisual.setFilters([])
+        };
+
+        // Assert
+        expect(attempt).toThrow(visual.Visual.SetFiltersNotSupportedError);
+      });
+
+      it('Not supported visual method: getPages', function () {
+        // Act
+        const attempt = () => {
+          embeddedVisual.getPages()
+        };
+
+        // Assert
+        expect(attempt).toThrow(visual.Visual.GetPagesNotSupportedError);
+      });
+
+      it('Not supported visual method: setPage', function () {
+        // Act
+        const attempt = () => {
+          embeddedVisual.setPage(null)
+        };
+
+        // Assert
+        expect(attempt).toThrow(visual.Visual.SetPageNotSupportedError);
       });
     });
 
@@ -2608,7 +2737,7 @@ describe('SDK-to-HPM', function () {
         report.switchMode(models.ViewMode.Edit);
 
         // Assert
-        let url = '/report/switchMode/' + models.ViewMode.Edit; 
+        let url = '/report/switchMode/' + models.ViewMode.Edit;
         expect(spyHpm.post).toHaveBeenCalledWith(url, null, { uid: uniqueId }, iframe.contentWindow);
       });
 
@@ -2861,7 +2990,7 @@ describe('SDK-to-HPM', function () {
       });
     });
   });
-    
+
   describe('create', function () {
     describe('createReport', function () {
       it('create.createReport() sends POST /report/create with configuration in body', function () {
@@ -2962,7 +3091,7 @@ describe('SDK-to-HPM', function () {
       });
     });
   });
-  
+
   describe('page', function () {
     describe('filters', function () {
       it('page.getFilters() sends GET /report/pages/xyz/filters', function () {
@@ -3445,7 +3574,7 @@ describe('SDK-to-MockApp', function () {
     /**
      * Note: For testing we need to configure the eventSourceOverrideWindow to allow the host to respond to
      * the iframe window; however, the iframe window doesn't exist until the first embed is created.
-     * 
+     *
      * To work around this we create a service for the initial embed, embed a report, then set the private variable
      */
     (<any>powerbi.wpmp).eventSourceOverrideWindow = iframe.contentWindow;
