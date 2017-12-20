@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IIdentityValue | powerbi-client</title>
+	<title>VisualDescriptor | powerbi-client</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,33 +56,48 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_node_modules_powerbi_models_dist_models_d_.html">&quot;node_modules/powerbi-models/dist/models.d&quot;</a>
+					<a href="../modules/_src_visualdescriptor_.html">&quot;src/visualDescriptor&quot;</a>
 				</li>
 				<li>
-					<a href="_node_modules_powerbi_models_dist_models_d_.iidentityvalue.html">IIdentityValue</a>
+					<a href="_src_visualdescriptor_.visualdescriptor.html">VisualDescriptor</a>
 				</li>
 			</ul>
-			<h1>Interface IIdentityValue&lt;T&gt;</h1>
+			<h1>Class VisualDescriptor</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>T<span class="tsd-signature-symbol">: </span><a href="_node_modules_powerbi_models_dist_models_d_.idatareference.html" class="tsd-signature-type">IDataReference</a></h4>
-					</li>
-				</ul>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A Power BI visual within a page</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>export</dt>
+						<dd></dd>
+						<dt>class</dt>
+						<dd><p>VisualDescriptor</p>
+						</dd>
+						<dt>implements</dt>
+						<dd><p>{IVisualNode}</p>
+						</dd>
+					</dl>
+				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">IIdentityValue</span>
+						<span class="target">VisualDescriptor</span>
 					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_src_visualdescriptor_.ivisualnode.html" class="tsd-signature-type">IVisualNode</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -90,36 +105,168 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_src_visualdescriptor_.visualdescriptor.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_node_modules_powerbi_models_dist_models_d_.iidentityvalue.html#identity" class="tsd-kind-icon">identity</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_node_modules_powerbi_models_dist_models_d_.iidentityvalue.html#values" class="tsd-kind-icon">values</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_visualdescriptor_.visualdescriptor.html#layout" class="tsd-kind-icon">layout</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_visualdescriptor_.visualdescriptor.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_visualdescriptor_.visualdescriptor.html#page" class="tsd-kind-icon">page</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_visualdescriptor_.visualdescriptor.html#title" class="tsd-kind-icon">title</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_visualdescriptor_.visualdescriptor.html#type" class="tsd-kind-icon">type</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="identity" class="tsd-anchor"></a>
-					<h3>identity</h3>
-					<div class="tsd-signature tsd-kind-icon">identity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in node_modules/powerbi-models/dist/models.d.ts:303</li>
-						</ul>
-					</aside>
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Visual<wbr>Descriptor<span class="tsd-signature-symbol">(</span>page<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_page_.ipagenode.html" class="tsd-signature-type">IPageNode</a>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, title<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, layout<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IVisualLayout</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_visualdescriptor_.visualdescriptor.html" class="tsd-signature-type">VisualDescriptor</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/visualDescriptor.ts:60</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>page: <a href="../interfaces/_src_page_.ipagenode.html" class="tsd-signature-type">IPageNode</a></h5>
+								</li>
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>title: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>layout: <span class="tsd-signature-type">models.IVisualLayout</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_src_visualdescriptor_.visualdescriptor.html" class="tsd-signature-type">VisualDescriptor</a></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="values" class="tsd-anchor"></a>
-					<h3>values</h3>
-					<div class="tsd-signature tsd-kind-icon">values<span class="tsd-signature-symbol">:</span> <a href="_node_modules_powerbi_models_dist_models_d_.ivaluedatareference.html" class="tsd-signature-type">IValueDataReference</a><span class="tsd-signature-symbol">[]</span></div>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="layout" class="tsd-anchor"></a>
+					<h3>layout</h3>
+					<div class="tsd-signature tsd-kind-icon">layout<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">models.IVisualLayout</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_src_visualdescriptor_.ivisualnode.html">IVisualNode</a>.<a href="../interfaces/_src_visualdescriptor_.ivisualnode.html#layout">layout</a></p>
 						<ul>
-							<li>Defined in node_modules/powerbi-models/dist/models.d.ts:304</li>
+							<li>Defined in src/visualDescriptor.ts:53</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The visual layout: position, size and visiblity.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{string}</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="name" class="tsd-anchor"></a>
+					<h3>name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_src_visualdescriptor_.ivisualnode.html">IVisualNode</a>.<a href="../interfaces/_src_visualdescriptor_.ivisualnode.html#name">name</a></p>
+						<ul>
+							<li>Defined in src/visualDescriptor.ts:32</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The visual name</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{string}</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="page" class="tsd-anchor"></a>
+					<h3>page</h3>
+					<div class="tsd-signature tsd-kind-icon">page<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_page_.ipagenode.html" class="tsd-signature-type">IPageNode</a></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_src_visualdescriptor_.ivisualnode.html">IVisualNode</a>.<a href="../interfaces/_src_visualdescriptor_.ivisualnode.html#page">page</a></p>
+						<ul>
+							<li>Defined in src/visualDescriptor.ts:60</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The parent Power BI page that contains this visual</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{IPageNode}</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="title" class="tsd-anchor"></a>
+					<h3>title</h3>
+					<div class="tsd-signature tsd-kind-icon">title<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_src_visualdescriptor_.ivisualnode.html">IVisualNode</a>.<a href="../interfaces/_src_visualdescriptor_.ivisualnode.html#title">title</a></p>
+						<ul>
+							<li>Defined in src/visualDescriptor.ts:39</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The visual title</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{string}</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="type" class="tsd-anchor"></a>
+					<h3>type</h3>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_src_visualdescriptor_.ivisualnode.html">IVisualNode</a>.<a href="../interfaces/_src_visualdescriptor_.ivisualnode.html#type">type</a></p>
+						<ul>
+							<li>Defined in src/visualDescriptor.ts:46</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The visual type</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{string}</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -129,7 +276,7 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_node_modules_powerbi_models_dist_models_d_.html">"node_<wbr>modules/powerbi-<wbr>models/dist/models.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -177,7 +324,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_visual_.html">"src/visual"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_src_visualdescriptor_.html">"src/visual<wbr>Descriptor"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -189,19 +336,34 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_node_modules_powerbi_models_dist_models_d_.iidentityvalue.html" class="tsd-kind-icon">IIdentity<wbr>Value</a>
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_src_visualdescriptor_.visualdescriptor.html" class="tsd-kind-icon">Visual<wbr>Descriptor</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_node_modules_powerbi_models_dist_models_d_.iidentityvalue.html#identity" class="tsd-kind-icon">identity</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_src_visualdescriptor_.visualdescriptor.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_node_modules_powerbi_models_dist_models_d_.iidentityvalue.html#values" class="tsd-kind-icon">values</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_visualdescriptor_.visualdescriptor.html#layout" class="tsd-kind-icon">layout</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_visualdescriptor_.visualdescriptor.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_visualdescriptor_.visualdescriptor.html#page" class="tsd-kind-icon">page</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_visualdescriptor_.visualdescriptor.html#title" class="tsd-kind-icon">title</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_visualdescriptor_.visualdescriptor.html#type" class="tsd-kind-icon">type</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_src_visualdescriptor_.ivisualnode.html" class="tsd-kind-icon">IVisual<wbr>Node</a>
+					</li>
 				</ul>
 			</nav>
 		</div>

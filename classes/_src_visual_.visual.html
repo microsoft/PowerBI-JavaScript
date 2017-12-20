@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Tile | powerbi-client</title>
+	<title>Visual | powerbi-client</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_src_tile_.html">&quot;src/tile&quot;</a>
+					<a href="../modules/_src_visual_.html">&quot;src/visual&quot;</a>
 				</li>
 				<li>
-					<a href="_src_tile_.tile.html">Tile</a>
+					<a href="_src_visual_.visual.html">Visual</a>
 				</li>
 			</ul>
-			<h1>Class Tile</h1>
+			<h1>Class Visual</h1>
 		</div>
 	</div>
 </header>
@@ -72,16 +72,13 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>The Power BI tile embed component</p>
+						<p>The Power BI Visual embed component</p>
 					</div>
 					<dl class="tsd-comment-tags">
 						<dt>export</dt>
 						<dd></dd>
 						<dt>class</dt>
-						<dd><p>Tile</p>
-						</dd>
-						<dt>extends</dt>
-						<dd><p>{Embed}</p>
+						<dd><p>Visual</p>
 						</dd>
 					</dl>
 				</div>
@@ -90,13 +87,20 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a>
+						<a href="_src_report_.report.html" class="tsd-signature-type">Report</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">Tile</span>
+								<span class="target">Visual</span>
 							</li>
 						</ul>
 					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_src_report_.ireportnode.html" class="tsd-signature-type">IReportNode</a></li>
+					<li><a href="../interfaces/_src_ifilterable_.ifilterable.html" class="tsd-signature-type">IFilterable</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -106,48 +110,65 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_src_tile_.tile.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_src_visual_.visual.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#allowedevents" class="tsd-kind-icon">allowed<wbr>Events</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#config" class="tsd-kind-icon">config</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#createconfig" class="tsd-kind-icon">create<wbr>Config</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#element" class="tsd-kind-icon">element</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#embetype" class="tsd-kind-icon">embe<wbr>Type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#eventhandlers" class="tsd-kind-icon">event<wbr>Handlers</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#iframe" class="tsd-kind-icon">iframe</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#loadpath" class="tsd-kind-icon">load<wbr>Path</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#phasedloadpath" class="tsd-kind-icon">phased<wbr>Load<wbr>Path</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#service" class="tsd-kind-icon">service</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_tile_.tile.html#accesstokenattribute" class="tsd-kind-icon">access<wbr>Token<wbr>Attribute</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-static"><a href="_src_tile_.tile.html#allowedevents-1" class="tsd-kind-icon">allowed<wbr>Events</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_tile_.tile.html#embedurlattribute" class="tsd-kind-icon">embed<wbr>Url<wbr>Attribute</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_tile_.tile.html#nameattribute" class="tsd-kind-icon">name<wbr>Attribute</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-static"><a href="_src_tile_.tile.html#type" class="tsd-kind-icon">type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_tile_.tile.html#typeattribute" class="tsd-kind-icon">type<wbr>Attribute</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#allowedevents" class="tsd-kind-icon">allowed<wbr>Events</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#config" class="tsd-kind-icon">config</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#createconfig" class="tsd-kind-icon">create<wbr>Config</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#element" class="tsd-kind-icon">element</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#embetype" class="tsd-kind-icon">embe<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#eventhandlers" class="tsd-kind-icon">event<wbr>Handlers</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#iframe" class="tsd-kind-icon">iframe</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#loadpath" class="tsd-kind-icon">load<wbr>Path</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#phasedloadpath" class="tsd-kind-icon">phased<wbr>Load<wbr>Path</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#service" class="tsd-kind-icon">service</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_visual_.visual.html#getfiltersnotsupportederror" class="tsd-kind-icon">Get<wbr>Filters<wbr>Not<wbr>Supported<wbr>Error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_visual_.visual.html#getpagesnotsupportederror" class="tsd-kind-icon">Get<wbr>Pages<wbr>Not<wbr>Supported<wbr>Error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_visual_.visual.html#setfiltersnotsupportederror" class="tsd-kind-icon">Set<wbr>Filters<wbr>Not<wbr>Supported<wbr>Error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_visual_.visual.html#setpagenotsupportederror" class="tsd-kind-icon">Set<wbr>Page<wbr>Not<wbr>Supported<wbr>Error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_visual_.visual.html#accesstokenattribute" class="tsd-kind-icon">access<wbr>Token<wbr>Attribute</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static"><a href="_src_visual_.visual.html#allowedevents-1" class="tsd-kind-icon">allowed<wbr>Events</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_visual_.visual.html#embedurlattribute" class="tsd-kind-icon">embed<wbr>Url<wbr>Attribute</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_visual_.visual.html#filterpaneenabledattribute" class="tsd-kind-icon">filter<wbr>Pane<wbr>Enabled<wbr>Attribute</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_visual_.visual.html#nameattribute" class="tsd-kind-icon">name<wbr>Attribute</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_visual_.visual.html#navcontentpaneenabledattribute" class="tsd-kind-icon">nav<wbr>Content<wbr>Pane<wbr>Enabled<wbr>Attribute</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_visual_.visual.html#reportidattribute" class="tsd-kind-icon">report<wbr>IdAttribute</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-static"><a href="_src_visual_.visual.html#type" class="tsd-kind-icon">type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static"><a href="_src_visual_.visual.html#typeattribute" class="tsd-kind-icon">type<wbr>Attribute</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#createreport" class="tsd-kind-icon">create<wbr>Report</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#exitfullscreen" class="tsd-kind-icon">exit<wbr>Fullscreen</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#fullscreen" class="tsd-kind-icon">fullscreen</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_tile_.tile.html#getid" class="tsd-kind-icon">get<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_tile_.tile.html#load" class="tsd-kind-icon">load</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="_src_tile_.tile.html#off" class="tsd-kind-icon">off</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="_src_tile_.tile.html#on" class="tsd-kind-icon">on</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_tile_.tile.html#populateconfig" class="tsd-kind-icon">populate<wbr>Config</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_tile_.tile.html#receivemessage" class="tsd-kind-icon">receive<wbr>Message</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#reload" class="tsd-kind-icon">reload</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#save" class="tsd-kind-icon">save</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#saveas" class="tsd-kind-icon">save<wbr>As</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_tile_.tile.html#setaccesstoken" class="tsd-kind-icon">set<wbr>Access<wbr>Token</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_tile_.tile.html#validate" class="tsd-kind-icon">validate</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_src_tile_.tile.html#findidfromembedurl" class="tsd-kind-icon">find<wbr>IdFrom<wbr>Embed<wbr>Url</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#createreport" class="tsd-kind-icon">create<wbr>Report</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#exitfullscreen" class="tsd-kind-icon">exit<wbr>Fullscreen</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#fullscreen" class="tsd-kind-icon">fullscreen</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_visual_.visual.html#getfilters" class="tsd-kind-icon">get<wbr>Filters</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_src_visual_.visual.html#getid" class="tsd-kind-icon">get<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_visual_.visual.html#getpages" class="tsd-kind-icon">get<wbr>Pages</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_visual_.visual.html#load" class="tsd-kind-icon">load</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="_src_visual_.visual.html#off" class="tsd-kind-icon">off</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="_src_visual_.visual.html#on" class="tsd-kind-icon">on</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#page" class="tsd-kind-icon">page</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_src_visual_.visual.html#populateconfig" class="tsd-kind-icon">populate<wbr>Config</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#print" class="tsd-kind-icon">print</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#refresh" class="tsd-kind-icon">refresh</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#reload" class="tsd-kind-icon">reload</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#removefilters" class="tsd-kind-icon">remove<wbr>Filters</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#render" class="tsd-kind-icon">render</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#save" class="tsd-kind-icon">save</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#saveas" class="tsd-kind-icon">save<wbr>As</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#setaccesstoken" class="tsd-kind-icon">set<wbr>Access<wbr>Token</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_visual_.visual.html#setfilters" class="tsd-kind-icon">set<wbr>Filters</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_src_visual_.visual.html#setpage" class="tsd-kind-icon">set<wbr>Page</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#switchmode" class="tsd-kind-icon">switch<wbr>Mode</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_src_visual_.visual.html#updatesettings" class="tsd-kind-icon">update<wbr>Settings</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_src_visual_.visual.html#validate" class="tsd-kind-icon">validate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_visual_.visual.html#findidfromembedurl" class="tsd-kind-icon">find<wbr>IdFrom<wbr>Embed<wbr>Url</a></li>
 							</ul>
 						</section>
 					</div>
@@ -159,16 +180,21 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Tile<span class="tsd-signature-symbol">(</span>service<span class="tsd-signature-symbol">: </span><a href="_src_service_.service.html" class="tsd-signature-type">Service</a>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, baseConfig<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_tile_.tile.html" class="tsd-signature-type">Tile</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Visual<span class="tsd-signature-symbol">(</span>service<span class="tsd-signature-symbol">: </span><a href="_src_service_.service.html" class="tsd-signature-type">Service</a>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, baseConfig<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, iframe<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">HTMLIFrameElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_visual_.visual.html" class="tsd-signature-type">Visual</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#constructor">constructor</a></p>
+								<p>Overrides <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in src/tile.ts:16</li>
+									<li>Defined in src/visual.ts:19</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates an instance of a Power BI Single Visual.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -183,8 +209,11 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> phasedRender: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> iframe: <span class="tsd-signature-type">HTMLIFrameElement</span></h5>
+								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_src_tile_.tile.html" class="tsd-signature-type">Tile</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_src_visual_.visual.html" class="tsd-signature-type">Visual</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -207,6 +236,7 @@
 					<h3>config</h3>
 					<div class="tsd-signature tsd-kind-icon">config<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_src_report_.ireportnode.html">IReportNode</a>.<a href="../interfaces/_src_report_.ireportnode.html#config">config</a></p>
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#config">config</a></p>
 						<ul>
 							<li>Defined in src/embed.ts:148</li>
@@ -307,6 +337,7 @@
 					<h3>iframe</h3>
 					<div class="tsd-signature tsd-kind-icon">iframe<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLIFrameElement</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_src_report_.ireportnode.html">IReportNode</a>.<a href="../interfaces/_src_report_.ireportnode.html#iframe">iframe</a></p>
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#iframe">iframe</a></p>
 						<ul>
 							<li>Defined in src/embed.ts:141</li>
@@ -360,6 +391,7 @@
 					<h3>service</h3>
 					<div class="tsd-signature tsd-kind-icon">service<span class="tsd-signature-symbol">:</span> <a href="_src_service_.service.html" class="tsd-signature-type">Service</a></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_src_report_.ireportnode.html">IReportNode</a>.<a href="../interfaces/_src_report_.ireportnode.html#service">service</a></p>
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#service">service</a></p>
 						<ul>
 							<li>Defined in src/embed.ts:127</li>
@@ -376,6 +408,46 @@
 						</dl>
 					</div>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="getfiltersnotsupportederror" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> Get<wbr>Filters<wbr>Not<wbr>Supported<wbr>Error</h3>
+					<div class="tsd-signature tsd-kind-icon">Get<wbr>Filters<wbr>Not<wbr>Supported<wbr>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Getting visual level filters is not supported.&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/visual.ts:16</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="getpagesnotsupportederror" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> Get<wbr>Pages<wbr>Not<wbr>Supported<wbr>Error</h3>
+					<div class="tsd-signature tsd-kind-icon">Get<wbr>Pages<wbr>Not<wbr>Supported<wbr>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Get pages is not supported while embedding a visual.&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/visual.ts:18</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="setfiltersnotsupportederror" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> Set<wbr>Filters<wbr>Not<wbr>Supported<wbr>Error</h3>
+					<div class="tsd-signature tsd-kind-icon">Set<wbr>Filters<wbr>Not<wbr>Supported<wbr>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Setting visual level filters is not supported.&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/visual.ts:17</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="setpagenotsupportederror" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> Set<wbr>Page<wbr>Not<wbr>Supported<wbr>Error</h3>
+					<div class="tsd-signature tsd-kind-icon">Set<wbr>Page<wbr>Not<wbr>Supported<wbr>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Set page is not supported while embedding a visual.&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/visual.ts:19</li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 					<a name="accesstokenattribute" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> access<wbr>Token<wbr>Attribute</h3>
@@ -387,14 +459,15 @@
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-static">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static">
 					<a name="allowedevents-1" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> allowed<wbr>Events</h3>
-					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;tileClicked&quot;, &quot;tileLoaded&quot;]</span></div>
+					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;filtersApplied&quot;, &quot;pageChanged&quot;, &quot;commandTriggered&quot;]</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#allowedevents-1">allowedEvents</a></p>
 						<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#allowedevents-1">allowedEvents</a></p>
 						<ul>
-							<li>Defined in src/tile.ts:16</li>
+							<li>Defined in src/report.ts:34</li>
 						</ul>
 					</aside>
 				</section>
@@ -410,6 +483,17 @@
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="filterpaneenabledattribute" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> filter<wbr>Pane<wbr>Enabled<wbr>Attribute</h3>
+					<div class="tsd-signature tsd-kind-icon">filter<wbr>Pane<wbr>Enabled<wbr>Attribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-settings-filter-pane-enabled&quot;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#filterpaneenabledattribute">filterPaneEnabledAttribute</a></p>
+						<ul>
+							<li>Defined in src/report.ts:36</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 					<a name="nameattribute" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> name<wbr>Attribute</h3>
 					<div class="tsd-signature tsd-kind-icon">name<wbr>Attribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-name&quot;</span></div>
@@ -420,25 +504,48 @@
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-static">
-					<a name="type" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Tile&quot;</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="navcontentpaneenabledattribute" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> nav<wbr>Content<wbr>Pane<wbr>Enabled<wbr>Attribute</h3>
+					<div class="tsd-signature tsd-kind-icon">nav<wbr>Content<wbr>Pane<wbr>Enabled<wbr>Attribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-settings-nav-content-pane-enabled&quot;</span></div>
 					<aside class="tsd-sources">
-						<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#type">type</a></p>
+						<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#navcontentpaneenabledattribute">navContentPaneEnabledAttribute</a></p>
 						<ul>
-							<li>Defined in src/tile.ts:15</li>
+							<li>Defined in src/report.ts:37</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="reportidattribute" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> report<wbr>IdAttribute</h3>
+					<div class="tsd-signature tsd-kind-icon">report<wbr>IdAttribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-report-id&quot;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#reportidattribute">reportIdAttribute</a></p>
+						<ul>
+							<li>Defined in src/report.ts:35</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-static">
+					<a name="type" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> type</h3>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;visual&quot;</span></div>
+					<aside class="tsd-sources">
+						<p>Overrides <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#type">type</a></p>
+						<ul>
+							<li>Defined in src/visual.ts:14</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static">
 					<a name="typeattribute" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> type<wbr>Attribute</h3>
 					<div class="tsd-signature tsd-kind-icon">type<wbr>Attribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-type&quot;</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#typeattribute">typeAttribute</a></p>
+						<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#typeattribute">typeAttribute</a></p>
+						<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#typeattribute">typeAttribute</a></p>
 						<ul>
-							<li>Defined in src/embed.ts:110</li>
+							<li>Defined in src/report.ts:38</li>
 						</ul>
 					</aside>
 				</section>
@@ -525,22 +632,53 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="getfilters" class="tsd-anchor"></a>
+					<h3>get<wbr>Filters</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Filters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#getfilters">getFilters</a></p>
+								<p>Overrides <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#getfilters">getFilters</a></p>
+								<ul>
+									<li>Defined in src/visual.ts:118</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets filters that are applied at the visual level.</p>
+								</div>
+								<pre><code class="lang-javascript"><span class="hljs-comment">// Get filters applied at visual level</span>
+visual.getFilters()
+  .then(<span class="hljs-function"><span class="hljs-params">filters</span> =&gt;</span> {
+    ...
+  });
+</code></pre>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="getid" class="tsd-anchor"></a>
 					<h3>get<wbr>Id</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#getid">getId</a></p>
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#getid">getId</a></p>
 								<ul>
-									<li>Defined in src/tile.ts:34</li>
+									<li>Defined in src/report.ts:139</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>The ID of the tile</p>
+									<p>Gets the report ID from the first available location: options, attribute, embed url.</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -548,28 +686,49 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="getpages" class="tsd-anchor"></a>
+					<h3>get<wbr>Pages</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Pages<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#getpages">getPages</a></p>
+								<ul>
+									<li>Defined in src/visual.ts:91</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the list of pages within the report - not supported in visual embed.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 					<a name="load" class="tsd-anchor"></a>
 					<h3>load</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>baseConfig<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>baseConfig<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#load">load</a></p>
 								<ul>
-									<li>Defined in src/tile.ts:78</li>
+									<li>Defined in src/visual.ts:32</li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Sends load configuration data for tile</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>baseConfig: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> phasedRender: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -680,18 +839,61 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="page" class="tsd-anchor"></a>
+					<h3>page</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">page<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, displayName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, isActive<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#page">page</a></p>
+								<ul>
+									<li>Defined in src/report.ts:193</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates an instance of a Page.</p>
+								</div>
+								<p>Normally you would get Page objects by calling <code>report.getPages()</code>, but in the case
+									that the page name is known and you want to perform an action on a page without having to retrieve it
+								you can create it directly.</p>
+								<p>Note: Because you are creating the page manually there is no guarantee that the page actually exists in the report, and subsequent requests could fail.</p>
+								<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> page = report.page(<span class="hljs-string">'ReportSection1'</span>);
+page.setActive();
+</code></pre>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> displayName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> isActive: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_src_page_.page.html" class="tsd-signature-type">Page</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="populateconfig" class="tsd-anchor"></a>
 					<h3>populate<wbr>Config</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">populate<wbr>Config<span class="tsd-signature-symbol">(</span>baseConfig<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#populateconfig">populateConfig</a></p>
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#populateconfig">populateConfig</a></p>
 								<ul>
-									<li>Defined in src/tile.ts:59</li>
+									<li>Defined in src/report.ts:307</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -709,31 +911,51 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
-					<a name="receivemessage" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> receive<wbr>Message</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">receive<wbr>Message<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MessageEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="print" class="tsd-anchor"></a>
+					<h3>print</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">print<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#print">print</a></p>
 								<ul>
-									<li>Defined in src/tile.ts:131</li>
+									<li>Defined in src/report.ts:200</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Adds the ability to get events from iframe</p>
+									<p>Prints the active page of the report by invoking <code>window.print()</code> on the embed iframe component.</p>
 								</div>
 							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>event: <span class="tsd-signature-type">MessageEvent</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="refresh" class="tsd-anchor"></a>
+					<h3>refresh</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">refresh<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#refresh">refresh</a></p>
+								<ul>
+									<li>Defined in src/report.ts:343</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Refreshes data sources for the report.</p>
+								</div>
+								<pre><code class="lang-javascript">report.refresh();
+</code></pre>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -759,6 +981,69 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 								<pre><code class="lang-javascript">report.reload();
 </code></pre>
 							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="removefilters" class="tsd-anchor"></a>
+					<h3>remove<wbr>Filters</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Filters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#removefilters">removeFilters</a></p>
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#removefilters">removeFilters</a></p>
+								<ul>
+									<li>Defined in src/report.ts:219</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Removes all filters at the report level.</p>
+								</div>
+								<pre><code class="lang-javascript">report.removeFilters();
+</code></pre>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="render" class="tsd-anchor"></a>
+					<h3>render</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">render<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_node_modules_powerbi_models_dist_models_d_.ireportloadconfiguration.html" class="tsd-signature-type">IReportLoadConfiguration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#render">render</a></p>
+								<ul>
+									<li>Defined in src/report.ts:103</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Render a preloaded report, using phased embedding API</p>
+								</div>
+								<pre><code class="lang-javascript"><span class="hljs-comment">// Load report</span>
+<span class="hljs-keyword">var</span> report = powerbi.load(element, config);
+
+...
+
+<span class="hljs-comment">// Render report</span>
+report.render()
+</code></pre>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> config: <a href="../interfaces/_node_modules_powerbi_models_dist_models_d_.ireportloadconfiguration.html" class="tsd-signature-type">IReportLoadConfiguration</a></h5>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -845,17 +1130,152 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="setfilters" class="tsd-anchor"></a>
+					<h3>set<wbr>Filters</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Filters<span class="tsd-signature-symbol">(</span>filters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#setfilters">setFilters</a></p>
+								<p>Overrides <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#setfilters">setFilters</a></p>
+								<ul>
+									<li>Defined in src/visual.ts:139</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets filters at the visual level.</p>
+								</div>
+								<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> filters: [
+   ...
+];
+
+visual.setFilters(filters)
+ .catch(<span class="hljs-function"><span class="hljs-params">errors</span> =&gt;</span> {
+   ...
+ });
+</code></pre>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>filters: <span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="setpage" class="tsd-anchor"></a>
+					<h3>set<wbr>Page</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Page<span class="tsd-signature-symbol">(</span>pageName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#setpage">setPage</a></p>
+								<ul>
+									<li>Defined in src/visual.ts:101</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets the active page of the report - not supported in visual embed.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>pageName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="switchmode" class="tsd-anchor"></a>
+					<h3>switch<wbr>Mode</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">switch<wbr>Mode<span class="tsd-signature-symbol">(</span>viewMode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.ViewMode</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#switchmode">switchMode</a></p>
+								<ul>
+									<li>Defined in src/report.ts:325</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Switch Report view mode.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>viewMode: <span class="tsd-signature-type">models.ViewMode</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="updatesettings" class="tsd-anchor"></a>
+					<h3>update<wbr>Settings</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Settings<span class="tsd-signature-symbol">(</span>settings<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.ISettings</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#updatesettings">updateSettings</a></p>
+								<ul>
+									<li>Defined in src/report.ts:287</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Updates visibility settings for the filter pane and the page navigation pane.</p>
+								</div>
+								<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> newSettings = {
+  <span class="hljs-attr">navContentPaneEnabled</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">filterPaneEnabled</span>: <span class="hljs-literal">false</span>
+};
+
+report.updateSettings(newSettings)
+  .catch(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> { ... });
+</code></pre>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>settings: <span class="tsd-signature-type">models.ISettings</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 					<a name="validate" class="tsd-anchor"></a>
 					<h3>validate</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
 						<li class="tsd-signature tsd-kind-icon">validate<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IError</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#validate">validate</a></p>
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#validate">validate</a></p>
 								<ul>
-									<li>Defined in src/tile.ts:48</li>
+									<li>Defined in src/report.ts:297</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -873,24 +1293,26 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 					<a name="findidfromembedurl" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> find<wbr>IdFrom<wbr>Embed<wbr>Url</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
 						<li class="tsd-signature tsd-kind-icon">find<wbr>IdFrom<wbr>Embed<wbr>Url<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="_src_report_.report.html">Report</a>.<a href="_src_report_.report.html#findidfromembedurl">findIdFromEmbedUrl</a></p>
 								<ul>
-									<li>Defined in src/tile.ts:114</li>
+									<li>Defined in src/report.ts:75</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Adds the ability to get tileId from url.
-									By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.</p>
+									<p>Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
+									(e.g. <a href="http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1">http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1</a>).</p>
 								</div>
+								<p>By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.</p>
 								<dl class="tsd-comment-tags">
 									<dt>static</dt>
 									<dd></dd>
@@ -953,13 +1375,13 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_service_.html">"src/service"</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_tile_.html">"src/tile"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_src_util_.html">"src/util"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_src_visual_.html">"src/visual"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -975,103 +1397,154 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_src_tile_.tile.html" class="tsd-kind-icon">Tile</a>
+						<a href="_src_visual_.visual.html" class="tsd-kind-icon">Visual</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_src_tile_.tile.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_src_visual_.visual.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#allowedevents" class="tsd-kind-icon">allowed<wbr>Events</a>
+								<a href="_src_visual_.visual.html#allowedevents" class="tsd-kind-icon">allowed<wbr>Events</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#config" class="tsd-kind-icon">config</a>
+								<a href="_src_visual_.visual.html#config" class="tsd-kind-icon">config</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#createconfig" class="tsd-kind-icon">create<wbr>Config</a>
+								<a href="_src_visual_.visual.html#createconfig" class="tsd-kind-icon">create<wbr>Config</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#element" class="tsd-kind-icon">element</a>
+								<a href="_src_visual_.visual.html#element" class="tsd-kind-icon">element</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#embetype" class="tsd-kind-icon">embe<wbr>Type</a>
+								<a href="_src_visual_.visual.html#embetype" class="tsd-kind-icon">embe<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#eventhandlers" class="tsd-kind-icon">event<wbr>Handlers</a>
+								<a href="_src_visual_.visual.html#eventhandlers" class="tsd-kind-icon">event<wbr>Handlers</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#iframe" class="tsd-kind-icon">iframe</a>
+								<a href="_src_visual_.visual.html#iframe" class="tsd-kind-icon">iframe</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#loadpath" class="tsd-kind-icon">load<wbr>Path</a>
+								<a href="_src_visual_.visual.html#loadpath" class="tsd-kind-icon">load<wbr>Path</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#phasedloadpath" class="tsd-kind-icon">phased<wbr>Load<wbr>Path</a>
+								<a href="_src_visual_.visual.html#phasedloadpath" class="tsd-kind-icon">phased<wbr>Load<wbr>Path</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#service" class="tsd-kind-icon">service</a>
+								<a href="_src_visual_.visual.html#service" class="tsd-kind-icon">service</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="_src_visual_.visual.html#getfiltersnotsupportederror" class="tsd-kind-icon">Get<wbr>Filters<wbr>Not<wbr>Supported<wbr>Error</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="_src_visual_.visual.html#getpagesnotsupportederror" class="tsd-kind-icon">Get<wbr>Pages<wbr>Not<wbr>Supported<wbr>Error</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="_src_visual_.visual.html#setfiltersnotsupportederror" class="tsd-kind-icon">Set<wbr>Filters<wbr>Not<wbr>Supported<wbr>Error</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="_src_visual_.visual.html#setpagenotsupportederror" class="tsd-kind-icon">Set<wbr>Page<wbr>Not<wbr>Supported<wbr>Error</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_src_tile_.tile.html#accesstokenattribute" class="tsd-kind-icon">access<wbr>Token<wbr>Attribute</a>
+								<a href="_src_visual_.visual.html#accesstokenattribute" class="tsd-kind-icon">access<wbr>Token<wbr>Attribute</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static">
+								<a href="_src_visual_.visual.html#allowedevents-1" class="tsd-kind-icon">allowed<wbr>Events</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="_src_visual_.visual.html#embedurlattribute" class="tsd-kind-icon">embed<wbr>Url<wbr>Attribute</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="_src_visual_.visual.html#filterpaneenabledattribute" class="tsd-kind-icon">filter<wbr>Pane<wbr>Enabled<wbr>Attribute</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="_src_visual_.visual.html#nameattribute" class="tsd-kind-icon">name<wbr>Attribute</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="_src_visual_.visual.html#navcontentpaneenabledattribute" class="tsd-kind-icon">nav<wbr>Content<wbr>Pane<wbr>Enabled<wbr>Attribute</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="_src_visual_.visual.html#reportidattribute" class="tsd-kind-icon">report<wbr>IdAttribute</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-static">
-								<a href="_src_tile_.tile.html#allowedevents-1" class="tsd-kind-icon">allowed<wbr>Events</a>
+								<a href="_src_visual_.visual.html#type" class="tsd-kind-icon">type</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_src_tile_.tile.html#embedurlattribute" class="tsd-kind-icon">embed<wbr>Url<wbr>Attribute</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_src_tile_.tile.html#nameattribute" class="tsd-kind-icon">name<wbr>Attribute</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-static">
-								<a href="_src_tile_.tile.html#type" class="tsd-kind-icon">type</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_src_tile_.tile.html#typeattribute" class="tsd-kind-icon">type<wbr>Attribute</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static">
+								<a href="_src_visual_.visual.html#typeattribute" class="tsd-kind-icon">type<wbr>Attribute</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#createreport" class="tsd-kind-icon">create<wbr>Report</a>
+								<a href="_src_visual_.visual.html#createreport" class="tsd-kind-icon">create<wbr>Report</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#exitfullscreen" class="tsd-kind-icon">exit<wbr>Fullscreen</a>
+								<a href="_src_visual_.visual.html#exitfullscreen" class="tsd-kind-icon">exit<wbr>Fullscreen</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#fullscreen" class="tsd-kind-icon">fullscreen</a>
+								<a href="_src_visual_.visual.html#fullscreen" class="tsd-kind-icon">fullscreen</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_src_tile_.tile.html#getid" class="tsd-kind-icon">get<wbr>Id</a>
+								<a href="_src_visual_.visual.html#getfilters" class="tsd-kind-icon">get<wbr>Filters</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_src_visual_.visual.html#getid" class="tsd-kind-icon">get<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_src_tile_.tile.html#load" class="tsd-kind-icon">load</a>
+								<a href="_src_visual_.visual.html#getpages" class="tsd-kind-icon">get<wbr>Pages</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="_src_visual_.visual.html#load" class="tsd-kind-icon">load</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-								<a href="_src_tile_.tile.html#off" class="tsd-kind-icon">off</a>
+								<a href="_src_visual_.visual.html#off" class="tsd-kind-icon">off</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
-								<a href="_src_tile_.tile.html#on" class="tsd-kind-icon">on</a>
+								<a href="_src_visual_.visual.html#on" class="tsd-kind-icon">on</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#page" class="tsd-kind-icon">page</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_src_visual_.visual.html#populateconfig" class="tsd-kind-icon">populate<wbr>Config</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#print" class="tsd-kind-icon">print</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#refresh" class="tsd-kind-icon">refresh</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#reload" class="tsd-kind-icon">reload</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#removefilters" class="tsd-kind-icon">remove<wbr>Filters</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#render" class="tsd-kind-icon">render</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#save" class="tsd-kind-icon">save</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#saveas" class="tsd-kind-icon">save<wbr>As</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#setaccesstoken" class="tsd-kind-icon">set<wbr>Access<wbr>Token</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_src_tile_.tile.html#populateconfig" class="tsd-kind-icon">populate<wbr>Config</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
-								<a href="_src_tile_.tile.html#receivemessage" class="tsd-kind-icon">receive<wbr>Message</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#reload" class="tsd-kind-icon">reload</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#save" class="tsd-kind-icon">save</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#saveas" class="tsd-kind-icon">save<wbr>As</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_src_tile_.tile.html#setaccesstoken" class="tsd-kind-icon">set<wbr>Access<wbr>Token</a>
+								<a href="_src_visual_.visual.html#setfilters" class="tsd-kind-icon">set<wbr>Filters</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_src_tile_.tile.html#validate" class="tsd-kind-icon">validate</a>
+								<a href="_src_visual_.visual.html#setpage" class="tsd-kind-icon">set<wbr>Page</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_src_tile_.tile.html#findidfromembedurl" class="tsd-kind-icon">find<wbr>IdFrom<wbr>Embed<wbr>Url</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#switchmode" class="tsd-kind-icon">switch<wbr>Mode</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_visual_.visual.html#updatesettings" class="tsd-kind-icon">update<wbr>Settings</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_src_visual_.visual.html#validate" class="tsd-kind-icon">validate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="_src_visual_.visual.html#findidfromembedurl" class="tsd-kind-icon">find<wbr>IdFrom<wbr>Embed<wbr>Url</a>
 							</li>
 						</ul>
 					</li>

@@ -132,6 +132,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_dashboard_.dashboard.html#eventhandlers" class="tsd-kind-icon">event<wbr>Handlers</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_dashboard_.dashboard.html#iframe" class="tsd-kind-icon">iframe</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_dashboard_.dashboard.html#loadpath" class="tsd-kind-icon">load<wbr>Path</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_dashboard_.dashboard.html#phasedloadpath" class="tsd-kind-icon">phased<wbr>Load<wbr>Path</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_src_dashboard_.dashboard.html#service" class="tsd-kind-icon">service</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_src_dashboard_.dashboard.html#accesstokenattribute" class="tsd-kind-icon">access<wbr>Token<wbr>Attribute</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-static"><a href="_src_dashboard_.dashboard.html#allowedevents-1" class="tsd-kind-icon">allowed<wbr>Events</a></li>
@@ -171,14 +172,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Dashboard<span class="tsd-signature-symbol">(</span>service<span class="tsd-signature-symbol">: </span><a href="_src_service_.service.html" class="tsd-signature-type">Service</a>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_dashboard_.dashboard.html" class="tsd-signature-type">Dashboard</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Dashboard<span class="tsd-signature-symbol">(</span>service<span class="tsd-signature-symbol">: </span><a href="_src_service_.service.html" class="tsd-signature-type">Service</a>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_dashboard_.dashboard.html" class="tsd-signature-type">Dashboard</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/dashboard.ts#L34">src/dashboard.ts:34</a></li>
+									<li>Defined in src/dashboard.ts:34</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -201,6 +202,9 @@
 								<li>
 									<h5>config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> phasedRender: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_dashboard_.dashboard.html" class="tsd-signature-type">Dashboard</a></h4>
 						</li>
@@ -216,7 +220,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#allowedevents">allowedEvents</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L109">src/embed.ts:109</a></li>
+							<li>Defined in src/embed.ts:113</li>
 						</ul>
 					</aside>
 				</section>
@@ -228,7 +232,7 @@
 						<p>Implementation of <a href="../interfaces/_src_dashboard_.idashboardnode.html">IDashboardNode</a>.<a href="../interfaces/_src_dashboard_.idashboardnode.html#config">config</a></p>
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#config">config</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L144">src/embed.ts:144</a></li>
+							<li>Defined in src/embed.ts:148</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -249,7 +253,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#createconfig">createConfig</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L151">src/embed.ts:151</a></li>
+							<li>Defined in src/embed.ts:155</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -270,7 +274,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#element">element</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L130">src/embed.ts:130</a></li>
+							<li>Defined in src/embed.ts:134</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -291,7 +295,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#embetype">embeType</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L161">src/embed.ts:161</a></li>
+							<li>Defined in src/embed.ts:170</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -307,7 +311,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#eventhandlers">eventHandlers</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L116">src/embed.ts:116</a></li>
+							<li>Defined in src/embed.ts:120</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -329,7 +333,7 @@
 						<p>Implementation of <a href="../interfaces/_src_dashboard_.idashboardnode.html">IDashboardNode</a>.<a href="../interfaces/_src_dashboard_.idashboardnode.html#iframe">iframe</a></p>
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#iframe">iframe</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L137">src/embed.ts:137</a></li>
+							<li>Defined in src/embed.ts:141</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -350,7 +354,23 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#loadpath">loadPath</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L156">src/embed.ts:156</a></li>
+							<li>Defined in src/embed.ts:160</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Url used in the load request.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="phasedloadpath" class="tsd-anchor"></a>
+					<h3>phased<wbr>Load<wbr>Path</h3>
+					<div class="tsd-signature tsd-kind-icon">phased<wbr>Load<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#phasedloadpath">phasedLoadPath</a></p>
+						<ul>
+							<li>Defined in src/embed.ts:165</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -367,7 +387,7 @@
 						<p>Implementation of <a href="../interfaces/_src_dashboard_.idashboardnode.html">IDashboardNode</a>.<a href="../interfaces/_src_dashboard_.idashboardnode.html#service">service</a></p>
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#service">service</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L123">src/embed.ts:123</a></li>
+							<li>Defined in src/embed.ts:127</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -388,7 +408,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#accesstokenattribute">accessTokenAttribute</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L103">src/embed.ts:103</a></li>
+							<li>Defined in src/embed.ts:107</li>
 						</ul>
 					</aside>
 				</section>
@@ -399,7 +419,7 @@
 					<aside class="tsd-sources">
 						<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#allowedevents-1">allowedEvents</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/dashboard.ts#L31">src/dashboard.ts:31</a></li>
+							<li>Defined in src/dashboard.ts:31</li>
 						</ul>
 					</aside>
 				</section>
@@ -409,7 +429,7 @@
 					<div class="tsd-signature tsd-kind-icon">dashboard<wbr>IdAttribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-dashboard-id&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/dashboard.ts#L32">src/dashboard.ts:32</a></li>
+							<li>Defined in src/dashboard.ts:32</li>
 						</ul>
 					</aside>
 				</section>
@@ -420,7 +440,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#embedurlattribute">embedUrlAttribute</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L104">src/embed.ts:104</a></li>
+							<li>Defined in src/embed.ts:108</li>
 						</ul>
 					</aside>
 				</section>
@@ -431,7 +451,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#nameattribute">nameAttribute</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L105">src/embed.ts:105</a></li>
+							<li>Defined in src/embed.ts:109</li>
 						</ul>
 					</aside>
 				</section>
@@ -442,7 +462,7 @@
 					<aside class="tsd-sources">
 						<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#type">type</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/dashboard.ts#L34">src/dashboard.ts:34</a></li>
+							<li>Defined in src/dashboard.ts:34</li>
 						</ul>
 					</aside>
 				</section>
@@ -453,7 +473,7 @@
 					<aside class="tsd-sources">
 						<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#typeattribute">typeAttribute</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/dashboard.ts#L33">src/dashboard.ts:33</a></li>
+							<li>Defined in src/dashboard.ts:33</li>
 						</ul>
 					</aside>
 				</section>
@@ -470,7 +490,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/dashboard.ts#L117">src/dashboard.ts:117</a></li>
+									<li>Defined in src/dashboard.ts:119</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -499,7 +519,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#createreport">createReport</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L202">src/embed.ts:202</a></li>
+									<li>Defined in src/embed.ts:211</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -532,7 +552,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#exitfullscreen">exitFullscreen</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L477">src/embed.ts:477</a></li>
+									<li>Defined in src/embed.ts:489</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -555,7 +575,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#fullscreen">fullscreen</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L469">src/embed.ts:469</a></li>
+									<li>Defined in src/embed.ts:481</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -578,7 +598,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#getid">getId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/dashboard.ts#L75">src/dashboard.ts:75</a></li>
+									<li>Defined in src/dashboard.ts:77</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -594,14 +614,14 @@
 					<a name="load" class="tsd-anchor"></a>
 					<h3>load</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#load">load</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L271">src/embed.ts:271</a></li>
+									<li>Defined in src/embed.ts:281</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -630,6 +650,9 @@
 								<li>
 									<h5>config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> phasedRender: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
@@ -646,7 +669,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#off">off</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L308">src/embed.ts:308</a></li>
+									<li>Defined in src/embed.ts:319</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -701,7 +724,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#on">on</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L339">src/embed.ts:339</a></li>
+									<li>Defined in src/embed.ts:350</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -750,7 +773,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#populateconfig">populateConfig</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/dashboard.ts#L101">src/dashboard.ts:101</a></li>
+									<li>Defined in src/dashboard.ts:103</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -779,7 +802,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#reload">reload</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L360">src/embed.ts:360</a></li>
+									<li>Defined in src/embed.ts:371</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -805,7 +828,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#save">save</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L222">src/embed.ts:222</a></li>
+									<li>Defined in src/embed.ts:231</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -828,7 +851,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#saveas">saveAs</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L237">src/embed.ts:237</a></li>
+									<li>Defined in src/embed.ts:246</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -857,7 +880,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#setaccesstoken">setAccessToken</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/embed.ts#L369">src/embed.ts:369</a></li>
+									<li>Defined in src/embed.ts:380</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -886,7 +909,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_src_embed_.embed.html">Embed</a>.<a href="_src_embed_.embed.html#validate">validate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/dashboard.ts#L89">src/dashboard.ts:89</a></li>
+									<li>Defined in src/dashboard.ts:91</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -914,7 +937,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/dashboard.ts#L58">src/dashboard.ts:58</a></li>
+									<li>Defined in src/dashboard.ts:60</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -992,6 +1015,12 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						<a href="../modules/_src_util_.html">"src/util"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_visual_.html">"src/visual"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_visualdescriptor_.html">"src/visual<wbr>Descriptor"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_typings_globals_es6_promise_index_d_.html">"typings/globals/es6-<wbr>promise/index.d"</a>
 					</li>
 				</ul>
@@ -1029,6 +1058,9 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="_src_dashboard_.dashboard.html#loadpath" class="tsd-kind-icon">load<wbr>Path</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="_src_dashboard_.dashboard.html#phasedloadpath" class="tsd-kind-icon">phased<wbr>Load<wbr>Path</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="_src_dashboard_.dashboard.html#service" class="tsd-kind-icon">service</a>

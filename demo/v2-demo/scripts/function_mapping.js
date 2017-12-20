@@ -11,6 +11,7 @@ const mockDict = {
     _Page_SetFilters: datasetNotSupported,
     _Page_GetFilters: datasetNotSupported,
     _Page_RemoveFilters: datasetNotSupported,
+    _Page_GetVisuals: datasetNotSupported,
     _Report_switchModeEdit: datasetNotSupported,
     _Report_switchModeView: datasetNotSupported,
     _Embed_BasicEmbed: _Mock_Embed_BasicEmbed_ViewMode,

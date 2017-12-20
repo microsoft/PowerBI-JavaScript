@@ -127,6 +127,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_page_.page.html#getfilters" class="tsd-kind-icon">get<wbr>Filters</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_page_.page.html#getvisuals" class="tsd-kind-icon">get<wbr>Visuals</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_page_.page.html#removefilters" class="tsd-kind-icon">remove<wbr>Filters</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_page_.page.html#setactive" class="tsd-kind-icon">set<wbr>Active</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_page_.page.html#setfilters" class="tsd-kind-icon">set<wbr>Filters</a></li>
@@ -147,7 +148,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/page.ts#L50">src/page.ts:50</a></li>
+									<li>Defined in src/page.ts:51</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -183,7 +184,7 @@
 					<div class="tsd-signature tsd-kind-icon">display<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/page.ts#L43">src/page.ts:43</a></li>
+							<li>Defined in src/page.ts:44</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -203,7 +204,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Active<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/page.ts#L50">src/page.ts:50</a></li>
+							<li>Defined in src/page.ts:51</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -224,7 +225,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_page_.ipagenode.html">IPageNode</a>.<a href="../interfaces/_src_page_.ipagenode.html#name">name</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/page.ts#L36">src/page.ts:36</a></li>
+							<li>Defined in src/page.ts:37</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -245,7 +246,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_page_.ipagenode.html">IPageNode</a>.<a href="../interfaces/_src_page_.ipagenode.html#report">report</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/page.ts#L30">src/page.ts:30</a></li>
+							<li>Defined in src/page.ts:31</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -273,7 +274,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#getfilters">getFilters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/page.ts#L77">src/page.ts:77</a></li>
+									<li>Defined in src/page.ts:78</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -289,6 +290,31 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getvisuals" class="tsd-anchor"></a>
+					<h3>get<wbr>Visuals</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Visuals<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="_src_visualdescriptor_.visualdescriptor.html" class="tsd-signature-type">VisualDescriptor</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/page.ts:149</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets all the visuals on the page.</p>
+								</div>
+								<pre><code class="lang-javascript">page.getVisuals()
+  .then(<span class="hljs-function"><span class="hljs-params">visuals</span> =&gt;</span> { ... });
+</code></pre>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="_src_visualdescriptor_.visualdescriptor.html" class="tsd-signature-type">VisualDescriptor</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="removefilters" class="tsd-anchor"></a>
 					<h3>remove<wbr>Filters</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -299,7 +325,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#removefilters">removeFilters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/page.ts#L94">src/page.ts:94</a></li>
+									<li>Defined in src/page.ts:95</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -323,7 +349,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/page.ts#L107">src/page.ts:107</a></li>
+									<li>Defined in src/page.ts:108</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -348,7 +374,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#setfilters">setFilters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-javascript/blob/f07e453/src/page.ts#L131">src/page.ts:131</a></li>
+									<li>Defined in src/page.ts:132</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -423,6 +449,12 @@
 						<a href="../modules/_src_util_.html">"src/util"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_visual_.html">"src/visual"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_src_visualdescriptor_.html">"src/visual<wbr>Descriptor"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_typings_globals_es6_promise_index_d_.html">"typings/globals/es6-<wbr>promise/index.d"</a>
 					</li>
 				</ul>
@@ -451,6 +483,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_page_.page.html#getfilters" class="tsd-kind-icon">get<wbr>Filters</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_page_.page.html#getvisuals" class="tsd-kind-icon">get<wbr>Visuals</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_page_.page.html#removefilters" class="tsd-kind-icon">remove<wbr>Filters</a>
