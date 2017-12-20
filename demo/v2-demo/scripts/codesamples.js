@@ -915,10 +915,8 @@ function _Page_GetFilters() {
     // Retrieve the page collection and get the filters for the first page.
     report.getPages()
         .then(function (pages) {
-          // Retrieve active page.
-          var activePage = pages.find(function(page) {
-            return page.isActive
-          });
+          // Retrieve first page.
+          var activePage = pages[0];
 
           activePage.getFilters()
             .then(function (filters) {
@@ -943,10 +941,8 @@ function _Page_GetVisuals() {
     // Retrieve the page collection and get the visuals for the first page.
     report.getPages()
       .then(function (pages) {
-        // Retrieve active page.
-        var activePage = pages.find(function(page) {
-          return page.isActive
-        });
+        // Retrieve first page.
+        var activePage = pages[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
@@ -992,10 +988,8 @@ function _Page_SetFilters() {
     // Pay attention that setFilters receives an array.
     report.getPages()
         .then(function (pages) {
-          // Retrieve active page.
-          var activePage = pages.find(function(page) {
-            return page.isActive
-          });
+          // Retrieve first page.
+          var activePage = pages[0];
 
           activePage.setFilters([filter])
             .then(function (result) {
@@ -1020,10 +1014,8 @@ function _Page_RemoveFilters() {
     // Retrieve the page collection and remove the filters for the first page.
     report.getPages()
         .then(function (pages) {
-          // Retrieve active page.
-          var activePage = pages.find(function(page) {
-            return page.isActive
-          });
+          // Retrieve first page.
+          var activePage = pages[0];
 
           activePage.removeFilters()
             .then(function (result) {
