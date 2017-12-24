@@ -145,6 +145,17 @@ export class Service implements IService {
       this.handleEvent(event);
     });
 
+    this.router.post(`/reports/:uniqueId/pages/:pageName/visuals/:visualName/events/:eventName`, (req, res) => {
+      const event: IEvent<any> = {
+        type: 'report',
+        id: req.params.uniqueId,
+        name: req.params.eventName,
+        value: req.body
+      };
+
+      this.handleEvent(event);
+    });
+
     this.router.post(`/dashboards/:uniqueId/events/:eventName`, (req, res) => {
       const event: IEvent<any> = {
         type: 'dashboard',

@@ -259,6 +259,67 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
       });
   });
 
+  router.get('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
+    const page = {
+      name: req.params.pageName,
+      displayName: null
+    };
+    const visual: models.IVisual = {
+      name: req.params.visualName,
+      title: 'title',
+      type: 'type',
+      layout: {},
+    };
+
+    return app.validateVisual(page, visual)
+      .then(() => {
+        return app.getFilters()
+          .then(filters => {
+            res.send(200, filters);
+          }, error => {
+            res.send(500, error);
+          });
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+
+  router.put('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
+    const pageName = req.params.pageName;
+    const visualName = req.params.visualName;
+    const uniqueId = req.headers['uid'];
+    const filters = req.body;
+    const page: models.IPage = {
+      name: pageName,
+      displayName: null
+    };
+    const visual: models.IVisual = {
+      name: visualName,
+      title: 'title',
+      type: 'type',
+      layout: {},
+    };
+
+    return app.validateVisual(page, visual)
+      .then(() => Promise.all(filters.map(filter => app.validateFilter(filter))))
+      .then(() => {
+        app.setFilters(filters)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post(`/reports/${uniqueId}/pages/${pageName}/visuals/${visualName}/events/filtersApplied`, {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
+          });
+
+        res.send(202);
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+
   router.patch('/report/settings', (req, res) => {
     const uniqueId = req.headers['uid'];
     const settings = req.body;

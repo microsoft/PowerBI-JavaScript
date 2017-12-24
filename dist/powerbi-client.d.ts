@@ -419,6 +419,7 @@ declare module "ifilterable" {
 }
 declare module "visualDescriptor" {
     import * as models from 'powerbi-models';
+    import { IFilterable } from "ifilterable";
     import { IPageNode } from "page";
     /**
      * A Visual node within a report hierarchy
@@ -440,7 +441,7 @@ declare module "visualDescriptor" {
      * @class VisualDescriptor
      * @implements {IVisualNode}
      */
-    export class VisualDescriptor implements IVisualNode {
+    export class VisualDescriptor implements IVisualNode, IFilterable {
         /**
          * The visual name
          *
@@ -472,6 +473,39 @@ declare module "visualDescriptor" {
          */
         page: IPageNode;
         constructor(page: IPageNode, name: string, title: string, type: string, layout: models.IVisualLayout);
+        /**
+         * Gets all visual level filters of the current visual.
+         *
+         * ```javascript
+         * visual.getFilters()
+         *  .then(filters => { ... });
+         * ```
+         *
+         * @returns {(Promise<models.IFilter[]>)}
+         */
+        getFilters(): Promise<models.IFilter[]>;
+        /**
+         * Removes all filters from the current visual.
+         *
+         * ```javascript
+         * visual.removeFilters();
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        removeFilters(): Promise<void>;
+        /**
+         * Sets the filters on the current visual to 'filters'.
+         *
+         * ```javascript
+         * visual.setFilters(filters);
+         *   .catch(errors => { ... });
+         * ```
+         *
+         * @param {(models.IFilter[])} filters
+         * @returns {Promise<void>}
+         */
+        setFilters(filters: models.IFilter[]): Promise<void>;
     }
 }
 declare module "page" {
@@ -536,7 +570,7 @@ declare module "page" {
          *
          * ```javascript
          * page.getFilters()
-         *  .then(pages => { ... });
+         *  .then(filters => { ... });
          * ```
          *
          * @returns {(Promise<models.IFilter[]>)}

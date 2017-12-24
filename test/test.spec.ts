@@ -5,6 +5,7 @@ import * as visual from '../src/visual';
 import * as create from '../src/create';
 import * as dashboard from '../src/dashboard';
 import * as page from '../src/page';
+import * as visualDescriptor from '../src/visualDescriptor';
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
 import * as Router from 'powerbi-router';
@@ -858,6 +859,11 @@ describe('Protocol', function () {
     });
 
     router.post('/reports/:uniqueId/pages/:pageName/events/:eventName', (req, res) => {
+      handler.handle(req);
+      res.send(202);
+    });
+
+    router.post('/reports/:uniqueId/pages/:pageName/visuals/:visualName/events/:eventName', (req, res) => {
       handler.handle(req);
       res.send(202);
     });
@@ -1805,6 +1811,7 @@ describe('Protocol', function () {
                 expect(spyApp.setFilters).not.toHaveBeenCalled();
                 expect(response.statusCode).toEqual(400);
                 // Cleanup
+                spyApp.validatePage.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 done();
               });
@@ -1833,6 +1840,7 @@ describe('Protocol', function () {
                 expect(spyApp.setFilters).toHaveBeenCalledWith(testData.filters);
                 expect(response.statusCode).toEqual(202);
                 // Cleanup
+                spyApp.validatePage.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 spyApp.setFilters.calls.reset();
                 done();
@@ -1870,6 +1878,164 @@ describe('Protocol', function () {
                 expect(response.statusCode).toEqual(202);
                 expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
                 // Cleanup
+                spyApp.validatePage.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                spyApp.setFilters.calls.reset();
+                done();
+              });
+          });
+      });
+    });
+
+    describe('filters (visual level)', function () {
+      it('GET /report/pages/xyz/visuals/uvw/filters returns 200 with body as array of filters', function (done) {
+        // Arrange
+        const testData = {
+          filters: [
+            {
+              name: "fakeFilter1"
+            },
+            {
+              name: "fakeFilter2"
+            }
+          ]
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.getFilters.and.returnValue(Promise.resolve(testData.filters));
+
+            // Act
+            hpm.get<models.IFilter[]>('/report/pages/xyz/visuals/uvw/filters')
+              .then(response => {
+                // Assert
+                expect(spyApp.getFilters).toHaveBeenCalled();
+                expect(response.statusCode).toEqual(200);
+                expect(response.body).toEqual(testData.filters);
+                // Cleanup
+                spyApp.getFilters.calls.reset();
+                spyApp.validateVisual.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('GET /report/pages/xyz/visuals/uvw/filters returns 500 with body as error', function (done) {
+        // Arrange
+        const testData = {
+          error: {
+            message: "internal error"
+          }
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.getFilters.and.returnValue(Promise.reject(testData.error));
+
+            // Act
+            hpm.get<models.IFilter[]>('/report/pages/xyz/visuals/uvw/filters')
+              .catch(response => {
+                // Assert
+                expect(spyApp.getFilters).toHaveBeenCalled();
+                expect(response.statusCode).toEqual(500);
+                expect(response.body).toEqual(testData.error);
+                // Cleanup
+                spyApp.getFilters.calls.reset();
+                spyApp.validateVisual.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('PUT /report/pages/xyz/visuals/uvw/filters returns 400 if request is invalid', function (done) {
+        // Arrange
+        const testData = {
+          uniqueId: 'uniqueId',
+          filters: [
+            {
+              name: "fakeFilter"
+            }
+          ]
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.reject(null));
+
+            // Act
+            hpm.put<models.IError>('/report/pages/xyz/visuals/uvw/filters', testData.filters, { uid: testData.uniqueId })
+              .catch(response => {
+                // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
+                expect(spyApp.setFilters).not.toHaveBeenCalled();
+                expect(response.statusCode).toEqual(400);
+                // Cleanup
+                spyApp.validateVisual.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('PUT /report/pages/xyz/visuals/uvw/filters returns 202 if request is valid', function (done) {
+        // Arrange
+        const testData = {
+          uniqueId: 'uniqueId',
+          filters: [
+            {
+              name: "fakeFilter"
+            }
+          ],
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyApp.validateFilter.and.returnValue(Promise.resolve(null));
+
+            // Act
+            hpm.put<void>('/report/pages/xyz/visuals/uvw/filters', testData.filters, { uid: testData.uniqueId })
+              .then(response => {
+                // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
+                expect(spyApp.setFilters).toHaveBeenCalledWith(testData.filters);
+                expect(response.statusCode).toEqual(202);
+                // Cleanup
+                spyApp.validateVisual.calls.reset();
+                spyApp.validateFilter.calls.reset();
+                spyApp.setFilters.calls.reset();
+                done();
+              });
+          });
+      });
+
+      it('PUT /report/:uniqueId/pages/xyz/visuals/uvw/filters will cause POST /reports/:uniqueId/pages/xyz/visuals/uvw/events/filtersApplied', function (done) {
+        // Arrange
+        const testData = {
+          uniqueId: 'uniqueId',
+          filters: [
+            {
+              name: "fakeFilter"
+            }
+          ]
+        };
+        const testExpectedEvent = {
+          method: 'POST',
+          url: `/reports/${testData.uniqueId}/pages/xyz/visuals/uvw/events/filtersApplied`
+        };
+
+        iframeLoaded
+          .then(() => {
+
+            // Act
+            hpm.put<void>('/report/pages/xyz/visuals/uvw/filters', testData.filters, { uid: testData.uniqueId })
+              .then(response => {
+                // Assert
+                expect(spyApp.validateFilter).toHaveBeenCalledWith(testData.filters[0]);
+                expect(spyApp.setFilters).toHaveBeenCalledWith(testData.filters);
+                expect(response.statusCode).toEqual(202);
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
+                // Cleanup
+                spyApp.validateVisual.calls.reset();
                 spyApp.validateFilter.calls.reset();
                 spyApp.setFilters.calls.reset();
                 done();
@@ -2098,6 +2264,46 @@ describe('Protocol', function () {
       });
     });
 
+    describe('filters (visual level)', function () {
+      it('POST /reports/:uniqueId/pages/xyz/visuals/uvw/events/filtersApplied when user changes filter', function (done) {
+        // Arrange
+        const testData = {
+          uniqueId: 'uniqueId',
+          reportId: 'fakeReportId',
+          event: {
+            initiator: 'user',
+            filters: [
+              {
+                name: "fakeFilter"
+              }
+            ]
+          }
+        };
+        const testExpectedRequest = {
+          method: 'POST',
+          url: `/reports/${testData.uniqueId}/pages/xyz/visuals/uvw/events/filtersApplied`,
+          body: testData.event
+        };
+
+        iframeLoaded
+          .then(() => {
+            spyHandler.handle.calls.reset();
+
+            // Act
+            iframeHpm.post(testExpectedRequest.url, testData.event)
+              .then(response => {
+                // Assert
+                expect(response.statusCode).toBe(202);
+                expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
+
+                done();
+              });
+
+            // Cleanup
+          });
+      });
+    });
+
     describe('settings', function () {
       it('POST /reports/:uniqueId/events/settingsUpdated when user changes settings', function (done) {
         // Arrange
@@ -2187,6 +2393,7 @@ describe('SDK-to-HPM', function () {
   let dashboard: dashboard.Dashboard;
   let embeddedVisual: visual.Visual;
   let page1: page.Page;
+  let visual1: visualDescriptor.VisualDescriptor;
   let uniqueId = 'uniqueId';
   let createUniqueId = 'uniqueId';
   let dashboardUniqueId = 'uniqueId';
@@ -2253,6 +2460,7 @@ describe('SDK-to-HPM', function () {
     dashboard = <dashboard.Dashboard>powerbi.embed($dashboardElement[0], dashboardEmbedConfiguration);
     embeddedVisual = <visual.Visual>powerbi.embed($visualElement[0], visualEmbedConfiguration);
     page1 = new page.Page(report, 'xyz');
+    visual1 = new visualDescriptor.VisualDescriptor(page1, 'uvw', 'title', 'type', {});
     uniqueId = report.config.uniqueId;
     createUniqueId = create.config.uniqueId;
     dashboardUniqueId = dashboard.config.uniqueId;
@@ -3310,6 +3518,159 @@ describe('SDK-to-HPM', function () {
           .then(response => {
             // Assert
             expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/active`, testData.page, { uid: uniqueId }, iframe.contentWindow);
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+    });
+  });
+
+  describe('visual', function () {
+    describe('filters', function () {
+      it('visual.getFilters() sends GET /report/pages/xyz/visuals/uvw/filters', function () {
+        // Arrange
+
+        // Act
+        visual1.getFilters();
+
+        // Assert
+        expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
+      });
+
+      it('visual.getFilters() return promise that rejects with server error if there was error getting filters', function (done) {
+        // Arrange
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'internal server error'
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        visual1.getFilters()
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('visual.getFilters() returns promise that resolves with list of filters', function (done) {
+        // Arrange
+        const testData = {
+          expectedResponse: {
+            body: [
+              { x: 'fakeFilter1' },
+              { x: 'fakeFilter2' }
+            ]
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.resolve(testData.expectedResponse));
+
+        // Act
+        visual1.getFilters()
+          .then(filters => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
+            expect(filters).toEqual(testData.expectedResponse.body);
+            done();
+          });
+      });
+
+      it('visual.setFilters(filters) sends PUT /report/pages/xyz/visuals/uvw/filters', function () {
+        // Arrange
+        const testData = {
+          filters: [
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+          ],
+          response: {
+            body: []
+          }
+        };
+
+        spyHpm.put.and.returnValue(Promise.resolve(testData.response));
+
+        // Act
+        visual1.setFilters(testData.filters);
+
+        // Assert
+        expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, testData.filters, { uid: uniqueId }, iframe.contentWindow);
+      });
+
+      it('visual.setFilters(filters) returns promise that rejects with validation errors if filter is invalid', function (done) {
+        // Arrange
+        const testData = {
+          filters: [
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+          ],
+          expectedErrors: {
+            body: [
+              {
+                message: 'target is invalid, missing property x'
+              }
+            ]
+          }
+        };
+
+        spyHpm.put.and.returnValue(Promise.reject(testData.expectedErrors));
+
+        // Act
+        visual1.setFilters(testData.filters)
+          .catch(errors => {
+            // Assert
+            expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, testData.filters, { uid: uniqueId }, iframe.contentWindow);
+            expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors.body));
+            done();
+          });
+      });
+
+      it('visual.setFilters(filters) returns promise that resolves with null if filter was valid and request is accepted', function (done) {
+        // Arrange
+        const testData = {
+          filters: [
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+          ]
+        };
+
+        spyHpm.put.and.returnValue(Promise.resolve(null));
+
+        // Act
+        visual1.setFilters(testData.filters)
+          .then(response => {
+            // Assert
+            expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, testData.filters, { uid: uniqueId }, iframe.contentWindow);
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('visual.removeFilters() sends PUT /report/pages/xyz/visuals/uvw/filters', function () {
+        // Arrange
+
+        // Act
+        visual1.removeFilters();
+
+        // Assert
+        expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, [], { uid: uniqueId }, iframe.contentWindow);
+      });
+
+      it('visual.removeFilters() returns promise that resolves with null if request is accepted', function (done) {
+        // Arrange
+        spyHpm.put.and.returnValue(Promise.resolve(null));
+
+        // Act
+        visual1.removeFilters()
+          .then(response => {
+            // Assert
+            expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, [], { uid: uniqueId }, iframe.contentWindow);
             expect(response).toEqual(null);
             done();
           });

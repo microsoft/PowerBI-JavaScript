@@ -14,6 +14,8 @@ export interface IApp {
   getPages(): Promise<models.IPage>;
   setPage(pageName: string): Promise<void>;
   validatePage(page: models.IPage): Promise<models.IError[]>;
+  // Visuals
+  validateVisual(page: models.IPage, visual: models.IVisual): Promise<models.IError[]>;
   // Filters
   getFilters(): Promise<models.IFilter[]>;
   setFilters(filters: models.IFilter[]): Promise<void>;
@@ -43,6 +45,8 @@ export const mockAppSpyObj = {
   getPages: jasmine.createSpy("getPages").and.returnValue(Promise.resolve(null)),
   setPage: jasmine.createSpy("setPage").and.returnValue(Promise.resolve(null)),
   validatePage: jasmine.createSpy("validatePage").and.returnValue(Promise.resolve(null)),
+  // Visuals
+  validateVisual: jasmine.createSpy("validateVisual").and.returnValue(Promise.resolve(null)),
   // Filters
   getFilters: jasmine.createSpy("getFilters").and.returnValue(Promise.resolve(null)),
   setFilters: jasmine.createSpy("setFilters").and.returnValue(Promise.resolve(null)),
@@ -67,6 +71,7 @@ export const mockAppSpyObj = {
     mockAppSpyObj.getPages.calls.reset();
     mockAppSpyObj.setPage.calls.reset();
     mockAppSpyObj.validatePage.calls.reset();
+    mockAppSpyObj.validateVisual.calls.reset();
     mockAppSpyObj.getFilters.calls.reset();
     mockAppSpyObj.setFilters.calls.reset();
     mockAppSpyObj.validateFilter.calls.reset();

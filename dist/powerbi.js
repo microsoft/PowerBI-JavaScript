@@ -142,6 +142,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            };
 	            _this.handleEvent(event);
 	        });
+	        this.router.post("/reports/:uniqueId/pages/:pageName/visuals/:visualName/events/:eventName", function (req, res) {
+	            var event = {
+	                type: 'report',
+	                id: req.params.uniqueId,
+	                name: req.params.eventName,
+	                value: req.body
+	            };
+	            _this.handleEvent(event);
+	        });
 	        this.router.post("/dashboards/:uniqueId/events/:eventName", function (req, res) {
 	            var event = {
 	                type: 'dashboard',
@@ -3509,7 +3518,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * ```javascript
 	     * page.getFilters()
-	     *  .then(pages => { ... });
+	     *  .then(filters => { ... });
 	     * ```
 	     *
 	     * @returns {(Promise<models.IFilter[]>)}
@@ -3615,6 +3624,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.layout = layout;
 	        this.page = page;
 	    }
+	    /**
+	     * Gets all visual level filters of the current visual.
+	     *
+	     * ```javascript
+	     * visual.getFilters()
+	     *  .then(filters => { ... });
+	     * ```
+	     *
+	     * @returns {(Promise<models.IFilter[]>)}
+	     */
+	    VisualDescriptor.prototype.getFilters = function () {
+	        return this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Removes all filters from the current visual.
+	     *
+	     * ```javascript
+	     * visual.removeFilters();
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    VisualDescriptor.prototype.removeFilters = function () {
+	        return this.setFilters([]);
+	    };
+	    /**
+	     * Sets the filters on the current visual to 'filters'.
+	     *
+	     * ```javascript
+	     * visual.setFilters(filters);
+	     *   .catch(errors => { ... });
+	     * ```
+	     *
+	     * @param {(models.IFilter[])} filters
+	     * @returns {Promise<void>}
+	     */
+	    VisualDescriptor.prototype.setFilters = function (filters) {
+	        return this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
 	    return VisualDescriptor;
 	}());
 	exports.VisualDescriptor = VisualDescriptor;

@@ -70,7 +70,7 @@ export class Page implements IPageNode, IFilterable {
    * 
    * ```javascript
    * page.getFilters()
-   *  .then(pages => { ... });
+   *  .then(filters => { ... });
    * ```
    * 
    * @returns {(Promise<models.IFilter[]>)}
