@@ -58,7 +58,7 @@ function _Embed_BasicEmbed() {
 
     report.on("error", function(event) {
         Log.log(event.detail);
-        
+
         report.off("error");
     });
 
@@ -69,6 +69,63 @@ function _Embed_BasicEmbed() {
             Log.logText('In order to interact with the new report, create a new token and load the new report');
          }
      });
+}
+
+function _Embed_VisualEmbed() {
+    // Read embed application token from textbox
+    var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
+    var txtEmbedUrl = $('#txtReportEmbed').val();
+
+    // Read report Id from textbox
+    var txtReportId = $('#txtEmbedReportId').val();
+
+    // Read page name from textbox
+    var txtPageName = $('#txtPageName').val();
+
+    // Read visual name from textbox
+    var txtVisualName = $('#txtVisualName').val();
+
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config= {
+        type: 'visual',
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
+        accessToken: txtAccessToken,
+        embedUrl: txtEmbedUrl,
+        id: txtReportId,
+        pageName: txtPageName,
+        visualName: txtVisualName
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#visualContainer')[0];
+
+    // Embed the report and display it within the div container.
+    var report = powerbi.embed(embedContainer, config);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("loaded");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("loaded", function() {
+        Log.logText("Loaded");
+    });
+
+    report.on("error", function(event) {
+        Log.log(event.detail);
+
+        report.off("error");
+    });
 }
 
 function _Embed_DashboardEmbed() {
@@ -115,7 +172,7 @@ function _Embed_DashboardEmbed() {
 
     dashboard.on("error", function(event) {
         Log.log(event.detail);
-        
+
         dashboard.off("error");
     });
 
@@ -269,7 +326,7 @@ function _Embed_EmbedWithDefaultFilter() {
     var txtAccessToken = $('#txtAccessToken').val();
     var txtEmbedUrl = $('#txtReportEmbed').val();
     var txtEmbedReportId = $('#txtEmbedReportId').val();
-    
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -282,7 +339,7 @@ function _Embed_EmbedWithDefaultFilter() {
       operator: "In",
       values: ["Lindseys"]
     };
-    
+
     var embedConfiguration = {
         type: 'report',
         tokenType: models.TokenType.Embed,
@@ -295,7 +352,7 @@ function _Embed_EmbedWithDefaultFilter() {
         },
         filters: [filter]
     };
-    
+
     var embedContainer = document.getElementById('embedContainer');
     powerbi.embed(embedContainer, embedConfiguration);
 }
@@ -368,7 +425,7 @@ function _Embed_Create() {
 
     // Read embed type from radio
     var tokenType = $('input:radio[name=tokenType]:checked').val();
-    
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -380,7 +437,7 @@ function _Embed_Create() {
         embedUrl: txtEmbedUrl,
         datasetId: txtEmbedDatasetId,
     };
-    
+
     // Grab the reference to the div HTML element that will host the report
     var embedContainer = $('#embedContainer')[0];
 
@@ -420,7 +477,7 @@ function _Mock_Embed_Create() {
 
     // Read embed type from radio
     var tokenType = $('input:radio[name=tokenType]:checked').val();
-    
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -435,7 +492,7 @@ function _Mock_Embed_Create() {
             useCustomSaveAsDialog: true
         }
     };
-    
+
     // Grab the reference to the div HTML element that will host the report
     var embedContainer = $('#embedContainer')[0];
 
@@ -554,7 +611,7 @@ function _Report_GetPages() {
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // Retrieve the page collection and loop through to collect the 
+    // Retrieve the page collection and loop through to collect the
     // page name and display name of each page and display the value.
     report.getPages()
         .then(function (pages) {
@@ -588,7 +645,7 @@ function _Report_SetPage() {
     // Report.off removes a given event handler if it exists.
     report.off("pageChanged");
 
-    // Report.on will add an event handler which prints page 
+    // Report.on will add an event handler which prints page
     // name and display name to Log window.
     report.on("pageChanged", function(event) {
         var page = event.detail.newPage;
@@ -602,7 +659,7 @@ function _Report_GetFilters() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Get the filters applied to the report.
     report.getFilters()
         .then(function (filters) {
@@ -631,7 +688,7 @@ function _Report_SetFilters() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Set the filter for the report.
     // Pay attention that setFilters receives an array.
     report.setFilters([filter])
@@ -776,7 +833,7 @@ function _Report_saveAs() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     var saveAsParameters = {
         name: "newReport"
     };
@@ -892,7 +949,7 @@ function _Page_SetActive() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Retrieve the page collection, and then set the second page to be active.
     report.getPages()
         .then(function (pages) {
@@ -911,7 +968,7 @@ function _Page_GetFilters() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Retrieve the page collection and get the filters for the first page.
     report.getPages()
         .then(function (pages) {
@@ -976,7 +1033,7 @@ function _Page_SetFilters() {
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // Build the filter you want to use. For more information, see Constructing 
+    // Build the filter you want to use. For more information, see Constructing
     // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
     const filter = {
         $schema: "http://powerbi.com/product/schema#basic",
@@ -1016,7 +1073,7 @@ function _Page_RemoveFilters() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Retrieve the page collection and remove the filters for the first page.
     report.getPages()
         .then(function (pages) {
@@ -1165,7 +1222,7 @@ function _DashboardEvents_TileClicked() {
 function _Qna_SetQuestion() {
     // Get a reference to the embedded Q&A HTML element
     var qnaContainer = $('#qnaContainer')[0];
-    
+
     // Get a reference to the embedded Q&A.
     qna = powerbi.get(qnaContainer);
 
@@ -1181,7 +1238,7 @@ function _Qna_SetQuestion() {
 function _Qna_QuestionChanged() {
     // Get a reference to the embedded Q&A HTML element
     var qnaContainer = $('#qnaContainer')[0];
-    
+
     // Get a reference to the embedded Q&A.
     qna = powerbi.get(qnaContainer);
 

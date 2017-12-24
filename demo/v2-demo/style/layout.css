@@ -47,7 +47,7 @@ header
     padding-left: 290px;
 }
 
-#embedContainer, #dashboardContainer, #tileContainer, #qnaContainer {
+.embedContainer {
     width: 100%;
     height: 450px;
     background-color: white;
@@ -177,7 +177,7 @@ header
 
     #embedArea {
         padding-left: 0px;
-    }   
+    }
 }
 
 @media screen and (min-width: 551px) {
@@ -297,7 +297,7 @@ header
         width: 100%;
         height: 380px;
     }
-    
+
     .bottomPanel {
         margin-left: 0;
         width: 100%;
