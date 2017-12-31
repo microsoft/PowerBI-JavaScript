@@ -596,11 +596,8 @@ function _Report_UpdateSettings() {
 
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
-        .then(function (result) {
-            $("#result").html(result);
-        })
         .catch(function (error) {
-            $("#result").html(error);
+            Log.log(errors);
         });
 }
 
@@ -632,16 +629,6 @@ function _Report_SetPage() {
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // setPage will change the selected view to the page you indicate.
-    // This is the actual page name not the display name.
-    report.setPage("ReportSection2")
-        .then(function (result) {
-            Log.log(result);
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
-
     // Report.off removes a given event handler if it exists.
     report.off("pageChanged");
 
@@ -651,6 +638,13 @@ function _Report_SetPage() {
         var page = event.detail.newPage;
         Log.logText(page.name + " - " + page.displayName);
     });
+
+    // setPage will change the selected view to the page you indicate.
+    // This is the actual page name not the display name.
+    report.setPage("ReportSection2")
+        .catch(function (errors) {
+            Log.log(errors);
+        });
 }
 
 function _Report_GetFilters() {
@@ -692,9 +686,6 @@ function _Report_SetFilters() {
     // Set the filter for the report.
     // Pay attention that setFilters receives an array.
     report.setFilters([filter])
-        .then(function (result) {
-            Log.log(result);
-        })
         .catch(function (errors) {
             Log.log(errors);
         });
@@ -709,9 +700,6 @@ function _Report_RemoveFilters() {
 
     // Remove the filters currently applied to the report.
     report.removeFilters()
-        .then(function (result) {
-            Log.log(result);
-        })
         .catch(function (errors) {
             Log.log(errors);
         });
@@ -726,9 +714,6 @@ function _Report_PrintCurrentReport() {
 
     // Trigger the print dialog for your browser.
     report.print()
-        .then(function (result) {
-            Log.log(result);
-        })
         .catch(function (errors) {
             Log.log(errors);
         });
@@ -764,6 +749,73 @@ function _Report_Refresh() {
             Log.logText("Refreshed");
         })
         .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _Report_ApplyCustomLayout() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Define default visual layout: visible in 400x300.
+    let defaultLayout = {
+      width: 400,
+      height: 300,
+      displayState: {
+        mode: models.VisualContainerDisplayMode.Hidden
+      }
+    };
+
+    // Define page size as custom size: 1000x580.
+    let pageSize = {
+        type: models.PageSizeType.Custom,
+        width: 1000,
+        height: 580
+    };
+
+    // Page layout: two visible visuals in fixed position.
+    let pageLayout = {
+      defaultLayout: defaultLayout,
+      visualsLayout: {
+        "VisualContainer7": {
+          x: 70,
+          y: 100,
+          displayState: {
+            mode: models.VisualContainerDisplayMode.Visible
+          }
+        },
+        "VisualContainer4": {
+          x: 540,
+          y: 100,
+          displayState: {
+            mode: models.VisualContainerDisplayMode.Visible
+          }
+        }
+      }
+    };
+
+    let settings = {
+      filterPaneEnabled: false,
+      navContentPaneEnabled: false,
+      layoutType: models.LayoutType.Custom,
+      customLayout: {
+        pageSize: pageSize,
+        displayOption: models.DisplayOption.FitToPage,
+        pagesLayout: {
+          "ReportSection3": pageLayout
+        }
+      }
+    }
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    report.updateSettings(settings)
+        .catch(function (error) {
             Log.log(errors);
         });
 }
@@ -874,11 +926,8 @@ function _Report_Extensions_OptionsMenu() {
 
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
-        .then(function (result) {
-            $("#result").html(result);
-        })
         .catch(function (error) {
-            $("#result").html(error);
+            Log.log(errors);
         });
 
     // Report.on will add an event handler to commandTriggered event which prints to console window.
@@ -922,11 +971,8 @@ function _Report_Extensions_ContextMenu() {
 
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
-        .then(function (result) {
-            $("#result").html(result);
-        })
         .catch(function (error) {
-            $("#result").html(error);
+            Log.log(errors);
         });
 
     // Report.on will add an event handler to commandTriggered event which prints to console window.
@@ -953,9 +999,10 @@ function _Page_SetActive() {
     // Retrieve the page collection, and then set the second page to be active.
     report.getPages()
         .then(function (pages) {
-            pages[1].setActive().then(function (result) {
-                Log.log(result);
-            });
+            pages[1].setActive()
+                .catch(function (errors) {
+                    Log.log(errors);
+                });
         })
         .catch(function (errors) {
            Log.log(errors);
@@ -1055,9 +1102,6 @@ function _Page_SetFilters() {
           });
 
           activePage.setFilters([filter])
-            .then(function (result) {
-                Log.log(result);
-            })
             .catch(function (errors) {
                 Log.log(errors);
             });
@@ -1083,9 +1127,6 @@ function _Page_RemoveFilters() {
           });
 
           activePage.removeFilters()
-            .then(function (result) {
-                Log.log(result);
-            })
             .catch(function (errors) {
                 Log.log(errors);
             });

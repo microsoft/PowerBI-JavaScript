@@ -55,6 +55,10 @@ function Report_Extensions_OptionsMenu() {
     SetCode(_Report_Extensions_OptionsMenu);
 }
 
+function Report_ApplyCustomLayout() {
+    SetCode(_Report_ApplyCustomLayout);
+}
+
 // ---- Page Operations ----------------------------------------------------
 
 function Page_SetActive() {
