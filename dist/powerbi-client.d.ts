@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.5 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.6 | (c) 2016 Microsoft Corporation MIT */
 declare module "config" {
     const config: {
         version: string;
@@ -941,13 +941,6 @@ declare module "tile" {
          */
         populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
         /**
-         * Sends load configuration data for tile
-         *
-         * @param {models.ILoadConfiguration} config
-         * @returns {Promise<void>}
-         */
-        load(baseConfig: embed.IEmbedConfigurationBase): Promise<void>;
-        /**
          * Adds the ability to get tileId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
          *
@@ -956,12 +949,6 @@ declare module "tile" {
          * @returns {string}
          */
         static findIdFromEmbedUrl(url: string): string;
-        /**
-         * Adds the ability to get events from iframe
-         *
-         * @param event: MessageEvent
-         */
-        private receiveMessage(event);
     }
 }
 declare module "qna" {

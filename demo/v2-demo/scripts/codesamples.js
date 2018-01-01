@@ -400,7 +400,6 @@ function _Embed_TileEmbed() {
     // Tile.on will add an event handler which prints to Log window.
     tile.on("tileLoaded", function(event) {
         Log.logText("Tile loaded event");
-        Log.log(event.detail);
     });
 
     // Tile.off removes a given event handler if it exists.

@@ -167,6 +167,17 @@ export class Service implements IService {
       this.handleEvent(event);
     });
 
+    this.router.post(`/tile/:uniqueId/events/:eventName`, (req, res) => {
+      const event: IEvent<any> = {
+        type: 'tile',
+        id: req.params.uniqueId,
+        name: req.params.eventName,
+        value: req.body
+      };
+
+      this.handleEvent(event);
+    });
+
     /**
      * Adds handler for Q&A events.
      */

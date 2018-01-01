@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.5 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.6 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -154,6 +154,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.router.post("/dashboards/:uniqueId/events/:eventName", function (req, res) {
 	            var event = {
 	                type: 'dashboard',
+	                id: req.params.uniqueId,
+	                name: req.params.eventName,
+	                value: req.body
+	            };
+	            _this.handleEvent(event);
+	        });
+	        this.router.post("/tile/:uniqueId/events/:eventName", function (req, res) {
+	            var event = {
+	                type: 'tile',
 	                id: req.params.uniqueId,
 	                name: req.params.eventName,
 	                value: req.body
@@ -3903,11 +3912,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    __extends(Tile, _super);
 	    function Tile(service, element, baseConfig, phasedRender) {
 	        var config = baseConfig;
-	        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'dashboardId', config.dashboardId);
-	        config.embedUrl = utils.addParamToUrl(config.embedUrl, 'tileId', config.id);
 	        _super.call(this, service, element, config, /* iframe */ undefined, phasedRender);
+	        this.loadPath = "/tile/load";
 	        Array.prototype.push.apply(this.allowedEvents, Tile.allowedEvents);
-	        window.addEventListener("message", this.receiveMessage.bind(this), false);
 	    }
 	    /**
 	     * The ID of the tile
@@ -3945,35 +3952,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.config = config;
 	    };
 	    /**
-	     * Sends load configuration data for tile
-	     *
-	     * @param {models.ILoadConfiguration} config
-	     * @returns {Promise<void>}
-	     */
-	    Tile.prototype.load = function (baseConfig) {
-	        var config = baseConfig;
-	        var errors = this.validate(config);
-	        if (errors) {
-	            throw errors;
-	        }
-	        var height = config.height ? config.height : this.iframe.offsetHeight;
-	        var width = config.width ? config.width : this.iframe.offsetWidth;
-	        var action = config.action ? config.action : 'loadTile';
-	        var tileConfig = {
-	            action: action,
-	            height: height,
-	            width: width,
-	            accessToken: config.accessToken,
-	            tokenType: config.tokenType,
-	        };
-	        this.iframe.contentWindow.postMessage(JSON.stringify(tileConfig), "*");
-	        // In order to use this function the same way we use it in embed
-	        // we need to keep the return type the same as 'load' in embed 
-	        return new Promise(function () {
-	            return;
-	        });
-	    };
-	    /**
 	     * Adds the ability to get tileId from url.
 	     * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
 	     *
@@ -3989,34 +3967,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            tileId = tileIdMatch[1];
 	        }
 	        return tileId;
-	    };
-	    /**
-	     * Adds the ability to get events from iframe
-	     *
-	     * @param event: MessageEvent
-	     */
-	    Tile.prototype.receiveMessage = function (event) {
-	        if (event.data) {
-	            try {
-	                var messageData = JSON.parse(event.data);
-	                var value = {
-	                    navigationUrl: messageData.navigationUrl,
-	                    errors: messageData.error,
-	                    openReport: messageData.openReport
-	                };
-	                var tileEvent = {
-	                    type: 'tile',
-	                    id: this.config.uniqueId,
-	                    name: messageData.event,
-	                    value: value
-	                };
-	                this.service.handleTileEvents(tileEvent);
-	            }
-	            catch (e) {
-	                console.log("invalid message data");
-	                return;
-	            }
-	        }
 	    };
 	    Tile.type = "Tile";
 	    Tile.allowedEvents = ["tileClicked", "tileLoaded"];
@@ -4264,7 +4214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.4.5',
+	    version: '2.4.6',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
