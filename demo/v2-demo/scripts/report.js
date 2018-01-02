@@ -134,6 +134,14 @@ function OpenInteractStep() {
             AddImgToNewOperations();
         });
     }
+    else if (entityType == EntityType.Visual)
+    {
+        $("#settings").load("settings_interact_visual.html", function() {
+            SetToggleHandler("visual-operations-div");
+            LoadCodeArea("#embedCodeDiv", _Visual_DataSelected);
+            AddImgToNewOperations();
+        });
+    }
     else
     {
         $("#settings").load("settings_interact.html", function() {
@@ -265,7 +273,7 @@ function OpenEmbedMode(mode, entityType, tokenType)
 
         if (IsEmbeddingSampleReport())
         {
-            LoadSampleReportIntoSession().then(function (response) {
+            LoadSampleVisualIntoSession().then(function (response) {
                 LoadSettings();
             });
         }

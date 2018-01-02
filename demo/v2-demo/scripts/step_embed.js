@@ -144,3 +144,9 @@ function Qna_SetQuestion() {
 function Qna_QuestionChanged() {
     SetCode(_Qna_QuestionChanged);
 }
+
+// ---- Visual Events Listener ----------------------------------------------------
+
+function Visual_DataSelected() {
+    SetCode(_Visual_DataSelected);
+}

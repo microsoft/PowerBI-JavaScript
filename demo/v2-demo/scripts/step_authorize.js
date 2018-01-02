@@ -130,6 +130,11 @@ function LoadSampleReportIntoSession() {
     return FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */);
 }
 
+function LoadSampleVisualIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Visual);
+    return FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */);
+}
+
 function LoadSampleDatasetIntoSession() {
     SetSession(SessionKeys.EntityType, EntityType.Report);
     return FetchUrlIntoSession(datasetUrl, false /* updateCurrentToken */);

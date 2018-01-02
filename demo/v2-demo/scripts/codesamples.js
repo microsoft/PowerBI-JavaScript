@@ -1290,3 +1290,27 @@ function _Qna_QuestionChanged() {
         Log.log(event.detail);
     });
 }
+
+// ---- Visual Events Listener ----------------------------------------------------
+
+function _Visual_DataSelected() {
+    // Get a reference to the embedded visual HTML element
+    var visualContainer = $('#visualContainer')[0];
+
+    // Get a reference to the embedded visual.
+    visual = powerbi.get(visualContainer);
+
+    // Visual.off removes a given event listener if it exists.
+    visual.off("dataSelected");
+
+    // Visual.on will add an event listener.
+    visual.on("dataSelected", function(event) {
+        var data = event.detail;
+        Log.log(data);
+    });
+
+    // Select Run and select an element of a visualization.
+    // For example, a bar in a bar chart. You should see an entry in the Log window.
+
+    Log.logText("Select data to see events in Log window.");
+}

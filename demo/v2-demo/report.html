@@ -37,6 +37,9 @@ $(document).ready(function() {
         entityType = EntityType.Dashboard;
     } else if (entityTypeUrlParam == "tile") {
         entityType = EntityType.Tile;
+    }
+    else if (entityTypeUrlParam == "visual") {
+        entityType = EntityType.Visual;
     } else {
         entityType = EntityType.Report;
     }
