@@ -37,10 +37,8 @@ function OpenEmbedStep(mode, entityType, tokenType) {
     $("#authorize-step-wrapper").hide();
     $("#embed-and-interact-steps-wrapper").show();
 
-    var embedContainer = $("#embedContainer");
-    var dashboardContainer = $("#dashboardContainer");
-    var tileContainer = $("#tileContainer");
-    var qnaContainer = $("#qnaContainer");
+    let containers = $(".embedContainer");
+    containers.hide();
 
     if (entityType == EntityType.Report)
     {
@@ -48,12 +46,20 @@ function OpenEmbedStep(mode, entityType, tokenType) {
             OpenEmbedMode(mode, entityType, tokenType);
 
             // Fix report size ratio
+            var embedContainer = $("#embedContainer");
             embedContainer.height(embedContainer.width() * 0.59);
-
             embedContainer.show();
-            dashboardContainer.hide();
-            tileContainer.hide();
-            qnaContainer.hide();
+        });
+    }
+    else if (entityType == EntityType.Visual)
+    {
+        $("#settings").load("settings_embed_visual.html", function() {
+            OpenEmbedMode(mode, entityType, tokenType);
+
+            // Fix report size ratio
+            var visualContainer = $("#visualContainer");
+            visualContainer.height(visualContainer.width() * 0.59);
+            visualContainer.show();
         });
     }
     else if (entityType == EntityType.Dashboard)
@@ -62,12 +68,9 @@ function OpenEmbedStep(mode, entityType, tokenType) {
             OpenEmbedMode(mode, entityType, tokenType);
 
             // Fix report size ratio
+            var dashboardContainer = $("#dashboardContainer");
             dashboardContainer.height(dashboardContainer.width() * 0.59);
-
-            embedContainer.hide();
             dashboardContainer.show();
-            tileContainer.hide();
-            qnaContainer.hide();
         });
     }
     else if (entityType == EntityType.Tile)
@@ -75,12 +78,9 @@ function OpenEmbedStep(mode, entityType, tokenType) {
         $("#settings").load("settings_embed_tile.html", function() {
             OpenEmbedMode(mode, entityType, tokenType);
 
+            var tileContainer = $("#tileContainer");
             tileContainer.height(tileContainer.width() * 0.59);
-
-            embedContainer.hide();
-            dashboardContainer.hide();
             tileContainer.show();
-            qnaContainer.hide();
         });
     }
     else if (entityType == EntityType.Qna)
@@ -88,11 +88,8 @@ function OpenEmbedStep(mode, entityType, tokenType) {
         $("#settings").load("settings_embed_qna.html", function() {
             OpenEmbedMode(mode, entityType,tokenType);
 
+            var qnaContainer = $("#qnaContainer");
             qnaContainer.height(qnaContainer.width() * 0.59);
-
-            embedContainer.hide();
-            dashboardContainer.hide();
-            tileContainer.hide();
             qnaContainer.show();
         });
     }
@@ -111,7 +108,7 @@ function OpenInteractStep() {
 
     var entityType = GetSession(SessionKeys.EntityType);
 
-    if (entityType == EntityType.Tile) 
+    if (entityType == EntityType.Tile)
     {
         $("#settings").load("settings_interact_tile.html", function() {
             SetToggleHandler("tile-operations-div");
@@ -134,6 +131,14 @@ function OpenInteractStep() {
             SetToggleHandler("qna-operations-div");
             SetToggleHandler("qna-events-operations-div");
             LoadCodeArea("#embedCodeDiv", _Qna_SetQuestion);
+            AddImgToNewOperations();
+        });
+    }
+    else if (entityType == EntityType.Visual)
+    {
+        $("#settings").load("settings_interact_visual.html", function() {
+            SetToggleHandler("visual-operations-div");
+            LoadCodeArea("#embedCodeDiv", _Visual_DataSelected);
             AddImgToNewOperations();
         });
     }
@@ -167,6 +172,9 @@ function setCodeArea(mode, entityType)
             LoadCodeArea("#embedCodeDiv", _Embed_Create);
         }
     }
+    else if (entityType == EntityType.Visual) {
+        LoadCodeArea("#embedCodeDiv", _Embed_VisualEmbed);
+    }
     else if (entityType == EntityType.Dashboard)
     {
         LoadCodeArea("#embedCodeDiv", _Embed_DashboardEmbed);
@@ -193,13 +201,18 @@ function showEmbedSettings(mode, entityType, tokenType)
             inputDivToShow = "#createModeInput";
             inputDivToHide = "#embedModeInput";
         }
-        
+
         $(inputDivToShow).show();
         $(inputDivToHide).hide();
 
-        var embedModeRadios = $('input:radio[name=embedMode]'); 
+        var embedModeRadios = $('input:radio[name=embedMode]');
         embedModeRadios.filter('[value=' + mode + ']').prop('checked', true);
 
+        var embedTypeRadios = $('input:radio[name=tokenType]');
+        embedTypeRadios.filter('[value=' + tokenType + ']').prop('checked', true);
+    }
+    else if (entityType == EntityType.Visual) {
+        $("#embedModeInput").show();
         var embedTypeRadios = $('input:radio[name=tokenType]');
         embedTypeRadios.filter('[value=' + tokenType + ']').prop('checked', true);
     }
@@ -247,6 +260,26 @@ function OpenEmbedMode(mode, entityType, tokenType)
                 SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
                 setCodeAndShowEmbedSettings(mode, entityType, tokenType);
             }
+        }
+    }
+    else if (entityType == EntityType.Visual)
+    {
+        LoadSettings = function() {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
+            SetTextboxFromSessionOrUrlParam(SessionKeys.PageName, "#txtPageName");
+            SetTextboxFromSessionOrUrlParam(SessionKeys.VisualName, "#txtVisualName");
+            setCodeAndShowEmbedSettings(mode, entityType, tokenType);
+        };
+
+        if (IsEmbeddingSampleReport())
+        {
+            LoadSampleVisualIntoSession().then(function (response) {
+                LoadSettings();
+            });
+        }
+        else
+        {
+            LoadSettings();
         }
     }
     else if (entityType == EntityType.Dashboard)

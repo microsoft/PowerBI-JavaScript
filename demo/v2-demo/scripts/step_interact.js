@@ -8,9 +8,9 @@ function OpenReportOperations() {
     $('#page-operations-li').removeClass('active');
     $('#events-operations-li').removeClass('active');
     $('#editandsave-operations-li').removeClass('active');
-    
+
     $("#report-operations-div .function-ul li.active").click()
-    $("#selected-catogory-button").html("Report operations");
+    $("#selected-catogory-button").text("Report operations");
 }
 
 function OpenPageOperations() {
@@ -26,7 +26,7 @@ function OpenPageOperations() {
 
     $("#page-operations-div .function-ul li.active").click();
 
-    $("#selected-catogory-button").html("Page operations");
+    $("#selected-catogory-button").text("Page operations");
 }
 
 function OpenEventOperations() {
@@ -42,7 +42,7 @@ function OpenEventOperations() {
 
     $("#events-operations-div .function-ul li.active").click();
 
-    $("#selected-catogory-button").html("Events Listener");
+    $("#selected-catogory-button").text("Events Listener");
 }
 
 function OpenEditAndSaveOperations() {
@@ -55,26 +55,34 @@ function OpenEditAndSaveOperations() {
     $('#report-operations-li').removeClass('active');
     $('#events-operations-li').removeClass('active');
     $('#editandsave-operations-li').addClass('active');
-    
+
     $("#editandsave-operations-div .function-ul li.active").click();
 
-    $("#selected-catogory-button").html("Edit and save operations");
+    $("#selected-catogory-button").text("Edit and save operations");
 }
 
 function OpenTileOperations() {
     $("#tile-operations-div").show();
     $("#tile-operations-li").addClass('active');
-    
+
     $("#tile-operations-div .function-ul li.active").click()
-    $("#selected-catogory-button").html("Tile operations");
+    $("#selected-catogory-button").text("Tile operations");
 }
 
 function OpenQnaOperations() {
     $("#qna-operations-div").show();
     $("#qna-operations-li").addClass('active');
-    
+
     $("#qna-operations-div .function-ul li.active").click()
-    $("#selected-catogory-button").html("QNA operations");
+    $("#selected-catogory-button").text("QNA operations");
+}
+
+function OpenVisualOperations() {
+    $("#visual-operations-div").show();
+    $("#visual-operations-li").addClass('active');
+
+    $("#visual-operations-div .function-ul li.active").click()
+    $("#selected-catogory-button").text("Visual operations");
 }
 
 function OpenDashboardOperations() {
@@ -83,9 +91,9 @@ function OpenDashboardOperations() {
 
     $("#dashboard-operations-li").addClass('active');
     $('#dashboard-events-operations-li').removeClass('active');
-    
+
     $("#dashboard-operations-div .function-ul li.active").click()
-    $("#selected-catogory-button").html("Dashboard operations");
+    $("#selected-catogory-button").text("Dashboard operations");
 }
 
 function OpenDashboardEventOperations() {
@@ -96,7 +104,7 @@ function OpenDashboardEventOperations() {
     $('#dashboard-events-operations-li').addClass('active');
 
     $("#dashboard-events-operations-div .function-ul li.active").click();
-    $("#selected-catogory-button").html("Events Listener");
+    $("#selected-catogory-button").text("Events Listener");
 }
 
 function SetToggleHandler(devId) {

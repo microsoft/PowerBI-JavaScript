@@ -57,11 +57,11 @@ a:hover, a:visited, a:link, a:active
     margin-bottom: 5px;
 }
 
-#report-embed-table, #qna-embed-table {
+.embed-table, #qna-embed-table {
     width: 100%;
 }
 
-#report-embed-table tr, #qna-embed-table tr {
+.embed-table tr, #qna-embed-table tr {
     width: 100%;
 }
 
@@ -85,7 +85,7 @@ a:hover, a:visited, a:link, a:active
     width: 30%;
 }
 
-#report-embed-table input[type="text"] {
+.embed-table input[type="text"] {
     width: 73%;
     border: none;
     margin-bottom: 5px;
@@ -401,7 +401,7 @@ a {
 #operations-ul-wrapper img {
     width: 20px;
     position: relative;
-    top: 3px; 
+    top: 3px;
 }
 
 #operation-categories {
@@ -568,15 +568,11 @@ a {
 	white-space: pre-wrap;
 }
 
-#GoToEmbedStepButton {
-    margin-top: 12px;
-}
-
 #authStepDiv {
     max-width: 500px;
 }
 
-#report-embed-table .inputLine {
+.embed-table .inputLine {
     margin: 5px 0px;
 }
 
@@ -585,11 +581,11 @@ a {
 }
 
 #tile-embed-table .inputLine {
-    margin: 5px 0px;    
+    margin: 5px 0px;
 }
 
 #qna-embed-table .inputLine {
-    margin: 5px 0px;    
+    margin: 5px 0px;
 }
 
 .pageTitle h4 {
@@ -665,11 +661,11 @@ line-height: 20px;
 .inputLineTitle {
     width: 25%;
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 .inputLineBody {
-    display: inline-block;  
+    display: inline-block;
 }
 
 #modeSelector {
@@ -677,15 +673,7 @@ line-height: 20px;
     cursor: default;
 }
 
-#embedContainer iframe {
-    border: none;
-}
-
-#dashboardContainer iframe {
-    border: none;    
-}
-
-#tileContainer iframe {
+.embedContainer iframe {
     border: none;
 }
 
@@ -695,4 +683,9 @@ line-height: 20px;
 
 #questionDiv {
     margin-bottom: 10px;
+}
+
+.infoImg {
+    width: 16px;
+    margin-bottom: 3px;
 }

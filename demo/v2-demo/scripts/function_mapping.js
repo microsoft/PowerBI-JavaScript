@@ -48,8 +48,8 @@ function IsNotSupported(funcName) {
         return false
     }
 
-    const dashboardOrTileOrQnaMatch = funcName.match(/Dashboard|Tile|Qna/);
-    if (dashboardOrTileOrQnaMatch) {
+    const notReportMatch = funcName.match(/Dashboard|Tile|Qna|Visual/);
+    if (notReportMatch) {
       return false;
     }
 
@@ -60,12 +60,12 @@ function IsNotSupported(funcName) {
         return false;
     }
 
-    var runFunc = mockDict[funcName]; 
+    var runFunc = mockDict[funcName];
     return (runFunc && runFunc === datasetNotSupported) ? true : false;
 }
 
 function IsMock(funcName) {
-    return (IsBasicMock(funcName) || IsSaveMock(funcName) || IsCreateMock(funcName) || IsNotSupported(funcName)); 
+    return (IsBasicMock(funcName) || IsSaveMock(funcName) || IsCreateMock(funcName) || IsNotSupported(funcName));
 }
 
 function mapFunc(func) {
@@ -75,7 +75,7 @@ function mapFunc(func) {
 
 function getFuncName(func) {
     var funcName = func.name;
-    
+
     if (!funcName)
     {
         // in IE, func.name is invalid method. so, function name should be extracted manually.

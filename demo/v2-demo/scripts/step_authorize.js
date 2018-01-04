@@ -12,6 +12,7 @@ var QnaRefreshTokenTimer = 0;
 
 const EntityType = {
     Report : "Report",
+    Visual : "Visual",
     Dashboard : "Dashboard",
     Tile : "Tile",
     Qna: "Qna"
@@ -40,10 +41,14 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
             }
         }
 
-        if (embedConfig.type === "report")
+        if (embedConfig.type === "report" || embedConfig.type === "visual")
         {
+            // Set single visual embed sample details.
+            SetSession(SessionKeys.PageName, "ReportSection3");
+            SetSession(SessionKeys.VisualName, "VisualContainer7");
+
             LastReportSampleUrl = url;
-            TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Report);
+            TokenExpirationRefreshListener(embedConfig.minutesToExpiration, embedConfig.type === "report" ? EntityType.Report : EntityType.Visual);
         }
         else if (embedConfig.type === "dashboard")
         {
@@ -53,7 +58,7 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
         {
             TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Qna);
         }
-        else 
+        else
         {
             TokenExpirationRefreshListener(embedConfig.minutesToExpiration, EntityType.Tile);
         }
@@ -63,7 +68,7 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
 function TokenExpirationRefreshListener(minutesToExpiration, entityType) {
     var updateAfterMilliSeconds = (minutesToExpiration - 2) * 60 * 1000;
 
-    if (entityType == EntityType.Report)
+    if (entityType == EntityType.Report || entityType == EntityType.Visual)
     {
         if (ReportRefreshTokenTimer)
         {
@@ -125,6 +130,11 @@ function LoadSampleReportIntoSession() {
     return FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */);
 }
 
+function LoadSampleVisualIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Visual);
+    return FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */);
+}
+
 function LoadSampleDatasetIntoSession() {
     SetSession(SessionKeys.EntityType, EntityType.Report);
     return FetchUrlIntoSession(datasetUrl, false /* updateCurrentToken */);
@@ -152,6 +162,11 @@ function OpenEmbedStepWithSample(entityType) {
     {
         SetSession(SessionKeys.IsSampleReport, true);
         OpenEmbedStep(EmbedViewMode, EntityType.Report);
+    }
+    else if (entityType == EntityType.Visual)
+    {
+        SetSession(SessionKeys.IsSampleReport, true);
+        OpenEmbedStep(EmbedViewMode, EntityType.Visual);
     }
     else if (entityType == EntityType.Dashboard)
     {
@@ -195,7 +210,7 @@ function WarmStartSampleReportEmbed() {
       type: 'report',
       embedUrl: embedUrl
     };
-  
+
     // Preload sample report
     powerbi.preload(config);
   });

@@ -58,7 +58,7 @@ function _Embed_BasicEmbed() {
 
     report.on("error", function(event) {
         Log.log(event.detail);
-        
+
         report.off("error");
     });
 
@@ -69,6 +69,63 @@ function _Embed_BasicEmbed() {
             Log.logText('In order to interact with the new report, create a new token and load the new report');
          }
      });
+}
+
+function _Embed_VisualEmbed() {
+    // Read embed application token from textbox
+    var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
+    var txtEmbedUrl = $('#txtReportEmbed').val();
+
+    // Read report Id from textbox
+    var txtReportId = $('#txtEmbedReportId').val();
+
+    // Read page name from textbox
+    var txtPageName = $('#txtPageName').val();
+
+    // Read visual name from textbox
+    var txtVisualName = $('#txtVisualName').val();
+
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config= {
+        type: 'visual',
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
+        accessToken: txtAccessToken,
+        embedUrl: txtEmbedUrl,
+        id: txtReportId,
+        pageName: txtPageName,
+        visualName: txtVisualName
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#visualContainer')[0];
+
+    // Embed the report and display it within the div container.
+    var report = powerbi.embed(embedContainer, config);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("loaded");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("loaded", function() {
+        Log.logText("Loaded");
+    });
+
+    report.on("error", function(event) {
+        Log.log(event.detail);
+
+        report.off("error");
+    });
 }
 
 function _Embed_DashboardEmbed() {
@@ -115,7 +172,7 @@ function _Embed_DashboardEmbed() {
 
     dashboard.on("error", function(event) {
         Log.log(event.detail);
-        
+
         dashboard.off("error");
     });
 
@@ -269,7 +326,7 @@ function _Embed_EmbedWithDefaultFilter() {
     var txtAccessToken = $('#txtAccessToken').val();
     var txtEmbedUrl = $('#txtReportEmbed').val();
     var txtEmbedReportId = $('#txtEmbedReportId').val();
-    
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -282,7 +339,7 @@ function _Embed_EmbedWithDefaultFilter() {
       operator: "In",
       values: ["Lindseys"]
     };
-    
+
     var embedConfiguration = {
         type: 'report',
         tokenType: models.TokenType.Embed,
@@ -295,7 +352,7 @@ function _Embed_EmbedWithDefaultFilter() {
         },
         filters: [filter]
     };
-    
+
     var embedContainer = document.getElementById('embedContainer');
     powerbi.embed(embedContainer, embedConfiguration);
 }
@@ -343,7 +400,6 @@ function _Embed_TileEmbed() {
     // Tile.on will add an event handler which prints to Log window.
     tile.on("tileLoaded", function(event) {
         Log.logText("Tile loaded event");
-        Log.log(event.detail);
     });
 
     // Tile.off removes a given event handler if it exists.
@@ -368,7 +424,7 @@ function _Embed_Create() {
 
     // Read embed type from radio
     var tokenType = $('input:radio[name=tokenType]:checked').val();
-    
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -380,7 +436,7 @@ function _Embed_Create() {
         embedUrl: txtEmbedUrl,
         datasetId: txtEmbedDatasetId,
     };
-    
+
     // Grab the reference to the div HTML element that will host the report
     var embedContainer = $('#embedContainer')[0];
 
@@ -420,7 +476,7 @@ function _Mock_Embed_Create() {
 
     // Read embed type from radio
     var tokenType = $('input:radio[name=tokenType]:checked').val();
-    
+
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -435,7 +491,7 @@ function _Mock_Embed_Create() {
             useCustomSaveAsDialog: true
         }
     };
-    
+
     // Grab the reference to the div HTML element that will host the report
     var embedContainer = $('#embedContainer')[0];
 
@@ -539,11 +595,8 @@ function _Report_UpdateSettings() {
 
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
-        .then(function (result) {
-            $("#result").html(result);
-        })
         .catch(function (error) {
-            $("#result").html(error);
+            Log.log(errors);
         });
 }
 
@@ -554,7 +607,7 @@ function _Report_GetPages() {
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // Retrieve the page collection and loop through to collect the 
+    // Retrieve the page collection and loop through to collect the
     // page name and display name of each page and display the value.
     report.getPages()
         .then(function (pages) {
@@ -575,25 +628,22 @@ function _Report_SetPage() {
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // setPage will change the selected view to the page you indicate.
-    // This is the actual page name not the display name.
-    report.setPage("ReportSection2")
-        .then(function (result) {
-            Log.log(result);
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
-
     // Report.off removes a given event handler if it exists.
     report.off("pageChanged");
 
-    // Report.on will add an event handler which prints page 
+    // Report.on will add an event handler which prints page
     // name and display name to Log window.
     report.on("pageChanged", function(event) {
         var page = event.detail.newPage;
         Log.logText(page.name + " - " + page.displayName);
     });
+
+    // setPage will change the selected view to the page you indicate.
+    // This is the actual page name not the display name.
+    report.setPage("ReportSection2")
+        .catch(function (errors) {
+            Log.log(errors);
+        });
 }
 
 function _Report_GetFilters() {
@@ -602,7 +652,7 @@ function _Report_GetFilters() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Get the filters applied to the report.
     report.getFilters()
         .then(function (filters) {
@@ -631,13 +681,10 @@ function _Report_SetFilters() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Set the filter for the report.
     // Pay attention that setFilters receives an array.
     report.setFilters([filter])
-        .then(function (result) {
-            Log.log(result);
-        })
         .catch(function (errors) {
             Log.log(errors);
         });
@@ -652,9 +699,6 @@ function _Report_RemoveFilters() {
 
     // Remove the filters currently applied to the report.
     report.removeFilters()
-        .then(function (result) {
-            Log.log(result);
-        })
         .catch(function (errors) {
             Log.log(errors);
         });
@@ -669,9 +713,6 @@ function _Report_PrintCurrentReport() {
 
     // Trigger the print dialog for your browser.
     report.print()
-        .then(function (result) {
-            Log.log(result);
-        })
         .catch(function (errors) {
             Log.log(errors);
         });
@@ -707,6 +748,73 @@ function _Report_Refresh() {
             Log.logText("Refreshed");
         })
         .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _Report_ApplyCustomLayout() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Define default visual layout: visible in 400x300.
+    let defaultLayout = {
+      width: 400,
+      height: 300,
+      displayState: {
+        mode: models.VisualContainerDisplayMode.Hidden
+      }
+    };
+
+    // Define page size as custom size: 1000x580.
+    let pageSize = {
+        type: models.PageSizeType.Custom,
+        width: 1000,
+        height: 580
+    };
+
+    // Page layout: two visible visuals in fixed position.
+    let pageLayout = {
+      defaultLayout: defaultLayout,
+      visualsLayout: {
+        "VisualContainer7": {
+          x: 70,
+          y: 100,
+          displayState: {
+            mode: models.VisualContainerDisplayMode.Visible
+          }
+        },
+        "VisualContainer4": {
+          x: 540,
+          y: 100,
+          displayState: {
+            mode: models.VisualContainerDisplayMode.Visible
+          }
+        }
+      }
+    };
+
+    let settings = {
+      filterPaneEnabled: false,
+      navContentPaneEnabled: false,
+      layoutType: models.LayoutType.Custom,
+      customLayout: {
+        pageSize: pageSize,
+        displayOption: models.DisplayOption.FitToPage,
+        pagesLayout: {
+          "ReportSection3": pageLayout
+        }
+      }
+    }
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    report.updateSettings(settings)
+        .catch(function (error) {
             Log.log(errors);
         });
 }
@@ -776,7 +884,7 @@ function _Report_saveAs() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     var saveAsParameters = {
         name: "newReport"
     };
@@ -817,11 +925,8 @@ function _Report_Extensions_OptionsMenu() {
 
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
-        .then(function (result) {
-            $("#result").html(result);
-        })
         .catch(function (error) {
-            $("#result").html(error);
+            Log.log(errors);
         });
 
     // Report.on will add an event handler to commandTriggered event which prints to console window.
@@ -865,11 +970,8 @@ function _Report_Extensions_ContextMenu() {
 
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
-        .then(function (result) {
-            $("#result").html(result);
-        })
         .catch(function (error) {
-            $("#result").html(error);
+            Log.log(errors);
         });
 
     // Report.on will add an event handler to commandTriggered event which prints to console window.
@@ -892,13 +994,14 @@ function _Page_SetActive() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Retrieve the page collection, and then set the second page to be active.
     report.getPages()
         .then(function (pages) {
-            pages[1].setActive().then(function (result) {
-                Log.log(result);
-            });
+            pages[1].setActive()
+                .catch(function (errors) {
+                    Log.log(errors);
+                });
         })
         .catch(function (errors) {
            Log.log(errors);
@@ -911,14 +1014,14 @@ function _Page_GetFilters() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Retrieve the page collection and get the filters for the first page.
     report.getPages()
         .then(function (pages) {
           // Retrieve first page.
-          var activePage = pages[0];
+          var firstPage = pages[0];
 
-          activePage.getFilters()
+          firstPage.getFilters()
             .then(function (filters) {
                 Log.log(filters);
             })
@@ -942,9 +1045,9 @@ function _Page_GetVisuals() {
     report.getPages()
       .then(function (pages) {
         // Retrieve first page.
-        var activePage = pages[0];
+        var firstPage = pages[0];
 
-        activePage.getVisuals()
+        firstPage.getVisuals()
           .then(function (visuals) {
             Log.log(
               visuals.map(function(visual) {
@@ -972,7 +1075,7 @@ function _Page_SetFilters() {
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // Build the filter you want to use. For more information, see Constructing 
+    // Build the filter you want to use. For more information, see Constructing
     // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
     const filter = {
         $schema: "http://powerbi.com/product/schema#basic",
@@ -989,12 +1092,9 @@ function _Page_SetFilters() {
     report.getPages()
         .then(function (pages) {
           // Retrieve first page.
-          var activePage = pages[0];
+          var firstPage = pages[0];
 
-          activePage.setFilters([filter])
-            .then(function (result) {
-                Log.log(result);
-            })
+          firstPage.setFilters([filter])
             .catch(function (errors) {
                 Log.log(errors);
             });
@@ -1010,17 +1110,14 @@ function _Page_RemoveFilters() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Retrieve the page collection and remove the filters for the first page.
     report.getPages()
         .then(function (pages) {
           // Retrieve first page.
-          var activePage = pages[0];
+          var firstPage = pages[0];
 
-          activePage.removeFilters()
-            .then(function (result) {
-                Log.log(result);
-            })
+          firstPage.removeFilters()
             .catch(function (errors) {
                 Log.log(errors);
             });
@@ -1157,7 +1254,7 @@ function _DashboardEvents_TileClicked() {
 function _Qna_SetQuestion() {
     // Get a reference to the embedded Q&A HTML element
     var qnaContainer = $('#qnaContainer')[0];
-    
+
     // Get a reference to the embedded Q&A.
     qna = powerbi.get(qnaContainer);
 
@@ -1173,7 +1270,7 @@ function _Qna_SetQuestion() {
 function _Qna_QuestionChanged() {
     // Get a reference to the embedded Q&A HTML element
     var qnaContainer = $('#qnaContainer')[0];
-    
+
     // Get a reference to the embedded Q&A.
     qna = powerbi.get(qnaContainer);
 
@@ -1184,4 +1281,28 @@ function _Qna_QuestionChanged() {
     qna.on("visualRendered", function(event) {
         Log.log(event.detail);
     });
+}
+
+// ---- Visual Events Listener ----------------------------------------------------
+
+function _Visual_DataSelected() {
+    // Get a reference to the embedded visual HTML element
+    var visualContainer = $('#visualContainer')[0];
+
+    // Get a reference to the embedded visual.
+    visual = powerbi.get(visualContainer);
+
+    // Visual.off removes a given event listener if it exists.
+    visual.off("dataSelected");
+
+    // Visual.on will add an event listener.
+    visual.on("dataSelected", function(event) {
+        var data = event.detail;
+        Log.log(data);
+    });
+
+    // Select Run and select an element of a visualization.
+    // For example, a bar in a bar chart. You should see an entry in the Log window.
+
+    Log.logText("Select data to see events in Log window.");
 }

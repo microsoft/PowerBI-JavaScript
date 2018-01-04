@@ -13,7 +13,9 @@ const SessionKeys = {
     EmbedMode: "embedMode",
     TokenType: "tokenType",
     EntityType: "entityType",
-    SampleId: "SampleId"
+    SampleId: "SampleId",
+    PageName: "PageName",
+    VisualName: "VisualName"
 };
 
 function GetParameterByName(name, url) {
@@ -46,13 +48,22 @@ function UpdateSession(button, sessionKey) {
     }
 }
 
+function SetTextboxFromSessionOrUrlParam(sessionKey, textboxSelector) {
+    var value = GetParameterByName(sessionKey);
+    if (!value)
+    {
+        value = GetSession(sessionKey);
+    }
+    $(textboxSelector).val(value);
+}
+
 function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector, embedIdSelector, dashboardIdSelector) {
     var accessToken = GetParameterByName(SessionKeys.AccessToken);
     if (!accessToken)
     {
         accessToken = GetSession(SessionKeys.AccessToken);
     }
-    
+
     var embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
     if (!embedUrl)
     {

@@ -13,10 +13,11 @@
             <div class="editorTitle">
                 <div class="editorTitleText">Embedded view</div>
             </div>
-            <div id="embedContainer"></div>
-            <div id="dashboardContainer"></div>
-            <div id="tileContainer"></div>
-            <div id="qnaContainer"></div>
+            <div id="embedContainer" class="embedContainer"></div>
+            <div id="dashboardContainer" class="embedContainer"></div>
+            <div id="visualContainer" class="embedContainer"></div>
+            <div id="tileContainer" class="embedContainer"></div>
+            <div id="qnaContainer" class="embedContainer"></div>
         </div>
     </div>
 </div>
@@ -26,7 +27,7 @@ $(document).ready(function() {
     $("#authorize-step-wrapper").load("step_authorize.html");
 
     LoadLogWindow("#logWindow");
-    
+
     var modeUrlParam = GetParameterByName("mode");
     var mode = modeUrlParam ? modeUrlParam : "view";
 
@@ -36,6 +37,9 @@ $(document).ready(function() {
         entityType = EntityType.Dashboard;
     } else if (entityTypeUrlParam == "tile") {
         entityType = EntityType.Tile;
+    }
+    else if (entityTypeUrlParam == "visual") {
+        entityType = EntityType.Visual;
     } else {
         entityType = EntityType.Report;
     }
