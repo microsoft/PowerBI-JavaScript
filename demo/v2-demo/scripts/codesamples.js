@@ -1135,6 +1135,24 @@ function _Page_RemoveFilters() {
         });
 }
 
+function _Page_HasLayout() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+    
+    // Retrieve the page collection and check if the first page has a MobilePortrait layout.
+    report.getPages().then(function (pages) {
+        pages[0].hasLayout(models.LayoutType.MobilePortrait).then(function(hasLayout) {
+            Log.log(hasLayout);
+        })
+    });
+}
+
 // ---- Event Listener ----------------------------------------------------
 
 function _Events_PageChanged() {

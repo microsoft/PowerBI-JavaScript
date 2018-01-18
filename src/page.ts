@@ -157,4 +157,23 @@ export class Page implements IPageNode, IFilterable {
         throw response.body;
       });
   }
+
+  /**
+   * Checks if page has layout.
+   * 
+   * ```javascript
+   * page.hasLayout(layoutType)
+   *  .then(hasLayout: boolean => { ... });
+   * ```
+   * 
+   * @returns {(Promise<boolean>)}
+   */
+  hasLayout(layoutType): Promise<boolean> {
+    let layoutTypeEnum = models.LayoutType[layoutType];
+    return this.report.service.hpm.get<boolean>(`/report/pages/${this.name}/layoutTypes/${layoutTypeEnum}`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+      .then(response => response.body,
+      response => {
+        throw response.body;
+      });
+  }
 }

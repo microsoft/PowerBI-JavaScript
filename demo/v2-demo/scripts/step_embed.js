@@ -81,6 +81,9 @@ function Page_RemoveFilters() {
     SetCode(_Page_RemoveFilters);
 }
 
+function Page_HasLayout() {
+    SetCode(_Page_HasLayout);
+}
 // ---- Event Listener ----------------------------------------------------
 
 function Events_PageChanged() {

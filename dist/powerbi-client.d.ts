@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.6 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.4.7 | (c) 2016 Microsoft Corporation MIT */
 declare module "config" {
     const config: {
         version: string;
@@ -619,6 +619,17 @@ declare module "page" {
          * @returns {Promise<VisualDescriptor[]>}
          */
         getVisuals(): Promise<VisualDescriptor[]>;
+        /**
+         * Checks if page has layout.
+         *
+         * ```javascript
+         * page.hasLayout(layoutType)
+         *  .then(hasLayout: boolean => { ... });
+         * ```
+         *
+         * @returns {(Promise<boolean>)}
+         */
+        hasLayout(layoutType: any): Promise<boolean>;
     }
 }
 declare module "defaults" {
