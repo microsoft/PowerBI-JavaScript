@@ -200,20 +200,26 @@ function OpenEmbedStepFromUserSettings() {
 }
 
 function WarmStartSampleReportEmbed() {
-  FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */).then(function (response) {
     var embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
-    if (!embedUrl)
-    {
-        embedUrl = GetSession(SessionKeys.EmbedUrl);
+    if (embedUrl) {
+        preload(embedUrl);
+        return;
     }
-    const config= {
-      type: 'report',
-      embedUrl: embedUrl
+
+  FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */).then(function (response) {
+    embedUrl = GetSession(SessionKeys.EmbedUrl);
+    preload(embedUrl);
+  });
+}
+
+function preload(embedUrl) {
+    const config = {
+        type: 'report',
+        embedUrl: embedUrl
     };
 
     // Preload sample report
     powerbi.preload(config);
-  });
 }
 
 function setSession(accessToken, embedUrl, embedId, dashboardId)
