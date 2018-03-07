@@ -10,6 +10,10 @@ JavaScript library for embedding Power BI into your apps.
 [![GitHub tag](https://img.shields.io/github/tag/microsoft/powerbi-javascript.svg)](https://github.com/Microsoft/PowerBI-JavaScript/tags)
 [![Gitter](https://img.shields.io/gitter/room/Microsoft/PowerBI-JavaScript.svg)](https://gitter.im/Microsoft/PowerBI-JavaScript)
 
+## Issues
+[Power BI Support Page](https://powerbi.microsoft.com/en-us/support/)
+[Power BI Ideas](https://ideas.powerbi.com)
+
 ## Wiki
 See the [wiki](https://github.com/Microsoft/PowerBI-JavaScript/wiki) for more details about embedding, service configuration, setting default page, page navigation, dynamically applying filters, and more.
 
