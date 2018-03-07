@@ -37,60 +37,49 @@ function OpenEmbedStep(mode, entityType, tokenType) {
     $("#authorize-step-wrapper").hide();
     $("#embed-and-interact-steps-wrapper").show();
 
-    let containers = $(".embedContainer");
-    containers.hide();
+    let containers = $(".iframeContainer");
+    containers.removeClass(active_class);
 
+    var containerID = getEmbedContainerID(entityType);
+    var classPrefix = getEmbedContainerClassPrefix(entityType);
+
+    $(classPrefix + 'Container').removeAttr('id');
+    $(classPrefix + 'MobileContainer').removeAttr('id');
+
+    var activeContainer = classPrefix + ($(".desktop-view").hasClass(active_class) ? 'Container' : 'MobileContainer');
+
+    $(activeContainer).attr('id', containerID);
+    $(activeContainer).addClass(active_class);
+
+    const widthHeightRatio = 0.4;
     if (entityType == EntityType.Report)
     {
         $("#settings").load("settings_embed.html", function() {
             OpenEmbedMode(mode, entityType, tokenType);
-
-            // Fix report size ratio
-            var embedContainer = $("#embedContainer");
-            embedContainer.height(embedContainer.width() * 0.59);
-            embedContainer.show();
         });
     }
     else if (entityType == EntityType.Visual)
     {
         $("#settings").load("settings_embed_visual.html", function() {
             OpenEmbedMode(mode, entityType, tokenType);
-
-            // Fix report size ratio
-            var visualContainer = $("#visualContainer");
-            visualContainer.height(visualContainer.width() * 0.59);
-            visualContainer.show();
         });
     }
     else if (entityType == EntityType.Dashboard)
     {
         $("#settings").load("settings_embed_dashboard.html", function() {
             OpenEmbedMode(mode, entityType, tokenType);
-
-            // Fix report size ratio
-            var dashboardContainer = $("#dashboardContainer");
-            dashboardContainer.height(dashboardContainer.width() * 0.59);
-            dashboardContainer.show();
         });
     }
     else if (entityType == EntityType.Tile)
     {
         $("#settings").load("settings_embed_tile.html", function() {
             OpenEmbedMode(mode, entityType, tokenType);
-
-            var tileContainer = $("#tileContainer");
-            tileContainer.height(tileContainer.width() * 0.59);
-            tileContainer.show();
         });
     }
     else if (entityType == EntityType.Qna)
     {
         $("#settings").load("settings_embed_qna.html", function() {
             OpenEmbedMode(mode, entityType,tokenType);
-
-            var qnaContainer = $("#qnaContainer");
-            qnaContainer.height(qnaContainer.width() * 0.59);
-            qnaContainer.show();
         });
     }
 }
@@ -119,57 +108,56 @@ function OpenInteractStep() {
     else if (entityType == EntityType.Dashboard)
     {
         $("#settings").load("settings_interact_dashboard.html", function() {
-            SetToggleHandler("dashboard-operations-div");
-            SetToggleHandler("dashboard-events-operations-div");
-            LoadCodeArea("#embedCodeDiv", _Dashboard_GetId);
+            SetToggleHandler("operation-categories");
+            LoadCodeArea("#embedCodeDiv", "");
             AddImgToNewOperations();
         });
     }
     else if (entityType == EntityType.Qna)
     {
         $("#settings").load("settings_interact_qna.html", function() {
-            SetToggleHandler("qna-operations-div");
-            SetToggleHandler("qna-events-operations-div");
-            LoadCodeArea("#embedCodeDiv", _Qna_SetQuestion);
+            SetToggleHandler("operation-categories");
+            LoadCodeArea("#embedCodeDiv", "");
             AddImgToNewOperations();
         });
     }
     else if (entityType == EntityType.Visual)
     {
         $("#settings").load("settings_interact_visual.html", function() {
-            SetToggleHandler("visual-operations-div");
-            LoadCodeArea("#embedCodeDiv", _Visual_DataSelected);
+            SetToggleHandler("operation-categories");
+            LoadCodeArea("#embedCodeDiv", "");
             AddImgToNewOperations();
         });
     }
     else
     {
         $("#settings").load("settings_interact.html", function() {
-            SetToggleHandler("report-operations-div");
-            SetToggleHandler("page-operations-div");
-            SetToggleHandler("events-operations-div");
-            SetToggleHandler("editandsave-operations-div");
-            LoadCodeArea("#embedCodeDiv", _Report_GetId);
+            SetToggleHandler("operation-categories");
+            LoadCodeArea("#embedCodeDiv", "");
             AddImgToNewOperations();
         });
-      }
+    }
 }
 
 function setCodeArea(mode, entityType)
 {
+    const isDesktop = $(".desktop-view").hasClass(active_class);
     if (entityType == EntityType.Report)
     {
         if (mode === EmbedViewMode)
         {
-            LoadCodeArea("#embedCodeDiv", _Embed_BasicEmbed);
+            const code = isDesktop ? _Embed_BasicEmbed : _Embed_BasicEmbed_Mobile;
+            LoadCodeArea("#embedCodeDiv", code);
         }
         else if (mode === EmbedEditMode)
         {
-            LoadCodeArea("#embedCodeDiv", _Embed_BasicEmbed_EditMode);
+            const code = isDesktop ? _Embed_BasicEmbed_EditMode : _Embed_MobileEditNotSupported;
+            LoadCodeArea("#embedCodeDiv", code);
         }
         else if (mode === EmbedCreateMode)
         {
-            LoadCodeArea("#embedCodeDiv", _Embed_Create);
+            const code = isDesktop ? _Embed_BasicEmbed_EditMode : _Embed_MobileCreateNotSupported;
+            LoadCodeArea("#embedCodeDiv", code);
         }
     }
     else if (entityType == EntityType.Visual) {
@@ -374,5 +362,72 @@ function ToggleQuestionBox(enabled) {
     else {
         txtQuestion.val("");
         txtQuestion.prop('disabled', true);
+    }
+}
+
+function EmbedAreaDesktopView() {
+    if ($(".desktop-view").hasClass(active_class)) {
+        return;
+    }
+
+    var entityType = GetSession(SessionKeys.EntityType);
+    var mode = GetSession(SessionKeys.EmbedMode);
+
+    $(".desktop-view").show();
+    $(".mobile-view").hide();
+    
+    $(".desktop-view").addClass(active_class);
+    $(".mobile-view").removeClass(active_class);
+
+    if($('#steps-embed').hasClass("steps-li-active")) {
+        // Update embed code area
+        setCodeArea(mode, entityType)
+    }
+
+    var containerID = getEmbedContainerID(entityType);
+    var classPrefix = getEmbedContainerClassPrefix(entityType);
+
+    $(classPrefix + 'MobileContainer').removeAttr('id');
+    $(classPrefix + 'Container').attr('id', containerID);
+
+    $(classPrefix + 'MobileContainer').removeClass(active_class);
+    $(classPrefix + 'Container').addClass(active_class);
+
+    // Check if run button was clicked in the other mode and wasn't clicked on the new mode
+    if ($(classPrefix + "MobileContainer iframe").length && !$(classPrefix + "Container iframe").length) {
+        $('#btnRunCode').click();
+    }
+}
+
+function EmbedAreaMobileView() {
+    if ($(".mobile-view").hasClass(active_class)) {
+        return;
+    }
+
+    var entityType = GetSession(SessionKeys.EntityType);
+    var mode = GetSession(SessionKeys.EmbedMode);
+
+    $(".desktop-view").hide();
+    $(".mobile-view").show();
+
+    $(".desktop-view").removeClass(active_class);
+    $(".mobile-view").addClass(active_class);
+
+    if($('#steps-embed').hasClass("steps-li-active")) {
+        // Update embed code area
+        setCodeArea(mode, entityType)
+    }
+    var containerID = getEmbedContainerID(entityType);
+    var classPrefix = getEmbedContainerClassPrefix(entityType);
+
+    $(classPrefix + 'Container').removeAttr('id');
+    $(classPrefix + 'MobileContainer').attr('id', containerID);
+
+    $(classPrefix + 'Container').removeClass(active_class);
+    $(classPrefix + 'MobileContainer').addClass(active_class);
+
+    // Check if run button was clicked in the other mode and wasn't clicked on the new mode
+    if ($(classPrefix + "Container iframe").length && !$(classPrefix + "MobileContainer iframe").length) {
+        $('#btnRunCode').click();
     }
 }

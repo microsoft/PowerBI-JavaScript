@@ -5,7 +5,7 @@ html {
 }
 
 body {
-    background-color: rgb(241, 241, 241);
+    background-color: #212121;
     font-family: 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
     margin:0;
     padding:0;
@@ -23,7 +23,6 @@ hr {
 header {
     display: block;
     width: 100%;
-    top: 0px;
     z-index: 1030;
     color: rgb(8, 122, 165);
     background-color: rgb(24, 24, 25);
@@ -33,6 +32,18 @@ header {
 a:hover, a:visited, a:link, a:active
 {
     text-decoration: none;
+}
+
+.logo-text-span {
+    position: relative;
+    width: 480px;
+    left: 24px;
+    padding-top: 8px;
+
+    font-family: 'Segoe UI', sans-serif;
+    line-height: normal;
+    font-size: 24px;
+    color: #FFFFFF;
 }
 
 #nextStep {
@@ -174,30 +185,16 @@ a {
     margin-bottom: 30px;
 }
 
-#top-nav-bar {
-    margin-top: 10px;
-}
-
 #top-nav-bar a {
     color: white;
     display: inline-block;
 }
 
-#top-nav-bar a:hover {
-    color: rgb(8, 122, 165);
-}
-
-#top-nav-bar .active {
-    color: rgb(0, 174, 239);
-}
-
 #steps-nav-bar a {
-    color: black;
-    display: inline-block;
-}
-
-#steps-nav-bar a:hover {
-    font-weight: bold;
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    line-height: normal;
+    font-size: 15px;
 }
 
 #steps-nav-bar .active {
@@ -261,30 +258,13 @@ a {
     font-weight: bold;
 }
 
-#navbar {
-    float: left;
-    width: 100%;
-}
-
-#top-ul-dev {
-    float: left;
-}
-
-.top-ul {
-    list-style-type: none;
-    margin: 0px;
-    overflow: hidden;
-    -webkit-margin-before: 0;
-    -webkit-padding-start: 0;
-    line-height: 30px;
-}
-
 .top-ul li {
     float: left;
-    margin-right: 40px;
+    width: 120px;
     text-align: center;
-    line-height: 22px;
-    font-size: 17px;
+    line-height: 18px;
+    font-size: 15px;
+    font-family: 'Segoe UI Semibold', 'Segoe UI', sans-serif;
 }
 
 #top-docs {
@@ -293,12 +273,11 @@ a {
 
 .top-li-active {
     color: white;
-    border-bottom: 1px solid white;
-    padding-bottom: 3px;
+    border-bottom: 2px solid #F2C811;
+    padding-bottom: 6px;
 }
 
 #steps-ul-dev {
-    float: left;
     width: 100%;
 }
 
@@ -317,7 +296,7 @@ a {
     text-align: left;
     line-height: 22px;
     font-weight: 400;
-    height: 40px;
+    height: 48px;
     width: 100%;
     margin-bottom: 10px;
     vertical-align: middle;
@@ -330,97 +309,64 @@ a {
 .steps-li-active {
     color: white;
     text-decoration: none;
-    background-color: #666666;
+    background-color: #121212;
 }
 
 .operations-div {
     height: 100%;
-    width: 95%;
-    background-color: rgb(231, 232, 233);
+    width: 100%;
     text-align: center;
     overflow-y: scroll;
     position: relative;
 }
 
-#operations-ul a {
-    text-decoration: none;
-    color: rgb(27, 27, 27);
-    width: 100%;
-    text-align: center;
-}
-
-#operations-ul li:hover {
-    border-bottom:  3px solid #444444;
-}
-
-#operations-ul {
-    -webkit-margin-before: 0;
-    -webkit-margin-after: 0;
-    -webkit-padding-start: 0;
-}
-
-#operations-ul li {
-    margin: 0px 30px 0px 0px;
-    display: inline-block;
-    /* font-size: 14px; */
-    color: #444444;
-}
-
-#operations-ul > .active {
-    border-bottom: 3px #444444 solid;
-}
-
 #wrapper-operations-div {
-    padding: 10px 20px 15px 20px;
-    background-color: rgb(231, 232, 233);
+    padding: 10px 20px 15px 8px;
+    background-color: white;
     width: 100%;
-    height: 300px;
+    height: 305px;
     overflow: hidden;
     display: inline-block;
 }
 
-#report-operations-div::-webkit-scrollbar-track, #page-operations-div::-webkit-scrollbar-track, #events-operations-div::-webkit-scrollbar-track
+#highlighter {
+    padding: 10px 20px 15px 20px;
+    background-color: white;
+}
+
+#operation-categories::-webkit-scrollbar-track
 {
     border-radius: 10px;
     background-color: transparent;
 }
 
-#report-operations-div::-webkit-scrollbar, #page-operations-div::-webkit-scrollbar, #events-operations-div::-webkit-scrollbar
+#operation-categories::-webkit-scrollbar 
 {
-    width:10px;
-    height:10px;
+    width: 6px;
+    height: 10px;
     background-color: transparent;
 }
 
-#report-operations-div::-webkit-scrollbar-thumb, page-operations-div::-webkit-scrollbar-thumb, #events-operations-div::-webkit-scrollbar-thumb
+#operation-categories::-webkit-scrollbar-thumb
 {
     border-radius: 10px;
-    background-color: #888888;
+    background-color: #E1E1E1;
 }
 
-#operations-ul-wrapper img {
-    width: 20px;
-    position: relative;
-    top: 3px;
-}
-
-#operation-categories {
-    margin-bottom: 0px;
-}
-
-#selected-catogory-button {
+#txtCode::-webkit-scrollbar-track, #txtResponse::-webkit-scrollbar-track {
+    border-radius: 10px;
     background-color: transparent;
-    border: none;
-    color: rgb(27, 27, 27);
-    min-width: 120px;
-    text-align: left;
 }
 
-.function-ul {
-    width: 100%;
-    clear: both;
-    margin: 0;
-    padding: 0px 20px 0px 0px;
+#txtCode::-webkit-scrollbar, #txtResponse::-webkit-scrollbar {
+    width: 6px;
+    height: 10px;
+    background: transparent
+}
+
+#txtCode::-webkit-scrollbar-thumb, #txtResponse::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #E1E1E1;
 }
 
 .newOperation span {
@@ -431,35 +377,56 @@ a {
     vertical-align: center;
 }
 
-.function-ul li {
+.function-ul {
+    width: 100%;
+    clear: both;
+    margin: 0;
+    padding: 0px 20px 0px 35px;
+    font-size: 12px;
+}
+
+.operations-ul {
+    width: 100%;
+    clear: both;
+    margin: 0;
+    padding: 0px 20px 0px 0px;
+}
+
+.function-ul li, .operations-ul li {
     width: 100%;
     clear: both;
     cursor: default;
-}
-
-.function-ul a {
-    text-decoration: none;
-    color: rgb(27, 27, 27);
-}
-
-.function-ul .active {
-    background-color: rgb(88, 88, 90);
-    color: white;
-}
-
-.function-ul a:hover {
-    background-color: #888888;
-}
-
-.function-ul li {
-    list-style-type: none;
-    margin: 0px;
     overflow: hidden;
     -webkit-margin-before: 0;
     -webkit-padding-start: 0;
     margin: 5px 0px;
     text-align: left;
-    padding: 3px;
+    padding: 3px 3px 0 0;
+}
+
+.operations-ul > li:before {
+    content: " ";
+    background: url('../images/expand.svg') center left;
+    background-repeat: no-repeat;
+    background-size: 8px 12px;
+    padding-right: 25px;
+    color: black;
+}
+
+.operations-ul > li.active:before {
+    background: url('../images/collapse.svg') center left;
+    background-repeat: no-repeat;
+    background-size: 12px 8px;
+}
+
+.operations-ul a {
+    text-decoration: none;
+    color: rgb(27, 27, 27);
+}
+
+.function-ul .active, .function-ul .active a {
+    color: #3E65FF;
+    font-weight: bold;
 }
 
 .td-field-name {
@@ -488,6 +455,7 @@ a {
 
 .editorTitle {
     margin-bottom: 5px;
+    font-weight: bold;
 }
 
 #GoToInteractStep {
@@ -496,42 +464,61 @@ a {
 }
 
 .textAreaControls {
-    text-align: right;
+    background-color: #FAFAFA;
     position: relative;
     z-index: 1;
-    height: 30px;
+    height: 40px;
     padding: 10px 20px;
     font-size: 14px;
+    font-weight: bold;
 }
 
 .textAreaControl {
-    color: rgb(127, 127, 127);
     background-color: transparent;
     border: none;
-    margin-right: 5px;
+    outline:none;
+    margin-right: 40px;
 }
 
 .textAreaControl img {
-    width: 16px;
+    width: 20px;
     height: 16px;
     position: relative;
     top: -2px;
+    padding-right: 3px;
+    right: 2px;
+    object-fit: scale-down;
+}
+
+.responseTextAreaWrapper {
+    padding: 10px 20px 15px 20px;
+    background-color: white; 
 }
 
 .responseTextArea {
     width: 100%;
-    height: 300px;
+    height: 240px;
     border: none;
-    padding-top: 40px;
     position: relative;
-    top: -30px;
-    padding-left: 10px;
-    margin-bottom: -30px;
+    overflow-y: auto;
+    resize: none;
+}
+
+#highlighter {
+    height: 265px;
 }
 
 .responseDiv {
     width: 100%;
     float: left;
+}
+
+.authorizeButton {
+    background-color: #333333;
+    border: none;
+    color: white;
+    padding: 5px 30px;
+    width: 225px;
 }
 
 .blueButton {
@@ -558,14 +545,11 @@ a {
 
 #txtCode {
     width: 100%;
-    height: 300px;
+    height: 240px;
     border: none;
-    padding: 20px;
     position: relative;
-    top: -30px;
-    background: #FFFFFF;
-	overflow: auto;
-	white-space: pre-wrap;
+    background: white;
+	overflow-y: auto;
 }
 
 #authStepDiv {
@@ -624,23 +608,14 @@ a {
     display: inline-block;
 }
 
-#selected-catogory-button-wrapper img {
-    width: 20px;
-    position: relative;
-    top: -1px;
-}
-
 .checkbox.input {
     width: auto;
 }
 
 .stepsButton {
-
-height: 100%;
-
-padding: 10px 0px 0px 10px;
-
-line-height: 20px;
+    height: 100%;
+    padding: 16px 0px 0px 16px;
+    line-height: 20px;
 }
 
 .video {
@@ -673,7 +648,7 @@ line-height: 20px;
     cursor: default;
 }
 
-.embedContainer iframe {
+.desktop-view iframe {
     border: none;
 }
 
@@ -688,4 +663,73 @@ line-height: 20px;
 .infoImg {
     width: 16px;
     margin-bottom: 3px;
+}
+
+.mobile-view {
+    display: none;
+    background: #FFFFFF;
+    padding: 16px;
+}
+
+.desktop-view {
+    display: none;
+    background: #FFFFFF;
+    height: 85vh;
+}
+
+.mobile-view.active, .desktop-view.active {
+    display: block;
+}
+
+.phone-frame {
+    border-radius: 30px;
+    background: #EAEAEA;
+    width: 408px;
+    width: 44vh;
+    height: 787px;
+    height: 85vh;
+    margin: auto;
+}
+
+.phone-top {
+    position: relative;
+    width: 100%;
+    height: 48px;
+}
+
+.phone-bottom {
+    position: relative;
+    width: 100%;
+    height: 72px;
+}
+
+
+.phone-speaker{
+    position: relative;
+    width: 48px;
+    height: 8px;
+    background: #C4C4C4;
+    border-radius: 4px;
+    margin: auto;
+    top: 21px;
+}
+
+.phone-screen {
+    position: relative;
+    width: 375px;
+    height: 667px;
+    width: calc(100% - 33px);
+    height: calc(100% - 120px) !important;
+    margin: auto;
+    background: #FFFFFF;
+}
+
+.phone-button {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background: #C4C4C4;
+    border-radius: 50%;
+    margin: auto;
+    top: 16px;
 }

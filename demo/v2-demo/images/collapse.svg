@@ -1,0 +1,45 @@
+<svg width="22" height="12" viewBox="0 0 22 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>collapse</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="matrix(2 0 0 2 -3230 -330)">
+<rect x="1615" y="165" width="11" height="6" fill="#E5E5E5"/>
+<clipPath id="clip-0" clip-rule="evenodd">
+<path d="M 1472 0L 2912 0L 2912 890L 1472 890L 1472 0Z" fill="#FFFFFF"/>
+</clipPath>
+<g id="Desktop HD" clip-path="url(#clip-0)">
+<path d="M 1472 0L 2912 0L 2912 890L 1472 890L 1472 0Z" fill="#F1F1F1"/>
+<clipPath id="clip-1" clip-rule="evenodd">
+<path d="M 1600 96L 2912 96L 2912 893L 1600 893L 1600 96Z" fill="#FFFFFF"/>
+</clipPath>
+<g id="Frame" clip-path="url(#clip-1)">
+<path d="M 1600 96L 2912 96L 2912 893L 1600 893L 1600 96Z" fill="#F1F1F1"/>
+<g id="section">
+<clipPath id="clip-2" clip-rule="evenodd">
+<path d="M 1608 144L 2032 144L 2032 432L 1608 432L 1608 144Z" fill="#FFFFFF"/>
+</clipPath>
+<g id="openList" clip-path="url(#clip-2)">
+<path d="M 1608 144L 2032 144L 2032 432L 1608 432L 1608 144Z" fill="#FFFFFF"/>
+<g id="Group">
+<clipPath id="clip-3" clip-rule="evenodd">
+<path d="M 1608 152L 2010 152L 2010 184L 1608 184L 1608 152Z" fill="#FFFFFF"/>
+</clipPath>
+<g id="apiItem" clip-path="url(#clip-3)">
+<clipPath id="clip-4" clip-rule="evenodd">
+<path d="M 1608 156L 1632 156L 1632 180L 1608 180L 1608 156Z" fill="#FFFFFF"/>
+</clipPath>
+<g id="ic" clip-path="url(#clip-4)">
+<g id="collapse">
+<use xlink:href="#path0_fill" transform="matrix(6.12323e-17 1 -1 6.12323e-17 1625.23 165.266)"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" d="M 0.59082 9.75586L 0 9.16504L 4.28711 4.87793L 0 0.59082L 0.59082 0L 5.46875 4.87793L 0.59082 9.75586Z"/>
+</defs>
+</svg>

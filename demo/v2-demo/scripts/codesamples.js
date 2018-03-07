@@ -71,6 +71,72 @@ function _Embed_BasicEmbed() {
      });
 }
 
+function _Embed_BasicEmbed_Mobile() {
+    // Read embed application token from textbox
+    var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
+    var txtEmbedUrl = $('#txtReportEmbed').val();
+
+    // Read report Id from textbox
+    var txtEmbedReportId = $('#txtEmbedReportId').val();
+
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // We give All permissions to demonstrate switching between View and Edit mode and saving report.
+    var permissions = models.Permissions.All;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config= {
+        type: 'report',
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
+        accessToken: txtAccessToken,
+        embedUrl: txtEmbedUrl,
+        id: txtEmbedReportId,
+        permissions: permissions,
+        settings: {
+            filterPaneEnabled: true,
+            navContentPaneEnabled: true,
+            layoutType: models.LayoutType.MobilePortrait
+        }
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Embed the report and display it within the div container.
+    var report = powerbi.embed(embedContainer, config);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("loaded");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("loaded", function() {
+        Log.logText("Loaded");
+    });
+
+    report.on("error", function(event) {
+        Log.log(event.detail);
+
+        report.off("error");
+    });
+
+    report.off("saved");
+    report.on("saved", function(event) {
+        Log.log(event.detail);
+        if(event.detail.saveAs) {
+            Log.logText('In order to interact with the new report, create a new token and load the new report');
+         }
+     });
+}
+
 function _Embed_VisualEmbed() {
     // Read embed application token from textbox
     var txtAccessToken = $('#txtAccessToken').val();
@@ -320,6 +386,14 @@ function _Embed_BasicEmbed_EditMode() {
           Log.logText('In order to interact with the new report, create a new token and load the new report');
         }
     });
+}
+
+function _Embed_MobileEditNotSupported() {
+    // Edit mode is not supported on mobile.
+}
+
+function _Embed_MobileCreateNotSupported() {
+    // Create mode is not supported on mobile.
 }
 
 function _Embed_EmbedWithDefaultFilter() {
@@ -1220,6 +1294,27 @@ function _Events_SaveAsTriggered() {
     Log.logText("Select SaveAs to see events in Log window.");
 }
 
+function _Events_BookmarkApplied() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Report.off removes a given event listener if it exists.
+    report.off("bookmarkApplied");
+
+    // Report.on will add an event listener.
+    report.on("bookmarkApplied", function(event) {
+        Log.log(event.detail);
+    });
+
+    // Select Run and then go to bookmarks
+    // and select 'Apply Bookmark by name'.
+    // You should see an entry in the Log window.
+    Log.logText("Apply a bookmark to see events in Log window.");
+}
+
 // ---- Dashboard Operations ----------------------------------------------------
 
 function _Dashboard_GetId() {
@@ -1331,4 +1426,162 @@ function _Visual_DataSelected() {
     // For example, a bar in a bar chart. You should see an entry in the Log window.
 
     Log.logText("Select data to see events in Log window.");
+}
+
+// ---- Bookmarks Operations ----------------------------------------------------
+function _Bookmarks_Enable() {
+    // The new settings that you want to apply to the report.
+    const newSettings = {
+      bookmarksPaneEnabled: true
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    report.updateSettings(newSettings)
+        .catch(function (error) {
+            Log.log(errors);
+        });
+}
+
+function _Bookmarks_Disable() {
+    // The new settings that you want to apply to the report.
+    const newSettings = {
+      bookmarksPaneEnabled: false
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    report.updateSettings(newSettings)
+        .catch(function (error) {
+            Log.log(errors);
+        });
+}
+
+function _Bookmarks_Get() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Retrieve the bookmark collection and loop through to print the
+    // bookmarks' name and display name.
+    report.bookmarksManager.getBookmarks()
+        .then(function (bookmarks) {
+            bookmarks.forEach(function(bookmark) {
+                var log = bookmark.name + " - " + bookmark.displayName;
+                Log.logText(log);
+            });
+        })
+        .catch(function (error) {
+            Log.log(error);
+        });
+}
+
+function _Bookmarks_Apply() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("bookmarkApplied");
+
+    // Report.on will add an event handler which prints bookmark
+    // name and display name to Log window.
+    report.on("bookmarkApplied", function(event) {
+        var bookmark = event.detail;
+        Log.logText(bookmark.bookmarkName);
+    });
+
+    // bookmarksManager.apply will apply the bookmark with the
+    // given name on the report.
+    // This is the actual bookmark name not the display name.
+    report.bookmarksManager.apply("Bookmark2f89b805540504c54031")
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _Bookmarks_Capture() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Capture the current bookmark and prints the bookmark's 
+    // state string to Log window.
+    report.bookmarksManager.capture()
+        .then(function (capturedBookmark) {
+            var log = "Captured bookmark state: " + capturedBookmark.state;
+            Log.logText(log);
+        })
+        .catch(function (error) {
+            Log.log(error);
+        });
+}
+
+function _Bookmarks_ApplyState() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("bookmarkApplied");
+
+    // Report.on will add an event handler which prints bookmark
+    // name and display name to Log window.
+    report.on("bookmarkApplied", function(event) {
+        var bookmark = event.detail;
+        Log.logText(bookmark.bookmarkName);
+    });
+
+    // bookmarksManager.applyState will apply the bookmark which
+    // represented by the given state string.
+    report.bookmarksManager.applyState("H4sIAAAAAAAAA81YUW/aMBD+K5GlqS/RRChdNd5WWqRpbVc1iGmaeDDJFdwmcWY7FITy33d2wlbSlAQGoTwlZ+fuO9/dd2eWxGcyDujiloZAuuSC86eQiierQ2wSrcvazunYOTv/3G75Y6cDvtOCFu7isWI8kqS7JIqKCaghkwkNtEIU/hqlNoF5HHBB9T5XUQV67wyExHfU73zUaqin2Axc8FQmvYeYC5W/n+KGBxYo/EZ/O15czWOBypcrjH2ziLvUItbvPbQy4YJ5NCDGvgCZmVuSHg+S0DxdrcldnggP7uHBLEWKqQVqumRSoR5FUnTkTvAYxJrcuqERnaBtvT7lzz0BaNsnXSe1C/CcY+Crgat9CFwDhhaKmHTsX+PRKSKzQJvwFkKPknca+/+JeeaSNjdcVULbJn3BQ+NbXo8Sd/6F4you8PxGNvkxBXzS+3o88pnKvfha8EzmW2r4nL0YiwVne1PKIhSi2SENElPUqPWaIXz0RDugxbjz5JpFvoSFPNHbR2ma5sW/cwByj8sBHSWtyxHptWpAp40BMtlTDajTGKDvMUTWDY/UtAass8ZgGaE10LbKaWlmehkWmcKcyxlouC7TIsmiSQDZgmlu5mmQ+aBgrsZ8rlvl+BFJTStJtbmCovbeNHXe5szGuKjHw5gKJotv35AjSLdlk2t4ULXD+DY9FUJ4zyZTo7aMn1x0xDIfaIY6FD9tTCr7jRA02qZaL2B88Wc08lB6qJO4TcJxyXhUC8MNUJkIqA2CBvAqQQZc0cAyS9YQc1Bbsj4cD0+G5A6E5f62+jsGZy8HM2XS+glUWP+W14GYwWwTIUmPKiwz7MhCrbPSaqBHe48vRrs86Rf1B5NtshzZyAXBYIu5Zyv1ZVzrVHLt3oJYVmJ5duulnSLoUeFX9pNPW/aTvRPJHZdK4/FfU+o7KpdDcPu2HaZGyEMaF2uVCx/ERVaVl0ysLuE4BFw1cI66bvfNFtVpVFrNG26bDV0lSi837yjJK9MrZtBIP9h4fKXBPW+OqusOIg2xSNmfMX2G3Tsov5MdBsXOf6XV6WNBIjGu4GeQGsnA6lMtTcOz404Mt/C853nB/P4AHEfgTkoWAAA=")
+        .catch(function (error) {
+            Log.log(error);
+        });
+}
+
+function _Bookmarks_EnterPresentation() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Enter bookmarks play mode
+    report.bookmarksManager.play(models.BookmarksPlayMode.Presentation);
+}
+
+function _Bookmarks_ExitPresentation() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Exit bookmarks play mode
+    report.bookmarksManager.play(models.BookmarksPlayMode.Off);
 }

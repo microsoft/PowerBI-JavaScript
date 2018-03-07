@@ -54,10 +54,12 @@ function SetCode(func) {
 	codeHtml = codeHtml + BodyCodeOfFunction(func) + '</pre><script type="text/javascript" src="syntaxHighlighter/syntaxhighlighter.js"></script>';
 	$("#highlighter").html(codeHtml);
 
-    var runFunc = mapFunc(func);
-    
-    $('#btnRunCode').off('click');
-    $('#btnRunCode').click(runFunc);
+    if (func != "") {
+        var runFunc = mapFunc(func);
+
+        $('#btnRunCode').off('click');
+        $('#btnRunCode').click(runFunc);
+    }
 }
 
 function CopyCode() {
@@ -96,4 +98,34 @@ function AddImgToNewOperations(){
       value.appendChild(newImgElement);
       
   });
+}
+
+function getEmbedContainerID(entityType) {
+    switch (entityType) {
+        case EntityType.Visual:
+            return "visualContainer";
+        case EntityType.Dashboard:
+            return "dashboardContainer";
+        case EntityType.Tile:
+            return "tileContainer";
+        case EntityType.Qna:
+            return "qnaContainer";
+        default:
+            return "embedContainer";
+    }
+}
+
+function getEmbedContainerClassPrefix(entityType, isMobile) {
+    switch (entityType) {
+        case EntityType.Visual:
+            return ".visual";
+        case EntityType.Dashboard:
+            return ".dashboard";
+        case EntityType.Tile:
+            return ".tile";
+        case EntityType.Qna:
+            return ".qna";
+        default:
+            return ".report";
+    }
 }

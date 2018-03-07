@@ -3,9 +3,9 @@
 </div>
 <div id="embed-and-interact-steps-wrapper">
     <div class="topPanel">
-        <div id="settings"></div>
-        <div id="embedCodeDiv"></div>
-        <div id="logWindow"></div>
+        <div id="settings" class="topFrame"></div>
+        <div id="embedCodeDiv" class="topFrame"></div>
+        <div id="logWindow" class="topFrame"></div>
     </div>
 
     <div class="bottomPanel">
@@ -13,11 +13,38 @@
             <div class="editorTitle">
                 <div class="editorTitleText">Embedded view</div>
             </div>
-            <div id="embedContainer" class="embedContainer"></div>
-            <div id="dashboardContainer" class="embedContainer"></div>
-            <div id="visualContainer" class="embedContainer"></div>
-            <div id="tileContainer" class="embedContainer"></div>
-            <div id="qnaContainer" class="embedContainer"></div>
+            <div class="textAreaControls">
+                <button id="btnDesktopView" class="textAreaControl" onclick="EmbedAreaDesktopView();">
+                    <img src="images\pc.png"/> Desktop
+                </button>
+                <button id="btnPhoneView" class="textAreaControl" onclick="EmbedAreaMobileView();">
+                    <img src="images\phone.png"/> Phone
+                </button>
+            </div>
+            <div class="desktop-view active">
+                <div class="reportContainer iframeContainer"></div>
+                <div class="dashboardContainer iframeContainer"></div>
+                <div class="visualContainer iframeContainer"></div>
+                <div class="tileContainer iframeContainer"></div>
+                <div class="qnaContainer iframeContainer"></div>
+            </div>
+            <div class="mobile-view">
+                <div class="phone-frame">
+                    <div class="phone-top">
+                        <div class="phone-speaker"></div>
+                    </div>
+                    <div class="phone-screen">
+                        <div class="reportMobileContainer iframeContainer"></div>
+                        <div class="dashboardMobileContainer iframeContainer"></div>
+                        <div class="visualMobileContainer iframeContainer"></div>
+                        <div class="tileMobileContainer iframeContainer"></div>
+                        <div class="qnaMobileContainer iframeContainer"></div>
+                    </div>
+                    <div class="phone-bottom">
+                        <div class="phone-button"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
