@@ -12,6 +12,7 @@ JavaScript library for embedding Power BI into your apps.
 
 ## Issues
 [Power BI Support Page](https://powerbi.microsoft.com/en-us/support/)
+
 [Power BI Ideas](https://ideas.powerbi.com)
 
 ## Wiki
