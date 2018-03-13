@@ -5,16 +5,31 @@
 
     <h8>Select mode to embed your report in:</h8>
     <div id="modeSelector">
-        <div onclick="OpenViewMode();"><input type="radio" name="embedMode" value="view" checked="checked"> View mode </input></div>
-        <div onclick="OpenEditMode();"><input type="radio" name="embedMode" value="edit"> Edit mode</input></div>
-        <div onclick="OpenCreateMode();"><input type="radio" name="embedMode" value="create"> Create mode</input></div>
+        <label class="radioContainer">
+            <div onclick="OpenViewMode();"><input type="radio" name="embedMode" value="view" checked="checked"> View mode </input>
+            <span class="checkmark"></span></div>
+        </label>
+        <label class="radioContainer">
+                <div onclick="OpenEditMode();"><input type="radio" name="embedMode" value="edit"> Edit mode</input>
+                <span class="checkmark"></span></div>
+        </label>
+        <label class="radioContainer">
+                <div onclick="OpenCreateMode();"><input type="radio" name="embedMode" value="create"> Create mode</input>
+                <span class="checkmark"></span></div>
+        </label>
     </div>
 
     <h8>Select token type:</h8>
 
     <div id="typeSelector">
-        <div onclick="SetEmbedTypeToEmbedToken(1);"><input type="radio" name="tokenType" value="1" checked="checked"> Embed token </input></div>
-        <div onclick="SetEmbedTypeToEmbedToken(0);"><input type="radio" name="tokenType" value="0"> AAD token</input></div>
+        <label class="radioContainer">
+            <div onclick="SetEmbedTypeToEmbedToken(1);"><input type="radio" name="tokenType" value="1" checked="checked"> Embed token </input>
+            <span class="checkmark"></span></div>
+        </label>
+        <label class="radioContainer">
+            <div onclick="SetEmbedTypeToEmbedToken(0);"><input type="radio" name="tokenType" value="0"> AAD token</input>
+            <span class="checkmark"></span></div>
+        </label>
     </div>
 
     <div class="spacer" />

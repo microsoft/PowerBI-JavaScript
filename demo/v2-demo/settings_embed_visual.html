@@ -6,8 +6,14 @@
     <h8>Select token type:</h8>
 
     <div id="typeSelector">
-        <div onclick="SetEmbedTypeToEmbedToken(1);"><input type="radio" name="tokenType" value="1" checked="checked"> Embed token </input></div>
-        <div onclick="SetEmbedTypeToEmbedToken(0);"><input type="radio" name="tokenType" value="0"> AAD token</input></div>
+        <label class="radioContainer">
+            <div onclick="SetEmbedTypeToEmbedToken(1);"><input type="radio" name="tokenType" value="1" checked="checked"> Embed token </input>
+            <span class="checkmark"></span></div>
+        </label>
+        <label class="radioContainer">
+            <div onclick="SetEmbedTypeToEmbedToken(0);"><input type="radio" name="tokenType" value="0"> AAD token</input>
+            <span class="checkmark"></span></div>
+        </label>
     </div>
 
     <div class="spacer" />

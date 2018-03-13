@@ -1,50 +1,64 @@
+html {
+    overflow-x: hidden;
+}
+
 body {
     min-width: 300px;
+    background-color: #212121;
 }
 
 header
 {
     position: relative;
-    height: 96px;
+    height: 60px;
 
     background: #121212;
 }
 
 #navbar {
-    width: 100%;
+    display: table-cell;
+    width: 160px;
+    background: #212121;
+    vertical-align: top;
 }
 
-#top-ul-dev {
+#main-ul-dev {
     position: relative;
-    background: #121212;
-
-    padding-top: 30px;
-    padding-left: 24px;
+    padding-top: 24px;
+    padding-left: 0px;
 }
 
-.top-ul {
+.main-ul {
+    position: absolute;
+    width: 100%;
     list-style-type: none;
     margin: 0px;
     overflow: hidden;
+    padding-left: 0;
     -webkit-margin-before: 0;
     -webkit-padding-start: 0;
     line-height: 30px;
 }
 
 #mainContent {
-    padding: 16px;
-    display: table-cell;
-    width: calc(100% - 128px);
+    padding: 12px;
+    width: 100%;
     background: #F1F1F1;
 }
 
-#documentationContent {
+#select-step-wrapper {
+    max-width: 1250px;
+}
+
+#documentationContent, #demosContent {
     background: #F1F1F1;
-    padding-left: 43px;
+    padding-left: 16px;
 }
 
 #contentWrapper {
-    height: calc(100% - 96px);
+    height: 100%;
+    width: 100%;
+    background-color: #F1F1F1;
 }
 
 .content {
@@ -113,17 +127,94 @@ header
 }
 
 #steps-nav-bar {
-    width: 128px;
-    display: table-cell;
+    height: 48px;
     vertical-align: top;
-    background: #212121;
+    background: #FFFFFF;
 }
 
 #steps-ul {
-    margin-top: 24px;
+    height: 100%;
 }
 
 #steps-ul li {
-    width: 100%;
+    width: 120px;
 }
 
+#navbar-content {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+@media only screen and (max-width: 1050px) {
+    .textAreaControl {
+        margin-right: 20px;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    #navbar-content {
+        display: block;
+    }
+    #main-ul-dev {
+        padding-top: 0px;
+    }
+    #navbar {
+        display: block;
+        width: 100%;
+        height: 48px;
+    }
+    .main-ul li {
+        width: 160px;
+        float: left;
+        text-align: center;
+    }
+    #main-nav-bar a {
+        padding-left: 0px;
+    }
+    #modeSelector {
+        margin-bottom: 8px;
+    }
+    body {
+        background-color: #F1F1F1;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .topPanel {
+        display: block;
+    }
+
+    .topFrame {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .main-ul li {
+        width: 33%;
+    }
+}
+
+@media only screen and (max-width: 460px) {
+    .logo-text-span {
+        font-size: 18px;
+        text-align: center;
+        left: 0px;
+        font-weight: 600;
+    }
+
+    .logo-text-span {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 432px) {
+    .pbi-line {
+        width: calc(100% - 24px);
+    }
+
+    #sampleTileImg {
+        background-position: left;
+    }
+}

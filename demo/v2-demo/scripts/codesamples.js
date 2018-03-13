@@ -102,8 +102,6 @@ function _Embed_BasicEmbed_Mobile() {
         id: txtEmbedReportId,
         permissions: permissions,
         settings: {
-            filterPaneEnabled: true,
-            navContentPaneEnabled: true,
             layoutType: models.LayoutType.MobilePortrait
         }
     };
@@ -220,6 +218,61 @@ function _Embed_DashboardEmbed() {
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
         id: txtEmbedDashboardId
+    };
+
+    // Get a reference to the embedded dashboard HTML element
+    var dashboardContainer = $('#dashboardContainer')[0];
+
+    // Embed the dashboard and display it within the div container.
+    var dashboard = powerbi.embed(dashboardContainer, config);
+
+    // Dashboard.off removes a given event handler if it exists.
+    dashboard.off("loaded");
+
+    // Dashboard.on will add an event handler which prints to Log window.
+    dashboard.on("loaded", function() {
+        Log.logText("Loaded");
+    });
+
+    dashboard.on("error", function(event) {
+        Log.log(event.detail);
+
+        dashboard.off("error");
+    });
+
+    dashboard.off("tileClicked");
+    dashboard.on("tileClicked", function(event) {
+        Log.log(event.detail);
+     });
+}
+
+function _Embed_DashboardEmbed_Mobile() {
+    // Read embed application token from textbox
+    var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
+    var txtEmbedUrl = $('#txtDashboardEmbed').val();
+
+    // Read dashboard Id from textbox
+    var txtEmbedDashboardId = $('#txtEmbedDashboardId').val();
+
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config = {
+        type: 'dashboard',
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
+        accessToken: txtAccessToken,
+        embedUrl: txtEmbedUrl,
+        id: txtEmbedDashboardId,
+        pageView: 'oneColumn'
     };
 
     // Get a reference to the embedded dashboard HTML element
@@ -1584,4 +1637,135 @@ function _Bookmarks_ExitPresentation() {
 
     // Exit bookmarks play mode
     report.bookmarksManager.play(models.BookmarksPlayMode.Off);
+}
+
+function _Visual_SetFilters() {
+    // Build the filter you want to use. For more information, See Constructing
+    // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
+    const filter = {
+      $schema: "http://powerbi.com/product/schema#basic",
+      target: {
+        table: "Store",
+        column: "Chain"
+      },
+      operator: "In",
+      values: ["Fashions Direct"]
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Retrieve the page collection and get the visuals for the first page.
+    report.getPages()
+      .then(function (pages) {
+
+        // Retrieve active page.
+        var activePage = pages.find(function(page) {
+          return page.isActive
+        });
+
+        activePage.getVisuals()
+          .then(function (visuals) {
+
+            // Retrieve the wanted visual.
+            var visual = visuals.find(function(visual) {
+              return visual.name == "VisualContainer3";
+            });
+
+            // Set the filter for the visual.
+            // Pay attention that setFilters receives an array.
+            visual.setFilters([filter])
+                .catch(function (errors) {
+                    Log.log(errors);
+                });
+            })
+            .catch(function (errors) {
+                Log.log(errors);
+            });
+      })
+      .catch(function (errors) {
+          Log.log(errors);
+      });
+}
+
+function _Visual_GetFilters() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Retrieve the page collection and get the visuals for the first page.
+    report.getPages()
+      .then(function (pages) {
+
+        // Retrieve active page.
+        var activePage = pages.find(function(page) {
+          return page.isActive
+        });
+
+        activePage.getVisuals()
+          .then(function (visuals) {
+
+            // Retrieve the wanted visual.
+            var visual = visuals.find(function(visual) {
+              return visual.name == "VisualContainer3";
+            });
+
+            visual.getFilters()
+              .then(function (filters) {
+                  Log.log(filters);
+              })
+              .catch(function (errors) {
+                  Log.log(errors);
+              });
+          })
+          .catch(function (errors) {
+            Log.log(errors);
+          });
+      })
+      .catch(function (errors) {
+        Log.log(errors);
+      });
+}
+
+function _Visual_RemoveFilters() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Retrieve the page collection and get the visuals for the first page.
+    report.getPages()
+      .then(function (pages) {
+
+        // Retrieve active page.
+        var activePage = pages.find(function(page) {
+          return page.isActive
+        });
+
+        activePage.getVisuals()
+          .then(function (visuals) {
+
+            // Retrieve the wanted visual.
+            var visual = visuals.find(function(visual) {
+              return visual.name == "VisualContainer3";
+            });
+
+            visual.removeFilters()
+              .catch(function (errors) {
+                  Log.log(errors);
+              });
+          })
+          .catch(function (errors) {
+            Log.log(errors);
+          });
+      })
+      .catch(function (errors) {
+        Log.log(errors);
+      });
 }

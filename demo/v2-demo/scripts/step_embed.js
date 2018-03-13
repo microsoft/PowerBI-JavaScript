@@ -189,3 +189,17 @@ function Qna_QuestionChanged() {
 function Visual_DataSelected() {
     SetCode(_Visual_DataSelected);
 }
+
+// ---- Visual Level Filters ------------------------------------------------------
+
+function Visual_GetFilters() {
+    SetCode(_Visual_GetFilters);
+}
+
+function Visual_SetFilters() {
+    SetCode(_Visual_SetFilters);
+}
+
+function Visual_RemoveFilters() {
+    SetCode(_Visual_RemoveFilters);
+}

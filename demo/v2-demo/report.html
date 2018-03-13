@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<div id="authorize-step-wrapper">
+<div id="select-step-wrapper">
 </div>
 <div id="embed-and-interact-steps-wrapper">
     <div class="topPanel">
@@ -14,10 +14,10 @@
                 <div class="editorTitleText">Embedded view</div>
             </div>
             <div class="textAreaControls">
-                <button id="btnDesktopView" class="textAreaControl" onclick="EmbedAreaDesktopView();">
+                <button id="btnDesktopView" class="textAreaControl wide" onclick="EmbedAreaDesktopView();">
                     <img src="images\pc.png"/> Desktop
                 </button>
-                <button id="btnPhoneView" class="textAreaControl" onclick="EmbedAreaMobileView();">
+                <button id="btnPhoneView" class="textAreaControl narrow" onclick="EmbedAreaMobileView();">
                     <img src="images\phone.png"/> Phone
                 </button>
             </div>
@@ -51,7 +51,7 @@
 
 <script>
 $(document).ready(function() {
-    $("#authorize-step-wrapper").load("step_authorize.html");
+    $("#select-step-wrapper").load("step_select.html");
 
     LoadLogWindow("#logWindow");
 
@@ -81,8 +81,8 @@ $(document).ready(function() {
     }
     else
     {
-        // Open Authorization Step after this page loads.
-        OpenAuthStep();
+        // Open Select Step after this page loads.
+        OpenSelectStep();
     }
 
     Log = InitLogger("txtResponse");

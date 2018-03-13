@@ -48,7 +48,7 @@ function IsNotSupported(funcName) {
         return false
     }
 
-    const notReportMatch = funcName.match(/Dashboard|Tile|Qna|Visual/);
+    const notReportMatch = funcName.match(/Dashboard|Tile|Qna|Visual|Mobile/);
     if (notReportMatch) {
       return false;
     }

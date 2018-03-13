@@ -5,8 +5,14 @@
     <h8>Select token type:</h8>
 
     <div id="typeSelector">
-        <div onclick="SetSession(SessionKeys.TokenType, 1);"><input type="radio" name="tokenType" value="1" checked="checked"> Embed token </input></div>
-        <div onclick="SetSession(SessionKeys.TokenType, 0);"><input type="radio" name="tokenType" value="0"> AAD token </input></div>
+        <label class="radioContainer">
+            <div onclick="SetSession(SessionKeys.TokenType, 1);"><input type="radio" name="tokenType" value="1" checked="checked"> Embed token </input>
+            <span class="checkmark"></span></div>
+        </label>
+        <label class="radioContainer">
+            <div onclick="SetSession(SessionKeys.TokenType, 0);"><input type="radio" name="tokenType" value="0"> AAD token </input>
+            <span class="checkmark"></span></div>
+        </label>
     </div>
     <div id="embedModeInput">
         <h8>Fill in the fields below to get the code to embed your tile.</h8>

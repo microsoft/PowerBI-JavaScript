@@ -1,5 +1,6 @@
 var sampleContentLoaded = false;
 var documentationContentLoaded = false;
+var demosContentLoaded = false;
 var anyReportSectionLoaded = false;
 
 $(function() {
@@ -8,11 +9,11 @@ $(function() {
 });
 
 function OpenSampleSection() {
-    OpenEmbedWorkspace("#top-sample", "step_authorize.html");
+    OpenEmbedWorkspace("#main-sample", "step_select.html");
 }
 
 function OpenAnyReportSection() {
-    OpenEmbedWorkspace("#top-anyReport", "anyReport.html");
+    OpenEmbedWorkspace("#main-anyReport", "anyReport.html");
 }
 
 function OpenEmbedWorkspace(activeTabSelector, authStepHtml)
@@ -27,12 +28,12 @@ function OpenEmbedWorkspace(activeTabSelector, authStepHtml)
         });
     }
 
-    $("#authorize-step-wrapper").load(authStepHtml);
+    $("#select-step-wrapper").load(authStepHtml);
     SetActiveStyle(activeTabSelector);
 
     $(".content").hide();
     $("#sampleContent").show();
-    OpenAuthStep();
+    OpenSelectStep();
 }
 
 function OpenDocumentationSection() {
@@ -42,14 +43,27 @@ function OpenDocumentationSection() {
         documentationContentLoaded = true;
     }
 
-    SetActiveStyle("#top-docs");
+    SetActiveStyle("#main-docs");
 
     $(".content").hide();
     $("#documentationContent").show();
 }
 
+function OpenDemosSection() {
+    if (!demosContentLoaded)
+    {
+        $("#demosContent").load("demos.html");
+        demosContentLoaded = true;
+    }
+
+    SetActiveStyle("#main-demos");
+
+    $(".content").hide();
+    $("#demosContent").show();
+}
+
 function SetActiveStyle(id)
 {
-    $("#top-ul li").removeClass("top-li-active");
-    $(id).addClass("top-li-active");
+    $("#main-ul li").removeClass("main-li-active");
+    $(id).addClass("main-li-active");
 }

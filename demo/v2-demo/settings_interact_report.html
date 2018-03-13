@@ -35,12 +35,6 @@
                             <li onclick="Report_Extensions_OptionsMenu()"><a href="#">Extend options menu</a></li>
                             <li onclick="Report_Extensions_ContextMenu()"><a href="#">Extend context menu</a></li>
                         </ul>
-                        <li id="reportentities-operations" onclick="OpenReportEntitiesOperations();"><a href="#">Report entities</a></li>
-                        <ul id="reportentities-operations-ul" class="function-ul" style="display: none;">
-                            <li onclick="Report_GetId()"><a href="#">Get ID</a></li>
-                            <li onclick="Report_GetPages()"><a href="#">Get pages</a></li>
-                            <li onclick="Page_GetVisuals()"><a href="#">Get visuals</a></li>
-                        </ul>
                         <li id="filters-operations" onclick="OpenFiltersOperations();"><a href="#">Filters</a></li>
                         <ul id="filters-operations-ul" class="function-ul" style="display: none;">
                                 <li onclick="Report_SetFilters()"><a href="#">Set report filters</a></li>
@@ -49,6 +43,9 @@
                                 <li onclick="Page_SetFilters()"><a href="#">Set page filters</a></li>
                                 <li onclick="Page_GetFilters()"><a href="#">Get page filters</a></li>
                                 <li onclick="Page_RemoveFilters()"><a href="#">Remove page filters</a></li>
+                                <li onclick="Visual_SetFilters()"><a href="#">Set visual filters</a></li>
+                                <li onclick="Visual_GetFilters()"><a href="#">Get visual filters</a></li>
+                                <li onclick="Visual_RemoveFilters()"><a href="#">Remove visual filters</a></li>
                         </ul>
                         <li id="general-operations" onclick="OpenGeneralOperations();"><a href="#">General Operations</a></li>
                         <ul id="general-operations-ul" class="function-ul" style="display: none;">
@@ -68,6 +65,12 @@
                         <ul id="navigation-operations-ul" class="function-ul" style="display: none;">
                             <li onclick="Report_SetPage()"><a href="#">Report - Set page</a></li>
                             <li onclick="Page_SetActive()"><a href="#">Page - Set active</a></li>
+                        </ul>
+                        <li id="reportentities-operations" onclick="OpenReportEntitiesOperations();"><a href="#">Report Entities</a></li>
+                        <ul id="reportentities-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_GetId()"><a href="#">Get ID</a></li>
+                            <li onclick="Report_GetPages()"><a href="#">Get pages</a></li>
+                            <li onclick="Page_GetVisuals()"><a href="#">Get visuals</a></li>
                         </ul>
                     </ul>
                 </div>

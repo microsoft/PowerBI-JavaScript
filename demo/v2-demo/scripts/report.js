@@ -5,15 +5,17 @@ const EmbedViewMode = "view";
 const EmbedEditMode = "edit";
 const EmbedCreateMode = "create";
 
-function OpenAuthStep() {
+const runEmbedCodeTimeout = 500;
+
+function OpenSelectStep() {
     $('#steps-ul a').removeClass(active_class);
     $(".steps-li-active").removeClass(active_li);
 
-    $("#steps-auth a").addClass(active_class);
-    $("#steps-auth").addClass(active_li);
+    $("#steps-select a").addClass(active_class);
+    $("#steps-select").addClass(active_li);
 
     // Hide Embed view in authorization step.
-    $("#authorize-step-wrapper").show();
+    $("#select-step-wrapper").show();
     $("#embed-and-interact-steps-wrapper").hide();
 }
 
@@ -34,7 +36,7 @@ function OpenEmbedStep(mode, entityType, tokenType) {
     $('#steps-embed').addClass(active_li);
 
     // Hide Embed view in authorization step.
-    $("#authorize-step-wrapper").hide();
+    $("#select-step-wrapper").hide();
     $("#embed-and-interact-steps-wrapper").show();
 
     let containers = $(".iframeContainer");
@@ -54,7 +56,7 @@ function OpenEmbedStep(mode, entityType, tokenType) {
     const widthHeightRatio = 0.4;
     if (entityType == EntityType.Report)
     {
-        $("#settings").load("settings_embed.html", function() {
+        $("#settings").load("settings_embed_report.html", function() {
             OpenEmbedMode(mode, entityType, tokenType);
         });
     }
@@ -92,7 +94,7 @@ function OpenInteractStep() {
     $('#steps-interact').addClass(active_li);
 
     // Hide Embed view in authorization step.
-    $("#authorize-step-wrapper").hide();
+    $("#select-step-wrapper").hide();
     $("#embed-and-interact-steps-wrapper").show();
 
     var entityType = GetSession(SessionKeys.EntityType);
@@ -131,7 +133,7 @@ function OpenInteractStep() {
     }
     else
     {
-        $("#settings").load("settings_interact.html", function() {
+        $("#settings").load("settings_interact_report.html", function() {
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
             AddImgToNewOperations();
@@ -165,7 +167,8 @@ function setCodeArea(mode, entityType)
     }
     else if (entityType == EntityType.Dashboard)
     {
-        LoadCodeArea("#embedCodeDiv", _Embed_DashboardEmbed);
+        const code = isDesktop ? _Embed_DashboardEmbed : _Embed_DashboardEmbed_Mobile;
+        LoadCodeArea("#embedCodeDiv", code);
     }
     else if (entityType == EntityType.Tile)
     {
@@ -379,11 +382,6 @@ function EmbedAreaDesktopView() {
     $(".desktop-view").addClass(active_class);
     $(".mobile-view").removeClass(active_class);
 
-    if($('#steps-embed').hasClass("steps-li-active")) {
-        // Update embed code area
-        setCodeArea(mode, entityType)
-    }
-
     var containerID = getEmbedContainerID(entityType);
     var classPrefix = getEmbedContainerClassPrefix(entityType);
 
@@ -393,9 +391,18 @@ function EmbedAreaDesktopView() {
     $(classPrefix + 'MobileContainer').removeClass(active_class);
     $(classPrefix + 'Container').addClass(active_class);
 
+    if(!$('#steps-embed').hasClass("steps-li-active")) {
+        return;
+    }
+
+    // Update embed code area
+    setCodeArea(mode, entityType)
+
     // Check if run button was clicked in the other mode and wasn't clicked on the new mode
     if ($(classPrefix + "MobileContainer iframe").length && !$(classPrefix + "Container iframe").length) {
-        $('#btnRunCode').click();
+        setTimeout(function() {
+            $('#btnRunCode').click();
+        }, runEmbedCodeTimeout);
     }
 }
 
@@ -413,10 +420,6 @@ function EmbedAreaMobileView() {
     $(".desktop-view").removeClass(active_class);
     $(".mobile-view").addClass(active_class);
 
-    if($('#steps-embed').hasClass("steps-li-active")) {
-        // Update embed code area
-        setCodeArea(mode, entityType)
-    }
     var containerID = getEmbedContainerID(entityType);
     var classPrefix = getEmbedContainerClassPrefix(entityType);
 
@@ -426,8 +429,17 @@ function EmbedAreaMobileView() {
     $(classPrefix + 'Container').removeClass(active_class);
     $(classPrefix + 'MobileContainer').addClass(active_class);
 
+    if(!$('#steps-embed').hasClass("steps-li-active")) {
+        return;
+    }
+
+    // Update embed code area
+    setCodeArea(mode, entityType)
+
     // Check if run button was clicked in the other mode and wasn't clicked on the new mode
     if ($(classPrefix + "Container iframe").length && !$(classPrefix + "MobileContainer iframe").length) {
-        $('#btnRunCode').click();
+        setTimeout(function() {
+            $('#btnRunCode').click();
+        }, runEmbedCodeTimeout);
     }
 }

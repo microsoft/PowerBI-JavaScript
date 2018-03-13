@@ -1,3 +1,5 @@
+var currentCode = "";
+
 function ValidateEmbedUrl(embedUrl) {
     var embedUrl = $('#txtReportEmbed').val();
     
@@ -50,8 +52,9 @@ function LoadLogWindow(divSelector) {
 }
 
 function SetCode(func) {
+    currentCode = BodyCodeOfFunction(func);
 	var codeHtml = '<pre id="txtCode" class="brush: js; gutter: false;">';
-	codeHtml = codeHtml + BodyCodeOfFunction(func) + '</pre><script type="text/javascript" src="syntaxHighlighter/syntaxhighlighter.js"></script>';
+	codeHtml = codeHtml + currentCode + '</pre><script type="text/javascript" src="syntaxHighlighter/syntaxhighlighter.js"></script>';
 	$("#highlighter").html(codeHtml);
 
     if (func != "") {
@@ -63,7 +66,17 @@ function SetCode(func) {
 }
 
 function CopyCode() {
-    CopyTextArea("#txtCode", "#btnRunCopyCode");
+    var id = "clipboard-textarea";
+    var textarea = document.getElementById(id);
+
+    if (!textarea) {
+        textarea = document.createElement("textarea");
+        textarea.id = id;
+        document.querySelector("body").appendChild(textarea);
+    }
+
+    textarea.value = currentCode;
+    CopyTextArea('#' + id, "#btnRunCopyCode");
 }
 
 function CopyResponseWindow() {
