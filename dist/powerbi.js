@@ -957,7 +957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.0.2 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.0.3 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1052,6 +1052,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		    LayoutType[LayoutType["MobilePortrait"] = 2] = "MobilePortrait";
 		    LayoutType[LayoutType["MobileLandscape"] = 3] = "MobileLandscape";
 		})(LayoutType = exports.LayoutType || (exports.LayoutType = {}));
+		var SectionVisibility;
+		(function (SectionVisibility) {
+		    SectionVisibility[SectionVisibility["AlwaysVisible"] = 0] = "AlwaysVisible";
+		    SectionVisibility[SectionVisibility["HiddenInViewMode"] = 1] = "HiddenInViewMode";
+		})(SectionVisibility = exports.SectionVisibility || (exports.SectionVisibility = {}));
 		var Permissions;
 		(function (Permissions) {
 		    Permissions[Permissions["Read"] = 0] = "Read";
@@ -1351,6 +1356,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		    QnaMode[QnaMode["Interactive"] = 0] = "Interactive";
 		    QnaMode[QnaMode["ResultOnly"] = 1] = "ResultOnly";
 		})(QnaMode = exports.QnaMode || (exports.QnaMode = {}));
+		var ExportDataType;
+		(function (ExportDataType) {
+		    ExportDataType[ExportDataType["Summarized"] = 0] = "Summarized";
+		    ExportDataType[ExportDataType["Underlying"] = 1] = "Underlying";
+		})(ExportDataType = exports.ExportDataType || (exports.ExportDataType = {}));
+		var BookmarksPlayMode;
+		(function (BookmarksPlayMode) {
+		    BookmarksPlayMode[BookmarksPlayMode["Off"] = 0] = "Off";
+		    BookmarksPlayMode[BookmarksPlayMode["Presentation"] = 1] = "Presentation";
+		})(BookmarksPlayMode = exports.BookmarksPlayMode || (exports.BookmarksPlayMode = {}));
 		function normalizeError(error) {
 		    var message = error.message;
 		    if (!message) {
@@ -1360,6 +1375,26 @@ return /******/ (function(modules) { // webpackBootstrap
 		        message: message
 		    };
 		}
+		function validatePlayBookmarkRequest(input) {
+		    var errors = exports.Validators.playBookmarkRequestValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validatePlayBookmarkRequest = validatePlayBookmarkRequest;
+		function validateAddBookmarkRequest(input) {
+		    var errors = exports.Validators.addBookmarkRequestValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateAddBookmarkRequest = validateAddBookmarkRequest;
+		function validateApplyBookmarkByNameRequest(input) {
+		    var errors = exports.Validators.applyBookmarkByNameRequestValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateApplyBookmarkByNameRequest = validateApplyBookmarkByNameRequest;
+		function validateApplyBookmarkStateRequest(input) {
+		    var errors = exports.Validators.applyBookmarkStateRequestValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateApplyBookmarkStateRequest = validateApplyBookmarkStateRequest;
 		function validateSettings(input) {
 		    var errors = exports.Validators.settingsValidator.validate(input);
 		    return errors ? errors.map(normalizeError) : undefined;
@@ -1420,6 +1455,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return errors ? errors.map(normalizeError) : undefined;
 		}
 		exports.validateQnaInterpretInputData = validateQnaInterpretInputData;
+		function validateExportDataRequest(input) {
+		    var errors = exports.Validators.exportDataRequestValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateExportDataRequest = validateExportDataRequest;
 	
 	
 	/***/ }),
@@ -1430,18 +1470,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		var typeValidator_1 = __webpack_require__(2);
 		var extensionsValidator_1 = __webpack_require__(3);
 		var settingsValidator_1 = __webpack_require__(5);
-		var filtersValidator_1 = __webpack_require__(6);
-		var fieldRequiredValidator_1 = __webpack_require__(7);
-		var anyOfValidator_1 = __webpack_require__(8);
-		var reportLoadValidator_1 = __webpack_require__(9);
-		var reportCreateValidator_1 = __webpack_require__(10);
-		var dashboardLoadValidator_1 = __webpack_require__(11);
-		var tileLoadValidator_1 = __webpack_require__(12);
-		var pageValidator_1 = __webpack_require__(13);
-		var qnaValidator_1 = __webpack_require__(14);
-		var saveAsParametersValidator_1 = __webpack_require__(15);
-		var mapValidator_1 = __webpack_require__(16);
-		var layoutValidator_1 = __webpack_require__(17);
+		var bookmarkValidator_1 = __webpack_require__(6);
+		var filtersValidator_1 = __webpack_require__(7);
+		var fieldRequiredValidator_1 = __webpack_require__(8);
+		var anyOfValidator_1 = __webpack_require__(9);
+		var reportLoadValidator_1 = __webpack_require__(10);
+		var reportCreateValidator_1 = __webpack_require__(11);
+		var dashboardLoadValidator_1 = __webpack_require__(12);
+		var tileLoadValidator_1 = __webpack_require__(13);
+		var pageValidator_1 = __webpack_require__(14);
+		var qnaValidator_1 = __webpack_require__(15);
+		var saveAsParametersValidator_1 = __webpack_require__(16);
+		var mapValidator_1 = __webpack_require__(17);
+		var layoutValidator_1 = __webpack_require__(18);
+		var exportDataValidator_1 = __webpack_require__(19);
 		exports.Validators = {
 		    advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
 		    advancedFilterValidator: new filtersValidator_1.AdvancedFilterValidator(),
@@ -1450,6 +1492,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		    anyValueValidator: new anyOfValidator_1.AnyOfValidator([new typeValidator_1.StringValidator(), new typeValidator_1.NumberValidator(), new typeValidator_1.BooleanValidator()]),
 		    basicFilterTypeValidator: new typeValidator_1.EnumValidator([1]),
 		    basicFilterValidator: new filtersValidator_1.BasicFilterValidator(),
+		    playBookmarkRequestValidator: new bookmarkValidator_1.PlayBookmarkRequestValidator(),
+		    addBookmarkRequestValidator: new bookmarkValidator_1.AddBookmarkRequestValidator(),
+		    applyBookmarkByNameRequestValidator: new bookmarkValidator_1.ApplyBookmarkByNameRequestValidator(),
+		    applyBookmarkStateRequestValidator: new bookmarkValidator_1.ApplyBookmarkStateRequestValidator(),
 		    booleanArrayValidator: new typeValidator_1.BooleanArrayValidator(),
 		    booleanValidator: new typeValidator_1.BooleanValidator(),
 		    commandExtensionValidator: new extensionsValidator_1.CommandExtensionValidator(),
@@ -1460,6 +1506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    dashboardLoadValidator: new dashboardLoadValidator_1.DashboardLoadValidator(),
 		    displayStateModeValidator: new typeValidator_1.EnumValidator([0, 1]),
 		    displayStateValidator: new layoutValidator_1.DisplayStateValidator(),
+		    exportDataRequestValidator: new exportDataValidator_1.ExportDataRequestValidator(),
 		    extensionPointsValidator: new extensionsValidator_1.ExtensionPointsValidator(),
 		    extentionArrayValidator: new typeValidator_1.ArrayValidator([new extensionsValidator_1.ExtensionValidator()]),
 		    extentionValidator: new extensionsValidator_1.ExtensionValidator(),
@@ -1953,6 +2000,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		                validators: [validator_1.Validators.booleanValidator]
 		            },
 		            {
+		                field: "bookmarksPaneEnabled",
+		                validators: [validator_1.Validators.booleanValidator]
+		            },
+		            {
 		                field: "useCustomSaveAsDialog",
 		                validators: [validator_1.Validators.booleanValidator]
 		            },
@@ -1979,6 +2030,134 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/***/ }),
 	/* 6 */
+	/***/ (function(module, exports, __webpack_require__) {
+	
+		var __extends = (this && this.__extends) || (function () {
+		    var extendStatics = Object.setPrototypeOf ||
+		        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+		        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+		    return function (d, b) {
+		        extendStatics(d, b);
+		        function __() { this.constructor = d; }
+		        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+		    };
+		})();
+		Object.defineProperty(exports, "__esModule", { value: true });
+		var validator_1 = __webpack_require__(1);
+		var multipleFieldsValidator_1 = __webpack_require__(4);
+		var typeValidator_1 = __webpack_require__(2);
+		var PlayBookmarkRequestValidator = /** @class */ (function (_super) {
+		    __extends(PlayBookmarkRequestValidator, _super);
+		    function PlayBookmarkRequestValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    PlayBookmarkRequestValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "playMode",
+		                validators: [validator_1.Validators.fieldRequiredValidator, new typeValidator_1.EnumValidator([0, 1])]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return PlayBookmarkRequestValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.PlayBookmarkRequestValidator = PlayBookmarkRequestValidator;
+		var AddBookmarkRequestValidator = /** @class */ (function (_super) {
+		    __extends(AddBookmarkRequestValidator, _super);
+		    function AddBookmarkRequestValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    AddBookmarkRequestValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "state",
+		                validators: [validator_1.Validators.stringValidator]
+		            },
+		            {
+		                field: "displayName",
+		                validators: [validator_1.Validators.stringValidator]
+		            },
+		            {
+		                field: "apply",
+		                validators: [validator_1.Validators.booleanValidator]
+		            },
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return AddBookmarkRequestValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.AddBookmarkRequestValidator = AddBookmarkRequestValidator;
+		var ApplyBookmarkByNameRequestValidator = /** @class */ (function (_super) {
+		    __extends(ApplyBookmarkByNameRequestValidator, _super);
+		    function ApplyBookmarkByNameRequestValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    ApplyBookmarkByNameRequestValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "name",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return ApplyBookmarkByNameRequestValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.ApplyBookmarkByNameRequestValidator = ApplyBookmarkByNameRequestValidator;
+		var ApplyBookmarkStateRequestValidator = /** @class */ (function (_super) {
+		    __extends(ApplyBookmarkStateRequestValidator, _super);
+		    function ApplyBookmarkStateRequestValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    ApplyBookmarkStateRequestValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "state",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return ApplyBookmarkStateRequestValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.ApplyBookmarkStateRequestValidator = ApplyBookmarkStateRequestValidator;
+	
+	
+	/***/ }),
+	/* 7 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2362,7 +2541,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 7 */
+	/* 8 */
 	/***/ (function(module, exports) {
 	
 		Object.defineProperty(exports, "__esModule", { value: true });
@@ -2385,7 +2564,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 8 */
+	/* 9 */
 	/***/ (function(module, exports) {
 	
 		Object.defineProperty(exports, "__esModule", { value: true });
@@ -2421,7 +2600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 9 */
+	/* 10 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2494,7 +2673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 10 */
+	/* 11 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2547,7 +2726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 11 */
+	/* 12 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2604,7 +2783,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 12 */
+	/* 13 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2673,7 +2852,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 13 */
+	/* 14 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2796,7 +2975,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 14 */
+	/* 15 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2915,7 +3094,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 15 */
+	/* 16 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2960,7 +3139,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 16 */
+	/* 17 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -3018,7 +3197,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 17 */
+	/* 18 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -3167,6 +3346,54 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return PageLayoutValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.PageLayoutValidator = PageLayoutValidator;
+	
+	
+	/***/ }),
+	/* 19 */
+	/***/ (function(module, exports, __webpack_require__) {
+	
+		var __extends = (this && this.__extends) || (function () {
+		    var extendStatics = Object.setPrototypeOf ||
+		        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+		        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+		    return function (d, b) {
+		        extendStatics(d, b);
+		        function __() { this.constructor = d; }
+		        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+		    };
+		})();
+		Object.defineProperty(exports, "__esModule", { value: true });
+		var multipleFieldsValidator_1 = __webpack_require__(4);
+		var typeValidator_1 = __webpack_require__(2);
+		var ExportDataRequestValidator = /** @class */ (function (_super) {
+		    __extends(ExportDataRequestValidator, _super);
+		    function ExportDataRequestValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    ExportDataRequestValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "rows",
+		                validators: [new typeValidator_1.NumberValidator()]
+		            },
+		            {
+		                field: "exportDataType",
+		                validators: [new typeValidator_1.EnumValidator([0, 1])]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return ExportDataRequestValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.ExportDataRequestValidator = ExportDataRequestValidator;
 	
 	
 	/***/ })
@@ -3697,6 +3924,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	    VisualDescriptor.prototype.setFilters = function (filters) {
 	        return this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
 	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Exports Visual data.
+	     * Can export up to 30K rows.
+	     * @param rows: Optional. Default value is 30K, maximum value is 30K as well.
+	     * @param exportDataType: Optional. Default is models.ExportDataType.Summarized.
+	     * ```javascript
+	     * visual.exportData()
+	     *  .then(data => { ... });
+	     * ```
+	     *
+	     * @returns {(Promise<string>)}
+	     */
+	    VisualDescriptor.prototype.exportData = function (exportDataType, rows) {
+	        var exportDataRequestBody = {
+	            rows: rows,
+	            exportDataType: exportDataType
+	        };
+	        return this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/exportData", exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
 	    };

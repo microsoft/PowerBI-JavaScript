@@ -506,6 +506,19 @@ declare module "visualDescriptor" {
          * @returns {Promise<void>}
          */
         setFilters(filters: models.IFilter[]): Promise<void>;
+        /**
+         * Exports Visual data.
+         * Can export up to 30K rows.
+         * @param rows: Optional. Default value is 30K, maximum value is 30K as well.
+         * @param exportDataType: Optional. Default is models.ExportDataType.Summarized.
+         * ```javascript
+         * visual.exportData()
+         *  .then(data => { ... });
+         * ```
+         *
+         * @returns {(Promise<string>)}
+         */
+        exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<string>;
     }
 }
 declare module "page" {

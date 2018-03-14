@@ -4,7 +4,7 @@ import { IPageNode, Page } from './page';
 
 /**
  * A Visual node within a report hierarchy
- * 
+ *
  * @export
  * @interface IVisualNode
  */
@@ -18,7 +18,7 @@ export interface IVisualNode {
 
 /**
  * A Power BI visual within a page
- * 
+ *
  * @export
  * @class VisualDescriptor
  * @implements {IVisualNode}
@@ -26,35 +26,35 @@ export interface IVisualNode {
 export class VisualDescriptor implements IVisualNode, IFilterable {
   /**
    * The visual name
-   * 
+   *
    * @type {string}
    */
   name: string;
 
   /**
    * The visual title
-   * 
+   *
    * @type {string}
    */
   title: string;
 
   /**
    * The visual type
-   * 
+   *
    * @type {string}
    */
   type: string;
 
   /**
    * The visual layout: position, size and visiblity.
-   * 
+   *
    * @type {string}
    */
   layout: models.IVisualLayout;
 
   /**
    * The parent Power BI page that contains this visual
-   * 
+   *
    * @type {IPageNode}
    */
   page: IPageNode;
@@ -69,12 +69,12 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
 
   /**
    * Gets all visual level filters of the current visual.
-   * 
+   *
    * ```javascript
    * visual.getFilters()
    *  .then(filters => { ... });
    * ```
-   * 
+   *
    * @returns {(Promise<models.IFilter[]>)}
    */
   getFilters(): Promise<models.IFilter[]> {
@@ -87,11 +87,11 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
 
   /**
    * Removes all filters from the current visual.
-   * 
+   *
    * ```javascript
    * visual.removeFilters();
    * ```
-   * 
+   *
    * @returns {Promise<void>}
    */
   removeFilters(): Promise<void> {
@@ -100,12 +100,12 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
 
   /**
    * Sets the filters on the current visual to 'filters'.
-   * 
+   *
    * ```javascript
    * visual.setFilters(filters);
    *   .catch(errors => { ... });
    * ```
-   * 
+   *
    * @param {(models.IFilter[])} filters
    * @returns {Promise<void>}
    */
@@ -114,5 +114,30 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
       .catch(response => {
         throw response.body;
       });
+  }
+
+  /**
+   * Exports Visual data.
+   * Can export up to 30K rows.
+   * @param rows: Optional. Default value is 30K, maximum value is 30K as well.
+   * @param exportDataType: Optional. Default is models.ExportDataType.Summarized.
+   * ```javascript
+   * visual.exportData()
+   *  .then(data => { ... });
+   * ```
+   *
+   * @returns {(Promise<string>)}
+   */
+  exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<string> {
+    let exportDataRequestBody: models.IExportDataRequest = {
+      rows: rows,
+      exportDataType: exportDataType
+    };
+
+    return this.page.report.service.hpm.post<string>(`/report/pages/${this.page.name}/visuals/${this.name}/exportData`, exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+      .then(response => response.body,
+        response => {
+          throw response.body;
+        });
   }
 }
