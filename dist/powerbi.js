@@ -57,23 +57,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(14);
+	var factories = __webpack_require__(15);
 	exports.factories = factories;
 	var models = __webpack_require__(4);
 	exports.models = models;
 	var report_1 = __webpack_require__(5);
 	exports.Report = report_1.Report;
-	var dashboard_1 = __webpack_require__(10);
+	var dashboard_1 = __webpack_require__(11);
 	exports.Dashboard = dashboard_1.Dashboard;
-	var tile_1 = __webpack_require__(11);
+	var tile_1 = __webpack_require__(12);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
 	var page_1 = __webpack_require__(6);
 	exports.Page = page_1.Page;
-	var qna_1 = __webpack_require__(12);
+	var qna_1 = __webpack_require__(13);
 	exports.Qna = qna_1.Qna;
-	var visual_1 = __webpack_require__(13);
+	var visual_1 = __webpack_require__(14);
 	exports.Visual = visual_1.Visual;
 	var visualDescriptor_1 = __webpack_require__(7);
 	exports.VisualDescriptor = visualDescriptor_1.VisualDescriptor;
@@ -92,12 +92,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(5);
-	var create_1 = __webpack_require__(9);
-	var dashboard_1 = __webpack_require__(10);
-	var tile_1 = __webpack_require__(11);
+	var create_1 = __webpack_require__(10);
+	var dashboard_1 = __webpack_require__(11);
+	var tile_1 = __webpack_require__(12);
 	var page_1 = __webpack_require__(6);
-	var qna_1 = __webpack_require__(12);
-	var visual_1 = __webpack_require__(13);
+	var qna_1 = __webpack_require__(13);
+	var visual_1 = __webpack_require__(14);
 	var utils = __webpack_require__(3);
 	/**
 	 * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
@@ -3416,6 +3416,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var utils = __webpack_require__(3);
 	var page_1 = __webpack_require__(6);
 	var defaults_1 = __webpack_require__(8);
+	var bookmarksManager_1 = __webpack_require__(9);
 	/**
 	 * The Power BI Report embed component
 	 *
@@ -3447,6 +3448,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.loadPath = "/report/load";
 	        this.phasedLoadPath = "/report/prepare";
 	        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
+	        this.bookmarksManager = new bookmarksManager_1.BookmarksManager(service, config, this.iframe);
 	    }
 	    /**
 	     * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
@@ -3714,7 +3716,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
-	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd"];
+	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
 	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
@@ -3974,6 +3976,117 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports) {
+
+	/**
+	 * Manages report bookmarks.
+	 *
+	 * @export
+	 * @class BookmarksManager
+	 * @implements {IBookmarksManager}
+	 */
+	var BookmarksManager = (function () {
+	    function BookmarksManager(service, config, iframe) {
+	        this.service = service;
+	        this.config = config;
+	        this.iframe = iframe;
+	    }
+	    /**
+	     * Gets bookmarks that are defined in the report.
+	     *
+	     * ```javascript
+	     * // Gets bookmarks that are defined in the report
+	     * bookmarksManager.getBookmarks()
+	     *   .then(bookmarks => {
+	     *     ...
+	     *   });
+	     * ```
+	     *
+	     * @returns {Promise<models.IReportBookmark[]>}
+	     */
+	    BookmarksManager.prototype.getBookmarks = function () {
+	        return this.service.hpm.get("/report/bookmarks", { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Apply bookmark By name.
+	     *
+	     * ```javascript
+	     * bookmarksManager.apply(bookmarkName)
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    BookmarksManager.prototype.apply = function (bookmarkName) {
+	        var request = {
+	            name: bookmarkName
+	        };
+	        return this.service.hpm.post("/report/bookmarks/applyByName", request, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Play bookmarks: Enter or Exit bookmarks presentation mode.
+	     *
+	     * ```javascript
+	     * // Enter presentation mode.
+	     * bookmarksManager.play(true)
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    BookmarksManager.prototype.play = function (playMode) {
+	        var playBookmarkRequest = {
+	            playMode: playMode
+	        };
+	        return this.service.hpm.post("/report/bookmarks/play", playBookmarkRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Capture bookmark from current state.
+	     *
+	     * ```javascript
+	     * bookmarksManager.capture()
+	     * ```
+	     *
+	     * @returns {Promise<models.IReportBookmark>}
+	     */
+	    BookmarksManager.prototype.capture = function () {
+	        return this.service.hpm.post("/report/bookmarks/capture", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Apply bookmark state.
+	     *
+	     * ```javascript
+	     * bookmarksManager.applyState(bookmarkName)
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    BookmarksManager.prototype.applyState = function (state) {
+	        var request = {
+	            state: state
+	        };
+	        return this.service.hpm.post("/report/bookmarks/applyState", request, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    return BookmarksManager;
+	}());
+	exports.BookmarksManager = BookmarksManager;
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -4052,7 +4165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -4160,7 +4273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -4247,7 +4360,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -4309,7 +4422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -4447,13 +4560,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var config_1 = __webpack_require__(15);
-	var wpmp = __webpack_require__(16);
-	var hpm = __webpack_require__(17);
-	var router = __webpack_require__(18);
+	var config_1 = __webpack_require__(16);
+	var wpmp = __webpack_require__(17);
+	var hpm = __webpack_require__(18);
+	var router = __webpack_require__(19);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -4481,7 +4594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	var config = {
@@ -4493,10 +4606,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.5 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -4551,7 +4664,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ function(module, exports) {
+	/***/ (function(module, exports) {
 	
 		"use strict";
 		var WindowPostMessageProxy = (function () {
@@ -4786,14 +4899,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.WindowPostMessageProxy = WindowPostMessageProxy;
 	
 	
-	/***/ }
+	/***/ })
 	/******/ ])
 	});
 	;
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -4977,7 +5090,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */
