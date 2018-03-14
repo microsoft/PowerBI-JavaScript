@@ -8,9 +8,9 @@ function OpenEditSaveOperations() {
     $("#editsave-operations").toggleClass("active");
 }
 
-function OpenEventsOperations() {
-    $("#events-operations-ul").toggle();
-    $("#events-operations").toggleClass("active");
+function OpenDataOperations() {
+    $("#data-operations-ul").toggle();
+    $("#data-operations").toggleClass("active");
 }
 
 function OpenExtensionsOperations() {
@@ -18,9 +18,9 @@ function OpenExtensionsOperations() {
     $("#extensions-operations").toggleClass("active");
 }
 
-function OpenReportEntitiesOperations() {
-    $("#reportentities-operations-ul").toggle();
-    $("#reportentities-operations").toggleClass("active");
+function OpenReportPropertiesOperations() {
+    $("#reportproperties-operations-ul").toggle();
+    $("#reportproperties-operations").toggleClass("active");
 }
 
 function OpenFiltersOperations() {
@@ -43,9 +43,9 @@ function OpenNavigationOperations() {
     $("#navigation-operations").toggleClass("active");
 }
 
-function OpenVisualEventsOperations() {
-    $("#visual-events-operations-ul").toggle();
-    $("#visual-events-operations").toggleClass("active");
+function OpenVisualDataOperations() {
+    $("#visual-data-operations-ul").toggle();
+    $("#visual-data-operations").toggleClass("active");
 }
 
 function OpenDashboardGeneralOperations() {
@@ -53,9 +53,9 @@ function OpenDashboardGeneralOperations() {
     $("#dashboard-general-operations").toggleClass("active");
 }
 
-function OpenDashboardEntitiesOperations() {
-    $("#dashboard-entities-operations-ul").toggle();
-    $("#dashboard-entities-operations").toggleClass("active");
+function OpenDashboardPropertiesOperations() {
+    $("#dashboard-properties-operations-ul").toggle();
+    $("#dashboard-properties-operations").toggleClass("active");
 }
 
 function OpenDashboardEventsOperations() {

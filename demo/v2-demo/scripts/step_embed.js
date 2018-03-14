@@ -190,7 +190,7 @@ function Visual_DataSelected() {
     SetCode(_Visual_DataSelected);
 }
 
-// ---- Visual Level Filters ------------------------------------------------------
+// ---- Visuals -------------------------------------------------------------------
 
 function Visual_GetFilters() {
     SetCode(_Visual_GetFilters);
@@ -202,4 +202,12 @@ function Visual_SetFilters() {
 
 function Visual_RemoveFilters() {
     SetCode(_Visual_RemoveFilters);
+}
+
+function Visual_ExportData_Summarized() {
+    SetCode(_Visual_ExportData_Summarized);
+}
+
+function Visual_ExportData_Underlying() {
+    SetCode(_Visual_ExportData_Underlying);
 }

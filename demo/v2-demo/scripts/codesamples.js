@@ -1717,10 +1717,10 @@ function _Visual_GetFilters() {
 
             visual.getFilters()
               .then(function (filters) {
-                  Log.log(filters);
+                Log.log(filters);
               })
               .catch(function (errors) {
-                  Log.log(errors);
+                Log.log(errors);
               });
           })
           .catch(function (errors) {
@@ -1758,12 +1758,102 @@ function _Visual_RemoveFilters() {
 
             visual.removeFilters()
               .catch(function (errors) {
-                  Log.log(errors);
+                Log.log(errors);
               });
           })
           .catch(function (errors) {
             Log.log(errors);
           });
+      })
+      .catch(function (errors) {
+        Log.log(errors);
+      });
+}
+
+function _Visual_ExportData_Summarized() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Retrieve the page collection and get the visuals for the first page.
+    report.getPages()
+      .then(function (pages) {
+
+        // Retrieve active page.
+        var activePage = pages.find(function(page) {
+          return page.isActive
+        });
+
+        activePage.getVisuals()
+          .then(function (visuals) {
+
+            // Retrieve the wanted visual.
+            var visual = visuals.find(function(visual) {
+              return visual.name == "VisualContainer3";
+            });
+
+            // Exports visual data
+            visual.exportData(models.ExportDataType.Summarized)
+              .then(function (data) {
+                Log.log(data);
+              })
+              .catch(function (errors) {
+                Log.log(errors);
+              });
+            })
+            .catch(function (errors) {
+              Log.log(errors);
+            });
+      })
+      .catch(function (errors) {
+        Log.log(errors);
+      });
+}
+
+function _Visual_ExportData_Underlying() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Retrieve the page collection and get the visuals for the first page.
+    report.getPages()
+      .then(function (pages) {
+
+        // Retrieve active page.
+        var activePage = pages.find(function(page) {
+          return page.isActive
+        });
+
+        activePage.getVisuals()
+          .then(function (visuals) {
+
+            // Retrieve the wanted visual.
+            var visual = visuals.find(function(visual) {
+              return visual.name == "VisualContainer3";
+            });
+
+            // Exports visual data
+            visual.exportData(models.ExportDataType.Underlying)
+              .then(function (data) {
+                Log.log(data);
+              })
+              .catch(function (errors) {
+                Log.log(errors);
+              });
+            })
+            .catch(function (errors) {
+              Log.log(errors);
+            });
       })
       .catch(function (errors) {
         Log.log(errors);

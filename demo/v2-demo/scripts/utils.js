@@ -96,23 +96,6 @@ function ClearTextArea(textAreaSelector) {
     $(textAreaSelector).val("");
 }
 
-function AddImgToNewOperations(){
-  var newListItems = $('.newOperation');
-  newListItems.each(function(index, value)
-  {
-      var spanElement = document.createElement("span");
-      spanElement.innerText = value.innerText;
-
-      var newImgElement = document.createElement("img");
-      newImgElement.src = "images\\new.svg";
-      
-      value.innerText = '';
-      value.appendChild(spanElement);
-      value.appendChild(newImgElement);
-      
-  });
-}
-
 function getEmbedContainerID(entityType) {
     switch (entityType) {
         case EntityType.Visual:

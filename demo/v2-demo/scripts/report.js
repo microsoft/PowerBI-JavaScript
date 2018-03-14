@@ -104,7 +104,6 @@ function OpenInteractStep() {
         $("#settings").load("settings_interact_tile.html", function() {
             SetToggleHandler("tile-operations-div");
             LoadCodeArea("#embedCodeDiv", "");
-            AddImgToNewOperations();
         });
     }
     else if (entityType == EntityType.Dashboard)
@@ -112,7 +111,6 @@ function OpenInteractStep() {
         $("#settings").load("settings_interact_dashboard.html", function() {
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
-            AddImgToNewOperations();
         });
     }
     else if (entityType == EntityType.Qna)
@@ -120,7 +118,6 @@ function OpenInteractStep() {
         $("#settings").load("settings_interact_qna.html", function() {
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
-            AddImgToNewOperations();
         });
     }
     else if (entityType == EntityType.Visual)
@@ -128,7 +125,6 @@ function OpenInteractStep() {
         $("#settings").load("settings_interact_visual.html", function() {
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
-            AddImgToNewOperations();
         });
     }
     else
@@ -136,7 +132,6 @@ function OpenInteractStep() {
         $("#settings").load("settings_interact_report.html", function() {
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
-            AddImgToNewOperations();
         });
     }
 }
