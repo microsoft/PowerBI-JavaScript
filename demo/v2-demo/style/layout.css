@@ -59,12 +59,13 @@ header
     height: 100%;
     width: 100%;
     background-color: #F1F1F1;
+    width: calc(100% - 160px);
+    display: table-cell;
 }
 
 .content {
     height: 100%;
     width: 100%;
-    display: table;
 }
 
 #settings {

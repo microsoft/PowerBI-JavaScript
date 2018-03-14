@@ -12,6 +12,10 @@ body {
     height:100%;
 }
 
+h1 {
+    margin-bottom: 15px;
+}
+
 h3 {
     margin: 0;
 }
@@ -649,11 +653,6 @@ a {
     max-width: 800px;
 }
 
-.title {
-    font-size: 17px;
-    font-weight: 400px;
-}
-
 #createModeInput {
     display: none;
 }
@@ -889,4 +888,37 @@ a {
     outline: none;
     box-shadow: none;
     background: transparent;
+}
+
+#docs-section {
+    font-size: 16px;
+    line-height: 2;
+    background: #F1F1F1;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+}
+
+.docs-links {
+    margin-right: 30px;
+    float: left;
+    width: 330px;
+    height: 180px;
+}
+
+.docs-video {
+    margin-right: 30px;
+    float: left;
+    font-weight: 600;
+    line-height: 3;
+    width: 330px;
+}
+
+.docs-line {
+    display: block;
+    clear: both;
+}
+
+#docs-content {
+    max-width: 1080px;
 }
