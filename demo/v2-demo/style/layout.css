@@ -41,7 +41,7 @@ header
 }
 
 #mainContent {
-    padding: 12px;
+    padding: 16px 8px 8px 8px;
     width: 100%;
     background: #F1F1F1;
 }
@@ -68,14 +68,13 @@ header
 }
 
 #settings {
-    margin-right: 20px;
+    margin-right: 10px;
     max-height: 330px;
     float: left;
-    overflow: hidden;
 }
 
 #embedCodeDiv {
-    margin-right: 20px;
+    margin-right: 10px;
     max-height: 330px;
     float: left;
     overflow: hidden;
@@ -108,7 +107,7 @@ header
 .topFrame {
     display: table-cell;
     width: 32%;
-    width: calc((100% - 40px)/3);
+    width: calc((100% - 20px)/3);
     height: 330px;
 }
 
@@ -177,6 +176,10 @@ header
     }
     body {
         background-color: #F1F1F1;
+    }
+
+    .desktop-view {
+        height: calc(100vw * 0.59);
     }
 }
 

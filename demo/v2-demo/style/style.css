@@ -16,6 +16,10 @@ h3 {
     margin: 0;
 }
 
+h8 {
+    font-weight: 600;
+}
+
 hr {
     border-color: #DDDDDD;
 }
@@ -97,9 +101,19 @@ a:hover, a:visited, a:link, a:active
 }
 
 .embed-table input[type="text"], #qna-embed-table input[type="text"], #dashboard-embed-table input[type="text"], #tile-embed-table input[type="text"] {
-    width: calc(100% - 110px);
+    width: calc(100% - 95px);
     border: none;
     margin-bottom: 5px;
+    background: #F1F1F1;
+    padding-left: 4px;
+}
+
+#visual-embed-table input[type="text"] {
+    width: calc(100% - 112px);
+    border: none;
+    margin-bottom: 5px;
+    background: #F1F1F1;
+    padding-left: 4px;
 }
 
 #report-embed-checkbox input {
@@ -300,11 +314,19 @@ a {
 }
 
 #wrapper-operations-div {
-    padding: 10px 20px 15px 8px;
+    padding: 10px 20px 15px 12px;
     background-color: white;
     width: 100%;
-    height: 305px;
+    height: 298px;
     overflow: hidden;
+    display: inline-block;
+}
+
+#wrapper-settings-div {
+    padding: 10px 10px 15px 12px;
+    background-color: white;
+    width: 100%;
+    height: 298px;
     display: inline-block;
 }
 
@@ -436,8 +458,10 @@ a {
 }
 
 .editorTitle {
-    margin-bottom: 5px;
     font-weight: bold;
+    font-size: 15px;
+    height: 32px;
+    padding: 5px 0 0 8px;
 }
 
 #GoToInteractStep {
@@ -530,7 +554,7 @@ a {
 }
 
 .spacer {
-    height: 10px;
+    height: 5px;
 }
 
 .scrollbar
@@ -552,20 +576,8 @@ a {
     overflow-y: auto;
 }
 
-.embed-table .inputLine {
-    margin: 5px 0px;
-}
-
-#dashboard-embed-table .inputLine {
-    margin: 5px 0px;
-}
-
-#tile-embed-table .inputLine {
-    margin: 5px 0px;
-}
-
-#qna-embed-table .inputLine {
-    margin: 5px 0px;
+.embed-table .inputLine, #dashboard-embed-table .inputLine, #tile-embed-table .inputLine, #qna-embed-table .inputLine, #visual-embed-table .inputLine {
+    margin: 2px 0px;
 }
 
 .pageTitle h4 {
@@ -630,7 +642,7 @@ a {
 }
 
 .inputLineTitle {
-    width: 100px;
+    width: 90px;
     display: inline-block;
     vertical-align: middle;
 }
@@ -640,7 +652,7 @@ a {
 }
 
 #modeSelector {
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     cursor: default;
 }
 
@@ -648,17 +660,46 @@ a {
     border: none;
 }
 
-#qna-embed-table .spacer {
-    height: 5px;
-}
-
 #questionDiv {
     margin-bottom: 10px;
 }
 
 .infoImg {
-    width: 16px;
     margin-bottom: 3px;
+}
+
+.customTooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.customTooltip .tooltipText {
+    visibility: hidden;
+    width: 164px;
+    background-color: #121212;
+    color: #F1F1F1;
+    text-align: left;
+    padding: 4px 12px;
+    font-size: 12px;
+    left: -75px;
+    top: 25px;
+    position: absolute;
+    z-index: 1;
+}
+
+.customTooltip:hover .tooltipText {
+    visibility: visible;
+}
+
+.customTooltip .tooltipText::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
 }
 
 .mobile-view {
@@ -772,8 +813,8 @@ a {
 .radioContainer {
     display: block;
     position: relative;
-    padding-left: 18px;
-    margin-bottom: 2px;
+    padding-left: 26px;
+    margin: 4px 0;
     cursor: pointer;
     font-weight: normal;
 }
@@ -786,20 +827,19 @@ a {
 
 .checkmark {
     position: absolute;
-    top: 2.5px;
+    top: 2px;
     left: 0px;
-    height: 14px;
-    width: 14px;
-    background-color: #FFFFFF;
+    height: 16px;
+    width: 16px;
     border: none;
     border-radius: 50%;
-    border-color: #C4C4C4;
+    border-color: #6E6E6E;
     border-style: solid;
     border-width: 1px;
 }
 
 .radioContainer input:checked ~ .checkmark {
-    background-color: #4A91DE;
+    border-color: #3E65FF;
 }
 
 .checkmark:after {
@@ -813,12 +853,12 @@ a {
 }
 
 .radioContainer .checkmark:after {
-    top: 4px;
-    left: 4px;
-    width: 4px;
-    height: 4px;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: #FFFFFF;
+    background: #3E65FF;
 }
 
 #clipboard-textarea {
