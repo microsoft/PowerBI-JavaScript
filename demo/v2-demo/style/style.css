@@ -479,15 +479,50 @@ a {
 }
 
 .editorTitle {
-    font-weight: bold;
+    font-weight: 620;
     font-size: 15px;
     height: 32px;
     padding: 5px 0 0 8px;
 }
 
-#GoToInteractStep {
-    display: inline-block;
-    position: relative;
+#tab-wrapper {
+    height: 32px;
+}
+
+#tabs-ul {
+    list-style-type: none;
+    margin: 0px;
+    overflow: hidden;
+    padding-left: 0;
+    -webkit-margin-before: 0;
+    -webkit-padding-start: 0;
+    line-height: 30px;
+    width: 100%;
+}
+
+#tabs-ul a {
+    color: #6E6E6E;
+    font-family: 'Segoe UI', sans-serif;
+    line-height: normal;
+    font-size: 15px;
+    font-weight: 620;
+}
+
+#tabs-ul li {
+    height: 32px;
+    width: 96px;
+    background-color: #E1E1E1;
+    text-align: center;
+    float: left;
+}
+
+#tabs-ul li.tabs-li-active {
+    color: black;
+    background-color: white;
+}
+
+#tabs-ul .tabs-li-active a {
+    color: black;
 }
 
 .textAreaControls {

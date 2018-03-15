@@ -1,9 +1,21 @@
 <!DOCTYPE html>
-<div id="select-step-wrapper">
+<div id="samples-step-wrapper">
 </div>
 <div id="embed-and-interact-steps-wrapper">
     <div class="topPanel">
-        <div id="settings" class="topFrame"></div>
+        <div id="settings-wrapper" class="topFrame">
+            <div id="tabs-wrapper">
+                <ul id="tabs-ul">
+                    <li id="embed-tab" class="tabs-li-active" onclick="OpenEmbedTab();">
+                        <div><a href="#">Embed</a></div>
+                    </li>
+                    <li id="interact-tab" onclick="OpenInteractTab();">
+                        <div><a href="#">Interact</a></div>
+                    </li>
+                </ul>
+            </div>
+            <div id="settings"></div>
+        </div>
         <div id="embedCodeDiv" class="topFrame"></div>
         <div id="logWindow" class="topFrame"></div>
     </div>
@@ -51,7 +63,7 @@
 
 <script>
 $(document).ready(function() {
-    $("#select-step-wrapper").load("step_select.html");
+    $("#samples-step-wrapper").load("step_samples.html");
 
     LoadLogWindow("#logWindow");
 
@@ -77,12 +89,12 @@ $(document).ready(function() {
 
     if (GetParameterByName("embedUrl") || GetParameterByName("embedId") || GetParameterByName("accessToken") || GetParameterByName("entityType"))
     {
-        OpenEmbedStep(mode, entityType, 0);
+        OpenCodeStep(mode, entityType, 0);
     }
     else
     {
         // Open Select Step after this page loads.
-        OpenSelectStep();
+        OpenSamplesStep();
     }
 
     Log = InitLogger("txtResponse");

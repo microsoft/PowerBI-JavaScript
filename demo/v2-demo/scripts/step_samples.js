@@ -155,48 +155,48 @@ function LoadSampleQnaIntoSession() {
     return FetchUrlIntoSession(qnaUrl, false /* updateCurrentToken */);
 }
 
-function OpenEmbedStepWithSample(entityType) {
+function OpenCodeStepWithSample(entityType) {
     SetSession(SessionKeys.EntityType, entityType);
 
     if (entityType == EntityType.Report)
     {
         SetSession(SessionKeys.IsSampleReport, true);
-        OpenEmbedStep(EmbedViewMode, EntityType.Report);
+        OpenCodeStep(EmbedViewMode, EntityType.Report);
     }
     else if (entityType == EntityType.Visual)
     {
         SetSession(SessionKeys.IsSampleReport, true);
-        OpenEmbedStep(EmbedViewMode, EntityType.Visual);
+        OpenCodeStep(EmbedViewMode, EntityType.Visual);
     }
     else if (entityType == EntityType.Dashboard)
     {
         SetSession(SessionKeys.IsSampleDashboard, true);
-        OpenEmbedStep(EmbedViewMode, EntityType.Dashboard);
+        OpenCodeStep(EmbedViewMode, EntityType.Dashboard);
     }
     else if (entityType == EntityType.Tile)
     {
       SetSession(SessionKeys.IsSampleTile, true);
-      OpenEmbedStep(EmbedViewMode, EntityType.Tile)
+      OpenCodeStep(EmbedViewMode, EntityType.Tile)
     }
     else if (entityType == EntityType.Qna)
     {
       SetSession(SessionKeys.IsSampleQna, true);
-      OpenEmbedStep(EmbedViewMode, EntityType.Qna)
+      OpenCodeStep(EmbedViewMode, EntityType.Qna)
     }
 }
 
-function OpenEmbedStepCreateWithSample() {
+function OpenCodeStepCreateWithSample() {
     SetSession(SessionKeys.IsSampleReport, true);
     SetSession(SessionKeys.EntityType, EntityType.Report);
 
-    OpenEmbedStep(EmbedCreateMode, EntityType.Report);
+    OpenCodeStep(EmbedCreateMode, EntityType.Report);
 }
 
-function OpenEmbedStepFromUserSettings() {
+function OpenCodeStepFromUserSettings() {
     SetSession(SessionKeys.IsSampleReport, false);
     SetSession(SessionKeys.EntityType, EntityType.Report);
 
-    OpenEmbedStep(EmbedViewMode, EntityType.Report);
+    OpenCodeStep(EmbedViewMode, EntityType.Report);
 }
 
 function WarmStartSampleReportEmbed() {

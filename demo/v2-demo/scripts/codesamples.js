@@ -217,7 +217,8 @@ function _Embed_DashboardEmbed() {
         tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
         accessToken: txtAccessToken,
         embedUrl: txtEmbedUrl,
-        id: txtEmbedDashboardId
+        id: txtEmbedDashboardId,
+        pageView: 'fitToWidth'
     };
 
     // Get a reference to the embedded dashboard HTML element

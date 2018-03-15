@@ -1,5 +1,6 @@
 const active_class = 'active';
-const active_li = 'steps-li-active';
+const active_steps_li = 'steps-li-active';
+const active_tabs_li = 'tabs-li-active';
 
 const EmbedViewMode = "view";
 const EmbedEditMode = "edit";
@@ -7,36 +8,36 @@ const EmbedCreateMode = "create";
 
 const runEmbedCodeTimeout = 500;
 
-function OpenSelectStep() {
+function OpenSamplesStep() {
     $('#steps-ul a').removeClass(active_class);
-    $(".steps-li-active").removeClass(active_li);
+    $(".steps-li-active").removeClass(active_steps_li);
 
-    $("#steps-select a").addClass(active_class);
-    $("#steps-select").addClass(active_li);
+    $("#steps-samples a").addClass(active_class);
+    $("#steps-samples").addClass(active_steps_li);
 
     // Hide Embed view in authorization step.
-    $("#select-step-wrapper").show();
+    $("#samples-step-wrapper").show();
     $("#embed-and-interact-steps-wrapper").hide();
 }
 
-function OpenEmbedStepFromNavPane()
+function OpenCodeStepFromNavPane()
 {
     var mode = GetSession(SessionKeys.EmbedMode);
     var entityType = GetSession(SessionKeys.EntityType);
     var tokenType = GetSession(SessionKeys.TokenType);
 
-    OpenEmbedStep(mode, entityType, tokenType);
+    OpenCodeStep(mode, entityType, tokenType);
 }
 
-function OpenEmbedStep(mode, entityType, tokenType) {
+function OpenCodeStep(mode, entityType, tokenType) {
     $('#steps-ul a').removeClass(active_class);
-    $(".steps-li-active").removeClass(active_li);
+    $(".steps-li-active").removeClass(active_steps_li);
 
-    $('#steps-embed a').addClass(active_class);
-    $('#steps-embed').addClass(active_li);
+    $('#steps-code a').addClass(active_class);
+    $('#steps-code').addClass(active_steps_li);
 
     // Hide Embed view in authorization step.
-    $("#select-step-wrapper").hide();
+    $("#samples-step-wrapper").hide();
     $("#embed-and-interact-steps-wrapper").show();
 
     let containers = $(".iframeContainer");
@@ -53,7 +54,15 @@ function OpenEmbedStep(mode, entityType, tokenType) {
     $(activeContainer).attr('id', containerID);
     $(activeContainer).addClass(active_class);
 
-    const widthHeightRatio = 0.4;
+    $('.' + active_tabs_li).removeClass(active_tabs_li);
+
+    $('#embed-tab').addClass(active_tabs_li);
+    $('#interact-tab').removeClass(active_tabs_li);
+
+    LoadEmbedSettings(mode, entityType, tokenType);
+}
+
+function LoadEmbedSettings(mode, entityType, tokenType) {
     if (entityType == EntityType.Report)
     {
         $("#settings").load("settings_embed_report.html", function() {
@@ -86,18 +95,40 @@ function OpenEmbedStep(mode, entityType, tokenType) {
     }
 }
 
-function OpenInteractStep() {
-    $('#steps-ul a').removeClass(active_class);
-    $(".steps-li-active").removeClass(active_li);
+function OpenEmbedTab() {
+    if ($('#embed-tab').hasClass(active_tabs_li)) {
+        return;
+    }
 
-    $('#steps-interact a').addClass(active_class);
-    $('#steps-interact').addClass(active_li);
+    $('.' + active_tabs_li).removeClass(active_tabs_li);
 
-    // Hide Embed view in authorization step.
-    $("#select-step-wrapper").hide();
-    $("#embed-and-interact-steps-wrapper").show();
+    $('#embed-tab').addClass(active_tabs_li);
 
+    var mode = GetSession(SessionKeys.EmbedMode);
     var entityType = GetSession(SessionKeys.EntityType);
+    var tokenType = GetSession(SessionKeys.TokenType);
+
+    LoadEmbedSettings(mode, entityType, tokenType);
+}
+
+function isInteractStepEnabled(entityType) {
+    var classPrefix = getEmbedContainerClassPrefix(entityType);
+    var activeContainer = classPrefix + ($(".desktop-view").hasClass(active_class) ? 'Container' : 'MobileContainer');
+
+    // Check if active container has an iframe
+    return $(activeContainer + " iframe").length > 0;
+}
+
+function OpenInteractTab() {
+    var entityType = GetSession(SessionKeys.EntityType);
+    // Interact step is disabled unless active container has an iframe
+    if (!isInteractStepEnabled(entityType)) {
+        // TODO: SHOW TOOLTIP "Press the run button in order to embed, before interacting"
+        return;
+    }
+
+    $('.' + active_tabs_li).removeClass(active_tabs_li);
+    $('#interact-tab').addClass(active_tabs_li);
 
     if (entityType == EntityType.Tile)
     {
@@ -386,7 +417,7 @@ function EmbedAreaDesktopView() {
     $(classPrefix + 'MobileContainer').removeClass(active_class);
     $(classPrefix + 'Container').addClass(active_class);
 
-    if(!$('#steps-embed').hasClass("steps-li-active")) {
+    if(!$('#embed-tab').hasClass("tabs-li-active")) {
         return;
     }
 
@@ -424,7 +455,7 @@ function EmbedAreaMobileView() {
     $(classPrefix + 'Container').removeClass(active_class);
     $(classPrefix + 'MobileContainer').addClass(active_class);
 
-    if(!$('#steps-embed').hasClass("steps-li-active")) {
+    if(!$('#embed-tab').hasClass("tabs-li-active")) {
         return;
     }
 

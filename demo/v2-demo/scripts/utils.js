@@ -62,6 +62,7 @@ function SetCode(func) {
 
         $('#btnRunCode').off('click');
         $('#btnRunCode').click(runFunc);
+        // TODO: add indication to click Interact tab on first embedding
     }
 }
 

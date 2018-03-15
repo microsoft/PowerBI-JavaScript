@@ -9,7 +9,7 @@ $(function() {
 });
 
 function OpenSampleSection() {
-    OpenEmbedWorkspace("#main-sample", "step_select.html");
+    OpenEmbedWorkspace("#main-sample", "step_samples.html");
 }
 
 function OpenAnyReportSection() {
@@ -28,12 +28,12 @@ function OpenEmbedWorkspace(activeTabSelector, authStepHtml)
         });
     }
 
-    $("#select-step-wrapper").load(authStepHtml);
+    $("#samples-step-wrapper").load(authStepHtml);
     SetActiveStyle(activeTabSelector);
 
     $(".content").hide();
     $("#sampleContent").show();
-    OpenSelectStep();
+    OpenSamplesStep();
 }
 
 function OpenDocumentationSection() {
