@@ -15,7 +15,9 @@ const SessionKeys = {
     EntityType: "entityType",
     SampleId: "SampleId",
     PageName: "PageName",
-    VisualName: "VisualName"
+    VisualName: "VisualName",
+    QnaQuestion: "QnaQuestion",
+    QnaMode: "QnaMode"
 };
 
 function GetParameterByName(name, url) {
@@ -23,7 +25,7 @@ function GetParameterByName(name, url) {
       url = window.location.href;
     }
     name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
@@ -41,7 +43,7 @@ function GetSession(key) {
 }
 
 function UpdateSession(button, sessionKey) {
-    var value = $(button).val();
+    const value = $(button).val();
     if (value)
     {
         SetSession(sessionKey, value);
@@ -49,7 +51,7 @@ function UpdateSession(button, sessionKey) {
 }
 
 function SetTextboxFromSessionOrUrlParam(sessionKey, textboxSelector) {
-    var value = GetParameterByName(sessionKey);
+    let value = GetParameterByName(sessionKey);
     if (!value)
     {
         value = GetSession(sessionKey);
@@ -58,18 +60,18 @@ function SetTextboxFromSessionOrUrlParam(sessionKey, textboxSelector) {
 }
 
 function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector, embedIdSelector, dashboardIdSelector) {
-    var accessToken = GetParameterByName(SessionKeys.AccessToken);
+    let accessToken = GetParameterByName(SessionKeys.AccessToken);
     if (!accessToken)
     {
         accessToken = GetSession(SessionKeys.AccessToken);
     }
 
-    var embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
+    let embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
     if (!embedUrl)
     {
         embedUrl = GetSession(SessionKeys.EmbedUrl);
     } else {
-        var groupId = GetParameterByName(SessionKeys.GroupId);
+        let groupId = GetParameterByName(SessionKeys.GroupId);
         if(groupId)
         {
             if (embedUrl.indexOf("?") != -1)
@@ -81,19 +83,19 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
         }
     }
 
-    var embedId = GetParameterByName(SessionKeys.EmbedId);
+    let embedId = GetParameterByName(SessionKeys.EmbedId);
     if (!embedId)
     {
         embedId = GetSession(SessionKeys.EmbedId);
     }
 
-    var tokenType = GetParameterByName(SessionKeys.TokenType);
+    let tokenType = GetParameterByName(SessionKeys.TokenType);
     if (!tokenType)
     {
         tokenType = GetSession(SessionKeys.TokenType);
     }
 
-    var dashboardId = GetParameterByName(SessionKeys.DashboardId);
+    let dashboardId = GetParameterByName(SessionKeys.DashboardId);
     if (!dashboardId) {
         dashboardId = GetSession(SessionKeys.DashboardId);
     }
@@ -106,6 +108,6 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
     //
     // Set the embed type (Saas or Embed token)
     //
-    var embedTypeRadios = $('input:radio[name=tokenType]');
+    let embedTypeRadios = $('input:radio[name=tokenType]');
     embedTypeRadios.filter('[value=' + tokenType + ']').prop('checked', true);
 }

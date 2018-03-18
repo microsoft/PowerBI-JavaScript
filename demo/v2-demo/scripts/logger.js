@@ -7,7 +7,7 @@ function InitLogger(divId) {
     };
 
     Logger.logText = function name(text) {
-        var textbox = document.getElementById(divId);
+        let textbox = document.getElementById(divId);
     
         if (!textbox.value)
         {

@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<div id="authorize-step-wrapper">
+<div id="samples-step-wrapper">
 </div>
 <div id="embed-and-interact-steps-wrapper">
     <div class="topPanel">
-        <div id="settings"></div>
-        <div id="embedCodeDiv"></div>
-        <div id="logWindow"></div>
+        <div id="settings-wrapper" class="topFrame">
+            <div id="tabs-wrapper">
+                <ul id="tabs-ul">
+                    <li id="embed-tab" class="tabs-li-active" onclick="OpenEmbedTab();">
+                        <div><a href="#">Embed</a></div>
+                    </li>
+                    <li id="interact-tab" onclick="OpenInteractTab();">
+                        <div class="interactTooltip">
+                            <div><a href="#">Interact</a></div>
+                            <span class="tooltipText">Please click 'Run' before switching to 'Interact' tab</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div id="settings"></div>
+        </div>
+        <div id="embedCodeDiv" class="topFrame"></div>
+        <div id="logWindow" class="topFrame"></div>
     </div>
 
     <div class="bottomPanel">
@@ -13,26 +28,53 @@
             <div class="editorTitle">
                 <div class="editorTitleText">Embedded view</div>
             </div>
-            <div id="embedContainer" class="embedContainer"></div>
-            <div id="dashboardContainer" class="embedContainer"></div>
-            <div id="visualContainer" class="embedContainer"></div>
-            <div id="tileContainer" class="embedContainer"></div>
-            <div id="qnaContainer" class="embedContainer"></div>
+            <div class="textAreaControls">
+                <button id="btnDesktopView" class="textAreaControl wide" onclick="elementClicked(this);EmbedAreaDesktopView();">
+                    <img src="images\pc.png"/> Desktop
+                </button>
+                <button id="btnPhoneView" class="textAreaControl narrow" onclick="elementClicked(this);EmbedAreaMobileView();">
+                    <img src="images\phone.png"/> Phone
+                </button>
+            </div>
+            <div class="desktop-view active">
+                <div class="reportContainer iframeContainer"></div>
+                <div class="dashboardContainer iframeContainer"></div>
+                <div class="visualContainer iframeContainer"></div>
+                <div class="tileContainer iframeContainer"></div>
+                <div class="qnaContainer iframeContainer"></div>
+            </div>
+            <div class="mobile-view">
+                <div class="phone-frame">
+                    <div class="phone-top">
+                        <div class="phone-speaker"></div>
+                    </div>
+                    <div class="phone-screen">
+                        <div class="reportMobileContainer iframeContainer"></div>
+                        <div class="dashboardMobileContainer iframeContainer"></div>
+                        <div class="visualMobileContainer iframeContainer"></div>
+                        <div class="tileMobileContainer iframeContainer"></div>
+                        <div class="qnaMobileContainer iframeContainer"></div>
+                    </div>
+                    <div class="phone-bottom">
+                        <div class="phone-button"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
 $(document).ready(function() {
-    $("#authorize-step-wrapper").load("step_authorize.html");
+    $("#samples-step-wrapper").load("step_samples.html");
 
     LoadLogWindow("#logWindow");
 
-    var modeUrlParam = GetParameterByName("mode");
-    var mode = modeUrlParam ? modeUrlParam : "view";
+    const modeUrlParam = GetParameterByName("mode");
+    const mode = modeUrlParam ? modeUrlParam : "view";
 
-    var entityTypeUrlParam = GetParameterByName("entityType");
-    var entityType;
+    const entityTypeUrlParam = GetParameterByName("entityType");
+    let entityType;
     if (entityTypeUrlParam == "dashboard") {
         entityType = EntityType.Dashboard;
     } else if (entityTypeUrlParam == "tile") {
@@ -50,12 +92,12 @@ $(document).ready(function() {
 
     if (GetParameterByName("embedUrl") || GetParameterByName("embedId") || GetParameterByName("accessToken") || GetParameterByName("entityType"))
     {
-        OpenEmbedStep(mode, entityType, 0);
+        OpenCodeStep(mode, entityType, 0);
     }
     else
     {
-        // Open Authorization Step after this page loads.
-        OpenAuthStep();
+        // Open Select Step after this page loads.
+        OpenSamplesStep();
     }
 
     Log = InitLogger("txtResponse");

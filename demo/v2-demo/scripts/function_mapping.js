@@ -26,20 +26,20 @@ function datasetNotSupported() {
 }
 
 function IsSaveMock(funcName) {
-    var sampleId = GetSession(SessionKeys.SampleId);
-    var isSample = sampleId && (_session.embedId  === sampleId);
+    const sampleId = GetSession(SessionKeys.SampleId);
+    const isSample = sampleId && (_session.embedId  === sampleId);
     return ((funcName === '_Report_save' || funcName === '_Report_saveAs') && isSample);
 }
 
 function IsBasicMock(funcName) {
-    var sampleId = GetSession(SessionKeys.SampleId);
-    var isSample = sampleId && (_session.embedId  === sampleId);
+    const sampleId = GetSession(SessionKeys.SampleId);
+    const isSample = sampleId && (_session.embedId  === sampleId);
     return ((funcName === '_Embed_BasicEmbed' || funcName === '_Embed_BasicEmbed_EditMode') && isSample);
 }
 
 function IsCreateMock(funcName) {
-    var sampleId = GetSession(SessionKeys.SampleId);
-    var isSample = sampleId && (_session.embedId  === sampleId);
+    const sampleId = GetSession(SessionKeys.SampleId);
+    const isSample = sampleId && (_session.embedId  === sampleId);
     return (funcName === '_Embed_Create' && isSample);
 }
 
@@ -48,19 +48,19 @@ function IsNotSupported(funcName) {
         return false
     }
 
-    const notReportMatch = funcName.match(/Dashboard|Tile|Qna|Visual/);
+    const notReportMatch = funcName.match(/Dashboard|Tile|Qna|Visual|Mobile/);
     if (notReportMatch) {
       return false;
     }
 
      // Get a reference to the embedded element
-    var container = '#embedContainer';
-    var embed = powerbi.get($(container)[0]);
+    const container = '#embedContainer';
+    let embed = powerbi.get($(container)[0]);
     if (embed.config.type !== 'create') {
         return false;
     }
 
-    var runFunc = mockDict[funcName];
+    const runFunc = mockDict[funcName];
     return (runFunc && runFunc === datasetNotSupported) ? true : false;
 }
 
@@ -69,12 +69,12 @@ function IsMock(funcName) {
 }
 
 function mapFunc(func) {
-    var funcName = getFuncName(func);
+    const funcName = getFuncName(func);
     return IsMock(funcName) ? mockDict[funcName] : func;
 }
 
 function getFuncName(func) {
-    var funcName = func.name;
+    let funcName = func.name;
 
     if (!funcName)
     {
