@@ -15,33 +15,37 @@
 
 <body>
     <header>
-        <div id="navbar">
-          <div class="logo-text">
-              <div class="logo-text-span">Microsoft Power BI Embedded Sample</div>
-          </div>
-          <div id="top-nav-bar">
-            <div id="top-ul-dev">
-                <ul id="top-ul" class="top-ul">
-                    <li id="top-sample" class="top-li-active" onclick="OpenSampleSection();">
-                        <div><a href="#">Sample</a></div>
-                    </li>
-                    <li id="top-docs" onclick="OpenDocumentationSection();">
-                        <div><a href="#">Documentation</a></div>
-                    </li>
-                </ul>
-            </div>
-          </div>
+        <div class="logo-text">
+            <div class="logo-text-span">Microsoft Power BI Embedded Playground</div>
         </div>
     </header>
-
-    <div id="contentWrapper">
-        <div id ="sampleContent" class="content">
+    <div id="navbar-content">
+        <div id="navbar">
+            <div id="main-nav-bar">
+                <div id="main-ul-dev">
+                    <ul id="main-ul" class="main-ul">
+                        <li id="main-sample" class="main-li-active" onclick="OpenSampleSection();">
+                            <div><a href="#">Sample tool</a></div>
+                        </li>
+                        <li id="main-demos" class="main-li-active" onclick="OpenDemosSection();" style="display: none;">
+                            <div><a href="#">Demos</a></div>
+                        </li>
+                        <li id="main-docs" onclick="OpenDocumentationSection();">
+                            <div><a href="#">Documentation</a></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
+        <div id="contentWrapper">
+            <div id ="sampleContent" class="content">
+            </div>
 
-        <div id ="documentationContent" class="content">
-        </div>
+            <div id ="demosContent" class="content">
+            </div>
 
-        <div id ="anyReportContent" class="content">
+            <div id ="documentationContent" class="content">
+            </div>
         </div>
     </div>
 
@@ -59,7 +63,7 @@
     
     <script src="scripts/report.js"></script>
     
-    <script src="scripts/step_authorize.js"></script>
+    <script src="scripts/step_samples.js"></script>
     <script src="scripts/step_embed.js"></script>
     <script src="scripts/step_interact.js"></script>
 

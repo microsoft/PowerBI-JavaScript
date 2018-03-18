@@ -98,6 +98,10 @@ function Events_SaveAsTriggered() {
     SetCode(_Events_SaveAsTriggered);
 }
 
+function Events_BookmarkApplied() {
+    SetCode(_Events_BookmarkApplied);
+}
+
 // ---- Edit and Save Operations ----------------------------------------------------
 
 function Report_switchModeEdit() {
@@ -116,6 +120,38 @@ function Report_saveAs() {
     SetCode(_Report_saveAs);
 }
 
+// ---- Bookmarks Operations ----------------------------------------------------
+function Bookmarks_Enable() {
+    SetCode(_Bookmarks_Enable);
+}
+
+function Bookmarks_Disable() {
+    SetCode(_Bookmarks_Disable);
+}
+
+function Bookmarks_Get() {
+    SetCode(_Bookmarks_Get);
+}
+
+function Bookmarks_Apply() {
+    SetCode(_Bookmarks_Apply);
+}
+
+function Bookmarks_Capture() {
+    SetCode(_Bookmarks_Capture);
+}
+
+function Bookmarks_ApplyState() {
+    SetCode(_Bookmarks_ApplyState);
+}
+
+function Bookmarks_EnterPresentation() {
+    SetCode(_Bookmarks_EnterPresentation);
+}
+
+function Bookmarks_ExitPresentation() {
+    SetCode(_Bookmarks_ExitPresentation);
+}
 
 // ---- Dashboard Operations ----------------------------------------------------
 
@@ -152,4 +188,26 @@ function Qna_QuestionChanged() {
 
 function Visual_DataSelected() {
     SetCode(_Visual_DataSelected);
+}
+
+// ---- Visuals -------------------------------------------------------------------
+
+function Visual_GetFilters() {
+    SetCode(_Visual_GetFilters);
+}
+
+function Visual_SetFilters() {
+    SetCode(_Visual_SetFilters);
+}
+
+function Visual_RemoveFilters() {
+    SetCode(_Visual_RemoveFilters);
+}
+
+function Visual_ExportData_Summarized() {
+    SetCode(_Visual_ExportData_Summarized);
+}
+
+function Visual_ExportData_Underlying() {
+    SetCode(_Visual_ExportData_Underlying);
 }

@@ -1,12 +1,14 @@
 <div id="response" class="responseDiv">
-    <div class="editorTitle">Log Viewer</div>
+    <div class="editorTitle">Log</div>
     <div class="textAreaControls">
-        <button id="btnCopyResponse" class="textAreaControl" onclick="CopyResponseWindow();">
+        <button id="btnCopyResponse" class="textAreaControl" onclick="elementClicked(this);CopyResponseWindow();">
             <img src="images\copy.png"/> Copy
         </button>
-        <button id="btnClearResponse" class="textAreaControl" onclick="ClearTextArea('#txtResponse');">
+        <button id="btnClearResponse" class="textAreaControl" onclick="elementClicked(this);ClearTextArea('#txtResponse');">
             <img src="images\clear.png"/> Clear
         </button>
     </div>
-    <textarea id="txtResponse" class="responseTextArea" />
+    <div class="responseTextAreaWrapper">
+        <textarea id="txtResponse" class="responseTextArea" />
+    </div>
 </div>

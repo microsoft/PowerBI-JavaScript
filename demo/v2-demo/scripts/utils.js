@@ -1,36 +1,12 @@
-function ValidateEmbedUrl(embedUrl) {
-    var embedUrl = $('#txtReportEmbed').val();
-    
-    if (!embedUrl)
-    {
-        alert("You must specify an embed url.");
-        return false;
-    }
-    var id = null;
-    var parts = embedUrl.split("reportId=");
-    if (parts && parts.length > 0)
-    {
-        var guidParts = parts[parts.length  -1].split("&");
-        if (guidParts && guidParts.length > 0)
-        {
-            id = guidParts[0];
-        }
-    }
-    
-    if (!id)
-    {
-        alert("Could not find report ID in url");
-        return false;
-    }
-    
-    return true;
-}
+var currentCode = "";
+const interactIndicationTimeout = 5000;
+const elementClickedTimeout = 250;
 
 function BodyCodeOfFunction(func) {
-    var lines = func.toString().split('\n');
+    let lines = func.toString().split('\n');
     lines = lines.slice(1, lines.length-1);
     
-    for (var i = 0; i < lines.length; ++i)
+    for (let i = 0; i < lines.length; ++i)
     {
         // remove trailing spaces.
         lines[i] = lines[i].substring(4);
@@ -50,18 +26,46 @@ function LoadLogWindow(divSelector) {
 }
 
 function SetCode(func) {
-	var codeHtml = '<pre id="txtCode" class="brush: js; gutter: false;">';
-	codeHtml = codeHtml + BodyCodeOfFunction(func) + '</pre><script type="text/javascript" src="syntaxHighlighter/syntaxhighlighter.js"></script>';
+    currentCode = BodyCodeOfFunction(func);
+	let codeHtml = '<pre id="txtCode" class="brush: js; gutter: false;">';
+	codeHtml = codeHtml + currentCode + '</pre><script type="text/javascript" src="syntaxHighlighter/syntaxhighlighter.js"></script>';
 	$("#highlighter").html(codeHtml);
 
-    var runFunc = mapFunc(func);
-    
-    $('#btnRunCode').off('click');
-    $('#btnRunCode').click(runFunc);
+    if (func != "") {
+        let runFunc = mapFunc(func);
+
+        if (getFuncName(runFunc).match(/Embed/)) {
+            let oldFunc = runFunc;
+            runFunc = function() {
+                oldFunc();
+                $('#interact-tab').addClass('enableTransition');
+                setTimeout(function() {
+                    $('#interact-tab').addClass('changeColor');
+                }, interactIndicationTimeout);
+            }
+        }
+
+        $('#btnRunCode').off('click');
+        $('#btnRunCode').click(function() {
+            elementClicked('#btnRunCode');
+            runFunc();
+        });
+        // TODO: add indication to click Interact tab on first embedding
+    }
 }
 
 function CopyCode() {
-    CopyTextArea("#txtCode", "#btnRunCopyCode");
+    const id = "clipboard-textarea";
+    let textarea = document.getElementById(id);
+
+    if (!textarea) {
+        textarea = document.createElement("textarea");
+        textarea.id = id;
+        document.querySelector("body").appendChild(textarea);
+    }
+
+    textarea.value = currentCode;
+    CopyTextArea('#' + id, "#btnRunCopyCode");
 }
 
 function CopyResponseWindow() {
@@ -81,19 +85,39 @@ function ClearTextArea(textAreaSelector) {
     $(textAreaSelector).val("");
 }
 
-function AddImgToNewOperations(){
-  var newListItems = $('.newOperation');
-  newListItems.each(function(index, value)
-  {
-      var spanElement = document.createElement("span");
-      spanElement.innerText = value.innerText;
+function getEmbedContainerID(entityType) {
+    switch (entityType) {
+        case EntityType.Visual:
+            return "visualContainer";
+        case EntityType.Dashboard:
+            return "dashboardContainer";
+        case EntityType.Tile:
+            return "tileContainer";
+        case EntityType.Qna:
+            return "qnaContainer";
+        default:
+            return "embedContainer";
+    }
+}
 
-      var newImgElement = document.createElement("img");
-      newImgElement.src = "images\\new.svg";
-      
-      value.innerText = '';
-      value.appendChild(spanElement);
-      value.appendChild(newImgElement);
-      
-  });
+function getEmbedContainerClassPrefix(entityType, isMobile) {
+    switch (entityType) {
+        case EntityType.Visual:
+            return ".visual";
+        case EntityType.Dashboard:
+            return ".dashboard";
+        case EntityType.Tile:
+            return ".tile";
+        case EntityType.Qna:
+            return ".qna";
+        default:
+            return ".report";
+    }
+}
+
+function elementClicked(element) {
+    $(element).addClass('elementClicked');
+    setTimeout(function() {
+        $(element).removeClass('elementClicked');
+    }, elementClickedTimeout);
 }

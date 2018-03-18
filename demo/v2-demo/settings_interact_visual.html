@@ -1,19 +1,13 @@
 <div id="step-interact-wrapper">
     <div>
-        <div id="operation-categories">
-            <div id="operations-ul-wrapper" tabindex="-1">
-                <ul id="operations-ul">
-                    <li id="visual-operations-li" onclick="OpenVisualOperations();" class="active">
-                        <a href="#">Visual operations</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
         <div id="category-browser">
             <div id="wrapper-operations-div" class="operations-div">
-                <div id="visual-operations-div" class="operations-div">
-                    <ul class="function-ul">
-                        <li onclick="Visual_DataSelected()">Data selected event</li>
+                <div id="operation-categories" class="operations-div">
+                    <ul class="operations-ul">
+                        <li id="visual-data-operations" onclick="OpenVisualDataOperations();"><a href="#">Data</a></li>
+                        <ul id="visual-data-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Visual_DataSelected()"><a href="#">Data selected</a></li>
+                        </ul>
                     </ul>
                 </div>
             </div>

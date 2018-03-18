@@ -1,67 +1,123 @@
+html {
+    overflow-x: hidden;
+}
+
 body {
     min-width: 300px;
+    background-color: #212121;
 }
 
 header
 {
-    padding: 20px 40px;
+    position: relative;
+    height: 60px;
+    background: #121212;
 }
 
-.logo-text-span {
-    color: rgb(0, 174, 239);
-    font-family: 'Segoe UI Web Light', 'Segoe UI Light', 'Segoe WP Light', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
-    font-weight: normal;
-    font-size: 28px;
+#navbar {
+    display: table-cell;
+    width: 160px;
+    background: #212121;
+    vertical-align: top;
+}
+
+#main-ul-dev {
+    position: relative;
+    padding-top: 24px;
+    padding-left: 0px;
+}
+
+.main-ul {
+    position: absolute;
+    width: 100%;
+    list-style-type: none;
+    margin: 0px;
+    overflow: hidden;
+    padding-left: 0;
+    -webkit-margin-before: 0;
+    -webkit-padding-start: 0;
+    line-height: 30px;
 }
 
 #mainContent {
-    position: relative;
-    color: #404040;
-    /* margin: 15px 30px; */
-    float: left;
+    padding: 16px 8px 8px 8px;
     width: 100%;
+    background: #F1F1F1;
+}
+
+#samples-step-wrapper {
+    max-width: 1250px;
+}
+
+#documentationContent, #demosContent {
+    background: #F1F1F1;
+    padding-left: 16px;
+}
+
+#contentWrapper {
+    height: 100%;
+    width: 100%;
+    background-color: #F1F1F1;
+    max-width: 100vw;
+    width: calc(100% - 160px);
+    display: table-cell;
 }
 
 .content {
-    position: relative;
-    color: #404040;
-    margin: 15px 30px;
     height: 100%;
+    width: 100%;
 }
 
-#settings {
-    width: 270px;
-    margin-right: 20px;
+#settings-wrapper {
+    margin-right: 10px;
+    max-height: 330px;
+    float: left;
 }
 
 #embedCodeDiv {
-    width: 400px;
-    margin-right: 20px;
-    max-height: 300px;
+    margin-right: 10px;
+    max-height: 330px;
     float: left;
+    overflow: hidden;
 }
 
 #embedArea {
     clear: both;
     width: 100%;
-    padding-left: 290px;
 }
 
-.embedContainer {
+.iframeContainer {
+    display: none;
     width: 100%;
-    height: 450px;
+    height: 100%;
     background-color: white;
     padding: 0px;
     clear: both;
 }
 
+.iframeContainer.active {
+    display: block;
+}
+
 #logWindow {
-    width: 400px;
+    max-height: 330px;
     float: left;
+    overflow: hidden;
+}
+
+.topFrame {
+    display: table-cell;
+    width: 32%;
+    width: calc((100% - 20.1px)/3);
+    height: 330px;
 }
 
 .topPanel {
-    margin-bottom: 10px;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    height: 330px;
+    margin-bottom: 15px;
 }
 
 .bottomPanel {
@@ -71,289 +127,136 @@ header
 }
 
 #steps-nav-bar {
-    width: 100%;
-    font-size: 90%;
-    border-bottom: 1px solid #E5E5E5;
-    margin-bottom: 20px;
-    padding-right: 0;
-    margin-right: 0;
+    height: 48px;
+    vertical-align: top;
+    background: #FFFFFF;
+}
+
+#steps-ul {
+    height: 100%;
 }
 
 #steps-ul li {
-    width: 32%;
-    display: inline-block;
+    width: 120px;
 }
 
-@media screen and (max-width: 320px) {
-    header
-    {
-        padding: 15px 30px;
-    }
+#navbar-content {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
 
-    .logo-text-span {
-        font-size: 90%;
-        line-height: 42px;
-        min-width: 295px;
-    }
-
-    .topPanel {
-        height: 430px;
-        width: 100%;
-    }
-
-    #embedCodeDiv {
-        width: 100%;
-        margin-bottom: 30px;
-        margin-right: 0px;
-    }
-
-    #logWindow {
-        width: 100%;
-    }
-
-    #settings {
-        width: 100%;
-        float: left;
-        margin-right: 0px;
-    }
-
-    #embedContainer, #dashboardContainer, #tileContainer, #qnaContainer {
-        width: 100%;
-        height: 360px;
-    }
-
-    #embedArea {
-        padding-left: 0px;
+@media only screen and (max-width: 1050px) {
+    .textAreaControl {
+        margin-right: 20px;
     }
 }
 
-@media screen and (max-width: 500px) {
-    .top-ul li {
-        float: left;
-        margin-right: 15px;
-        text-align: center;
-        line-height: 22px;
-        font-size: 13px;
-    }
-}
-
-@media screen and (min-width: 321px) {
-    header
-    {
-        padding: 15px 30px;
-    }
-
-    .logo-text-span {
-        font-size: 110%;
-        line-height: 42px;
-        min-width: 295px;
-    }
-
-    .topPanel {
-        height: 430px;
-        width: 100%;
-    }
-
-    #embedCodeDiv {
-        width: 100%;
-        margin-bottom: 30px;
-        margin-right: 0px;
-    }
-
-    #logWindow {
-        width: 100%;
-    }
-
-    #settings {
-        width: 100%;
-        float: left;
-        margin-right: 0px;
-    }
-
-    #embedContainer, #dashboardContainer, #tileContainer, #qnaContainer {
-        width: 100%;
-        height: 360px;
-    }
-
-    #embedArea {
-        padding-left: 0px;
-    }
-}
-
-@media screen and (min-width: 551px) {
-    header
-    {
-        padding: 15px 10px;
-    }
-
-    .logo-text-span {
-        font-size: 90%;
-        line-height: 42px;
-        min-width: 295px;
-    }
-
-    .topPanel {
-        height: 330px;
-        width: 100%;
-    }
-
-    #embedCodeDiv {
-        width: 100%;
-        margin-bottom: 30px;
-        margin-right: 0px;
-    }
-
-    #logWindow {
-        width: 100%;
-    }
-
-    #settings {
-        width: 100%;
-        float: left;
-        margin-right: 0px;
-    }
-
-    #embedContainer, #dashboardContainer, #tileContainer, #qnaContainer {
-        width: 100%;
-        height: 360px;
-    }
-
-    #embedArea {
-        padding-left: 0px;
-    }
-}
-
-@media screen and (min-width: 861px) and (max-width: 1023px) {
-    header
-    {
-        padding: 20px 40px;
-    }
-
-    .logo-text-span {
-        font-size: 28px;
-    }
-
-    #embedCodeDiv {
-        width: 49%;
-        font-size: 90%;
-        margin-right: 2%;
-    }
-
-    #logWindow {
-        width: 49%;
-    }
-
-    #settings {
-        float: none;
-        width: 380px;
-    }
-
-    #embedContainer, #dashboardContainer, #tileContainer, #qnaContainer {
-        width: 100%;
-        height: 360px;
-    }
-
-    #embedArea {
-        padding-left: 0px;
-    }
-}
-
-@media screen and (min-width: 1024px) {
-    header
-    {
-        padding: 20px 40px;
-    }
-
-    .logo-text-span {
-        font-size: 28px;
-    }
-
-    #mainContent {
-        width: 86.7%;
-        margin-left: 0.8%;
-    }
-
-    #embedCodeDiv {
-        width: 34%;
-        font-size: 90%;
-        margin-right: 1%;
-    }
-
-    #logWindow {
-        width: 34%;
-    }
-
-    #settings {
-        float: left;
-        width: 30%;
-        margin-right: 1%;
-    }
-
-    #operations-ul li {
-        margin: 0px 2px;
-    }
-
-    #embedContainer, #dashboardContainer, #tileContainer, #qnaContainer {
-        width: 100%;
-        height: 380px;
-    }
-
-    .bottomPanel {
-        margin-left: 0;
-        width: 100%;
-    }
-
-    #steps-nav-bar {
-        width: 13.3%;
-        font-size: 90%;
-        padding-right: 0.8%;
-        border-right: 1px solid #E5E5E5;
-        border-bottom: none;
-        margin-bottom: 0px;
-    }
-
-    #steps-ul li {
-        width: 100%;
+@media only screen and (max-width: 950px) {
+    #navbar-content {
         display: block;
     }
-}
-
-@media screen and (min-width: 1280px) {
-    .logo-text-span {
-        font-size: 28px;
-    }
 
     .content {
-        margin: 15px 20px;
+        display: block;
     }
 
-    .bottomPanel {
-        max-width: 100%;
+    #main-ul-dev {
+        padding-top: 0px;
+    }
+
+    #navbar {
+        display: block;
+        width: 100%;
+        height: 48px;
+    }
+
+    .main-ul li {
+        width: 160px;
+        float: left;
+        text-align: center;
+    }
+
+    #main-nav-bar a {
+        padding-left: 0px;
+    }
+
+    #modeSelector {
+        margin-bottom: 8px;
+    }
+
+    body {
+        background-color: #F1F1F1;
+    }
+
+    .desktop-view {
+        height: calc(100vw * 0.59);
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .topPanel {
+        display: block;
+    }
+
+    .topFrame {
+        width: 100%;
+    }
+
+    .customTooltip .tooltipText {
+        top: -21px;
+        left: -170px;
+    }
+
+    .customTooltip .tooltipText::after {
+        top: 50%;
+        left: 100%; /* To the right of the tooltip */
+        margin-top: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent transparent black;
         margin-left: 0px;
     }
+}
 
-    .steps-ul li {
-        font-size: 17px;
+@media only screen and (max-width: 500px) {
+    .main-ul li {
+        width: 33%;
+    }
+
+    body {
+        font-size: 12px;
+    }
+
+    .interactTooltip .tooltipText {
+        left: -105px;
+        top: 35px;
+    }
+
+    .interactTooltip .tooltipText::after {
+        display: none;
     }
 }
 
-
-@media screen and (min-width: 1600px) {
+@media only screen and (max-width: 460px) {
     .logo-text-span {
-        font-size: 28px;
+        font-size: 18px;
+        text-align: center;
+        left: 0px;
+        font-weight: 600;
     }
 
-    .content {
-        margin: 15px 40px;
+    .logo-text-span {
+        width: 100%;
     }
 }
 
-@media screen and (min-width: 1800px) {
-    .logo-text-span {
-        font-size: 28px;
+@media only screen and (max-width: 432px) {
+    .pbi-line {
+        width: calc(100% - 24px);
     }
 
-    #embedContainer, #dashboardContainer, #tileContainer, #qnaContainer {
-        height: 450px;
+    #sampleTileImg {
+        background-position: left;
     }
 }

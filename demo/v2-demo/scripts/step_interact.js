@@ -1,114 +1,80 @@
-function OpenReportOperations() {
-    $("#report-operations-div").show();
-    $("#page-operations-div").hide();
-    $("#events-operations-div").hide();
-    $("#editandsave-operations-div").hide();
-
-    $("#report-operations-li").addClass('active');
-    $('#page-operations-li').removeClass('active');
-    $('#events-operations-li').removeClass('active');
-    $('#editandsave-operations-li').removeClass('active');
-
-    $("#report-operations-div .function-ul li.active").click()
-    $("#selected-catogory-button").text("Report operations");
+function OpenBookmarksOperations() {
+    $("#bookmarks-operations-ul").toggle();
+    $("#bookmarks-operations").toggleClass("active");
 }
 
-function OpenPageOperations() {
-    $("#page-operations-div").show();
-    $("#report-operations-div").hide();
-    $("#events-operations-div").hide();
-    $("#editandsave-operations-div").hide();
-
-    $("#page-operations-li").addClass('active');
-    $('#report-operations-li').removeClass('active');
-    $('#events-operations-li').removeClass('active');
-    $('#editandsave-operations-li').removeClass('active');
-
-    $("#page-operations-div .function-ul li.active").click();
-
-    $("#selected-catogory-button").text("Page operations");
+function OpenEditSaveOperations() {
+    $("#editsave-operations-ul").toggle();
+    $("#editsave-operations").toggleClass("active");
 }
 
-function OpenEventOperations() {
-    $("#page-operations-div").hide();
-    $("#report-operations-div").hide();
-    $("#events-operations-div").show();
-    $("#editandsave-operations-div").hide();
-
-    $("#page-operations-li").removeClass('active');
-    $('#report-operations-li').removeClass('active');
-    $('#events-operations-li').addClass('active');
-    $('#editandsave-operations-li').removeClass('active');
-
-    $("#events-operations-div .function-ul li.active").click();
-
-    $("#selected-catogory-button").text("Events Listener");
+function OpenDataOperations() {
+    $("#data-operations-ul").toggle();
+    $("#data-operations").toggleClass("active");
 }
 
-function OpenEditAndSaveOperations() {
-    $("#page-operations-div").hide();
-    $("#report-operations-div").hide();
-    $("#events-operations-div").hide();
-    $("#editandsave-operations-div").show();
-
-    $("#page-operations-li").removeClass('active');
-    $('#report-operations-li').removeClass('active');
-    $('#events-operations-li').removeClass('active');
-    $('#editandsave-operations-li').addClass('active');
-
-    $("#editandsave-operations-div .function-ul li.active").click();
-
-    $("#selected-catogory-button").text("Edit and save operations");
+function OpenExtensionsOperations() {
+    $("#extensions-operations-ul").toggle();
+    $("#extensions-operations").toggleClass("active");
 }
 
-function OpenTileOperations() {
-    $("#tile-operations-div").show();
-    $("#tile-operations-li").addClass('active');
+function OpenReportPropertiesOperations() {
+    $("#reportproperties-operations-ul").toggle();
+    $("#reportproperties-operations").toggleClass("active");
+}
 
-    $("#tile-operations-div .function-ul li.active").click()
-    $("#selected-catogory-button").text("Tile operations");
+function OpenFiltersOperations() {
+    $("#filters-operations-ul").toggle();
+    $("#filters-operations").toggleClass("active");
+}
+
+function OpenGeneralOperations() {
+    $("#general-operations-ul").toggle();
+    $("#general-operations").toggleClass("active");
+}
+
+function OpenLayoutOperations() {
+    $("#layout-operations-ul").toggle();
+    $("#layout-operations").toggleClass("active");
+}
+
+function OpenNavigationOperations() {
+    $("#navigation-operations-ul").toggle();
+    $("#navigation-operations").toggleClass("active");
+}
+
+function OpenVisualDataOperations() {
+    $("#visual-data-operations-ul").toggle();
+    $("#visual-data-operations").toggleClass("active");
+}
+
+function OpenDashboardGeneralOperations() {
+    $("#dashboard-general-operations-ul").toggle();
+    $("#dashboard-general-operations").toggleClass("active");
+}
+
+function OpenDashboardPropertiesOperations() {
+    $("#dashboard-properties-operations-ul").toggle();
+    $("#dashboard-properties-operations").toggleClass("active");
+}
+
+function OpenDashboardEventsOperations() {
+    $("#dashboard-events-operations-ul").toggle();
+    $("#dashboard-events-operations").toggleClass("active");
 }
 
 function OpenQnaOperations() {
-    $("#qna-operations-div").show();
-    $("#qna-operations-li").addClass('active');
-
-    $("#qna-operations-div .function-ul li.active").click()
-    $("#selected-catogory-button").text("QNA operations");
+    $("#qna-operations-ul").toggle();
+    $("#qna-operations").toggleClass("active");
 }
 
-function OpenVisualOperations() {
-    $("#visual-operations-div").show();
-    $("#visual-operations-li").addClass('active');
-
-    $("#visual-operations-div .function-ul li.active").click()
-    $("#selected-catogory-button").text("Visual operations");
-}
-
-function OpenDashboardOperations() {
-    $("#dashboard-operations-div").show();
-    $("#dashboard-events-operations-div").hide();
-
-    $("#dashboard-operations-li").addClass('active');
-    $('#dashboard-events-operations-li').removeClass('active');
-
-    $("#dashboard-operations-div .function-ul li.active").click()
-    $("#selected-catogory-button").text("Dashboard operations");
-}
-
-function OpenDashboardEventOperations() {
-    $("#dashboard-operations-div").hide();
-    $("#dashboard-events-operations-div").show();
-
-    $('#dashboard-operations-li').removeClass('active');
-    $('#dashboard-events-operations-li').addClass('active');
-
-    $("#dashboard-events-operations-div .function-ul li.active").click();
-    $("#selected-catogory-button").text("Events Listener");
+function OpenQnaEventsOperations() {
+    $("#qna-events-operations-ul").toggle();
+    $("#qna-events-operations").toggleClass("active");
 }
 
 function SetToggleHandler(devId) {
-    var selector = "#" + devId + " .function-ul li";
+    const selector = "#" + devId + " .function-ul li";
     $(selector).each(function(index, li) {
         $(li).click(function() {
             $(selector).removeClass('active');

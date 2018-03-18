@@ -8,10 +8,11 @@ import { IFilterable } from './ifilterable';
 import { IPageNode, Page } from './page';
 import { Defaults } from './defaults';
 import { IReportLoadConfiguration } from 'powerbi-models';
+import { BookmarksManager } from './bookmarksManager';
 
 /**
  * A Report node within a report hierarchy
- * 
+ *
  * @export
  * @interface IReportNode
  */
@@ -23,7 +24,7 @@ export interface IReportNode {
 
 /**
  * The Power BI Report embed component
- * 
+ *
  * @export
  * @class Report
  * @extends {embed.Embed}
@@ -31,16 +32,18 @@ export interface IReportNode {
  * @implements {IFilterable}
  */
 export class Report extends embed.Embed implements IReportNode, IFilterable {
-  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd"];
+  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied"];
   static reportIdAttribute = 'powerbi-report-id';
   static filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
   static navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
   static typeAttribute = 'powerbi-type';
   static type = "Report";
 
+  public bookmarksManager: BookmarksManager;
+
   /**
    * Creates an instance of a Power BI Report.
-   * 
+   *
    * @param {service.Service} service
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfiguration} config
@@ -60,14 +63,16 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     this.loadPath = "/report/load";
     this.phasedLoadPath = "/report/prepare";
     Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
+
+    this.bookmarksManager = new BookmarksManager(service, config, this.iframe);
   }
 
   /**
    * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
    * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
-   * 
+   *
    * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
-   * 
+   *
    * @static
    * @param {string} url
    * @returns {string}
@@ -84,20 +89,20 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     return reportId;
   }
 
-  
+
   /**
    * Render a preloaded report, using phased embedding API
-   * 
+   *
    * ```javascript
    * // Load report
    * var report = powerbi.load(element, config);
-   * 
+   *
    * ...
-   * 
+   *
    * // Render report
    * report.render()
    * ```
-   * 
+   *
    * @returns {Promise<void>}
    */
   render(config?: IReportLoadConfiguration): Promise<void> {
@@ -112,7 +117,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Gets filters that are applied at the report level.
-   * 
+   *
    * ```javascript
    * // Get filters applied at report level
    * report.getFilters()
@@ -120,7 +125,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *     ...
    *   });
    * ```
-   * 
+   *
    * @returns {Promise<models.IFilter[]>}
    */
   getFilters(): Promise<models.IFilter[]> {
@@ -133,7 +138,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Gets the report ID from the first available location: options, attribute, embed url.
-   * 
+   *
    * @returns {string}
    */
   getId(): string {
@@ -149,14 +154,14 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Gets the list of pages within the report.
-   * 
+   *
    * ```javascript
    * report.getPages()
    *  .then(pages => {
    *      ...
    *  });
    * ```
-   * 
+   *
    * @returns {Promise<Page[]>}
    */
   getPages(): Promise<Page[]> {
@@ -173,18 +178,18 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Creates an instance of a Page.
-   * 
+   *
    * Normally you would get Page objects by calling `report.getPages()`, but in the case
    * that the page name is known and you want to perform an action on a page without having to retrieve it
    * you can create it directly.
-   * 
+   *
    * Note: Because you are creating the page manually there is no guarantee that the page actually exists in the report, and subsequent requests could fail.
-   * 
+   *
    * ```javascript
    * const page = report.page('ReportSection1');
    * page.setActive();
    * ```
-   * 
+   *
    * @param {string} name
    * @param {string} [displayName]
    * @param {boolean} [isActive]
@@ -209,11 +214,11 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Removes all filters at the report level.
-   * 
+   *
    * ```javascript
    * report.removeFilters();
    * ```
-   * 
+   *
    * @returns {Promise<void>}
    */
   removeFilters(): Promise<void> {
@@ -222,12 +227,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Sets the active page of the report.
-   * 
+   *
    * ```javascript
    * report.setPage("page2")
    *  .catch(error => { ... });
    * ```
-   * 
+   *
    * @param {string} pageName
    * @returns {Promise<void>}
    */
@@ -246,18 +251,18 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Sets filters at the report level.
-   * 
+   *
    * ```javascript
    * const filters: [
    *    ...
    * ];
-   * 
+   *
    * report.setFilters(filters)
    *  .catch(errors => {
    *    ...
    *  });
    * ```
-   * 
+   *
    * @param {(models.IFilter[])} filters
    * @returns {Promise<void>}
    */
@@ -270,17 +275,17 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Updates visibility settings for the filter pane and the page navigation pane.
-   * 
+   *
    * ```javascript
    * const newSettings = {
    *   navContentPaneEnabled: true,
    *   filterPaneEnabled: false
    * };
-   * 
+   *
    * report.updateSettings(newSettings)
    *   .catch(error => { ... });
    * ```
-   * 
+   *
    * @param {models.ISettings} settings
    * @returns {Promise<void>}
    */
@@ -300,7 +305,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Populate config for load config
-   * 
+   *
    * @param {IEmbedConfigurationBase}
    * @returns {void}
    */
@@ -321,7 +326,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Switch Report view mode.
-   * 
+   *
    * @returns {Promise<void>}
    */
   switchMode(viewMode: models.ViewMode): Promise<void> {
@@ -337,7 +342,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
   * Refreshes data sources for the report.
-  * 
+  *
   * ```javascript
   * report.refresh();
   * ```

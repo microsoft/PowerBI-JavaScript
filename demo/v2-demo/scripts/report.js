@@ -1,200 +1,233 @@
 const active_class = 'active';
-const active_li = 'steps-li-active';
+const active_steps_li = 'steps-li-active';
+const active_tabs_li = 'tabs-li-active';
 
 const EmbedViewMode = "view";
 const EmbedEditMode = "edit";
 const EmbedCreateMode = "create";
 
-function OpenAuthStep() {
+const runEmbedCodeTimeout = 500;
+const interactTooltipTimeout = 2000;
+
+const defualtTokenType = 1;
+const defaultQnaQuestion = "This year sales by store type by postal code as map";
+const defaultQnaMode = "Interactive";
+
+function OpenSamplesStep() {
     $('#steps-ul a').removeClass(active_class);
-    $(".steps-li-active").removeClass(active_li);
+    $(".steps-li-active").removeClass(active_steps_li);
 
-    $("#steps-auth a").addClass(active_class);
-    $("#steps-auth").addClass(active_li);
+    $("#steps-samples a").addClass(active_class);
+    $("#steps-samples").addClass(active_steps_li);
 
-    // Hide Embed view in authorization step.
-    $("#authorize-step-wrapper").show();
+    $('#interact-tab').removeClass('enableTransition');
+    $('#interact-tab').removeClass('changeColor');
+
+    // Hide Embed view in samples step.
+    $("#samples-step-wrapper").show();
     $("#embed-and-interact-steps-wrapper").hide();
 }
 
-function OpenEmbedStepFromNavPane()
+function OpenCodeStepFromNavPane()
 {
-    var mode = GetSession(SessionKeys.EmbedMode);
-    var entityType = GetSession(SessionKeys.EntityType);
-    var tokenType = GetSession(SessionKeys.TokenType);
+    const mode = GetSession(SessionKeys.EmbedMode);
+    const entityType = GetSession(SessionKeys.EntityType);
+    const tokenType = GetSession(SessionKeys.TokenType);
 
-    OpenEmbedStep(mode, entityType, tokenType);
+    OpenCodeStep(mode, entityType, tokenType);
 }
 
-function OpenEmbedStep(mode, entityType, tokenType) {
+function OpenCodeStep(mode, entityType, tokenType) {
     $('#steps-ul a').removeClass(active_class);
-    $(".steps-li-active").removeClass(active_li);
+    $(".steps-li-active").removeClass(active_steps_li);
 
-    $('#steps-embed a').addClass(active_class);
-    $('#steps-embed').addClass(active_li);
+    $('#steps-code a').addClass(active_class);
+    $('#steps-code').addClass(active_steps_li);
 
-    // Hide Embed view in authorization step.
-    $("#authorize-step-wrapper").hide();
+    // Hide Embed view in samples step.
+    $("#samples-step-wrapper").hide();
     $("#embed-and-interact-steps-wrapper").show();
 
-    let containers = $(".embedContainer");
-    containers.hide();
+    let containers = $(".iframeContainer");
+    containers.removeClass(active_class);
 
+    const containerID = getEmbedContainerID(entityType);
+    const classPrefix = getEmbedContainerClassPrefix(entityType);
+
+    $(classPrefix + 'Container').removeAttr('id');
+    $(classPrefix + 'MobileContainer').removeAttr('id');
+
+    const activeContainer = classPrefix + ($(".desktop-view").hasClass(active_class) ? 'Container' : 'MobileContainer');
+
+    $(activeContainer).attr('id', containerID);
+    $(activeContainer).addClass(active_class);
+
+    $('.' + active_tabs_li).removeClass(active_tabs_li);
+
+    $('#embed-tab').addClass(active_tabs_li);
+    $('#interact-tab').removeClass(active_tabs_li);
+
+    LoadEmbedSettings(mode, entityType, tokenType);
+}
+
+function LoadEmbedSettings(mode, entityType, tokenType) {
     if (entityType == EntityType.Report)
     {
-        $("#settings").load("settings_embed.html", function() {
+        $("#settings").load("settings_embed_report.html", function() {
             OpenEmbedMode(mode, entityType, tokenType);
-
-            // Fix report size ratio
-            var embedContainer = $("#embedContainer");
-            embedContainer.height(embedContainer.width() * 0.59);
-            embedContainer.show();
         });
     }
     else if (entityType == EntityType.Visual)
     {
         $("#settings").load("settings_embed_visual.html", function() {
             OpenEmbedMode(mode, entityType, tokenType);
-
-            // Fix report size ratio
-            var visualContainer = $("#visualContainer");
-            visualContainer.height(visualContainer.width() * 0.59);
-            visualContainer.show();
         });
     }
     else if (entityType == EntityType.Dashboard)
     {
         $("#settings").load("settings_embed_dashboard.html", function() {
             OpenEmbedMode(mode, entityType, tokenType);
-
-            // Fix report size ratio
-            var dashboardContainer = $("#dashboardContainer");
-            dashboardContainer.height(dashboardContainer.width() * 0.59);
-            dashboardContainer.show();
         });
     }
     else if (entityType == EntityType.Tile)
     {
         $("#settings").load("settings_embed_tile.html", function() {
             OpenEmbedMode(mode, entityType, tokenType);
-
-            var tileContainer = $("#tileContainer");
-            tileContainer.height(tileContainer.width() * 0.59);
-            tileContainer.show();
         });
     }
     else if (entityType == EntityType.Qna)
     {
         $("#settings").load("settings_embed_qna.html", function() {
             OpenEmbedMode(mode, entityType,tokenType);
-
-            var qnaContainer = $("#qnaContainer");
-            qnaContainer.height(qnaContainer.width() * 0.59);
-            qnaContainer.show();
         });
     }
 }
 
-function OpenInteractStep() {
-    $('#steps-ul a').removeClass(active_class);
-    $(".steps-li-active").removeClass(active_li);
+function OpenEmbedTab() {
+    if ($('#embed-tab').hasClass(active_tabs_li)) {
+        return;
+    }
 
-    $('#steps-interact a').addClass(active_class);
-    $('#steps-interact').addClass(active_li);
+    $('.' + active_tabs_li).removeClass(active_tabs_li);
 
-    // Hide Embed view in authorization step.
-    $("#authorize-step-wrapper").hide();
-    $("#embed-and-interact-steps-wrapper").show();
+    $('#embed-tab').addClass(active_tabs_li);
 
-    var entityType = GetSession(SessionKeys.EntityType);
+    const mode = GetSession(SessionKeys.EmbedMode);
+    const entityType = GetSession(SessionKeys.EntityType);
+    const tokenType = GetSession(SessionKeys.TokenType);
+
+    LoadEmbedSettings(mode, entityType, tokenType);
+}
+
+function isInteractStepEnabled(entityType) {
+    const classPrefix = getEmbedContainerClassPrefix(entityType);
+    const activeContainer = classPrefix + ($(".desktop-view").hasClass(active_class) ? 'Container' : 'MobileContainer');
+
+    // Check if active container has an iframe
+    return $(activeContainer + " iframe").length > 0;
+}
+
+function OpenInteractTab() {
+    const entityType = GetSession(SessionKeys.EntityType);
+    // Interact step is disabled unless active container has an iframe
+    if (!isInteractStepEnabled(entityType)) {
+        $('.interactTooltip .tooltipText').addClass("showTooltip");
+        setTimeout(function() {
+            $('.interactTooltip .tooltipText').removeClass("showTooltip");
+        }, interactTooltipTimeout);
+        return;
+    }
+    $('#interact-tab').removeClass('enableTransition');
+    $('#interact-tab').removeClass('changeColor');
+
+    $('.' + active_tabs_li).removeClass(active_tabs_li);
+    $('#interact-tab').addClass(active_tabs_li);
 
     if (entityType == EntityType.Tile)
     {
         $("#settings").load("settings_interact_tile.html", function() {
             SetToggleHandler("tile-operations-div");
             LoadCodeArea("#embedCodeDiv", "");
-            AddImgToNewOperations();
         });
     }
     else if (entityType == EntityType.Dashboard)
     {
         $("#settings").load("settings_interact_dashboard.html", function() {
-            SetToggleHandler("dashboard-operations-div");
-            SetToggleHandler("dashboard-events-operations-div");
-            LoadCodeArea("#embedCodeDiv", _Dashboard_GetId);
-            AddImgToNewOperations();
+            SetToggleHandler("operation-categories");
+            LoadCodeArea("#embedCodeDiv", "");
         });
     }
     else if (entityType == EntityType.Qna)
     {
         $("#settings").load("settings_interact_qna.html", function() {
-            SetToggleHandler("qna-operations-div");
-            SetToggleHandler("qna-events-operations-div");
-            LoadCodeArea("#embedCodeDiv", _Qna_SetQuestion);
-            AddImgToNewOperations();
+            SetToggleHandler("operation-categories");
+            LoadCodeArea("#embedCodeDiv", "");
         });
     }
     else if (entityType == EntityType.Visual)
     {
         $("#settings").load("settings_interact_visual.html", function() {
-            SetToggleHandler("visual-operations-div");
-            LoadCodeArea("#embedCodeDiv", _Visual_DataSelected);
-            AddImgToNewOperations();
+            SetToggleHandler("operation-categories");
+            LoadCodeArea("#embedCodeDiv", "");
         });
     }
     else
     {
-        $("#settings").load("settings_interact.html", function() {
-            SetToggleHandler("report-operations-div");
-            SetToggleHandler("page-operations-div");
-            SetToggleHandler("events-operations-div");
-            SetToggleHandler("editandsave-operations-div");
-            LoadCodeArea("#embedCodeDiv", _Report_GetId);
-            AddImgToNewOperations();
+        $("#settings").load("settings_interact_report.html", function() {
+            SetToggleHandler("operation-categories");
+            LoadCodeArea("#embedCodeDiv", "");
         });
-      }
+    }
 }
 
 function setCodeArea(mode, entityType)
 {
+    LoadCodeArea("#embedCodeDiv", getEmbedCode(mode, entityType));
+}
+
+function getEmbedCode(mode, entityType)
+{
+    const isDesktop = $(".desktop-view").hasClass(active_class);
+    let code = "";
     if (entityType == EntityType.Report)
     {
         if (mode === EmbedViewMode)
         {
-            LoadCodeArea("#embedCodeDiv", _Embed_BasicEmbed);
+            code = isDesktop ? _Embed_BasicEmbed : _Embed_BasicEmbed_Mobile;
         }
         else if (mode === EmbedEditMode)
         {
-            LoadCodeArea("#embedCodeDiv", _Embed_BasicEmbed_EditMode);
+            code = isDesktop ? _Embed_BasicEmbed_EditMode : _Embed_MobileEditNotSupported;
         }
         else if (mode === EmbedCreateMode)
         {
-            LoadCodeArea("#embedCodeDiv", _Embed_Create);
+            code = isDesktop ? _Embed_BasicEmbed_EditMode : _Embed_MobileCreateNotSupported;
         }
     }
     else if (entityType == EntityType.Visual) {
-        LoadCodeArea("#embedCodeDiv", _Embed_VisualEmbed);
+        code = _Embed_VisualEmbed;
     }
     else if (entityType == EntityType.Dashboard)
     {
-        LoadCodeArea("#embedCodeDiv", _Embed_DashboardEmbed);
+        code = isDesktop ? _Embed_DashboardEmbed : _Embed_DashboardEmbed_Mobile;
     }
     else if (entityType == EntityType.Tile)
     {
-        LoadCodeArea("#embedCodeDiv", _Embed_TileEmbed);
+        code = _Embed_TileEmbed;
     }
     else if (entityType == EntityType.Qna)
     {
-        LoadCodeArea("#embedCodeDiv", _Embed_QnaEmbed);
+        code = _Embed_QnaEmbed;
     }
+    return code;
 }
 
 function showEmbedSettings(mode, entityType, tokenType)
 {
     if (entityType == EntityType.Report)
     {
-        var inputDivToShow = "#embedModeInput";
-        var inputDivToHide = "#createModeInput";
+        let inputDivToShow = "#embedModeInput";
+        let inputDivToHide = "#createModeInput";
 
         if (mode === EmbedCreateMode)
         {
@@ -205,15 +238,15 @@ function showEmbedSettings(mode, entityType, tokenType)
         $(inputDivToShow).show();
         $(inputDivToHide).hide();
 
-        var embedModeRadios = $('input:radio[name=embedMode]');
+        let embedModeRadios = $('input:radio[name=embedMode]');
         embedModeRadios.filter('[value=' + mode + ']').prop('checked', true);
 
-        var embedTypeRadios = $('input:radio[name=tokenType]');
+        let embedTypeRadios = $('input:radio[name=tokenType]');
         embedTypeRadios.filter('[value=' + tokenType + ']').prop('checked', true);
     }
     else if (entityType == EntityType.Visual) {
         $("#embedModeInput").show();
-        var embedTypeRadios = $('input:radio[name=tokenType]');
+        let embedTypeRadios = $('input:radio[name=tokenType]');
         embedTypeRadios.filter('[value=' + tokenType + ']').prop('checked', true);
     }
     else if (entityType == EntityType.Dashboard)
@@ -366,13 +399,140 @@ function IsEmbeddingSampleQna() {
 }
 
 function ToggleQuestionBox(enabled) {
+    UpdateSession($("input[name='qnaMode']:checked").val(), SessionKeys.QnaMode);
     let txtQuestion = $("#txtQuestion");
     if (enabled === true) {
-        txtQuestion.val("This year sales by store type by postal code as map");
+        let question = GetSession(SessionKeys.QnaQuestion);
+        question = question? question : defaultQnaQuestion;
+        txtQuestion.val(question);
         txtQuestion.prop('disabled', false);
     }
     else {
         txtQuestion.val("");
         txtQuestion.prop('disabled', true);
     }
+}
+
+function EmbedAreaDesktopView() {
+    if ($(".desktop-view").hasClass(active_class)) {
+        return;
+    }
+
+    const entityType = GetSession(SessionKeys.EntityType);
+    const mode = GetSession(SessionKeys.EmbedMode);
+
+    $(".desktop-view").show();
+    $(".mobile-view").hide();
+    
+    $(".desktop-view").addClass(active_class);
+    $(".mobile-view").removeClass(active_class);
+
+    const containerID = getEmbedContainerID(entityType);
+    const classPrefix = getEmbedContainerClassPrefix(entityType);
+
+    $(classPrefix + 'MobileContainer').removeAttr('id');
+    $(classPrefix + 'Container').attr('id', containerID);
+
+    $(classPrefix + 'MobileContainer').removeClass(active_class);
+    $(classPrefix + 'Container').addClass(active_class);
+
+    if($('#embed-tab').hasClass("tabs-li-active")) {
+        // Update embed code area
+        setCodeArea(mode, entityType)
+    }
+
+    // Check if run button was clicked in the other mode and wasn't clicked on the new mode
+    if ($(classPrefix + "MobileContainer iframe").length && !$(classPrefix + "Container iframe").length) {
+        let runFunc = getEmbedCode(mode, entityType);
+        if ($('#interact-tab').hasClass("tabs-li-active")) {
+            runFunc = updateRunFuncSessionParameters(runFunc);
+            eval(runFunc);
+        } else {
+            runFunc();
+        }
+    }
+}
+
+function EmbedAreaMobileView() {
+    if ($(".mobile-view").hasClass(active_class)) {
+        return;
+    }
+
+    const entityType = GetSession(SessionKeys.EntityType);
+    const mode = GetSession(SessionKeys.EmbedMode);
+
+    $(".desktop-view").hide();
+    $(".mobile-view").show();
+
+    $(".desktop-view").removeClass(active_class);
+    $(".mobile-view").addClass(active_class);
+
+    const containerID = getEmbedContainerID(entityType);
+    const classPrefix = getEmbedContainerClassPrefix(entityType);
+
+    $(classPrefix + 'Container').removeAttr('id');
+    $(classPrefix + 'MobileContainer').attr('id', containerID);
+
+    $(classPrefix + 'Container').removeClass(active_class);
+    $(classPrefix + 'MobileContainer').addClass(active_class);
+
+    if($('#embed-tab').hasClass("tabs-li-active")) {
+        // Update embed code area
+        setCodeArea(mode, entityType)
+    }
+
+    // Check if run button was clicked in the other mode and wasn't clicked on the new mode
+    if ($(classPrefix + "Container iframe").length && !$(classPrefix + "MobileContainer iframe").length) {
+        let runFunc = getEmbedCode(mode, entityType);
+        if ($('#interact-tab').hasClass("tabs-li-active")) {
+            runFunc = updateRunFuncSessionParameters(runFunc);
+            eval(runFunc);
+        } else {
+            runFunc();
+        }
+    }
+}
+
+function updateRunFuncSessionParameters(runFunc) {
+    const entityType = GetSession(SessionKeys.EntityType);
+    const accessToken = '"' + GetSession(SessionKeys.AccessToken) + '"';
+    const embedUrl = '"' + GetSession(SessionKeys.EmbedUrl) + '"';
+    const embedId = '"' + GetSession(SessionKeys.EmbedId) + '"';
+    const dashboardId = '"' + GetSession(SessionKeys.DashboardId) + '"';
+    const pageName = '"' + GetSession(SessionKeys.PageName) + '"';
+    const visualName = '"' + GetSession(SessionKeys.VisualName) + '"';
+
+    let code = BodyCodeOfFunction(runFunc);
+    let tokenType = GetSession(SessionKeys.TokenType);
+    tokenType = tokenType? tokenType : defualtTokenType;
+    code = code.replace("$('#txtAccessToken').val()", accessToken)
+                .replace("$('input:radio[name=tokenType]:checked').val()", tokenType);
+
+    if (entityType == EntityType.Report) {
+        code = code.replace("$('#txtReportEmbed').val()", embedUrl)
+                    .replace("$('#txtEmbedReportId').val()", embedId);
+    } else if (entityType == EntityType.Dashboard) {
+        code = code.replace("$('#txtDashboardEmbed').val()", embedUrl)
+                    .replace("$('#txtEmbedDashboardId').val()", embedId);
+    } else if (entityType == EntityType.Tile) {
+        code = code.replace("$('#txtTileEmbed').val()", embedUrl)
+                    .replace("$('#txtEmbedDashboardId').val()", dashboardId)
+                    .replace("$('#txtEmbedTileId').val()", embedId);
+    } else if (entityType == EntityType.Visual) {
+        code = code.replace("$('#txtReportEmbed').val()", embedUrl)
+                    .replace("$('#txtEmbedReportId').val()", embedId)
+                    .replace("$('#txtPageName').val()", pageName)
+                    .replace("$('#txtVisualName').val()", visualName);
+    } else if (entityType == EntityType.Qna) {
+        let question = GetSession(SessionKeys.QnaQuestion);
+        question = question? question : defaultQnaQuestion;
+        let mode = GetSession(SessionKeys.QnaMode);
+        mode = mode? mode : defaultQnaMode;
+        code = code.replace("$('#txtQnaEmbed').val()", embedUrl)
+                    .replace("$('#txtDatasetId').val()", embedId)
+                    .replace("$('#txtQuestion').val()", '"' + question + '"')
+                    .replace('$("input[name=' + "'qnaMode'" + ']:checked").val()', '"' + mode + '"');
+    }
+
+    return code;
 }

@@ -1,20 +1,17 @@
 <div id="step-interact-wrapper">
     <div>
-        <div id="operation-categories">
-            <div id="operations-ul-wrapper" tabindex="-1">
-                <ul id="operations-ul">
-                    <li id="qna-operations-li" onclick="OpenQnaOperations();" class="active">
-                        <a href="#">Q&A operations</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
         <div id="category-browser">
             <div id="wrapper-operations-div" class="operations-div">
-                <div id="qna-operations-div" class="operations-div">
-                    <ul class="function-ul">
-                        <li onclick="Qna_SetQuestion()">Set question</li>
-                        <li onclick="Qna_QuestionChanged()">Question changed event</li>
+                <div id="operation-categories" class="operations-div">
+                    <ul class="operations-ul">
+                        <li id="qna-operations" onclick="OpenQnaOperations();"><a href="#">Q&A Operations</a></li>
+                        <ul id="qna-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Qna_SetQuestion()"><a href="#">Set question</a></li>
+                        </ul>
+                        <li id="qna-events-operations" onclick="OpenQnaEventsOperations();"><a href="#">Events</a></li>
+                        <ul id="qna-events-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Qna_QuestionChanged()"><a href="#">Question changed</a></li>
+                        </ul>
                     </ul>
                 </div>
             </div>

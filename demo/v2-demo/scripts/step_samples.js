@@ -25,7 +25,7 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
 
         if (updateCurrentToken)
         {
-            var embedContainerId;
+            let embedContainerId;
             if (embedConfig.type === "dashboard") {
                 embedContainerId = "dashboardContainer";
             } else if (embedConfig.type === "report") {
@@ -34,7 +34,7 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
                 embedContainerId = "tileContainer"
             }
 
-            var embedContainer = powerbi.embeds.find(function(embedElement) {return (embedElement.element.id == embedContainerId)});
+            let embedContainer = powerbi.embeds.find(function(embedElement) {return (embedElement.element.id == embedContainerId)});
             if (embedContainer)
             {
                 embedContainer.setAccessToken(embedConfig.embedToken.token);
@@ -66,7 +66,7 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
 }
 
 function TokenExpirationRefreshListener(minutesToExpiration, entityType) {
-    var updateAfterMilliSeconds = (minutesToExpiration - 2) * 60 * 1000;
+    const updateAfterMilliSeconds = (minutesToExpiration - 2) * 60 * 1000;
 
     if (entityType == EntityType.Report || entityType == EntityType.Visual)
     {
@@ -155,61 +155,47 @@ function LoadSampleQnaIntoSession() {
     return FetchUrlIntoSession(qnaUrl, false /* updateCurrentToken */);
 }
 
-function OpenEmbedStepWithSample(entityType) {
+function OpenCodeStepWithSample(entityType) {
     SetSession(SessionKeys.EntityType, entityType);
 
     if (entityType == EntityType.Report)
     {
         SetSession(SessionKeys.IsSampleReport, true);
-        OpenEmbedStep(EmbedViewMode, EntityType.Report);
+        OpenCodeStep(EmbedViewMode, EntityType.Report);
     }
     else if (entityType == EntityType.Visual)
     {
         SetSession(SessionKeys.IsSampleReport, true);
-        OpenEmbedStep(EmbedViewMode, EntityType.Visual);
+        OpenCodeStep(EmbedViewMode, EntityType.Visual);
     }
     else if (entityType == EntityType.Dashboard)
     {
         SetSession(SessionKeys.IsSampleDashboard, true);
-        OpenEmbedStep(EmbedViewMode, EntityType.Dashboard);
+        OpenCodeStep(EmbedViewMode, EntityType.Dashboard);
     }
     else if (entityType == EntityType.Tile)
     {
       SetSession(SessionKeys.IsSampleTile, true);
-      OpenEmbedStep(EmbedViewMode, EntityType.Tile)
+      OpenCodeStep(EmbedViewMode, EntityType.Tile)
     }
     else if (entityType == EntityType.Qna)
     {
       SetSession(SessionKeys.IsSampleQna, true);
-      OpenEmbedStep(EmbedViewMode, EntityType.Qna)
+      OpenCodeStep(EmbedViewMode, EntityType.Qna)
     }
 }
 
-function OpenEmbedStepCreateWithSample() {
-    SetSession(SessionKeys.IsSampleReport, true);
-    SetSession(SessionKeys.EntityType, EntityType.Report);
-
-    OpenEmbedStep(EmbedCreateMode, EntityType.Report);
-}
-
-function OpenEmbedStepFromUserSettings() {
-    SetSession(SessionKeys.IsSampleReport, false);
-    SetSession(SessionKeys.EntityType, EntityType.Report);
-
-    OpenEmbedStep(EmbedViewMode, EntityType.Report);
-}
-
 function WarmStartSampleReportEmbed() {
-    var embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
+    let embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
     if (embedUrl) {
         preload(embedUrl);
         return;
     }
 
-  FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */).then(function (response) {
-    embedUrl = GetSession(SessionKeys.EmbedUrl);
-    preload(embedUrl);
-  });
+    FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */).then(function (response) {
+        embedUrl = GetSession(SessionKeys.EmbedUrl);
+        preload(embedUrl);
+    });
 }
 
 function preload(embedUrl) {

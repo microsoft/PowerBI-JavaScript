@@ -1,11 +1,4 @@
-/*! powerbi-client v2.4.7 | (c) 2016 Microsoft Corporation MIT */
-declare module "config" {
-    const config: {
-        version: string;
-        type: string;
-    };
-    export default config;
-}
+/*! powerbi-client v2.5.0 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     /**
      * Raises a custom event with event data on the specified HTML element.
@@ -506,6 +499,19 @@ declare module "visualDescriptor" {
          * @returns {Promise<void>}
          */
         setFilters(filters: models.IFilter[]): Promise<void>;
+        /**
+         * Exports Visual data.
+         * Can export up to 30K rows.
+         * @param rows: Optional. Default value is 30K, maximum value is 30K as well.
+         * @param exportDataType: Optional. Default is models.ExportDataType.Summarized.
+         * ```javascript
+         * visual.exportData()
+         *  .then(data => { ... });
+         * ```
+         *
+         * @returns {(Promise<string>)}
+         */
+        exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<string>;
     }
 }
 declare module "page" {
@@ -646,6 +652,7 @@ declare module "report" {
     import { IFilterable } from "ifilterable";
     import { Page } from "page";
     import { IReportLoadConfiguration } from 'powerbi-models';
+    import { BookmarksManager } from "bookmarksManager";
     /**
      * A Report node within a report hierarchy
      *
@@ -673,6 +680,7 @@ declare module "report" {
         static navContentPaneEnabledAttribute: string;
         static typeAttribute: string;
         static type: string;
+        bookmarksManager: BookmarksManager;
         /**
          * Creates an instance of a Power BI Report.
          *
@@ -847,6 +855,42 @@ declare module "report" {
         * ```
         */
         refresh(): Promise<void>;
+    }
+}
+declare module "create" {
+    import * as service from "service";
+    import * as models from 'powerbi-models';
+    import * as embed from "embed";
+    export class Create extends embed.Embed {
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean);
+        /**
+         * Gets the dataset ID from the first available location: createConfig or embed url.
+         *
+         * @returns {string}
+         */
+        getId(): string;
+        /**
+         * Validate create report configuration.
+         */
+        validate(config: embed.IEmbedConfigurationBase): models.IError[];
+        /**
+         * Populate config for create
+         *
+         * @param {IEmbedConfigurationBase}
+         * @returns {void}
+         */
+        populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
+        /**
+         * Adds the ability to get datasetId from url.
+         * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
+         *
+         * By extracting the ID we can ensure that the ID is always explicitly provided as part of the create configuration.
+         *
+         * @static
+         * @param {string} url
+         * @returns {string}
+         */
+        static findIdFromEmbedUrl(url: string): string;
     }
 }
 declare module "dashboard" {
@@ -1262,41 +1306,98 @@ declare module "service" {
         preload(config: embed.IEmbedConfigurationBase, element?: HTMLElement): HTMLIFrameElement;
     }
 }
-declare module "create" {
+declare module "bookmarksManager" {
     import * as service from "service";
-    import * as models from 'powerbi-models';
     import * as embed from "embed";
-    export class Create extends embed.Embed {
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean);
-        /**
-         * Gets the dataset ID from the first available location: createConfig or embed url.
-         *
-         * @returns {string}
-         */
-        getId(): string;
-        /**
-         * Validate create report configuration.
-         */
-        validate(config: embed.IEmbedConfigurationBase): models.IError[];
-        /**
-         * Populate config for create
-         *
-         * @param {IEmbedConfigurationBase}
-         * @returns {void}
-         */
-        populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
-        /**
-         * Adds the ability to get datasetId from url.
-         * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
-         *
-         * By extracting the ID we can ensure that the ID is always explicitly provided as part of the create configuration.
-         *
-         * @static
-         * @param {string} url
-         * @returns {string}
-         */
-        static findIdFromEmbedUrl(url: string): string;
+    import * as models from 'powerbi-models';
+    /**
+     * Report bookmarks management APIs.
+     *
+     * @export
+     * @interface IBookmarksManager
+     */
+    export interface IBookmarksManager {
+        getBookmarks(): Promise<models.IReportBookmark[]>;
+        apply(bookmarkName: string): Promise<void>;
+        play(playMode: models.BookmarksPlayMode): Promise<void>;
+        capture(): Promise<models.IReportBookmark>;
+        applyState(state: string): Promise<void>;
     }
+    /**
+     * Manages report bookmarks.
+     *
+     * @export
+     * @class BookmarksManager
+     * @implements {IBookmarksManager}
+     */
+    export class BookmarksManager implements IBookmarksManager {
+        private service;
+        private config;
+        private iframe;
+        constructor(service: service.Service, config: embed.IEmbedConfigurationBase, iframe?: HTMLIFrameElement);
+        /**
+         * Gets bookmarks that are defined in the report.
+         *
+         * ```javascript
+         * // Gets bookmarks that are defined in the report
+         * bookmarksManager.getBookmarks()
+         *   .then(bookmarks => {
+         *     ...
+         *   });
+         * ```
+         *
+         * @returns {Promise<models.IReportBookmark[]>}
+         */
+        getBookmarks(): Promise<models.IReportBookmark[]>;
+        /**
+         * Apply bookmark By name.
+         *
+         * ```javascript
+         * bookmarksManager.apply(bookmarkName)
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        apply(bookmarkName: string): Promise<void>;
+        /**
+         * Play bookmarks: Enter or Exit bookmarks presentation mode.
+         *
+         * ```javascript
+         * // Enter presentation mode.
+         * bookmarksManager.play(true)
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        play(playMode: models.BookmarksPlayMode): Promise<void>;
+        /**
+         * Capture bookmark from current state.
+         *
+         * ```javascript
+         * bookmarksManager.capture()
+         * ```
+         *
+         * @returns {Promise<models.IReportBookmark>}
+         */
+        capture(): Promise<models.IReportBookmark>;
+        /**
+         * Apply bookmark state.
+         *
+         * ```javascript
+         * bookmarksManager.applyState(bookmarkName)
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        applyState(state: string): Promise<void>;
+    }
+}
+declare module "config" {
+    const config: {
+        version: string;
+        type: string;
+    };
+    export default config;
 }
 declare module "factories" {
     /**
