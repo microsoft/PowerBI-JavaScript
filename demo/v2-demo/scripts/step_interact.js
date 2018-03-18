@@ -74,7 +74,7 @@ function OpenQnaEventsOperations() {
 }
 
 function SetToggleHandler(devId) {
-    var selector = "#" + devId + " .function-ul li";
+    const selector = "#" + devId + " .function-ul li";
     $(selector).each(function(index, li) {
         $(li).click(function() {
             $(selector).removeClass('active');

@@ -24,19 +24,6 @@ h8 {
     font-weight: 600;
 }
 
-hr {
-    border-color: #DDDDDD;
-}
-
-header {
-    display: block;
-    width: 100%;
-    z-index: 1030;
-    color: rgb(8, 122, 165);
-    background-color: rgb(24, 24, 25);
-    height: 100px;
-}
-
 a:hover, a:visited, a:link, a:active
 {
     text-decoration: none;
@@ -52,28 +39,6 @@ a:hover, a:visited, a:link, a:active
     line-height: normal;
     font-size: 24px;
     color: #FFFFFF;
-}
-
-#nextStep {
-    float: right;
-}
-
-#result-wrap {
-    margin-top: 10px;
-}
-
-#user-embed-details {
-    width: 100%;
-}
-
-#user-embed-details tr {
-    width: 100%;
-}
-
-#user-embed-details input[type="text"] {
-    width: 100%;
-    border: none;
-    margin-bottom: 5px;
 }
 
 .embed-table, #qna-embed-table {
@@ -120,63 +85,8 @@ a:hover, a:visited, a:link, a:active
     padding-left: 4px;
 }
 
-#report-embed-checkbox input {
-    width: auto;
-    border: none;
-    margin-bottom: 5px;
-}
-
-#oldSample {
-    display: block;
-    float: right;
-    margin-right: 30px;
-}
-
-#sampleReportImgDiv img {
-    width: 265px;
-    height: 180px;
-}
-
-#sampleReportImgDiv {
-    margin-top: 17px;
-    margin-right: 32px;
-    float: left;
-}
-
-#sampleReportDescription {
-    float: left;
-    margin-top: 17px;
-    max-width: 400px;
-}
-
 a {
     text-decoration: none;
-}
-
-.btn.btn-margin {
-    margin-bottom: 5px;
-}
-
-.halfWidth.right {
-    width: 750px;
-    min-height: 100px;
-    float: left;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.halfWidth.left {
-    width: 750px;
-    min-height: 100px;
-    float: left;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-right: 40px;
-}
-
-.break-float {
-    clear: both;
-    width: 100%;
 }
 
 .pbi-line {
@@ -247,12 +157,6 @@ a {
     padding: 0px 16px;
     text-decoration: none;
     background-color: rgb(245, 211, 65);
-}
-
-.main-title {
-    font-family: 'Segoe UI Web Light', 'Segoe UI Light', 'Segoe WP Light', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
-    font-size: 28px;
-    font-weight: bold;
 }
 
 .main-ul li {
@@ -451,6 +355,7 @@ a {
     bottom: 0px;
     position: absolute;
     font-weight: 600;
+    padding: 0.5px;
 }
 
 .newFeature {
@@ -465,6 +370,7 @@ a {
     display: inline-block;
     position: relative;
     font-weight: 600;
+    padding: 0.5px;
 }
 
 .highlightSection {
@@ -485,14 +391,13 @@ a {
     padding: 5px 0 0 8px;
 }
 
-#tab-wrapper {
+#tabs-wrapper {
     height: 32px;
 }
 
 #tabs-ul {
     list-style-type: none;
     margin: 0px;
-    overflow: hidden;
     padding-left: 0;
     -webkit-margin-before: 0;
     -webkit-padding-start: 0;
@@ -540,6 +445,7 @@ a {
     border: none;
     outline:none;
     margin-right: 40px;
+    opacity: 1;
 }
 
 .textAreaControl img {
@@ -584,7 +490,7 @@ a {
     float: left;
 }
 
-.authorizeButton {
+.selectButton {
     border: none;
     color: black;
     background-color: #FFFFFF;
@@ -596,7 +502,7 @@ a {
     height: 32px;
 }
 
-.authorizeButton:hover {
+.selectButton:hover {
     background-color: #3E65FF;
     color: white;
     border: none;
@@ -651,41 +557,14 @@ a {
     border: solid black 1px;
 }
 
-.active-top {
-    background-color: rgb(36, 169, 225);
-}
-
-.step-div {
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    display: inline-block;
-    background-color: white;
-    border: solid black 1px;
-}
-
-.active-step {
-    background-color: rgb(36, 169, 225);
-}
-
 .editorTitleText {
     display: inline-block;
-}
-
-.checkbox.input {
-    width: auto;
 }
 
 .stepsButton {
     height: 100%;
     padding-top: 20px;
     line-height: 20px;
-}
-
-.video {
-    width: 90%;
-    height: 500px;
-    max-width: 800px;
 }
 
 #createModeInput {
@@ -696,10 +575,6 @@ a {
     width: 90px;
     display: inline-block;
     vertical-align: middle;
-}
-
-.inputLineBody {
-    display: inline-block;
 }
 
 #modeSelector {
@@ -751,6 +626,42 @@ a {
     border-width: 5px;
     border-style: solid;
     border-color: transparent transparent black transparent;
+}
+
+.interactTooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.interactTooltip .tooltipText {
+    transition: opacity 0.5s ease-in-out;
+    -webkit-transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+    width: 290px;
+    background-color: #121212;
+    color: #F1F1F1;
+    text-align: left;
+    padding: 4px 12px;
+    font-size: 12px;
+    top: -5px;
+    left: 145%;
+    position: absolute;
+    z-index: 1;
+}
+
+.interactTooltip .tooltipText.showTooltip {
+    opacity: 1;
+}
+
+.interactTooltip .tooltipText::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
 }
 
 .mobile-view {
@@ -956,4 +867,21 @@ a {
 
 #docs-content {
     max-width: 1080px;
+}
+
+#interact-tab.enableTransition {
+    transition: all 1s ease 0s;
+    -webkit-transition: all 1s ease 0s;
+}
+
+#interact-tab.changeColor {
+    background-color: #F2C811;
+}
+
+#interact-tab.changeColor a {
+    color: black;
+}
+
+.elementClicked {
+    opacity: 0.7;
 }

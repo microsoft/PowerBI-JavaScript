@@ -11,7 +11,6 @@ header
 {
     position: relative;
     height: 60px;
-
     background: #121212;
 }
 
@@ -109,7 +108,7 @@ header
 .topFrame {
     display: table-cell;
     width: 32%;
-    width: calc((100% - 20px)/3);
+    width: calc((100% - 20.1px)/3);
     height: 330px;
 }
 
@@ -203,6 +202,21 @@ header
     .topFrame {
         width: 100%;
     }
+
+    .customTooltip .tooltipText {
+        top: -21px;
+        left: -170px;
+    }
+
+    .customTooltip .tooltipText::after {
+        top: 50%;
+        left: 100%; /* To the right of the tooltip */
+        margin-top: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent transparent black;
+        margin-left: 0px;
+    }
 }
 
 @media only screen and (max-width: 500px) {
@@ -212,6 +226,15 @@ header
 
     body {
         font-size: 12px;
+    }
+
+    .interactTooltip .tooltipText {
+        left: -105px;
+        top: 35px;
+    }
+
+    .interactTooltip .tooltipText::after {
+        display: none;
     }
 }
 

@@ -1,7 +1,6 @@
 var sampleContentLoaded = false;
 var documentationContentLoaded = false;
 var demosContentLoaded = false;
-var anyReportSectionLoaded = false;
 
 $(function() {
     OpenSampleSection();
@@ -12,13 +11,8 @@ function OpenSampleSection() {
     OpenEmbedWorkspace("#main-sample", "step_samples.html");
 }
 
-function OpenAnyReportSection() {
-    OpenEmbedWorkspace("#main-anyReport", "anyReport.html");
-}
-
-function OpenEmbedWorkspace(activeTabSelector, authStepHtml)
+function OpenEmbedWorkspace(activeTabSelector, samplesStepHtml)
 {
-    // Any report, uses the same settings as sample report. ony changes the auth step.
     if (!sampleContentLoaded)
     {
         // Open Report Sample.
@@ -28,7 +22,7 @@ function OpenEmbedWorkspace(activeTabSelector, authStepHtml)
         });
     }
 
-    $("#samples-step-wrapper").load(authStepHtml);
+    $("#samples-step-wrapper").load(samplesStepHtml);
     SetActiveStyle(activeTabSelector);
 
     $(".content").hide();

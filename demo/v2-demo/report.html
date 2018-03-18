@@ -10,7 +10,10 @@
                         <div><a href="#">Embed</a></div>
                     </li>
                     <li id="interact-tab" onclick="OpenInteractTab();">
-                        <div><a href="#">Interact</a></div>
+                        <div class="interactTooltip">
+                            <div><a href="#">Interact</a></div>
+                            <span class="tooltipText">Please click 'Run' before switching to 'Interact' tab</span>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -26,10 +29,10 @@
                 <div class="editorTitleText">Embedded view</div>
             </div>
             <div class="textAreaControls">
-                <button id="btnDesktopView" class="textAreaControl wide" onclick="EmbedAreaDesktopView();">
+                <button id="btnDesktopView" class="textAreaControl wide" onclick="elementClicked(this);EmbedAreaDesktopView();">
                     <img src="images\pc.png"/> Desktop
                 </button>
-                <button id="btnPhoneView" class="textAreaControl narrow" onclick="EmbedAreaMobileView();">
+                <button id="btnPhoneView" class="textAreaControl narrow" onclick="elementClicked(this);EmbedAreaMobileView();">
                     <img src="images\phone.png"/> Phone
                 </button>
             </div>
@@ -67,11 +70,11 @@ $(document).ready(function() {
 
     LoadLogWindow("#logWindow");
 
-    var modeUrlParam = GetParameterByName("mode");
-    var mode = modeUrlParam ? modeUrlParam : "view";
+    const modeUrlParam = GetParameterByName("mode");
+    const mode = modeUrlParam ? modeUrlParam : "view";
 
-    var entityTypeUrlParam = GetParameterByName("entityType");
-    var entityType;
+    const entityTypeUrlParam = GetParameterByName("entityType");
+    let entityType;
     if (entityTypeUrlParam == "dashboard") {
         entityType = EntityType.Dashboard;
     } else if (entityTypeUrlParam == "tile") {

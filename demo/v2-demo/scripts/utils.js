@@ -1,38 +1,12 @@
 var currentCode = "";
-
-function ValidateEmbedUrl(embedUrl) {
-    var embedUrl = $('#txtReportEmbed').val();
-    
-    if (!embedUrl)
-    {
-        alert("You must specify an embed url.");
-        return false;
-    }
-    var id = null;
-    var parts = embedUrl.split("reportId=");
-    if (parts && parts.length > 0)
-    {
-        var guidParts = parts[parts.length  -1].split("&");
-        if (guidParts && guidParts.length > 0)
-        {
-            id = guidParts[0];
-        }
-    }
-    
-    if (!id)
-    {
-        alert("Could not find report ID in url");
-        return false;
-    }
-    
-    return true;
-}
+const interactIndicationTimeout = 5000;
+const elementClickedTimeout = 250;
 
 function BodyCodeOfFunction(func) {
-    var lines = func.toString().split('\n');
+    let lines = func.toString().split('\n');
     lines = lines.slice(1, lines.length-1);
     
-    for (var i = 0; i < lines.length; ++i)
+    for (let i = 0; i < lines.length; ++i)
     {
         // remove trailing spaces.
         lines[i] = lines[i].substring(4);
@@ -53,22 +27,36 @@ function LoadLogWindow(divSelector) {
 
 function SetCode(func) {
     currentCode = BodyCodeOfFunction(func);
-	var codeHtml = '<pre id="txtCode" class="brush: js; gutter: false;">';
+	let codeHtml = '<pre id="txtCode" class="brush: js; gutter: false;">';
 	codeHtml = codeHtml + currentCode + '</pre><script type="text/javascript" src="syntaxHighlighter/syntaxhighlighter.js"></script>';
 	$("#highlighter").html(codeHtml);
 
     if (func != "") {
-        var runFunc = mapFunc(func);
+        let runFunc = mapFunc(func);
+
+        if (getFuncName(runFunc).match(/Embed/)) {
+            let oldFunc = runFunc;
+            runFunc = function() {
+                oldFunc();
+                $('#interact-tab').addClass('enableTransition');
+                setTimeout(function() {
+                    $('#interact-tab').addClass('changeColor');
+                }, interactIndicationTimeout);
+            }
+        }
 
         $('#btnRunCode').off('click');
-        $('#btnRunCode').click(runFunc);
+        $('#btnRunCode').click(function() {
+            elementClicked('#btnRunCode');
+            runFunc();
+        });
         // TODO: add indication to click Interact tab on first embedding
     }
 }
 
 function CopyCode() {
-    var id = "clipboard-textarea";
-    var textarea = document.getElementById(id);
+    const id = "clipboard-textarea";
+    let textarea = document.getElementById(id);
 
     if (!textarea) {
         textarea = document.createElement("textarea");
@@ -125,4 +113,11 @@ function getEmbedContainerClassPrefix(entityType, isMobile) {
         default:
             return ".report";
     }
+}
+
+function elementClicked(element) {
+    $(element).addClass('elementClicked');
+    setTimeout(function() {
+        $(element).removeClass('elementClicked');
+    }, elementClickedTimeout);
 }
