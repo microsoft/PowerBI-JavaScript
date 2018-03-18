@@ -1562,7 +1562,7 @@ function _Bookmarks_Apply() {
     // bookmarksManager.apply will apply the bookmark with the
     // given name on the report.
     // This is the actual bookmark name not the display name.
-    report.bookmarksManager.apply("Bookmark2f89b805540504c54031")
+    report.bookmarksManager.apply("Bookmark4f76333c3ea205286501")
         .catch(function (errors) {
             Log.log(errors);
         });
