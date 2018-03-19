@@ -201,7 +201,7 @@ function getEmbedCode(mode, entityType)
         }
         else if (mode === EmbedCreateMode)
         {
-            code = isDesktop ? _Embed_BasicEmbed_EditMode : _Embed_MobileCreateNotSupported;
+            code = isDesktop ? _Embed_Create : _Embed_MobileCreateNotSupported;
         }
     }
     else if (entityType == EntityType.Visual) {
