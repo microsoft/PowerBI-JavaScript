@@ -44,9 +44,35 @@ function GetSession(key) {
 
 function UpdateSession(button, sessionKey) {
     const value = $(button).val();
-    if (value)
+    if (value || value === "")
     {
         SetSession(sessionKey, value);
+        SetIsSample(false);
+    }
+}
+
+function SetIsSample(value) {
+    const entityType = GetSession(SessionKeys.EntityType);
+
+    if (entityType == EntityType.Report)
+    {
+        SetSession(SessionKeys.IsSampleReport, value);
+    }
+    else if (entityType == EntityType.Visual)
+    {
+        SetSession(SessionKeys.IsSampleReport, value);
+    }
+    else if (entityType == EntityType.Dashboard)
+    {
+        SetSession(SessionKeys.IsSampleDashboard, value);
+    }
+    else if (entityType == EntityType.Tile)
+    {
+        SetSession(SessionKeys.IsSampleTile, value);
+    }
+    else if (entityType == EntityType.Qna)
+    {
+        SetSession(SessionKeys.IsSampleQna, value);
     }
 }
 
