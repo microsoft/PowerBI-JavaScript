@@ -157,6 +157,7 @@ function LoadSampleQnaIntoSession() {
 
 function OpenCodeStepWithSample(entityType) {
     SetSession(SessionKeys.EntityType, entityType);
+    SetSession(SessionKeys.TokenType, defaultTokenType);
 
     if (entityType == EntityType.Report)
     {
