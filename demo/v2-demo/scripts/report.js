@@ -9,7 +9,7 @@ const EmbedCreateMode = "create";
 const runEmbedCodeTimeout = 500;
 const interactTooltipTimeout = 2000;
 
-const defualtTokenType = 1;
+const defaultTokenType = 1;
 const defaultQnaQuestion = "This year sales by store type by postal code as map";
 const defaultQnaMode = "Interactive";
 
@@ -255,11 +255,6 @@ function showEmbedSettings(mode, entityType, tokenType)
     }
 }
 
-function SetEmbedTypeToEmbedToken(tokenType)
-{
-    SetSession(SessionKeys.TokenType, tokenType);
-}
-
 function OpenEmbedMode(mode, entityType, tokenType)
 {
     if (entityType == EntityType.Report)
@@ -413,6 +408,74 @@ function ToggleQuestionBox(enabled) {
     }
 }
 
+function OnTokenTypeRadioClicked(tokenType) {
+    SetSession(SessionKeys.TokenType, tokenType);
+    const entityType = GetSession(SessionKeys.EntityType);
+
+    if (tokenType == 0 /* AAD Token */) {
+        $('.inputLine input').each(function () {
+            $(this).val("");
+            let onChangeFunc = $(this).attr("onchange");
+            if (onChangeFunc) {
+                // Change 'this' to button's identifier
+                onChangeFunc = onChangeFunc.replace("this", "'input#" + $(this).attr('id') + "'");
+                eval(onChangeFunc);
+            }
+        });
+
+    } else {
+        // Moving to embed token will reload the sample
+        ReloadSample(entityType);
+    }
+}
+
+function ReloadSample(entityType) {
+    const mode = GetSession(SessionKeys.EmbedMode);
+    SetIsSample(true);
+
+    if (entityType == EntityType.Report)
+    {
+        if (mode == EmbedCreateMode)
+        {
+            LoadSampleDatasetIntoSession().then(function (response) {
+                SetTextBoxesFromSessionOrUrlParam("#txtCreateAccessToken", "#txtCreateReportEmbed", "#txtEmbedDatasetId");
+            });
+        }
+        else
+        {
+            LoadSampleReportIntoSession().then(function (response) {
+                SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
+            });
+        }
+    }
+    else if (entityType == EntityType.Visual)
+    {
+        LoadSampleVisualIntoSession().then(function (response) {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
+            SetTextboxFromSessionOrUrlParam(SessionKeys.PageName, "#txtPageName");
+            SetTextboxFromSessionOrUrlParam(SessionKeys.VisualName, "#txtVisualName");
+        });
+    }
+    else if (entityType == EntityType.Dashboard)
+    {
+        LoadSampleDashboardIntoSession().then(function (response) {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtDashboardEmbed", "#txtEmbedDashboardId");
+        });
+    }
+    else if (entityType == EntityType.Tile)
+    {
+        LoadSampleTileIntoSession().then(function (response) {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtTileEmbed", "#txtEmbedTileId", "#txtEmbedDashboardId");
+        });
+    }
+    else if (entityType == EntityType.Qna)
+    {
+        LoadSampleQnaIntoSession().then(function (response) {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
+        });
+    }
+}
+
 function EmbedAreaDesktopView() {
     if ($(".desktop-view").hasClass(active_class)) {
         return;
@@ -504,7 +567,7 @@ function updateRunFuncSessionParameters(runFunc) {
 
     let code = BodyCodeOfFunction(runFunc);
     let tokenType = GetSession(SessionKeys.TokenType);
-    tokenType = tokenType? tokenType : defualtTokenType;
+    tokenType = (tokenType != undefined)? tokenType : defaultTokenType;
     code = code.replace("$('#txtAccessToken').val()", accessToken)
                 .replace("$('input:radio[name=tokenType]:checked').val()", tokenType);
 
