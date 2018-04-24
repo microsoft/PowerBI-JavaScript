@@ -81,6 +81,8 @@ function SetTextboxFromSessionOrUrlParam(sessionKey, textboxSelector) {
     if (!value)
     {
         value = GetSession(sessionKey);
+    } else {
+        SetSession(sessionKey, value);
     }
     $(textboxSelector).val(value);
 }
@@ -90,6 +92,8 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
     if (!accessToken)
     {
         accessToken = GetSession(SessionKeys.AccessToken);
+    } else {
+        SetSession(SessionKeys.AccessToken, accessToken);
     }
 
     let embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
@@ -98,7 +102,7 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
         embedUrl = GetSession(SessionKeys.EmbedUrl);
     } else {
         let groupId = GetParameterByName(SessionKeys.GroupId);
-        if(groupId)
+        if (groupId)
         {
             if (embedUrl.indexOf("?") != -1)
             {
@@ -107,23 +111,30 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
               embedUrl += "?groupId=" + groupId;
             }
         }
+        SetSession(SessionKeys.EmbedUrl, embedUrl);
     }
 
     let embedId = GetParameterByName(SessionKeys.EmbedId);
     if (!embedId)
     {
         embedId = GetSession(SessionKeys.EmbedId);
+    } else {
+        SetSession(SessionKeys.EmbedId, embedId);
     }
 
     let tokenType = GetParameterByName(SessionKeys.TokenType);
     if (!tokenType)
     {
         tokenType = GetSession(SessionKeys.TokenType);
+    } else {
+        SetSession(SessionKeys.TokenType, tokenType);
     }
 
     let dashboardId = GetParameterByName(SessionKeys.DashboardId);
     if (!dashboardId) {
         dashboardId = GetSession(SessionKeys.DashboardId);
+    } else {
+        SetSession(SessionKeys.DashboardId, dashboardId);
     }
 
     $(accessTokenSelector).val(accessToken);
