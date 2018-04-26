@@ -1272,7 +1272,7 @@ function _Page_HasLayout() {
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
-    
+
     // Retrieve the page collection and check if the first page has a MobilePortrait layout.
     report.getPages().then(function (pages) {
         pages[0].hasLayout(models.LayoutType.MobilePortrait).then(function(hasLayout) {
@@ -1575,7 +1575,7 @@ function _Bookmarks_Capture() {
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // Capture the current bookmark and prints the bookmark's 
+    // Capture the current bookmark and prints the bookmark's
     // state string to Log window.
     report.bookmarksManager.capture()
         .then(function (capturedBookmark) {
@@ -1800,8 +1800,8 @@ function _Visual_ExportData_Summarized() {
 
             // Exports visual data
             visual.exportData(models.ExportDataType.Summarized)
-              .then(function (data) {
-                Log.log(data);
+              .then(function (result) {
+                Log.logCsv(result.data);
               })
               .catch(function (errors) {
                 Log.log(errors);
@@ -1845,8 +1845,8 @@ function _Visual_ExportData_Underlying() {
 
             // Exports visual data
             visual.exportData(models.ExportDataType.Underlying)
-              .then(function (data) {
-                Log.log(data);
+              .then(function (result) {
+                Log.logCsv(result.data);
               })
               .catch(function (errors) {
                 Log.log(errors);
