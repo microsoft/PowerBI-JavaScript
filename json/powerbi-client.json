@@ -12,7 +12,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/node_modules/powerbi-models/dist/models.d.ts",
+			"originalName": "C:/Workspace/mirror/github/node_modules/powerbi-models/dist/models.d.ts",
 			"children": [
 				{
 					"id": 188,
@@ -12249,7 +12249,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/bookmarksManager.ts",
+			"originalName": "C:/Workspace/mirror/github/src/bookmarksManager.ts",
 			"children": [
 				{
 					"id": 3367,
@@ -13059,7 +13059,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/config.ts",
+			"originalName": "C:/Workspace/mirror/github/src/config.ts",
 			"children": [
 				{
 					"id": 3390,
@@ -13155,7 +13155,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/create.ts",
+			"originalName": "C:/Workspace/mirror/github/src/create.ts",
 			"children": [
 				{
 					"id": 1075,
@@ -14698,7 +14698,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/dashboard.ts",
+			"originalName": "C:/Workspace/mirror/github/src/dashboard.ts",
 			"children": [
 				{
 					"id": 1145,
@@ -16488,7 +16488,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/defaults.ts",
+			"originalName": "C:/Workspace/mirror/github/src/defaults.ts",
 			"children": [
 				{
 					"id": 964,
@@ -16652,7 +16652,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/embed.ts",
+			"originalName": "C:/Workspace/mirror/github/src/embed.ts",
 			"children": [
 				{
 					"id": 887,
@@ -20283,7 +20283,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/factories.ts",
+			"originalName": "C:/Workspace/mirror/github/src/factories.ts",
 			"children": [
 				{
 					"id": 3394,
@@ -20502,7 +20502,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/ifilterable.ts",
+			"originalName": "C:/Workspace/mirror/github/src/ifilterable.ts",
 			"children": [
 				{
 					"id": 895,
@@ -20730,7 +20730,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/page.ts",
+			"originalName": "C:/Workspace/mirror/github/src/page.ts",
 			"children": [
 				{
 					"id": 938,
@@ -21459,7 +21459,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/powerbi-client.ts",
+			"originalName": "C:/Workspace/mirror/github/src/powerbi-client.ts",
 			"children": [
 				{
 					"id": 3410,
@@ -21592,7 +21592,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/qna.ts",
+			"originalName": "C:/Workspace/mirror/github/src/qna.ts",
 			"children": [
 				{
 					"id": 1281,
@@ -23154,7 +23154,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/report.ts",
+			"originalName": "C:/Workspace/mirror/github/src/report.ts",
 			"children": [
 				{
 					"id": 974,
@@ -25590,7 +25590,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/service.ts",
+			"originalName": "C:/Workspace/mirror/github/src/service.ts",
 			"children": [
 				{
 					"id": 3276,
@@ -57423,7 +57423,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/tile.ts",
+			"originalName": "C:/Workspace/mirror/github/src/tile.ts",
 			"children": [
 				{
 					"id": 1215,
@@ -58983,7 +58983,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/util.ts",
+			"originalName": "C:/Workspace/mirror/github/src/util.ts",
 			"children": [
 				{
 					"id": 730,
@@ -59610,7 +59610,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/visual.ts",
+			"originalName": "C:/Workspace/mirror/github/src/visual.ts",
 			"children": [
 				{
 					"id": 1347,
@@ -62167,7 +62167,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/src/visualDescriptor.ts",
+			"originalName": "C:/Workspace/mirror/github/src/visualDescriptor.ts",
 			"children": [
 				{
 					"id": 910,
@@ -62927,7 +62927,7 @@
 			"flags": {
 				"isExported": true
 			},
-			"originalName": "c:/mirror/github/powerbi-javascript/typings/globals/es6-promise/index.d.ts",
+			"originalName": "C:/Workspace/mirror/github/typings/globals/es6-promise/index.d.ts",
 			"children": [
 				{
 					"id": 165,
