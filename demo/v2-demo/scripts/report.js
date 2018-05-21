@@ -26,6 +26,8 @@ function OpenSamplesStep() {
     // Hide Embed view in samples step.
     $("#samples-step-wrapper").show();
     $("#embed-and-interact-steps-wrapper").hide();
+
+    $("#welcome-text").show();
 }
 
 function OpenCodeStepFromNavPane()
@@ -47,6 +49,8 @@ function OpenCodeStep(mode, entityType, tokenType) {
     // Hide Embed view in samples step.
     $("#samples-step-wrapper").hide();
     $("#embed-and-interact-steps-wrapper").show();
+
+    $("#welcome-text").hide();
 
     let containers = $(".iframeContainer");
     containers.removeClass(active_class);
