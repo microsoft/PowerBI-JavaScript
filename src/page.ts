@@ -51,18 +51,29 @@ export class Page implements IPageNode, IFilterable {
   isActive: boolean; 
 
   /**
+   * The visibility of the page.
+   * 0 - Always Visible
+   * 1 - Hidden in View Mode
+   * 
+   * @type {models.SectionVisibility}
+   */
+   visibility: models.SectionVisibility;
+
+  /**
    * Creates an instance of a Power BI report page.
    * 
    * @param {IReportNode} report
    * @param {string} name
    * @param {string} [displayName]
    * @param {boolean} [isActivePage]
+   * @param {models.SectionVisibility} [visibility]
    */
-  constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean) {
+  constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility) {
     this.report = report;
     this.name = name;
     this.displayName = displayName;
     this.isActive = isActivePage;
+    this.visibility = visibility;
   }
 
   /**

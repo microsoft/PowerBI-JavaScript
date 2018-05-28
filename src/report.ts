@@ -169,7 +169,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       .then(response => {
         return response.body
           .map(page => {
-            return new Page(this, page.name, page.displayName, page.isActive);
+            return new Page(this, page.name, page.displayName, page.isActive, page.visibility);
           });
       }, response => {
         throw response.body;
@@ -195,8 +195,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @param {boolean} [isActive]
    * @returns {Page}
    */
-  page(name: string, displayName?: string, isActive?: boolean): Page {
-    return new Page(this, name, displayName, isActive);
+  page(name: string, displayName?: string, isActive?: boolean, visibility?: models.SectionVisibility): Page {
+    return new Page(this, name, displayName, isActive, visibility);
   }
 
   /**
