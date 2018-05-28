@@ -34,6 +34,7 @@ export interface IEmbedConfigurationBase {
   type?: string;
   accessToken?: string;
   tokenType?: models.TokenType;
+  groupId?: string;
 }
 
 // TODO: Re-use ILoadConfiguration interface to prevent duplicating properties.
@@ -418,6 +419,7 @@ export abstract class Embed {
     this.config.uniqueId = this.getUniqueId();
     this.config.embedUrl = this.getEmbedUrl();
     this.config.accessToken = this.getAccessToken(this.service.accessToken);
+    this.config.groupId = this.getGroupId();
     this.addLocaleToEmbedUrl(config);
   }
 
@@ -465,6 +467,16 @@ export abstract class Embed {
    */
   private getUniqueId(): string {
     return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || utils.createRandomString();
+  }
+
+  /**
+   * Gets the group ID from the first available location: options, embeddedUrl.
+   * 
+   * @private
+   * @returns {string}
+   */
+  private getGroupId(): string {
+    return this.config.groupId || Embed.findGroupIdFromEmbedUrl(this.config.embedUrl);
   }
 
   /**
@@ -538,5 +550,25 @@ export abstract class Embed {
     } else {
       this.iframe.addEventListener('load', () => this.createReport(this.createConfig), false);
     }
+  }
+
+  /**
+   * Adds the ability to get groupId from url.
+   * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
+   * 
+   * @static
+   * @param {string} url
+   * @returns {string}
+   */
+  static findGroupIdFromEmbedUrl(url: string): string {
+      const groupIdRegEx = /groupId="?([^&]+)"?/
+      const groupIdMatch = url.match(groupIdRegEx);
+
+      let groupId;
+      if (groupIdMatch) {
+          groupId = groupIdMatch[1];
+      }
+
+      return groupId;
   }
 }
