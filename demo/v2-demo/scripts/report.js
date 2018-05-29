@@ -52,6 +52,8 @@ function OpenCodeStep(mode, entityType, tokenType) {
 
     $("#welcome-text").hide();
 
+    $("#highlighter").empty();
+
     let containers = $(".iframeContainer");
     containers.removeClass(active_class);
 
@@ -164,6 +166,9 @@ function OpenInteractTab() {
     else if (entityType == EntityType.Qna)
     {
         $("#settings").load("settings_interact_qna.html", function() {
+            const isResultOnlyMode = GetSession(SessionKeys.QnaMode) === "ResultOnly";
+            // Hide set question on interactive mode
+            $('#qna-operations').toggle(isResultOnlyMode);
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
         });
@@ -398,7 +403,7 @@ function IsEmbeddingSampleQna() {
 }
 
 function ToggleQuestionBox(enabled) {
-    UpdateSession($("input[name='qnaMode']:checked").val(), SessionKeys.QnaMode);
+    UpdateSession("input[name='qnaMode']:checked", SessionKeys.QnaMode);
     let txtQuestion = $("#txtQuestion");
     if (enabled === true) {
         let question = GetSession(SessionKeys.QnaQuestion);

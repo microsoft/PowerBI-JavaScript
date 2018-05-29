@@ -1,0 +1,50 @@
+<div id="demos-text">
+    <h3>Custom Layout Demo</h3>
+    <br>
+    <div id="demos-description">
+        Use this demo to learn how to leverage the custom layout API.<br>
+        The Embedded object is a report, which is used as a visuals container.<br>
+        By selecting or un-selecting the visual name on the left, you change the configuration of each visual between 'Hide/Show'.<br>
+        The application calculates the position of each visual according to the selected number of columns and visuals.<br>
+        In this demo, you can change the layout of your visuals to fit into different screens:<br>
+        &emsp;- 3 columns: usually fits a Desktop screen<br>
+        &emsp;- 2 columns: usually fits a Tablet or small laptop screens<br>
+        &emsp;- 1 columns: fits a mobile screen<br>
+        By choosing different layouts, the code actually changes the configuration of each visual, by setting its size and position.<br>
+        You can see and use the code for all of the above through GitHub. Just click "Get the code".
+    </div>
+</div>
+
+<div id="demoContent">
+    <div id="visualsArea">
+        <div class="editorTitle">Report visuals</div>
+        <div id="visualsWrapper">
+            <div id="visualsList">
+            </div>
+        </div>
+    </div>
+    <div id="demoEmbedArea">
+        <div class="editorTitle">Embedded view</div>
+        <div class="textAreaControls">
+            <button id="btnThreeCols" class="textAreaControl" onclick="onColumnsClicked(3);elementClicked(this);">
+                <img src="images\ic_3columns.svg"/> 3 Columns
+            </button>
+            <button id="btnTwoCols" class="textAreaControl" onclick="onColumnsClicked(2);elementClicked(this);">
+                <img src="images\ic_2columns.svg"/> 2 Columns
+            </button>
+            <button id="btnOneCol" class="textAreaControl" onclick="onColumnsClicked(1);elementClicked(this);">
+                <img src="images\ic_1column.svg"/> 1 Column
+            </button>
+        </div>
+        <div id="demo-embedded-view">
+            <div id="embedContainer" class="iframeContainer active"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        embedCustomLayoutReport();
+        window.addEventListener("resize", renderVisuals);
+    });
+</script>

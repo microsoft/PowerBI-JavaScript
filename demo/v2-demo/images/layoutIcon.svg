@@ -1,0 +1,59 @@
+<svg width="168" height="112" viewBox="0 0 168 112" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Canvas" fill="none">
+<g id="layoutIcon">
+<g id="Rectangle 2">
+<rect width="112" height="112" fill="white"/>
+<rect x="1" y="1" width="110" height="110" stroke-width="2" stroke="black"/>
+</g>
+<g id="Rectangle 2.9">
+<rect width="32" height="32" transform="translate(6 8)" fill="white"/>
+<rect x="1" y="1" width="30" height="30" stroke-width="2" transform="translate(6 8)" stroke="#BDBDBD"/>
+</g>
+<g id="Rectangle 2.12">
+<rect width="32" height="32" transform="translate(6 44)" fill="white"/>
+<rect x="1" y="1" width="30" height="30" stroke-width="2" transform="translate(6 44)" stroke="#BDBDBD"/>
+</g>
+<g id="Rectangle 2.13">
+<path d="M 32 30L 32 0L 0 0L 0 30" stroke-width="2" transform="translate(7 80)" stroke="#BDBDBD"/>
+</g>
+<g id="Rectangle 2.10">
+<rect width="32" height="32" transform="translate(40 8)" fill="white"/>
+<rect x="1" y="1" width="30" height="30" stroke-width="2" transform="translate(40 8)" stroke="#BDBDBD"/>
+</g>
+<g id="Rectangle 2.11">
+<rect width="32" height="32" transform="translate(74 8)" fill="white"/>
+<rect x="1" y="1" width="30" height="30" stroke-width="2" transform="translate(74 8)" stroke="#BDBDBD"/>
+</g>
+<g id="Rectangle 2.1">
+<rect width="112" height="84" transform="translate(31.5 28)" fill="white"/>
+<rect x="1" y="1" width="110" height="82" stroke-width="2" transform="translate(31.5 28)" stroke="black"/>
+</g>
+<g id="Rectangle 2.5">
+<rect width="40" height="40" transform="translate(44 38)" fill="white"/>
+<rect x="1" y="1" width="38" height="38" stroke-width="2" transform="translate(44 38)" stroke="#BDBDBD"/>
+</g>
+<g id="Rectangle 2.6">
+<rect width="40" height="40" transform="translate(92 38)" fill="white"/>
+<rect x="1" y="1" width="38" height="38" stroke-width="2" transform="translate(92 38)" stroke="#BDBDBD"/>
+</g>
+<g id="Rectangle 2.8">
+<path d="M 38 26L 38 0L 0 0L 0 26" stroke-width="2" transform="translate(93 84)" stroke="#BDBDBD"/>
+</g>
+<g id="Rectangle 2.2">
+<rect width="42" height="56" transform="translate(126 56)" fill="white"/>
+<rect x="1" y="1" width="40" height="54" stroke-width="2" transform="translate(126 56)" stroke="black"/>
+</g>
+<g id="Rectangle 2.3">
+<rect width="24" height="24" transform="translate(135 62)" fill="white"/>
+<rect x="1" y="1" width="22" height="22" stroke-width="2" transform="translate(135 62)" stroke="#BDBDBD"/>
+</g>
+<g id="Rectangle 2.4">
+<path d="M 22 19L 22 0L 0 0L 0 19" stroke-width="2" transform="translate(136 91)" stroke="#BDBDBD"/>
+</g>
+<g id="Rectangle 2.7">
+<path d="M 38 26L 38 0L 0 0L 0 26" stroke-width="2" transform="translate(45 84)" stroke="#BDBDBD"/>
+</g>
+</g>
+</g>
+</svg>
+

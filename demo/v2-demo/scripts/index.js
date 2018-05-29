@@ -5,6 +5,9 @@ var demosContentLoaded = false;
 $(function() {
     OpenSampleSection();
     WarmStartSampleReportEmbed();
+    if (GetParameterByName("demos")) {
+        $('#main-demos').show();
+    }
 });
 
 function OpenSampleSection() {
@@ -28,6 +31,9 @@ function OpenEmbedWorkspace(activeTabSelector, samplesStepHtml)
     $(".content").hide();
     $("#sampleContent").show();
     OpenSamplesStep();
+
+    LayoutDemoState.layoutReport = null;
+    BookmarkDemoState.bookmarksReport = null;
 }
 
 function OpenDocumentationSection() {
@@ -46,6 +52,7 @@ function OpenDocumentationSection() {
 function OpenDemosSection() {
     if (!demosContentLoaded)
     {
+        $('#embedContainer').removeAttr('id');
         $("#demosContent").load("demos.html");
         demosContentLoaded = true;
     }
@@ -60,4 +67,14 @@ function SetActiveStyle(id)
 {
     $("#main-ul li").removeClass("main-li-active");
     $(id).addClass("main-li-active");
+}
+
+const DemosHtmls = {
+    CustomLayout : "./live_demos/custom_layout/demo_custom_layout.html",
+    Bookmarks : "./live_demos/bookmarks/demo_bookmarks.html"
+};
+
+function OpenDemo(demoType) {
+    $("#demosContent").load(DemosHtmls[demoType]);
+    demosContentLoaded = false;
 }
