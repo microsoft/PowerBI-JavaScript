@@ -2997,7 +2997,7 @@ describe('SDK-to-HPM', function () {
         report.switchMode(models.ViewMode.Edit);
 
         // Assert
-        let url = '/report/switchMode/' + models.ViewMode.Edit;
+        let url = '/report/switchMode/edit';
         expect(spyHpm.post).toHaveBeenCalledWith(url, null, { uid: uniqueId }, iframe.contentWindow);
       });
 
@@ -3011,7 +3011,7 @@ describe('SDK-to-HPM', function () {
         report.switchMode(models.ViewMode.Edit)
           .then(() => {
             // Assert
-            let url = '/report/switchMode/' + models.ViewMode.Edit;
+            let url = '/report/switchMode/edit';
             expect(spyHpm.post).toHaveBeenCalledWith(url, null, { uid: uniqueId }, iframe.contentWindow);
             done();
           });

@@ -329,8 +329,16 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * @returns {Promise<void>}
    */
-  switchMode(viewMode: models.ViewMode): Promise<void> {
-    let url = '/report/switchMode/' + viewMode;
+  switchMode(viewMode: models.ViewMode | string): Promise<void> {
+    let newMode: string;
+    if (typeof viewMode === "string"){
+      newMode = viewMode;
+    }
+    else {
+      newMode = this.viewModeToString(viewMode);
+    }
+
+    let url = '/report/switchMode/' + newMode;
     return this.service.hpm.post<models.IError[]>(url, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body;
@@ -355,5 +363,19 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       .catch(response => {
         throw response.body;
     });
+  }
+
+  private viewModeToString(viewMode: models.ViewMode): string {
+    let mode: string;
+    switch (viewMode) {
+      case models.ViewMode.Edit:
+        mode = "edit";
+        break;
+      case models.ViewMode.View:
+        mode = "view";
+        break;
+    }
+
+    return mode;
   }
 }
