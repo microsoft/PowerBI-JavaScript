@@ -1,4 +1,4 @@
-/*! powerbi-client v2.5.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.5.2 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -715,6 +715,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.config.uniqueId = this.getUniqueId();
 	        this.config.embedUrl = this.getEmbedUrl();
 	        this.config.accessToken = this.getAccessToken(this.service.accessToken);
+	        this.config.groupId = this.getGroupId();
 	        this.addLocaleToEmbedUrl(config);
 	    };
 	    /**
@@ -757,6 +758,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Embed.prototype.getUniqueId = function () {
 	        return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || utils.createRandomString();
+	    };
+	    /**
+	     * Gets the group ID from the first available location: options, embeddedUrl.
+	     *
+	     * @private
+	     * @returns {string}
+	     */
+	    Embed.prototype.getGroupId = function () {
+	        return this.config.groupId || Embed.findGroupIdFromEmbedUrl(this.config.embedUrl);
 	    };
 	    /**
 	     * Requests the browser to render the component's iframe in fullscreen mode.
@@ -812,6 +822,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	        else {
 	            this.iframe.addEventListener('load', function () { return _this.createReport(_this.createConfig); }, false);
 	        }
+	    };
+	    /**
+	     * Adds the ability to get groupId from url.
+	     * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
+	     *
+	     * @static
+	     * @param {string} url
+	     * @returns {string}
+	     */
+	    Embed.findGroupIdFromEmbedUrl = function (url) {
+	        var groupIdRegEx = /groupId="?([^&]+)"?/;
+	        var groupIdMatch = url.match(groupIdRegEx);
+	        var groupId;
+	        if (groupIdMatch) {
+	            groupId = groupIdMatch[1];
+	        }
+	        return groupId;
 	    };
 	    Embed.allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected"];
 	    Embed.accessTokenAttribute = 'powerbi-access-token';
@@ -957,7 +984,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.0.4 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.0.6 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -2651,6 +2678,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
 		            },
 		            {
+		                field: "groupId",
+		                validators: [validator_1.Validators.stringValidator]
+		            },
+		            {
 		                field: "settings",
 		                validators: [validator_1.Validators.settingsValidator]
 		            },
@@ -2728,6 +2759,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
 		            },
 		            {
+		                field: "groupId",
+		                validators: [validator_1.Validators.stringValidator]
+		            },
+		            {
 		                field: "tokenType",
 		                validators: [validator_1.Validators.tokenTypeValidator]
 		            }
@@ -2779,6 +2814,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "id",
 		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+		            },
+		            {
+		                field: "groupId",
+		                validators: [validator_1.Validators.stringValidator]
 		            },
 		            {
 		                field: "pageView",
@@ -2840,6 +2879,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "dashboardId",
 		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+		            },
+		            {
+		                field: "groupId",
+		                validators: [validator_1.Validators.stringValidator]
 		            },
 		            {
 		                field: "pageView",
@@ -3044,6 +3087,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "tokenType",
 		                validators: [validator_1.Validators.tokenTypeValidator]
+		            },
+		            {
+		                field: "groupId",
+		                validators: [validator_1.Validators.stringValidator]
 		            }
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
@@ -3558,7 +3605,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            .then(function (response) {
 	            return response.body
 	                .map(function (page) {
-	                return new page_1.Page(_this, page.name, page.displayName, page.isActive);
+	                return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility);
 	            });
 	        }, function (response) {
 	            throw response.body;
@@ -3583,8 +3630,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {boolean} [isActive]
 	     * @returns {Page}
 	     */
-	    Report.prototype.page = function (name, displayName, isActive) {
-	        return new page_1.Page(this, name, displayName, isActive);
+	    Report.prototype.page = function (name, displayName, isActive, visibility) {
+	        return new page_1.Page(this, name, displayName, isActive, visibility);
 	    };
 	    /**
 	     * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
@@ -3706,7 +3753,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    Report.prototype.switchMode = function (viewMode) {
-	        var url = '/report/switchMode/' + viewMode;
+	        var newMode;
+	        if (typeof viewMode === "string") {
+	            newMode = viewMode;
+	        }
+	        else {
+	            newMode = this.viewModeToString(viewMode);
+	        }
+	        var url = '/report/switchMode/' + newMode;
 	        return this.service.hpm.post(url, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
 	            return response.body;
@@ -3730,6 +3784,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	            .catch(function (response) {
 	            throw response.body;
 	        });
+	    };
+	    Report.prototype.viewModeToString = function (viewMode) {
+	        var mode;
+	        switch (viewMode) {
+	            case models.ViewMode.Edit:
+	                mode = "edit";
+	                break;
+	            case models.ViewMode.View:
+	                mode = "view";
+	                break;
+	        }
+	        return mode;
 	    };
 	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
@@ -3764,12 +3830,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {string} name
 	     * @param {string} [displayName]
 	     * @param {boolean} [isActivePage]
+	     * @param {models.SectionVisibility} [visibility]
 	     */
-	    function Page(report, name, displayName, isActivePage) {
+	    function Page(report, name, displayName, isActivePage, visibility) {
 	        this.report = report;
 	        this.name = name;
 	        this.displayName = displayName;
 	        this.isActive = isActivePage;
+	        this.visibility = visibility;
 	    }
 	    /**
 	     * Gets all page level filters within the report.
@@ -3954,7 +4022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *  .then(data => { ... });
 	     * ```
 	     *
-	     * @returns {(Promise<string>)}
+	     * @returns {(Promise<models.ExportDataType>)}
 	     */
 	    VisualDescriptor.prototype.exportData = function (exportDataType, rows) {
 	        var exportDataRequestBody = {
@@ -4152,7 +4220,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            datasetId: config.datasetId || this.getId(),
 	            accessToken: config.accessToken,
 	            tokenType: config.tokenType,
-	            settings: settings
+	            settings: settings,
+	            groupId: config.groupId
 	        };
 	    };
 	    /**
@@ -4613,7 +4682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.5.1',
+	    version: '2.5.2',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -4924,7 +4993,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
+	/*! http-post-message v0.2.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -4979,7 +5048,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ function(module, exports) {
+	/***/ (function(module, exports) {
 	
 		"use strict";
 		var HttpPostMessage = (function () {
@@ -5098,7 +5167,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.HttpPostMessage = HttpPostMessage;
 	
 	
-	/***/ }
+	/***/ })
 	/******/ ])
 	});
 	;

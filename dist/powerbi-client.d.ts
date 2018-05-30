@@ -1,4 +1,4 @@
-/*! powerbi-client v2.5.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.5.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     /**
      * Raises a custom event with event data on the specified HTML element.
@@ -82,6 +82,7 @@ declare module "embed" {
         type?: string;
         accessToken?: string;
         tokenType?: models.TokenType;
+        groupId?: string;
     }
     /**
      * Configuration settings for Power BI embed components
@@ -346,6 +347,13 @@ declare module "embed" {
          */
         private getUniqueId();
         /**
+         * Gets the group ID from the first available location: options, embeddedUrl.
+         *
+         * @private
+         * @returns {string}
+         */
+        private getGroupId();
+        /**
          * Gets the report ID from the first available location: options, attribute.
          *
          * @abstract
@@ -377,6 +385,15 @@ declare module "embed" {
          * Sets Iframe for embed
          */
         private setIframe(isLoad, phasedRender?);
+        /**
+         * Adds the ability to get groupId from url.
+         * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
+         *
+         * @static
+         * @param {string} url
+         * @returns {string}
+         */
+        static findGroupIdFromEmbedUrl(url: string): string;
     }
 }
 declare module "ifilterable" {
@@ -509,9 +526,9 @@ declare module "visualDescriptor" {
          *  .then(data => { ... });
          * ```
          *
-         * @returns {(Promise<string>)}
+         * @returns {(Promise<models.ExportDataType>)}
          */
-        exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<string>;
+        exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<models.ExportDataType>;
     }
 }
 declare module "page" {
@@ -563,14 +580,23 @@ declare module "page" {
          */
         isActive: boolean;
         /**
+         * The visibility of the page.
+         * 0 - Always Visible
+         * 1 - Hidden in View Mode
+         *
+         * @type {models.SectionVisibility}
+         */
+        visibility: models.SectionVisibility;
+        /**
          * Creates an instance of a Power BI report page.
          *
          * @param {IReportNode} report
          * @param {string} name
          * @param {string} [displayName]
          * @param {boolean} [isActivePage]
+         * @param {models.SectionVisibility} [visibility]
          */
-        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean);
+        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility);
         /**
          * Gets all page level filters within the report.
          *
@@ -768,7 +794,7 @@ declare module "report" {
          * @param {boolean} [isActive]
          * @returns {Page}
          */
-        page(name: string, displayName?: string, isActive?: boolean): Page;
+        page(name: string, displayName?: string, isActive?: boolean, visibility?: models.SectionVisibility): Page;
         /**
          * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
          */
@@ -846,7 +872,7 @@ declare module "report" {
          *
          * @returns {Promise<void>}
          */
-        switchMode(viewMode: models.ViewMode): Promise<void>;
+        switchMode(viewMode: models.ViewMode | string): Promise<void>;
         /**
         * Refreshes data sources for the report.
         *
@@ -855,6 +881,7 @@ declare module "report" {
         * ```
         */
         refresh(): Promise<void>;
+        private viewModeToString(viewMode);
     }
 }
 declare module "create" {
