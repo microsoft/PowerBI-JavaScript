@@ -169,7 +169,7 @@ a {
     padding-top: 12px;
 }
 
-#main-docs, #main-demos {
+#main-docs, #main-showcases {
     margin-right: 0px;
 }
 
@@ -344,7 +344,7 @@ a {
     font-weight: normal;
 }
 
-.newSample, .newDemo {
+.newSample, .newShowcase {
     height: 16px;
     width: 40px;
     background-color: #F2C811;
@@ -365,8 +365,8 @@ a {
     font-size: 8px;
     text-align: center;
     color: #000000;
-    left: 75px;
-    bottom: 87px;
+    left: 99px;
+    bottom: 86px;
     position: absolute;
     font-weight: 600;
     line-height: 10px;
@@ -601,7 +601,7 @@ a {
     cursor: default;
 }
 
-.desktop-view iframe, .mobile-view iframe, #demo-embedded-view iframe {
+.desktop-view iframe, .mobile-view iframe, #showcase-embedded-view iframe {
     border: none;
 }
 
@@ -755,7 +755,7 @@ a {
     top: 16px;
 }
 
-.sampleImg, .demoImg {
+.sampleImg, .showcaseImg {
     position: relative;
     height: 192px;
     background: #FFFFFF;
@@ -765,7 +765,7 @@ a {
     box-shadow: inset 0 -7px 35px -7px rgba(0,0,0,0.12);
 }
 
-.sampleTextButton, .demoTextButton {
+.sampleTextButton, .showcaseTextButton {
     padding: 16px;
 }
 
@@ -791,7 +791,7 @@ a {
     background-image: url('../images/sampledashboard.png');
 }
 
-.demoIcon {
+.showcaseIcon {
     position: relative;
     left: 50%;
     top: 50%;
@@ -1123,4 +1123,18 @@ a {
 .dialogSubText {
     font-size: 12px;
     margin-bottom: 16px;
+}
+
+.floatButton {
+    float: left;
+    margin-right: 16px;
+}
+
+.showcases-buttons {
+    height: 32px;
+    margin-top: 16px;
+}
+
+.text-tab {
+    padding-left: 1.4em;
 }

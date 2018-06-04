@@ -1,6 +1,6 @@
 
 
-var BookmarkDemoState = {
+var BookmarkShowcaseState = {
     bookmarksArray: null,
     bookmarksReport: null,
 
@@ -50,13 +50,13 @@ function embedBookmarksReport() {
         var embedContainer = $('#embedContainer')[0];
 
         // Embed the report and display it within the div container
-        BookmarkDemoState.bookmarksReport = powerbi.embed(embedContainer, config);
+        BookmarkShowcaseState.bookmarksReport = powerbi.embed(embedContainer, config);
 
         // Report.on will add an event handler for report loaded event.
-        BookmarkDemoState.bookmarksReport.on("loaded", function() {
+        BookmarkShowcaseState.bookmarksReport.on("loaded", function() {
 
             // Get report's existing bookmarks
-            BookmarkDemoState.bookmarksReport.bookmarksManager.getBookmarks().then(function (bookmarks) {
+            BookmarkShowcaseState.bookmarksReport.bookmarksManager.getBookmarks().then(function (bookmarks) {
 
                 // Create bookmarks list from the existing report bookmarks
                 createBookmarksList(bookmarks);
@@ -116,7 +116,7 @@ function embedSharedBookmark(enableFilterPane, bookmarkState) {
         var embedContainer = $('#embedContainer')[0];
 
         // Embed the report and display it within the div container
-        BookmarkDemoState.bookmarksReport = powerbi.embed(embedContainer, config);
+        BookmarkShowcaseState.bookmarksReport = powerbi.embed(embedContainer, config);
     });
 }
 
@@ -124,14 +124,14 @@ function embedSharedBookmark(enableFilterPane, bookmarkState) {
 function createBookmarksList(bookmarks) {
 
     // Reset next bookmark ID
-    BookmarkDemoState.nextBookmarkId = 1;
+    BookmarkShowcaseState.nextBookmarkId = 1;
 
     // Set bookmarks array to the report's fetched bookmarks
-    BookmarkDemoState.bookmarksArray = bookmarks;
+    BookmarkShowcaseState.bookmarksArray = bookmarks;
 
     // Build the bookmarks list HTML code
     var bookmarksList = $('#bookmarksList');
-    for (let bookmark of BookmarkDemoState.bookmarksArray) {
+    for (let bookmark of BookmarkShowcaseState.bookmarksArray) {
         bookmarksList.append(buildBookmarkElement(bookmark));
     }
 }
@@ -142,12 +142,12 @@ function onBookmarkCaptureClicked() {
     elementClicked('#btnCaptureBookmark');
 
     // Capture the report's current state
-    BookmarkDemoState.bookmarksReport.bookmarksManager.capture().then(function (capturedBookmark) {
+    BookmarkShowcaseState.bookmarksReport.bookmarksManager.capture().then(function (capturedBookmark) {
 
         // Build bookmark element
         let bookmark = {
-            name: "bookmark_" + BookmarkDemoState.nextBookmarkId,
-            displayName: "Bookmark " + BookmarkDemoState.nextBookmarkId,
+            name: "bookmark_" + BookmarkShowcaseState.nextBookmarkId,
+            displayName: "Bookmark " + BookmarkShowcaseState.nextBookmarkId,
             state: capturedBookmark.state
         }
 
@@ -155,8 +155,8 @@ function onBookmarkCaptureClicked() {
         setCapturedBookmarkActive(bookmark);
 
         // Add the bookmark to the bookmarks array and increase the bookmarks number counter
-        BookmarkDemoState.bookmarksArray.push(bookmark);
-        BookmarkDemoState.nextBookmarkId++;
+        BookmarkShowcaseState.bookmarksArray.push(bookmark);
+        BookmarkShowcaseState.nextBookmarkId++;
     });
 }
 
@@ -168,13 +168,13 @@ function setCapturedBookmarkActive(bookmark) {
     $('#bookmarkShare').remove();
 
     // Find bookmark parent node
-    let parentNode = ($('#bookmark_' + BookmarkDemoState.nextBookmarkId)[0]).parentNode;
+    let parentNode = ($('#bookmark_' + BookmarkShowcaseState.nextBookmarkId)[0]).parentNode;
 
     // Add share bookmark icon to bookmark's line
     $(parentNode).append(buildShareElement());
 
     // Set bookmark radio button to checked
-    $('#bookmark_' + BookmarkDemoState.nextBookmarkId).attr('checked', true);
+    $('#bookmark_' + BookmarkShowcaseState.nextBookmarkId).attr('checked', true);
 }
 
 function onCloseDialogClicked() {
@@ -202,10 +202,10 @@ function onBookmarkClicked(element) {
     const bookmarkId = $(element).attr('id');
 
     // Find the bookmark in the bookmarks array
-    let currentBookmark = BookmarkDemoState.bookmarksArray.find(bookmark => { return bookmark.name === bookmarkId });
+    let currentBookmark = BookmarkShowcaseState.bookmarksArray.find(bookmark => { return bookmark.name === bookmarkId });
 
     // Apply the bookmark state
-    BookmarkDemoState.bookmarksReport.bookmarksManager.applyState(currentBookmark.state);
+    BookmarkShowcaseState.bookmarksReport.bookmarksManager.applyState(currentBookmark.state);
 }
 
 // Open bookmark share dialog
@@ -215,10 +215,10 @@ function shareBookmark(element) {
     const bookmarkId = $($(element).siblings('input')).attr('id');
 
     // Find the bookmark in the bookmarks array
-    let currentBookmark = BookmarkDemoState.bookmarksArray.find(bookmark => { return bookmark.name === bookmarkId });
+    let currentBookmark = BookmarkShowcaseState.bookmarksArray.find(bookmark => { return bookmark.name === bookmarkId });
 
     // Build the share bookmark URL
-    let shareUrl = location.href.substring(0, location.href.lastIndexOf("/")) + '/shareBookmark' + '?state=' + currentBookmark.state;
+    let shareUrl = location.href.substring(0, location.href.lastIndexOf("/")) + '/shareBookmark.html' + '?state=' + currentBookmark.state;
 
     // Set bookmark display name and share URL on dialog HTML code
     var displayNameElement = document.createTextNode(currentBookmark.displayName);

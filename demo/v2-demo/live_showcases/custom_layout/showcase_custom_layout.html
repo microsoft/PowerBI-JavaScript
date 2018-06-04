@@ -1,0 +1,57 @@
+<div id="showcases-text">
+    <h3>Custom Layout Showcase</h3>
+    <br>
+    <div id="showcases-description">
+        Use this showcase to learn how to leverage the custom layout API for a dynamic embedding of visuals<br><br>
+        &nbsp;<b>1. Select the visuals from the menu on the left</b><br>
+        <div class="text-tab">
+                    The configuration of each visual will change between 'Hide'/ 'show', and the app will calculate the position of each visual (see code)<br><br>
+        </div>
+        &nbsp;<b>2. Change the layout to fit different screens</b><br>
+        <div class="text-tab">
+                    By choosing different layouts, the application sets size and position of each visual (see code)<br>
+        <div class="text-tab">
+                        • <b>3 columns:</b> usually fits a Desktop screen<br>
+                        • <b>2 columns:</b> usually fits a Tablet or small laptop screens<br>
+                        • <b>1 columns:</b> fits a mobile screen<br>
+        </div></div>
+    </div>
+    <div class="showcases-buttons">
+        <button class="selectButton floatButton" onclick="openUrl('CustomLayoutDocs')">Documentation</button>
+        <button class="selectButton floatButton" onclick="openUrl('CustomLayoutCode')">Get Code</button>
+    </div>
+</div>
+
+<div id="showcaseContent">
+    <div id="visualsArea">
+        <div class="editorTitle">Report visuals</div>
+        <div id="visualsWrapper">
+            <div id="visualsList">
+            </div>
+        </div>
+    </div>
+    <div id="showcaseEmbedArea">
+        <div class="editorTitle">Embedded view</div>
+        <div class="textAreaControls">
+            <button id="btnThreeCols" class="textAreaControl" onclick="onColumnsClicked(3);elementClicked(this);">
+                <img src="images\ic_3columns.svg"/> 3 Columns
+            </button>
+            <button id="btnTwoCols" class="textAreaControl" onclick="onColumnsClicked(2);elementClicked(this);">
+                <img src="images\ic_2columns.svg"/> 2 Columns
+            </button>
+            <button id="btnOneCol" class="textAreaControl" onclick="onColumnsClicked(1);elementClicked(this);">
+                <img src="images\ic_1column.svg"/> 1 Column
+            </button>
+        </div>
+        <div id="showcase-embedded-view">
+            <div id="embedContainer" class="iframeContainer active"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        embedCustomLayoutReport();
+        window.addEventListener("resize", renderVisuals);
+    });
+</script>

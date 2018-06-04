@@ -3,7 +3,7 @@ const datasetUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/Samp
 const dashboardUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Dashboards/SampleDashboard';
 const tileUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Tiles/SampleTile';
 const qnaUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Datasets/SampleQna';
-const layoutDemoReportUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/LayoutDemoReport';
+const layoutShowcaseReportUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/LayoutDemoReport';
 
 var LastReportSampleUrl = null;
 var ReportRefreshTokenTimer = 0;
@@ -264,9 +264,9 @@ function LoadSampleQnaIntoSession() {
     return FetchUrlIntoSession(qnaUrl, false /* updateCurrentToken */);
 }
 
-function LoadLayoutDemoReportIntoSession() {
+function LoadLayoutShowcaseReportIntoSession() {
     SetSession(SessionKeys.EntityType, EntityType.Report);
-    return FetchUrlIntoSession(layoutDemoReportUrl, false /* updateCurrentToken */);
+    return FetchUrlIntoSession(layoutShowcaseReportUrl, false /* updateCurrentToken */);
 }
 
 function WarmStartSampleReportEmbed() {

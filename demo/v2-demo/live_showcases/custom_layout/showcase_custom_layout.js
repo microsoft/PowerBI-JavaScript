@@ -5,12 +5,12 @@ const ColumnsNumber = {
     Three: 3
 }
 
-const LayoutDemoConsts = {
+const LayoutShowcaseConsts = {
     margin: 15,
     minPageWidth: 270
 }
 
-var LayoutDemoState = {
+var LayoutShowcaseState = {
     columns: ColumnsNumber.Three,
     layoutVisuals: null,
     layoutReport: null,
@@ -20,7 +20,7 @@ var LayoutDemoState = {
 function embedCustomLayoutReport() {
 
     // Load custom layout report properties into session
-    LoadLayoutDemoReportIntoSession().then(function () {
+    LoadLayoutShowcaseReportIntoSession().then(function () {
 
         // Get models. models contains enums that can be used
         const models = window['powerbi-client'].models;
@@ -58,14 +58,14 @@ function embedCustomLayoutReport() {
         var embedContainer = $('#embedContainer')[0];
 
         // Embed the report and display it within the div container
-        LayoutDemoState.layoutReport = powerbi.embed(embedContainer, config);
+        LayoutShowcaseState.layoutReport = powerbi.embed(embedContainer, config);
 
         // Report.on will add an event handler for report loaded event
-        LayoutDemoState.layoutReport.on("loaded", function() {
+        LayoutShowcaseState.layoutReport.on("loaded", function() {
 
             // After report is loaded, we find the active page and get all the visuals on it
             // Retrieve the page collection
-            LayoutDemoState.layoutReport.getPages().then(function (pages) {
+            LayoutShowcaseState.layoutReport.getPages().then(function (pages) {
 
                 // Retrieve active page
                 activePage = pages.find(function (page) {
@@ -73,7 +73,7 @@ function embedCustomLayoutReport() {
                 });
 
                 // Set layoutPageName to active page name
-                LayoutDemoState.layoutPageName = activePage.name;
+                LayoutShowcaseState.layoutPageName = activePage.name;
 
                 // Retrieve active page visuals.
                 activePage.getVisuals().then(function (visuals) {
@@ -97,12 +97,12 @@ function embedCustomLayoutReport() {
 function createVisualsArray(reportVisuals) {
 
     // Remove all visuals without titles (i.e cards)
-    LayoutDemoState.layoutVisuals = reportVisuals.filter(function (visual) {
+    LayoutShowcaseState.layoutVisuals = reportVisuals.filter(function (visual) {
         return visual.title !== undefined;
     });
 
     // Build checkbox html list and insert the html code to visualsList div
-    for (let visual of LayoutDemoState.layoutVisuals) {
+    for (let visual of LayoutShowcaseState.layoutVisuals) {
         $('#visualsList').append(buildVisualElement(visual));
     }
 
@@ -114,7 +114,7 @@ function createVisualsArray(reportVisuals) {
 function renderVisuals() {
 
     // render only if report and visuals initialized
-    if (!LayoutDemoState.layoutReport || !LayoutDemoState.layoutVisuals)
+    if (!LayoutShowcaseState.layoutReport || !LayoutShowcaseState.layoutVisuals)
         return;
 
     // Get models. models contains enums that can be used
@@ -125,23 +125,23 @@ function renderVisuals() {
     let pageHeight = $('#embedContainer').height();
 
     // Calculate total width for visuals decreasing the size of margins from the width of the page
-    let visualsTotalWidth = pageWidth - (LayoutDemoConsts.margin * (LayoutDemoState.columns + 1));
+    let visualsTotalWidth = pageWidth - (LayoutShowcaseConsts.margin * (LayoutShowcaseState.columns + 1));
 
 
     // Calculate the width of a single visual, according to the number of columns
     // For one and three columns visuals width will be a third of visuals total width
-    let width = (LayoutDemoState.columns === ColumnsNumber.Two) ? (visualsTotalWidth / 2) : (visualsTotalWidth / 3);
+    let width = (LayoutShowcaseState.columns === ColumnsNumber.Two) ? (visualsTotalWidth / 2) : (visualsTotalWidth / 3);
 
     // For one column, set page width to visual's width with margins
-    if (LayoutDemoState.columns === ColumnsNumber.One) {
-        pageWidth = width + 2 * LayoutDemoConsts.margin;
+    if (LayoutShowcaseState.columns === ColumnsNumber.One) {
+        pageWidth = width + 2 * LayoutShowcaseConsts.margin;
 
         // Check if page width is smaller than minimum width and update accordingly
-        if (pageWidth < LayoutDemoConsts.minPageWidth) {
-            pageWidth = LayoutDemoConsts.minPageWidth;
+        if (pageWidth < LayoutShowcaseConsts.minPageWidth) {
+            pageWidth = LayoutShowcaseConsts.minPageWidth;
 
             // Visuals width is set to fit minimum page width with margins on both sides
-            width = LayoutDemoConsts.minPageWidth - 2 * LayoutDemoConsts.margin;
+            width = LayoutShowcaseConsts.minPageWidth - 2 * LayoutShowcaseConsts.margin;
         }
     }
 
@@ -149,16 +149,16 @@ function renderVisuals() {
     const height = width * (9 / 16);
 
     // Visuals starting point
-    let x = LayoutDemoConsts.margin, y = LayoutDemoConsts.margin;
+    let x = LayoutShowcaseConsts.margin, y = LayoutShowcaseConsts.margin;
 
     // Filter the visuals list to display only the checked visuals
-    let checkedVisuals = LayoutDemoState.layoutVisuals.filter(visual => { return visual.checked; });
+    let checkedVisuals = LayoutShowcaseState.layoutVisuals.filter(visual => { return visual.checked; });
 
     // Calculate the number of lines
-    const lines = Math.ceil(checkedVisuals.length / LayoutDemoState.columns);
+    const lines = Math.ceil(checkedVisuals.length / LayoutShowcaseState.columns);
 
     // Calculate page height with margins
-    pageHeight = Math.max(pageHeight, ((lines * height) + ((lines + 1) * LayoutDemoConsts.margin)));
+    pageHeight = Math.max(pageHeight, ((lines * height) + ((lines + 1) * LayoutShowcaseConsts.margin)));
 
     // Building visualsLayout object
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Custom-Layout
@@ -177,16 +177,16 @@ function renderVisuals() {
         }
 
         // Calculating (x,y) position for the next visual
-        x += width + LayoutDemoConsts.margin;
+        x += width + LayoutShowcaseConsts.margin;
         if (x >= pageWidth) {
-            x = LayoutDemoConsts.margin;
-            y += height + LayoutDemoConsts.margin;
+            x = LayoutShowcaseConsts.margin;
+            y += height + LayoutShowcaseConsts.margin;
         }
     }
 
     // Building pagesLayout object
     let pagesLayout = {};
-    pagesLayout[LayoutDemoState.layoutPageName] = {
+    pagesLayout[LayoutShowcaseState.layoutPageName] = {
         defaultLayout: {
             displayState: {
 
@@ -217,23 +217,23 @@ function renderVisuals() {
     }
 
     // Change page background to transparent on Two / Three columns configuration
-    settings.background = (LayoutDemoState.columns === ColumnsNumber.One) ? models.BackgroundType.Default : models.BackgroundType.Transparent;
+    settings.background = (LayoutShowcaseState.columns === ColumnsNumber.One) ? models.BackgroundType.Default : models.BackgroundType.Transparent;
 
     // Call updateSettings with the new settings object
-    LayoutDemoState.layoutReport.updateSettings(settings);
+    LayoutShowcaseState.layoutReport.updateSettings(settings);
 }
 
 function onCheckboxClicked(checkbox) {
 
     // Update the visuals list with the change and render all visuals
-    LayoutDemoState.layoutVisuals.find(visual => visual.name === checkbox.value).checked = $(checkbox).is(':checked');
+    LayoutShowcaseState.layoutVisuals.find(visual => visual.name === checkbox.value).checked = $(checkbox).is(':checked');
     renderVisuals();
 };
 
 function onColumnsClicked(num) {
 
     // Update columns var and render all visuals
-    LayoutDemoState.columns = num;
+    LayoutShowcaseState.columns = num;
     renderVisuals();
 }
 

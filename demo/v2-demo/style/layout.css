@@ -53,7 +53,7 @@ label {
     background: #F1F1F1;
 }
 
-#demoContent {
+#showcaseContent {
     display: table;
     padding: 32px 24px 24px 24px;
     width: 100%;
@@ -161,9 +161,9 @@ label {
     height: 100%;
 }
 
-#welcome-text, #demos-text {
+#welcome-text, #showcases-text {
     margin-top: 2px;
-    padding: 16px 24px 24px 24px;
+    padding: 16px 24px 16px 24px;
     background: #FFFFFF;
 }
 
@@ -172,11 +172,11 @@ label {
     font-size: 24px;
 }
 
-#sample-tool-description, #demos-description {
+#sample-tool-description, #showcases-description {
     max-width: 1000px;
 }
 
-#demo-embedded-view {
+#showcase-embedded-view {
     background: #FFFFFF;
     height: calc(67vw*(9/16)*1.1);
 }
@@ -193,7 +193,7 @@ label {
     min-height: 350px;
 }
 
-#demoEmbedArea {
+#showcaseEmbedArea {
     display: table-cell;
     width: 100%;
 }
@@ -277,7 +277,7 @@ label {
 }
 
 @media only screen and (max-width: 750px) {
-    #main-demos {
+    #main-showcases {
         display: none;
     }
 }

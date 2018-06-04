@@ -1,12 +1,12 @@
 var sampleContentLoaded = false;
 var documentationContentLoaded = false;
-var demosContentLoaded = false;
+var showcasesContentLoaded = false;
 
 $(function() {
     OpenSampleSection();
     WarmStartSampleReportEmbed();
-    if (GetParameterByName("demos")) {
-        $('#main-demos').show();
+    if (GetParameterByName("showcases")) {
+        $('#main-showcases').show();
     }
 });
 
@@ -32,8 +32,8 @@ function OpenEmbedWorkspace(activeTabSelector, samplesStepHtml)
     $("#sampleContent").show();
     OpenSamplesStep();
 
-    LayoutDemoState.layoutReport = null;
-    BookmarkDemoState.bookmarksReport = null;
+    LayoutShowcaseState.layoutReport = null;
+    BookmarkShowcaseState.bookmarksReport = null;
 }
 
 function OpenDocumentationSection() {
@@ -49,18 +49,18 @@ function OpenDocumentationSection() {
     $("#documentationContent").show();
 }
 
-function OpenDemosSection() {
-    if (!demosContentLoaded)
+function OpenShowcasesSection() {
+    if (!showcasesContentLoaded)
     {
         $('#embedContainer').removeAttr('id');
-        $("#demosContent").load("demos.html");
-        demosContentLoaded = true;
+        $("#showcasesContent").load("showcases.html");
+        showcasesContentLoaded = true;
     }
 
-    SetActiveStyle("#main-demos");
+    SetActiveStyle("#main-showcases");
 
     $(".content").hide();
-    $("#demosContent").show();
+    $("#showcasesContent").show();
 }
 
 function SetActiveStyle(id)
@@ -69,12 +69,23 @@ function SetActiveStyle(id)
     $(id).addClass("main-li-active");
 }
 
-const DemosHtmls = {
-    CustomLayout : "./live_demos/custom_layout/demo_custom_layout.html",
-    Bookmarks : "./live_demos/bookmarks/demo_bookmarks.html"
+const ShowcasesHtmls = {
+    CustomLayout : "./live_showcases/custom_layout/showcase_custom_layout.html",
+    Bookmarks : "./live_showcases/bookmarks/showcase_bookmarks.html"
 };
 
-function OpenDemo(demoType) {
-    $("#demosContent").load(DemosHtmls[demoType]);
-    demosContentLoaded = false;
+function OpenShowcase(showcaseType) {
+    $("#showcasesContent").load(ShowcasesHtmls[showcaseType]);
+    showcasesContentLoaded = false;
+}
+
+const ShowcasesLinks = {
+    CustomLayoutDocs : "https://github.com/Microsoft/PowerBI-JavaScript/wiki/Custom-Layout",
+    CustomLayoutCode : "https://github.com/Microsoft/PowerBI-JavaScript/tree/master/demo/v2-demo/live_showcases/custom_layout/showcase_custom_layout.js",
+    BookmarksDocs : "https://github.com/Microsoft/PowerBI-JavaScript/wiki/Bookmarks",
+    BookmarksCode : "https://github.com/Microsoft/PowerBI-JavaScript/tree/master/demo/v2-demo/live_showcases/bookmarks/showcase_bookmarks.js"
+};
+
+function openUrl(showcaseLink) {
+    window.open(ShowcasesLinks[showcaseLink], '_blank');
 }
