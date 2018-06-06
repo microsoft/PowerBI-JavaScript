@@ -382,13 +382,16 @@ export abstract class Embed {
     var embedType = this.config.type;
     return this.service.hpm.post<models.IError[]>('/' + embedType + '/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
+        this.config.accessToken = accessToken;
+        this.element.setAttribute(Embed.accessTokenAttribute, accessToken);
+        this.service.accessToken = accessToken;
         return response.body;
       })
       .catch(response => {
         throw response.body;
       });
   }
-  
+
   /**
    * Gets an access token from the first available location: config, attribute, global.
    * 

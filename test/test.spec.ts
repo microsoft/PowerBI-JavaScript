@@ -3102,11 +3102,15 @@ describe('SDK-to-HPM', function () {
           body: {}
         }));
 
+        let newToken = "newToken"
         // Act
-        report.setAccessToken(accessToken)
+        report.setAccessToken(newToken)
           .then(() => {
             // Assert
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/token', accessToken, { uid: uniqueId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/token', newToken, { uid: uniqueId }, iframe.contentWindow);
+            expect(report.service.accessToken).toEqual(newToken);
+            expect(report.config.accessToken).toEqual(newToken);
+            expect(report.element.getAttribute(embed.Embed.accessTokenAttribute)).toEqual(newToken);
             done();
           });
       });
