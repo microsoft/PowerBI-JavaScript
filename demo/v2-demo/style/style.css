@@ -1089,10 +1089,10 @@ a {
     float: left;
     height: 32px;
     border: solid;
-    border-width: 2px;
+    border-width: 2px 0 2px 2px;
     border-color: #3E65FF;
     width: calc(100% - 70px);
-    padding: 8px;
+    padding: 8px 0 8px 8px;
     outline: none;
 }
 
@@ -1105,6 +1105,10 @@ a {
     background-color: #3E65FF;
     color: #FFFFFF;
     padding: 6px;
+}
+
+#btnDialogCopy:hover {
+    background-color: #213BD1;
 }
 
 .dialogBody {

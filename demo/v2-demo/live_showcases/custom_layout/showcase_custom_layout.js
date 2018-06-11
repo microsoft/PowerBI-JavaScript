@@ -17,6 +17,7 @@ var LayoutShowcaseState = {
     layoutPageName: null
 }
 
+// Embed the report and retrieve all report visuals
 function embedCustomLayoutReport() {
 
     // Load custom layout report properties into session
@@ -101,6 +102,9 @@ function createVisualsArray(reportVisuals) {
         return visual.title !== undefined;
     });
 
+    // Clear visuals list div
+    $('#visualsList').empty();
+
     // Build checkbox html list and insert the html code to visualsList div
     for (let visual of LayoutShowcaseState.layoutVisuals) {
         $('#visualsList').append(buildVisualElement(visual));
@@ -124,9 +128,8 @@ function renderVisuals() {
     let pageWidth = $('#embedContainer').width();
     let pageHeight = $('#embedContainer').height();
 
-    // Calculate total width for visuals decreasing the size of margins from the width of the page
+    // Calculate the width left for visuals per line by decreasing the margins width from the page width
     let visualsTotalWidth = pageWidth - (LayoutShowcaseConsts.margin * (LayoutShowcaseState.columns + 1));
-
 
     // Calculate the width of a single visual, according to the number of columns
     // For one and three columns visuals width will be a third of visuals total width
@@ -223,16 +226,14 @@ function renderVisuals() {
     LayoutShowcaseState.layoutReport.updateSettings(settings);
 }
 
+// Update the visuals list with the change and rerender all visuals
 function onCheckboxClicked(checkbox) {
-
-    // Update the visuals list with the change and render all visuals
     LayoutShowcaseState.layoutVisuals.find(visual => visual.name === checkbox.value).checked = $(checkbox).is(':checked');
     renderVisuals();
 };
 
+// Update columns number and rerender the visuals
 function onColumnsClicked(num) {
-
-    // Update columns var and render all visuals
     LayoutShowcaseState.columns = num;
     renderVisuals();
 }

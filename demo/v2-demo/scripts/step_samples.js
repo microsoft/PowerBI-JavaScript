@@ -1,4 +1,9 @@
 function OpenCodeStepWithSample(entityType) {
+    $("html, body").animate({ scrollTop: 0 }, "slow");
+
+    // Clear the log
+    ClearTextArea('#txtResponse');
+
     SetSession(SessionKeys.EntityType, entityType);
     SetSession(SessionKeys.TokenType, defaultTokenType);
 

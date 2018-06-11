@@ -8,6 +8,9 @@ var BookmarkShowcaseState = {
     nextBookmarkId: 1
 }
 
+const dialogTextSelectTimeout = 50;
+
+// Embed the report and retrieve the existing report bookmarks
 function embedBookmarksReport() {
 
     // Load sample report properties into session
@@ -136,6 +139,7 @@ function createBookmarksList(bookmarks) {
     }
 }
 
+// Capture new bookmark of the current state and update the bookmarks list
 function onBookmarkCaptureClicked() {
 
     // Element clicked animation
@@ -160,6 +164,7 @@ function onBookmarkCaptureClicked() {
     });
 }
 
+// Set the new captured bookmark as the active bookmark on the list
 function setCapturedBookmarkActive(bookmark) {
     // Add the new bookmark to the HTML list
     $('#bookmarksList').append(buildBookmarkElement(bookmark));
@@ -177,19 +182,19 @@ function setCapturedBookmarkActive(bookmark) {
     $('#bookmark_' + BookmarkShowcaseState.nextBookmarkId).attr('checked', true);
 }
 
+// Closes the dialog
 function onCloseDialogClicked() {
-
-    // Close the dialog
     $('#overlay').hide();
     $('#shareDialog').hide();
 }
 
+// Copy the dialog's input text
 function onDialogCopyClicked() {
-
-    // Copy the input text
-    CopyTextArea('#dialogInput', '#btnDialogCopy')
+    CopyTextArea('#dialogInput', '#btnDialogCopy');
+    $('#dialogInput').select();
 }
 
+// Apply clicked bookmark state and set it as the active bookmark on the list
 function onBookmarkClicked(element) {
 
     // Remove share boomark icon
@@ -221,6 +226,7 @@ function shareBookmark(element) {
     let shareUrl = location.href.substring(0, location.href.lastIndexOf("/")) + '/shareBookmark.html' + '?state=' + currentBookmark.state;
 
     // Set bookmark display name and share URL on dialog HTML code
+    $('#dialogBookmarkName').empty();
     var displayNameElement = document.createTextNode(currentBookmark.displayName);
     $('#dialogBookmarkName').append(displayNameElement);
     $('#dialogInput').val(shareUrl);
@@ -228,11 +234,15 @@ function shareBookmark(element) {
     // Show overlay and share dialog
     $('#overlay').show();
     $('#shareDialog').show();
+
+    // Select dialog input after the dialog is shown
+    setTimeout(function() {
+        $('#dialogInput').select();
+    }, dialogTextSelectTimeout);
 }
 
 // Build bookmark radio button HTML element
 function buildBookmarkElement(bookmark) {
-
     var labelElement = document.createElement("label");
     labelElement.setAttribute("class", "bookmarkContainer");
 

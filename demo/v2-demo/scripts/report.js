@@ -161,6 +161,7 @@ function OpenInteractTab() {
         $("#settings").load("settings_interact_dashboard.html", function() {
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
+            hideFeaturesOnMobile();
         });
     }
     else if (entityType == EntityType.Qna)
@@ -185,6 +186,8 @@ function OpenInteractTab() {
         $("#settings").load("settings_interact_report.html", function() {
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
+            $('.hideOnReportCreate').toggle(GetSession(SessionKeys.EmbedMode) !== EmbedCreateMode);
+            hideFeaturesOnMobile();
         });
     }
 }
@@ -513,6 +516,8 @@ function EmbedAreaDesktopView() {
         setCodeArea(mode, entityType)
     }
 
+    $('.hideOnMobile').show();
+
     // Check if run button was clicked in the other mode and wasn't clicked on the new mode
     if ($(classPrefix + "MobileContainer iframe").length && !$(classPrefix + "Container iframe").length) {
         let runFunc = getEmbedCode(mode, entityType);
@@ -552,6 +557,8 @@ function EmbedAreaMobileView() {
         // Update embed code area
         setCodeArea(mode, entityType)
     }
+
+    $('.hideOnMobile').hide();
 
     // Check if run button was clicked in the other mode and wasn't clicked on the new mode
     if ($(classPrefix + "Container iframe").length && !$(classPrefix + "MobileContainer iframe").length) {
@@ -607,4 +614,9 @@ function updateRunFuncSessionParameters(runFunc) {
     }
 
     return code;
+}
+
+function hideFeaturesOnMobile(){
+    if ($(".mobile-view").hasClass(active_class))
+        $('.hideOnMobile').hide();
 }
