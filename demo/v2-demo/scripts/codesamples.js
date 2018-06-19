@@ -1276,7 +1276,7 @@ function _Page_HasLayout() {
     // Retrieve the page collection and check if the first page has a MobilePortrait layout.
     report.getPages().then(function (pages) {
         pages[0].hasLayout(models.LayoutType.MobilePortrait).then(function(hasLayout) {
-            Log.log(hasLayout);
+            Log.logText(hasLayout);
         })
     });
 }

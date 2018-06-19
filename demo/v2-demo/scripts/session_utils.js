@@ -1,3 +1,24 @@
+const reportUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/SampleReport';
+const datasetUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/SampleCreate';
+const dashboardUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Dashboards/SampleDashboard';
+const tileUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Tiles/SampleTile';
+const qnaUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Datasets/SampleQna';
+const layoutShowcaseReportUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/LayoutDemoReport';
+
+var LastReportSampleUrl = null;
+var ReportRefreshTokenTimer = 0;
+var DashboardRefreshTokenTimer = 0;
+var TileRefreshTokenTimer = 0;
+var QnaRefreshTokenTimer = 0;
+
+const EntityType = {
+    Report : "Report",
+    Visual : "Visual",
+    Dashboard : "Dashboard",
+    Tile : "Tile",
+    Qna: "Qna"
+};
+
 var _session = {};
 
 const SessionKeys = {
@@ -24,6 +45,7 @@ function GetParameterByName(name, url) {
     if (!url) {
       url = window.location.href;
     }
+
     name = name.replace(/[\[\]]/g, "\\$&");
     let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
@@ -147,4 +169,133 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
     //
     let embedTypeRadios = $('input:radio[name=tokenType]');
     embedTypeRadios.filter('[value=' + tokenType + ']').prop('checked', true);
+}
+
+function FetchUrlIntoSession(url, updateCurrentToken) {
+    return $.getJSON(url, function (embedConfig) {
+        setSession(embedConfig.embedToken.token, embedConfig.embedUrl, embedConfig.id, embedConfig.dashboardId);
+        SetSession(SessionKeys.SampleId, embedConfig.id);
+
+        if (updateCurrentToken)
+        {
+            let embedContainerId = getEmbedContainerID(capitalizeFirstLetter(embedConfig.type));
+
+            let embedContainer = powerbi.embeds.find(function(embedElement) {return (embedElement.element.id == embedContainerId)});
+            if (embedContainer)
+            {
+                embedContainer.setAccessToken(embedConfig.embedToken.token);
+            }
+        }
+
+        if (embedConfig.type === "report" || embedConfig.type === "visual")
+        {
+            // Set single visual embed sample details.
+            SetSession(SessionKeys.PageName, "ReportSection3");
+            SetSession(SessionKeys.VisualName, "VisualContainer7");
+
+            LastReportSampleUrl = url;
+        }
+
+        TokenExpirationRefreshListener(embedConfig.minutesToExpiration, capitalizeFirstLetter(embedConfig.type));
+    });
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function TokenExpirationRefreshListener(minutesToExpiration, entityType) {
+    const updateAfterMilliSeconds = (minutesToExpiration - 2) * 60 * 1000;
+
+    if (entityType == EntityType.Report || entityType == EntityType.Visual) {
+        setTokenRefreshListener(updateAfterMilliSeconds, ReportRefreshTokenTimer, LastReportSampleUrl, entityType);
+    } else if (entityType == EntityType.Dashboard) {
+        setTokenRefreshListener(updateAfterMilliSeconds, DashboardRefreshTokenTimer, dashboardUrl, entityType);
+    } else if (entityType == EntityType.Qna) {
+        setTokenRefreshListener(updateAfterMilliSeconds, QnaRefreshTokenTimer, qnaUrl, entityType);
+    } else {
+        setTokenRefreshListener(updateAfterMilliSeconds, TileRefreshTokenTimer, tileUrl, entityType);
+    }
+}
+
+function setTokenRefreshListener(updateAfterMilliSeconds, RefreshTokenTimer, url, entityType) {
+    if (RefreshTokenTimer)
+    {
+        console.log("step current " + entityType + " Embed Token update threads.");
+        clearTimeout(RefreshTokenTimer);
+    }
+
+    console.log(entityType + " Embed Token will be updated in " + updateAfterMilliSeconds + " milliseconds.");
+    RefreshTokenTimer = setTimeout(function() {
+        if (url)
+        {
+            FetchUrlIntoSession(url, true /* updateCurrentToken */);
+        }
+    }, updateAfterMilliSeconds);
+}
+
+function LoadSampleReportIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Report);
+    return FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */);
+}
+
+function LoadSampleVisualIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Visual);
+    return FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */);
+}
+
+function LoadSampleDatasetIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Report);
+    return FetchUrlIntoSession(datasetUrl, false /* updateCurrentToken */);
+}
+
+function LoadSampleDashboardIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Dashboard);
+    return FetchUrlIntoSession(dashboardUrl, false /* updateCurrentToken */);
+}
+
+function LoadSampleTileIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Tile);
+    return FetchUrlIntoSession(tileUrl, false /* updateCurrentToken */);
+}
+
+function LoadSampleQnaIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Qna);
+    return FetchUrlIntoSession(qnaUrl, false /* updateCurrentToken */);
+}
+
+function LoadLayoutShowcaseReportIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Report);
+    return FetchUrlIntoSession(layoutShowcaseReportUrl, false /* updateCurrentToken */);
+}
+
+function WarmStartSampleReportEmbed() {
+    let embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
+    if (embedUrl) {
+        preload(embedUrl);
+        return;
+    }
+
+    FetchUrlIntoSession(reportUrl, false /* updateCurrentToken */).then(function (response) {
+        embedUrl = GetSession(SessionKeys.EmbedUrl);
+        preload(embedUrl);
+    });
+}
+
+function preload(embedUrl) {
+    const config = {
+        type: 'report',
+        embedUrl: embedUrl
+    };
+
+    // Preload sample report
+    powerbi.preload(config);
+}
+
+function setSession(accessToken, embedUrl, embedId, dashboardId)
+{
+    SetSession(SessionKeys.AccessToken, accessToken);
+    SetSession(SessionKeys.EmbedUrl, embedUrl);
+    SetSession(SessionKeys.EmbedId, embedId);
+    SetSession(SessionKeys.DashboardId, dashboardId);
 }

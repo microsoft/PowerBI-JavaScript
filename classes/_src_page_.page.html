@@ -121,6 +121,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_page_.page.html#isactive" class="tsd-kind-icon">is<wbr>Active</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_page_.page.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_page_.page.html#report" class="tsd-kind-icon">report</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_page_.page.html#visibility" class="tsd-kind-icon">visibility</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -143,13 +144,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Page<span class="tsd-signature-symbol">(</span>report<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_report_.ireportnode.html" class="tsd-signature-type">IReportNode</a>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, displayName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, isActivePage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Page<span class="tsd-signature-symbol">(</span>report<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_report_.ireportnode.html" class="tsd-signature-type">IReportNode</a>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, displayName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, isActivePage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, visibility<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">models.SectionVisibility</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L51">src/page.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L60">src/page.ts:60</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -171,6 +172,9 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> isActivePage: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> visibility: <span class="tsd-signature-type">models.SectionVisibility</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_page_.page.html" class="tsd-signature-type">Page</a></h4>
 						</li>
@@ -185,7 +189,7 @@
 					<div class="tsd-signature tsd-kind-icon">display<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L44">src/page.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L44">src/page.ts:44</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -205,7 +209,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Active<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L51">src/page.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L51">src/page.ts:51</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -226,7 +230,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_page_.ipagenode.html">IPageNode</a>.<a href="../interfaces/_src_page_.ipagenode.html#name">name</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L37">src/page.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L37">src/page.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -247,7 +251,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_page_.ipagenode.html">IPageNode</a>.<a href="../interfaces/_src_page_.ipagenode.html#report">report</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L31">src/page.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L31">src/page.ts:31</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -257,6 +261,28 @@
 						<dl class="tsd-comment-tags">
 							<dt>type</dt>
 							<dd><p>{IReportNode}</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="visibility" class="tsd-anchor"></a>
+					<h3>visibility</h3>
+					<div class="tsd-signature tsd-kind-icon">visibility<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">models.SectionVisibility</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L60">src/page.ts:60</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The visibility of the page.
+								0 - Always Visible
+							1 - Hidden in View Mode</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{models.SectionVisibility}</p>
 							</dd>
 						</dl>
 					</div>
@@ -275,7 +301,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#getfilters">getFilters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L78">src/page.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L89">src/page.ts:89</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -300,7 +326,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L149">src/page.ts:149</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L160">src/page.ts:160</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -325,7 +351,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L171">src/page.ts:171</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L182">src/page.ts:182</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -357,7 +383,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#removefilters">removeFilters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L95">src/page.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L106">src/page.ts:106</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -381,7 +407,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L108">src/page.ts:108</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L119">src/page.ts:119</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -406,7 +432,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#setfilters">setFilters</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/83fc5c7/src/page.ts#L132">src/page.ts:132</a></li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript/blob/44febbf/src/page.ts#L143">src/page.ts:143</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -515,6 +541,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_page_.page.html#report" class="tsd-kind-icon">report</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_page_.page.html#visibility" class="tsd-kind-icon">visibility</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_page_.page.html#getfilters" class="tsd-kind-icon">get<wbr>Filters</a>
