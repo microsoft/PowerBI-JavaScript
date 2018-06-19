@@ -134,8 +134,16 @@ function createBookmarksList(bookmarks) {
 
     // Build the bookmarks list HTML code
     var bookmarksList = $('#bookmarksList');
-    for (let bookmark of BookmarkShowcaseState.bookmarksArray) {
-        bookmarksList.append(buildBookmarkElement(bookmark));
+    for (let i = 0; i < BookmarkShowcaseState.bookmarksArray.length; i++) {
+        bookmarksList.append(buildBookmarkElement(BookmarkShowcaseState.bookmarksArray[i]));
+    }
+
+    // Set first bookmark active
+    if (bookmarksList.length) {
+        let firstBookmark = $('#' + BookmarkShowcaseState.bookmarksArray[0].name);
+
+        // Apply first bookmark state
+        onBookmarkClicked(firstBookmark[0]);
     }
 }
 
@@ -155,8 +163,11 @@ function onBookmarkCaptureClicked() {
             state: capturedBookmark.state
         }
 
-        // Add and set the captured bookmark as active
-        setCapturedBookmarkActive(bookmark);
+        // Add the new bookmark to the HTML list
+        $('#bookmarksList').append(buildBookmarkElement(bookmark));
+
+        // Set the captured bookmark as active
+        setBookmarkActive($('#bookmark_' + BookmarkShowcaseState.nextBookmarkId));
 
         // Add the bookmark to the bookmarks array and increase the bookmarks number counter
         BookmarkShowcaseState.bookmarksArray.push(bookmark);
@@ -164,22 +175,20 @@ function onBookmarkCaptureClicked() {
     });
 }
 
-// Set the new captured bookmark as the active bookmark on the list
-function setCapturedBookmarkActive(bookmark) {
-    // Add the new bookmark to the HTML list
-    $('#bookmarksList').append(buildBookmarkElement(bookmark));
+// Set the bookmark as the active bookmark on the list
+function setBookmarkActive(bookmarkSelector) {
 
     // Remove share boomark icon
     $('#bookmarkShare').remove();
 
     // Find bookmark parent node
-    let parentNode = ($('#bookmark_' + BookmarkShowcaseState.nextBookmarkId)[0]).parentNode;
+    let parentNode = (bookmarkSelector[0]).parentNode;
 
     // Add share bookmark icon to bookmark's line
     $(parentNode).append(buildShareElement());
 
     // Set bookmark radio button to checked
-    $('#bookmark_' + BookmarkShowcaseState.nextBookmarkId).attr('checked', true);
+    bookmarkSelector.attr('checked', true);
 }
 
 // Closes the dialog
@@ -197,17 +206,14 @@ function onDialogCopyClicked() {
 // Apply clicked bookmark state and set it as the active bookmark on the list
 function onBookmarkClicked(element) {
 
-    // Remove share boomark icon
-    $('#bookmarkShare').remove();
-
-    // Add share bookmark icon to bookmark's line
-    $(element.parentNode).append(buildShareElement());
+    // Set the clicked bookmark as active
+    setBookmarkActive($(element));
 
     // Get bookmark Id from HTML
     const bookmarkId = $(element).attr('id');
 
     // Find the bookmark in the bookmarks array
-    let currentBookmark = BookmarkShowcaseState.bookmarksArray.find(bookmark => { return bookmark.name === bookmarkId });
+    let currentBookmark = getBookmarkByID(bookmarkId);
 
     // Apply the bookmark state
     BookmarkShowcaseState.bookmarksReport.bookmarksManager.applyState(currentBookmark.state);
@@ -220,7 +226,7 @@ function shareBookmark(element) {
     const bookmarkId = $($(element).siblings('input')).attr('id');
 
     // Find the bookmark in the bookmarks array
-    let currentBookmark = BookmarkShowcaseState.bookmarksArray.find(bookmark => { return bookmark.name === bookmarkId });
+    let currentBookmark = getBookmarkByID(bookmarkId);
 
     // Build the share bookmark URL
     let shareUrl = location.href.substring(0, location.href.lastIndexOf("/")) + '/shareBookmark.html' + '?state=' + currentBookmark.state;
@@ -239,6 +245,11 @@ function shareBookmark(element) {
     setTimeout(function() {
         $('#dialogInput').select();
     }, dialogTextSelectTimeout);
+}
+
+// Get the bookmark with bookmarkId name
+function getBookmarkByID(bookmarkId) {
+    return jQuery.grep(BookmarkShowcaseState.bookmarksArray, function (bookmark) { return bookmark.name === bookmarkId })[0];
 }
 
 // Build bookmark radio button HTML element

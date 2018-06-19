@@ -50,12 +50,17 @@
                             <li onclick="Report_Extensions_OptionsMenu()"><a href="#">Extend options menu</a></li>
                             <li onclick="Report_Extensions_ContextMenu()" class="hideOnMobile"><a href="#">Extend context menu</a></li>
                         </ul>
-                        <li id="layout-operations" onclick="OpenLayoutOperations();"><a href="#">Layout</a></li>
+                        <li id="layout-operations" onclick="OpenLayoutOperations();"><a href="#">Layout</a>
+                            <span class="tryShowcase" onclick="OpenLayoutOperations();onShowcaseTryMeClicked('CustomLayout');">(<span class="tryMeText">Showcase</span> <img src="images/tab_out.svg">)</span>
+                        </li>
                         <ul id="layout-operations-ul" class="function-ul" style="display: none;">
                             <li onclick="Report_ApplyCustomLayout()" class="hideOnMobile hideOnReportCreate"><a href="#">Apply custom Layout</a></li>
                             <li onclick="Page_HasLayout()"><a href="#">Check layout</a></li>
                         </ul>
-                        <li id="bookmarks-operations" onclick="OpenBookmarksOperations();" class="hideOnMobile"><a href="#">Bookmarks</a><div class="newFeature">NEW</div></li>
+                        <li id="bookmarks-operations" onclick="OpenBookmarksOperations();" class="hideOnMobile"><a href="#">Bookmarks</a>
+                            <span class="tryShowcase" onclick="OpenBookmarksOperations();onShowcaseTryMeClicked('Bookmarks');">(<span class="tryMeText">Showcase</span> <img src="images/tab_out.svg">)</span>
+                            <div class="newFeature">NEW</div>
+                        </li>
                         <ul id="bookmarks-operations-ul" class="function-ul" style="display: none;">
                             <li onclick="Bookmarks_Enable()" class="hideOnMobile"><a href="#">Enable bookmarks pane</a></li>
                             <li onclick="Bookmarks_Disable()" class="hideOnMobile"><a href="#"> Disable bookmarks pane</a></li>

@@ -26,7 +26,7 @@ h8 {
 
 a:hover, a:visited, a:link, a:active
 {
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .logo-text-span {
@@ -197,11 +197,15 @@ a {
 
 .steps-ul li {
     float: left;
-    width: 120px;
+    width: 100px;
     text-align: center;
     line-height: 18px;
     font-size: 15px;
     font-family: 'Segoe UI', sans-serif;
+}
+
+#steps-samples {
+    margin-left: 6px;
 }
 
 #steps-interact {
@@ -209,8 +213,8 @@ a {
 }
 
 .steps-li-active {
-    border-bottom: 2px solid #F2C811;
-    padding-bottom: 6px;
+    border-bottom: 2px solid #F2C811 !important;
+    padding: 0 4px 6px;
 }
 
 .operations-div {
@@ -222,7 +226,7 @@ a {
 }
 
 #wrapper-operations-div {
-    padding: 8px 20px 8px 12px;
+    padding: 8px 8px 8px 12px;
     background-color: #FFFFFF;
     width: 100%;
     height: 298px;
@@ -290,7 +294,7 @@ a {
     width: 100%;
     clear: both;
     margin: 0;
-    padding: 0px 20px 0px 0px;
+    padding: 0;
 }
 
 .function-ul li, .operations-ul li {
@@ -379,7 +383,7 @@ a {
     font-size: 10px;
     text-align: center;
     color: #000000;
-    left: 12px;
+    left: 6px;
     bottom: 1px;
     display: inline-block;
     position: relative;
@@ -450,9 +454,15 @@ a {
     position: relative;
     z-index: 1;
     height: 40px;
-    padding: 10px 20px;
+    padding: 0 20px;
     font-size: 14px;
     font-weight: bold;
+}
+
+.textAreaControl:hover {
+    background-color: #EAEAEA;
+    border-top: 2px solid #EAEAEA;
+    border-bottom: 2px solid #EAEAEA;
 }
 
 .textAreaControl {
@@ -460,7 +470,9 @@ a {
     border: none;
     outline:none;
     margin-right: 40px;
+    height: 40px;
     opacity: 1;
+    min-width: 80px;
 }
 
 .textAreaControl img {
@@ -472,12 +484,14 @@ a {
 }
 
 .textAreaControl.regular img {
-    width: 17px;
-    height: 16px;
+    height: 18px;
+}
+
+.textAreaControl.wide {
+    min-width: 100px;
 }
 
 .textAreaControl.wide img {
-    width: 20px;
     height: 14px;
 }
 
@@ -519,12 +533,13 @@ a {
     padding: 5px 30px;
     width: 160px;
     height: 32px;
+    text-align: center;
 }
 
 .selectButton:hover {
     background-color: #3E65FF;
     color: #FFFFFF;
-    border: none;
+    border-color: transparent;
 }
 
 .blueButton {
@@ -665,11 +680,12 @@ a {
     top: -5px;
     left: 145%;
     position: absolute;
-    z-index: 1;
+    z-index: -1;
 }
 
 .interactTooltip .tooltipText.showTooltip {
     opacity: 1;
+    z-index: 5;
 }
 
 .interactTooltip .tooltipText::after {
@@ -1141,4 +1157,109 @@ a {
 
 .text-tab {
     padding-left: 1.4em;
+}
+
+.active-mode {
+    border-bottom: 2px solid #F2C811 !important;
+    border-top: 2px solid transparent;
+}
+
+.active-columns-btn {
+    border-bottom: 2px solid #F2C811 !important;
+    border-top: 2px solid transparent;
+}
+
+.tryShowcase {
+    position: relative;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 8pt;
+    margin-left: 3px;
+}
+
+.tryMeText {
+    color: #3E65FF;
+    margin-left: 1px;
+}
+
+.tryShowcase img {
+    width: 12px;
+    height: 9px;
+    margin: 0 1px;
+    position: relative;
+    bottom: 1px;
+}
+
+.modeTooltip {
+    position: relative;
+    float: right;
+    bottom: 24px;
+}
+
+.modeTooltip.view {
+    right: calc(100% - 115px);
+}
+
+.modeTooltip.edit {
+    right: calc(100% - 108px);
+}
+
+.modeTooltip.create {
+    right: calc(100% - 125px);
+}
+
+.modeTooltip .tooltipText {
+    visibility: hidden;
+    width: 246px;
+    background-color: #121212;
+    color: #F1F1F1;
+    text-align: left;
+    padding: 4px 12px;
+    font-size: 12px;
+    top: -2px;
+    left: 145%;
+    position: absolute;
+    z-index: 10;
+}
+
+.modeTooltip .tooltipText.edit {
+    width: 200px;
+}
+
+.modeTooltip .tooltipText.create {
+    width: 230px;
+}
+
+.modeTooltip:hover .tooltipText {
+    visibility: visible;
+}
+
+.modeTooltip .tooltipText::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+
+.noOverflow {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.columnsIcon img {
+    height: 24px;
+}
+
+.columnsIcon {
+    padding-top: 6px;
+    min-width: 95px;
+}
+
+.twoColumnsIcon {
+    min-width: 107px;
 }

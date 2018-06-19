@@ -5,9 +5,6 @@ var showcasesContentLoaded = false;
 $(function() {
     OpenSampleSection();
     WarmStartSampleReportEmbed();
-    if (GetParameterByName("showcases")) {
-        $('#main-showcases').show();
-    }
 });
 
 function OpenSampleSection() {
@@ -79,13 +76,10 @@ function OpenShowcase(showcaseType) {
     showcasesContentLoaded = false;
 }
 
-const ShowcasesLinks = {
-    CustomLayoutDocs : "https://github.com/Microsoft/PowerBI-JavaScript/wiki/Custom-Layout",
-    CustomLayoutCode : "https://github.com/Microsoft/PowerBI-JavaScript/tree/master/demo/v2-demo/live_showcases/custom_layout/showcase_custom_layout.js",
-    BookmarksDocs : "https://github.com/Microsoft/PowerBI-JavaScript/wiki/Bookmarks",
-    BookmarksCode : "https://github.com/Microsoft/PowerBI-JavaScript/tree/master/demo/v2-demo/live_showcases/bookmarks/showcase_bookmarks.js"
-};
+function OpenShowcaseFromURL(showcase) {
+    $("#showcasesContent").load(ShowcasesHtmls[showcase]);
+    SetActiveStyle("#main-showcases");
 
-function openUrl(showcaseLink) {
-    window.open(ShowcasesLinks[showcaseLink], '_blank');
+    $(".content").hide();
+    $("#showcasesContent").show();
 }

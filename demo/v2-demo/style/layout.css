@@ -151,10 +151,6 @@ label {
     height: 100%;
 }
 
-#steps-ul li {
-    width: 120px;
-}
-
 #navbar-content {
     display: table;
     width: 100%;
@@ -278,7 +274,11 @@ label {
 
 @media only screen and (max-width: 750px) {
     #main-showcases {
-        display: none;
+        display: none !important;
+    }
+
+    .tryShowcase {
+        display: none !important;
     }
 }
 

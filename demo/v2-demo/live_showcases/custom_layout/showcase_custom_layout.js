@@ -69,9 +69,7 @@ function embedCustomLayoutReport() {
             LayoutShowcaseState.layoutReport.getPages().then(function (pages) {
 
                 // Retrieve active page
-                activePage = pages.find(function (page) {
-                    return page.isActive
-                });
+                let activePage = jQuery.grep(pages, function (page) { return page.isActive })[0];
 
                 // Set layoutPageName to active page name
                 LayoutShowcaseState.layoutPageName = activePage.name;
@@ -106,8 +104,8 @@ function createVisualsArray(reportVisuals) {
     $('#visualsList').empty();
 
     // Build checkbox html list and insert the html code to visualsList div
-    for (let visual of LayoutShowcaseState.layoutVisuals) {
-        $('#visualsList').append(buildVisualElement(visual));
+    for (let i = 0; i < LayoutShowcaseState.layoutVisuals.length; i++) {
+        $('#visualsList').append(buildVisualElement(LayoutShowcaseState.layoutVisuals[i]));
     }
 
     // Render all visuals
@@ -128,7 +126,7 @@ function renderVisuals() {
     let pageWidth = $('#embedContainer').width();
     let pageHeight = $('#embedContainer').height();
 
-    // Calculate the width left for visuals per line by decreasing the margins width from the page width
+    // Calculating the overall width of the visuals in each row
     let visualsTotalWidth = pageWidth - (LayoutShowcaseConsts.margin * (LayoutShowcaseState.columns + 1));
 
     // Calculate the width of a single visual, according to the number of columns
@@ -155,7 +153,7 @@ function renderVisuals() {
     let x = LayoutShowcaseConsts.margin, y = LayoutShowcaseConsts.margin;
 
     // Filter the visuals list to display only the checked visuals
-    let checkedVisuals = LayoutShowcaseState.layoutVisuals.filter(visual => { return visual.checked; });
+    let checkedVisuals = LayoutShowcaseState.layoutVisuals.filter(function (visual) { return visual.checked; });
 
     // Calculate the number of lines
     const lines = Math.ceil(checkedVisuals.length / LayoutShowcaseState.columns);
@@ -166,8 +164,8 @@ function renderVisuals() {
     // Building visualsLayout object
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Custom-Layout
     let visualsLayout = {};
-    for (let visual of checkedVisuals) {
-        visualsLayout[visual.name] = {
+    for (let i = 0; i < checkedVisuals.length; i++) {
+        visualsLayout[checkedVisuals[i].name] = {
             x: x,
             y: y,
             width: width,
@@ -228,13 +226,15 @@ function renderVisuals() {
 
 // Update the visuals list with the change and rerender all visuals
 function onCheckboxClicked(checkbox) {
-    LayoutShowcaseState.layoutVisuals.find(visual => visual.name === checkbox.value).checked = $(checkbox).is(':checked');
+    let visual = jQuery.grep(LayoutShowcaseState.layoutVisuals, function (visual) { return visual.name === checkbox.value })[0];
+    visual.checked = $(checkbox).is(':checked');
     renderVisuals();
 };
 
 // Update columns number and rerender the visuals
 function onColumnsClicked(num) {
     LayoutShowcaseState.columns = num;
+    setColumnButtonActive(num);
     renderVisuals();
 }
 
@@ -262,4 +262,20 @@ function buildVisualElement(visual) {
     labelElement.appendChild(secondSpanElement);
 
     return labelElement;
+}
+
+// Set clicked columns button active
+function setColumnButtonActive(num) {
+    const active_btn_class = "active-columns-btn";
+    $('#btnOneCol').removeClass(active_btn_class);
+    $('#btnTwoCols').removeClass(active_btn_class);
+    $('#btnThreeCols').removeClass(active_btn_class);
+
+    if (num === ColumnsNumber.Three) {
+        $('#btnThreeCols').addClass(active_btn_class);
+    } else if (num === ColumnsNumber.Two) {
+        $('#btnTwoCols').addClass(active_btn_class);
+    } else {
+        $('#btnOneCol').addClass(active_btn_class);
+    }
 }
