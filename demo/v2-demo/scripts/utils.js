@@ -1,6 +1,7 @@
 var currentCode = "";
 const interactIndicationTimeout = 5000;
 const elementClickedTimeout = 250;
+const textCodeTimeout = 100;
 
 function BodyCodeOfFunction(func) {
     let lines = func.toString().split('\n');
@@ -27,9 +28,29 @@ function LoadLogWindow(divSelector) {
 
 function SetCode(func) {
     currentCode = BodyCodeOfFunction(func);
-	let codeHtml = '<pre id="txtCode" class="brush: js; gutter: false;">';
-	codeHtml = codeHtml + currentCode + '</pre><script type="text/javascript" src="syntaxHighlighter/syntaxhighlighter.js"></script>';
-	$("#highlighter").html(codeHtml);
+
+    $("#highlighter").empty();
+
+    var txtCodeElement = document.createElement("div");
+    txtCodeElement.setAttribute("id", "txtCode");
+    txtCodeElement.setAttribute("style", "display: none;");
+
+    var preElement = document.createElement("pre");
+    preElement.setAttribute("class", "brush: js; gutter: false;");
+
+    var codeElement = document.createTextNode(currentCode);
+    preElement.appendChild(codeElement);
+    txtCodeElement.appendChild(preElement);
+    $("#highlighter").append(txtCodeElement);
+
+    var scriptElement = document.createElement("script");
+    scriptElement.setAttribute("type", "text/javascript");
+    scriptElement.setAttribute("src", "syntaxHighlighter/syntaxhighlighter.js");
+    $("#highlighter").append(scriptElement);
+
+    setTimeout(function() {
+        $("#txtCode").show();
+    }, textCodeTimeout);
 
     if (func != "") {
         let runFunc = mapFunc(func);
