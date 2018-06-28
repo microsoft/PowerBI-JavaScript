@@ -140,4 +140,39 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
           throw response.body;
         });
   }
+
+  /**
+   * Set slicer state.
+   * Works only for visuals of type slicer.
+   * @param state: A new state which contains the slicer filters.
+   * ```javascript
+   * visual.setSlicerState()
+   *  .then(() => { ... });
+   * ```
+   */
+  setSlicerState(state: models.ISlicerState): Promise<void> {
+    return this.page.report.service.hpm.put<models.IError[]>(`/report/pages/${this.page.name}/visuals/${this.name}/slicer`, state, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
+   * Get slicer state.
+   * Works only for visuals of type slicer.
+   *
+   * ```javascript
+   * visual.getSlicerState()
+   *  .then(state => { ... });
+   * ```
+   *
+   * @returns {(Promise<models.ISlicerState>)}
+   */
+  getSlicerState(): Promise<models.ISlicerState> {
+    return this.page.report.service.hpm.get<models.ISlicerState>(`/report/pages/${this.page.name}/visuals/${this.name}/slicer`, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+      .then(response => response.body,
+        response => {
+          throw response.body;
+        });
+  }
 }

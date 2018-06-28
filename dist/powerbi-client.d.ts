@@ -1,4 +1,4 @@
-/*! powerbi-client v2.5.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.0 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     /**
      * Raises a custom event with event data on the specified HTML element.
@@ -529,6 +529,28 @@ declare module "visualDescriptor" {
          * @returns {(Promise<models.ExportDataType>)}
          */
         exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<models.ExportDataType>;
+        /**
+         * Set slicer state.
+         * Works only for visuals of type slicer.
+         * @param state: A new state which contains the slicer filters.
+         * ```javascript
+         * visual.setSlicerState()
+         *  .then(() => { ... });
+         * ```
+         */
+        setSlicerState(state: models.ISlicerState): Promise<void>;
+        /**
+         * Get slicer state.
+         * Works only for visuals of type slicer.
+         *
+         * ```javascript
+         * visual.getSlicerState()
+         *  .then(state => { ... });
+         * ```
+         *
+         * @returns {(Promise<models.ISlicerState>)}
+         */
+        getSlicerState(): Promise<models.ISlicerState>;
     }
 }
 declare module "page" {
