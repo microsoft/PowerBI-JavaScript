@@ -1,4 +1,4 @@
-/*! powerbi-client v2.5.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.0 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -680,9 +680,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    Embed.prototype.setAccessToken = function (accessToken) {
+	        var _this = this;
 	        var embedType = this.config.type;
 	        return this.service.hpm.post('/' + embedType + '/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
+	            _this.config.accessToken = accessToken;
+	            _this.element.setAttribute(Embed.accessTokenAttribute, accessToken);
+	            _this.service.accessToken = accessToken;
 	            return response.body;
 	        })
 	            .catch(function (response) {
@@ -984,7 +988,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.0.6 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.0.7 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1398,6 +1402,35 @@ return /******/ (function(modules) { // webpackBootstrap
 		    BookmarksPlayMode[BookmarksPlayMode["Off"] = 0] = "Off";
 		    BookmarksPlayMode[BookmarksPlayMode["Presentation"] = 1] = "Presentation";
 		})(BookmarksPlayMode = exports.BookmarksPlayMode || (exports.BookmarksPlayMode = {}));
+		var Selector = /** @class */ (function () {
+		    function Selector(schema) {
+		        this.$schema = schema;
+		    }
+		    Selector.prototype.toJSON = function () {
+		        return {
+		            $schema: this.$schema
+		        };
+		    };
+		    ;
+		    return Selector;
+		}());
+		exports.Selector = Selector;
+		var VisualSelector = /** @class */ (function (_super) {
+		    __extends(VisualSelector, _super);
+		    function VisualSelector(visualName) {
+		        var _this = _super.call(this, VisualSelector.schemaUrl) || this;
+		        _this.visualName = visualName;
+		        return _this;
+		    }
+		    VisualSelector.prototype.toJSON = function () {
+		        var selector = _super.prototype.toJSON.call(this);
+		        selector.visualName = this.visualName;
+		        return selector;
+		    };
+		    VisualSelector.schemaUrl = "http://powerbi.com/product/schema#visualSelector";
+		    return VisualSelector;
+		}(Selector));
+		exports.VisualSelector = VisualSelector;
 		function normalizeError(error) {
 		    var message = error.message;
 		    if (!message) {
@@ -1407,6 +1440,21 @@ return /******/ (function(modules) { // webpackBootstrap
 		        message: message
 		    };
 		}
+		function validateVisualSelector(input) {
+		    var errors = exports.Validators.visualSelectorValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateVisualSelector = validateVisualSelector;
+		function validateSlicer(input) {
+		    var errors = exports.Validators.slicerValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateSlicer = validateSlicer;
+		function validateSlicerState(input) {
+		    var errors = exports.Validators.slicerStateValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateSlicerState = validateSlicerState;
 		function validatePlayBookmarkRequest(input) {
 		    var errors = exports.Validators.playBookmarkRequestValidator.validate(input);
 		    return errors ? errors.map(normalizeError) : undefined;
@@ -1516,6 +1564,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		var mapValidator_1 = __webpack_require__(17);
 		var layoutValidator_1 = __webpack_require__(18);
 		var exportDataValidator_1 = __webpack_require__(19);
+		var selectorsValidator_1 = __webpack_require__(20);
+		var slicersValidator_1 = __webpack_require__(21);
 		exports.Validators = {
 		    advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
 		    advancedFilterValidator: new filtersValidator_1.AdvancedFilterValidator(),
@@ -1578,6 +1628,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		    reportLoadValidator: new reportLoadValidator_1.ReportLoadValidator(),
 		    saveAsParametersValidator: new saveAsParametersValidator_1.SaveAsParametersValidator(),
 		    settingsValidator: new settingsValidator_1.SettingsValidator(),
+		    slicerValidator: new slicersValidator_1.SlicerValidator(),
+		    slicerStateValidator: new slicersValidator_1.SlicerStateValidator(),
 		    stringArrayValidator: new typeValidator_1.StringArrayValidator(),
 		    stringValidator: new typeValidator_1.StringValidator(),
 		    tileLoadValidator: new tileLoadValidator_1.TileLoadValidator(),
@@ -1586,6 +1638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    topNFilterValidator: new filtersValidator_1.TopNFilterValidator(),
 		    viewModeValidator: new typeValidator_1.EnumValidator([0, 1]),
 		    visualLayoutValidator: new layoutValidator_1.VisualLayoutValidator(),
+		    visualSelectorValidator: new selectorsValidator_1.VisualSelectorValidator(),
 		};
 	
 	
@@ -3458,6 +3511,125 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.ExportDataRequestValidator = ExportDataRequestValidator;
 	
 	
+	/***/ }),
+	/* 20 */
+	/***/ (function(module, exports, __webpack_require__) {
+	
+		var __extends = (this && this.__extends) || (function () {
+		    var extendStatics = Object.setPrototypeOf ||
+		        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+		        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+		    return function (d, b) {
+		        extendStatics(d, b);
+		        function __() { this.constructor = d; }
+		        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+		    };
+		})();
+		Object.defineProperty(exports, "__esModule", { value: true });
+		var validator_1 = __webpack_require__(1);
+		var multipleFieldsValidator_1 = __webpack_require__(4);
+		var typeValidator_1 = __webpack_require__(2);
+		var VisualSelectorValidator = /** @class */ (function (_super) {
+		    __extends(VisualSelectorValidator, _super);
+		    function VisualSelectorValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    VisualSelectorValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "visualName",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return VisualSelectorValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.VisualSelectorValidator = VisualSelectorValidator;
+	
+	
+	/***/ }),
+	/* 21 */
+	/***/ (function(module, exports, __webpack_require__) {
+	
+		var __extends = (this && this.__extends) || (function () {
+		    var extendStatics = Object.setPrototypeOf ||
+		        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+		        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+		    return function (d, b) {
+		        extendStatics(d, b);
+		        function __() { this.constructor = d; }
+		        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+		    };
+		})();
+		Object.defineProperty(exports, "__esModule", { value: true });
+		var validator_1 = __webpack_require__(1);
+		var multipleFieldsValidator_1 = __webpack_require__(4);
+		var typeValidator_1 = __webpack_require__(2);
+		var SlicerValidator = /** @class */ (function (_super) {
+		    __extends(SlicerValidator, _super);
+		    function SlicerValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    SlicerValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "selector",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.visualSelectorValidator]
+		            },
+		            {
+		                field: "state",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.slicerStateValidator]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return SlicerValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.SlicerValidator = SlicerValidator;
+		var SlicerStateValidator = /** @class */ (function (_super) {
+		    __extends(SlicerStateValidator, _super);
+		    function SlicerStateValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    SlicerStateValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "filters",
+		                validators: [validator_1.Validators.filtersArrayValidator]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return SlicerStateValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.SlicerStateValidator = SlicerStateValidator;
+	
+	
 	/***/ })
 	/******/ ])
 	});
@@ -4030,6 +4202,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	            exportDataType: exportDataType
 	        };
 	        return this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/exportData", exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Set slicer state.
+	     * Works only for visuals of type slicer.
+	     * @param state: A new state which contains the slicer filters.
+	     * ```javascript
+	     * visual.setSlicerState()
+	     *  .then(() => { ... });
+	     * ```
+	     */
+	    VisualDescriptor.prototype.setSlicerState = function (state) {
+	        return this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/slicer", state, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Get slicer state.
+	     * Works only for visuals of type slicer.
+	     *
+	     * ```javascript
+	     * visual.getSlicerState()
+	     *  .then(state => { ... });
+	     * ```
+	     *
+	     * @returns {(Promise<models.ISlicerState>)}
+	     */
+	    VisualDescriptor.prototype.getSlicerState = function () {
+	        return this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/slicer", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
@@ -4682,7 +4886,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.5.2',
+	    version: '2.6.0',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -4993,7 +5197,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! http-post-message v0.2.4 | (c) 2016 Microsoft Corporation MIT */
+	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -5048,7 +5252,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ (function(module, exports) {
+	/***/ function(module, exports) {
 	
 		"use strict";
 		var HttpPostMessage = (function () {
@@ -5167,7 +5371,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.HttpPostMessage = HttpPostMessage;
 	
 	
-	/***/ })
+	/***/ }
 	/******/ ])
 	});
 	;

@@ -31,6 +31,7 @@ function ValidateDashboardConfigurationWorksAsExpected(pageView: string, excepti
   const dashboardEmbedConfig = {
     type: "dashboard",
     id: "fakeReportId",
+    groupId: "fakeGroupId",
     accessToken: "fakeAccessToken",
     embedUrl: "fakeEmbedUrl",
     pageView: pageView
@@ -179,14 +180,16 @@ describe('service', function () {
         type: "report",
         id: "fakeReportId",
         accessToken: "fakeAccessToken",
-        embedUrl: "fakeEmbedUrl"
+        embedUrl: "fakeEmbedUrl",
+        groupId: "fakeGroupId",
       };
 
       const dashboardEmbedConfig: embed.IEmbedConfiguration = {
         type: "dashboard",
         id: "fakeDashboardId",
         accessToken: "fakeAccessToken",
-        embedUrl: "fakeEmbedUrl"
+        embedUrl: "fakeEmbedUrl",
+        groupId: "fakeGroupId"
       };
 
       powerbi.embed(component[0], reportEmbedConfig);
@@ -209,13 +212,15 @@ describe('service', function () {
         accessToken: "fakeAccessToken",
         embedUrl: 'fakeUrl',
         id: 'report2',
-        type: 'report'
+        type: 'report',
+        groupId: "fakeGroupId"
       };
 
       const createConfig: embed.IEmbedConfiguration = {
         datasetId: "fakeDashboardId",
         accessToken: "fakeAccessToken",
-        embedUrl: "fakeEmbedUrl"
+        embedUrl: "fakeEmbedUrl",
+        groupId: "fakeGroupId"
       };
 
       // Act
@@ -245,7 +250,8 @@ describe('service', function () {
             language: 'languageName',
             formatLocale: 'formatName'
           }
-        }
+        },
+        groupId: "fakeGroupId"
       };
 
       powerbi.embed($reportContainer[0], testConfiguration);
@@ -364,6 +370,52 @@ describe('service', function () {
 
       // Assert
       expect(report.config.uniqueId).toEqual(jasmine.any(String));
+    });
+
+    it('should get group id from configuration first', function () {
+      // Arrange
+      const testGroupId = "ABC123";
+      const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed?groupId=DIFFERENTID`;
+      const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      const configuration: embed.IEmbedConfiguration = { id: 'fakeId' , groupId: testGroupId };
+
+      // Act
+      const report = powerbi.embed($reportContainer[0], configuration);
+
+      // Assert
+      expect((<embed.IEmbedConfiguration>report.config).groupId).toEqual(testGroupId);
+    });
+
+    it('should get groupId from embeddUrl is not specified in config', function () {
+      // Arrange
+      const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed?groupId=DIFFERENTID`;
+      const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      const configuration: embed.IEmbedConfiguration = {id: 'fakeId'};
+
+      // Act
+      const report = powerbi.embed($reportContainer[0], configuration);
+
+      // Assert
+      expect((<embed.IEmbedConfiguration>report.config).groupId).toEqual('DIFFERENTID');
+    });
+
+    it('should get groupId undefined if not specified in embeddUrl or config', function () {
+      // Arrange
+      const embedUrl = `https://embedded.powerbi.com/appTokenReportEmbed?reportId=fakeId`;
+      const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
+        .appendTo('#powerbi-fixture');
+
+      const configuration: embed.IEmbedConfiguration = {id: 'fakeId'};
+
+      // Act
+      const report = powerbi.embed($reportContainer[0], configuration);
+
+      // Assert
+      expect((<embed.IEmbedConfiguration>report.config).groupId).toBeUndefined();
     });
 
     it('should get filterPaneEnabled setting from attribute from config and then attribute', function () {
@@ -2945,7 +2997,7 @@ describe('SDK-to-HPM', function () {
         report.switchMode(models.ViewMode.Edit);
 
         // Assert
-        let url = '/report/switchMode/' + models.ViewMode.Edit;
+        let url = '/report/switchMode/edit';
         expect(spyHpm.post).toHaveBeenCalledWith(url, null, { uid: uniqueId }, iframe.contentWindow);
       });
 
@@ -2959,7 +3011,7 @@ describe('SDK-to-HPM', function () {
         report.switchMode(models.ViewMode.Edit)
           .then(() => {
             // Assert
-            let url = '/report/switchMode/' + models.ViewMode.Edit;
+            let url = '/report/switchMode/edit';
             expect(spyHpm.post).toHaveBeenCalledWith(url, null, { uid: uniqueId }, iframe.contentWindow);
             done();
           });
@@ -3050,11 +3102,15 @@ describe('SDK-to-HPM', function () {
           body: {}
         }));
 
+        let newToken = "newToken"
         // Act
-        report.setAccessToken(accessToken)
+        report.setAccessToken(newToken)
           .then(() => {
             // Assert
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/token', accessToken, { uid: uniqueId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/token', newToken, { uid: uniqueId }, iframe.contentWindow);
+            expect(report.service.accessToken).toEqual(newToken);
+            expect(report.config.accessToken).toEqual(newToken);
+            expect(report.element.getAttribute(embed.Embed.accessTokenAttribute)).toEqual(newToken);
             done();
           });
       });

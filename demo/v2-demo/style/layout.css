@@ -14,6 +14,14 @@ header
     background: #121212;
 }
 
+label {
+    display: initial;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: normal;
+}
+
 #navbar {
     display: table-cell;
     width: 160px;
@@ -45,11 +53,18 @@ header
     background: #F1F1F1;
 }
 
+#showcaseContent {
+    display: table;
+    padding: 32px 24px 24px 24px;
+    width: 100%;
+    background: #F1F1F1;
+}
+
 #samples-step-wrapper {
     max-width: 1250px;
 }
 
-#documentationContent, #demosContent {
+#documentationContent {
     background: #F1F1F1;
     padding-left: 16px;
 }
@@ -90,7 +105,7 @@ header
     display: none;
     width: 100%;
     height: 100%;
-    background-color: white;
+    background-color: #FFFFFF;
     padding: 0px;
     clear: both;
 }
@@ -136,19 +151,15 @@ header
     height: 100%;
 }
 
-#steps-ul li {
-    width: 120px;
-}
-
 #navbar-content {
     display: table;
     width: 100%;
     height: 100%;
 }
 
-#welcome-text {
+#welcome-text, #showcases-text {
     margin-top: 2px;
-    padding: 16px 24px 24px 24px;
+    padding: 16px 24px 16px 24px;
     background: #FFFFFF;
 }
 
@@ -157,8 +168,30 @@ header
     font-size: 24px;
 }
 
-#sample-tool-description {
+#sample-tool-description, #showcases-description {
     max-width: 1000px;
+}
+
+#showcase-embedded-view {
+    background: #FFFFFF;
+    height: calc(67vw*(9/16)*1.1);
+}
+
+#visualsArea, #bookmarksArea {
+    min-width: 20vw;
+    max-width: 20vw;
+    display: table-cell;
+    padding-right: 16px;
+}
+
+#visualsWrapper, #bookmarksWrapper {
+    background: #FFFFFF;
+    min-height: 350px;
+}
+
+#showcaseEmbedArea {
+    display: table-cell;
+    width: 100%;
 }
 
 @media only screen and (max-width: 1050px) {
@@ -174,6 +207,11 @@ header
 
     .content {
         display: block;
+    }
+
+    #contentWrapper {
+        display: block;
+        width: 100%;
     }
 
     #main-ul-dev {
@@ -229,8 +267,18 @@ header
         margin-top: -5px;
         border-width: 5px;
         border-style: solid;
-        border-color: transparent transparent transparent black;
+        border-color: transparent transparent transparent #000000;
         margin-left: 0px;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    #main-showcases {
+        display: none !important;
+    }
+
+    .tryShowcase {
+        display: none !important;
     }
 }
 

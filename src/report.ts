@@ -169,7 +169,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       .then(response => {
         return response.body
           .map(page => {
-            return new Page(this, page.name, page.displayName, page.isActive);
+            return new Page(this, page.name, page.displayName, page.isActive, page.visibility);
           });
       }, response => {
         throw response.body;
@@ -195,8 +195,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @param {boolean} [isActive]
    * @returns {Page}
    */
-  page(name: string, displayName?: string, isActive?: boolean): Page {
-    return new Page(this, name, displayName, isActive);
+  page(name: string, displayName?: string, isActive?: boolean, visibility?: models.SectionVisibility): Page {
+    return new Page(this, name, displayName, isActive, visibility);
   }
 
   /**
@@ -329,8 +329,16 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * @returns {Promise<void>}
    */
-  switchMode(viewMode: models.ViewMode): Promise<void> {
-    let url = '/report/switchMode/' + viewMode;
+  switchMode(viewMode: models.ViewMode | string): Promise<void> {
+    let newMode: string;
+    if (typeof viewMode === "string"){
+      newMode = viewMode;
+    }
+    else {
+      newMode = this.viewModeToString(viewMode);
+    }
+
+    let url = '/report/switchMode/' + newMode;
     return this.service.hpm.post<models.IError[]>(url, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body;
@@ -355,5 +363,19 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       .catch(response => {
         throw response.body;
     });
+  }
+
+  private viewModeToString(viewMode: models.ViewMode): string {
+    let mode: string;
+    switch (viewMode) {
+      case models.ViewMode.Edit:
+        mode = "edit";
+        break;
+      case models.ViewMode.View:
+        mode = "view";
+        break;
+    }
+
+    return mode;
   }
 }

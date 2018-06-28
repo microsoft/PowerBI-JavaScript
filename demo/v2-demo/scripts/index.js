@@ -1,6 +1,6 @@
 var sampleContentLoaded = false;
 var documentationContentLoaded = false;
-var demosContentLoaded = false;
+var showcasesContentLoaded = false;
 
 $(function() {
     OpenSampleSection();
@@ -28,6 +28,9 @@ function OpenEmbedWorkspace(activeTabSelector, samplesStepHtml)
     $(".content").hide();
     $("#sampleContent").show();
     OpenSamplesStep();
+
+    LayoutShowcaseState.layoutReport = null;
+    BookmarkShowcaseState.bookmarksReport = null;
 }
 
 function OpenDocumentationSection() {
@@ -43,21 +46,40 @@ function OpenDocumentationSection() {
     $("#documentationContent").show();
 }
 
-function OpenDemosSection() {
-    if (!demosContentLoaded)
+function OpenShowcasesSection() {
+    if (!showcasesContentLoaded)
     {
-        $("#demosContent").load("demos.html");
-        demosContentLoaded = true;
+        $('#embedContainer').removeAttr('id');
+        $("#showcasesContent").load("showcases.html");
+        showcasesContentLoaded = true;
     }
 
-    SetActiveStyle("#main-demos");
+    SetActiveStyle("#main-showcases");
 
     $(".content").hide();
-    $("#demosContent").show();
+    $("#showcasesContent").show();
 }
 
 function SetActiveStyle(id)
 {
     $("#main-ul li").removeClass("main-li-active");
     $(id).addClass("main-li-active");
+}
+
+const ShowcasesHtmls = {
+    CustomLayout : "./live_showcases/custom_layout/showcase_custom_layout.html",
+    Bookmarks : "./live_showcases/bookmarks/showcase_bookmarks.html"
+};
+
+function OpenShowcase(showcaseType) {
+    $("#showcasesContent").load(ShowcasesHtmls[showcaseType]);
+    showcasesContentLoaded = false;
+}
+
+function OpenShowcaseFromURL(showcase) {
+    $("#showcasesContent").load(ShowcasesHtmls[showcase]);
+    SetActiveStyle("#main-showcases");
+
+    $(".content").hide();
+    $("#showcasesContent").show();
 }

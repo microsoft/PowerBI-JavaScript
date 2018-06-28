@@ -1,6 +1,7 @@
 const active_class = 'active';
 const active_steps_li = 'steps-li-active';
 const active_tabs_li = 'tabs-li-active';
+const active_mode = 'active-mode'
 
 const EmbedViewMode = "view";
 const EmbedEditMode = "edit";
@@ -15,10 +16,10 @@ const defaultQnaMode = "Interactive";
 
 function OpenSamplesStep() {
     $('#steps-ul a').removeClass(active_class);
-    $(".steps-li-active").removeClass(active_steps_li);
+    $('.'+ active_steps_li).removeClass(active_steps_li);
 
     $("#steps-samples a").addClass(active_class);
-    $("#steps-samples").addClass(active_steps_li);
+    $("#steps-samples a").addClass(active_steps_li);
 
     $('#interact-tab').removeClass('enableTransition');
     $('#interact-tab').removeClass('changeColor');
@@ -41,16 +42,18 @@ function OpenCodeStepFromNavPane()
 
 function OpenCodeStep(mode, entityType, tokenType) {
     $('#steps-ul a').removeClass(active_class);
-    $(".steps-li-active").removeClass(active_steps_li);
+    $('.' + active_steps_li).removeClass(active_steps_li);
 
     $('#steps-code a').addClass(active_class);
-    $('#steps-code').addClass(active_steps_li);
+    $('#steps-code a').addClass(active_steps_li);
 
     // Hide Embed view in samples step.
     $("#samples-step-wrapper").hide();
     $("#embed-and-interact-steps-wrapper").show();
 
     $("#welcome-text").hide();
+
+    $("#highlighter").empty();
 
     let containers = $(".iframeContainer");
     containers.removeClass(active_class);
@@ -159,11 +162,15 @@ function OpenInteractTab() {
         $("#settings").load("settings_interact_dashboard.html", function() {
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
+            hideFeaturesOnMobile();
         });
     }
     else if (entityType == EntityType.Qna)
     {
         $("#settings").load("settings_interact_qna.html", function() {
+            const isResultOnlyMode = GetSession(SessionKeys.QnaMode) === "ResultOnly";
+            // Hide set question on interactive mode
+            $('#qna-operations').toggle(isResultOnlyMode);
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
         });
@@ -180,6 +187,8 @@ function OpenInteractTab() {
         $("#settings").load("settings_interact_report.html", function() {
             SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
+            $('.hideOnReportCreate').toggle(GetSession(SessionKeys.EmbedMode) !== EmbedCreateMode);
+            hideFeaturesOnMobile();
         });
     }
 }
@@ -398,7 +407,7 @@ function IsEmbeddingSampleQna() {
 }
 
 function ToggleQuestionBox(enabled) {
-    UpdateSession($("input[name='qnaMode']:checked").val(), SessionKeys.QnaMode);
+    UpdateSession("input[name='qnaMode']:checked", SessionKeys.QnaMode);
     let txtQuestion = $("#txtQuestion");
     if (enabled === true) {
         let question = GetSession(SessionKeys.QnaQuestion);
@@ -485,6 +494,9 @@ function EmbedAreaDesktopView() {
         return;
     }
 
+    $("#btnPhoneView").removeClass(active_mode);
+    $("#btnDesktopView").addClass(active_mode);
+
     const entityType = GetSession(SessionKeys.EntityType);
     const mode = GetSession(SessionKeys.EmbedMode);
 
@@ -503,15 +515,17 @@ function EmbedAreaDesktopView() {
     $(classPrefix + 'MobileContainer').removeClass(active_class);
     $(classPrefix + 'Container').addClass(active_class);
 
-    if($('#embed-tab').hasClass("tabs-li-active")) {
+    if($('#embed-tab').hasClass(active_tabs_li)) {
         // Update embed code area
-        setCodeArea(mode, entityType)
+        setCodeArea(mode, entityType);
     }
+
+    $('.hideOnMobile').show();
 
     // Check if run button was clicked in the other mode and wasn't clicked on the new mode
     if ($(classPrefix + "MobileContainer iframe").length && !$(classPrefix + "Container iframe").length) {
         let runFunc = getEmbedCode(mode, entityType);
-        if ($('#interact-tab').hasClass("tabs-li-active")) {
+        if ($('#interact-tab').hasClass(active_tabs_li)) {
             runFunc = updateRunFuncSessionParameters(runFunc);
             eval(runFunc);
         } else {
@@ -524,6 +538,9 @@ function EmbedAreaMobileView() {
     if ($(".mobile-view").hasClass(active_class)) {
         return;
     }
+
+    $("#btnDesktopView").removeClass(active_mode);
+    $("#btnPhoneView").addClass(active_mode);
 
     const entityType = GetSession(SessionKeys.EntityType);
     const mode = GetSession(SessionKeys.EmbedMode);
@@ -543,15 +560,26 @@ function EmbedAreaMobileView() {
     $(classPrefix + 'Container').removeClass(active_class);
     $(classPrefix + 'MobileContainer').addClass(active_class);
 
-    if($('#embed-tab').hasClass("tabs-li-active")) {
+    if($('#embed-tab').hasClass(active_tabs_li)) {
         // Update embed code area
-        setCodeArea(mode, entityType)
+        setCodeArea(mode, entityType);
+    }
+
+    $('.hideOnMobile').hide();
+
+    // Remove active class and code if the feature should be hidden on mobile view
+    if ($('#interact-tab').hasClass(active_tabs_li)) {
+        let activeHideOnMobile = $('.function-ul .hideOnMobile.active');
+        if (activeHideOnMobile.length) {
+            activeHideOnMobile.removeClass(active_class);
+            LoadCodeArea("#embedCodeDiv", "");
+        }
     }
 
     // Check if run button was clicked in the other mode and wasn't clicked on the new mode
     if ($(classPrefix + "Container iframe").length && !$(classPrefix + "MobileContainer iframe").length) {
         let runFunc = getEmbedCode(mode, entityType);
-        if ($('#interact-tab').hasClass("tabs-li-active")) {
+        if ($('#interact-tab').hasClass(active_tabs_li)) {
             runFunc = updateRunFuncSessionParameters(runFunc);
             eval(runFunc);
         } else {
@@ -602,4 +630,14 @@ function updateRunFuncSessionParameters(runFunc) {
     }
 
     return code;
+}
+
+function hideFeaturesOnMobile(){
+    if ($(".mobile-view").hasClass(active_class))
+        $('.hideOnMobile').hide();
+}
+
+function onShowcaseTryMeClicked(showcase) {
+    let showcaseUrl = location.href.substring(0, location.href.lastIndexOf("/")) + '?showcase=' + showcase;
+    window.open(showcaseUrl, '_blank');
 }

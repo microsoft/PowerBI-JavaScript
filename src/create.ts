@@ -51,7 +51,8 @@ export class Create extends embed.Embed {
           datasetId: config.datasetId || this.getId(),
           accessToken: config.accessToken,
           tokenType: config.tokenType,
-          settings: settings
+          settings: settings,
+          groupId:  config.groupId
       }
   }
 

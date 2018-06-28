@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css" />
     <link type="text/css" rel="stylesheet" href="syntaxHighlighter/theme.css">
     <link rel="stylesheet" type="text/css" href="style/style.css">
@@ -27,8 +27,9 @@
                         <li id="main-sample" class="main-li-active" onclick="OpenSampleSection();">
                             <div><a href="#">Sample tool</a></div>
                         </li>
-                        <li id="main-demos" class="main-li-active" onclick="OpenDemosSection();" style="display: none;">
-                            <div><a href="#">Demos</a></div>
+                        <li id="main-showcases" class="main-li-active" onclick="OpenShowcasesSection();">
+                            <div><a href="#">Showcase</a></div>
+                            <div class="newSection">NEW</div>
                         </li>
                         <li id="main-docs" onclick="OpenDocumentationSection();">
                             <div><a href="#">Documentation</a></div>
@@ -38,13 +39,13 @@
             </div>
         </div>
         <div id="contentWrapper">
-            <div id ="sampleContent" class="content">
+            <div id="sampleContent" class="content">
             </div>
 
-            <div id ="demosContent" class="content">
+            <div id="showcasesContent" class="content">
             </div>
 
-            <div id ="documentationContent" class="content">
+            <div id="documentationContent" class="content">
             </div>
         </div>
     </div>
@@ -54,18 +55,21 @@
     <script src="../node_modules/powerbi-client/dist/powerbi.js"></script>
 
     <script src="scripts/codesamples.js"></script>
-    
+
     <script src="scripts/index.js"></script>
     <script src="scripts/utils.js"></script>
     <script src="scripts/logger.js"></script>
     <script src="scripts/session_utils.js"></script>
     <script src="scripts/function_mapping.js"></script>
-    
+
     <script src="scripts/report.js"></script>
-    
+
     <script src="scripts/step_samples.js"></script>
     <script src="scripts/step_embed.js"></script>
     <script src="scripts/step_interact.js"></script>
+
+    <script src="live_showcases/custom_layout/showcase_custom_layout.js"></script>
+    <script src="live_showcases/bookmarks/showcase_bookmarks.js"></script>
 
 </body>
 </html>
