@@ -27,15 +27,17 @@
                         </ul>
                         <li id="filters-operations" onclick="OpenFiltersOperations();"><a href="#">Filters</a><div class="highlightSection"></div></li>
                         <ul id="filters-operations-ul" class="function-ul" style="display: none;">
+                                <li onclick="Visual_SetSlicer()"><a href="#">Set Slicer State</a><div class="newFeature">NEW</div></li>
+                                <li onclick="Visual_GetSlicer()"><a href="#">Get Slicer State</a><div class="newFeature">NEW</div></li>
                                 <li onclick="Report_SetFilters()" class="hideOnReportCreate"><a href="#">Set report filters</a></li>
                                 <li onclick="Report_GetFilters()"><a href="#">Get report filters</a></li>
                                 <li onclick="Report_RemoveFilters()"><a href="#">Remove report filters</a></li>
                                 <li onclick="Page_SetFilters()" class="hideOnReportCreate"><a href="#">Set page filters</a></li>
                                 <li onclick="Page_GetFilters()"><a href="#">Get page filters</a></li>
                                 <li onclick="Page_RemoveFilters()"><a href="#">Remove page filters</a></li>
-                                <li onclick="Visual_SetFilters()" class="hideOnReportCreate"><a href="#">Set visual filters</a><div class="newFeature">NEW</div></li>
-                                <li onclick="Visual_GetFilters()"><a href="#">Get visual filters</a><div class="newFeature">NEW</div></li>
-                                <li onclick="Visual_RemoveFilters()"><a href="#">Remove visual filters</a><div class="newFeature">NEW</div></li>
+                                <li onclick="Visual_SetFilters()" class="hideOnReportCreate"><a href="#">Set visual filters</a></li>
+                                <li onclick="Visual_GetFilters()"><a href="#">Get visual filters</a></li>
+                                <li onclick="Visual_RemoveFilters()"><a href="#">Remove visual filters</a></li>
                         </ul>
                         <li id="editsave-operations" onclick="OpenEditSaveOperations();" class="hideOnMobile"><a href="#">Edit & Save</a></li>
                         <ul id="editsave-operations-ul" class="function-ul" style="display: none;">
@@ -59,7 +61,6 @@
                         </ul>
                         <li id="bookmarks-operations" onclick="OpenBookmarksOperations();" class="hideOnMobile"><a href="#">Bookmarks</a>
                             <span class="tryShowcase" onclick="OpenBookmarksOperations();onShowcaseTryMeClicked('Bookmarks');">(<span class="tryMeText">Showcase</span> <img src="images/tab_out.svg">)</span>
-                            <div class="newFeature">NEW</div>
                         </li>
                         <ul id="bookmarks-operations-ul" class="function-ul" style="display: none;">
                             <li onclick="Bookmarks_Enable()" class="hideOnMobile"><a href="#">Enable bookmarks pane</a></li>
@@ -72,11 +73,11 @@
                             <li onclick="Bookmarks_ExitPresentation()" class="hideOnMobile"><a href="#">Exit play bookmarks mode</a></li>
                             <li onclick="Events_BookmarkApplied()" class="hideOnMobile"><a href="#">Bookmark applied event</a></li>
                         </ul>
-                        <li id="data-operations" onclick="OpenDataOperations();"><a href="#">Data</a><div class="highlightSection"></div></li>
+                        <li id="data-operations" onclick="OpenDataOperations();"><a href="#">Data</a></div></li>
                         <ul id="data-operations-ul" class="function-ul" style="display: none;">
                             <li onclick="Events_DataSelected()"><a href="#">Data selected event</a></li>
-                            <li onclick="Visual_ExportData_Summarized()"><a href="#">Export visual data summarized</a><div class="newFeature">NEW</div></li>
-                            <li onclick="Visual_ExportData_Underlying()"><a href="#">Export visual data underlying</a><div class="newFeature">NEW</div></li>
+                            <li onclick="Visual_ExportData_Summarized()"><a href="#">Export visual data summarized</a></li>
+                            <li onclick="Visual_ExportData_Underlying()"><a href="#">Export visual data underlying</a></li>
                         </ul>
                     </ul>
                 </div>
