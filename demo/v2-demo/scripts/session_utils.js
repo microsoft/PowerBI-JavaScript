@@ -1,9 +1,9 @@
-const reportUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/SampleReport';
-const datasetUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/SampleCreate';
-const dashboardUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Dashboards/SampleDashboard';
-const tileUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Tiles/SampleTile';
-const qnaUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Datasets/SampleQna';
-const layoutShowcaseReportUrl = 'https://powerbilivedemobe.azurewebsites.net/api/Reports/LayoutDemoReport';
+const reportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/SampleReport';
+const datasetUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/SampleCreate';
+const dashboardUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Dashboards/SampleDashboard';
+const tileUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Tiles/SampleTile';
+const qnaUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Datasets/SampleQna';
+const layoutShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/LayoutDemoReport';
 
 var LastReportSampleUrl = null;
 var ReportRefreshTokenTimer = 0;
@@ -26,19 +26,19 @@ const SessionKeys = {
     EmbedUrl : "embedUrl",
     EmbedId : "embedId",
     DashboardId : "dashboardId",
+    EmbedMode: "embedMode",
+    EntityType: "entityType",
     GroupId : "groupId",
     IsSampleReport: "isSampleReport",
     IsSampleDashboard: "IsSampleDashboard",
     IsSampleTile: "IsSampleTile",
     IsSampleQna: "IsSampleQna",
-    EmbedMode: "embedMode",
-    TokenType: "tokenType",
-    EntityType: "entityType",
-    SampleId: "SampleId",
     PageName: "PageName",
-    VisualName: "VisualName",
     QnaQuestion: "QnaQuestion",
-    QnaMode: "QnaMode"
+    QnaMode: "QnaMode",
+    SampleId: "SampleId",
+    TokenType: "tokenType",
+    VisualName: "VisualName"
 };
 
 function GetParameterByName(name, url) {
