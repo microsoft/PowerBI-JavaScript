@@ -101,6 +101,7 @@ function _Embed_BasicEmbed_Mobile() {
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
         permissions: permissions,
+        pageName: "ReportSectionf55279cd456214bd0381",
         settings: {
             layoutType: models.LayoutType.MobilePortrait
         }
