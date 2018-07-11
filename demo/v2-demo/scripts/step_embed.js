@@ -200,6 +200,14 @@ function Visual_SetFilters() {
     SetCode(_Visual_SetFilters);
 }
 
+function Visual_GetSlicer() {
+    SetCode(_Visual_GetSlicer);
+}
+
+function Visual_SetSlicer() {
+    SetCode(_Visual_SetSlicer);
+}
+
 function Visual_RemoveFilters() {
     SetCode(_Visual_RemoveFilters);
 }

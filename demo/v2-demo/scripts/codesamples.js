@@ -1640,6 +1640,95 @@ function _Bookmarks_ExitPresentation() {
     report.bookmarksManager.play(models.BookmarksPlayMode.Off);
 }
 
+function _Visual_GetSlicer() {
+    // Get a reference to the embedded report HTML element 
+    var embedContainer = $('#embedContainer')[0]; 
+
+    // Get a reference to the embedded report. 
+    report = powerbi.get(embedContainer); 
+
+    // Retrieve the page collection and get the visuals for the first page. 
+    report.getPages() 
+      .then(function (pages) { 
+          // Retrieve active page.
+          var activePage = pages.find(function(page) {
+            return page.isActive;
+        });
+
+      activePage.getVisuals()
+        .then(function (visuals) { 
+          // Retrieve the wanted visual. 
+          var slicer = visuals.find(function(visual) { 
+            return visual.type == "slicer"; 
+          }); 
+
+          // Get the slicer state which contains the slicer filter.
+          slicer.getSlicerState()
+            .then(function (state) {
+                Log.log(state);
+            })
+            .catch(function (errors) {
+                Log.log(errors);
+            });
+          })
+          .catch(function (errors) { 
+              Log.log(errors); 
+          }); 
+    }) 
+    .catch(function (errors) { 
+        Log.log(errors); 
+    });
+}
+
+function _Visual_SetSlicer() {
+    // Build the filter you want to use. For more information, See Constructing 
+    // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters. 
+    const filter = { 
+        $schema: "http://powerbi.com/product/schema#basic", 
+        target: { 
+            table: "District", 
+            column: "District Manager" 
+        },
+        operator: "In", 
+        values: ["Brad Sutton", "Andrew Ma"] 
+    };
+
+    // Get a reference to the embedded report HTML element 
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report. 
+    report = powerbi.get(embedContainer); 
+      
+    // Retrieve the page collection and get the visuals for the first page. 
+    report.getPages() 
+      .then(function (pages) { 
+          // Retrieve active page.
+          var activePage = pages.find(function(page) {
+            return page.isActive;
+        });
+
+      activePage.getVisuals()
+        .then(function (visuals) { 
+          // Retrieve the wanted visual. 
+          var slicer = visuals.find(function(visual) { 
+            return visual.type == "slicer"; 
+          }); 
+
+          // Set the slicer state which contains the slicer filters.
+          slicer.setSlicerState({ filters: [filter]})
+              .catch(function (errors) {
+                  Log.log(errors);
+              });
+          })
+          .catch(function (errors) { 
+              Log.log(errors); 
+          }); 
+    }) 
+    .catch(function (errors) { 
+        Log.log(errors); 
+    });
+}
+
 function _Visual_SetFilters() {
     // Build the filter you want to use. For more information, See Constructing
     // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
