@@ -59,6 +59,18 @@ function Report_ApplyCustomLayout() {
     SetCode(_Report_ApplyCustomLayout);
 }
 
+function Report_HideAllVisualHeaders() {
+    SetCode(_Report_HideAllVisualHeaders);
+}
+
+function Report_ShowAllVisualHeaders() {
+    SetCode(_Report_ShowAllVisualHeaders);
+}
+
+function Report_HideSingleVisualHeader() {
+    SetCode(_Report_HideSingleVisualHeader);
+}
+
 // ---- Page Operations ----------------------------------------------------
 
 function Page_SetActive() {
