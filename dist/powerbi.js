@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.1 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -988,7 +988,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.0.7 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.0.8 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1057,6 +1057,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		})();
 		Object.defineProperty(exports, "__esModule", { value: true });
 		exports.Validators = __webpack_require__(1).Validators;
+		var TraceType;
+		(function (TraceType) {
+		    TraceType[TraceType["Information"] = 0] = "Information";
+		    TraceType[TraceType["Verbose"] = 1] = "Verbose";
+		    TraceType[TraceType["Warning"] = 2] = "Warning";
+		    TraceType[TraceType["Error"] = 3] = "Error";
+		    TraceType[TraceType["ExpectedError"] = 4] = "ExpectedError";
+		    TraceType[TraceType["UnexpectedError"] = 5] = "UnexpectedError";
+		    TraceType[TraceType["Fatal"] = 6] = "Fatal";
+		})(TraceType = exports.TraceType || (exports.TraceType = {}));
 		var PageSizeType;
 		(function (PageSizeType) {
 		    PageSizeType[PageSizeType["Widescreen"] = 0] = "Widescreen";
@@ -1540,6 +1550,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return errors ? errors.map(normalizeError) : undefined;
 		}
 		exports.validateExportDataRequest = validateExportDataRequest;
+		function validateVisualHeader(input) {
+		    var errors = exports.Validators.visualHeaderValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateVisualHeader = validateVisualHeader;
+		function validateVisualSettings(input) {
+		    var errors = exports.Validators.visualSettingsValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateVisualSettings = validateVisualSettings;
 	
 	
 	/***/ }),
@@ -1566,6 +1586,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		var exportDataValidator_1 = __webpack_require__(19);
 		var selectorsValidator_1 = __webpack_require__(20);
 		var slicersValidator_1 = __webpack_require__(21);
+		var visualSettingsValidator_1 = __webpack_require__(22);
+		var visualSettingsValidator_2 = __webpack_require__(22);
+		var visualSettingsValidator_3 = __webpack_require__(22);
 		exports.Validators = {
 		    advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
 		    advancedFilterValidator: new filtersValidator_1.AdvancedFilterValidator(),
@@ -1637,8 +1660,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		    topNFilterTypeValidator: new typeValidator_1.EnumValidator([5]),
 		    topNFilterValidator: new filtersValidator_1.TopNFilterValidator(),
 		    viewModeValidator: new typeValidator_1.EnumValidator([0, 1]),
+		    visualHeaderSettingsValidator: new visualSettingsValidator_1.VisualHeaderSettingsValidator(),
+		    visualHeaderValidator: new visualSettingsValidator_2.VisualHeaderValidator(),
 		    visualLayoutValidator: new layoutValidator_1.VisualLayoutValidator(),
+		    visualHeadersValidator: new typeValidator_1.ArrayValidator([new visualSettingsValidator_2.VisualHeaderValidator()]),
 		    visualSelectorValidator: new selectorsValidator_1.VisualSelectorValidator(),
+		    visualSettingsValidator: new visualSettingsValidator_3.VisualSettingsValidator(),
 		};
 	
 	
@@ -2109,6 +2136,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "background",
 		                validators: [validator_1.Validators.backgroundValidator]
+		            },
+		            {
+		                field: "visualSettings",
+		                validators: [validator_1.Validators.visualSettingsValidator]
+		            },
+		            {
+		                field: "hideErrors",
+		                validators: [validator_1.Validators.booleanValidator]
 		            },
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
@@ -3169,7 +3204,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "filterPaneEnabled",
 		                validators: [validator_1.Validators.booleanValidator]
-		            }
+		            },
+		            {
+		                field: "hideErrors",
+		                validators: [validator_1.Validators.booleanValidator]
+		            },
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
 		        return multipleFieldsValidator.validate(input, path, field);
@@ -3628,6 +3667,105 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return SlicerStateValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.SlicerStateValidator = SlicerStateValidator;
+	
+	
+	/***/ }),
+	/* 22 */
+	/***/ (function(module, exports, __webpack_require__) {
+	
+		var __extends = (this && this.__extends) || (function () {
+		    var extendStatics = Object.setPrototypeOf ||
+		        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+		        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+		    return function (d, b) {
+		        extendStatics(d, b);
+		        function __() { this.constructor = d; }
+		        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+		    };
+		})();
+		Object.defineProperty(exports, "__esModule", { value: true });
+		var validator_1 = __webpack_require__(1);
+		var multipleFieldsValidator_1 = __webpack_require__(4);
+		var typeValidator_1 = __webpack_require__(2);
+		var VisualSettingsValidator = /** @class */ (function (_super) {
+		    __extends(VisualSettingsValidator, _super);
+		    function VisualSettingsValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    VisualSettingsValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "visualHeaders",
+		                validators: [validator_1.Validators.visualHeadersValidator]
+		            },
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return VisualSettingsValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.VisualSettingsValidator = VisualSettingsValidator;
+		var VisualHeaderSettingsValidator = /** @class */ (function (_super) {
+		    __extends(VisualHeaderSettingsValidator, _super);
+		    function VisualHeaderSettingsValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    VisualHeaderSettingsValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "visible",
+		                validators: [validator_1.Validators.booleanValidator]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return VisualHeaderSettingsValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.VisualHeaderSettingsValidator = VisualHeaderSettingsValidator;
+		var VisualHeaderValidator = /** @class */ (function (_super) {
+		    __extends(VisualHeaderValidator, _super);
+		    function VisualHeaderValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    VisualHeaderValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "settings",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.visualHeaderSettingsValidator]
+		            },
+		            {
+		                field: "selector",
+		                validators: [validator_1.Validators.visualSelectorValidator]
+		            },
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return VisualHeaderValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.VisualHeaderValidator = VisualHeaderValidator;
 	
 	
 	/***/ })
@@ -4886,7 +5024,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.6.0',
+	    version: '2.6.1',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });

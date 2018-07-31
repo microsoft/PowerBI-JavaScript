@@ -948,6 +948,115 @@ function _Report_ApplyCustomLayout() {
         });
 }
 
+function _Report_HideAllVisualHeaders() {
+
+    // New settings to hide all the visual headers in the report
+    const newSettings = {
+      visualSettings: {
+        visualHeaders: [
+          {
+            settings: {
+              visible: false
+            }
+            // No selector - Hide visual header for all the visuals in the report
+          }
+        ]
+      }
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    report.updateSettings(newSettings)
+        .then(function () {
+            Log.log("Visual header was successfully hidden for all the visuals in the report.");
+        })
+        .catch(function (error) {
+            Log.log(errors);
+        });
+
+}
+
+function _Report_ShowAllVisualHeaders() {
+    // New settings to show all the visual headers in the report
+    const newSettings = {
+      visualSettings: {
+        visualHeaders: [
+          {
+            settings: {
+              visible: true
+            }
+            // No selector - Show visual header for all the visuals in the report
+          }
+        ]
+      }
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    report.updateSettings(newSettings)
+        .then(function () {
+            Log.log("Visual header was successfully shown for all the visuals in the report.");
+        })
+        .catch(function (error) {
+            Log.log(errors);
+        });
+
+}
+
+function _Report_HideSingleVisualHeader() {
+
+    // Define settings to hide the header of a single visual
+    var newSettings = {
+      visualSettings: {
+        visualHeaders: [
+          {
+            settings: {
+              visible: true
+            }
+            // No selector - Show visual header for all the visuals in the report
+          },
+          {
+            settings: {
+              visible: false
+            },
+            selector: {
+                $schema: "http://powerbi.com/product/schema#visualSelector",
+                visualName: "VisualContainer7"
+                // The visual name can be retrieved using getVisuals()
+                // Hide visual header for a single visual only
+            }
+          }
+        ]
+      }
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    report.updateSettings(newSettings)
+        .then(function () {
+            Log.log("Visual header was successfully hidden for 'Total Sales Variance by FiscalMonth and District Manager' visual.");
+        })
+        .catch(function (error) {
+            Log.log(errors);
+        });
+
+}
+
 function _Report_FullScreen() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
