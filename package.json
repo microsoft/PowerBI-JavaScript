@@ -75,11 +75,7 @@
   },
   "dependencies": {
     "http-post-message": "^0.2",
-<<<<<<< HEAD
-    "powerbi-models": "^1.0",
-=======
     "powerbi-models": "^1.0.8",
->>>>>>> powerbi/master
     "powerbi-router": "^0.1",
     "window-post-message-proxy": "^0.2"
   },
