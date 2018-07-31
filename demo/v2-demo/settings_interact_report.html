@@ -54,10 +54,14 @@
                         </ul>
                         <li id="layout-operations" onclick="OpenLayoutOperations();"><a href="#">Layout</a>
                             <span class="tryShowcase" onclick="OpenLayoutOperations();onShowcaseTryMeClicked('CustomLayout');">(<span class="tryMeText">Showcase</span> <img src="images/tab_out.svg">)</span>
+                            <div class="highlightSection"></div>
                         </li>
                         <ul id="layout-operations-ul" class="function-ul" style="display: none;">
                             <li onclick="Report_ApplyCustomLayout()" class="hideOnMobile hideOnReportCreate"><a href="#">Apply custom Layout</a></li>
                             <li onclick="Page_HasLayout()"><a href="#">Check layout</a></li>
+                            <li onclick="Report_HideAllVisualHeaders()" class="hideOnMobile hideOnReportCreate"><a href="#">Hide all visual headers</a><div class="newFeature">NEW</div></li>
+                            <li onclick="Report_ShowAllVisualHeaders()" class="hideOnMobile hideOnReportCreate"><a href="#">Show all visual headers</a><div class="newFeature">NEW</div></li>
+                            <li onclick="Report_HideSingleVisualHeader()" class="hideOnMobile hideOnReportCreate"><a href="#">Hide single visual header</a><div class="newFeature">NEW</div></li>
                         </ul>
                         <li id="bookmarks-operations" onclick="OpenBookmarksOperations();" class="hideOnMobile"><a href="#">Bookmarks</a>
                             <span class="tryShowcase" onclick="OpenBookmarksOperations();onShowcaseTryMeClicked('Bookmarks');">(<span class="tryMeText">Showcase</span> <img src="images/tab_out.svg">)</span>
