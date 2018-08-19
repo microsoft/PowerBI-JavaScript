@@ -59,6 +59,18 @@ function Report_ApplyCustomLayout() {
     SetCode(_Report_ApplyCustomLayout);
 }
 
+function Report_HideAllVisualHeaders() {
+    SetCode(_Report_HideAllVisualHeaders);
+}
+
+function Report_ShowAllVisualHeaders() {
+    SetCode(_Report_ShowAllVisualHeaders);
+}
+
+function Report_HideSingleVisualHeader() {
+    SetCode(_Report_HideSingleVisualHeader);
+}
+
 // ---- Page Operations ----------------------------------------------------
 
 function Page_SetActive() {
@@ -198,6 +210,14 @@ function Visual_GetFilters() {
 
 function Visual_SetFilters() {
     SetCode(_Visual_SetFilters);
+}
+
+function Visual_GetSlicer() {
+    SetCode(_Visual_GetSlicer);
+}
+
+function Visual_SetSlicer() {
+    SetCode(_Visual_SetSlicer);
 }
 
 function Visual_RemoveFilters() {
