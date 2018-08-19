@@ -190,8 +190,8 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
         if (embedConfig.type === "report" || embedConfig.type === "visual")
         {
             // Set single visual embed sample details.
-            SetSession(SessionKeys.PageName, "ReportSection3");
-            SetSession(SessionKeys.VisualName, "VisualContainer7");
+            SetSession(SessionKeys.PageName, "ReportSectioneb8c865100f8508cc533");
+            SetSession(SessionKeys.VisualName, "47eb6c0240defd498d4b");
 
             LastReportSampleUrl = url;
         }

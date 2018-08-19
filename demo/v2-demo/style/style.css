@@ -94,6 +94,8 @@ a {
     width: 384px;
     margin: 12px;
     background: #FFFFFF;
+    border: solid;
+    border-color: white;
 }
 
 .pbi-line:hover {
@@ -616,7 +618,7 @@ a {
     cursor: default;
 }
 
-.desktop-view iframe, .mobile-view iframe, #showcase-embedded-view iframe {
+.desktop-view iframe, .mobile-view iframe, #showcase-embedded-view iframe, #bookmark-embedded-view iframe {
     border: none;
 }
 
@@ -776,7 +778,7 @@ a {
     height: 192px;
     background: #FFFFFF;
     background-repeat: no-repeat;
-    background-size: 384px auto;
+    background-size: 378px auto;
     background-position: top left;
     box-shadow: inset 0 -7px 35px -7px rgba(0,0,0,0.12);
 }
@@ -1110,6 +1112,7 @@ a {
     width: calc(100% - 70px);
     padding: 8px 0 8px 8px;
     outline: none;
+    margin-bottom: 32px;
 }
 
 #btnDialogCopy {

@@ -45,7 +45,6 @@ function embedBookmarksReport() {
             settings: {
                 filterPaneEnabled: true,
                 navContentPaneEnabled: false,
-                background: models.BackgroundType.Transparent
             }
         };
 
@@ -106,7 +105,6 @@ function embedSharedBookmark(enableFilterPane, bookmarkState) {
             settings: {
                 filterPaneEnabled: false,
                 navContentPaneEnabled: false,
-                background: models.BackgroundType.Transparent
             },
 
             // Adding bookmark attribute will apply the bookmark on load
