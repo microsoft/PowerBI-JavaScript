@@ -19,6 +19,8 @@ var LayoutShowcaseState = {
 
 // Embed the report and retrieve all report visuals
 function embedCustomLayoutReport() {
+    // Defualt columns value is three columns
+    LayoutShowcaseState.columns = ColumnsNumber.Three;
 
     // Load custom layout report properties into session
     LoadLayoutShowcaseReportIntoSession().then(function () {

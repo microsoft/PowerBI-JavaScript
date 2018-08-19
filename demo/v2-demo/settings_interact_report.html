@@ -25,19 +25,19 @@
                             <li onclick="Page_SetActive()" class="hideOnMobile hideOnReportCreate"><a href="#">Page - Set active</a></li>
                             <li onclick="Events_PageChanged()" class="hideOnMobile"><a href="#">Page changed event</a></li>
                         </ul>
-                        <li id="filters-operations" onclick="OpenFiltersOperations();"><a href="#">Filters & Slicers</a><div class="highlightSection"></div></li>
+                        <li id="filters-operations" onclick="OpenFiltersOperations();"><a href="#">Filters & Slicers</a><div class="highlightSection hideOnMobile"></div></li>
                         <ul id="filters-operations-ul" class="function-ul" style="display: none;">
-                                <li onclick="Visual_SetSlicer()"><a href="#">Set Slicer State</a><div class="newFeature">NEW</div></li>
-                                <li onclick="Visual_GetSlicer()"><a href="#">Get Slicer State</a><div class="newFeature">NEW</div></li>
+                                <li onclick="Visual_SetSlicer()" class="hideOnMobile"><a href="#">Set slicer state</a><div class="newFeature">NEW</div></li>
+                                <li onclick="Visual_GetSlicer()" class="hideOnMobile"><a href="#">Get slicer state</a><div class="newFeature">NEW</div></li>
                                 <li onclick="Report_SetFilters()" class="hideOnReportCreate"><a href="#">Set report filters</a></li>
                                 <li onclick="Report_GetFilters()"><a href="#">Get report filters</a></li>
                                 <li onclick="Report_RemoveFilters()"><a href="#">Remove report filters</a></li>
                                 <li onclick="Page_SetFilters()" class="hideOnReportCreate"><a href="#">Set page filters</a></li>
                                 <li onclick="Page_GetFilters()"><a href="#">Get page filters</a></li>
                                 <li onclick="Page_RemoveFilters()"><a href="#">Remove page filters</a></li>
-                                <li onclick="Visual_SetFilters()" class="hideOnReportCreate"><a href="#">Set visual filters</a></li>
-                                <li onclick="Visual_GetFilters()"><a href="#">Get visual filters</a></li>
-                                <li onclick="Visual_RemoveFilters()"><a href="#">Remove visual filters</a></li>
+                                <li onclick="Visual_SetFilters()" class="hideOnMobile hideOnReportCreate"><a href="#">Set visual filters</a></li>
+                                <li onclick="Visual_GetFilters()" class="hideOnMobile"><a href="#">Get visual filters</a></li>
+                                <li onclick="Visual_RemoveFilters()" class="hideOnMobile"><a href="#">Remove visual filters</a></li>
                         </ul>
                         <li id="editsave-operations" onclick="OpenEditSaveOperations();" class="hideOnMobile"><a href="#">Edit & Save</a></li>
                         <ul id="editsave-operations-ul" class="function-ul" style="display: none;">
@@ -59,8 +59,8 @@
                         <ul id="layout-operations-ul" class="function-ul" style="display: none;">
                             <li onclick="Report_ApplyCustomLayout()" class="hideOnMobile hideOnReportCreate"><a href="#">Apply custom Layout</a></li>
                             <li onclick="Page_HasLayout()"><a href="#">Check layout</a></li>
-                            <li onclick="Report_HideAllVisualHeaders()" class="hideOnMobile hideOnReportCreate"><a href="#">Hide all visual headers</a><div class="newFeature">NEW</div></li>
-                            <li onclick="Report_ShowAllVisualHeaders()" class="hideOnMobile hideOnReportCreate"><a href="#">Show all visual headers</a><div class="newFeature">NEW</div></li>
+                            <li onclick="Report_HideAllVisualHeaders()" class="hideOnReportCreate"><a href="#">Hide all visual headers</a><div class="newFeature">NEW</div></li>
+                            <li onclick="Report_ShowAllVisualHeaders()" class="hideOnReportCreate"><a href="#">Show all visual headers</a><div class="newFeature">NEW</div></li>
                             <li onclick="Report_HideSingleVisualHeader()" class="hideOnMobile hideOnReportCreate"><a href="#">Hide single visual header</a><div class="newFeature">NEW</div></li>
                         </ul>
                         <li id="bookmarks-operations" onclick="OpenBookmarksOperations();" class="hideOnMobile"><a href="#">Bookmarks</a>
@@ -80,8 +80,8 @@
                         <li id="data-operations" onclick="OpenDataOperations();"><a href="#">Data</a></li>
                         <ul id="data-operations-ul" class="function-ul" style="display: none;">
                             <li onclick="Events_DataSelected()"><a href="#">Data selected event</a></li>
-                            <li onclick="Visual_ExportData_Summarized()"><a href="#">Export visual data summarized</a></li>
-                            <li onclick="Visual_ExportData_Underlying()"><a href="#">Export visual data underlying</a></li>
+                            <li onclick="Visual_ExportData_Summarized()" class="hideOnMobile"><a href="#">Export visual data summarized</a></li>
+                            <li onclick="Visual_ExportData_Underlying()" class="hideOnMobile"><a href="#">Export visual data underlying</a></li>
                         </ul>
                     </ul>
                 </div>

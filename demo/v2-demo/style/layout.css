@@ -177,6 +177,11 @@ label {
     height: calc(67vw*(9/16)*1.1);
 }
 
+#bookmark-embedded-view {
+    background: #FFFFFF;
+    height: calc(61vw*(9/16)*1.1);
+}
+
 #visualsArea, #bookmarksArea {
     min-width: 20vw;
     max-width: 20vw;
@@ -187,6 +192,10 @@ label {
 #visualsWrapper, #bookmarksWrapper {
     background: #FFFFFF;
     min-height: 350px;
+}
+
+#bookmarksWrapper {
+    min-height: 550px;
 }
 
 #showcaseEmbedArea {

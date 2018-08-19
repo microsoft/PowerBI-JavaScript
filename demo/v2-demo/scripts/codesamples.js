@@ -101,7 +101,7 @@ function _Embed_BasicEmbed_Mobile() {
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
         permissions: permissions,
-        pageName: "ReportSectionf55279cd456214bd0381",
+        pageName: "ReportSectioneb8c865100f8508cc533",
         settings: {
             layoutType: models.LayoutType.MobilePortrait
         }
@@ -343,6 +343,8 @@ function _Mock_Embed_BasicEmbed(isEdit) {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
+    powerbi.reset(embedContainer);
+
     // Embed the report and display it within the div container.
     var report = powerbi.embed(embedContainer, config);
 
@@ -460,13 +462,13 @@ function _Embed_EmbedWithDefaultFilter() {
     var models = window['powerbi-client'].models;
 
     const filter = {
-      $schema: "http://powerbi.com/product/schema#basic",
-      target: {
-        table: "Store",
-        column: "Chain"
-      },
-      operator: "In",
-      values: ["Lindseys"]
+        $schema: "http://powerbi.com/product/schema#basic",
+        target: {
+            table: "Geo",
+            column: "Region"
+        },
+        operator: "In",
+        values: ["West"]
     };
 
     var embedConfiguration = {
@@ -678,20 +680,11 @@ function _Embed_QnaEmbed() {
         question: txtQuestion
     };
 
-    // Get a reference to the embedded QNA HTML element
+    // Get a reference to the embedded Q&A HTML element
     var qnaContainer = $('#qnaContainer')[0];
 
-    // Embed the QNA and display it within the div container.
-    var qna = powerbi.embed(qnaContainer, config);
-
-    // qna.off removes a given event handler if it exists.
-    qna.off("loaded");
-
-    // qna.on will add an event handler which prints to Log window.
-    qna.on("loaded", function(event) {
-        Log.logText("QNA loaded event");
-        Log.log(event.detail);
-    });
+    // Embed the Q&A and display it within the div container.
+    powerbi.embed(qnaContainer, config);
 }
 
 // ---- Report Operations ----------------------------------------------------
@@ -706,7 +699,7 @@ function _Report_GetId() {
     // Retrieve the report id.
     var reportId = report.getId();
 
-    Log.logText(reportId);
+    Log.logText("Report id: \"" + reportId + "\"");
 }
 
 function _Report_UpdateSettings() {
@@ -724,6 +717,9 @@ function _Report_UpdateSettings() {
 
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
+        .then(function () {
+            Log.logText("Filter pane was removed.");
+        })
         .catch(function (error) {
             Log.log(errors);
         });
@@ -740,10 +736,11 @@ function _Report_GetPages() {
     // page name and display name of each page and display the value.
     report.getPages()
         .then(function (pages) {
-            pages.forEach(function(page) {
-                var log = page.name + " - " + page.displayName;
-                Log.logText(log);
-            });
+          var log = "Report pages:";
+          pages.forEach(function(page) {
+            log += "\n" + page.name + " - " + page.displayName;
+          });
+          Log.logText(log);
         })
         .catch(function (error) {
             Log.log(error);
@@ -757,19 +754,12 @@ function _Report_SetPage() {
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // Report.off removes a given event handler if it exists.
-    report.off("pageChanged");
-
-    // Report.on will add an event handler which prints page
-    // name and display name to Log window.
-    report.on("pageChanged", function(event) {
-        var page = event.detail.newPage;
-        Log.logText(page.name + " - " + page.displayName);
-    });
-
     // setPage will change the selected view to the page you indicate.
     // This is the actual page name not the display name.
-    report.setPage("ReportSection2")
+    report.setPage("ReportSectiona271643cba2213c935be")
+        .then(function () {
+            Log.logText("Page was set to: ReportSectiona271643cba2213c935be");
+        })
         .catch(function (errors) {
             Log.log(errors);
         });
@@ -796,13 +786,13 @@ function _Report_SetFilters() {
     // Build the filter you want to use. For more information, See Constructing
     // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
     const filter = {
-      $schema: "http://powerbi.com/product/schema#basic",
-      target: {
-        table: "Store",
-        column: "Chain"
-      },
-      operator: "In",
-      values: ["Lindseys"]
+        $schema: "http://powerbi.com/product/schema#basic",
+        target: {
+            table: "Geo",
+            column: "Region"
+        },
+        operator: "In",
+        values: ["West"]
     };
 
     // Get a reference to the embedded report HTML element
@@ -814,6 +804,9 @@ function _Report_SetFilters() {
     // Set the filter for the report.
     // Pay attention that setFilters receives an array.
     report.setFilters([filter])
+        .then(function () {
+            Log.logText("Report filter was set.");
+        })
         .catch(function (errors) {
             Log.log(errors);
         });
@@ -828,6 +821,9 @@ function _Report_RemoveFilters() {
 
     // Remove the filters currently applied to the report.
     report.removeFilters()
+        .then(function () {
+          Log.logText("Report filters were removed.");
+        })
         .catch(function (errors) {
             Log.log(errors);
         });
@@ -891,7 +887,7 @@ function _Report_ApplyCustomLayout() {
     // Define default visual layout: visible in 400x300.
     let defaultLayout = {
       width: 400,
-      height: 300,
+      height: 250,
       displayState: {
         mode: models.VisualContainerDisplayMode.Hidden
       }
@@ -908,14 +904,14 @@ function _Report_ApplyCustomLayout() {
     let pageLayout = {
       defaultLayout: defaultLayout,
       visualsLayout: {
-        "VisualContainer7": {
+        "VisualContainer1": {
           x: 70,
           y: 100,
           displayState: {
             mode: models.VisualContainerDisplayMode.Visible
           }
         },
-        "VisualContainer4": {
+        "VisualContainer3": {
           x: 540,
           y: 100,
           displayState: {
@@ -933,7 +929,7 @@ function _Report_ApplyCustomLayout() {
         pageSize: pageSize,
         displayOption: models.DisplayOption.FitToPage,
         pagesLayout: {
-          "ReportSection3": pageLayout
+          "ReportSection600dd9293d71ade01765": pageLayout
         }
       }
     }
@@ -943,6 +939,9 @@ function _Report_ApplyCustomLayout() {
 
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(settings)
+        .then(function () {
+            Log.logText("Custom layout applied, to remove custom layout, reload the report using 'Reload' API.")
+        })
         .catch(function (error) {
             Log.log(errors);
         });
@@ -973,7 +972,7 @@ function _Report_HideAllVisualHeaders() {
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
         .then(function () {
-            Log.log("Visual header was successfully hidden for all the visuals in the report.");
+            Log.logText("Visual header was successfully hidden for all the visuals in the report.");
         })
         .catch(function (error) {
             Log.log(errors);
@@ -1005,7 +1004,7 @@ function _Report_ShowAllVisualHeaders() {
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
         .then(function () {
-            Log.log("Visual header was successfully shown for all the visuals in the report.");
+            Log.logText("Visual header was successfully shown for all the visuals in the report.");
         })
         .catch(function (error) {
             Log.log(errors);
@@ -1031,7 +1030,7 @@ function _Report_HideSingleVisualHeader() {
             },
             selector: {
                 $schema: "http://powerbi.com/product/schema#visualSelector",
-                visualName: "VisualContainer7"
+                visualName: "VisualContainer4"
                 // The visual name can be retrieved using getVisuals()
                 // Hide visual header for a single visual only
             }
@@ -1049,7 +1048,7 @@ function _Report_HideSingleVisualHeader() {
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
         .then(function () {
-            Log.log("Visual header was successfully hidden for 'Total Sales Variance by FiscalMonth and District Manager' visual.");
+            Log.logText("Visual header was successfully hidden for 'Category Breakdown' visual.");
         })
         .catch(function (error) {
             Log.log(errors);
@@ -1169,6 +1168,7 @@ function _Report_Extensions_OptionsMenu() {
 
     // Report.on will add an event handler to commandTriggered event which prints to console window.
     report.on("commandTriggered", function(event) {
+        Log.logText("Event - commandTriggered:");
         var commandDetails = event.detail;
         Log.log(commandDetails);
     });
@@ -1214,6 +1214,7 @@ function _Report_Extensions_ContextMenu() {
 
     // Report.on will add an event handler to commandTriggered event which prints to console window.
     report.on("commandTriggered", function(event) {
+        Log.logText("Event - commandTriggered:");
         var commandDetails = event.detail;
         Log.log(commandDetails);
     });
@@ -1236,7 +1237,10 @@ function _Page_SetActive() {
     // Retrieve the page collection, and then set the second page to be active.
     report.getPages()
         .then(function (pages) {
-            pages[1].setActive()
+            pages[3].setActive()
+                .then(function () {
+                    Log.logText("Active page was set to: \"" + pages[3].displayName + "\"");
+                })
                 .catch(function (errors) {
                     Log.log(errors);
                 });
@@ -1322,11 +1326,11 @@ function _Page_SetFilters() {
     const filter = {
         $schema: "http://powerbi.com/product/schema#basic",
         target: {
-            table: "Store",
-            column: "Chain"
+            table: "Geo",
+            column: "Region"
         },
         operator: "In",
-        values: ["Lindseys"]
+        values: ["West"]
     };
 
     // Retrieve the page collection and then set the filters for the first page.
@@ -1339,6 +1343,9 @@ function _Page_SetFilters() {
           });
 
           activePage.setFilters([filter])
+            .then(function () {
+                Log.logText("Page filter was set.");
+            })
             .catch(function (errors) {
                 Log.log(errors);
             });
@@ -1364,6 +1371,9 @@ function _Page_RemoveFilters() {
           });
 
           activePage.removeFilters()
+            .then(function () {
+                Log.logText("Page filters were removed.");
+            })
             .catch(function (errors) {
                 Log.log(errors);
             });
@@ -1386,7 +1396,8 @@ function _Page_HasLayout() {
     // Retrieve the page collection and check if the first page has a MobilePortrait layout.
     report.getPages().then(function (pages) {
         pages[0].hasLayout(models.LayoutType.MobilePortrait).then(function(hasLayout) {
-            Log.logText(hasLayout);
+            hasLayout = hasLayout ? "has" : "doesn't have";
+            Log.logText("Page \"" + pages[0].name + "\" " + hasLayout + " mobile portrait layout.");
         })
     });
 }
@@ -1405,8 +1416,9 @@ function _Events_PageChanged() {
 
     // Report.on will add an event listener.
     report.on("pageChanged", function(event) {
+        Log.logText("Event - pageChanged:");
         var page = event.detail.newPage;
-        Log.logText("Page changed to: " + page.name + " - " + page.displayName);
+        Log.logText("Page changed to \"" + page.name + "\" - \"" + page.displayName + "\"");
     });
 
     // Select Run and change to a different page.
@@ -1427,6 +1439,7 @@ function _Events_DataSelected() {
 
     // Report.on will add an event listener.
     report.on("dataSelected", function(event) {
+        Log.logText("Event - dataSelected:");
         var data = event.detail;
         Log.log(data);
     });
@@ -1470,6 +1483,7 @@ function _Events_BookmarkApplied() {
 
     // Report.on will add an event listener.
     report.on("bookmarkApplied", function(event) {
+        Log.logText("Event - bookmarkApplied:");
         Log.log(event.detail);
     });
 
@@ -1491,7 +1505,7 @@ function _Dashboard_GetId() {
     // Retrieve the dashboard id.
     var dashboardId = dashboard.getId();
 
-    Log.logText(dashboardId);
+    Log.logText("Dashboard id: \"" + dashboardId + "\"");
 }
 
 function _Dashboard_FullScreen() {
@@ -1543,7 +1557,7 @@ function _Qna_SetQuestion() {
     // Get a reference to the embedded Q&A.
     qna = powerbi.get(qnaContainer);
 
-    qna.setQuestion("This year sales")
+    qna.setQuestion("2014 total units YTD by manufacturer, region as treemap chart")
         .then(function (result) {
             log.log(result);
         })
@@ -1566,6 +1580,8 @@ function _Qna_QuestionChanged() {
     qna.on("visualRendered", function(event) {
         Log.log(event.detail);
     });
+
+    Log.logText("Change the question to see events in Log window.");
 }
 
 // ---- Visual Events Listener ----------------------------------------------------
@@ -1659,20 +1675,13 @@ function _Bookmarks_Apply() {
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // Report.off removes a given event handler if it exists.
-    report.off("bookmarkApplied");
-
-    // Report.on will add an event handler which prints bookmark
-    // name and display name to Log window.
-    report.on("bookmarkApplied", function(event) {
-        var bookmark = event.detail;
-        Log.logText(bookmark.bookmarkName);
-    });
-
     // bookmarksManager.apply will apply the bookmark with the
     // given name on the report.
     // This is the actual bookmark name not the display name.
-    report.bookmarksManager.apply("Bookmark4f76333c3ea205286501")
+    report.bookmarksManager.apply("Bookmarkaf5fe203dc1e280a4822")
+        .then(function () {
+            Log.logText("Bookmark \"Q4 2014\" applied.");
+        })
         .catch(function (errors) {
             Log.log(errors);
         });
@@ -1704,19 +1713,12 @@ function _Bookmarks_ApplyState() {
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // Report.off removes a given event handler if it exists.
-    report.off("bookmarkApplied");
-
-    // Report.on will add an event handler which prints bookmark
-    // name and display name to Log window.
-    report.on("bookmarkApplied", function(event) {
-        var bookmark = event.detail;
-        Log.logText(bookmark.bookmarkName);
-    });
-
     // bookmarksManager.applyState will apply the bookmark which
     // represented by the given state string.
-    report.bookmarksManager.applyState("H4sIAAAAAAAAA81YUW/aMBD+K5GlqS/RRChdNd5WWqRpbVc1iGmaeDDJFdwmcWY7FITy33d2wlbSlAQGoTwlZ+fuO9/dd2eWxGcyDujiloZAuuSC86eQiierQ2wSrcvazunYOTv/3G75Y6cDvtOCFu7isWI8kqS7JIqKCaghkwkNtEIU/hqlNoF5HHBB9T5XUQV67wyExHfU73zUaqin2Axc8FQmvYeYC5W/n+KGBxYo/EZ/O15czWOBypcrjH2ziLvUItbvPbQy4YJ5NCDGvgCZmVuSHg+S0DxdrcldnggP7uHBLEWKqQVqumRSoR5FUnTkTvAYxJrcuqERnaBtvT7lzz0BaNsnXSe1C/CcY+Crgat9CFwDhhaKmHTsX+PRKSKzQJvwFkKPknca+/+JeeaSNjdcVULbJn3BQ+NbXo8Sd/6F4you8PxGNvkxBXzS+3o88pnKvfha8EzmW2r4nL0YiwVne1PKIhSi2SENElPUqPWaIXz0RDugxbjz5JpFvoSFPNHbR2ma5sW/cwByj8sBHSWtyxHptWpAp40BMtlTDajTGKDvMUTWDY/UtAass8ZgGaE10LbKaWlmehkWmcKcyxlouC7TIsmiSQDZgmlu5mmQ+aBgrsZ8rlvl+BFJTStJtbmCovbeNHXe5szGuKjHw5gKJotv35AjSLdlk2t4ULXD+DY9FUJ4zyZTo7aMn1x0xDIfaIY6FD9tTCr7jRA02qZaL2B88Wc08lB6qJO4TcJxyXhUC8MNUJkIqA2CBvAqQQZc0cAyS9YQc1Bbsj4cD0+G5A6E5f62+jsGZy8HM2XS+glUWP+W14GYwWwTIUmPKiwz7MhCrbPSaqBHe48vRrs86Rf1B5NtshzZyAXBYIu5Zyv1ZVzrVHLt3oJYVmJ5duulnSLoUeFX9pNPW/aTvRPJHZdK4/FfU+o7KpdDcPu2HaZGyEMaF2uVCx/ERVaVl0ysLuE4BFw1cI66bvfNFtVpVFrNG26bDV0lSi837yjJK9MrZtBIP9h4fKXBPW+OqusOIg2xSNmfMX2G3Tsov5MdBsXOf6XV6WNBIjGu4GeQGsnA6lMtTcOz404Mt/C853nB/P4AHEfgTkoWAAA=")
+    report.bookmarksManager.applyState("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")
+        .then(function () {
+            Log.logText("Bookmark applied from given state.");
+        })
         .catch(function (error) {
             Log.log(error);
         });
@@ -1733,7 +1735,10 @@ function _Bookmarks_EnterPresentation() {
     report = powerbi.get(embedContainer);
 
     // Enter bookmarks play mode
-    report.bookmarksManager.play(models.BookmarksPlayMode.Presentation);
+    report.bookmarksManager.play(models.BookmarksPlayMode.Presentation)
+        .then(function () {
+            Log.logText("Bookmarks play mode is on, check the play bar at the bottom of the report.");
+        });
 }
 
 function _Bookmarks_ExitPresentation() {
@@ -1747,30 +1752,33 @@ function _Bookmarks_ExitPresentation() {
     report = powerbi.get(embedContainer);
 
     // Exit bookmarks play mode
-    report.bookmarksManager.play(models.BookmarksPlayMode.Off);
+    report.bookmarksManager.play(models.BookmarksPlayMode.Off)
+        .then(function () {
+            Log.logText("Bookmarks play mode is off.");
+        });
 }
 
 function _Visual_GetSlicer() {
-    // Get a reference to the embedded report HTML element 
-    var embedContainer = $('#embedContainer')[0]; 
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
 
-    // Get a reference to the embedded report. 
-    report = powerbi.get(embedContainer); 
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
 
-    // Retrieve the page collection and get the visuals for the first page. 
-    report.getPages() 
-      .then(function (pages) { 
+    // Retrieve the page collection and get the visuals for the first page.
+    report.getPages()
+      .then(function (pages) {
           // Retrieve active page.
           var activePage = pages.find(function(page) {
             return page.isActive;
         });
 
       activePage.getVisuals()
-        .then(function (visuals) { 
-          // Retrieve the wanted visual. 
-          var slicer = visuals.find(function(visual) { 
-            return visual.type == "slicer"; 
-          }); 
+        .then(function (visuals) {
+          // Retrieve the wanted visual.
+          var slicer = visuals.find(function(visual) {
+            return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
+          });
 
           // Get the slicer state which contains the slicer filter.
           slicer.getSlicerState()
@@ -1781,61 +1789,74 @@ function _Visual_GetSlicer() {
                 Log.log(errors);
             });
           })
-          .catch(function (errors) { 
-              Log.log(errors); 
-          }); 
+          .catch(function (errors) {
+              Log.log(errors);
+          });
     }) 
-    .catch(function (errors) { 
-        Log.log(errors); 
+    .catch(function (errors) {
+        Log.log(errors);
     });
 }
 
 function _Visual_SetSlicer() {
-    // Build the filter you want to use. For more information, See Constructing 
-    // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters. 
-    const filter = { 
-        $schema: "http://powerbi.com/product/schema#basic", 
-        target: { 
-            table: "District", 
-            column: "District Manager" 
+    // Build the filter you want to use. For more information, See Constructing
+    // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
+    const filter = {
+        $schema: "http://powerbi.com/product/schema#advanced",
+        target: {
+          table: "Date",
+          column: "Date"
         },
-        operator: "In", 
-        values: ["Brad Sutton", "Andrew Ma"] 
+        filterType: 0,
+        logicalOperator: "And",
+        conditions: [
+          {
+            operator: "GreaterThanOrEqual",
+            value: "2014-10-12T21:00:00.000Z"
+          },
+          {
+            operator: "LessThan",
+            value: "2014-11-28T22:00:00.000Z"
+          }
+        ]
     };
 
-    // Get a reference to the embedded report HTML element 
+    // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
-    // Get a reference to the embedded report. 
-    report = powerbi.get(embedContainer); 
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
       
-    // Retrieve the page collection and get the visuals for the first page. 
+    // Retrieve the page collection and get the visuals for the first page.
     report.getPages() 
-      .then(function (pages) { 
-          // Retrieve active page.
-          var activePage = pages.find(function(page) {
-            return page.isActive;
+      .then(function (pages) {
+        // Retrieve active page.
+        var activePage = pages.find(function(page) {
+          return page.isActive;
         });
 
-      activePage.getVisuals()
-        .then(function (visuals) { 
-          // Retrieve the wanted visual. 
-          var slicer = visuals.find(function(visual) { 
-            return visual.type == "slicer"; 
-          }); 
+        activePage.getVisuals()
+          .then(function (visuals) {
+            // Retrieve the wanted visual.
+            var slicer = visuals.find(function(visual) {
+              return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
+            });
 
-          // Set the slicer state which contains the slicer filters.
-          slicer.setSlicerState({ filters: [filter]})
-              .catch(function (errors) {
-                  Log.log(errors);
-              });
-          })
-          .catch(function (errors) { 
-              Log.log(errors); 
-          }); 
-    }) 
-    .catch(function (errors) { 
-        Log.log(errors); 
+            // Set the slicer state which contains the slicer filters.
+            slicer.setSlicerState({ filters: [filter]})
+                .then(function () {
+                    Log.logText("Date slicer was set.");
+                })
+                .catch(function (errors) {
+                    Log.log(errors);
+                });
+            })
+            .catch(function (errors) {
+                Log.log(errors);
+            });
+    })
+    .catch(function (errors) {
+        Log.log(errors);
     });
 }
 
@@ -1843,13 +1864,19 @@ function _Visual_SetFilters() {
     // Build the filter you want to use. For more information, See Constructing
     // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
     const filter = {
-      $schema: "http://powerbi.com/product/schema#basic",
+      $schema: "http://powerbi.com/product/schema#advanced",
       target: {
-        table: "Store",
-        column: "Chain"
+        table: "SalesFact",
+        measure: "Total Category Volume"
       },
-      operator: "In",
-      values: ["Fashions Direct"]
+      filterType: 0,
+      logicalOperator: "And",
+      conditions: [
+        {
+          operator: "LessThan",
+          value: 500
+        }
+      ]
     };
 
     // Get a reference to the embedded report HTML element
@@ -1872,12 +1899,15 @@ function _Visual_SetFilters() {
 
             // Retrieve the wanted visual.
             var visual = visuals.find(function(visual) {
-              return visual.name == "VisualContainer3";
+              return visual.name == "VisualContainer4";
             });
 
             // Set the filter for the visual.
             // Pay attention that setFilters receives an array.
             visual.setFilters([filter])
+                .then(function() {
+                    Log.logText("Filter was set for \"Category Breakdown\" table.")
+                })
                 .catch(function (errors) {
                     Log.log(errors);
                 });
@@ -1912,7 +1942,7 @@ function _Visual_GetFilters() {
 
             // Retrieve the wanted visual.
             var visual = visuals.find(function(visual) {
-              return visual.name == "VisualContainer3";
+              return visual.name == "VisualContainer4";
             });
 
             visual.getFilters()
@@ -1953,10 +1983,13 @@ function _Visual_RemoveFilters() {
 
             // Retrieve the wanted visual.
             var visual = visuals.find(function(visual) {
-              return visual.name == "VisualContainer3";
+              return visual.name == "VisualContainer4";
             });
 
             visual.removeFilters()
+              .then(function () {
+                Log.logText("\"Category Breakdown\" visual filters were removed.");
+              })
               .catch(function (errors) {
                 Log.log(errors);
               });
@@ -1994,7 +2027,7 @@ function _Visual_ExportData_Summarized() {
 
             // Retrieve the wanted visual.
             var visual = visuals.find(function(visual) {
-              return visual.name == "VisualContainer3";
+              return visual.name == "VisualContainer4";
             });
 
             // Exports visual data
@@ -2039,7 +2072,7 @@ function _Visual_ExportData_Underlying() {
 
             // Retrieve the wanted visual.
             var visual = visuals.find(function(visual) {
-              return visual.name == "VisualContainer3";
+              return visual.name == "VisualContainer4";
             });
 
             // Exports visual data

@@ -11,7 +11,7 @@ const runEmbedCodeTimeout = 500;
 const interactTooltipTimeout = 2000;
 
 const defaultTokenType = 1;
-const defaultQnaQuestion = "This year sales by store type by postal code as map";
+const defaultQnaQuestion = "2014 total units YTD var % by month, manufacturer as clustered column chart";
 const defaultQnaMode = "Interactive";
 
 function OpenSamplesStep() {
