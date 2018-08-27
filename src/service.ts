@@ -192,6 +192,20 @@ export class Service implements IService {
       this.handleEvent(event);
     });
 
+    /**
+     * Adds handler for front load 'ready' message.
+     */
+    this.router.post(`/ready/:uniqueId`, (req, res) => {
+      const event: IEvent<any> = {
+        type: 'report',
+        id: req.params.uniqueId,
+        name: 'ready',
+        value: req.body
+      };
+
+      this.handleEvent(event);
+    });
+
     this.embeds = [];
 
     // TODO: Change when Object.assign is available.

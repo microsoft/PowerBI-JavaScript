@@ -535,7 +535,7 @@ export abstract class Embed {
   private setIframe(isLoad: boolean, phasedRender?: boolean): void {
     if(!this.iframe) {
       var iframeContent = document.createElement("iframe");
-      var embedUrl = this.config.embedUrl;
+      var embedUrl = this.config.uniqueId ? utils.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
       iframeContent.setAttribute("style", "width:100%;height:100%;");
       iframeContent.setAttribute("src", embedUrl);
       iframeContent.setAttribute("scrolling", "no");
@@ -548,8 +548,10 @@ export abstract class Embed {
       this.iframe = <HTMLIFrameElement>node.firstChild;
     }
 
-    if(isLoad){
+    if (isLoad) {
       this.iframe.addEventListener('load', () => this.load(this.config, phasedRender), false);
+      // 'ready' event is fired by the embedded element (not by the iframe)
+      this.element.addEventListener('ready', () => this.frontLoadSendConfig(this.config), false);
     } else {
       this.iframe.addEventListener('load', () => this.createReport(this.createConfig), false);
     }
@@ -573,5 +575,22 @@ export abstract class Embed {
       }
 
       return groupId;
+  }
+
+  /**
+   * Sends the config for front load calls, after 'ready' message is received from the iframe
+   */
+  private frontLoadSendConfig(config: IEmbedConfigurationBase): Promise<void> {
+    const errors = this.validate(config);
+    if (errors) {
+      throw errors;
+    }
+
+    return this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(response => {
+      return response.body;
+    },
+    response => {
+      throw response.body;
+    });
   }
 }

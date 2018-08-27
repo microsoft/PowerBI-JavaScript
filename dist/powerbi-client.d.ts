@@ -394,6 +394,10 @@ declare module "embed" {
          * @returns {string}
          */
         static findGroupIdFromEmbedUrl(url: string): string;
+        /**
+         * Sends the config for front load calls, after 'ready' message is received from the iframe
+         */
+        private frontLoadSendConfig(config);
     }
 }
 declare module "ifilterable" {

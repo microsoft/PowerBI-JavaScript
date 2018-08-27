@@ -181,6 +181,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	            };
 	            _this.handleEvent(event);
 	        });
+	        /**
+	         * Adds handler for front load 'ready' message.
+	         */
+	        this.router.post("/ready/:uniqueId", function (req, res) {
+	            var event = {
+	                type: 'report',
+	                id: req.params.uniqueId,
+	                name: 'ready',
+	                value: req.body
+	            };
+	            _this.handleEvent(event);
+	        });
 	        this.embeds = [];
 	        // TODO: Change when Object.assign is available.
 	        this.config = utils.assign({}, Service.defaultConfig, config);
@@ -808,7 +820,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _this = this;
 	        if (!this.iframe) {
 	            var iframeContent = document.createElement("iframe");
-	            var embedUrl = this.config.embedUrl;
+	            var embedUrl = this.config.uniqueId ? utils.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
 	            iframeContent.setAttribute("style", "width:100%;height:100%;");
 	            iframeContent.setAttribute("src", embedUrl);
 	            iframeContent.setAttribute("scrolling", "no");
@@ -822,6 +834,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        if (isLoad) {
 	            this.iframe.addEventListener('load', function () { return _this.load(_this.config, phasedRender); }, false);
+	            // 'ready' event is fired by the embedded element (not by the iframe)
+	            this.element.addEventListener('ready', function () { return _this.frontLoadSendConfig(_this.config); }, false);
 	        }
 	        else {
 	            this.iframe.addEventListener('load', function () { return _this.createReport(_this.createConfig); }, false);
@@ -843,6 +857,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	            groupId = groupIdMatch[1];
 	        }
 	        return groupId;
+	    };
+	    /**
+	     * Sends the config for front load calls, after 'ready' message is received from the iframe
+	     */
+	    Embed.prototype.frontLoadSendConfig = function (config) {
+	        var errors = this.validate(config);
+	        if (errors) {
+	            throw errors;
+	        }
+	        return this.service.hpm.post("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(function (response) {
+	            return response.body;
+	        }, function (response) {
+	            throw response.body;
+	        });
 	    };
 	    Embed.allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected"];
 	    Embed.accessTokenAttribute = 'powerbi-access-token';
@@ -5035,7 +5063,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.5 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -5090,7 +5118,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ (function(module, exports) {
+	/***/ function(module, exports) {
 	
 		"use strict";
 		var WindowPostMessageProxy = (function () {
@@ -5325,7 +5353,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.WindowPostMessageProxy = WindowPostMessageProxy;
 	
 	
-	/***/ })
+	/***/ }
 	/******/ ])
 	});
 	;
