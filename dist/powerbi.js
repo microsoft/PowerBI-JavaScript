@@ -988,7 +988,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.0.8 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.0.11 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1412,6 +1412,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		    BookmarksPlayMode[BookmarksPlayMode["Off"] = 0] = "Off";
 		    BookmarksPlayMode[BookmarksPlayMode["Presentation"] = 1] = "Presentation";
 		})(BookmarksPlayMode = exports.BookmarksPlayMode || (exports.BookmarksPlayMode = {}));
+		// This is not an enum because enum strings require 
+		// us to upgrade typeScript version and change SDK build definition
+		exports.CommonErrorCodes = {
+		    TokenExpired: 'TokenExpired',
+		    NotFound: 'PowerBIEntityNotFound',
+		    InvalidParameters: 'Invalid parameters',
+		    LoadReportFailed: 'LoadReportFailed',
+		    NotAuthorized: 'PowerBINotAuthorizedException',
+		    FailedToLoadModel: 'ExplorationContainer_FailedToLoadModel_DefaultDetails',
+		};
 		var Selector = /** @class */ (function () {
 		    function Selector(schema) {
 		        this.$schema = schema;
@@ -1441,6 +1451,22 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return VisualSelector;
 		}(Selector));
 		exports.VisualSelector = VisualSelector;
+		var VisualTypeSelector = /** @class */ (function (_super) {
+		    __extends(VisualTypeSelector, _super);
+		    function VisualTypeSelector(visualType) {
+		        var _this = _super.call(this, VisualSelector.schemaUrl) || this;
+		        _this.visualType = visualType;
+		        return _this;
+		    }
+		    VisualTypeSelector.prototype.toJSON = function () {
+		        var selector = _super.prototype.toJSON.call(this);
+		        selector.visualType = this.visualType;
+		        return selector;
+		    };
+		    VisualTypeSelector.schemaUrl = "http://powerbi.com/product/schema#visualTypeSelector";
+		    return VisualTypeSelector;
+		}(Selector));
+		exports.VisualTypeSelector = VisualTypeSelector;
 		function normalizeError(error) {
 		    var message = error.message;
 		    if (!message) {
@@ -1585,6 +1611,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var layoutValidator_1 = __webpack_require__(18);
 		var exportDataValidator_1 = __webpack_require__(19);
 		var selectorsValidator_1 = __webpack_require__(20);
+		var selectorsValidator_2 = __webpack_require__(20);
 		var slicersValidator_1 = __webpack_require__(21);
 		var visualSettingsValidator_1 = __webpack_require__(22);
 		var visualSettingsValidator_2 = __webpack_require__(22);
@@ -1664,7 +1691,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		    visualHeaderValidator: new visualSettingsValidator_2.VisualHeaderValidator(),
 		    visualLayoutValidator: new layoutValidator_1.VisualLayoutValidator(),
 		    visualHeadersValidator: new typeValidator_1.ArrayValidator([new visualSettingsValidator_2.VisualHeaderValidator()]),
+		    visualHeaderSelectorValidator: new anyOfValidator_1.AnyOfValidator([new selectorsValidator_1.VisualSelectorValidator(), new selectorsValidator_2.VisualTypeSelectorValidator()]),
 		    visualSelectorValidator: new selectorsValidator_1.VisualSelectorValidator(),
+		    visualTypeSelectorValidator: new selectorsValidator_2.VisualTypeSelectorValidator(),
 		    visualSettingsValidator: new visualSettingsValidator_3.VisualSettingsValidator(),
 		};
 	
@@ -1801,6 +1830,19 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return ValueValidator;
 		}());
 		exports.ValueValidator = ValueValidator;
+		var SchemaValidator = /** @class */ (function (_super) {
+		    __extends(SchemaValidator, _super);
+		    function SchemaValidator(schemaValue) {
+		        var _this = _super.call(this, [schemaValue]) || this;
+		        _this.schemaValue = schemaValue;
+		        return _this;
+		    }
+		    SchemaValidator.prototype.validate = function (input, path, field) {
+		        return _super.prototype.validate.call(this, input, path, field);
+		    };
+		    return SchemaValidator;
+		}(ValueValidator));
+		exports.SchemaValidator = SchemaValidator;
 		var EnumValidator = /** @class */ (function (_super) {
 		    __extends(EnumValidator, _super);
 		    function EnumValidator(possibleValues) {
@@ -3568,6 +3610,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
+		var typeValidator_2 = __webpack_require__(2);
 		var VisualSelectorValidator = /** @class */ (function (_super) {
 		    __extends(VisualSelectorValidator, _super);
 		    function VisualSelectorValidator() {
@@ -3583,6 +3626,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		        }
 		        var fields = [
 		            {
+		                // Not required for this selector only - Backward compatibility 
+		                field: "$schema",
+		                validators: [validator_1.Validators.stringValidator, new typeValidator_2.SchemaValidator("http://powerbi.com/product/schema#visualSelector")]
+		            },
+		            {
 		                field: "visualName",
 		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
 		            }
@@ -3593,6 +3641,35 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return VisualSelectorValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.VisualSelectorValidator = VisualSelectorValidator;
+		var VisualTypeSelectorValidator = /** @class */ (function (_super) {
+		    __extends(VisualTypeSelectorValidator, _super);
+		    function VisualTypeSelectorValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    VisualTypeSelectorValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "$schema",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator, new typeValidator_2.SchemaValidator("http://powerbi.com/product/schema#visualTypeSelector")]
+		            },
+		            {
+		                field: "visualType",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return VisualTypeSelectorValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.VisualTypeSelectorValidator = VisualTypeSelectorValidator;
 	
 	
 	/***/ }),
@@ -3757,7 +3834,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		            },
 		            {
 		                field: "selector",
-		                validators: [validator_1.Validators.visualSelectorValidator]
+		                validators: [validator_1.Validators.visualHeaderSelectorValidator]
 		            },
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
