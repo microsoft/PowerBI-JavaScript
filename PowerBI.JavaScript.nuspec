@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>JavaScript web components for Power BI</summary>
     <description>A suite of JavaScript web components for integrating Power BI into your app</description>
-    <copyright>Copyright (c) Microsoft Corporation</copyright>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     <tags>Microsoft Power BI JavaScript JS</tags>
   </metadata>
   <files>
