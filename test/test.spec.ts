@@ -251,12 +251,13 @@ describe('service', function () {
             formatLocale: 'formatName'
           }
         },
-        groupId: "fakeGroupId"
+        groupId: "fakeGroupId",
+        uniqueId: "fakeUid",
       };
 
       powerbi.embed($reportContainer[0], testConfiguration);
       var iframe = $reportContainer.find('iframe');
-      expect(iframe.attr('src')).toEqual('fakeUrl?reportId=1&language=languageName&formatLocale=formatName');
+      expect(iframe.attr('src')).toEqual('fakeUrl?reportId=1&language=languageName&formatLocale=formatName&uid=fakeUid');
     });
 
     it('if attempting to embed without specifying an embed url, throw error', function () {
@@ -650,12 +651,12 @@ describe('service', function () {
           .appendTo('#powerbi-fixture');
 
         // Act
-        let report = powerbi.embed($reportContainer[0]);
+        let report = powerbi.embed($reportContainer[0], { uniqueId: "fakeUid" });
 
         // Assert
         var iframe = $reportContainer.find('iframe');
         expect(iframe.length).toEqual(1);
-        expect(iframe.attr('src')).toEqual(embedUrl);
+        expect(iframe.attr('src')).toEqual(embedUrl + "&uid=fakeUid");
       });
 
       describe('findIdFromEmbedUrl', function () {
