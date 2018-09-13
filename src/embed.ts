@@ -23,7 +23,7 @@ declare global {
 
 /**
  * Base Configuration settings for Power BI embed components
- * 
+ *
  * @export
  * @interface IEmbedConfigurationBase
  */
@@ -41,7 +41,7 @@ export interface IEmbedConfigurationBase {
 // Current issue is that they are optional when embedding since they can be specificed as attributes but they are required when loading.
 /**
  * Configuration settings for Power BI embed components
- * 
+ *
  * @export
  * @interface IEmbedConfiguration
  */
@@ -66,7 +66,7 @@ export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
 
 /**
  * Configuration settings for Power BI QNA embed component
- * 
+ *
  * @export
  * @interface IEmbedConfiguration
  */
@@ -98,7 +98,7 @@ export interface IInternalEventHandler<T> {
 
 /**
  * Base class for all Power BI embed components
- * 
+ *
  * @export
  * @abstract
  * @class Embed
@@ -115,42 +115,42 @@ export abstract class Embed {
 
   /**
    * Gets or sets the event handler registered for this embed component.
-   * 
+   *
    * @type {IInternalEventHandler<any>[]}
    */
   eventHandlers: IInternalEventHandler<any>[];
 
   /**
    * Gets or sets the Power BI embed service.
-   * 
+   *
    * @type {service.Service}
    */
   service: service.Service;
 
   /**
    * Gets or sets the HTML element that contains the Power BI embed component.
-   * 
+   *
    * @type {HTMLElement}
    */
   element: HTMLElement;
 
   /**
    * Gets or sets the HTML iframe element that renders the Power BI embed component.
-   * 
+   *
    * @type {HTMLIFrameElement}
    */
   iframe: HTMLIFrameElement;
 
   /**
    * Gets or sets the configuration settings for the Power BI embed component.
-   * 
+   *
    * @type {IEmbedConfigurationBase}
    */
   config: IEmbedConfigurationBase;
 
   /**
    * Gets or sets the configuration settings for creating report.
-   * 
+   *
    * @type {models.IReportCreateConfiguration}
    */
   createConfig: models.IReportCreateConfiguration;
@@ -172,10 +172,10 @@ export abstract class Embed {
 
   /**
    * Creates an instance of Embed.
-   * 
+   *
    * Note: there is circular reference between embeds and the service, because
    * the service has a list of all embeds on the host page, and each embed has a reference to the service that created it.
-   * 
+   *
    * @param {service.Service} service
    * @param {HTMLElement} element
    * @param {IEmbedConfigurationBase} config
@@ -189,7 +189,7 @@ export abstract class Embed {
     this.embeType = config.type.toLowerCase();
 
     this.populateConfig(config);
-    
+
     if(this.embeType === 'create'){
       this.setIframe(false/*set EventListener to call create() on 'load' event*/);
     } else {
@@ -199,13 +199,13 @@ export abstract class Embed {
 
   /**
    * Sends createReport configuration data.
-   * 
+   *
    * ```javascript
    * createReport({
    *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
    *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
    * ```
-   * 
+   *
    * @param {models.IReportCreateConfiguration} config
    * @returns {Promise<void>}
    */
@@ -214,7 +214,7 @@ export abstract class Embed {
     if (errors) {
       throw errors;
     }
-    
+
     return this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body;
@@ -226,7 +226,7 @@ export abstract class Embed {
 
   /**
    * Saves Report.
-   * 
+   *
    * @returns {Promise<void>}
    */
   save(): Promise<void> {
@@ -241,7 +241,7 @@ export abstract class Embed {
 
   /**
    * SaveAs Report.
-   * 
+   *
    * @returns {Promise<void>}
    */
   saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void> {
@@ -256,7 +256,7 @@ export abstract class Embed {
 
   /**
    * Sends load configuration data.
-   * 
+   *
    * ```javascript
    * report.load({
    *   type: 'report',
@@ -274,7 +274,7 @@ export abstract class Embed {
    * })
    *   .catch(error => { ... });
    * ```
-   * 
+   *
    * @param {models.ILoadConfiguration} config
    * @param {boolean} phasedRender
    * @returns {Promise<void>}
@@ -300,19 +300,19 @@ export abstract class Embed {
    * Removes one or more event handlers from the list of handlers.
    * If a reference to the existing handle function is specified, remove the specific handler.
    * If the handler is not specified, remove all handlers for the event name specified.
-   * 
+   *
    * ```javascript
    * report.off('pageChanged')
-   * 
-   * or 
-   * 
+   *
+   * or
+   *
    * const logHandler = function (event) {
    *    console.log(event);
    * };
-   * 
+   *
    * report.off('pageChanged', logHandler);
    * ```
-   * 
+   *
    * @template T
    * @param {string} eventName
    * @param {service.IEventHandler<T>} [handler]
@@ -337,13 +337,13 @@ export abstract class Embed {
 
   /**
    * Adds an event handler for a specific event.
-   * 
+   *
    * ```javascript
    * report.on('pageChanged', (event) => {
    *   console.log('PageChanged: ', event.page.name);
    * });
    * ```
-   * 
+   *
    * @template T
    * @param {string} eventName
    * @param {service.IEventHandler<T>} handler
@@ -364,7 +364,7 @@ export abstract class Embed {
   /**
    * Reloads embed using existing configuration.
    * E.g. For reports this effectively clears all filters and makes the first page active which simulates resetting a report back to loaded state.
-   * 
+   *
    * ```javascript
    * report.reload();
    * ```
@@ -372,10 +372,10 @@ export abstract class Embed {
   reload(): Promise<void> {
     return this.load(this.config);
   }
-  
+
   /**
    * Set accessToken.
-   * 
+   *
    * @returns {Promise<void>}
    */
   setAccessToken(accessToken: string): Promise<void> {
@@ -394,7 +394,7 @@ export abstract class Embed {
 
   /**
    * Gets an access token from the first available location: config, attribute, global.
-   * 
+   *
    * @private
    * @param {string} globalAccessToken
    * @returns {string}
@@ -411,13 +411,13 @@ export abstract class Embed {
 
   /**
    * Populate config for create and load
-   * 
+   *
    * @param {IEmbedConfiguration}
    * @returns {void}
    */
   populateConfig(config: IEmbedConfigurationBase): void {
     this.config = config;
-    
+
     // TODO: Change when Object.assign is available.
     this.config.uniqueId = this.getUniqueId();
     this.config.embedUrl = this.getEmbedUrl();
@@ -428,7 +428,7 @@ export abstract class Embed {
 
   /**
    * Adds locale parameters to embedUrl
-   * 
+   *
    * @private
    * @param {IEmbedConfiguration} config
    */
@@ -447,7 +447,7 @@ export abstract class Embed {
 
   /**
    * Gets an embed url from the first available location: options, attribute.
-   * 
+   *
    * @private
    * @returns {string}
    */
@@ -464,7 +464,7 @@ export abstract class Embed {
   /**
    * Gets a unique ID from the first available location: options, attribute.
    * If neither is provided generate a unique string.
-   * 
+   *
    * @private
    * @returns {string}
    */
@@ -474,7 +474,7 @@ export abstract class Embed {
 
   /**
    * Gets the group ID from the first available location: options, embeddedUrl.
-   * 
+   *
    * @private
    * @returns {string}
    */
@@ -484,7 +484,7 @@ export abstract class Embed {
 
   /**
    * Gets the report ID from the first available location: options, attribute.
-   * 
+   *
    * @abstract
    * @returns {string}
    */
@@ -513,7 +513,7 @@ export abstract class Embed {
   /**
    * Returns true if the iframe is rendered in fullscreen mode,
    * otherwise returns false.
-   * 
+   *
    * @private
    * @param {HTMLIFrameElement} iframe
    * @returns {boolean}
@@ -523,7 +523,7 @@ export abstract class Embed {
 
     return options.some(option => document[option] === iframe);
   }
-  
+
   /**
    * Validate load and create configuration.
    */
@@ -550,8 +550,6 @@ export abstract class Embed {
 
     if (isLoad) {
       this.iframe.addEventListener('load', () => this.load(this.config, phasedRender), false);
-      // 'ready' event is fired by the embedded element (not by the iframe)
-      this.element.addEventListener('ready', () => this.frontLoadSendConfig(this.config), false);
     } else {
       this.iframe.addEventListener('load', () => this.createReport(this.createConfig), false);
     }
@@ -560,7 +558,7 @@ export abstract class Embed {
   /**
    * Adds the ability to get groupId from url.
    * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
-   * 
+   *
    * @static
    * @param {string} url
    * @returns {string}
@@ -575,22 +573,5 @@ export abstract class Embed {
       }
 
       return groupId;
-  }
-
-  /**
-   * Sends the config for front load calls, after 'ready' message is received from the iframe
-   */
-  private frontLoadSendConfig(config: IEmbedConfigurationBase): Promise<void> {
-    const errors = this.validate(config);
-    if (errors) {
-      throw errors;
-    }
-
-    return this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(response => {
-      return response.body;
-    },
-    response => {
-      throw response.body;
-    });
   }
 }

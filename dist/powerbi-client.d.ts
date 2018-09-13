@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.4 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     /**
      * Raises a custom event with event data on the specified HTML element.
@@ -394,10 +394,6 @@ declare module "embed" {
          * @returns {string}
          */
         static findGroupIdFromEmbedUrl(url: string): string;
-        /**
-         * Sends the config for front load calls, after 'ready' message is received from the iframe
-         */
-        private frontLoadSendConfig(config);
     }
 }
 declare module "ifilterable" {

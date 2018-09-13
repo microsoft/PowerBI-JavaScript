@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.4 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -834,8 +834,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        if (isLoad) {
 	            this.iframe.addEventListener('load', function () { return _this.load(_this.config, phasedRender); }, false);
-	            // 'ready' event is fired by the embedded element (not by the iframe)
-	            this.element.addEventListener('ready', function () { return _this.frontLoadSendConfig(_this.config); }, false);
 	        }
 	        else {
 	            this.iframe.addEventListener('load', function () { return _this.createReport(_this.createConfig); }, false);
@@ -857,20 +855,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            groupId = groupIdMatch[1];
 	        }
 	        return groupId;
-	    };
-	    /**
-	     * Sends the config for front load calls, after 'ready' message is received from the iframe
-	     */
-	    Embed.prototype.frontLoadSendConfig = function (config) {
-	        var errors = this.validate(config);
-	        if (errors) {
-	            throw errors;
-	        }
-	        return this.service.hpm.post("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(function (response) {
-	            return response.body;
-	        }, function (response) {
-	            throw response.body;
-	        });
 	    };
 	    Embed.allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected"];
 	    Embed.accessTokenAttribute = 'powerbi-access-token';
@@ -5129,7 +5113,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.6.3',
+	    version: '2.6.4',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
