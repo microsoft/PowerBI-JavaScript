@@ -37,8 +37,6 @@ function ValidateDashboardConfigurationWorksAsExpected(pageView: string, excepti
     pageView: pageView
   };
 
-  powerbi.embed(component[0], <any>dashboardEmbedConfig);
-
   var exceptionThrown = false;
   // Act
   try {

@@ -280,11 +280,6 @@ export abstract class Embed {
    * @returns {Promise<void>}
    */
   load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void> {
-    const errors = this.validate(config);
-    if (errors) {
-      throw errors;
-    }
-
     const path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
     return this.service.hpm.post<void>(path, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
@@ -549,6 +544,11 @@ export abstract class Embed {
     }
 
     if (isLoad) {
+      const errors = this.validate(this.config);
+      if (errors) {
+        throw errors;
+      }
+
       this.iframe.addEventListener('load', () => this.load(this.config, phasedRender), false);
     } else {
       this.iframe.addEventListener('load', () => this.createReport(this.createConfig), false);

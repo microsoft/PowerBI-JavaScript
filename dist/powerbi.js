@@ -601,10 +601,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Embed.prototype.load = function (config, phasedRender) {
 	        var _this = this;
-	        var errors = this.validate(config);
-	        if (errors) {
-	            throw errors;
-	        }
 	        var path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
 	        return this.service.hpm.post(path, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
@@ -833,6 +829,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.iframe = node.firstChild;
 	        }
 	        if (isLoad) {
+	            var errors = this.validate(this.config);
+	            if (errors) {
+	                throw errors;
+	            }
 	            this.iframe.addEventListener('load', function () { return _this.load(_this.config, phasedRender); }, false);
 	        }
 	        else {
@@ -5124,7 +5124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.5 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -5179,7 +5179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ (function(module, exports) {
+	/***/ function(module, exports) {
 	
 		"use strict";
 		var WindowPostMessageProxy = (function () {
@@ -5414,7 +5414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.WindowPostMessageProxy = WindowPostMessageProxy;
 	
 	
-	/***/ })
+	/***/ }
 	/******/ ])
 	});
 	;
