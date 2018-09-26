@@ -536,8 +536,8 @@ export abstract class Embed {
     if(!this.iframe) {
       var iframeContent = document.createElement("iframe");
       var embedUrl = this.config.uniqueId ? utils.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
-      iframeContent.style.width="100%";
-      iframeContent.style.height="100%";
+      iframeContent.style.width = '100%';
+      iframeContent.style.height = '100%';
       iframeContent.setAttribute("src", embedUrl);
       iframeContent.setAttribute("scrolling", "no");
       iframeContent.setAttribute("allowfullscreen", "true");
