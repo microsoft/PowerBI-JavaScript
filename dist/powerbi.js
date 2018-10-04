@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.4 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.5 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -266,6 +266,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            component = this.embedNew(powerBiElement, config, phasedRender);
 	        }
 	        return component;
+	    };
+	    Service.prototype.getNumberOfComponents = function () {
+	        if (!this.embeds) {
+	            return 0;
+	        }
+	        return this.embeds.length;
 	    };
 	    /**
 	     * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
@@ -601,10 +607,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Embed.prototype.load = function (config, phasedRender) {
 	        var _this = this;
-	        var errors = this.validate(config);
-	        if (errors) {
-	            throw errors;
-	        }
 	        var path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
 	        return this.service.hpm.post(path, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
@@ -833,7 +835,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.iframe = node.firstChild;
 	        }
 	        if (isLoad) {
+	            var errors = this.validate(this.config);
+	            if (errors) {
+	                throw errors;
+	            }
 	            this.iframe.addEventListener('load', function () { return _this.load(_this.config, phasedRender); }, false);
+	            if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
+	                // 'ready' event is fired by the embedded element (not by the iframe)
+	                this.element.addEventListener('ready', function () { return _this.frontLoadSendConfig(_this.config); }, false);
+	            }
 	        }
 	        else {
 	            this.iframe.addEventListener('load', function () { return _this.createReport(_this.createConfig); }, false);
@@ -856,11 +866,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return groupId;
 	    };
+	    /**
+	     * Sends the config for front load calls, after 'ready' message is received from the iframe
+	     */
+	    Embed.prototype.frontLoadSendConfig = function (config) {
+	        var errors = this.validate(config);
+	        if (errors) {
+	            throw errors;
+	        }
+	        return this.service.hpm.post("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(function (response) {
+	            return response.body;
+	        }, function (response) {
+	            throw response.body;
+	        });
+	    };
 	    Embed.allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected"];
 	    Embed.accessTokenAttribute = 'powerbi-access-token';
 	    Embed.embedUrlAttribute = 'powerbi-embed-url';
 	    Embed.nameAttribute = 'powerbi-name';
 	    Embed.typeAttribute = 'powerbi-type';
+	    Embed.maxFrontLoadTimes = 2;
 	    return Embed;
 	}());
 	exports.Embed = Embed;
@@ -5113,7 +5138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.6.4',
+	    version: '2.6.5',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });

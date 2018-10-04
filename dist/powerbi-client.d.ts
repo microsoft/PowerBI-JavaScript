@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.4 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.5 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     /**
      * Raises a custom event with event data on the specified HTML element.
@@ -147,6 +147,7 @@ declare module "embed" {
         static nameAttribute: string;
         static typeAttribute: string;
         static type: string;
+        static maxFrontLoadTimes: number;
         allowedEvents: any[];
         /**
          * Gets or sets the event handler registered for this embed component.
@@ -394,6 +395,10 @@ declare module "embed" {
          * @returns {string}
          */
         static findGroupIdFromEmbedUrl(url: string): string;
+        /**
+         * Sends the config for front load calls, after 'ready' message is received from the iframe
+         */
+        private frontLoadSendConfig(config);
     }
 }
 declare module "ifilterable" {
@@ -1283,6 +1288,7 @@ declare module "service" {
          */
         load(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
         embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed;
+        getNumberOfComponents(): number;
         /**
          * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
          *

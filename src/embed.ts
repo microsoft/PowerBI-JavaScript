@@ -111,6 +111,8 @@ export abstract class Embed {
   static typeAttribute = 'powerbi-type';
   static type: string;
 
+  static maxFrontLoadTimes: number = 2;
+
   allowedEvents = [];
 
   /**
@@ -280,11 +282,6 @@ export abstract class Embed {
    * @returns {Promise<void>}
    */
   load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void> {
-    const errors = this.validate(config);
-    if (errors) {
-      throw errors;
-    }
-
     const path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
     return this.service.hpm.post<void>(path, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
@@ -549,7 +546,17 @@ export abstract class Embed {
     }
 
     if (isLoad) {
+      const errors = this.validate(this.config);
+      if (errors) {
+        throw errors;
+      }
+
       this.iframe.addEventListener('load', () => this.load(this.config, phasedRender), false);
+
+      if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
+        // 'ready' event is fired by the embedded element (not by the iframe)
+        this.element.addEventListener('ready', () => this.frontLoadSendConfig(this.config), false);
+      }
     } else {
       this.iframe.addEventListener('load', () => this.createReport(this.createConfig), false);
     }
@@ -573,5 +580,22 @@ export abstract class Embed {
       }
 
       return groupId;
+  }
+
+  /**
+   * Sends the config for front load calls, after 'ready' message is received from the iframe
+   */
+  private frontLoadSendConfig(config: IEmbedConfigurationBase): Promise<void> {
+    const errors = this.validate(config);
+    if (errors) {
+      throw errors;
+    }
+
+    return this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(response => {
+      return response.body;
+    },
+    response => {
+      throw response.body;
+    });
   }
 }
