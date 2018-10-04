@@ -61,7 +61,7 @@ export interface IService {
 
 /**
  * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
- *  
+ *
  * @export
  * @class Service
  * @implements {IService}
@@ -89,7 +89,7 @@ export class Service implements IService {
 
   /**
    * Gets or sets the access token as the global fallback token to use when a local token is not provided for a report or tile.
-   * 
+   *
    * @type {string}
    */
   accessToken: string;
@@ -99,6 +99,7 @@ export class Service implements IService {
 
   /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
   private embeds: embed.Embed[];
+
   /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
   hpm: hpm.HttpPostMessage;
   /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
@@ -109,7 +110,7 @@ export class Service implements IService {
 
   /**
    * Creates an instance of a Power BI Service.
-   * 
+   *
    * @param {IHpmFactory} hpmFactory The http post message factory used in the postMessage communication layer
    * @param {IWpmpFactory} wpmpFactory The window post message factory used in the postMessage communication layer
    * @param {IRouterFactory} routerFactory The router factory used in the postMessage communication layer
@@ -234,7 +235,7 @@ export class Service implements IService {
 
   /**
    * TODO: Add a description here
-   * 
+   *
    * @param {HTMLElement} [container]
    * @param {embed.IEmbedConfiguration} [config=undefined]
    * @returns {embed.Embed[]}
@@ -250,7 +251,7 @@ export class Service implements IService {
    * Given a configuration based on an HTML element,
    * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
    * otherwise creates a new component instance.
-   * 
+   *
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfigurationBase} [config={}]
    * @returns {embed.Embed}
@@ -264,7 +265,7 @@ export class Service implements IService {
    * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
    * otherwise creates a new component instance.
    * This is used for the phased embedding API, once element is loaded successfully, one can call 'render' on it.
-   * 
+   *
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfigurationBase} [config={}]
    * @returns {embed.Embed}
@@ -287,9 +288,17 @@ export class Service implements IService {
     return component;
   }
 
+  getNumberOfComponents(): number {
+    if (!this.embeds) {
+      return 0;
+    }
+
+    return this.embeds.length;
+  }
+
   /**
    * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
-   * 
+   *
    * @private
    * @param {IPowerBiElement} element
    * @param {embed.IEmbedConfigurationBase} config
@@ -318,7 +327,7 @@ export class Service implements IService {
 
   /**
    * Given an element that already contains an embed component, load with a new configuration.
-   * 
+   *
    * @private
    * @param {IPowerBiElement} element
    * @param {embed.IEmbedConfigurationBase} config
@@ -376,7 +385,7 @@ export class Service implements IService {
 
   /**
    * Returns an instance of the component associated with the element.
-   * 
+   *
    * @param {HTMLElement} element
    * @returns {(Report | Tile)}
    */
@@ -392,7 +401,7 @@ export class Service implements IService {
 
   /**
    * Finds an embed instance by the name or unique ID that is provided.
-   * 
+   *
    * @param {string} uniqueId
    * @returns {(Report | Tile)}
    */
@@ -411,7 +420,7 @@ export class Service implements IService {
 
   /**
    * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
-   * 
+   *
    * @param {HTMLElement} element
    * @returns {void}
    */
@@ -441,9 +450,9 @@ export class Service implements IService {
 
   /**
    * handles tile events
-   * 
-   * @param {IEvent<any>} event 
-   */ 
+   *
+   * @param {IEvent<any>} event
+   */
   handleTileEvents (event: IEvent<any>): void {
       if (event.type === 'tile'){
           this.handleEvent(event);
@@ -452,7 +461,7 @@ export class Service implements IService {
 
   /**
    * Given an event object, finds the embed component with the matching type and ID, and invokes its handleEvent method with the event object.
-   * 
+   *
    * @private
    * @param {IEvent<any>} event
    */
@@ -480,7 +489,7 @@ export class Service implements IService {
   /**
    * API for warm starting powerbi embedded endpoints.
    * Use this API to preload Power BI Embedded in the background.
-   * 
+   *
    * @public
    * @param {embed.IEmbedConfigurationBase} [config={}]
    * @param {HTMLElement} [element=undefined]
