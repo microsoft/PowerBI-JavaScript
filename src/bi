@@ -1,0 +1,10 @@
+* A Dashboard node within a dashboard hierarchy
+ * 
+ * @export
+ * @interface IDashboardNode
+ */
+export interface IDashboardNode {
+    iframe: HTMLIFrameElement;
+    service: service.IService;
+    config: embed.IEmbedConfigurationBase
+}
