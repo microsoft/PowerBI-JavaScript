@@ -1,0 +1,15 @@
+@static
+     * @param {string} url
+     * @returns {string}
+     */
+    static findIdFromEmbedUrl(url: string): string {
+        const dashboardIdRegEx = /dashboardId="?([^&]+)"?/
+        const dashboardIdMatch = url.match(dashboardIdRegEx);
+
+        let dashboardId;
+        if (dashboardIdMatch) {
+            dashboardId = dashboardIdMatch[1];
+        }
+
+        return dashboardId;
+    }
