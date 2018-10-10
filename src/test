@@ -1,0 +1,10 @@
+getId(): string {
+        let config = <embed.IEmbedConfiguration>this.config;
+        const tileId = config.id || Tile.findIdFromEmbedUrl(this.config.embedUrl);
+
+        if (typeof tileId !== 'string' || tileId.length === 0) {
+            throw new Error(`Tile id is required, but it was not found. You must provide an id either as part of embed configuration.`);
+        }
+
+        return tileId;
+    }
