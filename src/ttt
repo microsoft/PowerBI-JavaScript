@@ -1,0 +1,12 @@
+setActive(): Promise<void> {
+    const page: models.IPage = {
+      name: this.name,
+      displayName: null,
+      isActive: true
+    };
+
+    return this.report.service.hpm.put<models.IError[]>('/report/pages/active', page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+      .catch(response => {
+        throw response.body;
+      });
+  }
