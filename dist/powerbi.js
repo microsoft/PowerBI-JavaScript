@@ -840,7 +840,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw errors;
 	            }
 	            this.iframe.addEventListener('load', function () { return _this.load(_this.config, phasedRender); }, false);
-	            if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes && this.config.type !== "qna") {
+	            if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
 	                // 'ready' event is fired by the embedded element (not by the iframe)
 	                this.element.addEventListener('ready', function () { return _this.frontLoadSendConfig(_this.config); }, false);
 	            }

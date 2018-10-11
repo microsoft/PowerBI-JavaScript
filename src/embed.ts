@@ -553,7 +553,7 @@ export abstract class Embed {
 
       this.iframe.addEventListener('load', () => this.load(this.config, phasedRender), false);
 
-      if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes && this.config.type !== "qna") {
+      if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
         // 'ready' event is fired by the embedded element (not by the iframe)
         this.element.addEventListener('ready', () => this.frontLoadSendConfig(this.config), false);
       }
