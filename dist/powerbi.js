@@ -371,7 +371,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Service.prototype.addOrOverwriteEmbed = function (component, element) {
 	        // remove embeds over the same div element.
 	        this.embeds = this.embeds.filter(function (embed) {
-	            return embed.element.id !== element.id;
+	            return embed.element !== element;
 	        });
 	        this.embeds.push(component);
 	    };
