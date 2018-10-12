@@ -1,0 +1,55 @@
+import { Component, OnInit } from '@angular/core';
+import * as pbicli from 'powerbi-client';
+import {AuthenticationService} from '../authentication';
+@Component({
+  selector: 'app-powerbi-qna',
+  templateUrl: './powerbi-qna.component.html',
+  styleUrls: ['./powerbi-qna.component.scss']
+})
+export class PowerbiQnaComponent implements OnInit {
+embedToken: string;
+  constructor(private authSvc: AuthenticationService) { }
+
+  ngOnInit() {
+   
+
+    this.loadDashboard();
+  }
+loadDashboard() {
+
+this.displayDashboard(this.authSvc.getCachedToken());
+}
+displayDashboard(token: string) {
+const embedUrl = 'https://app.powerbi.com/reportEmbed?reportId=<reportid>';
+const embedReportId = '<reportid>';
+const config = {
+    type: 'report',
+    tokenType: 0,
+    accessToken: token,
+    embedUrl: embedUrl,
+    id: embedReportId,
+    permissions: 7,
+    settings: {
+    }
+};
+
+const embedContainer = <HTMLElement>document.getElementById('powerBiEmbed');
+const powerbi = new pbicli.service.Service(pbicli.factories.hpmFactory, pbicli.factories.wpmpFactory, pbicli.factories.routerFactory);
+
+const report = powerbi.embed(embedContainer, config);
+
+report.off('loaded');
+
+report.on('loaded', function() {
+  console.log('Loaded');
+});
+/*report.on('error', function(event) {
+  console.log(event.detail);
+    report.off('error');
+});*/
+report.off('saved');
+report.on('saved', function(event) {
+    console.log(event.detail);
+ });
+}
+}
