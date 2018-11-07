@@ -88,8 +88,12 @@ function embedSharedBookmark(enableFilterPane, bookmarkState) {
         // We give the user View permissions
         var permissions = models.Permissions.View;
 
-        // Get the bookmark state from url param
-        var bookmarkState = GetBookmarkStateFromURL();
+        // Get the bookmark name from url param
+        var bookmarkName = GetBookmarkNameFromURL();
+
+        // Get the bookmark state from local storage
+        // any type of database can be used
+        var bookmarkState = localStorage.getItem(bookmarkName);
 
         // Embed configuration used to describe the what and how to embed
         // This object is used when calling powerbi.embed
@@ -227,7 +231,11 @@ function shareBookmark(element) {
     let currentBookmark = getBookmarkByID(bookmarkId);
 
     // Build the share bookmark URL
-    let shareUrl = location.href.substring(0, location.href.lastIndexOf("/")) + '/shareBookmark.html' + '?state=' + currentBookmark.state;
+    let shareUrl = location.href.substring(0, location.href.lastIndexOf("/")) + '/shareBookmark.html' + '?name=' + currentBookmark.name;
+
+    // Store bookmark state with name as a key on the local storage
+    // any type of database can be used
+    localStorage.setItem(currentBookmark.name, currentBookmark.state);
 
     // Set bookmark display name and share URL on dialog HTML code
     $('#dialogBookmarkName').empty();
@@ -284,10 +292,10 @@ function buildShareElement() {
     return imgElement;
 }
 
-// Get the bookmark state from url 'state' argument
-function GetBookmarkStateFromURL() {
+// Get the bookmark name from url 'name' argument
+function GetBookmarkNameFromURL() {
     url = window.location.href;
-    let regex = new RegExp("[?&]state(=([^&#]*)|&|#|$)"),
+    let regex = new RegExp("[?&]name(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
