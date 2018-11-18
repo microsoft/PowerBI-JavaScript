@@ -370,6 +370,10 @@ function OpenEmbedMode(mode, entityType, tokenType)
         if (IsEmbeddingSampleQna())
         {
             LoadSampleQnaIntoSession().then(function (response) {
+                if (!GetSession(SessionKeys.QnaQuestion)) {
+                    SetSession(SessionKeys.QnaQuestion, defaultQnaQuestion);
+                }
+
                 LoadSettings();
             });
         }
