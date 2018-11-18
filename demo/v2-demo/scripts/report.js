@@ -355,17 +355,27 @@ function OpenEmbedMode(mode, entityType, tokenType)
     }
     else if (entityType == EntityType.Qna)
     {
+        LoadSettings = function() {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
+            SetTextboxFromSessionOrUrlParam(SessionKeys.QnaQuestion, "#txtQuestion");
+            setCodeAndShowEmbedSettings(mode, entityType, tokenType);
+            let qnaMode = GetParameterByName(SessionKeys.QnaMode);
+            if (qnaMode) {
+                SetSession(SessionKeys.QnaMode, qnaMode);
+                let modesRadios = $('input:radio[name=qnaMode]');
+                modesRadios.filter('[value=' + qnaMode + ']').prop('checked', true);
+            }
+        };
+
         if (IsEmbeddingSampleQna())
         {
             LoadSampleQnaIntoSession().then(function (response) {
-                SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
-                setCodeAndShowEmbedSettings(mode, entityType, tokenType);
+                LoadSettings();
             });
         }
         else
         {
-            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
-            setCodeAndShowEmbedSettings(mode, entityType, tokenType);
+            LoadSettings();
         }
     }
 }
@@ -411,7 +421,7 @@ function ToggleQuestionBox(enabled) {
     let txtQuestion = $("#txtQuestion");
     if (enabled === true) {
         let question = GetSession(SessionKeys.QnaQuestion);
-        question = question? question : defaultQnaQuestion;
+        question = question ? question : defaultQnaQuestion;
         txtQuestion.val(question);
         txtQuestion.prop('disabled', false);
     }

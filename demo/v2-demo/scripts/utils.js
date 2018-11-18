@@ -121,7 +121,7 @@ function getEmbedContainerID(entityType) {
     }
 }
 
-function getEmbedContainerClassPrefix(entityType, isMobile) {
+function getEmbedContainerClassPrefix(entityType) {
     switch (entityType) {
         case EntityType.Visual:
             return ".visual";
@@ -134,6 +134,21 @@ function getEmbedContainerClassPrefix(entityType, isMobile) {
         default:
             return ".report";
     }
+}
+
+function getEntityTypeFromParameter(urlParam) {
+  switch (urlParam) {
+      case "visual":
+          return EntityType.Visual;
+      case "dashboard":
+          return EntityType.Dashboard;
+      case "tile":
+          return EntityType.Tile;
+      case "qna":
+          return EntityType.Qna;
+      default:
+          return EntityType.Report;
+  }
 }
 
 function elementClicked(element) {
