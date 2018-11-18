@@ -30,7 +30,7 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "^3.3.6",
+    "bootstrap": "^4.1.2",
     "es6-promise": "^3.2.2",
     "fetch": "^1.0.0",
     "http-server": "^0.10.0",
