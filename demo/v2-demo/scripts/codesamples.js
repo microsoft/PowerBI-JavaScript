@@ -687,6 +687,45 @@ function _Embed_QnaEmbed() {
     powerbi.embed(qnaContainer, config);
 }
 
+function _Embed_QnaEmbed_Aad() {
+    // Read embed application token from textbox
+    var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
+    var txtEmbedUrl = $('#txtQnaEmbed').val();
+
+    // Read dataset Id from textbox
+    var txtDatasetId = $('#txtDatasetId').val();
+
+    // Read question from textbox
+    var txtQuestion = $('#txtQuestion').val();
+
+    // Read Qna mode
+    var qnaMode = $("input[name='qnaMode']:checked").val();
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config= {
+        type: 'qna',
+        tokenType: models.TokenType.Aad,
+        accessToken: txtAccessToken,
+        embedUrl: txtEmbedUrl,
+        datasetIds: [txtDatasetId],
+        viewMode: models.QnaMode[qnaMode],
+        question: txtQuestion
+    };
+
+    // Get a reference to the embedded Q&A HTML element
+    var qnaContainer = $('#qnaContainer')[0];
+
+    // Embed the Q&A and display it within the div container.
+    powerbi.embed(qnaContainer, config);
+}
+
 // ---- Report Operations ----------------------------------------------------
 
 function _Report_GetId() {

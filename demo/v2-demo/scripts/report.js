@@ -13,6 +13,7 @@ const interactTooltipTimeout = 2000;
 const defaultTokenType = 1;
 const defaultQnaQuestion = "2014 total units YTD var % by month, manufacturer as clustered column chart";
 const defaultQnaMode = "Interactive";
+const interactiveNoQuestionMode = "InteractiveNoQuestion";
 
 function OpenSamplesStep() {
     $('#steps-ul a').removeClass(active_class);
@@ -230,7 +231,7 @@ function getEmbedCode(mode, entityType)
     }
     else if (entityType == EntityType.Qna)
     {
-        code = _Embed_QnaEmbed;
+        code = GetParameterByName(SessionKeys.TokenType) === '0' /* AAD Token */ ? _Embed_QnaEmbed_Aad : _Embed_QnaEmbed;
     }
     return code;
 }
@@ -361,9 +362,10 @@ function OpenEmbedMode(mode, entityType, tokenType)
             setCodeAndShowEmbedSettings(mode, entityType, tokenType);
             let qnaMode = GetParameterByName(SessionKeys.QnaMode);
             if (qnaMode) {
-                SetSession(SessionKeys.QnaMode, qnaMode);
                 let modesRadios = $('input:radio[name=qnaMode]');
-                modesRadios.filter('[value=' + qnaMode + ']').prop('checked', true);
+                modesRadios.filter('[id=' + qnaMode + ']').prop('checked', true);
+                qnaMode = qnaMode !== interactiveNoQuestionMode ? qnaMode : defaultQnaMode;
+                SetSession(SessionKeys.QnaMode, qnaMode);
             }
         };
 
