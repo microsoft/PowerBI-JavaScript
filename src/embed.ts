@@ -173,6 +173,11 @@ export abstract class Embed {
   embeType: string;
 
   /**
+   * Handler function for the 'ready' event
+   */
+  frontLoadHandler: (HTMLElement) => any;
+
+  /**
    * Creates an instance of Embed.
    *
    * Note: there is circular reference between embeds and the service, because
@@ -554,8 +559,10 @@ export abstract class Embed {
       this.iframe.addEventListener('load', () => this.load(this.config, phasedRender), false);
 
       if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
+        this.frontLoadHandler = () => this.frontLoadSendConfig(this.config);
+
         // 'ready' event is fired by the embedded element (not by the iframe)
-        this.element.addEventListener('ready', () => this.frontLoadSendConfig(this.config), false);
+        this.element.addEventListener('ready', this.frontLoadHandler, false);
       }
     } else {
       this.iframe.addEventListener('load', () => this.createReport(this.createConfig), false);

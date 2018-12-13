@@ -431,6 +431,12 @@ export class Service implements IService {
       return;
     }
 
+    /** Removes the element frontLoad listener if exists. */
+    let embedElement = powerBiElement.powerBiEmbed;
+    if (embedElement.frontLoadHandler) {
+      embedElement.element.removeEventListener('ready', embedElement.frontLoadHandler, false);
+    }
+
     /** Removes the component from an internal list of components. */
     utils.remove(x => x === powerBiElement.powerBiEmbed, this.embeds);
     /** Deletes a property from the HTML element. */

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.5 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.6 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -385,6 +385,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var powerBiElement = element;
 	        if (!powerBiElement.powerBiEmbed) {
 	            return;
+	        }
+	        /** Removes the element frontLoad listener if exists. */
+	        var embedElement = powerBiElement.powerBiEmbed;
+	        if (embedElement.frontLoadHandler) {
+	            embedElement.element.removeEventListener('ready', embedElement.frontLoadHandler, false);
 	        }
 	        /** Removes the component from an internal list of components. */
 	        utils.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
@@ -841,8 +846,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            this.iframe.addEventListener('load', function () { return _this.load(_this.config, phasedRender); }, false);
 	            if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
+	                this.frontLoadHandler = function () { return _this.frontLoadSendConfig(_this.config); };
 	                // 'ready' event is fired by the embedded element (not by the iframe)
-	                this.element.addEventListener('ready', function () { return _this.frontLoadSendConfig(_this.config); }, false);
+	                this.element.addEventListener('ready', this.frontLoadHandler, false);
 	            }
 	        }
 	        else {
@@ -1025,7 +1031,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.0.12 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.0.13 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1166,6 +1172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    FilterType[FilterType["IncludeExclude"] = 3] = "IncludeExclude";
 		    FilterType[FilterType["RelativeDate"] = 4] = "RelativeDate";
 		    FilterType[FilterType["TopN"] = 5] = "TopN";
+		    FilterType[FilterType["Tuple"] = 6] = "Tuple";
 		})(FilterType = exports.FilterType || (exports.FilterType = {}));
 		var RelativeDateFilterTimeUnit;
 		(function (RelativeDateFilterTimeUnit) {
@@ -1323,7 +1330,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        _this.target = target;
 		        var numberOfKeys = target.keys ? target.keys.length : 0;
 		        if (numberOfKeys > 0 && !keyValues) {
-		            throw new Error("You shold pass the values to be filtered for each key. You passed: no values and " + numberOfKeys + " keys");
+		            throw new Error("You should pass the values to be filtered for each key. You passed: no values and " + numberOfKeys + " keys");
 		        }
 		        if (numberOfKeys === 0 && keyValues && keyValues.length > 0) {
 		            throw new Error("You passed key values but your target object doesn't contain the keys to be filtered");
@@ -1346,6 +1353,26 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return BasicFilterWithKeys;
 		}(BasicFilter));
 		exports.BasicFilterWithKeys = BasicFilterWithKeys;
+		var TupleFilter = /** @class */ (function (_super) {
+		    __extends(TupleFilter, _super);
+		    function TupleFilter(target, operator, values) {
+		        var _this = _super.call(this, target, FilterType.Tuple) || this;
+		        _this.operator = operator;
+		        _this.schemaUrl = TupleFilter.schemaUrl;
+		        _this.values = values;
+		        return _this;
+		    }
+		    TupleFilter.prototype.toJSON = function () {
+		        var filter = _super.prototype.toJSON.call(this);
+		        filter.operator = this.operator;
+		        filter.values = this.values;
+		        filter.target = this.target;
+		        return filter;
+		    };
+		    TupleFilter.schemaUrl = "http://powerbi.com/product/schema#tuple";
+		    return TupleFilter;
+		}(Filter));
+		exports.TupleFilter = TupleFilter;
 		var AdvancedFilter = /** @class */ (function (_super) {
 		    __extends(AdvancedFilter, _super);
 		    function AdvancedFilter(target, logicalOperator) {
@@ -5138,7 +5165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.6.5',
+	    version: '2.6.6',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -5149,7 +5176,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.5 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -5204,7 +5231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ (function(module, exports) {
+	/***/ function(module, exports) {
 	
 		"use strict";
 		var WindowPostMessageProxy = (function () {
@@ -5439,7 +5466,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.WindowPostMessageProxy = WindowPostMessageProxy;
 	
 	
-	/***/ })
+	/***/ }
 	/******/ ])
 	});
 	;

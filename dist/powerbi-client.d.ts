@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.5 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.6 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     /**
      * Raises a custom event with event data on the specified HTML element.
@@ -197,6 +197,10 @@ declare module "embed" {
          * Type of embed
          */
         embeType: string;
+        /**
+         * Handler function for the 'ready' event
+         */
+        frontLoadHandler: (HTMLElement) => any;
         /**
          * Creates an instance of Embed.
          *
