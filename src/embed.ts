@@ -222,7 +222,7 @@ export abstract class Embed {
       throw errors;
     }
 
-    return this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    return this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow)
       .then(response => {
         return response.body;
       },
@@ -288,7 +288,7 @@ export abstract class Embed {
    */
   load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void> {
     const path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
-    return this.service.hpm.post<void>(path, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    return this.service.hpm.post<void>(path, config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow)
       .then(response => {
         utils.assign(this.config, config);
         return response.body;
