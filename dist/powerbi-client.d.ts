@@ -46,6 +46,13 @@ declare module "util" {
      */
     export function createRandomString(): string;
     /**
+     * Generates a 20 charachter uuid.
+     *
+     * @export
+     * @returns {string}
+     */
+    export function generateUUID(): string;
+    /**
      * Adds a parameter to the given url
      *
      * @export
@@ -1245,6 +1252,7 @@ declare module "service" {
         /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
         wpmp: wpmp.WindowPostMessageProxy;
         private router;
+        private uniqueSessionId;
         private static DefaultInitEmbedUrl;
         /**
          * Creates an instance of a Power BI Service.
@@ -1293,6 +1301,7 @@ declare module "service" {
         load(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
         embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed;
         getNumberOfComponents(): number;
+        getSdkSessionId(): string;
         /**
          * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
          *

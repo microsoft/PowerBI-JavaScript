@@ -2446,6 +2446,7 @@ describe('SDK-to-HPM', function () {
   let page1: page.Page;
   let visual1: visualDescriptor.VisualDescriptor;
   let uniqueId = 'uniqueId';
+  let sdkSessionId = 'sdkSessionId';
   let createUniqueId = 'uniqueId';
   let dashboardUniqueId = 'uniqueId';
   let visualUniqueId = 'uniqueId';
@@ -2513,6 +2514,7 @@ describe('SDK-to-HPM', function () {
     page1 = new page.Page(report, 'xyz');
     visual1 = new visualDescriptor.VisualDescriptor(page1, 'uvw', 'title', 'type', {});
     uniqueId = report.config.uniqueId;
+    sdkSessionId = powerbi.getSdkSessionId();
     createUniqueId = create.config.uniqueId;
     dashboardUniqueId = dashboard.config.uniqueId;
     visualUniqueId = embeddedVisual.config.uniqueId;
@@ -2567,7 +2569,7 @@ describe('SDK-to-HPM', function () {
         report.load(testData.loadConfiguration);
 
         // Assert
-        expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId }, iframe.contentWindow);
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
       });
 
       it('report.load() returns promise that rejects with validation error if the load configuration is invalid', function (done) {
@@ -2589,7 +2591,7 @@ describe('SDK-to-HPM', function () {
         // Act
         report.load(testData.loadConfiguration)
           .catch(error => {
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
             expect(error).toEqual(testData.errorResponse.body);
             // Assert
             done();
@@ -2613,7 +2615,7 @@ describe('SDK-to-HPM', function () {
         // Act
         report.load(testData.loadConfiguration)
           .then(response => {
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
             expect(response).toEqual(null);
             // Assert
             done();
@@ -2709,7 +2711,7 @@ describe('SDK-to-HPM', function () {
         let spyArgs = spyHpm.post.calls.mostRecent().args;
         expect(spyArgs[0]).toEqual('/report/load');
         expect(spyArgs[1]).toEqual(expectedConfiguration);
-        expect(spyArgs[2]).toEqual({ uid: visualUniqueId });
+        expect(spyArgs[2]).toEqual({ uid: visualUniqueId, sdkSessionId: sdkSessionId });
         expect(spyArgs[3]).toEqual(visualFrame.contentWindow);
       });
 
@@ -3167,7 +3169,7 @@ describe('SDK-to-HPM', function () {
             report.reload();
 
             // Assert
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.loadConfiguration), { uid: uniqueId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.loadConfiguration), { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
           });
       });
     });
@@ -3274,7 +3276,7 @@ describe('SDK-to-HPM', function () {
         create.createReport(testData.createConfiguration);
 
         // Assert
-        expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId }, createIframe.contentWindow);
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId }, createIframe.contentWindow);
       });
 
       it('create.createReport() returns promise that rejects with validation error if the create configuration is invalid', function (done) {
@@ -3296,7 +3298,7 @@ describe('SDK-to-HPM', function () {
         // Act
         create.createReport(testData.createConfiguration)
           .catch(error => {
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId }, createIframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId }, createIframe.contentWindow);
             expect(error).toEqual(testData.errorResponse.body);
             // Assert
             done();
@@ -3320,7 +3322,7 @@ describe('SDK-to-HPM', function () {
         // Act
         create.createReport(testData.createConfiguration)
           .then(response => {
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId }, createIframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId }, createIframe.contentWindow);
             expect(response).toEqual(null);
             // Assert
             done();
@@ -3350,7 +3352,7 @@ describe('SDK-to-HPM', function () {
         dashboard.load(testData.loadConfiguration);
 
         // Assert
-        expect(spyHpm.post).toHaveBeenCalledWith('/dashboard/load', testData.loadConfiguration, { uid: dashboardUniqueId }, dashboardIframe.contentWindow);
+        expect(spyHpm.post).toHaveBeenCalledWith('/dashboard/load', testData.loadConfiguration, { uid: dashboardUniqueId, sdkSessionId: sdkSessionId }, dashboardIframe.contentWindow);
       });
     });
   });
