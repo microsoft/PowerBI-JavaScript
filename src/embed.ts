@@ -173,6 +173,11 @@ export abstract class Embed {
   embeType: string;
 
   /**
+   * Handler function for the 'ready' event
+   */
+  frontLoadHandler: (HTMLElement) => any;
+
+  /**
    * Creates an instance of Embed.
    *
    * Note: there is circular reference between embeds and the service, because
@@ -217,7 +222,7 @@ export abstract class Embed {
       throw errors;
     }
 
-    return this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    return this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow)
       .then(response => {
         return response.body;
       },
@@ -283,7 +288,7 @@ export abstract class Embed {
    */
   load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void> {
     const path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
-    return this.service.hpm.post<void>(path, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    return this.service.hpm.post<void>(path, config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow)
       .then(response => {
         utils.assign(this.config, config);
         return response.body;
@@ -555,8 +560,10 @@ export abstract class Embed {
       this.iframe.addEventListener('load', () => this.load(this.config, phasedRender), false);
 
       if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
+        this.frontLoadHandler = () => this.frontLoadSendConfig(this.config);
+
         // 'ready' event is fired by the embedded element (not by the iframe)
-        this.element.addEventListener('ready', () => this.frontLoadSendConfig(this.config), false);
+        this.element.addEventListener('ready', this.frontLoadHandler, false);
       }
     } else {
       this.iframe.addEventListener('load', () => this.createReport(this.createConfig), false);

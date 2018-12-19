@@ -13,6 +13,7 @@ const interactTooltipTimeout = 2000;
 const defaultTokenType = 1;
 const defaultQnaQuestion = "2014 total units YTD var % by month, manufacturer as clustered column chart";
 const defaultQnaMode = "Interactive";
+const interactiveNoQuestionMode = "InteractiveNoQuestion";
 
 function OpenSamplesStep() {
     $('#steps-ul a').removeClass(active_class);
@@ -230,7 +231,7 @@ function getEmbedCode(mode, entityType)
     }
     else if (entityType == EntityType.Qna)
     {
-        code = _Embed_QnaEmbed;
+        code = GetParameterByName(SessionKeys.TokenType) === '0' /* AAD Token */ ? _Embed_QnaEmbed_Aad : _Embed_QnaEmbed;
     }
     return code;
 }
@@ -355,17 +356,32 @@ function OpenEmbedMode(mode, entityType, tokenType)
     }
     else if (entityType == EntityType.Qna)
     {
+        LoadSettings = function() {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
+            SetTextboxFromSessionOrUrlParam(SessionKeys.QnaQuestion, "#txtQuestion");
+            setCodeAndShowEmbedSettings(mode, entityType, tokenType);
+            let qnaMode = GetParameterByName(SessionKeys.QnaMode);
+            if (qnaMode) {
+                let modesRadios = $('input:radio[name=qnaMode]');
+                modesRadios.filter('[id=' + qnaMode + ']').prop('checked', true);
+                qnaMode = qnaMode !== interactiveNoQuestionMode ? qnaMode : defaultQnaMode;
+                SetSession(SessionKeys.QnaMode, qnaMode);
+            }
+        };
+
         if (IsEmbeddingSampleQna())
         {
             LoadSampleQnaIntoSession().then(function (response) {
-                SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
-                setCodeAndShowEmbedSettings(mode, entityType, tokenType);
+                if (!GetSession(SessionKeys.QnaQuestion)) {
+                    SetSession(SessionKeys.QnaQuestion, defaultQnaQuestion);
+                }
+
+                LoadSettings();
             });
         }
         else
         {
-            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
-            setCodeAndShowEmbedSettings(mode, entityType, tokenType);
+            LoadSettings();
         }
     }
 }
@@ -411,7 +427,7 @@ function ToggleQuestionBox(enabled) {
     let txtQuestion = $("#txtQuestion");
     if (enabled === true) {
         let question = GetSession(SessionKeys.QnaQuestion);
-        question = question? question : defaultQnaQuestion;
+        question = question ? question : defaultQnaQuestion;
         txtQuestion.val(question);
         txtQuestion.prop('disabled', false);
     }

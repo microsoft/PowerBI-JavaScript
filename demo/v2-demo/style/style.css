@@ -10,18 +10,40 @@ body {
     margin:0;
     padding:0;
     height:100%;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
 }
 
 h1 {
     margin-bottom: 15px;
 }
 
+h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
 h3 {
     margin: 0;
+    font-size: 24px;
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
 }
 
 h8 {
     font-weight: 600;
+}
+
+button:focus {
+    outline: none !important;
+}
+
+a {
+    color: #337ab7;
+    text-decoration: none;
 }
 
 a:hover, a:visited, a:link, a:active
@@ -83,10 +105,6 @@ a:hover, a:visited, a:link, a:active
     margin-bottom: 5px;
     background: #F1F1F1;
     padding-left: 4px;
-}
-
-a {
-    text-decoration: none;
 }
 
 .pbi-line {
@@ -317,11 +335,13 @@ a {
     background: url('../images/expand.svg') center left;
     background-repeat: no-repeat;
     padding-right: 18px;
+    cursor: pointer;
 }
 
 .operations-ul > li.active:before {
     background: url('../images/collapse.svg') center left;
     background-repeat: no-repeat;
+    cursor: pointer;
 }
 
 .operations-ul a {
@@ -470,11 +490,13 @@ a {
 .textAreaControl {
     background-color: transparent;
     border: none;
-    outline:none;
+    outline: none;
     margin-right: 40px;
     height: 40px;
     opacity: 1;
     min-width: 80px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .textAreaControl img {
@@ -536,6 +558,7 @@ a {
     width: 160px;
     height: 32px;
     text-align: center;
+    cursor: pointer;
 }
 
 .selectButton:hover {
@@ -618,7 +641,7 @@ a {
     cursor: default;
 }
 
-.desktop-view iframe, .mobile-view iframe, #showcase-embedded-view iframe, #bookmark-embedded-view iframe {
+.desktop-view iframe, .mobile-view iframe, #showcase-embedded-view iframe, #bookmark-embedded-view iframe, #share-bookmark iframe {
     border: none;
 }
 

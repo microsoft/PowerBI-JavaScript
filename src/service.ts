@@ -105,6 +105,7 @@ export class Service implements IService {
   /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
   wpmp: wpmp.WindowPostMessageProxy;
   private router: router.Router;
+  private uniqueSessionId: string;
 
   private static DefaultInitEmbedUrl: string = "http://app.powerbi.com/reportEmbed";
 
@@ -120,6 +121,7 @@ export class Service implements IService {
     this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
     this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
     this.router = routerFactory(this.wpmp);
+    this.uniqueSessionId = utils.generateUUID();
 
     /**
      * Adds handler for report events.
@@ -296,6 +298,10 @@ export class Service implements IService {
     return this.embeds.length;
   }
 
+  getSdkSessionId(): string {
+    return this.uniqueSessionId;
+  }
+
   /**
    * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
    *
@@ -429,6 +435,12 @@ export class Service implements IService {
 
     if (!powerBiElement.powerBiEmbed) {
       return;
+    }
+
+    /** Removes the element frontLoad listener if exists. */
+    let embedElement = powerBiElement.powerBiEmbed;
+    if (embedElement.frontLoadHandler) {
+      embedElement.element.removeEventListener('ready', embedElement.frontLoadHandler, false);
     }
 
     /** Removes the component from an internal list of components. */
