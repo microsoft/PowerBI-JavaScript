@@ -121,6 +121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
 	        this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
 	        this.router = routerFactory(this.wpmp);
+	        this.uniqueSessionId = utils.generateUUID();
 	        /**
 	         * Adds handler for report events.
 	         */
@@ -272,6 +273,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return 0;
 	        }
 	        return this.embeds.length;
+	    };
+	    Service.prototype.getSdkSessionId = function () {
+	        return this.uniqueSessionId;
 	    };
 	    /**
 	     * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
@@ -550,7 +554,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (errors) {
 	            throw errors;
 	        }
-	        return this.service.hpm.post("/report/create", config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	        return this.service.hpm.post("/report/create", config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow)
 	            .then(function (response) {
 	            return response.body;
 	        }, function (response) {
@@ -613,7 +617,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Embed.prototype.load = function (config, phasedRender) {
 	        var _this = this;
 	        var path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
-	        return this.service.hpm.post(path, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	        return this.service.hpm.post(path, config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow)
 	            .then(function (response) {
 	            utils.assign(_this.config, config);
 	            return response.body;
@@ -1010,6 +1014,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return (Math.random() + 1).toString(36).substring(7);
 	}
 	exports.createRandomString = createRandomString;
+	/**
+	 * Generates a 20 charachter uuid.
+	 *
+	 * @export
+	 * @returns {string}
+	 */
+	function generateUUID() {
+	    var d = new Date().getTime();
+	    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+	        d += performance.now();
+	    }
+	    return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+	        // Generate a random number, scaled from 0 to 16.
+	        // Bitwise-and by 15 since we only care about the last 4 bits.
+	        var r = (d + Math.random() * 16) & 15 | 0;
+	        // Shift 4 times to divide by 16
+	        d >>= 4;
+	        return r.toString(16);
+	    });
+	}
+	exports.generateUUID = generateUUID;
 	/**
 	 * Adds a parameter to the given url
 	 *
@@ -5176,7 +5201,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.5 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -5231,7 +5256,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ function(module, exports) {
+	/***/ (function(module, exports) {
 	
 		"use strict";
 		var WindowPostMessageProxy = (function () {
@@ -5466,7 +5491,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.WindowPostMessageProxy = WindowPostMessageProxy;
 	
 	
-	/***/ }
+	/***/ })
 	/******/ ])
 	});
 	;
@@ -5476,7 +5501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
+	/*! http-post-message v0.2.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -5531,7 +5556,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ function(module, exports) {
+	/***/ (function(module, exports) {
 	
 		"use strict";
 		var HttpPostMessage = (function () {
@@ -5650,7 +5675,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.HttpPostMessage = HttpPostMessage;
 	
 	
-	/***/ }
+	/***/ })
 	/******/ ])
 	});
 	;
