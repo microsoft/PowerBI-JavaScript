@@ -65,7 +65,7 @@ function _Embed_BasicEmbed() {
     report.off("saved");
     report.on("saved", function(event) {
         Log.log(event.detail);
-        if(event.detail.saveAs) {
+        if (event.detail.saveAs) {
             Log.logText('In order to interact with the new report, create a new token and load the new report');
          }
      });
@@ -130,7 +130,7 @@ function _Embed_BasicEmbed_Mobile() {
     report.off("saved");
     report.on("saved", function(event) {
         Log.log(event.detail);
-        if(event.detail.saveAs) {
+        if (event.detail.saveAs) {
             Log.logText('In order to interact with the new report, create a new token and load the new report');
          }
      });
@@ -173,7 +173,7 @@ function _Embed_VisualEmbed() {
     };
 
     // Get a reference to the embedded report HTML element
-    var embedContainer = $('#visualContainer')[0];
+    var embedContainer = $('#embedContainer')[0];
 
     // Embed the report and display it within the div container.
     var report = powerbi.embed(embedContainer, config);
@@ -369,7 +369,7 @@ function _Mock_Embed_BasicEmbed(isEdit) {
     report.off("saved");
     report.on("saved", function(event) {
         Log.log(event.detail);
-        if(event.detail.saveAs) {
+        if (event.detail.saveAs) {
           Log.logText('In order to interact with the new report, create a new token and load the new report');
         }
     });
@@ -439,7 +439,7 @@ function _Embed_BasicEmbed_EditMode() {
     report.off("saved");
     report.on("saved", function(event) {
         Log.log(event.detail);
-        if(event.detail.saveAs) {
+        if (event.detail.saveAs) {
           Log.logText('In order to interact with the new report, create a new token and load the new report');
         }
     });
@@ -868,6 +868,216 @@ function _Report_RemoveFilters() {
         });
 }
 
+function _ReportVisual_Report_SetFilters() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Build the filter you want to use. For more information, See Constructing
+    // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
+    const filter = {
+        $schema: "http://powerbi.com/product/schema#basic",
+        target: {
+            table: "Date",
+            column: "Months"
+        },
+        operator: "In",
+        values: ["Oct", "Nov", "Dec"]
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    visual = powerbi.get(embedContainer);
+
+    // Set the filter for the report.
+    // Pay attention that setFilters receives an array.
+    visual.setFilters([filter], models.FiltersLevel.Report)
+        .then(function () {
+            Log.logText("Report filter was set.");
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _ReportVisual_Report_GetFilters() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    visual = powerbi.get(embedContainer);
+
+    // Get the filters applied to the report.
+    visual.getFilters(models.FiltersLevel.Report)
+        .then(function (filters) {
+            Log.log(filters);
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _ReportVisual_Report_RemoveFilters() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Remove the filters currently applied to the report.
+    report.removeFilters(models.FiltersLevel.Report)
+        .then(function () {
+          Log.logText("Report filters were removed.");
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _ReportVisual_Page_SetFilters() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Build the filter you want to use. For more information, See Constructing
+    // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
+    const filter = {
+        $schema: "http://powerbi.com/product/schema#basic",
+        target: {
+            table: "Date",
+            column: "Months"
+        },
+        operator: "In",
+        values: ["Oct", "Nov", "Dec"]
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    visual = powerbi.get(embedContainer);
+
+    // Set the filter for the report.
+    // Pay attention that setFilters receives an array.
+    visual.setFilters([filter], models.FiltersLevel.Page)
+        .then(function () {
+            Log.logText("Page filter was set.");
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _ReportVisual_Page_GetFilters() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    visual = powerbi.get(embedContainer);
+
+    // Get the filters applied to the report.
+    visual.getFilters(models.FiltersLevel.Page)
+        .then(function (filters) {
+            Log.log(filters);
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _ReportVisual_Page_RemoveFilters() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Remove the filters currently applied to the report.
+    report.removeFilters(models.FiltersLevel.Page)
+        .then(function () {
+          Log.logText("Page filters were removed.");
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _ReportVisual_Visual_SetFilters() {
+    // Build the filter you want to use. For more information, See Constructing
+    // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
+    const filter = {
+        $schema: "http://powerbi.com/product/schema#basic",
+        target: {
+            table: "Date",
+            column: "Months"
+        },
+        operator: "In",
+        values: ["Oct", "Nov", "Dec"]
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    visual = powerbi.get(embedContainer);
+
+    // Set the filter for the report.
+    // Pay attention that setFilters receives an array.
+    visual.setFilters([filter])
+        .then(function () {
+            Log.logText("Report filter was set.");
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _ReportVisual_Visual_GetFilters() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    visual = powerbi.get(embedContainer);
+
+    // Get the filters applied to the report.
+    visual.getFilters()
+        .then(function (filters) {
+            Log.log(filters);
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
+function _ReportVisual_Visual_RemoveFilters() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Remove the filters currently applied to the report.
+    report.removeFilters()
+        .then(function () {
+          Log.logText("Report filters were removed.");
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
 function _Report_PrintCurrentReport() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
@@ -1092,7 +1302,6 @@ function _Report_HideSingleVisualHeader() {
         .catch(function (error) {
             Log.log(errors);
         });
-
 }
 
 function _Report_FullScreen() {
@@ -1532,6 +1741,98 @@ function _Events_BookmarkApplied() {
     Log.logText("Apply a bookmark to see events in Log window.");
 }
 
+function _Events_ReportLoaded() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("loaded");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("loaded", function() {
+        Log.logText("Loaded");
+    });
+
+    Log.logText("Reload the report to see the loaded event.");
+}
+
+function _Events_ReportRendered() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
+    });
+
+    Log.logText("Reload the report to see the rendered event.");
+}
+
+function _Events_ReportSaved() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Report.off removes a given event handler if it exists.
+    report.off("saved");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("saved", function(event) {
+        Log.log(event.detail);
+        if (event.detail.saveAs) {
+            Log.logText('In order to interact with the new report, create a new token and load the new report');
+        }
+    });
+
+    Log.logText("Save/SaveAs the report to see the saved event.");
+}
+
+function _Events_TileLoaded() {
+    // Get a reference to the embedded tile HTML element
+    var tileContainer = $('#tileContainer')[0];
+
+    // Get a reference to the embedded tile.
+    var tile = powerbi.get(tileContainer);
+
+    // Tile.off removes a given event handler if it exists.
+    tile.off("tileLoaded");
+
+    // Tile.on will add an event handler which prints to Log window.
+    tile.on("tileLoaded", function(event) {
+        Log.logText("Tile loaded event");
+    });
+}
+
+function _Events_TileClicked() {
+    // Get a reference to the embedded tile HTML element
+    var tileContainer = $('#tileContainer')[0];
+
+    // Get a reference to the embedded tile.
+    var tile = powerbi.get(tileContainer);
+
+    // Tile.off removes a given event handler if it exists.
+    tile.off("tileClicked");
+
+    // Tile.on will add an event handler which prints to Log window.
+    tile.on("tileClicked", function(event) {
+        Log.logText("Tile clicked event"); 
+        Log.log(event.detail); 
+    });
+
+    Log.logText("Click on the tile to see the tile clicked event.");
+}
+
 // ---- Dashboard Operations ----------------------------------------------------
 
 function _Dashboard_GetId() {
@@ -1627,7 +1928,7 @@ function _Qna_QuestionChanged() {
 
 function _Visual_DataSelected() {
     // Get a reference to the embedded visual HTML element
-    var visualContainer = $('#visualContainer')[0];
+    var visualContainer = $('#embedContainer')[0];
 
     // Get a reference to the embedded visual.
     visual = powerbi.get(visualContainer);
@@ -2022,12 +2323,12 @@ function _Visual_RemoveFilters() {
 
             // Retrieve the wanted visual.
             var visual = visuals.find(function(visual) {
-              return visual.name == "VisualContainer4";
+              return visual.name == "47eb6c0240defd498d4b";
             });
 
             visual.removeFilters()
               .then(function () {
-                Log.logText("\"Category Breakdown\" visual filters were removed.");
+                Log.logText("\"Sentiment by Year and Months\" visual filters were removed.");
               })
               .catch(function (errors) {
                 Log.log(errors);
@@ -2130,4 +2431,69 @@ function _Visual_ExportData_Underlying() {
       .catch(function (errors) {
         Log.log(errors);
       });
+}
+
+function _ReportVisual_UpdateSettings() {
+    // The new settings that you want to apply to the report.
+    const newSettings = {
+      filterPaneEnabled: true
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    visual = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    visual.updateSettings(newSettings)
+        .then(function () {
+            Log.logText("Filter pane was added.");
+        })
+        .catch(function (error) {
+            Log.log(errors);
+        });
+}
+
+function _ReportVisual_HideSingleVisualHeader() {
+
+    // Define settings to hide the header of a single visual
+    var newSettings = {
+      visualSettings: {
+        visualHeaders: [
+          {
+            settings: {
+              visible: true
+            }
+            // No selector - Show visual header for all the visuals in the report
+          },
+          {
+            settings: {
+              visible: false
+            },
+            selector: {
+                $schema: "http://powerbi.com/product/schema#visualSelector",
+                visualName: "47eb6c0240defd498d4b"
+                // The visual name can be retrieved using getVisuals()
+                // Hide visual header for a single visual only
+            }
+          }
+        ]
+      }
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    visual = powerbi.get(embedContainer);
+
+    // Update the settings by passing in the new settings you have configured.
+    visual.updateSettings(newSettings)
+        .then(function () {
+            Log.logText("Visual header was successfully hidden for 'Sentiment by Year and Months' visual.");
+        })
+        .catch(function (error) {
+            Log.log(errors);
+        });
 }

@@ -65,6 +65,9 @@ function OpenCodeStep(mode, entityType, tokenType) {
     $(classPrefix + 'Container').removeAttr('id');
     $(classPrefix + 'MobileContainer').removeAttr('id');
 
+    // remove ID if exists on any container
+    $("#" + containerID).removeAttr('id');
+
     const activeContainer = classPrefix + ($(".desktop-view").hasClass(active_class) ? 'Container' : 'MobileContainer');
 
     $(activeContainer).attr('id', containerID);
@@ -154,7 +157,7 @@ function OpenInteractTab() {
     if (entityType == EntityType.Tile)
     {
         $("#settings").load("settings_interact_tile.html", function() {
-            SetToggleHandler("tile-operations-div");
+            SetToggleHandler("operation-categories");
             LoadCodeArea("#embedCodeDiv", "");
         });
     }
