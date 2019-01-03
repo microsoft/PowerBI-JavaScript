@@ -5431,11 +5431,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        throw Visual.SetPageNotSupportedError;
 	    };
 	    /**
-	     * Gets filters that are applied at the visual level.
+	     * Gets filters that are applied to the filter level.
+	     * Default filter level is visual level.
 	     *
 	     * ```javascript
-	     * // Get filters applied at visual level
-	     * visual.getFilters()
+	     * visual.getFilters(filtersLevel)
 	     *   .then(filters => {
 	     *     ...
 	     *   });
@@ -5443,18 +5443,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @returns {Promise<models.IFilter[]>}
 	     */
-	    Visual.prototype.getFilters = function () {
-	        throw Visual.GetFiltersNotSupportedError;
+	    Visual.prototype.getFilters = function (filtersLevel) {
+	        var url = this.getFiltersLevelUrl(filtersLevel);
+	        return this.service.hpm.get(url, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
 	    };
 	    /**
-	     * Sets filters at the visual level.
+	     * Sets filters at the filter level.
+	     * Default filter level is visual level.
 	     *
 	     * ```javascript
 	     * const filters: [
 	     *    ...
 	     * ];
 	     *
-	     * visual.setFilters(filters)
+	     * visual.setFilters(filters, filtersLevel)
 	     *  .catch(errors => {
 	     *    ...
 	     *  });
@@ -5463,12 +5468,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {(models.IFilter[])} filters
 	     * @returns {Promise<void>}
 	     */
-	    Visual.prototype.setFilters = function (filters) {
-	        throw Visual.SetFiltersNotSupportedError;
+	    Visual.prototype.setFilters = function (filters, filtersLevel) {
+	        var url = this.getFiltersLevelUrl(filtersLevel);
+	        return this.service.hpm.put(url, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Removes all filters from the current filter level.
+	     * Default filter level is visual level.
+	     *
+	     * ```javascript
+	     * visual.removeFilters(filtersLevel);
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Visual.prototype.removeFilters = function (filtersLevel) {
+	        return this.setFilters([], filtersLevel);
+	    };
+	    Visual.prototype.getFiltersLevelUrl = function (filtersLevel) {
+	        var config = this.config;
+	        switch (filtersLevel) {
+	            case models.FiltersLevel.Report:
+	                return "/report/filters";
+	            case models.FiltersLevel.Page:
+	                return "/report/pages/" + config.pageName + "/filters";
+	            default:
+	                return "/report/pages/" + config.pageName + "/visuals/" + config.visualName + "/filters";
+	        }
 	    };
 	    Visual.type = "visual";
-	    Visual.GetFiltersNotSupportedError = "Getting visual level filters is not supported.";
-	    Visual.SetFiltersNotSupportedError = "Setting visual level filters is not supported.";
 	    Visual.GetPagesNotSupportedError = "Get pages is not supported while embedding a visual.";
 	    Visual.SetPageNotSupportedError = "Set page is not supported while embedding a visual.";
 	    return Visual;
@@ -5526,7 +5557,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.5 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -5581,7 +5612,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ (function(module, exports) {
+	/***/ function(module, exports) {
 	
 		"use strict";
 		var WindowPostMessageProxy = (function () {
@@ -5816,7 +5847,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.WindowPostMessageProxy = WindowPostMessageProxy;
 	
 	
-	/***/ })
+	/***/ }
 	/******/ ])
 	});
 	;
