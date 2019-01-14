@@ -398,6 +398,10 @@ declare module "embed" {
          */
         private setIframe(isLoad, phasedRender?);
         /**
+         * Sets Iframe's title
+         */
+        setComponentTitle(title: string): void;
+        /**
          * Adds the ability to get groupId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
          *
@@ -626,6 +630,16 @@ declare module "page" {
          */
         visibility: models.SectionVisibility;
         /**
+         * Page size as saved in the report.
+         * @type {models.ICustomPageSize}
+         */
+        defaultSize: models.ICustomPageSize;
+        /**
+         * Page display options as saved in the report.
+         * @type {models.ICustomPageSize}
+         */
+        defaultDisplayOption: models.DisplayOption;
+        /**
          * Creates an instance of a Power BI report page.
          *
          * @param {IReportNode} report
@@ -634,7 +648,7 @@ declare module "page" {
          * @param {boolean} [isActivePage]
          * @param {models.SectionVisibility} [visibility]
          */
-        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility);
+        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility, defaultSize?: models.ICustomPageSize, defaultDisplayOption?: models.DisplayOption);
         /**
          * Gets all page level filters within the report.
          *

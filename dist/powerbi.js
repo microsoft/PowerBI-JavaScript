@@ -860,6 +860,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	    /**
+	     * Sets Iframe's title
+	     */
+	    Embed.prototype.setComponentTitle = function (title) {
+	        if (!this.iframe) {
+	            return;
+	        }
+	        if (title == null) {
+	            this.iframe.removeAttribute("title");
+	        }
+	        else {
+	            this.iframe.setAttribute("title", title);
+	        }
+	    };
+	    /**
 	     * Adds the ability to get groupId from url.
 	     * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
 	     *
@@ -4406,7 +4420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            .then(function (response) {
 	            return response.body
 	                .map(function (page) {
-	                return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility);
+	                return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
 	            });
 	        }, function (response) {
 	            throw response.body;
@@ -4633,12 +4647,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {boolean} [isActivePage]
 	     * @param {models.SectionVisibility} [visibility]
 	     */
-	    function Page(report, name, displayName, isActivePage, visibility) {
+	    function Page(report, name, displayName, isActivePage, visibility, defaultSize, defaultDisplayOption) {
 	        this.report = report;
 	        this.name = name;
 	        this.displayName = displayName;
 	        this.isActive = isActivePage;
 	        this.visibility = visibility;
+	        this.defaultSize = defaultSize;
+	        this.defaultDisplayOption = defaultDisplayOption;
 	    }
 	    /**
 	     * Gets all page level filters within the report.
@@ -5557,7 +5573,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.5 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -5612,7 +5628,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ function(module, exports) {
+	/***/ (function(module, exports) {
 	
 		"use strict";
 		var WindowPostMessageProxy = (function () {
@@ -5847,7 +5863,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.WindowPostMessageProxy = WindowPostMessageProxy;
 	
 	
-	/***/ }
+	/***/ })
 	/******/ ])
 	});
 	;
