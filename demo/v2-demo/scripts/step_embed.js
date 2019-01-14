@@ -82,7 +82,7 @@ function Page_GetFilters() {
 }
 
 function Page_GetVisuals() {
-  SetCode(_Page_GetVisuals);
+    SetCode(_Page_GetVisuals);
 }
 
 function Page_SetFilters() {
@@ -112,6 +112,26 @@ function Events_SaveAsTriggered() {
 
 function Events_BookmarkApplied() {
     SetCode(_Events_BookmarkApplied);
+}
+
+function Events_ReportLoaded() {
+    SetCode(_Events_ReportLoaded);
+}
+
+function Events_ReportRendered() {
+    SetCode(_Events_ReportRendered);
+}
+
+function Events_ReportSaved() {
+    SetCode(_Events_ReportSaved);
+}
+
+function Events_TileLoaded() {
+    SetCode(_Events_TileLoaded);
+}
+
+function Events_TileClicked() {
+    SetCode(_Events_TileClicked);
 }
 
 // ---- Edit and Save Operations ----------------------------------------------------
@@ -230,4 +250,48 @@ function Visual_ExportData_Summarized() {
 
 function Visual_ExportData_Underlying() {
     SetCode(_Visual_ExportData_Underlying);
+}
+
+function ReportVisual_UpdateSettings() {
+    SetCode(_ReportVisual_UpdateSettings);
+}
+
+function ReportVisual_Report_SetFilters() {
+    SetCode(_ReportVisual_Report_SetFilters);
+}
+
+function ReportVisual_Report_GetFilters() {
+    SetCode(_ReportVisual_Report_GetFilters);
+}
+
+function ReportVisual_Report_RemoveFilters() {
+    SetCode(_ReportVisual_Report_RemoveFilters);
+}
+
+function ReportVisual_Page_SetFilters() {
+    SetCode(_ReportVisual_Page_SetFilters);
+}
+
+function ReportVisual_Page_GetFilters() {
+    SetCode(_ReportVisual_Page_GetFilters);
+}
+
+function ReportVisual_Page_RemoveFilters() {
+    SetCode(_ReportVisual_Page_RemoveFilters);
+}
+
+function ReportVisual_Visual_SetFilters() {
+    SetCode(_ReportVisual_Visual_SetFilters);
+}
+
+function ReportVisual_Visual_GetFilters() {
+    SetCode(_ReportVisual_Visual_GetFilters);
+}
+
+function ReportVisual_Visual_RemoveFilters() {
+    SetCode(_ReportVisual_Visual_RemoveFilters);
+}
+
+function ReportVisual_HideSingleVisualHeader() {
+    SetCode(_ReportVisual_HideSingleVisualHeader);
 }

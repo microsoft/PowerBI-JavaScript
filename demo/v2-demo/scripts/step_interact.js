@@ -43,11 +43,6 @@ function OpenNavigationOperations() {
     $("#navigation-operations").toggleClass("active");
 }
 
-function OpenVisualDataOperations() {
-    $("#visual-data-operations-ul").toggle();
-    $("#visual-data-operations").toggleClass("active");
-}
-
 function OpenDashboardGeneralOperations() {
     $("#dashboard-general-operations-ul").toggle();
     $("#dashboard-general-operations").toggleClass("active");

@@ -108,8 +108,6 @@ function ClearTextArea(textAreaSelector) {
 
 function getEmbedContainerID(entityType) {
     switch (entityType) {
-        case EntityType.Visual:
-            return "visualContainer";
         case EntityType.Dashboard:
             return "dashboardContainer";
         case EntityType.Tile:

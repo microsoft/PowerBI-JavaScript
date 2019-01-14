@@ -2715,24 +2715,86 @@ describe('SDK-to-HPM', function () {
         expect(spyArgs[3]).toEqual(visualFrame.contentWindow);
       });
 
-      it('Not supported visual method: getFilters', function () {
-          // Act
-        const attempt = () => {
-          embeddedVisual.getFilters()
-        };
+      it('embeddedVisual.getFilters(models.FiltersLevel.Report) sends GET /report/filters', function () {
+        // Act
+        embeddedVisual.getFilters(models.FiltersLevel.Report);
 
         // Assert
-        expect(attempt).toThrow(visual.Visual.GetFiltersNotSupportedError);
+        expect(spyHpm.get).toHaveBeenCalledWith('/report/filters', { uid: visualUniqueId }, visualFrame.contentWindow);
       });
 
-      it('Not supported visual method: setFilters', function () {
-        // Act
-        const attempt = () => {
-          embeddedVisual.setFilters([])
+      it('embeddedVisual.setFilters(filters, models.FiltersLevel.Report) sends PUT /report/filters', function () {
+        // Arrange
+        const testData = {
+          filters: [
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+          ]
         };
 
+        // Act
+        embeddedVisual.setFilters(testData.filters, models.FiltersLevel.Report);
+
         // Assert
-        expect(attempt).toThrow(visual.Visual.SetFiltersNotSupportedError);
+        expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', testData.filters, { uid: visualUniqueId }, visualFrame.contentWindow);
+      });
+
+      it('embeddedVisual.getFilters(models.FiltersLevel.Page) sends GET /report/pages/ReportSection1/filters', function () {
+        // Act
+        embeddedVisual.getFilters(models.FiltersLevel.Page);
+
+        // Assert
+        expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/ReportSection1/filters`, { uid: visualUniqueId }, visualFrame.contentWindow);
+      });
+
+      it('embeddedVisual.setFilters(filters, models.FiltersLevel.Page) sends PUT /report/pages/ReportSection1/filters', function () {
+        // Arrange
+        const testData = {
+          filters: [
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+          ],
+          response: {
+            body: []
+          }
+        };
+
+        spyHpm.put.and.returnValue(Promise.resolve(testData.response));
+
+        // Act
+        embeddedVisual.setFilters(testData.filters, models.FiltersLevel.Page);
+
+        // Assert
+        expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/ReportSection1/filters`, testData.filters, { uid: visualUniqueId }, visualFrame.contentWindow);
+      });
+
+      it('embeddedVisual.getFilters() sends GET /report/pages/ReportSection1/visuals/VisualContainer1/filters', function () {
+        // Act
+        embeddedVisual.getFilters();
+
+        // Assert
+        expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/ReportSection1/visuals/VisualContainer1/filters`, { uid: visualUniqueId }, visualFrame.contentWindow);
+      });
+
+      it('embeddedVisual.setFilters(filters) sends PUT /report/pages/ReportSection1/visuals/VisualContainer1/filters', function () {
+        // Arrange
+        const testData = {
+          filters: [
+            (new models.BasicFilter({ table: "Cars", measure: "Make" }, "In", ["subaru", "honda"])).toJSON(),
+            (new models.AdvancedFilter({ table: "Cars", measure: "Make" }, "And", [{ value: "subaru", operator: "None" }, { value: "honda", operator: "Contains" }])).toJSON()
+          ],
+          response: {
+            body: []
+          }
+        };
+
+        spyHpm.put.and.returnValue(Promise.resolve(testData.response));
+
+        // Act
+        embeddedVisual.setFilters(testData.filters);
+
+        // Assert
+        expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/ReportSection1/visuals/VisualContainer1/filters`, testData.filters, { uid: visualUniqueId }, visualFrame.contentWindow);
       });
 
       it('Not supported visual method: getPages', function () {

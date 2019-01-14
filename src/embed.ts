@@ -571,6 +571,20 @@ export abstract class Embed {
   }
 
   /**
+   * Sets Iframe's title
+   */
+  setComponentTitle(title: string): void {
+    if(!this.iframe) {
+      return;
+    }
+    if(title == null) {
+      this.iframe.removeAttribute("title");
+    } else {
+      this.iframe.setAttribute("title", title);
+    }
+  }
+
+  /**
    * Adds the ability to get groupId from url.
    * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
    *

@@ -13,8 +13,6 @@ import { Page } from './page';
 export class Visual extends Report {
   static type = "visual";
 
-  static GetFiltersNotSupportedError = "Getting visual level filters is not supported.";
-  static SetFiltersNotSupportedError = "Setting visual level filters is not supported.";
   static GetPagesNotSupportedError = "Get pages is not supported while embedding a visual.";
   static SetPageNotSupportedError = "Set page is not supported while embedding a visual.";
 
@@ -103,11 +101,11 @@ export class Visual extends Report {
   }
 
   /**
-   * Gets filters that are applied at the visual level.
+   * Gets filters that are applied to the filter level.
+   * Default filter level is visual level.
    * 
    * ```javascript
-   * // Get filters applied at visual level
-   * visual.getFilters()
+   * visual.getFilters(filtersLevel)
    *   .then(filters => {
    *     ...
    *   });
@@ -115,19 +113,25 @@ export class Visual extends Report {
    * 
    * @returns {Promise<models.IFilter[]>}
    */
-  getFilters(): Promise<models.IFilter[]> {
-    throw Visual.GetFiltersNotSupportedError;
+  getFilters(filtersLevel?: models.FiltersLevel): Promise<models.IFilter[]> {
+    const url: string = this.getFiltersLevelUrl(filtersLevel);
+    return this.service.hpm.get<models.IFilter[]>(url, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => response.body,
+      response => {
+        throw response.body;
+      });
   }
 
   /**
-   * Sets filters at the visual level.
+   * Sets filters at the filter level.
+   * Default filter level is visual level.
    * 
    * ```javascript
    * const filters: [
    *    ...
    * ];
    * 
-   * visual.setFilters(filters)
+   * visual.setFilters(filters, filtersLevel)
    *  .catch(errors => {
    *    ...
    *  });
@@ -136,7 +140,37 @@ export class Visual extends Report {
    * @param {(models.IFilter[])} filters
    * @returns {Promise<void>}
    */
-  setFilters(filters: models.IFilter[]): Promise<void> {
-    throw Visual.SetFiltersNotSupportedError;
+  setFilters(filters: models.IFilter[], filtersLevel?: models.FiltersLevel): Promise<void> {
+    const url: string = this.getFiltersLevelUrl(filtersLevel);
+    return this.service.hpm.put<models.IError[]>(url, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
+   * Removes all filters from the current filter level.
+   * Default filter level is visual level.
+   *
+   * ```javascript
+   * visual.removeFilters(filtersLevel);
+   * ```
+   *
+   * @returns {Promise<void>}
+   */
+  removeFilters(filtersLevel?: models.FiltersLevel): Promise<void> {
+    return this.setFilters([], filtersLevel);
+  }
+
+  private getFiltersLevelUrl(filtersLevel: models.FiltersLevel): string {
+    const config = <embed.IVisualEmbedConfiguration>this.config;
+    switch (filtersLevel) {
+      case models.FiltersLevel.Report:
+        return `/report/filters`;
+      case models.FiltersLevel.Page:
+        return `/report/pages/${config.pageName}/filters`;
+      default:
+        return `/report/pages/${config.pageName}/visuals/${config.visualName}/filters`;
+    }
   }
 }

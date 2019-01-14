@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.6 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.7 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     /**
      * Raises a custom event with event data on the specified HTML element.
@@ -398,6 +398,10 @@ declare module "embed" {
          */
         private setIframe(isLoad, phasedRender?);
         /**
+         * Sets Iframe's title
+         */
+        setComponentTitle(title: string): void;
+        /**
          * Adds the ability to get groupId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
          *
@@ -626,6 +630,16 @@ declare module "page" {
          */
         visibility: models.SectionVisibility;
         /**
+         * Page size as saved in the report.
+         * @type {models.ICustomPageSize}
+         */
+        defaultSize: models.ICustomPageSize;
+        /**
+         * Page display options as saved in the report.
+         * @type {models.ICustomPageSize}
+         */
+        defaultDisplayOption: models.DisplayOption;
+        /**
          * Creates an instance of a Power BI report page.
          *
          * @param {IReportNode} report
@@ -634,7 +648,7 @@ declare module "page" {
          * @param {boolean} [isActivePage]
          * @param {models.SectionVisibility} [visibility]
          */
-        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility);
+        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility, defaultSize?: models.ICustomPageSize, defaultDisplayOption?: models.DisplayOption);
         /**
          * Gets all page level filters within the report.
          *
@@ -1119,8 +1133,6 @@ declare module "visual" {
      */
     export class Visual extends Report {
         static type: string;
-        static GetFiltersNotSupportedError: string;
-        static SetFiltersNotSupportedError: string;
         static GetPagesNotSupportedError: string;
         static SetPageNotSupportedError: string;
         /**
@@ -1146,11 +1158,11 @@ declare module "visual" {
          */
         setPage(pageName: string): Promise<void>;
         /**
-         * Gets filters that are applied at the visual level.
+         * Gets filters that are applied to the filter level.
+         * Default filter level is visual level.
          *
          * ```javascript
-         * // Get filters applied at visual level
-         * visual.getFilters()
+         * visual.getFilters(filtersLevel)
          *   .then(filters => {
          *     ...
          *   });
@@ -1158,16 +1170,17 @@ declare module "visual" {
          *
          * @returns {Promise<models.IFilter[]>}
          */
-        getFilters(): Promise<models.IFilter[]>;
+        getFilters(filtersLevel?: models.FiltersLevel): Promise<models.IFilter[]>;
         /**
-         * Sets filters at the visual level.
+         * Sets filters at the filter level.
+         * Default filter level is visual level.
          *
          * ```javascript
          * const filters: [
          *    ...
          * ];
          *
-         * visual.setFilters(filters)
+         * visual.setFilters(filters, filtersLevel)
          *  .catch(errors => {
          *    ...
          *  });
@@ -1176,7 +1189,19 @@ declare module "visual" {
          * @param {(models.IFilter[])} filters
          * @returns {Promise<void>}
          */
-        setFilters(filters: models.IFilter[]): Promise<void>;
+        setFilters(filters: models.IFilter[], filtersLevel?: models.FiltersLevel): Promise<void>;
+        /**
+         * Removes all filters from the current filter level.
+         * Default filter level is visual level.
+         *
+         * ```javascript
+         * visual.removeFilters(filtersLevel);
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        removeFilters(filtersLevel?: models.FiltersLevel): Promise<void>;
+        private getFiltersLevelUrl(filtersLevel);
     }
 }
 declare module "service" {
