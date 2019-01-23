@@ -639,6 +639,40 @@ describe('service', function () {
         // Assert
         expect(report.createConfig.datasetId).toEqual(testDatasetId);
       });
+
+      it('theme should be in create config if exists is embedConfig', function () {
+        // Arrange
+
+        const testDatasetId = "ABC123";
+        const accessToken = 'ABC123';
+        const theme = {themeJson: {name: "Theme ABC 123"}};
+        const embedUrl = `https://app.powerbi.com/reportEmbed?datasetId=${testDatasetId}`;
+        const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}"</div>`)
+          .appendTo('#powerbi-fixture');
+
+        // Act
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken, theme: theme });
+
+        // Assert
+        expect(report.createConfig.theme).toEqual(theme);
+      });
+
+      it('theme should be undefined in create config if not exists is embedConfig', function () {
+        // Arrange
+
+        const testDatasetId = "ABC123";
+        const accessToken = 'ABC123';
+        const theme = {themeJson: {name: "Theme ABC 123"}};
+        const embedUrl = `https://app.powerbi.com/reportEmbed?datasetId=${testDatasetId}`;
+        const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}"</div>`)
+          .appendTo('#powerbi-fixture');
+
+        // Act
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken });
+
+        // Assert
+        expect(report.createConfig.theme).toBeUndefined();
+      });
     });
 
     describe('reports', function () {
@@ -724,6 +758,40 @@ describe('service', function () {
 
         // Assert
         expect((<embed.IEmbedConfiguration>report.config).id).toEqual(testReportId);
+      });
+
+      it('theme should be in report config if exists is embedConfig', function () {
+        // Arrange
+        const testReportId = "ABC123";
+        const embedUrl = `https://app.powerbi.com/reportEmbed?reportId=${testReportId}`;
+        const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id></div>`)
+          .appendTo('#powerbi-fixture');
+
+        const theme = {themeJson: {name: "Theme ABC 123"}};
+        const configuration: embed.IEmbedConfiguration = { theme: theme };
+
+        // Act
+        const report = powerbi.embed($reportContainer[0], configuration);
+
+        // Assert
+        expect((<embed.IEmbedConfiguration>report.config).theme).toEqual(theme);
+      });
+
+      it('theme should be  undefined in report config if not exists is embedConfig', function () {
+        // Arrange
+        const testReportId = "ABC123";
+        const embedUrl = `https://app.powerbi.com/reportEmbed?reportId=${testReportId}`;
+        const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id></div>`)
+          .appendTo('#powerbi-fixture');
+
+        const theme = {themeJson: {name: "Theme ABC 123"}};
+        const configuration: embed.IEmbedConfiguration = {};
+
+        // Act
+        const report = powerbi.embed($reportContainer[0], configuration);
+
+        // Assert
+        expect((<embed.IEmbedConfiguration>report.config).theme).toBeUndefined();
       });
     });
 
@@ -3792,6 +3860,53 @@ describe('SDK-to-HPM', function () {
             expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, [], { uid: uniqueId }, iframe.contentWindow);
             expect(response).toEqual(null);
             done();
+          });
+      });
+    });
+
+    describe('theme', function () {
+      it('report.applyTheme(theme) sends PUT /report/theme with theme in body', function () {
+        // Arrange
+        const testData = {
+          theme: {
+            themeJson: {
+              name: "Theme ABC 123"
+            }
+          },
+          response: {
+            body: null
+          }
+        };
+
+        spyHpm.post.and.returnValue(Promise.resolve(testData.response));
+        report.applyTheme(testData.theme)
+          .then(() => {
+            spyHpm.post.calls.reset();
+
+            // Act
+            report.reload();
+
+            // Assert
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.theme), { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
+          });
+      });
+
+      it('report.resetTheme() sends PUT /report/theme with empty object as theme in body', function () {
+        // Arrange
+        const response =  {
+          body: null
+        };
+
+        spyHpm.post.and.returnValue(Promise.resolve(response));
+        report.resetTheme()
+          .then(() => {
+            spyHpm.post.calls.reset();
+
+            // Act
+            report.reload();
+
+            // Assert
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining({}), { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
           });
       });
     });

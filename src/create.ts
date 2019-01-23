@@ -48,11 +48,12 @@ export class Create extends embed.Embed {
       const config = <embed.IEmbedConfiguration>this.config;
 
       this.createConfig = {
-          datasetId: config.datasetId || this.getId(),
           accessToken: config.accessToken,
-          tokenType: config.tokenType,
+          datasetId: config.datasetId || this.getId(),
+          groupId:  config.groupId,
           settings: settings,
-          groupId:  config.groupId
+          tokenType: config.tokenType,
+          theme: config.theme
       }
   }
 

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.7 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.8 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -4600,6 +4600,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
+	    /**
+	    * Apply a theme to the report
+	    *
+	    * ```javascript
+	    * report.applyTheme(theme);
+	    * ```
+	    */
+	    Report.prototype.applyTheme = function (theme) {
+	        return this.applyThemeInternal(theme);
+	    };
+	    /**
+	    * Reset and apply the default theme of the report
+	    *
+	    * ```javascript
+	    * report.resetTheme();
+	    * ```
+	    */
+	    Report.prototype.resetTheme = function () {
+	        return this.applyThemeInternal({});
+	    };
+	    Report.prototype.applyThemeInternal = function (theme) {
+	        return this.service.hpm.put('/report/theme', theme, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
 	    Report.prototype.viewModeToString = function (viewMode) {
 	        var mode;
 	        switch (viewMode) {
@@ -5066,11 +5095,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.config = utils.assign({ settings: settings }, baseConfig);
 	        var config = this.config;
 	        this.createConfig = {
-	            datasetId: config.datasetId || this.getId(),
 	            accessToken: config.accessToken,
-	            tokenType: config.tokenType,
+	            datasetId: config.datasetId || this.getId(),
+	            groupId: config.groupId,
 	            settings: settings,
-	            groupId: config.groupId
+	            tokenType: config.tokenType,
+	            theme: config.theme
 	        };
 	    };
 	    /**
@@ -5562,7 +5592,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.6.7',
+	    version: '2.6.8',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });

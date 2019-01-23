@@ -58,6 +58,7 @@ export interface IEmbedConfiguration extends IEmbedConfigurationBase {
   dashboardId?: string;
   height?: number;
   width?: number;
+  theme?: models.IReportTheme;
 }
 
 export interface IVisualEmbedConfiguration extends IEmbedConfiguration {

@@ -365,6 +365,38 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     });
   }
 
+  /**
+  * Apply a theme to the report
+  *
+  * ```javascript
+  * report.applyTheme(theme);
+  * ```
+  */
+  applyTheme(theme: models.IReportTheme): Promise<void> {
+    return this.applyThemeInternal(theme);
+  }
+
+  /**
+  * Reset and apply the default theme of the report
+  *
+  * ```javascript
+  * report.resetTheme();
+  * ```
+  */
+  resetTheme(): Promise<void> {
+    return this.applyThemeInternal(<models.IReportTheme>{});
+  }
+
+  private applyThemeInternal(theme: models.IReportTheme): Promise<void> {
+    return this.service.hpm.put<models.IError[]>('/report/theme', theme, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+    });
+  }
+
   private viewModeToString(viewMode: models.ViewMode): string {
     let mode: string;
     switch (viewMode) {

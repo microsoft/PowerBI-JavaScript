@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.7 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.8 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     /**
      * Raises a custom event with event data on the specified HTML element.
@@ -110,6 +110,7 @@ declare module "embed" {
         dashboardId?: string;
         height?: number;
         width?: number;
+        theme?: models.IReportTheme;
     }
     export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
         visualName: string;
@@ -933,6 +934,23 @@ declare module "report" {
         * ```
         */
         refresh(): Promise<void>;
+        /**
+        * Apply a theme to the report
+        *
+        * ```javascript
+        * report.applyTheme(theme);
+        * ```
+        */
+        applyTheme(theme: models.IReportTheme): Promise<void>;
+        /**
+        * Reset and apply the default theme of the report
+        *
+        * ```javascript
+        * report.resetTheme();
+        * ```
+        */
+        resetTheme(): Promise<void>;
+        private applyThemeInternal(theme);
         private viewModeToString(viewMode);
     }
 }
