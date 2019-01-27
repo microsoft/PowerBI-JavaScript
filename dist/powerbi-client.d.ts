@@ -208,7 +208,7 @@ declare module "embed" {
         /**
          * Handler function for the 'ready' event
          */
-        frontLoadHandler: (element: HTMLElement) => any;
+        frontLoadHandler: (HTMLElement) => any;
         /**
          * Creates an instance of Embed.
          *
