@@ -4,6 +4,8 @@ const dashboardUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Dashboar
 const tileUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Tiles/SampleTile';
 const qnaUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Datasets/SampleQna';
 const layoutShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/LayoutDemoReport';
+const insightToActionShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/InsightToActionReport';
+const themesShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/ThemesReport';
 
 var LastReportSampleUrl = null;
 var ReportRefreshTokenTimer = 0;
@@ -267,6 +269,16 @@ function LoadSampleQnaIntoSession() {
 function LoadLayoutShowcaseReportIntoSession() {
     SetSession(SessionKeys.EntityType, EntityType.Report);
     return FetchUrlIntoSession(layoutShowcaseReportUrl, false /* updateCurrentToken */);
+}
+
+function LoadInsightToActionShowcaseReportIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Report);
+    return FetchUrlIntoSession(insightToActionShowcaseReportUrl, false /* updateCurrentToken */);
+}
+
+function LoadThemesShowcaseReportIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Report);
+    return FetchUrlIntoSession(themesShowcaseReportUrl, false /* updateCurrentToken */);
 }
 
 function WarmStartSampleReportEmbed() {

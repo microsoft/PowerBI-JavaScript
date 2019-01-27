@@ -37,7 +37,7 @@ function embedCustomLayoutReport() {
         // Get report Id from session
         var embedReportId = GetSession(SessionKeys.EmbedId);
 
-        // We give the user View permissions
+        // Use View permissions
         var permissions = models.Permissions.View;
 
         // Embed configuration used to describe the what and how to embed
