@@ -67,8 +67,10 @@ function SetActiveStyle(id)
 }
 
 const ShowcasesHtmls = {
-    CustomLayout : "./live_showcases/custom_layout/showcase_custom_layout.html",
-    Bookmarks : "./live_showcases/bookmarks/showcase_bookmarks.html"
+    CustomLayout: "./live_showcases/custom_layout/showcase_custom_layout.html",
+    Bookmarks: "./live_showcases/bookmarks/showcase_bookmarks.html",
+    Themes: "./live_showcases/themes/showcase_themes.html",
+    InsightToAction: "./live_showcases/insight_to_action/showcase_insight_to_action.html",
 };
 
 function OpenShowcase(showcaseType) {

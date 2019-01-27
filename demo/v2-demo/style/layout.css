@@ -53,11 +53,16 @@ label {
     background: #F1F1F1;
 }
 
+#showcasesContent {
+    position: relative;
+}
+
 #showcaseContent {
     display: table;
     padding: 32px 24px 24px 24px;
     width: 100%;
     background: #F1F1F1;
+    overflow: hidden;
 }
 
 #samples-step-wrapper {
@@ -175,6 +180,7 @@ label {
 #showcase-embedded-view {
     background: #FFFFFF;
     height: calc(67vw*(9/16)*1.1);
+    position: relative;
 }
 
 #bookmark-embedded-view {
@@ -182,16 +188,34 @@ label {
     height: calc(61vw*(9/16)*1.1);
 }
 
-#visualsArea, #bookmarksArea {
+#themes-embedded-view {
+    background: #FFFFFF;
+    height: calc(64vw*(9/16)*1.1);
+}
+
+
+#leftShowcaseWindow {
     min-width: 20vw;
     max-width: 20vw;
     display: table-cell;
     padding-right: 16px;
 }
 
-#visualsWrapper, #bookmarksWrapper {
+#showcaseItemsWrapper, #bookmarksWrapper {
     background: #FFFFFF;
     min-height: 350px;
+}
+
+#themesDataColorsWrapper {
+    background: #FFFFFF;
+    min-height: 236px;
+    margin-bottom: 8px;
+}
+
+#themesBackgroundWrapper {
+    background: #FFFFFF;
+    min-height: 64px;
+    padding: 22px 22px;
 }
 
 #bookmarksWrapper {
@@ -202,6 +226,30 @@ label {
     display: table-cell;
     width: 100%;
 }
+
+#insightToActionShowcaseEmbedArea {
+    width: calc(100% - 20vw);
+}
+
+#showcasesSelectDiv {
+    max-width: 1250px;
+}
+
+@media only screen and (max-width: 1280px) {
+    #distributionDialog {
+        width: 750px;
+        height: 450px;
+    }
+
+    #dialogTable {
+        height: 303px;
+    }
+
+    #dialogTooltip {
+        top: 195px;
+    }
+}
+
 
 @media only screen and (max-width: 1050px) {
     .textAreaControl {
