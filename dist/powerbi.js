@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.8 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.9 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -832,7 +832,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!this.iframe) {
 	            var iframeContent = document.createElement("iframe");
 	            var embedUrl = this.config.uniqueId ? utils.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
-	            iframeContent.setAttribute("style", "width:100%;height:100%;");
+	            iframeContent.style.width = '100%';
+	            iframeContent.style.height = '100%';
 	            iframeContent.setAttribute("src", embedUrl);
 	            iframeContent.setAttribute("scrolling", "no");
 	            iframeContent.setAttribute("allowfullscreen", "true");
@@ -5592,7 +5593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.6.8',
+	    version: '2.6.9',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
