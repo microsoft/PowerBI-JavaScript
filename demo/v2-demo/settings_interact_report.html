@@ -10,6 +10,8 @@
                             <li onclick="Report_PrintCurrentReport()"><a href="#">Print</a></li>
                             <li onclick="Report_Reload()"><a href="#">Reload</a></li>
                             <li onclick="Report_Refresh()"><a href="#">Refresh</a></li>
+                            <li onclick="Events_ReportLoaded()"><a href="#">Loaded event</a></li>
+                            <li onclick="Events_ReportRendered()"><a href="#">Rendered event</a></li>
                             <li onclick="Report_FullScreen()" class="hideOnMobile"><a href="#">Full screen</a></li>
                             <li onclick="Report_ExitFullScreen()" class="hideOnMobile"><a href="#">Exit full screen</a></li>
                         </ul>
@@ -46,6 +48,7 @@
                             <li onclick="Report_save()" class="hideOnMobile"><a href="#">Save report</a></li>
                             <li onclick="Report_saveAs()" class="hideOnMobile"><a href="#">SaveAs report</a></li>
                             <li onclick="Events_SaveAsTriggered()" class="hideOnMobile"><a href="#">SaveAs triggered event</a></li>
+                            <li onclick="Events_ReportSaved()" class="hideOnMobile"><a href="#">Saved event</a></li>
                         </ul>
                         <li id="extensions-operations" onclick="OpenExtensionsOperations();"><a href="#">Menu Extensions</a></li>
                         <ul id="extensions-operations-ul" class="function-ul" style="display: none;">

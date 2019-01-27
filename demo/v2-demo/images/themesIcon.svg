@@ -1,0 +1,28 @@
+<svg width="222" height="149" viewBox="0 0 222 149" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="12" y="14" width="134" height="110.2" fill="white" stroke="black" stroke-width="2"/>
+<path d="M42 39.6279L50 48M42 39.6279V28M42 39.6279L30 41.4884" stroke="black" stroke-width="2"/>
+<path d="M29 67V89.6087M94 107H29V89.6087M29 89.6087H42.3333L55.6667 75.6957H69L75.6667 68.7391H82.3333L89 75.6957H105.667L114 68.7391H119" stroke="black" stroke-width="2"/>
+<rect x="69" y="27" width="59" height="25" fill="white" stroke="black" stroke-width="2"/>
+<rect x="76" y="39" width="3" height="10" fill="black"/>
+<rect x="83" y="34" width="3" height="15" fill="black"/>
+<rect x="90" y="37" width="3" height="12" fill="black"/>
+<rect x="97" y="33" width="3" height="16" fill="black"/>
+<rect x="104" y="33" width="3" height="16" fill="black"/>
+<rect x="111" y="40" width="3" height="9" fill="black"/>
+<rect x="118" y="40" width="3" height="9" fill="black"/>
+<mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="28" y="26" width="27" height="27">
+<rect x="29" y="27" width="25" height="25" rx="12.5" fill="white" stroke="black" stroke-width="2"/>
+</mask>
+<g mask="url(#mask0)">
+<rect x="29" y="27" width="25" height="25" rx="12.5" stroke="black" stroke-width="2"/>
+</g>
+<rect x="32" y="102" width="38" height="38" fill="white" stroke="#F2C811" stroke-width="2"/>
+<rect x="80" y="102" width="38" height="38" fill="white" stroke="#DAB50F" stroke-width="2"/>
+<rect x="128" y="102" width="38" height="38" fill="white" stroke="#A98C0C" stroke-width="2"/>
+<rect x="176" y="102" width="38" height="38" fill="white" stroke="#7A6816" stroke-width="2"/>
+<path d="M10.4482 2L10.9659 3.93185" stroke="#F2C811" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M2 6.17285L6.33013 8.67285" stroke="#C8C8C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M220.572 91.4507L214.777 89.8978" stroke="#F2C811" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M218.451 87.7764L216.898 93.5719" stroke="#F2C811" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M209 92.1211V94.1211" stroke="#C8C8C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -28,7 +28,7 @@ function embedBookmarksReport() {
         // Get report Id from session
         var embedReportId = GetSession(SessionKeys.EmbedId);
 
-        // We give the user View permissions
+        // Use View permissions
         var permissions = models.Permissions.View;
 
         // Embed configuration used to describe the what and how to embed
@@ -85,7 +85,7 @@ function embedSharedBookmark(enableFilterPane, bookmarkState) {
         // Get report Id from session
         var embedReportId = GetSession(SessionKeys.EmbedId);
 
-        // We give the user View permissions
+        // Use View permissions
         var permissions = models.Permissions.View;
 
         // Get the bookmark name from url param
@@ -261,7 +261,7 @@ function getBookmarkByID(bookmarkId) {
 // Build bookmark radio button HTML element
 function buildBookmarkElement(bookmark) {
     var labelElement = document.createElement("label");
-    labelElement.setAttribute("class", "bookmarkContainer");
+    labelElement.setAttribute("class", "showcaseRadioContainer");
 
     var inputElement = document.createElement("input");
     inputElement.setAttribute("type", "radio");
@@ -271,7 +271,7 @@ function buildBookmarkElement(bookmark) {
     labelElement.appendChild(inputElement);
 
     var spanElement = document.createElement("span");
-    spanElement.setAttribute("class", "bookmarkCheckmark");
+    spanElement.setAttribute("class", "showcaseRadioCheckmark");
     labelElement.appendChild(spanElement);
 
     var secondSpanElement = document.createElement("span");

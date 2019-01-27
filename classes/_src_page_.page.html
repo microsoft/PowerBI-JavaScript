@@ -117,6 +117,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_page_.page.html#defaultdisplayoption" class="tsd-kind-icon">default<wbr>Display<wbr>Option</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_page_.page.html#defaultsize" class="tsd-kind-icon">default<wbr>Size</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_page_.page.html#displayname" class="tsd-kind-icon">display<wbr>Name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_page_.page.html#isactive" class="tsd-kind-icon">is<wbr>Active</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_page_.page.html#name" class="tsd-kind-icon">name</a></li>
@@ -144,13 +146,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Page<span class="tsd-signature-symbol">(</span>report<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_report_.ireportnode.html" class="tsd-signature-type">IReportNode</a>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, displayName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, isActivePage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, visibility<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">models.SectionVisibility</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Page<span class="tsd-signature-symbol">(</span>report<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_report_.ireportnode.html" class="tsd-signature-type">IReportNode</a>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, displayName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, isActivePage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, visibility<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">models.SectionVisibility</span>, defaultSize<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">models.ICustomPageSize</span>, defaultDisplayOption<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">models.DisplayOption</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_page_.page.html" class="tsd-signature-type">Page</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/page.ts:60</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L72">src/page.ts:72</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -175,6 +177,12 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> visibility: <span class="tsd-signature-type">models.SectionVisibility</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> defaultSize: <span class="tsd-signature-type">models.ICustomPageSize</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> defaultDisplayOption: <span class="tsd-signature-type">models.DisplayOption</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_page_.page.html" class="tsd-signature-type">Page</a></h4>
 						</li>
@@ -184,12 +192,52 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="defaultdisplayoption" class="tsd-anchor"></a>
+					<h3>default<wbr>Display<wbr>Option</h3>
+					<div class="tsd-signature tsd-kind-icon">default<wbr>Display<wbr>Option<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">models.DisplayOption</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L72">src/page.ts:72</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Page display options as saved in the report.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{models.ICustomPageSize}</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="defaultsize" class="tsd-anchor"></a>
+					<h3>default<wbr>Size</h3>
+					<div class="tsd-signature tsd-kind-icon">default<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">models.ICustomPageSize</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L66">src/page.ts:66</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Page size as saved in the report.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{models.ICustomPageSize}</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="displayname" class="tsd-anchor"></a>
 					<h3>display<wbr>Name</h3>
 					<div class="tsd-signature tsd-kind-icon">display<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/page.ts:44</li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L44">src/page.ts:44</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -209,7 +257,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Active<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/page.ts:51</li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L51">src/page.ts:51</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -230,7 +278,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_page_.ipagenode.html">IPageNode</a>.<a href="../interfaces/_src_page_.ipagenode.html#name">name</a></p>
 						<ul>
-							<li>Defined in src/page.ts:37</li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L37">src/page.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -251,7 +299,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_src_page_.ipagenode.html">IPageNode</a>.<a href="../interfaces/_src_page_.ipagenode.html#report">report</a></p>
 						<ul>
-							<li>Defined in src/page.ts:31</li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L31">src/page.ts:31</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -271,7 +319,7 @@
 					<div class="tsd-signature tsd-kind-icon">visibility<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">models.SectionVisibility</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/page.ts:60</li>
+							<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L60">src/page.ts:60</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -301,7 +349,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#getfilters">getFilters</a></p>
 								<ul>
-									<li>Defined in src/page.ts:89</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L103">src/page.ts:103</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -326,7 +374,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/page.ts:160</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L174">src/page.ts:174</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -351,7 +399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/page.ts:182</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L196">src/page.ts:196</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -383,7 +431,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#removefilters">removeFilters</a></p>
 								<ul>
-									<li>Defined in src/page.ts:106</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L120">src/page.ts:120</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -407,7 +455,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/page.ts:119</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L133">src/page.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -432,7 +480,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_src_ifilterable_.ifilterable.html">IFilterable</a>.<a href="../interfaces/_src_ifilterable_.ifilterable.html#setfilters">setFilters</a></p>
 								<ul>
-									<li>Defined in src/page.ts:143</li>
+									<li>Defined in <a href="https://github.com/Microsoft/PowerBI-JavaScript//blob/335a683/src/page.ts#L157">src/page.ts:157</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -529,6 +577,12 @@
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="_src_page_.page.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_page_.page.html#defaultdisplayoption" class="tsd-kind-icon">default<wbr>Display<wbr>Option</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_page_.page.html#defaultsize" class="tsd-kind-icon">default<wbr>Size</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_page_.page.html#displayname" class="tsd-kind-icon">display<wbr>Name</a>
