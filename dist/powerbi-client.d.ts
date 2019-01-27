@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.8 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.6.9 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     /**
      * Raises a custom event with event data on the specified HTML element.
