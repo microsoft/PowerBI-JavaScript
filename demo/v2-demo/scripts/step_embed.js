@@ -134,6 +134,10 @@ function Events_TileClicked() {
     SetCode(_Events_TileClicked);
 }
 
+function Events_ButtonClicked() {
+    SetCode(_Events_ButtonClicked)
+}
+
 // ---- Edit and Save Operations ----------------------------------------------------
 
 function Report_switchModeEdit() {

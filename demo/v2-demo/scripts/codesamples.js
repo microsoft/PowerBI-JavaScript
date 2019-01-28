@@ -353,7 +353,7 @@ function _Mock_Embed_BasicEmbed(isEdit) {
 
     // Report.on will add an event handler which prints to Log window.
     report.on("loaded", function() {
-        Log.logText("Loaded");
+      Log.logText("Loaded");
     });
 
     report.off("saveAsTriggered");
@@ -1831,6 +1831,28 @@ function _Events_TileClicked() {
     });
 
     Log.logText("Click on the tile to see the tile clicked event.");
+}
+
+function _Events_ButtonClicked() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Report.off removes a given event listener if it exists.
+    report.off("buttonClicked");
+
+    // Report.on will add an event listener.
+    report.on("buttonClicked", function(event) {
+        Log.logText("Event - buttonClicked:");
+        var data = event.detail;
+        Log.log(data);
+    });
+
+    // Select Run and click on a button in the report
+    // For example, a Qna button. You should see an entry in the Log window.
+    Log.logText("Click button to see event in Log window.");
 }
 
 // ---- Dashboard Operations ----------------------------------------------------
