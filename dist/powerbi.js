@@ -1,4 +1,4 @@
-/*! powerbi-client v2.6.9 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.7.0 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -905,7 +905,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
-	    Embed.allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected"];
+	    Embed.allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected", "buttonClicked"];
 	    Embed.accessTokenAttribute = 'powerbi-access-token';
 	    Embed.embedUrlAttribute = 'powerbi-embed-url';
 	    Embed.nameAttribute = 'powerbi-name';
@@ -5593,7 +5593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.6.9',
+	    version: '2.7.0',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });

@@ -105,7 +105,7 @@ export interface IInternalEventHandler<T> {
  * @class Embed
  */
 export abstract class Embed {
-  static allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected"];
+  static allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected", "buttonClicked"];
   static accessTokenAttribute = 'powerbi-access-token';
   static embedUrlAttribute = 'powerbi-embed-url';
   static nameAttribute = 'powerbi-name';
