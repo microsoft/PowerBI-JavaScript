@@ -572,6 +572,12 @@ declare module "visualDescriptor" {
          * @returns {(Promise<models.ISlicerState>)}
          */
         getSlicerState(): Promise<models.ISlicerState>;
+        /**
+         * Clone existing visual to a new instance.
+         *
+         * @returns {(Promise<models.ICloneVisualResponse>)}
+         */
+        clone(request?: models.ICloneVisualRequest): Promise<models.ICloneVisualResponse>;
     }
 }
 declare module "page" {

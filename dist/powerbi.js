@@ -4914,6 +4914,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
+	    /**
+	     * Clone existing visual to a new instance.
+	     *
+	     * @returns {(Promise<models.ICloneVisualResponse>)}
+	     */
+	    VisualDescriptor.prototype.clone = function (request) {
+	        if (request === void 0) { request = {}; }
+	        return this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/clone", request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
 	    return VisualDescriptor;
 	}());
 	exports.VisualDescriptor = VisualDescriptor;
