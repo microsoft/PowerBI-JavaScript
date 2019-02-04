@@ -1,4 +1,4 @@
-/*! powerbi-client v2.7.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.7.1 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     /**
      * Raises a custom event with event data on the specified HTML element.
@@ -572,6 +572,12 @@ declare module "visualDescriptor" {
          * @returns {(Promise<models.ISlicerState>)}
          */
         getSlicerState(): Promise<models.ISlicerState>;
+        /**
+         * Clone existing visual to a new instance.
+         *
+         * @returns {(Promise<models.ICloneVisualResponse>)}
+         */
+        clone(request?: models.ICloneVisualRequest): Promise<models.ICloneVisualResponse>;
     }
 }
 declare module "page" {

@@ -175,4 +175,17 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
           throw response.body;
         });
   }
+
+  /**
+   * Clone existing visual to a new instance.
+   *
+   * @returns {(Promise<models.ICloneVisualResponse>)}
+   */
+  clone(request: models.ICloneVisualRequest = {}): Promise<models.ICloneVisualResponse> {
+    return this.page.report.service.hpm.post<models.ICloneVisualResponse>(`/report/pages/${this.page.name}/visuals/${this.name}/clone`, request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+      .then(response => response.body,
+        response => {
+          throw response.body;
+        });
+  }
 }
