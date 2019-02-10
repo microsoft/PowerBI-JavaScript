@@ -366,7 +366,19 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-  * Apply a theme to the report
+   * checks if the report is saved.
+   *
+   * ```javascript
+   * report.isSaved()
+   * ```
+   *
+   * @returns {Promise<boolean>}
+   */
+  isSaved(): Promise<boolean> {
+    return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
+  }
+
+  /* Apply a theme to the report
   *
   * ```javascript
   * report.applyTheme(theme);
@@ -394,7 +406,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       })
       .catch(response => {
         throw response.body;
-    });
+      });
   }
 
   private viewModeToString(viewMode: models.ViewMode): string {
