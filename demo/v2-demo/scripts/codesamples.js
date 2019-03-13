@@ -56,6 +56,14 @@ function _Embed_BasicEmbed() {
         Log.logText("Loaded");
     });
 
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
+    });
+
     report.on("error", function(event) {
         Log.log(event.detail);
 
@@ -121,6 +129,14 @@ function _Embed_BasicEmbed_Mobile() {
         Log.logText("Loaded");
     });
 
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
+    });
+
     report.on("error", function(event) {
         Log.log(event.detail);
 
@@ -184,6 +200,14 @@ function _Embed_VisualEmbed() {
     // Report.on will add an event handler which prints to Log window.
     report.on("loaded", function() {
         Log.logText("Loaded");
+    });
+
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
     });
 
     report.on("error", function(event) {
@@ -356,6 +380,14 @@ function _Mock_Embed_BasicEmbed(isEdit) {
       Log.logText("Loaded");
     });
 
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
+    });
+
     report.off("saveAsTriggered");
     report.on("saveAsTriggered", function() {
         Log.logText("Cannot save sample report");
@@ -429,6 +461,14 @@ function _Embed_BasicEmbed_EditMode() {
     // Report.on will add an event handler which prints to Log window.
     report.on("loaded", function() {
         Log.logText("Loaded");
+    });
+
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
     });
 
     report.off("error");
@@ -582,6 +622,14 @@ function _Embed_Create() {
         Log.logText("Loaded");
     });
 
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
+    });
+
     report.off("error");
     report.on("error", function(event) {
         Log.log(event.detail);
@@ -635,6 +683,14 @@ function _Mock_Embed_Create() {
     // Report.on will add an event handler which prints to Log window.
     report.on("loaded", function() {
         Log.logText("Loaded");
+    });
+
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
     });
 
     report.off("saveAsTriggered");
