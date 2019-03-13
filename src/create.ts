@@ -58,6 +58,19 @@ export class Create extends embed.Embed {
   }
 
   /**
+   * checks if the report is saved.
+   *
+   * ```javascript
+   * report.isSaved()
+   * ```
+   *
+   * @returns {Promise<boolean>}
+   */
+  isSaved(): Promise<boolean> {
+    return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
+  }
+
+  /**
    * Adds the ability to get datasetId from url. 
    * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
    * 

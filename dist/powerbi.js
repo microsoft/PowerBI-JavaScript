@@ -1,4 +1,4 @@
-/*! powerbi-client v2.7.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.7.2 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -1066,6 +1066,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return url;
 	}
 	exports.addParamToUrl = addParamToUrl;
+	/**
+	 * Checks if the report is saved.
+	 *
+	 * @export
+	 * @param {HttpPostMessage} hpm
+	 * @param {string} uid
+	 * @param {Window} contentWindow
+	 * @returns {Promise<boolean>}
+	 */
+	function isSavedInternal(hpm, uid, contentWindow) {
+	    return hpm.get('/report/hasUnsavedChanges', { uid: uid }, contentWindow)
+	        .then(function (response) { return !response.body; }, function (response) {
+	        throw response.body;
+	    });
+	}
+	exports.isSavedInternal = isSavedInternal;
 
 
 /***/ }),
@@ -4603,12 +4619,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    /**
-	    * Apply a theme to the report
-	    *
-	    * ```javascript
-	    * report.applyTheme(theme);
-	    * ```
-	    */
+	     * checks if the report is saved.
+	     *
+	     * ```javascript
+	     * report.isSaved()
+	     * ```
+	     *
+	     * @returns {Promise<boolean>}
+	     */
+	    Report.prototype.isSaved = function () {
+	        return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
+	    };
+	    /**
+	     * Apply a theme to the report
+	     *
+	     * ```javascript
+	     * report.applyTheme(theme);
+	     * ```
+	     */
 	    Report.prototype.applyTheme = function (theme) {
 	        return this.applyThemeInternal(theme);
 	    };
@@ -5118,6 +5146,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        };
 	    };
 	    /**
+	     * checks if the report is saved.
+	     *
+	     * ```javascript
+	     * report.isSaved()
+	     * ```
+	     *
+	     * @returns {Promise<boolean>}
+	     */
+	    Create.prototype.isSaved = function () {
+	        return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
+	    };
+	    /**
 	     * Adds the ability to get datasetId from url.
 	     * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
 	     *
@@ -5606,7 +5646,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.7.1',
+	    version: '2.7.2',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -5917,7 +5957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
+	/*! http-post-message v0.2.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -5972,7 +6012,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ function(module, exports) {
+	/***/ (function(module, exports) {
 	
 		"use strict";
 		var HttpPostMessage = (function () {
@@ -6091,7 +6131,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.HttpPostMessage = HttpPostMessage;
 	
 	
-	/***/ }
+	/***/ })
 	/******/ ])
 	});
 	;

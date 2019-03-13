@@ -1,3 +1,4 @@
+import { HttpPostMessage } from 'http-post-message';
 
 /**
  * Raises a custom event with event data on the specified HTML element.
@@ -143,4 +144,21 @@ export function addParamToUrl(url: string, paramName: string, value: string): st
   let parameterPrefix = url.indexOf('?') > 0 ? '&' : '?';
   url += parameterPrefix + paramName + '=' + value;
   return url;
+}
+
+/**
+ * Checks if the report is saved.
+ * 
+ * @export
+ * @param {HttpPostMessage} hpm
+ * @param {string} uid
+ * @param {Window} contentWindow
+ * @returns {Promise<boolean>}
+ */
+export function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow: Window): Promise<boolean> {
+  return hpm.get<boolean>('/report/hasUnsavedChanges', { uid }, contentWindow)
+    .then(response => !response.body,
+    response => {
+      throw response.body;
+    });
 }

@@ -1,5 +1,6 @@
-/*! powerbi-client v2.7.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.7.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
+    import { HttpPostMessage } from 'http-post-message';
     /**
      * Raises a custom event with event data on the specified HTML element.
      *
@@ -62,6 +63,16 @@ declare module "util" {
      * @returns {string}
      */
     export function addParamToUrl(url: string, paramName: string, value: string): string;
+    /**
+     * Checks if the report is saved.
+     *
+     * @export
+     * @param {HttpPostMessage} hpm
+     * @param {string} uid
+     * @param {Window} contentWindow
+     * @returns {Promise<boolean>}
+     */
+    export function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow: Window): Promise<boolean>;
 }
 declare module "embed" {
     import * as service from "service";
@@ -208,7 +219,7 @@ declare module "embed" {
         /**
          * Handler function for the 'ready' event
          */
-        frontLoadHandler: (HTMLElement) => any;
+        frontLoadHandler: () => any;
         /**
          * Creates an instance of Embed.
          *
@@ -941,12 +952,22 @@ declare module "report" {
         */
         refresh(): Promise<void>;
         /**
-        * Apply a theme to the report
-        *
-        * ```javascript
-        * report.applyTheme(theme);
-        * ```
-        */
+         * checks if the report is saved.
+         *
+         * ```javascript
+         * report.isSaved()
+         * ```
+         *
+         * @returns {Promise<boolean>}
+         */
+        isSaved(): Promise<boolean>;
+        /**
+         * Apply a theme to the report
+         *
+         * ```javascript
+         * report.applyTheme(theme);
+         * ```
+         */
         applyTheme(theme: models.IReportTheme): Promise<void>;
         /**
         * Reset and apply the default theme of the report
@@ -983,6 +1004,16 @@ declare module "create" {
          * @returns {void}
          */
         populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
+        /**
+         * checks if the report is saved.
+         *
+         * ```javascript
+         * report.isSaved()
+         * ```
+         *
+         * @returns {Promise<boolean>}
+         */
+        isSaved(): Promise<boolean>;
         /**
          * Adds the ability to get datasetId from url.
          * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).

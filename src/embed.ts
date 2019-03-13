@@ -176,7 +176,7 @@ export abstract class Embed {
   /**
    * Handler function for the 'ready' event
    */
-  frontLoadHandler: (HTMLElement) => any;
+  frontLoadHandler: () => any;
 
   /**
    * Creates an instance of Embed.
