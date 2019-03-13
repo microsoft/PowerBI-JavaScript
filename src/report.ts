@@ -378,12 +378,13 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
   }
 
-  /* Apply a theme to the report
-  *
-  * ```javascript
-  * report.applyTheme(theme);
-  * ```
-  */
+  /**
+   * Apply a theme to the report
+   *
+   * ```javascript
+   * report.applyTheme(theme);
+   * ```
+   */
   applyTheme(theme: models.IReportTheme): Promise<void> {
     return this.applyThemeInternal(theme);
   }
