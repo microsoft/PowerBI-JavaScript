@@ -2401,7 +2401,7 @@ function _Visual_RemoveFilters() {
 
             // Retrieve the wanted visual.
             var visual = visuals.find(function(visual) {
-              return visual.name == "47eb6c0240defd498d4b";
+              return visual.name == "VisualContainer4";
             });
 
             visual.removeFilters()
@@ -2551,7 +2551,7 @@ function _ReportVisual_HideSingleVisualHeader() {
             },
             selector: {
                 $schema: "http://powerbi.com/product/schema#visualSelector",
-                visualName: "47eb6c0240defd498d4b"
+                visualName: "VisualContainer4"
                 // The visual name can be retrieved using getVisuals()
                 // Hide visual header for a single visual only
             }
