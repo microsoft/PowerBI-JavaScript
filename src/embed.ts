@@ -615,6 +615,10 @@ export abstract class Embed {
       throw errors;
     }
 
+    // contentWindow must be initialized
+    if (this.iframe.contentWindow == null)
+        return;
+
     return this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(response => {
       return response.body;
     },
