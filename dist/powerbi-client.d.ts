@@ -1,4 +1,4 @@
-/*! powerbi-client v2.7.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.7.3 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -413,6 +413,14 @@ declare module "embed" {
          * Sets Iframe's title
          */
         setComponentTitle(title: string): void;
+        /**
+         * Sets elements's tabindex attribute
+         */
+        setComponentTabIndex(tabIndex?: number): void;
+        /**
+         * Removes element's tabindex attribute
+         */
+        removeComponentTabIndex(tabIndex?: number): void;
         /**
          * Adds the ability to get groupId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.7.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.7.3 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -874,6 +874,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        else {
 	            this.iframe.setAttribute("title", title);
 	        }
+	    };
+	    /**
+	     * Sets elements's tabindex attribute
+	     */
+	    Embed.prototype.setComponentTabIndex = function (tabIndex) {
+	        if (!this.element) {
+	            return;
+	        }
+	        this.element.setAttribute("tabindex", (tabIndex == null) ? "0" : tabIndex.toString());
+	    };
+	    /**
+	     * Removes element's tabindex attribute
+	     */
+	    Embed.prototype.removeComponentTabIndex = function (tabIndex) {
+	        if (!this.element) {
+	            return;
+	        }
+	        this.element.removeAttribute("tabindex");
 	    };
 	    /**
 	     * Adds the ability to get groupId from url.
@@ -5649,7 +5667,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.7.2',
+	    version: '2.7.3',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });

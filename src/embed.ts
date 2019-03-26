@@ -587,6 +587,26 @@ export abstract class Embed {
   }
 
   /**
+   * Sets element's tabindex attribute
+   */
+  setComponentTabIndex(tabIndex?: number): void {
+    if(!this.element) {
+      return;
+    }
+    this.element.setAttribute("tabindex", (tabIndex == null) ? "0" : tabIndex.toString());
+  }
+
+  /**
+   * Removes element's tabindex attribute
+   */
+  removeComponentTabIndex(tabIndex?: number): void {
+    if(!this.element) {
+      return;
+    }
+    this.element.removeAttribute("tabindex");
+  }
+
+  /**
    * Adds the ability to get groupId from url.
    * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
    *
