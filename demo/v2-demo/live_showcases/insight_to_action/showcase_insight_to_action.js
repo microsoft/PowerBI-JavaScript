@@ -118,18 +118,18 @@ function embedInsightsToActionReport() {
                     .then(function (pages) {
 
                         // Retrieve active page.
-                        let activePage = pages.find(function(page) {
+                        let activePage = pages.filter(function(page) {
                             return page.isActive
-                        });
+                        })[0];
 
                         // Get page's visuals
                         activePage.getVisuals()
                             .then(function (visuals) {
 
                             // Retrieve the wanted visual.
-                            let visual = visuals.find(function(visual) {
+                            let visual = visuals.filter(function(visual) {
                                 return visual.name === tableVisualName;
-                            });
+                            })[0];
 
                             // Exports visual data
                             visual.exportData(models.ExportDataType.Underlying).then(handleExportData);
@@ -191,7 +191,10 @@ function parseData(data) {
 // Filter the table's data - removing the 'filterValues' columns
 function filterTable(filterValues, table) {
     for (let i = 0; i < filterValues.length; i++) {
-        valueIndex = table[0].findIndex(function(value) { return value === filterValues[i] });
+        valueIndex = table[0].indexOf(
+            table[0].filter(function(value) { return value === filterValues[i] })[0]
+        );
+
         for (let j = 0; j < table.length; j++) {
             table[j].splice(valueIndex, 1);
         }
