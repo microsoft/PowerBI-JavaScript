@@ -56,6 +56,14 @@ function _Embed_BasicEmbed() {
         Log.logText("Loaded");
     });
 
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
+    });
+
     report.on("error", function(event) {
         Log.log(event.detail);
 
@@ -121,6 +129,14 @@ function _Embed_BasicEmbed_Mobile() {
         Log.logText("Loaded");
     });
 
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
+    });
+
     report.on("error", function(event) {
         Log.log(event.detail);
 
@@ -184,6 +200,14 @@ function _Embed_VisualEmbed() {
     // Report.on will add an event handler which prints to Log window.
     report.on("loaded", function() {
         Log.logText("Loaded");
+    });
+
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
     });
 
     report.on("error", function(event) {
@@ -353,7 +377,15 @@ function _Mock_Embed_BasicEmbed(isEdit) {
 
     // Report.on will add an event handler which prints to Log window.
     report.on("loaded", function() {
-        Log.logText("Loaded");
+      Log.logText("Loaded");
+    });
+
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
     });
 
     report.off("saveAsTriggered");
@@ -429,6 +461,14 @@ function _Embed_BasicEmbed_EditMode() {
     // Report.on will add an event handler which prints to Log window.
     report.on("loaded", function() {
         Log.logText("Loaded");
+    });
+
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
     });
 
     report.off("error");
@@ -582,6 +622,14 @@ function _Embed_Create() {
         Log.logText("Loaded");
     });
 
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
+    });
+
     report.off("error");
     report.on("error", function(event) {
         Log.log(event.detail);
@@ -635,6 +683,14 @@ function _Mock_Embed_Create() {
     // Report.on will add an event handler which prints to Log window.
     report.on("loaded", function() {
         Log.logText("Loaded");
+    });
+
+    // Report.off removes a given event handler if it exists.
+    report.off("rendered");
+
+    // Report.on will add an event handler which prints to Log window.
+    report.on("rendered", function() {
+        Log.logText("Rendered");
     });
 
     report.off("saveAsTriggered");
@@ -1509,9 +1565,9 @@ function _Page_GetFilters() {
     report.getPages()
         .then(function (pages) {
           // Retrieve active page.
-          var activePage = pages.find(function(page) {
+          var activePage = pages.filter(function(page) {
             return page.isActive
-          });
+          })[0];
 
           activePage.getFilters()
             .then(function (filters) {
@@ -1537,9 +1593,9 @@ function _Page_GetVisuals() {
     report.getPages()
       .then(function (pages) {
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
@@ -1586,9 +1642,9 @@ function _Page_SetFilters() {
     report.getPages()
         .then(function (pages) {
           // Retrieve active page.
-          var activePage = pages.find(function(page) {
+          var activePage = pages.filter(function(page) {
             return page.isActive
-          });
+          })[0];
 
           activePage.setFilters([filter])
             .then(function () {
@@ -1614,9 +1670,9 @@ function _Page_RemoveFilters() {
     report.getPages()
         .then(function (pages) {
           // Retrieve active page.
-          var activePage = pages.find(function(page) {
+          var activePage = pages.filter(function(page) {
             return page.isActive
-          });
+          })[0];
 
           activePage.removeFilters()
             .then(function () {
@@ -1831,6 +1887,28 @@ function _Events_TileClicked() {
     });
 
     Log.logText("Click on the tile to see the tile clicked event.");
+}
+
+function _Events_ButtonClicked() {
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Report.off removes a given event listener if it exists.
+    report.off("buttonClicked");
+
+    // Report.on will add an event listener.
+    report.on("buttonClicked", function(event) {
+        Log.logText("Event - buttonClicked:");
+        var data = event.detail;
+        Log.log(data);
+    });
+
+    // Select Run and click on a button in the report
+    // For example, a Qna button. You should see an entry in the Log window.
+    Log.logText("Click button to see event in Log window.");
 }
 
 // ---- Dashboard Operations ----------------------------------------------------
@@ -2109,16 +2187,16 @@ function _Visual_GetSlicer() {
     report.getPages()
       .then(function (pages) {
           // Retrieve active page.
-          var activePage = pages.find(function(page) {
+          var activePage = pages.filter(function(page) {
             return page.isActive;
-        });
+        })[0];
 
       activePage.getVisuals()
         .then(function (visuals) {
           // Retrieve the wanted visual.
-          var slicer = visuals.find(function(visual) {
+          var slicer = visuals.filter(function(visual) {
             return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
-          });
+          })[0];
 
           // Get the slicer state which contains the slicer filter.
           slicer.getSlicerState()
@@ -2171,16 +2249,16 @@ function _Visual_SetSlicer() {
     report.getPages() 
       .then(function (pages) {
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive;
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
             // Retrieve the wanted visual.
-            var slicer = visuals.find(function(visual) {
+            var slicer = visuals.filter(function(visual) {
               return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
-            });
+            })[0];
 
             // Set the slicer state which contains the slicer filters.
             slicer.setSlicerState({ filters: [filter]})
@@ -2230,17 +2308,17 @@ function _Visual_SetFilters() {
       .then(function (pages) {
 
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
 
             // Retrieve the wanted visual.
-            var visual = visuals.find(function(visual) {
+            var visual = visuals.filter(function(visual) {
               return visual.name == "VisualContainer4";
-            });
+            })[0];
 
             // Set the filter for the visual.
             // Pay attention that setFilters receives an array.
@@ -2273,17 +2351,17 @@ function _Visual_GetFilters() {
       .then(function (pages) {
 
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
 
             // Retrieve the wanted visual.
-            var visual = visuals.find(function(visual) {
+            var visual = visuals.filter(function(visual) {
               return visual.name == "VisualContainer4";
-            });
+            })[0];
 
             visual.getFilters()
               .then(function (filters) {
@@ -2314,17 +2392,17 @@ function _Visual_RemoveFilters() {
       .then(function (pages) {
 
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
 
             // Retrieve the wanted visual.
-            var visual = visuals.find(function(visual) {
+            var visual = visuals.filter(function(visual) {
               return visual.name == "VisualContainer4";
-            });
+            })[0];
 
             visual.removeFilters()
               .then(function () {
@@ -2358,17 +2436,17 @@ function _Visual_ExportData_Summarized() {
       .then(function (pages) {
 
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
 
             // Retrieve the wanted visual.
-            var visual = visuals.find(function(visual) {
+            var visual = visuals.filter(function(visual) {
               return visual.name == "VisualContainer4";
-            });
+            })[0];
 
             // Exports visual data
             visual.exportData(models.ExportDataType.Summarized)
@@ -2403,17 +2481,17 @@ function _Visual_ExportData_Underlying() {
       .then(function (pages) {
 
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
 
             // Retrieve the wanted visual.
-            var visual = visuals.find(function(visual) {
+            var visual = visuals.filter(function(visual) {
               return visual.name == "VisualContainer4";
-            });
+            })[0];
 
             // Exports visual data
             visual.exportData(models.ExportDataType.Underlying)
