@@ -182,7 +182,7 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
         {
             let embedContainerId = getEmbedContainerID(capitalizeFirstLetter(embedConfig.type));
 
-            let embedContainer = powerbi.embeds.find(function(embedElement) {return (embedElement.element.id == embedContainerId)});
+            let embedContainer = powerbi.embeds.filter(function(embedElement) { return embedElement.element.id === embedContainerId; })[0];
             if (embedContainer)
             {
                 embedContainer.setAccessToken(embedConfig.embedToken.token);

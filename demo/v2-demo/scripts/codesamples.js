@@ -1565,9 +1565,9 @@ function _Page_GetFilters() {
     report.getPages()
         .then(function (pages) {
           // Retrieve active page.
-          var activePage = pages.find(function(page) {
+          var activePage = pages.filter(function(page) {
             return page.isActive
-          });
+          })[0];
 
           activePage.getFilters()
             .then(function (filters) {
@@ -1593,9 +1593,9 @@ function _Page_GetVisuals() {
     report.getPages()
       .then(function (pages) {
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
@@ -1642,9 +1642,9 @@ function _Page_SetFilters() {
     report.getPages()
         .then(function (pages) {
           // Retrieve active page.
-          var activePage = pages.find(function(page) {
+          var activePage = pages.filter(function(page) {
             return page.isActive
-          });
+          })[0];
 
           activePage.setFilters([filter])
             .then(function () {
@@ -1670,9 +1670,9 @@ function _Page_RemoveFilters() {
     report.getPages()
         .then(function (pages) {
           // Retrieve active page.
-          var activePage = pages.find(function(page) {
+          var activePage = pages.filter(function(page) {
             return page.isActive
-          });
+          })[0];
 
           activePage.removeFilters()
             .then(function () {
@@ -2187,16 +2187,16 @@ function _Visual_GetSlicer() {
     report.getPages()
       .then(function (pages) {
           // Retrieve active page.
-          var activePage = pages.find(function(page) {
+          var activePage = pages.filter(function(page) {
             return page.isActive;
-        });
+        })[0];
 
       activePage.getVisuals()
         .then(function (visuals) {
           // Retrieve the wanted visual.
-          var slicer = visuals.find(function(visual) {
+          var slicer = visuals.filter(function(visual) {
             return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
-          });
+          })[0];
 
           // Get the slicer state which contains the slicer filter.
           slicer.getSlicerState()
@@ -2249,16 +2249,16 @@ function _Visual_SetSlicer() {
     report.getPages() 
       .then(function (pages) {
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive;
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
             // Retrieve the wanted visual.
-            var slicer = visuals.find(function(visual) {
+            var slicer = visuals.filter(function(visual) {
               return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
-            });
+            })[0];
 
             // Set the slicer state which contains the slicer filters.
             slicer.setSlicerState({ filters: [filter]})
@@ -2308,17 +2308,17 @@ function _Visual_SetFilters() {
       .then(function (pages) {
 
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
 
             // Retrieve the wanted visual.
-            var visual = visuals.find(function(visual) {
+            var visual = visuals.filter(function(visual) {
               return visual.name == "VisualContainer4";
-            });
+            })[0];
 
             // Set the filter for the visual.
             // Pay attention that setFilters receives an array.
@@ -2351,17 +2351,17 @@ function _Visual_GetFilters() {
       .then(function (pages) {
 
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
 
             // Retrieve the wanted visual.
-            var visual = visuals.find(function(visual) {
+            var visual = visuals.filter(function(visual) {
               return visual.name == "VisualContainer4";
-            });
+            })[0];
 
             visual.getFilters()
               .then(function (filters) {
@@ -2392,17 +2392,17 @@ function _Visual_RemoveFilters() {
       .then(function (pages) {
 
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
 
             // Retrieve the wanted visual.
-            var visual = visuals.find(function(visual) {
-              return visual.name == "47eb6c0240defd498d4b";
-            });
+            var visual = visuals.filter(function(visual) {
+              return visual.name == "VisualContainer4";
+            })[0];
 
             visual.removeFilters()
               .then(function () {
@@ -2436,17 +2436,17 @@ function _Visual_ExportData_Summarized() {
       .then(function (pages) {
 
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
 
             // Retrieve the wanted visual.
-            var visual = visuals.find(function(visual) {
+            var visual = visuals.filter(function(visual) {
               return visual.name == "VisualContainer4";
-            });
+            })[0];
 
             // Exports visual data
             visual.exportData(models.ExportDataType.Summarized)
@@ -2481,17 +2481,17 @@ function _Visual_ExportData_Underlying() {
       .then(function (pages) {
 
         // Retrieve active page.
-        var activePage = pages.find(function(page) {
+        var activePage = pages.filter(function(page) {
           return page.isActive
-        });
+        })[0];
 
         activePage.getVisuals()
           .then(function (visuals) {
 
             // Retrieve the wanted visual.
-            var visual = visuals.find(function(visual) {
+            var visual = visuals.filter(function(visual) {
               return visual.name == "VisualContainer4";
-            });
+            })[0];
 
             // Exports visual data
             visual.exportData(models.ExportDataType.Underlying)
@@ -2551,7 +2551,7 @@ function _ReportVisual_HideSingleVisualHeader() {
             },
             selector: {
                 $schema: "http://powerbi.com/product/schema#visualSelector",
-                visualName: "47eb6c0240defd498d4b"
+                visualName: "VisualContainer4"
                 // The visual name can be retrieved using getVisuals()
                 // Hide visual header for a single visual only
             }
