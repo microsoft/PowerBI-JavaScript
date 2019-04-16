@@ -73,7 +73,7 @@ function mapFunc(func) {
     if (IsMock(funcName)) {
         if (funcName == '_Embed_BasicEmbed') {
             let rand = Math.floor(Math.random() * 10);
-            if (rand <= 5) {
+            if (rand <= 4) {
                 return mockDict[funcName];
             }
             else {
