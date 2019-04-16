@@ -70,7 +70,20 @@ function IsMock(funcName) {
 
 function mapFunc(func) {
     const funcName = getFuncName(func);
-    return IsMock(funcName) ? mockDict[funcName] : func;
+    if (IsMock(funcName)) {
+        if (funcName == '_Embed_BasicEmbed') {
+            let rand = Math.floor(Math.random() * 10);
+            if (rand <= 5) {
+                return mockDict[funcName];
+            }
+            else {
+                return _Mock_Embed_BasicEmbed_ViewMode_With_Filters;
+            }
+        }
+        return mockDict[funcName];
+    }
+
+    return func;
 }
 
 function getFuncName(func) {
