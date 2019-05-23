@@ -373,6 +373,7 @@ export class Service implements IService {
       throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
     }
 
+    component.populateConfig(config);
     component.load(config, phasedRender);
 
     return component;
