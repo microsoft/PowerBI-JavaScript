@@ -1,4 +1,4 @@
-/*! powerbi-client v2.7.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.7.4 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -336,6 +336,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but the existing element contains an embed of type: " + this.config.type + " which does not match the new type: " + config.type);
 	        }
+	        component.populateConfig(config);
 	        component.load(config, phasedRender);
 	        return component;
 	    };
@@ -876,7 +877,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	    /**
-	     * Sets elements's tabindex attribute
+	     * Sets element's tabindex attribute
 	     */
 	    Embed.prototype.setComponentTabIndex = function (tabIndex) {
 	        if (!this.element) {
@@ -1109,7 +1110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.1.0 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.1.1 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1543,13 +1544,21 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 		exports.isMeasure = isMeasure;
 		function isColumn(arg) {
-		    return arg.table !== undefined && arg.column !== undefined;
+		    return !!(arg.table && arg.column && !arg.aggregationFunction);
 		}
 		exports.isColumn = isColumn;
-		function isHierarchy(arg) {
-		    return arg.table !== undefined && arg.hierarchy !== undefined && arg.hierarchyLevel !== undefined;
+		function isHierarchyLevel(arg) {
+		    return !!(arg.table && arg.hierarchy && arg.hierarchyLevel && !arg.aggregationFunction);
 		}
-		exports.isHierarchy = isHierarchy;
+		exports.isHierarchyLevel = isHierarchyLevel;
+		function isHierarchyLevelAggr(arg) {
+		    return !!(arg.table && arg.hierarchy && arg.hierarchyLevel && arg.aggregationFunction);
+		}
+		exports.isHierarchyLevelAggr = isHierarchyLevelAggr;
+		function isColumnAggr(arg) {
+		    return !!(arg.table && arg.column && arg.aggregationFunction);
+		}
+		exports.isColumnAggr = isColumnAggr;
 		var QnaMode;
 		(function (QnaMode) {
 		    QnaMode[QnaMode["Interactive"] = 0] = "Interactive";
@@ -1574,6 +1583,21 @@ return /******/ (function(modules) { // webpackBootstrap
 		    LoadReportFailed: 'LoadReportFailed',
 		    NotAuthorized: 'PowerBINotAuthorizedException',
 		    FailedToLoadModel: 'ExplorationContainer_FailedToLoadModel_DefaultDetails',
+		};
+		exports.TextAlignment = {
+		    Left: 'left',
+		    Center: 'center',
+		    Right: 'right',
+		};
+		exports.LegendPosition = {
+		    Top: 'Top',
+		    Bottom: 'Bottom',
+		    Right: 'Right',
+		    Left: 'Left',
+		    TopCenter: 'TopCenter',
+		    BottomCenter: 'BottomCenter',
+		    RightCenter: 'RightCenter',
+		    LeftCenter: 'LeftCenter',
 		};
 		var Selector = /** @class */ (function () {
 		    function Selector(schema) {
@@ -1658,6 +1682,24 @@ return /******/ (function(modules) { // webpackBootstrap
 		    CommandDisplayOption[CommandDisplayOption["Disabled"] = 1] = "Disabled";
 		    CommandDisplayOption[CommandDisplayOption["Hidden"] = 2] = "Hidden";
 		})(CommandDisplayOption = exports.CommandDisplayOption || (exports.CommandDisplayOption = {}));
+		/*
+		 * Visual CRUD
+		 */
+		var VisualDataRoleKind;
+		(function (VisualDataRoleKind) {
+		    // Indicates that the role should be bound to something that evaluates to a grouping of values.
+		    VisualDataRoleKind[VisualDataRoleKind["Grouping"] = 0] = "Grouping";
+		    // Indicates that the role should be bound to something that evaluates to a single value in a scope.
+		    VisualDataRoleKind[VisualDataRoleKind["Measure"] = 1] = "Measure";
+		    // Indicates that the role can be bound to either Grouping or Measure.
+		    VisualDataRoleKind[VisualDataRoleKind["GroupingOrMeasure"] = 2] = "GroupingOrMeasure";
+		})(VisualDataRoleKind = exports.VisualDataRoleKind || (exports.VisualDataRoleKind = {}));
+		// Indicates the visual preference on Grouping or Measure. Only applicable if kind is GroupingOrMeasure.
+		var VisualDataRoleKindPreference;
+		(function (VisualDataRoleKindPreference) {
+		    VisualDataRoleKindPreference[VisualDataRoleKindPreference["Measure"] = 0] = "Measure";
+		    VisualDataRoleKindPreference[VisualDataRoleKindPreference["Grouping"] = 1] = "Grouping";
+		})(VisualDataRoleKindPreference = exports.VisualDataRoleKindPreference || (exports.VisualDataRoleKindPreference = {}));
 		function normalizeError(error) {
 		    var message = error.message;
 		    if (!message) {
@@ -5667,7 +5709,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.7.3',
+	    version: '2.7.4',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.7.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.7.4 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -414,7 +414,7 @@ declare module "embed" {
          */
         setComponentTitle(title: string): void;
         /**
-         * Sets elements's tabindex attribute
+         * Sets element's tabindex attribute
          */
         setComponentTabIndex(tabIndex?: number): void;
         /**

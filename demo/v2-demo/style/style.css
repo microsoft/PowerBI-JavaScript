@@ -504,7 +504,6 @@ a:hover, a:visited, a:link, a:active
     top: -2px;
     padding-right: 3px;
     right: 2px;
-    object-fit: scale-down;
 }
 
 .textAreaControl.regular img {
