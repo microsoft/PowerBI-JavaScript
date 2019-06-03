@@ -2,6 +2,8 @@ import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
 import { VisualDescriptor } from './visualDescriptor';
 import * as models from 'powerbi-models';
+import * as utils from './util';
+import * as errors from './errors';
 
 /**
  * A Page node within a report hierarchy
@@ -172,6 +174,10 @@ export class Page implements IPageNode, IFilterable {
    * @returns {Promise<VisualDescriptor[]>}
    */
   getVisuals(): Promise<VisualDescriptor[]> {
+    if (utils.isRDLEmbed(this.report.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.report.service.hpm.get<models.IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .then(response => {
         return response.body
@@ -194,6 +200,10 @@ export class Page implements IPageNode, IFilterable {
    * @returns {(Promise<boolean>)}
    */
   hasLayout(layoutType): Promise<boolean> {
+    if (utils.isRDLEmbed(this.report.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     let layoutTypeEnum = models.LayoutType[layoutType];
     return this.report.service.hpm.get<boolean>(`/report/pages/${this.name}/layoutTypes/${layoutTypeEnum}`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
       .then(response => response.body,
