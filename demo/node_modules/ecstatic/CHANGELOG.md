@@ -1,3 +1,6 @@
+2019/05/03 Version 2.2.2
+- Backport redirects bugfix
+
 2017/06/06 Version 2.2.1
 - Fix version number in CHANGELOG.md
 

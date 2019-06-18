@@ -415,102 +415,6 @@ function _Mock_Embed_BasicEmbed_ViewMode() {
     _Mock_Embed_BasicEmbed(false);
 }
 
-function _Mock_Embed_BasicEmbed_ViewMode_With_Filters() {
-    var filters = [
-        {
-          "$schema": "http://powerbi.com/product/schema#basic",
-          "target": {
-            "table": "Date",
-            "column": "Year"
-          },
-          "filterType": 1,
-          "operator": "In",
-          "values": [
-            2014
-          ]
-        }
-      ];
-
-    // Read embed application token from textbox
-    var txtAccessToken = $('#txtAccessToken').val();
-
-    // Read embed URL from textbox
-    var txtEmbedUrl = $('#txtReportEmbed').val();
-
-    // Read report Id from textbox
-    var txtEmbedReportId = $('#txtEmbedReportId').val();
-
-    // Read embed type from radio
-    var tokenType = $('input:radio[name=tokenType]:checked').val();
-
-    // Get models. models contains enums that can be used.
-    var models = window['powerbi-client'].models;
-    var permissions = models.Permissions.All;
-    var viewMode = models.ViewMode.View;
-
-    // Embed configuration used to describe the what and how to embed.
-    // This object is used when calling powerbi.embed.
-    // This also includes settings and options such as filters.
-    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
-    var config= {
-        type: 'report',
-        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
-        accessToken: txtAccessToken,
-        embedUrl: txtEmbedUrl,
-        id: txtEmbedReportId,
-        permissions: permissions,
-        viewMode: viewMode,
-        settings: {
-            filterPaneEnabled: true,
-            navContentPaneEnabled: true,
-            useCustomSaveAsDialog: true
-        },
-        filters: filters
-    };
-
-    // Get a reference to the embedded report HTML element
-    var embedContainer = $('#embedContainer')[0];
-
-    powerbi.reset(embedContainer);
-
-    // Embed the report and display it within the div container.
-    var report = powerbi.embed(embedContainer, config);
-
-    // Report.off removes a given event handler if it exists.
-    report.off("loaded");
-
-    // Report.on will add an event handler which prints to Log window.
-    report.on("loaded", function() {
-      Log.logText("Loaded");
-    });
-
-    // Report.off removes a given event handler if it exists.
-    report.off("rendered");
-
-    // Report.on will add an event handler which prints to Log window.
-    report.on("rendered", function() {
-        Log.logText("Rendered");
-    });
-
-    report.off("saveAsTriggered");
-    report.on("saveAsTriggered", function() {
-        Log.logText("Cannot save sample report");
-    });
-
-    report.off("error");
-    report.on("error", function(event) {
-        Log.log(event.detail);
-    });
-
-    report.off("saved");
-    report.on("saved", function(event) {
-        Log.log(event.detail);
-        if (event.detail.saveAs) {
-          Log.logText('In order to interact with the new report, create a new token and load the new report');
-        }
-    });
-}
-
 function _Embed_BasicEmbed_EditMode() {
     // Read embed application token from textbox
     var txtAccessToken = $('#txtAccessToken').val();
@@ -2647,7 +2551,7 @@ function _ReportVisual_HideSingleVisualHeader() {
             },
             selector: {
                 $schema: "http://powerbi.com/product/schema#visualSelector",
-                visualName: "VisualContainer4"
+                visualName: "47eb6c0240defd498d4b"
                 // The visual name can be retrieved using getVisuals()
                 // Hide visual header for a single visual only
             }

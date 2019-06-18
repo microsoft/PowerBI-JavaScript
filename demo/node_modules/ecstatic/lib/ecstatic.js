@@ -144,7 +144,7 @@ var ecstatic = module.exports = function (dir, options) {
           }
 
           // 302 to / if necessary
-          if (!parsed.pathname.match(/\/$/)) {
+          if (!pathname.match(/\/$/)) {
             res.statusCode = 302;
             res.setHeader('location', parsed.pathname + '/' +
               (parsed.query? ('?' + parsed.query):'')
@@ -384,7 +384,7 @@ function shouldCompress(req) {
 function decodePathname(pathname) {
   var pieces = pathname.replace(/\\/g,"/").split('/');
 
-  return pieces.map(function (piece) {
+  return path.normalize(pieces.map(function (piece) {
     piece = decodeURIComponent(piece);
 
     if (process.platform === 'win32' && /\\/.test(piece)) {
@@ -392,7 +392,7 @@ function decodePathname(pathname) {
     }
 
     return piece;
-  }).join('/');
+  }).join('/'));
 }
 
 if (!module.parent) {
