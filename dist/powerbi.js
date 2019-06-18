@@ -1,4 +1,4 @@
-/*! powerbi-client v2.7.4 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.7.5 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -57,25 +57,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(15);
+	var factories = __webpack_require__(16);
 	exports.factories = factories;
 	var models = __webpack_require__(4);
 	exports.models = models;
 	var report_1 = __webpack_require__(5);
 	exports.Report = report_1.Report;
-	var dashboard_1 = __webpack_require__(11);
+	var dashboard_1 = __webpack_require__(12);
 	exports.Dashboard = dashboard_1.Dashboard;
-	var tile_1 = __webpack_require__(12);
+	var tile_1 = __webpack_require__(13);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
-	var page_1 = __webpack_require__(6);
+	var page_1 = __webpack_require__(7);
 	exports.Page = page_1.Page;
-	var qna_1 = __webpack_require__(13);
+	var qna_1 = __webpack_require__(14);
 	exports.Qna = qna_1.Qna;
-	var visual_1 = __webpack_require__(14);
+	var visual_1 = __webpack_require__(15);
 	exports.Visual = visual_1.Visual;
-	var visualDescriptor_1 = __webpack_require__(7);
+	var visualDescriptor_1 = __webpack_require__(8);
 	exports.VisualDescriptor = visualDescriptor_1.VisualDescriptor;
 	/**
 	 * Makes Power BI available to the global object for use in applications that don't have module loading support.
@@ -92,12 +92,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(5);
-	var create_1 = __webpack_require__(10);
-	var dashboard_1 = __webpack_require__(11);
-	var tile_1 = __webpack_require__(12);
-	var page_1 = __webpack_require__(6);
-	var qna_1 = __webpack_require__(13);
-	var visual_1 = __webpack_require__(14);
+	var create_1 = __webpack_require__(11);
+	var dashboard_1 = __webpack_require__(12);
+	var tile_1 = __webpack_require__(13);
+	var page_1 = __webpack_require__(7);
+	var qna_1 = __webpack_require__(14);
+	var visual_1 = __webpack_require__(15);
 	var utils = __webpack_require__(3);
 	/**
 	 * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
@@ -1104,13 +1104,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	}
 	exports.isSavedInternal = isSavedInternal;
+	/**
+	 * Checks if the embed url is for RDL report.
+	 *
+	 * @export
+	  * @param {string} embedUrl
+	  * @returns {boolean}
+	 */
+	function isRDLEmbed(embedUrl) {
+	    return embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
+	}
+	exports.isRDLEmbed = isRDLEmbed;
 
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.1.1 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.2.0 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1286,11 +1297,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		        this.filterType = filterType;
 		    }
 		    Filter.prototype.toJSON = function () {
-		        return {
+		        var filter = {
 		            $schema: this.schemaUrl,
 		            target: this.target,
 		            filterType: this.filterType
 		        };
+		        // Add displaySettings only when defined
+		        if (this.displaySettings !== undefined) {
+		            filter.displaySettings = this.displaySettings;
+		        }
+		        return filter;
 		    };
 		    ;
 		    return Filter;
@@ -4372,9 +4388,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var embed = __webpack_require__(2);
 	var models = __webpack_require__(4);
 	var utils = __webpack_require__(3);
-	var page_1 = __webpack_require__(6);
-	var defaults_1 = __webpack_require__(8);
-	var bookmarksManager_1 = __webpack_require__(9);
+	var errors = __webpack_require__(6);
+	var page_1 = __webpack_require__(7);
+	var defaults_1 = __webpack_require__(9);
+	var bookmarksManager_1 = __webpack_require__(10);
 	/**
 	 * The Power BI Report embed component
 	 *
@@ -4465,6 +4482,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<models.IFilter[]>}
 	     */
 	    Report.prototype.getFilters = function () {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.service.hpm.get("/report/filters", { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
@@ -4497,6 +4517,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Report.prototype.getPages = function () {
 	        var _this = this;
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.service.hpm.get('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
 	            return response.body
@@ -4533,6 +4556,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
 	     */
 	    Report.prototype.print = function () {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.service.hpm.post('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
 	            return response.body;
@@ -4551,6 +4577,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    Report.prototype.removeFilters = function () {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.setFilters([]);
 	    };
 	    /**
@@ -4565,6 +4594,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    Report.prototype.setPage = function (pageName) {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        var page = {
 	            name: pageName,
 	            displayName: null,
@@ -4593,6 +4625,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    Report.prototype.setFilters = function (filters) {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.service.hpm.put("/report/filters", filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
@@ -4615,6 +4650,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    Report.prototype.updateSettings = function (settings) {
+	        if (utils.isRDLEmbed(this.config.embedUrl) && settings.customLayout != null) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.service.hpm.patch('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
@@ -4691,6 +4729,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<boolean>}
 	     */
 	    Report.prototype.isSaved = function () {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
 	    };
 	    /**
@@ -4701,6 +4742,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * ```
 	     */
 	    Report.prototype.applyTheme = function (theme) {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.applyThemeInternal(theme);
 	    };
 	    /**
@@ -4711,6 +4755,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    * ```
 	    */
 	    Report.prototype.resetTheme = function () {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.applyThemeInternal({});
 	    };
 	    Report.prototype.applyThemeInternal = function (theme) {
@@ -4747,10 +4794,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports) {
+
+	exports.APINotSupportedForRDLError = "This API is currently not supported for RDL reports";
+
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var visualDescriptor_1 = __webpack_require__(7);
+	var visualDescriptor_1 = __webpack_require__(8);
 	var models = __webpack_require__(4);
+	var utils = __webpack_require__(3);
+	var errors = __webpack_require__(6);
 	/**
 	 * A Power BI report page
 	 *
@@ -4855,6 +4911,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Page.prototype.getVisuals = function () {
 	        var _this = this;
+	        if (utils.isRDLEmbed(this.report.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
 	            .then(function (response) {
 	            return response.body
@@ -4876,6 +4935,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {(Promise<boolean>)}
 	     */
 	    Page.prototype.hasLayout = function (layoutType) {
+	        if (utils.isRDLEmbed(this.report.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        var layoutTypeEnum = models.LayoutType[layoutType];
 	        return this.report.service.hpm.get("/report/pages/" + this.name + "/layoutTypes/" + layoutTypeEnum, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
@@ -4888,7 +4950,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5023,7 +5085,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 	var Defaults = (function () {
@@ -5041,9 +5103,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports) {
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
 
+	var utils = __webpack_require__(3);
+	var errors = __webpack_require__(6);
 	/**
 	 * Manages report bookmarks.
 	 *
@@ -5071,6 +5135,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<models.IReportBookmark[]>}
 	     */
 	    BookmarksManager.prototype.getBookmarks = function () {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.service.hpm.get("/report/bookmarks", { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
@@ -5086,6 +5153,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    BookmarksManager.prototype.apply = function (bookmarkName) {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        var request = {
 	            name: bookmarkName
 	        };
@@ -5105,6 +5175,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    BookmarksManager.prototype.play = function (playMode) {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        var playBookmarkRequest = {
 	            playMode: playMode
 	        };
@@ -5123,6 +5196,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<models.IReportBookmark>}
 	     */
 	    BookmarksManager.prototype.capture = function () {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        return this.service.hpm.post("/report/bookmarks/capture", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
@@ -5138,6 +5214,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {Promise<void>}
 	     */
 	    BookmarksManager.prototype.applyState = function (state) {
+	        if (utils.isRDLEmbed(this.config.embedUrl)) {
+	            return Promise.reject(errors.APINotSupportedForRDLError);
+	        }
 	        var request = {
 	            state: state
 	        };
@@ -5152,7 +5231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -5163,7 +5242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var models = __webpack_require__(4);
 	var embed = __webpack_require__(2);
 	var utils = __webpack_require__(3);
-	var defaults_1 = __webpack_require__(8);
+	var defaults_1 = __webpack_require__(9);
 	var Create = (function (_super) {
 	    __extends(Create, _super);
 	    function Create(service, element, config, phasedRender) {
@@ -5245,7 +5324,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -5256,7 +5335,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var embed = __webpack_require__(2);
 	var models = __webpack_require__(4);
 	var utils = __webpack_require__(3);
-	var defaults_1 = __webpack_require__(8);
+	var defaults_1 = __webpack_require__(9);
 	/**
 	 * A Power BI Dashboard embed component
 	 *
@@ -5353,7 +5432,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -5364,7 +5443,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var models = __webpack_require__(4);
 	var embed = __webpack_require__(2);
 	var utils = __webpack_require__(3);
-	var defaults_1 = __webpack_require__(8);
+	var defaults_1 = __webpack_require__(9);
 	/**
 	 * The Power BI tile embed component
 	 *
@@ -5440,7 +5519,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -5502,7 +5581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -5671,13 +5750,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var config_1 = __webpack_require__(16);
-	var wpmp = __webpack_require__(17);
-	var hpm = __webpack_require__(18);
-	var router = __webpack_require__(19);
+	var config_1 = __webpack_require__(17);
+	var wpmp = __webpack_require__(18);
+	var hpm = __webpack_require__(19);
+	var router = __webpack_require__(20);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -5705,11 +5784,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.7.4',
+	    version: '2.7.5',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -5717,7 +5796,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! window-post-message-proxy v0.2.5 | (c) 2016 Microsoft Corporation MIT */
@@ -6017,7 +6096,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -6201,7 +6280,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */
