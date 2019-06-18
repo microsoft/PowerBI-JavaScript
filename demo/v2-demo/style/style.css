@@ -961,6 +961,10 @@ a:hover, a:visited, a:link, a:active
     padding: 8px 0 8px 0;
 }
 
+#generatorOptions {
+    padding: 8px 16px;
+}
+
 .checkboxContainer {
     display: block;
     position: relative;
@@ -1100,6 +1104,21 @@ a:hover, a:visited, a:link, a:active
     z-index: 11;
 }
 
+#overlay-embed-container {
+    background-color:white;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 11;
+    text-align: center;
+    font-family: Segoe UI;
+    font-size: 20px;
+}
+
+#overlay-embed-container.overlay-text {
+    padding-top: calc(30% - 20px);
+}
+
 #shareDialog {
     display: none;
     position: fixed;
@@ -1182,6 +1201,10 @@ a:hover, a:visited, a:link, a:active
 .showcases-buttons {
     height: 32px;
     margin-top: 16px;
+}
+
+.text-small-tab {
+  padding-left: 1em;
 }
 
 .text-tab {
@@ -1596,4 +1619,242 @@ a:hover, a:visited, a:link, a:active
 #messageSent.show {
     opacity: 1;
     z-index: 5;
+}
+
+#generator-fields, #generator-properties, .title-wrapper {
+  margin-top: 8px;
+}
+
+input#ptitle[type="text"] {
+  margin-top: 8px;
+  border: 1px solid #A19F9D;
+  border-radius: 2px;
+  height: 32px;
+  width: calc(100% - 30px);
+  padding-left: 8px;
+}
+
+#btnEraseCustomTitle {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+#alignment-blocks-wrapper {
+  height: 32px;
+  margin-top: 8px;
+}
+
+.alignment-block {
+  height: 25px;
+  width: 25px;
+  padding: 1px 4px;
+  margin-right: 6px;
+  float: left;
+  cursor: pointer;
+  user-select: none;
+}
+
+.alignment-block.selected {
+  background-color: #F2C811;
+}
+
+.title-wrapper-big {
+  margin-top: 12px;
+}
+
+/* Select Menu */
+
+.styled-select {
+  position: relative;
+  font-family: Segoe UI;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.styled-select select {
+  display: none; /*hide original SELECT element: */
+}
+
+.inline-select-text, .inline-toggle-text {
+  line-height: 32px;
+}
+
+.select-wrapper, .toggle-wrapper {
+  height: 32px;
+  margin-top: 8px;
+}
+
+.inline-select {
+  float: right;
+  width: calc(100% - 80px);
+}
+
+.select-selected {
+  background-color: #FFFFFF;
+}
+
+/* Style the arrow inside the select element: */
+.select-selected:after {
+  position: absolute;
+  top: 9px;
+  right: 5px;
+  display: block;
+  content: " ";
+  background: url(../images/collapse.svg) center left;
+  background-repeat: no-repeat;
+  height: 16px;
+  width: 16px;
+}
+
+/* style the items (options), including the selected item: */
+.select-selected, .select-items div {
+  color: #000000;
+  padding: 5px 10px;
+  border: 1px solid #A19F9D;
+  cursor: pointer;
+}
+
+.select-selected {
+  border-radius: 2px;
+}
+
+.select-items div {
+  border-color: transparent #A19F9D #A19F9D #A19F9D;
+}
+
+.select-items {
+  position: absolute;
+  background-color: #FFFFFF;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+/* Hide the items when the select box is closed */
+.select-hide {
+  display: none;
+}
+
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Toggle Button */
+
+.inline-toggle-text {
+  float: left;
+  width: 54px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  float: left;
+  width: 40px;
+  height: 20px;
+  margin: 7px 0 7px 16px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FFFFFF;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 4px;
+  bottom: 3px;
+  background-color: #605E5C;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #F2C811;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+  background-color: #FFFFFF;
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 40px;
+  border-color: #605E5C;
+  border: 1px solid;
+}
+
+input:checked + .slider.round {
+  border-color: #F2C811;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.generator-disabled {
+  color: #A19F9D;
+  pointer-events: none;
+}
+
+.generator-disabled .select-selected {
+  color: #A19F9D;
+}
+
+.toggle-wrapper.disabled {
+  pointer-events: none;
+}
+
+.generator-disabled .slider, .generator-disabled input:checked + .slider, .toggle-wrapper.disabled input:checked + .slider {
+  background-color: #C8C6C4;
+  border-color: #C8C6C4;
+}
+
+.generator-disabled .alignment-block.selected {
+  background-color: #F3F2F1;
+}
+
+#aligns-disabled, #erase-tool-disabled {
+  display: none;
+}
+
+#erase-tool-enabled {
+  display: inherit;
+}
+
+.generator-disabled #aligns-enabled, .generator-disabled #erase-tool-enabled {
+  display: none;
+}
+
+.generator-disabled #aligns-disabled, .generator-disabled #erase-tool-disabled {
+  display: inherit;
+}
+
+#overlay-embed-container #spinner {
+  top: calc(50% - 20px);
+  right: calc(50% - 60px);
+  position: absolute;
+  font-size: 14px;
 }

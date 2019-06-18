@@ -201,7 +201,7 @@ label {
     padding-right: 16px;
 }
 
-#showcaseItemsWrapper, #bookmarksWrapper {
+#showcaseItemsWrapper, #bookmarksWrapper, #generatorWrapper {
     background: #FFFFFF;
     min-height: 350px;
 }

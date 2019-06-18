@@ -71,6 +71,7 @@ const ShowcasesHtmls = {
     Bookmarks: "./live_showcases/bookmarks/showcase_bookmarks.html",
     Themes: "./live_showcases/themes/showcase_themes.html",
     InsightToAction: "./live_showcases/insight_to_action/showcase_insight_to_action.html",
+    QuickVisualCreator: "./live_showcases/quick_visual_creator/showcase_quick_visual_creator.html",
 };
 
 function OpenShowcase(showcaseType) {
