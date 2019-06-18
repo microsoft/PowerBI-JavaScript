@@ -4,6 +4,7 @@ import * as models from 'powerbi-models';
 import * as wpmp from 'window-post-message-proxy';
 import * as hpm from 'http-post-message';
 import * as utils from './util';
+import * as errors from './errors';
 import { IFilterable } from './ifilterable';
 import { IPageNode, Page } from './page';
 import { Defaults } from './defaults';
@@ -38,7 +39,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   static navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
   static typeAttribute = 'powerbi-type';
   static type = "Report";
-
+  
   public bookmarksManager: BookmarksManager;
 
   /**
@@ -129,6 +130,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<models.IFilter[]>}
    */
   getFilters(): Promise<models.IFilter[]> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.service.hpm.get<models.IFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => response.body,
       response => {
@@ -165,6 +170,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<Page[]>}
    */
   getPages(): Promise<Page[]> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.service.hpm.get<models.IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body
@@ -203,6 +212,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
    */
   print(): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.service.hpm.post<models.IError[]>('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body;
@@ -222,6 +235,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<void>}
    */
   removeFilters(): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.setFilters([]);
   }
 
@@ -237,6 +254,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<void>}
    */
   setPage(pageName: string): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     const page: models.IPage = {
       name: pageName,
       displayName: null,
@@ -267,6 +288,11 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<void>}
    */
   setFilters(filters: models.IFilter[]): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
+
     return this.service.hpm.put<models.IError[]>(`/report/filters`, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .catch(response => {
         throw response.body;
@@ -290,6 +316,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<void>}
    */
   updateSettings(settings: models.ISettings): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl) && settings.customLayout != null) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.service.hpm.patch<models.IError[]>('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .catch(response => {
         throw response.body;
@@ -375,6 +405,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<boolean>}
    */
   isSaved(): Promise<boolean> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
   }
 
@@ -386,6 +420,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * ```
    */
   applyTheme(theme: models.IReportTheme): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.applyThemeInternal(theme);
   }
 
@@ -397,6 +435,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   * ```
   */
   resetTheme(): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.applyThemeInternal(<models.IReportTheme>{});
   }
 

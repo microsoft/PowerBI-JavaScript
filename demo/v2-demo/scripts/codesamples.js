@@ -2551,7 +2551,7 @@ function _ReportVisual_HideSingleVisualHeader() {
             },
             selector: {
                 $schema: "http://powerbi.com/product/schema#visualSelector",
-                visualName: "VisualContainer4"
+                visualName: "47eb6c0240defd498d4b"
                 // The visual name can be retrieved using getVisuals()
                 // Hide visual header for a single visual only
             }

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.7.4 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.7.5 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -73,6 +73,14 @@ declare module "util" {
      * @returns {Promise<boolean>}
      */
     export function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow: Window): Promise<boolean>;
+    /**
+     * Checks if the embed url is for RDL report.
+     *
+     * @export
+      * @param {string} embedUrl
+      * @returns {boolean}
+     */
+    export function isRDLEmbed(embedUrl: string): boolean;
 }
 declare module "embed" {
     import * as service from "service";
@@ -435,6 +443,9 @@ declare module "embed" {
          */
         private frontLoadSendConfig(config);
     }
+}
+declare module "errors" {
+    export let APINotSupportedForRDLError: string;
 }
 declare module "ifilterable" {
     import * as models from 'powerbi-models';

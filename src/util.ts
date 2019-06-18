@@ -162,3 +162,16 @@ export function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow
       throw response.body;
     });
 }
+
+/**
+ * Checks if the embed url is for RDL report.
+ * 
+ * @export
+  * @param {string} embedUrl
+  * @returns {boolean}
+ */
+export function isRDLEmbed(embedUrl: string): boolean {
+  return embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
+}
+
+
