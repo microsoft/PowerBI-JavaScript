@@ -155,3 +155,31 @@ function elementClicked(element) {
         $(element).removeClass('elementClicked');
     }, elementClickedTimeout);
 }
+
+function SetAuthoringPageActive(report) {
+    return new Promise((resolve, reject) => {
+
+        // Get all report pages
+        report.getPages().then(function (pages) {
+
+            // Find authoring page
+            var authoringPage = pages.filter(function (page) {
+                return page.name === "ReportSection6da8317ad6cbcae5b3bb";
+            })[0];
+
+            // If active page is not authoring page, navigate to authoring page
+            if (authoringPage.isActive) {
+                resolve(authoringPage);
+            } else {
+                authoringPage.setActive().then(function () {
+                    Log.logText("Page was set to authoring page.");
+                    resolve(authoringPage);
+                }).catch(function (errors) {
+                    reject(errors);
+                });
+            }
+        }).catch(function (errors) {
+            reject(errors);
+        });
+    });
+}

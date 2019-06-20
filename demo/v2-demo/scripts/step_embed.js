@@ -299,3 +299,45 @@ function ReportVisual_Visual_RemoveFilters() {
 function ReportVisual_HideSingleVisualHeader() {
     SetCode(_ReportVisual_HideSingleVisualHeader);
 }
+
+// ---- Report Authoring ----------------------------------------------------
+
+function Report_Authoring_Create() {
+    SetCode(_Report_Authoring_Create);
+}
+
+function Report_Authoring_ChangeType() {
+    SetCode(_Report_Authoring_ChangeType);
+}
+
+function Report_Authoring_Remove() {
+    SetCode(_Report_Authoring_Remove);
+}
+
+function Report_Authoring_Capabilities() {
+    SetCode(_Report_Authoring_Capabilities);
+}
+
+function Report_Authoring_AddDataField() {
+    SetCode(_Report_Authoring_AddDataField);
+}
+
+function Report_Authoring_RemoveDataField() {
+    SetCode(_Report_Authoring_RemoveDataField);
+}
+
+function Report_Authoring_GetDataField() {
+    SetCode(_Report_Authoring_GetDataField);
+}
+
+function Report_Authoring_GetProperty() {
+    SetCode(_Report_Authoring_GetProperty);
+}
+
+function Report_Authoring_SetProperty() {
+    SetCode(_Report_Authoring_SetProperty);
+}
+
+function Report_Authoring_ResetProperty() {
+    SetCode(_Report_Authoring_ResetProperty);
+}
