@@ -13,6 +13,11 @@ function OpenDataOperations() {
     $("#data-operations").toggleClass("active");
 }
 
+function OpenAuthoringOperations() {
+    $("#authoring-operations-ul").toggle();
+    $("#authoring-operations").toggleClass("active");
+}
+
 function OpenExtensionsOperations() {
     $("#extensions-operations-ul").toggle();
     $("#extensions-operations").toggleClass("active");
