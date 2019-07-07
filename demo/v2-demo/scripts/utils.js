@@ -157,7 +157,7 @@ function elementClicked(element) {
 }
 
 function SetAuthoringPageActive(report) {
-    return new Promise((resolve, reject) => {
+    return new Promise(function(resolve, reject) {
 
         // Get all report pages
         report.getPages().then(function (pages) {
