@@ -608,6 +608,17 @@ declare module "visualDescriptor" {
          * @returns {(Promise<models.ICloneVisualResponse>)}
          */
         clone(request?: models.ICloneVisualRequest): Promise<models.ICloneVisualResponse>;
+        /**
+         * Sort a visual by dataField and direction.
+         *
+         * @param request: Sort by visual request.
+         *
+         * ```javascript
+         * visual.sortBy(request)
+         *  .then(() => { ... });
+         * ```
+         */
+        sortBy(request: models.ISortByVisualRequest): Promise<void>;
     }
 }
 declare module "page" {
