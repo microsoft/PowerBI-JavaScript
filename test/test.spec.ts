@@ -5,6 +5,7 @@ import * as visual from '../src/visual';
 import * as create from '../src/create';
 import * as dashboard from '../src/dashboard';
 import * as page from '../src/page';
+import * as sdkConfig from '../src/config';
 import * as visualDescriptor from '../src/visualDescriptor';
 import * as Wpmp from 'window-post-message-proxy';
 import * as Hpm from 'http-post-message';
@@ -453,18 +454,23 @@ describe('service', function () {
       const component = powerbi.embed($element[0]);
       spyOn(component, "load");
 
-      const testConfiguration = {
-        accessToken: undefined,
+      const testConfiguration: embed.IEmbedConfiguration = {
+        accessToken: "fakeToken",
         embedUrl: 'fakeUrl',
-        id: 'report2'
+        id: 'report2',
       };
 
       // Act
       const component2 = powerbi.embed($element[0], testConfiguration);
 
+      const actualConfig = (<jasmine.Spy>component.load).calls.mostRecent().args[0];
+
       // Assert
       expect(component.load).toHaveBeenCalled();
-      expect((<jasmine.Spy>component.load).calls.mostRecent().args[0]).toEqual(testConfiguration);
+      expect(actualConfig.accessToken).toEqual(testConfiguration.accessToken);
+      expect(actualConfig.embedUrl).toEqual(testConfiguration.embedUrl);
+      expect(actualConfig.id).toEqual(testConfiguration.id);
+
       expect(component2).toBe(component);
     });
 
@@ -812,6 +818,119 @@ describe('service', function () {
       });
     });
   });
+
+  describe('bootstrap', function () {
+    it('if attempting to bootstrap without specifying a type, throw error', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const attemptEmbed = () => {
+        powerbi.bootstrap(component[0], {});
+      };
+
+      // Assert
+      expect(attemptEmbed).toThrowError(Error);
+    });
+
+    it('if attempting to bootstrap with an unknown type, throw error', function () {
+      // Arrange
+      const component = $('<div powerbi-type="unknownType"></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const attemptEmbed = () => {
+        powerbi.bootstrap(component[0], {});
+      };
+
+      // Assert
+      expect(attemptEmbed).toThrowError(Error);
+    });
+
+    it('if attempting to bootstrap on existing element, throw error', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      const reportEmbedConfig: embed.IEmbedConfiguration = {
+        type: "report",
+        id: "fakeReportId",
+        accessToken: "fakeAccessToken",
+        embedUrl: "fakeEmbedUrl",
+        groupId: "fakeGroupId",
+      };
+
+      const reportEmbedConfig2: embed.IEmbedConfiguration = {
+        type: "report",
+        id: "fakeReportId2",
+        accessToken: "fakeAccessToken",
+        embedUrl: "fakeEmbedUrl",
+        groupId: "fakeGroupId"
+      };
+
+      powerbi.embed(component[0], reportEmbedConfig);
+
+      // Act
+      const attemptBootstrap = () => {
+        powerbi.bootstrap(component[0], reportEmbedConfig2);
+      };
+
+      // Assert
+      expect(attemptBootstrap).toThrowError(Error);
+    });
+
+    it('powerbi.embed should use the same iframe is already embedded with powerbi.bootstrap', function () {
+      // Arrange
+      const $element = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+        .appendTo('#powerbi-fixture');
+
+      const testConfiguration = {
+        accessToken: "fakeAccessToken",
+        embedUrl: 'fakeUrl',
+        id: 'report2',
+        type: 'report',
+        groupId: "fakeGroupId"
+      };
+
+      // Act
+      const component = powerbi.bootstrap($element[0], {
+        type: 'report',
+		embedUrl: 'fakeUrl2',
+      });
+
+      const component2 = powerbi.embed($element[0], testConfiguration);
+      const component3 = powerbi.get($element[0]);
+
+      // Assert
+      expect(component).toBeDefined();
+      expect(component2).toBeDefined();
+      expect(component2).toBe(component3);
+    });
+
+    it('powerbi.bootstrap url with correct locale parameters', function () {
+      // Arrange
+      const $reportContainer = $('<div powerbi-embed-url="https://app.powerbi.com/reportEmbed?reportId=ABC123" powerbi-type="report"></div>')
+        .appendTo('#powerbi-fixture');
+
+      const testConfiguration: embed.IEmbedConfiguration = {
+        embedUrl: 'fakeUrl?reportId=1',
+        id: 'report2',
+        type: 'report',
+        settings: {
+          localeSettings: {
+            language: 'languageName',
+            formatLocale: 'formatName'
+          }
+        },
+        uniqueId: "fakeUid",
+      };
+
+      powerbi.bootstrap($reportContainer[0], testConfiguration);
+      var iframe = $reportContainer.find('iframe');
+      expect(iframe.attr('src')).toEqual('fakeUrl?reportId=1&language=languageName&formatLocale=formatName&uid=fakeUid');
+    });
+});
 
   describe('reset', function () {
     it('deletes the powerBiEmbed property on the element', function () {
@@ -2637,7 +2756,14 @@ describe('SDK-to-HPM', function () {
         report.load(testData.loadConfiguration);
 
         // Assert
-        expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
+        const expectedHeaders = {
+          bootstrapped: undefined,
+          sdkVersion: sdkConfig.default.version,
+          uid: uniqueId,
+          sdkSessionId: sdkSessionId
+        };
+
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, expectedHeaders, iframe.contentWindow);
       });
 
       it('report.load() returns promise that rejects with validation error if the load configuration is invalid', function (done) {
@@ -2659,7 +2785,13 @@ describe('SDK-to-HPM', function () {
         // Act
         report.load(testData.loadConfiguration)
           .catch(error => {
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
+            const expectedHeaders = {
+              bootstrapped: undefined,
+              sdkVersion: sdkConfig.default.version,
+              uid: uniqueId,
+              sdkSessionId: sdkSessionId
+            };
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, expectedHeaders, iframe.contentWindow);
             expect(error).toEqual(testData.errorResponse.body);
             // Assert
             done();
@@ -2683,7 +2815,14 @@ describe('SDK-to-HPM', function () {
         // Act
         report.load(testData.loadConfiguration)
           .then(response => {
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
+            const expectedHeaders = {
+              bootstrapped: undefined,
+              sdkVersion: sdkConfig.default.version,
+              uid: uniqueId,
+              sdkSessionId: sdkSessionId
+            };
+
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, expectedHeaders, iframe.contentWindow);
             expect(response).toEqual(null);
             // Assert
             done();
@@ -2779,7 +2918,12 @@ describe('SDK-to-HPM', function () {
         let spyArgs = spyHpm.post.calls.mostRecent().args;
         expect(spyArgs[0]).toEqual('/report/load');
         expect(spyArgs[1]).toEqual(expectedConfiguration);
-        expect(spyArgs[2]).toEqual({ uid: visualUniqueId, sdkSessionId: sdkSessionId });
+        expect(spyArgs[2]).toEqual({
+          bootstrapped: undefined,
+          sdkVersion: sdkConfig.default.version,
+          uid: visualUniqueId,
+          sdkSessionId: sdkSessionId
+        });
         expect(spyArgs[3]).toEqual(visualFrame.contentWindow);
       });
 
@@ -3298,8 +3442,15 @@ describe('SDK-to-HPM', function () {
             // Act
             report.reload();
 
+            const expectedHeaders = {
+              bootstrapped: undefined,
+              sdkVersion: sdkConfig.default.version,
+              uid: uniqueId,
+              sdkSessionId: sdkSessionId
+            };
+
             // Assert
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.loadConfiguration), { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.loadConfiguration), expectedHeaders, iframe.contentWindow);
           });
       });
     });
@@ -3481,8 +3632,15 @@ describe('SDK-to-HPM', function () {
         // Act
         dashboard.load(testData.loadConfiguration);
 
+        const expectedHeaders = {
+          bootstrapped: undefined,
+          sdkVersion: sdkConfig.default.version,
+          uid: dashboardUniqueId,
+          sdkSessionId: sdkSessionId
+        };
+
         // Assert
-        expect(spyHpm.post).toHaveBeenCalledWith('/dashboard/load', testData.loadConfiguration, { uid: dashboardUniqueId, sdkSessionId: sdkSessionId }, dashboardIframe.contentWindow);
+        expect(spyHpm.post).toHaveBeenCalledWith('/dashboard/load', testData.loadConfiguration, expectedHeaders, dashboardIframe.contentWindow);
       });
     });
   });
@@ -4774,12 +4932,11 @@ describe('SDK-to-MockApp', function () {
       // Act
       iframeHpm.post(`/reports/${report2.config.uniqueId}/events/${testData.eventName}`, testData.simulatedPageChangeBody)
         .then(response => {
-          // Assert
+          expect(testData.handler).not.toHaveBeenCalled();
           expect(testData.handler2).toHaveBeenCalledWith(jasmine.any(CustomEvent));
           // Workaround to compare pages which prevents recursive loop in jasmine equals
           // expect(testData.handler).toHaveBeenCalledWith(jasmine.objectContaining(testData.expectedEvent));
           expect(testData.handler2.calls.mostRecent().args[0].detail.newPage.name).toEqual(testData.simulatedPageChangeBody.newPage.name);
-          expect(testData.handler).not.toHaveBeenCalled();
           done();
         });
     });

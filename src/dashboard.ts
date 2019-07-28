@@ -8,7 +8,7 @@ import { Defaults } from './defaults';
 
 /**
  * A Dashboard node within a dashboard hierarchy
- * 
+ *
  * @export
  * @interface IDashboardNode
  */
@@ -20,7 +20,7 @@ export interface IDashboardNode {
 
 /**
  * A Power BI Dashboard embed component
- * 
+ *
  * @export
  * @class Dashboard
  * @extends {embed.Embed}
@@ -35,12 +35,12 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
 
     /**
      * Creates an instance of a Power BI Dashboard.
-     * 
+     *
      * @param {service.Service} service
      * @param {HTMLElement} element
      */
-    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean) {
-        super(service, element, config, /* iframe */ undefined, phasedRender);
+    constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) {
+        super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
         this.loadPath = "/dashboard/load";
         this.phasedLoadPath = "/dashboard/prepare";
 
@@ -50,9 +50,9 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
     /**
      * This adds backwards compatibility for older config which used the dashboardId query param to specify dashboard id.
      * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
-     * 
+     *
      * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
-     * 
+     *
      * @static
      * @param {string} url
      * @returns {string}
@@ -71,7 +71,7 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
 
     /**
      * Get dashboard id from first available location: options, attribute, embed url.
-     * 
+     *
      * @returns {string}
      */
     getId(): string {
@@ -95,24 +95,23 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
     }
 
     /**
-     * Populate config for load config
-     * 
-     * @param {IEmbedConfigurationBase}
+     * Handle config changes.
+     *
      * @returns {void}
      */
-    populateConfig(baseConfig: embed.IEmbedConfigurationBase): void {
-      let config = <embed.IEmbedConfiguration>baseConfig;
+    configChanged(isBootstrap: boolean): void {
+      if (isBootstrap) {
+        return;
+      }
 
-      super.populateConfig(config);
-
-      // TODO: Change when Object.assign is available.
-      const settings = utils.assign({}, Defaults.defaultSettings, config.settings);
-      config = utils.assign({ settings }, config);
-
-      config.id = this.getId();
-      this.config = config;
+      // Populate dashboard id into config object.
+      (<embed.IEmbedConfiguration>this.config).id = this.getId();
     }
-   
+
+    getDefaultEmbedUrlEndpoint(): string {
+      return "dashboardEmbed";
+    }
+
     /**
      * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
      */

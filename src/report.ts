@@ -1,12 +1,10 @@
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
-import * as wpmp from 'window-post-message-proxy';
-import * as hpm from 'http-post-message';
 import * as utils from './util';
 import * as errors from './errors';
 import { IFilterable } from './ifilterable';
-import { IPageNode, Page } from './page';
+import { Page } from './page';
 import { Defaults } from './defaults';
 import { IReportLoadConfiguration } from 'powerbi-models';
 import { BookmarksManager } from './bookmarksManager';
@@ -39,7 +37,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   static navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
   static typeAttribute = 'powerbi-type';
   static type = "Report";
-  
+
   public bookmarksManager: BookmarksManager;
 
   /**
@@ -49,18 +47,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfiguration} config
    */
-  constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, iframe?: HTMLIFrameElement) {
+  constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement) {
     const config = <embed.IEmbedConfiguration>baseConfig;
-
-    const filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
-    const navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
-    const settings = utils.assign({
-      filterPaneEnabled,
-      navContentPaneEnabled
-    }, config.settings);
-    const configCopy = utils.assign({ settings }, config);
-
-    super(service, element, configCopy, iframe, phasedRender);
+    super(service, element, config, iframe, phasedRender, isBootstrap);
     this.loadPath = "/report/load";
     this.phasedLoadPath = "/report/prepare";
     Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
@@ -334,24 +323,37 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Populate config for load config
+   * Handle config changes.
    *
-   * @param {IEmbedConfigurationBase}
    * @returns {void}
    */
-  populateConfig(baseConfig: embed.IEmbedConfigurationBase): void {
-    let config = <embed.IEmbedConfiguration>baseConfig;
-    if (config.settings && (config.settings.layoutType === models.LayoutType.MobileLandscape || config.settings.layoutType === models.LayoutType.MobilePortrait))
-        config.embedUrl = utils.addParamToUrl(config.embedUrl, "isMobile", "true")
+  configChanged(isBootstrap: boolean): void {
+    let config = <embed.IEmbedConfiguration>this.config;
 
-    super.populateConfig(config);
+    if (this.isMobileSettings(config.settings))
+      config.embedUrl = utils.addParamToUrl(config.embedUrl, "isMobile", "true");
 
-    // TODO: Change when Object.assign is available.
-    const settings = utils.assign({}, Defaults.defaultSettings, config.settings);
-    config = utils.assign({ settings }, config);
+    // Calculate settings from HTML element attributes if available.
+    let filterPaneEnabledAttribute = this.element.getAttribute(Report.filterPaneEnabledAttribute);
+    let navContentPaneEnabledAttribute = this.element.getAttribute(Report.navContentPaneEnabledAttribute);
+
+    let elementAttrSettings: embed.IEmbedSettings = {
+      filterPaneEnabled: (filterPaneEnabledAttribute == null) ? Defaults.defaultSettings.filterPaneEnabled : (filterPaneEnabledAttribute !== "false"),
+      navContentPaneEnabled: (navContentPaneEnabledAttribute == null) ? Defaults.defaultSettings.navContentPaneEnabled : (navContentPaneEnabledAttribute !== "false")
+    };
+
+    // Set the settings back into the config.
+    this.config.settings = utils.assign({}, elementAttrSettings, config.settings);
+
+    if (isBootstrap) {
+      return;
+    }
 
     config.id = this.getId();
-    this.config = config;
+  }
+
+  getDefaultEmbedUrlEndpoint(): string {
+    return "reportEmbed";
   }
 
   /**
@@ -361,7 +363,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    */
   switchMode(viewMode: models.ViewMode | string): Promise<void> {
     let newMode: string;
-    if (typeof viewMode === "string"){
+    if (typeof viewMode === "string") {
       newMode = viewMode;
     }
     else {
@@ -464,5 +466,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     }
 
     return mode;
+  }
+
+  private isMobileSettings(settings: embed.IEmbedSettings): boolean {
+    return settings && (settings.layoutType === models.LayoutType.MobileLandscape || settings.layoutType === models.LayoutType.MobilePortrait);
   }
 }

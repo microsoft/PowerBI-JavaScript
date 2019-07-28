@@ -1,7 +1,8 @@
 import * as utils from './util';
 import * as service from './service';
+import * as sdkConfig from './config';
 import * as models from 'powerbi-models';
-import * as hpm from 'http-post-message';
+import { Defaults } from './defaults';
 
 declare global {
   interface Document {
@@ -22,19 +23,31 @@ declare global {
 }
 
 /**
+ * Prepare configuration for Power BI embed components.
+ *
+ * @export
+ * @interface IBootstrapEmbedConfiguration
+ */
+export interface IBootstrapEmbedConfiguration {
+  hostname?: string;
+  embedUrl?: string;
+  settings?: ISettings;
+  uniqueId?: string;
+  type?: string;
+  groupId?: string;
+  bootstrapped?: boolean;
+}
+
+/**
  * Base Configuration settings for Power BI embed components
  *
  * @export
  * @interface IEmbedConfigurationBase
+ * @extends IBootstrapEmbedConfiguration
  */
-export interface IEmbedConfigurationBase {
-  settings?: ISettings;
-  embedUrl?: string;
-  uniqueId?: string;
-  type?: string;
+export interface IEmbedConfigurationBase extends IBootstrapEmbedConfiguration {
   accessToken?: string;
   tokenType?: models.TokenType;
-  groupId?: string;
 }
 
 // TODO: Re-use ILoadConfiguration interface to prevent duplicating properties.
@@ -110,6 +123,8 @@ export abstract class Embed {
   static embedUrlAttribute = 'powerbi-embed-url';
   static nameAttribute = 'powerbi-name';
   static typeAttribute = 'powerbi-type';
+  static defaultEmbedHostName = "https://app.powerbi.com";
+
   static type: string;
 
   static maxFrontLoadTimes: number = 2;
@@ -152,6 +167,13 @@ export abstract class Embed {
   config: IEmbedConfigurationBase;
 
   /**
+   * Gets or sets the bootstrap configuration for the Power BI embed component received by powerbi.bootstrap().
+   *
+   * @type {IBootstrapEmbedConfiguration}
+   */
+  bootstrapConfig: IBootstrapEmbedConfiguration;
+
+  /**
    * Gets or sets the configuration settings for creating report.
    *
    * @type {models.IReportCreateConfiguration}
@@ -188,7 +210,7 @@ export abstract class Embed {
    * @param {HTMLElement} element
    * @param {IEmbedConfigurationBase} config
    */
-  constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean) {
+  constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean, isBootstrap?: boolean) {
     Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
     this.eventHandlers = [];
     this.service = service;
@@ -196,12 +218,12 @@ export abstract class Embed {
     this.iframe = iframe;
     this.embeType = config.type.toLowerCase();
 
-    this.populateConfig(config);
+    this.populateConfig(config, isBootstrap);
 
-    if(this.embeType === 'create'){
-      this.setIframe(false/*set EventListener to call create() on 'load' event*/);
+    if (this.embeType === 'create') {
+      this.setIframe(false /*set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
     } else {
-      this.setIframe(true/*set EventListener to call load() on 'load' event*/, phasedRender);
+      this.setIframe(true /*set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
     }
   }
 
@@ -288,8 +310,19 @@ export abstract class Embed {
    * @returns {Promise<void>}
    */
   load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void> {
+    if (!config.accessToken) {
+      return;
+    }
+
     const path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
-    return this.service.hpm.post<void>(path, config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow)
+    const headers = {
+      uid: this.config.uniqueId,
+      sdkSessionId: this.service.getSdkSessionId(),
+      bootstrapped: this.config.bootstrapped,
+      sdkVersion: sdkConfig.default.version
+    };
+
+    return this.service.hpm.post<void>(path, config, headers, this.iframe.contentWindow)
       .then(response => {
         utils.assign(this.config, config);
         return response.body;
@@ -419,15 +452,34 @@ export abstract class Embed {
    * @param {IEmbedConfiguration}
    * @returns {void}
    */
-  populateConfig(config: IEmbedConfigurationBase): void {
-    this.config = config;
+  populateConfig(config: IBootstrapEmbedConfiguration, isBootstrap: boolean): void {
+    if (this.bootstrapConfig) {
+      this.config = utils.assign({}, this.bootstrapConfig, config);
 
-    // TODO: Change when Object.assign is available.
-    this.config.uniqueId = this.getUniqueId();
-    this.config.embedUrl = this.getEmbedUrl();
-    this.config.accessToken = this.getAccessToken(this.service.accessToken);
+      // reset bootstrapConfig because we do not want to merge it in re-embed scenario.
+      this.bootstrapConfig = null;
+    }
+    else {
+      // Copy config - important for multiple iframe scenario.
+      // Otherwise, if a user uses the same config twice, same unique Id which will be used in different iframes.
+      this.config = utils.assign({}, config);
+    }
+
+    this.config.embedUrl = this.getEmbedUrl(isBootstrap);
     this.config.groupId = this.getGroupId();
     this.addLocaleToEmbedUrl(config);
+    this.config.uniqueId = this.getUniqueId();
+
+    if (isBootstrap) {
+      // save current config in bootstrapConfig to be able to merge it on next call to powerbi.embed
+      this.bootstrapConfig = this.config;
+      this.bootstrapConfig.bootstrapped = true;
+    }
+    else {
+      this.config.accessToken = this.getAccessToken(this.service.accessToken);
+    }
+
+    this.configChanged(isBootstrap);
   }
 
   /**
@@ -455,14 +507,40 @@ export abstract class Embed {
    * @private
    * @returns {string}
    */
-  private getEmbedUrl(): string {
-    const embedUrl = this.config.embedUrl || this.element.getAttribute(Embed.embedUrlAttribute);
+  private getEmbedUrl(isBootstrap: boolean): string {
+    let embedUrl = this.config.embedUrl || this.element.getAttribute(Embed.embedUrlAttribute);
+
+    if (isBootstrap && !embedUrl) {
+      // Prepare flow, embed url was not provided, use hostname to build embed url.
+      embedUrl = this.getDefaultEmbedUrl(this.config.hostname);
+    }
 
     if (typeof embedUrl !== 'string' || embedUrl.length === 0) {
       throw new Error(`Embed Url is required, but it was not found. You must provide an embed url either as part of embed configuration or as attribute '${Embed.embedUrlAttribute}'.`);
     }
 
     return embedUrl;
+  }
+
+  private getDefaultEmbedUrl(hostname: string): string {
+    if (!hostname) {
+      hostname = Embed.defaultEmbedHostName;
+    }
+
+    let endpoint = this.getDefaultEmbedUrlEndpoint();
+
+    // Trim spaces to fix user mistakes.
+    hostname = hostname.toLowerCase().trim();
+
+    if (hostname.indexOf("http://") === 0) {
+      throw new Error("HTTP is not allowed. HTTPS is required");
+    }
+
+    if (hostname.indexOf("https://") === 0) {
+      return `${hostname}/${endpoint}`;
+    }
+
+    return `https://${hostname}/${endpoint}`;
   }
 
   /**
@@ -493,6 +571,22 @@ export abstract class Embed {
    * @returns {string}
    */
   abstract getId(): string;
+
+  /**
+   * Raise a config changed event.
+   *
+   * @returns {void}
+   */
+  abstract configChanged(isBootstrap: boolean): void;
+
+  /**
+   * Gets default embed endpoint for each entity.
+   * For example: report embed endpoint is reportEmbed.
+   * This will help creating a default embed URL such as: https://app.powerbi.com/reportEmbed
+   *
+   * @returns {string} endpoint.
+   */
+  abstract getDefaultEmbedUrlEndpoint(): string;
 
   /**
    * Requests the browser to render the component's iframe in fullscreen mode.
@@ -536,8 +630,8 @@ export abstract class Embed {
   /**
    * Sets Iframe for embed
    */
-  private setIframe(isLoad: boolean, phasedRender?: boolean): void {
-    if(!this.iframe) {
+  private setIframe(isLoad: boolean, phasedRender?: boolean, isBootstrap?: boolean): void {
+    if (!this.iframe) {
       var iframeContent = document.createElement("iframe");
       var embedUrl = this.config.uniqueId ? utils.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
       iframeContent.style.width = '100%';
@@ -554,9 +648,12 @@ export abstract class Embed {
     }
 
     if (isLoad) {
-      const errors = this.validate(this.config);
-      if (errors) {
-        throw errors;
+      if (!isBootstrap) {
+        // Validate config if it's not a bootstrap case.
+        const errors = this.validate(this.config);
+        if (errors) {
+          throw errors;
+        }
       }
 
       this.iframe.addEventListener('load', () => this.load(this.config, phasedRender), false);
@@ -630,6 +727,10 @@ export abstract class Embed {
    * Sends the config for front load calls, after 'ready' message is received from the iframe
    */
   private frontLoadSendConfig(config: IEmbedConfigurationBase): Promise<void> {
+    if (!config.accessToken) {
+      return;
+    }
+
     const errors = this.validate(config);
     if (errors) {
       throw errors;
