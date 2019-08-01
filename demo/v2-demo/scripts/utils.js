@@ -6,7 +6,7 @@ const textCodeTimeout = 100;
 function BodyCodeOfFunction(func) {
     let lines = func.toString().split('\n');
     lines = lines.slice(1, lines.length-1);
-    
+
     for (let i = 0; i < lines.length; ++i)
     {
         // remove trailing spaces.
@@ -68,6 +68,7 @@ function SetCode(func) {
 
         $('#btnRunCode').off('click');
         $('#btnRunCode').click(function() {
+            showEmbedContainer();
             elementClicked('#btnRunCode');
             runFunc();
         });
@@ -134,6 +135,13 @@ function getEmbedContainerClassPrefix(entityType) {
     }
 }
 
+function getActiveEmbedContainer() {
+    const entityType = GetSession(SessionKeys.EntityType);
+    const classPrefix = getEmbedContainerClassPrefix(entityType);
+    const activeContainer = classPrefix + ($(".desktop-view").hasClass(active_class) ? 'Container' : 'MobileContainer');
+    return $(activeContainer)[0];
+}
+
 function getEntityTypeFromParameter(urlParam) {
   switch (urlParam) {
       case "visual":
@@ -154,6 +162,11 @@ function elementClicked(element) {
     setTimeout(function() {
         $(element).removeClass('elementClicked');
     }, elementClickedTimeout);
+}
+
+function showEmbedContainer() {
+    const activeContainer = getActiveEmbedContainer();
+    $(activeContainer).css({"visibility":"visible"});
 }
 
 function SetAuthoringPageActive(report) {

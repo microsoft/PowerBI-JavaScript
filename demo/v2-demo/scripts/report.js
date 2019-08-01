@@ -81,6 +81,28 @@ function OpenCodeStep(mode, entityType, tokenType) {
     LoadEmbedSettings(mode, entityType, tokenType);
 }
 
+function bootstrapIframe(entityType) {
+    const activeContainer = getActiveEmbedContainer();
+
+    // Bootstrap iframe - for better performance.
+    let embedUrl = GetSession(SessionKeys.EmbedUrl);
+    config = {
+        type: entityType.toLowerCase(),
+        embedUrl: embedUrl
+    };
+
+    const isMobile = $(".mobile-view").hasClass(active_class);
+    if (isMobile) {
+        config.settings = {
+            layoutType: models.LayoutType.MobilePortrait
+        };
+    }
+
+    // Hide the container in order to hide the spinner.
+    $(activeContainer).css({"visibility":"hidden"});
+    powerbi.bootstrap(activeContainer, config);
+}
+
 function LoadEmbedSettings(mode, entityType, tokenType) {
     if (entityType == EntityType.Report)
     {
@@ -392,6 +414,7 @@ function OpenEmbedMode(mode, entityType, tokenType)
 function setCodeAndShowEmbedSettings(mode, entityType, tokenType) {
     setCodeArea(mode, entityType);
     showEmbedSettings(mode, entityType, tokenType);
+    bootstrapIframe(entityType);
 }
 
 function OpenViewMode() {
@@ -521,7 +544,7 @@ function EmbedAreaDesktopView() {
 
     $(".desktop-view").show();
     $(".mobile-view").hide();
-    
+
     $(".desktop-view").addClass(active_class);
     $(".mobile-view").removeClass(active_class);
 

@@ -367,8 +367,6 @@ function _Mock_Embed_BasicEmbed(isEdit) {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
-    powerbi.reset(embedContainer);
-
     // Embed the report and display it within the div container.
     var report = powerbi.embed(embedContainer, config);
 
@@ -2958,7 +2956,7 @@ function _Report_Authoring_ResetProperty() {
                 // Reset visual legend position
                 // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Properties
                 visual.resetProperty({ objectName: "legend", propertyName: "position" })
-                    .then(function () { 
+                    .then(function () {
                         Log.logText("Last visual legend position property was reset to default value.");
                     })
                     .catch(function (errors) {
