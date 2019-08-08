@@ -188,4 +188,21 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
           throw response.body;
         });
   }
+
+  /**
+   * Sort a visual by dataField and direction.
+   *
+   * @param request: Sort by visual request.
+   *
+   * ```javascript
+   * visual.sortBy(request)
+   *  .then(() => { ... });
+   * ```
+   */
+  sortBy(request: models.ISortByVisualRequest): Promise<void> {
+    return this.page.report.service.hpm.put<models.IError[]>(`/report/pages/${this.page.name}/visuals/${this.name}/sortBy`, request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+      .catch(response => {
+        throw response.body;
+      });
+  }
 }

@@ -1121,7 +1121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.2.0 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.2.1 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1352,17 +1352,19 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.IncludeExcludeFilter = IncludeExcludeFilter;
 		var TopNFilter = /** @class */ (function (_super) {
 		    __extends(TopNFilter, _super);
-		    function TopNFilter(target, operator, itemCount) {
+		    function TopNFilter(target, operator, itemCount, orderBy) {
 		        var _this = _super.call(this, target, FilterType.TopN) || this;
 		        _this.operator = operator;
 		        _this.itemCount = itemCount;
 		        _this.schemaUrl = TopNFilter.schemaUrl;
+		        _this.orderBy = orderBy;
 		        return _this;
 		    }
 		    TopNFilter.prototype.toJSON = function () {
 		        var filter = _super.prototype.toJSON.call(this);
 		        filter.operator = this.operator;
 		        filter.itemCount = this.itemCount;
+		        filter.orderBy = this.orderBy;
 		        return filter;
 		    };
 		    TopNFilter.schemaUrl = "http://powerbi.com/product/schema#topN";
@@ -1615,6 +1617,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		    RightCenter: 'RightCenter',
 		    LeftCenter: 'LeftCenter',
 		};
+		var SortDirection;
+		(function (SortDirection) {
+		    SortDirection[SortDirection["Ascending"] = 1] = "Ascending";
+		    SortDirection[SortDirection["Descending"] = 2] = "Descending";
+		})(SortDirection = exports.SortDirection || (exports.SortDirection = {}));
 		var Selector = /** @class */ (function () {
 		    function Selector(schema) {
 		        this.$schema = schema;
@@ -2912,6 +2919,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		                field: "filterType",
 		                validators: [validator_1.Validators.topNFilterTypeValidator]
 		            },
+		            {
+		                field: "orderBy",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filterTargetValidator]
+		            }
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
 		        return multipleFieldsValidator.validate(input, path, field);
@@ -5076,6 +5087,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (request === void 0) { request = {}; }
 	        return this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/clone", request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Sort a visual by dataField and direction.
+	     *
+	     * @param request: Sort by visual request.
+	     *
+	     * ```javascript
+	     * visual.sortBy(request)
+	     *  .then(() => { ... });
+	     * ```
+	     */
+	    VisualDescriptor.prototype.sortBy = function (request) {
+	        return this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/sortBy", request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .catch(function (response) {
 	            throw response.body;
 	        });
 	    };
