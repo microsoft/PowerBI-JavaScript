@@ -1527,6 +1527,60 @@ function _Report_Extensions_ContextMenu() {
     Log.logText("Open visual context menu by right click on data points and click on added items to see events in Log window.");
 }
 
+function _Visual_Operations_SortVisualBy() {
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Build the sort request.
+    // For more information, See https://github.com/Microsoft/PowerBI-JavaScript/wiki/Sort-Visual-By
+    const sortByRequest = {
+        orderBy: {
+            table: "SalesFact",
+            measure: "Total Category Volume"
+        },
+        direction: models.SortDirection.Descending
+    };
+
+    // Get a reference to the embedded report HTML element
+    var embedContainer = $('#embedContainer')[0];
+
+    // Get a reference to the embedded report.
+    report = powerbi.get(embedContainer);
+
+    // Retrieve the page collection and get the visuals for the first page.
+    report.getPages()
+        .then(function (pages) {
+
+            // Retrieve active page.
+            var activePage = pages.filter(function (page) {
+                return page.isActive
+            })[0];
+
+            activePage.getVisuals()
+                .then(function (visuals) {
+                    // Retrieve the target visual.
+                    var visual = visuals.filter(function (visual) {
+                        return visual.name === "VisualContainer6";
+                    })[0];
+
+                    // Sort the visual's data by direction and data field.
+                    visual.sortBy(sortByRequest)
+                        .then(function () {
+                            Log.logText("\"Total Category Volume Over Time by Region\" visual was sorted according to the request.")
+                        })
+                        .catch(function (errors) {
+                            Log.log(errors);
+                        });
+                })
+                .catch(function (errors) {
+                    Log.log(errors);
+                });
+        })
+        .catch(function (errors) {
+            Log.log(errors);
+        });
+}
+
 // ---- Page Operations ----------------------------------------------------
 
 function _Page_SetActive() {
@@ -2191,7 +2245,7 @@ function _Visual_GetSlicer() {
 
             activePage.getVisuals()
                 .then(function (visuals) {
-                    // Retrieve the wanted visual.
+                    // Retrieve the target visual.
                     var slicer = visuals.filter(function (visual) {
                         return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
                     })[0];
@@ -2253,7 +2307,7 @@ function _Visual_SetSlicer() {
 
             activePage.getVisuals()
                 .then(function (visuals) {
-                    // Retrieve the wanted visual.
+                    // Retrieve the target visual.
                     var slicer = visuals.filter(function (visual) {
                         return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
                     })[0];
@@ -2313,7 +2367,7 @@ function _Visual_SetFilters() {
             activePage.getVisuals()
                 .then(function (visuals) {
 
-                    // Retrieve the wanted visual.
+                    // Retrieve the target visual.
                     var visual = visuals.filter(function (visual) {
                         return visual.name == "VisualContainer4";
                     })[0];
@@ -2356,7 +2410,7 @@ function _Visual_GetFilters() {
             activePage.getVisuals()
                 .then(function (visuals) {
 
-                    // Retrieve the wanted visual.
+                    // Retrieve the target visual.
                     var visual = visuals.filter(function (visual) {
                         return visual.name == "VisualContainer4";
                     })[0];
@@ -2397,7 +2451,7 @@ function _Visual_RemoveFilters() {
             activePage.getVisuals()
                 .then(function (visuals) {
 
-                    // Retrieve the wanted visual.
+                    // Retrieve the target visual.
                     var visual = visuals.filter(function (visual) {
                         return visual.name == "VisualContainer4";
                     })[0];
@@ -2441,7 +2495,7 @@ function _Visual_ExportData_Summarized() {
             activePage.getVisuals()
                 .then(function (visuals) {
 
-                    // Retrieve the wanted visual.
+                    // Retrieve the target visual.
                     var visual = visuals.filter(function (visual) {
                         return visual.name == "VisualContainer4";
                     })[0];
@@ -2486,7 +2540,7 @@ function _Visual_ExportData_Underlying() {
             activePage.getVisuals()
                 .then(function (visuals) {
 
-                    // Retrieve the wanted visual.
+                    // Retrieve the target visual.
                     var visual = visuals.filter(function (visual) {
                         return visual.name == "VisualContainer4";
                     })[0];
@@ -2968,4 +3022,3 @@ function _Report_Authoring_ResetProperty() {
             Log.log(errors);
         });
 }
-

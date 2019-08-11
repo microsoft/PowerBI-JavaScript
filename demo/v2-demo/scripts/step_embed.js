@@ -55,6 +55,10 @@ function Report_Extensions_OptionsMenu() {
     SetCode(_Report_Extensions_OptionsMenu);
 }
 
+function Visual_Operations_SortVisualBy() {
+    SetCode(_Visual_Operations_SortVisualBy);
+}
+
 function Report_ApplyCustomLayout() {
     SetCode(_Report_ApplyCustomLayout);
 }

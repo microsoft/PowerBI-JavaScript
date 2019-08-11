@@ -18,9 +18,9 @@ function OpenAuthoringOperations() {
     $("#authoring-operations").toggleClass("active");
 }
 
-function OpenExtensionsOperations() {
-    $("#extensions-operations-ul").toggle();
-    $("#extensions-operations").toggleClass("active");
+function OpenMenuOperations() {
+    $("#menu-operations-ul").toggle();
+    $("#menu-operations").toggleClass("active");
 }
 
 function OpenReportPropertiesOperations() {
