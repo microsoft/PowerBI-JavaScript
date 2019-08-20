@@ -87,8 +87,8 @@ declare module "embed" {
     import * as models from 'powerbi-models';
     global  {
         interface Document {
-            mozCancelFullScreen: Function;
-            msExitFullscreen: Function;
+            mozCancelFullScreen: any;
+            msExitFullscreen: any;
         }
         interface HTMLIFrameElement {
             mozRequestFullScreen: Function;
