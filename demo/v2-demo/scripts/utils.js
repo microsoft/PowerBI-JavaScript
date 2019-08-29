@@ -59,6 +59,9 @@ function SetCode(func) {
             let oldFunc = runFunc;
             runFunc = function() {
                 oldFunc();
+
+                SetSession(SessionKeys.EntityIsAlreadyEmbedded, true);
+
                 $('#interact-tab').addClass('enableTransition');
                 setTimeout(function() {
                     $('#interact-tab').addClass('changeColor');
@@ -69,6 +72,7 @@ function SetCode(func) {
         $('#btnRunCode').off('click');
         $('#btnRunCode').click(function() {
             showEmbedContainer();
+            removeIframeIfUrlIsChanged();
             elementClicked('#btnRunCode');
             runFunc();
         });
@@ -169,6 +173,21 @@ function showEmbedContainer() {
     $(activeContainer).css({"visibility":"visible"});
 }
 
+function removeIframeIfUrlIsChanged() {
+    const activeContainer = getActiveEmbedContainer();
+    if (!activeContainer || !activeContainer.powerBiEmbed || !activeContainer.powerBiEmbed.iframe) {
+      return;
+    }
+
+    let existingIframeUrl = removeUidFromUrl(activeContainer.powerBiEmbed.iframe.src);
+    let embedUrl = GetSession(SessionKeys.EmbedUrl);
+
+    if (embedUrl !== existingIframeUrl) {
+        // textbox has changed, delete the iframe and avoid the bootstrap.
+        powerbi.reset(activeContainer);
+    }
+}
+
 function SetAuthoringPageActive(report) {
     return new Promise(function(resolve, reject) {
 
@@ -195,4 +214,15 @@ function SetAuthoringPageActive(report) {
             reject(errors);
         });
     });
+}
+
+function removeUidFromUrl(url) {
+    const uidRegEx = /uid="?([^&]+)"?/
+    const uidMatch = url.match(uidRegEx);
+
+    if (uidMatch) {
+        return url.replace("&" + uidMatch[0], "");
+    }
+
+    return url;
 }

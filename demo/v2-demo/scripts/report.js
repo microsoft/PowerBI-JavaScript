@@ -620,6 +620,8 @@ function EmbedAreaMobileView() {
 
     // Check if run button was clicked in the other mode and wasn't clicked on the new mode
     if ($(classPrefix + "Container iframe").length && !$(classPrefix + "MobileContainer iframe").length) {
+      // It's not enough to check the number of iframes because of the bootstrap feature.
+      if (GetSession(SessionKeys.EntityIsAlreadyEmbedded)) {
         let runFunc = getEmbedCode(mode, entityType);
         if ($('#interact-tab').hasClass(active_tabs_li)) {
             runFunc = updateRunFuncSessionParameters(runFunc);
@@ -627,6 +629,7 @@ function EmbedAreaMobileView() {
         } else {
             runFunc();
         }
+      }
     }
 }
 

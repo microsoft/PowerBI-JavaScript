@@ -6,7 +6,8 @@ const SessionKeys = {
     EmbedId : "embedId",
     GroupId : "groupId",
     IsSampleReport: "isSampleReport",
-    QnaQuestion: "qnaQuestion"
+    QnaQuestion: "qnaQuestion",
+    EntityIsAlreadyEmbedded: "EntityIsAlreadyEmbedded",
 };
 
 function GetParameterByName(name, url) {
@@ -45,7 +46,7 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
     {
         accessToken = GetSession(SessionKeys.AccessToken);
     }
-    
+
     var embedUrl = GetParameterByName(SessionKeys.EmbedUrl);
     if (!embedUrl)
     {
