@@ -11,13 +11,13 @@ JavaScript library for embedding Power BI into your apps.
 [![Gitter](https://img.shields.io/gitter/room/Microsoft/PowerBI-JavaScript.svg)](https://gitter.im/Microsoft/PowerBI-JavaScript)
 
 ## Wiki
-See the [wiki](https://github.com/Microsoft/PowerBI-JavaScript/wiki) for more details about embedding, service configuration, setting default page, page navigation, dynamically applying filters, and more.
+See the [wiki](https://github.com/Microsoft/PowerBI-JavaScript/wiki) for more details about embedding, service configuration, setting a default page, page navigation, dynamically applying filters, and more.
 
 ## Code Docs
 See the [code docs](https://microsoft.github.io/PowerBI-JavaScript) for detailed information about classes, interfaces, types, etc.
 
 ## Demo
-New [live demo](https://microsoft.github.io/PowerBI-JavaScript/demo) for sample application using the powerbi-client library in scenarios such as page navigation, applying filters, updating settings, and more.
+New [live demo](https://microsoft.github.io/PowerBI-JavaScript/demo) for a sample application using the `powerbi-client` library in scenarios such as page navigation, applying filters, updating settings, and more.
 
 ## Installation
 
@@ -39,19 +39,19 @@ Installing beta versions:
 
 ## Include the library via import or manually
 
-Ideally you would use module loader or compilation step to import using ES6 modules as:
+Ideally you would use a module loader or a compilation step to import using ES6 modules as:
 
 ```javascript
 import * as pbi from 'powerbi-client';
 ```
 
-However, the library is exported as a Universal Module and the powerbi.js script can be included before your apps closing `</body>` tag as:
+However, the library is exported as a Universal Module and the powerbi.js script can be included before your app's closing `</body>` tag as:
 
 ```html
 <script src="/bower_components/powerbi-client/dist/powerbi.js"></script>
 ```
 
-When included directly the library is exposd as a global named 'powerbi-client'.
-There is also another global `powerbi` which is an instance of the service.
+When included directly, the library is exposed as a global named `powerbi-client`.
+There is also another global named `powerbi` which is an instance of the service.
 
 
