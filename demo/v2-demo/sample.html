@@ -1,3 +1,7 @@
+<div id="playground-survey" onclick="openSurvey();">
+    <p id="playground-survey-text">We are looking for your feedback! </p> <p id="playground-survey-text-underlined">Click here to participate</p>
+    <img id="playground-survey-close" src="images\close.png" onclick="closeSurveyBanner();"/>
+</div>
 <div id="steps-nav-bar">
     <div id="steps-ul-dev">
         <ul id="steps-ul" class="steps-ul">
@@ -29,3 +33,18 @@
 
 <div id="mainContent">
 </div>
+
+<script>
+    var showSurveyBanner = true;
+    function closeSurveyBanner() {
+        showSurveyBanner = false;
+        $("#playground-survey").hide();
+    }
+
+    function openSurvey() {
+        if (!showSurveyBanner)
+            return;
+        
+        window.open("https://aka.ms/pbieplaygroundsurvey", '_blank');
+    }
+</script>

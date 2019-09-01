@@ -1858,3 +1858,38 @@ input:checked + .slider.round {
   position: absolute;
   font-size: 14px;
 }
+
+#playground-survey {
+    height: 48px;
+    text-align: center;
+    background-color: #F2C811;
+    padding: 12px;
+    border-bottom: solid 1px #F1F1F1;
+    cursor: pointer;
+}
+
+#playground-survey:hover {
+    background-color: #ddb612;
+}
+
+#playground-survey-text, #playground-survey-text-underlined {
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+#playground-survey-text-underlined {
+    text-decoration: underline;
+}
+
+#playground-survey-close {
+    float: right;
+    margin-top: 4px;
+    margin-right: 8px;
+}
+
+@media only screen and (max-width: 500px) {
+    #playground-survey {
+        display: none;
+    }
+}
