@@ -44,6 +44,7 @@ function OpenDocumentationSection() {
 
     $(".content").hide();
     $("#documentationContent").show();
+    trackEvent(TelemetryEventName.SectionOpen, { section: TelemetrySectionName.Documentation, src: TelemetryEventSource.UserClick });
 }
 
 function OpenShowcasesSection() {
@@ -58,6 +59,7 @@ function OpenShowcasesSection() {
 
     $(".content").hide();
     $("#showcasesContent").show();
+    trackEvent(TelemetryEventName.SectionOpen, { section: TelemetrySectionName.Showcase, src: TelemetryEventSource.UserClick });
 }
 
 function SetActiveStyle(id)
@@ -77,6 +79,7 @@ const ShowcasesHtmls = {
 function OpenShowcase(showcaseType) {
     $("#showcasesContent").load(ShowcasesHtmls[showcaseType]);
     showcasesContentLoaded = false;
+    trackEvent(TelemetrySectionName.Showcase, { showcaseType: showcaseType, src: TelemetryEventSource.UserClick });
 }
 
 function OpenShowcaseFromURL(showcase) {
@@ -85,4 +88,5 @@ function OpenShowcaseFromURL(showcase) {
 
     $(".content").hide();
     $("#showcasesContent").show();
+    trackEvent(TelemetrySectionName.Showcase, { showcaseType: showcase, src: TelemetryEventSource.Url });
 }

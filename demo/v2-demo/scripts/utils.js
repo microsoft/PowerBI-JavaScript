@@ -54,8 +54,8 @@ function SetCode(func) {
 
     if (func != "") {
         let runFunc = mapFunc(func);
-
-        if (getFuncName(runFunc).match(/Embed/)) {
+        let funcName = getFuncName(runFunc);
+        if (funcName.match(/Embed/)) {
             let oldFunc = runFunc;
             runFunc = function() {
                 oldFunc();
@@ -74,6 +74,7 @@ function SetCode(func) {
             showEmbedContainer();
             removeIframeIfUrlIsChanged();
             elementClicked('#btnRunCode');
+            trackEvent(TelemetryEventName.RunClick, { EmbedType: GetSession(SessionKeys.EntityType), TokenType: GetSession(SessionKeys.TokenType), ApiUsed: funcName });
             runFunc();
         });
         // TODO: add indication to click Interact tab on first embedding
@@ -92,10 +93,12 @@ function CopyCode() {
 
     textarea.value = currentCode;
     CopyTextArea('#' + id, "#btnRunCopyCode");
+    trackEvent(TelemetryEventName.CopyCode, {});
 }
 
 function CopyResponseWindow() {
     CopyTextArea("#txtResponse", "#btnCopyResponse");
+    trackEvent(TelemetryEventName.CopyLog, {});
 }
 
 function CopyTextArea(textAreaSelector, buttonSelector) {
@@ -179,7 +182,9 @@ function removeIframeIfUrlIsChanged() {
       return;
     }
 
-    let existingIframeUrl = removeUidFromUrl(activeContainer.powerBiEmbed.iframe.src);
+    let existingIframeUrl = removeArgFromUrl(activeContainer.powerBiEmbed.iframe.src, "uid");
+    existingIframeUrl = removeArgFromUrl(existingIframeUrl, "isMobile");
+
     let embedUrl = GetSession(SessionKeys.EmbedUrl);
 
     if (embedUrl !== existingIframeUrl) {
@@ -216,12 +221,12 @@ function SetAuthoringPageActive(report) {
     });
 }
 
-function removeUidFromUrl(url) {
-    const uidRegEx = /uid="?([^&]+)"?/
-    const uidMatch = url.match(uidRegEx);
+function removeArgFromUrl(url, arg) {
+    const argRegEx = new RegExp(arg + '="?([^&]+)"?')
+    const argMatch = url.match(argRegEx);
 
-    if (uidMatch) {
-        return url.replace("&" + uidMatch[0], "");
+    if (argMatch) {
+        return url.replace("&" + argMatch[0], "");
     }
 
     return url;

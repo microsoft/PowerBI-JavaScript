@@ -1,5 +1,29 @@
 const TelemetryEventName = {
-    Homepage : "Homepage",
+    CodeStepError: "CodeStepError",
+    CopyCode: "CopyCode",
+    CopyLog: "CopyLog",
+    DesktopModeOpen: "DesktopModeOpen",
+    InnerSectionOpen: "InnerSectionOpen",
+    Interact: "Interact",
+    MobileModeOpen: "MobileModeOpen",
+    RunClick: "RunClick",
+    SectionOpen: "SectionOpen",
+    SessionStart: "SessionStart"
+};
+const TelemetryEventSource = {
+    Url: "Url",
+    UserClick: "UserClick"
+};
+
+const TelemetryInnerSection = {
+    Code: "Code",
+    Sample: "Sample"
+};
+
+const TelemetrySectionName = {
+    Documentation: "Documentation",
+    SampleTool: "SampleTool",
+    Showcase: "Showcase"
 };
 
 function trackEvent(name, properties, flush = false) {
@@ -17,4 +41,4 @@ function trackEvent(name, properties, flush = false) {
     }
 }
 
-trackEvent(TelemetryEventName.Homepage, {}, true);
+trackEvent(TelemetryEventName.SessionStart, {}, true);
