@@ -6,7 +6,7 @@ const textCodeTimeout = 100;
 function BodyCodeOfFunction(func) {
     let lines = func.toString().split('\n');
     lines = lines.slice(1, lines.length-1);
-    
+
     for (let i = 0; i < lines.length; ++i)
     {
         // remove trailing spaces.
@@ -54,11 +54,14 @@ function SetCode(func) {
 
     if (func != "") {
         let runFunc = mapFunc(func);
-
-        if (getFuncName(runFunc).match(/Embed/)) {
+        let funcName = getFuncName(runFunc);
+        if (funcName.match(/Embed/)) {
             let oldFunc = runFunc;
             runFunc = function() {
                 oldFunc();
+
+                SetSession(SessionKeys.EntityIsAlreadyEmbedded, true);
+
                 $('#interact-tab').addClass('enableTransition');
                 setTimeout(function() {
                     $('#interact-tab').addClass('changeColor');
@@ -68,7 +71,10 @@ function SetCode(func) {
 
         $('#btnRunCode').off('click');
         $('#btnRunCode').click(function() {
+            showEmbedContainer();
+            removeIframeIfUrlIsChanged();
             elementClicked('#btnRunCode');
+            trackEvent(TelemetryEventName.RunClick, { EmbedType: GetSession(SessionKeys.EntityType), TokenType: GetSession(SessionKeys.TokenType), ApiUsed: funcName });
             runFunc();
         });
         // TODO: add indication to click Interact tab on first embedding
@@ -87,10 +93,12 @@ function CopyCode() {
 
     textarea.value = currentCode;
     CopyTextArea('#' + id, "#btnRunCopyCode");
+    trackEvent(TelemetryEventName.CopyCode, {});
 }
 
 function CopyResponseWindow() {
     CopyTextArea("#txtResponse", "#btnCopyResponse");
+    trackEvent(TelemetryEventName.CopyLog, {});
 }
 
 function CopyTextArea(textAreaSelector, buttonSelector) {
@@ -134,6 +142,13 @@ function getEmbedContainerClassPrefix(entityType) {
     }
 }
 
+function getActiveEmbedContainer() {
+    const entityType = GetSession(SessionKeys.EntityType);
+    const classPrefix = getEmbedContainerClassPrefix(entityType);
+    const activeContainer = classPrefix + ($(".desktop-view").hasClass(active_class) ? 'Container' : 'MobileContainer');
+    return $(activeContainer)[0];
+}
+
 function getEntityTypeFromParameter(urlParam) {
   switch (urlParam) {
       case "visual":
@@ -154,6 +169,28 @@ function elementClicked(element) {
     setTimeout(function() {
         $(element).removeClass('elementClicked');
     }, elementClickedTimeout);
+}
+
+function showEmbedContainer() {
+    const activeContainer = getActiveEmbedContainer();
+    $(activeContainer).css({"visibility":"visible"});
+}
+
+function removeIframeIfUrlIsChanged() {
+    const activeContainer = getActiveEmbedContainer();
+    if (!activeContainer || !activeContainer.powerBiEmbed || !activeContainer.powerBiEmbed.iframe) {
+      return;
+    }
+
+    let existingIframeUrl = removeArgFromUrl(activeContainer.powerBiEmbed.iframe.src, "uid");
+    existingIframeUrl = removeArgFromUrl(existingIframeUrl, "isMobile");
+
+    let embedUrl = GetSession(SessionKeys.EmbedUrl);
+
+    if (embedUrl !== existingIframeUrl) {
+        // textbox has changed, delete the iframe and avoid the bootstrap.
+        powerbi.reset(activeContainer);
+    }
 }
 
 function SetAuthoringPageActive(report) {
@@ -182,4 +219,15 @@ function SetAuthoringPageActive(report) {
             reject(errors);
         });
     });
+}
+
+function removeArgFromUrl(url, arg) {
+    const argRegEx = new RegExp(arg + '="?([^&]+)"?')
+    const argMatch = url.match(argRegEx);
+
+    if (argMatch) {
+        return url.replace("&" + argMatch[0], "");
+    }
+
+    return url;
 }

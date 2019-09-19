@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Service | powerbi-client</title>
+	<title>Service | typescript</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">powerbi-client</a>
+					<a href="../index.html" class="title">typescript</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -120,7 +120,6 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_src_service_.service.html#router" class="tsd-kind-icon">router</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_src_service_.service.html#uniquesessionid" class="tsd-kind-icon">unique<wbr>Session<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_service_.service.html#wpmp" class="tsd-kind-icon">wpmp</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="_src_service_.service.html#defaultinitembedurl" class="tsd-kind-icon">Default<wbr>Init<wbr>Embed<wbr>Url</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="_src_service_.service.html#components" class="tsd-kind-icon">components</a></li>
 							</ul>
 						</section>
@@ -128,6 +127,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_service_.service.html#addoroverwriteembed" class="tsd-kind-icon">add<wbr>OrOverwrite<wbr>Embed</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_service_.service.html#bootstrap" class="tsd-kind-icon">bootstrap</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_service_.service.html#createreport" class="tsd-kind-icon">create<wbr>Report</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_service_.service.html#embed" class="tsd-kind-icon">embed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_service_.service.html#embedexisting" class="tsd-kind-icon">embed<wbr>Existing</a></li>
@@ -167,7 +167,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:110</li>
+									<li>Defined in src/service.ts:108</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -314,19 +314,9 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-					<a name="defaultinitembedurl" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> Default<wbr>Init<wbr>Embed<wbr>Url</h3>
-					<div class="tsd-signature tsd-kind-icon">Default<wbr>Init<wbr>Embed<wbr>Url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;http://app.powerbi.com/reportEmbed&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in src/service.ts:110</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
 					<a name="components" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> components</h3>
-					<div class="tsd-signature tsd-kind-icon">components<span class="tsd-signature-symbol">:</span>             <span class="tsd-signature-symbol">(</span><a href="_src_report_.report.html" class="tsd-signature-type">Report</a><span class="tsd-signature-symbol"> | </span><a href="_src_tile_.tile.html" class="tsd-signature-type">Tile</a><span class="tsd-signature-symbol"> | </span><a href="_src_dashboard_.dashboard.html" class="tsd-signature-type">Dashboard</a><span class="tsd-signature-symbol"> | </span><a href="_src_qna_.qna.html" class="tsd-signature-type">Qna</a><span class="tsd-signature-symbol"> | </span><a href="_src_visual_.visual.html" class="tsd-signature-type">Visual</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[Tile,Report,Dashboard,Qna,Visual]</span></div>
+					<div class="tsd-signature tsd-kind-icon">components<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><a href="_src_report_.report.html" class="tsd-signature-type">Report</a><span class="tsd-signature-symbol"> | </span><a href="_src_tile_.tile.html" class="tsd-signature-type">Tile</a><span class="tsd-signature-symbol"> | </span><a href="_src_dashboard_.dashboard.html" class="tsd-signature-type">Dashboard</a><span class="tsd-signature-symbol"> | </span><a href="_src_qna_.qna.html" class="tsd-signature-type">Qna</a><span class="tsd-signature-symbol"> | </span><a href="_src_visual_.visual.html" class="tsd-signature-type">Visual</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[Tile,Report,Dashboard,Qna,Visual]</span></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in src/service.ts:74</li>
@@ -345,13 +335,13 @@
 					<a name="addoroverwriteembed" class="tsd-anchor"></a>
 					<h3>add<wbr>OrOverwrite<wbr>Embed</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>OrOverwrite<wbr>Embed<span class="tsd-signature-symbol">(</span>component<span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>OrOverwrite<wbr>Embed<span class="tsd-signature-symbol">(</span>component<span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a>, element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:419</li>
+									<li>Defined in src/service.ts:431</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -360,7 +350,7 @@
 									<h5>component: <a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></h5>
 								</li>
 								<li>
-									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5>element: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -368,16 +358,47 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="createreport" class="tsd-anchor"></a>
-					<h3>create<wbr>Report</h3>
+					<a name="bootstrap" class="tsd-anchor"></a>
+					<h3>bootstrap</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Report<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfiguration.html" class="tsd-signature-type">IEmbedConfiguration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
+						<li class="tsd-signature tsd-kind-icon">bootstrap<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.ibootstrapembedconfiguration.html" class="tsd-signature-type">IBootstrapEmbedConfiguration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:228</li>
+									<li>Defined in src/service.ts:283</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Given an HTML element and entityType, creates a new component instance, and bootstrap the iframe for embedding.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>element: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
+								</li>
+								<li>
+									<h5>config: <a href="../interfaces/_src_embed_.ibootstrapembedconfiguration.html" class="tsd-signature-type">IBootstrapEmbedConfiguration</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createreport" class="tsd-anchor"></a>
+					<h3>create<wbr>Report</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Report<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfiguration.html" class="tsd-signature-type">IEmbedConfiguration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/service.ts:226</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -388,7 +409,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5>element: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
 								</li>
 								<li>
 									<h5>config: <a href="../interfaces/_src_embed_.iembedconfiguration.html" class="tsd-signature-type">IEmbedConfiguration</a></h5>
@@ -402,13 +423,13 @@
 					<a name="embed" class="tsd-anchor"></a>
 					<h3>embed</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">embed<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, config<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
+						<li class="tsd-signature tsd-kind-icon">embed<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a>, config<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:261</li>
+									<li>Defined in src/service.ts:259</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -421,7 +442,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5>element: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
@@ -441,7 +462,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:342</li>
+									<li>Defined in src/service.ts:354</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -469,25 +490,28 @@
 					<a name="embedinternal" class="tsd-anchor"></a>
 					<h3>embed<wbr>Internal</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">embed<wbr>Internal<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, config<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
+						<li class="tsd-signature tsd-kind-icon">embed<wbr>Internal<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a>, config<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, isBootstrap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:279</li>
+									<li>Defined in src/service.ts:287</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5>element: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> phasedRender: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> isBootstrap: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></h4>
@@ -498,13 +522,13 @@
 					<a name="embednew" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> embed<wbr>New</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">embed<wbr>New<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_service_.ipowerbielement.html" class="tsd-signature-type">IPowerBiElement</a>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
+						<li class="tsd-signature tsd-kind-icon">embed<wbr>New<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_service_.ipowerbielement.html" class="tsd-signature-type">IPowerBiElement</a>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, isBootstrap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:313</li>
+									<li>Defined in src/service.ts:325</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -523,6 +547,9 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> phasedRender: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> isBootstrap: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></h4>
 						</li>
@@ -538,7 +565,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:389</li>
+									<li>Defined in src/service.ts:401</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -563,7 +590,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:415</li>
+									<li>Defined in src/service.ts:427</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -585,13 +612,13 @@
 					<a name="get" class="tsd-anchor"></a>
 					<h3>get</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
+						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:399</li>
+									<li>Defined in src/service.ts:411</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -602,7 +629,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5>element: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></h4>
@@ -619,7 +646,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:293</li>
+									<li>Defined in src/service.ts:305</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -636,7 +663,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:301</li>
+									<li>Defined in src/service.ts:313</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -653,7 +680,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:481</li>
+									<li>Defined in src/service.ts:493</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -683,7 +710,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:469</li>
+									<li>Defined in src/service.ts:481</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -707,13 +734,13 @@
 					<a name="init" class="tsd-anchor"></a>
 					<h3>init</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">HTMLElement</span>, config<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_src_embed_.iembedconfiguration.html" class="tsd-signature-type">IEmbedConfiguration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a>, config<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_src_embed_.iembedconfiguration.html" class="tsd-signature-type">IEmbedConfiguration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:245</li>
+									<li>Defined in src/service.ts:243</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -724,7 +751,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> container: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> container: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> config: <a href="../interfaces/_src_embed_.iembedconfiguration.html" class="tsd-signature-type">IEmbedConfiguration</a><span class="tsd-signature-symbol"> =&nbsp;undefined</span></h5>
@@ -738,13 +765,13 @@
 					<a name="load" class="tsd-anchor"></a>
 					<h3>load</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, config<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
+						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a>, config<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:275</li>
+									<li>Defined in src/service.ts:273</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -758,7 +785,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5>element: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
@@ -772,13 +799,13 @@
 					<a name="preload" class="tsd-anchor"></a>
 					<h3>preload</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">preload<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLIFrameElement</span></li>
+						<li class="tsd-signature tsd-kind-icon">preload<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, element<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLIFrameElement</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:510</li>
+									<li>Defined in src/service.ts:522</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -793,7 +820,7 @@
 									<h5>config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> element: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> element: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLIFrameElement</span></h4>
@@ -804,13 +831,13 @@
 					<a name="reset" class="tsd-anchor"></a>
 					<h3>reset</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/service.ts:434</li>
+									<li>Defined in src/service.ts:446</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -821,7 +848,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5>element: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -848,7 +875,7 @@
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
 						<a name="defaultconfig.autoembedoncontentloaded" class="tsd-anchor"></a>
 						<h3>auto<wbr>Embed<wbr>OnContent<wbr>Loaded</h3>
-						<div class="tsd-signature tsd-kind-icon">auto<wbr>Embed<wbr>OnContent<wbr>Loaded<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
+						<div class="tsd-signature tsd-kind-icon">auto<wbr>Embed<wbr>OnContent<wbr>Loaded<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 						<aside class="tsd-sources">
 							<ul>
 								<li>Defined in src/service.ts:86</li>
@@ -859,7 +886,7 @@
 						<a name="defaultconfig.onerror" class="tsd-anchor"></a>
 						<h3>on<wbr>Error</h3>
 						<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-object-literal">
-							<li class="tsd-signature tsd-kind-icon">on<wbr>Error<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+							<li class="tsd-signature tsd-kind-icon">on<wbr>Error<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 						</ul>
 						<ul class="tsd-descriptions">
 							<li class="tsd-description">
@@ -871,7 +898,7 @@
 								<h4 class="tsd-parameters-title">Parameters</h4>
 								<ul class="tsd-parameters">
 									<li>
-										<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">]</span></h5>
 									</li>
 								</ul>
 								<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -887,65 +914,8 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_node_modules_powerbi_models_dist_models_d_.html">"node_<wbr>modules/powerbi-<wbr>models/dist/models.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_bookmarksmanager_.html">"src/bookmarks<wbr>Manager"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_config_.html">"src/config"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_create_.html">"src/create"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_dashboard_.html">"src/dashboard"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_defaults_.html">"src/defaults"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_embed_.html">"src/embed"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_errors_.html">"src/errors"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_factories_.html">"src/factories"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_ifilterable_.html">"src/ifilterable"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_page_.html">"src/page"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_powerbi_client_.html">"src/powerbi-<wbr>client"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_qna_.html">"src/qna"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_report_.html">"src/report"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_src_service_.html">"src/service"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_tile_.html">"src/tile"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_util_.html">"src/util"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_visual_.html">"src/visual"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_visualdescriptor_.html">"src/visual<wbr>Descriptor"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_typings_globals_es6_promise_index_d_.html">"typings/globals/es6-<wbr>promise/index.d"</a>
 					</li>
 				</ul>
 			</nav>
@@ -981,13 +951,13 @@
 								<a href="_src_service_.service.html#wpmp" class="tsd-kind-icon">wpmp</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-								<a href="_src_service_.service.html#defaultinitembedurl" class="tsd-kind-icon">Default<wbr>Init<wbr>Embed<wbr>Url</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
 								<a href="_src_service_.service.html#components" class="tsd-kind-icon">components</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_service_.service.html#addoroverwriteembed" class="tsd-kind-icon">add<wbr>OrOverwrite<wbr>Embed</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_service_.service.html#bootstrap" class="tsd-kind-icon">bootstrap</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_service_.service.html#createreport" class="tsd-kind-icon">create<wbr>Report</a>
@@ -1091,6 +1061,7 @@
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -1139,7 +1110,7 @@
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>

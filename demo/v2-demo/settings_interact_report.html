@@ -68,10 +68,11 @@
                             <li onclick="Events_SaveAsTriggered()" class="hideOnMobile"><a href="#">SaveAs triggered event</a></li>
                             <li onclick="Events_ReportSaved()" class="hideOnMobile"><a href="#">Saved event</a></li>
                         </ul>
-                        <li id="extensions-operations" onclick="OpenExtensionsOperations();"><a href="#">Menu Extensions</a></li>
-                        <ul id="extensions-operations-ul" class="function-ul" style="display: none;">
+                        <li id="menu-operations" onclick="OpenMenuOperations();"><a href="#">Menu Operations</a></li>
+                        <ul id="menu-operations-ul" class="function-ul" style="display: none;">
                             <li onclick="Report_Extensions_OptionsMenu()"><a href="#">Extend options menu</a></li>
                             <li onclick="Report_Extensions_ContextMenu()" class="hideOnMobile"><a href="#">Extend context menu</a></li>
+                            <li onclick="Visual_Operations_SortVisualBy()" class="hideOnMobile hideOnReportCreate"><a href="#">Sort visual by</a></li>
                         </ul>
                         <li id="layout-operations" onclick="OpenLayoutOperations();"><a href="#">Layout</a>
                             <span class="tryShowcase" onclick="OpenLayoutOperations();onShowcaseTryMeClicked('CustomLayout');">
@@ -103,7 +104,7 @@
                             <li onclick="Events_BookmarkApplied()" class="hideOnMobile"><a href="#">Bookmark applied event</a></li>
                         </ul>
                         <li id="data-operations" onclick="OpenDataOperations();"><a href="#">Data</a>
-                            <span class="tryShowcase" onclick="OpenAuthoringOperations();onShowcaseTryMeClicked('InsightToAction');">
+                            <span class="tryShowcase" onclick="OpenDataOperations();onShowcaseTryMeClicked('InsightToAction');">
                                 (<span class="tryMeText">Showcase</span> <img src="images/tab_out.svg">)
                             </span>
                         </li>
@@ -111,7 +112,7 @@
                             <li onclick="Events_DataSelected()"><a href="#">Data selected event</a></li>
                             <li onclick="Visual_ExportData_Summarized()" class="hideOnMobile"><a href="#">Export visual data summarized</a></li>
                             <li onclick="Visual_ExportData_Underlying()" class="hideOnMobile"><a href="#">Export visual data underlying</a></li>
-                            <li onclick="Events_ButtonClicked()"><a herf="#">Button click event</a></li>
+                            <li onclick="Events_ButtonClicked()"><a href="#">Button click event</a></li>
                         </ul>
                     </ul>
                 </div>

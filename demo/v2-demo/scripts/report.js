@@ -30,6 +30,8 @@ function OpenSamplesStep() {
     $("#embed-and-interact-steps-wrapper").hide();
 
     $("#welcome-text").show();
+
+    trackEvent(TelemetryEventName.InnerSectionOpen, { section: TelemetryInnerSection.Sample, src: TelemetryEventSource.UserClick });
 }
 
 function OpenCodeStepFromNavPane()
@@ -79,6 +81,37 @@ function OpenCodeStep(mode, entityType, tokenType) {
     $('#interact-tab').removeClass(active_tabs_li);
 
     LoadEmbedSettings(mode, entityType, tokenType);
+
+    trackEvent(TelemetryEventName.InnerSectionOpen, { section: TelemetryInnerSection.Code, src: TelemetryEventSource.UserClick });
+}
+
+function bootstrapIframe(entityType) {
+    const activeContainer = getActiveEmbedContainer();
+
+    // To avoid multiple bootstrap when switching between Desktop view and Phone view 
+    // and also when changing the mode (view/edit/create).
+    if (activeContainer.children.length > 0) {
+      // entity is already embedded
+      return;
+    }
+
+    // Bootstrap iframe - for better performance.
+    let embedUrl = GetSession(SessionKeys.EmbedUrl);
+    config = {
+        type: entityType.toLowerCase(),
+        embedUrl: embedUrl
+    };
+
+    const isMobile = $(".mobile-view").hasClass(active_class);
+    if (isMobile) {
+        config.settings = {
+            layoutType: models.LayoutType.MobilePortrait
+        };
+    }
+
+    // Hide the container in order to hide the spinner.
+    $(activeContainer).css({"visibility":"hidden"});
+    powerbi.bootstrap(activeContainer, config);
 }
 
 function LoadEmbedSettings(mode, entityType, tokenType) {
@@ -392,6 +425,7 @@ function OpenEmbedMode(mode, entityType, tokenType)
 function setCodeAndShowEmbedSettings(mode, entityType, tokenType) {
     setCodeArea(mode, entityType);
     showEmbedSettings(mode, entityType, tokenType);
+    bootstrapIframe(entityType);
 }
 
 function OpenViewMode() {
@@ -521,7 +555,7 @@ function EmbedAreaDesktopView() {
 
     $(".desktop-view").show();
     $(".mobile-view").hide();
-    
+
     $(".desktop-view").addClass(active_class);
     $(".mobile-view").removeClass(active_class);
 
@@ -551,6 +585,7 @@ function EmbedAreaDesktopView() {
             runFunc();
         }
     }
+    trackEvent(TelemetryEventName.DesktopModeOpen, {});
 }
 
 function EmbedAreaMobileView() {
@@ -597,6 +632,8 @@ function EmbedAreaMobileView() {
 
     // Check if run button was clicked in the other mode and wasn't clicked on the new mode
     if ($(classPrefix + "Container iframe").length && !$(classPrefix + "MobileContainer iframe").length) {
+      // It's not enough to check the number of iframes because of the bootstrap feature.
+      if (GetSession(SessionKeys.EntityIsAlreadyEmbedded)) {
         let runFunc = getEmbedCode(mode, entityType);
         if ($('#interact-tab').hasClass(active_tabs_li)) {
             runFunc = updateRunFuncSessionParameters(runFunc);
@@ -604,7 +641,9 @@ function EmbedAreaMobileView() {
         } else {
             runFunc();
         }
+      }
     }
+    trackEvent(TelemetryEventName.MobileModeOpen, {});
 }
 
 function updateRunFuncSessionParameters(runFunc) {
@@ -658,5 +697,6 @@ function hideFeaturesOnMobile(){
 
 function onShowcaseTryMeClicked(showcase) {
     let showcaseUrl = location.href.substring(0, location.href.lastIndexOf("/")) + '?showcase=' + showcase;
+    trackEvent(TelemetrySectionName.Showcase, { showcaseType: showcase, src: TelemetryEventSource.Interact });
     window.open(showcaseUrl, '_blank');
 }
