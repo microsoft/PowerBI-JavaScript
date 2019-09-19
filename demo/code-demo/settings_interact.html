@@ -1,0 +1,65 @@
+<div id="step-interact-wrapper">
+    <div>
+        <div id="operation-categories">
+            <div id="operations-ul-wrapper" tabindex="-1">
+                <ul id="operations-ul">
+                    <li id="report-operations-li" onclick="OpenReportOperations();" class="active">
+                        <a href="#">Report</a>
+                    </li>
+                    <li id="page-operations-li" onclick="OpenPageOperations();">
+                        <a href="#">Page</a>
+                    </li>
+                    <li id="events-operations-li" onclick="OpenEventOperations();">
+                        <a href="#">Events</a>
+                    </li>
+                    <li id="editandsave-operations-li" onclick="OpenEditAndSaveOperations();">
+                        <a href="#">Edit & save</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="category-browser">
+            <div id="wrapper-operations-div" class="operations-div">
+                <div id="report-operations-div" class="operations-div">
+                    <ul class="function-ul">
+                        <li class="active" onclick="Report_GetId()">Get Id</li>
+                        <li onclick="Report_GetPages()">Get pages</li>
+                        <li onclick="Report_SetPage()">Set page</li>
+                        <li onclick="Report_SetFilters()">Set filters</li>
+                        <li onclick="Report_GetFilters()">Get filters</li>
+                        <li onclick="Report_RemoveFilters()">Remove filters</li>
+                        <li onclick="Report_PrintCurrentReport()">Print</li>
+                        <li onclick="Report_UpdateSettings()">Update settings</li>
+                        <li onclick="Report_Reload()">Reload</li>
+                        <li onclick="Report_Refresh()">Refresh</li>
+                        <li onclick="Report_FullScreen()">Full screen</li>
+                        <li onclick="Report_ExitFullScreen()">Exit full screen</li>
+                    </ul>
+                </div>
+                <div id="page-operations-div" class="operations-div" style="display: none;">
+                    <ul class="function-ul">
+                        <li class="active" onclick="Page_SetActive()">Set Active</li>
+                        <li onclick="Page_SetFilters()">Set Filters</li>
+                        <li onclick="Page_GetFilters()">Get Filters</li>
+                        <li onclick="Page_RemoveFilters()">Remove Filters</li>
+                    </ul>
+                </div>
+                <div id="events-operations-div" class="operations-div" style="display: none;">
+                    <ul class="function-ul">
+                        <li class="active" onclick="Events_PageChanged()">Page Changed</li>
+                        <li onclick="Events_DataSelected()">Data Selected</li>
+                        <li onclick="Events_SaveAsTriggered()">SaveAs Triggered</li>
+                    </ul>
+                </div>
+                 <div id="editandsave-operations-div" class="operations-div" style="display: none;">
+                    <ul class="function-ul">
+                        <li onclick="Report_switchModeEdit()">Enter edit mode</li>
+                        <li onclick="Report_switchModeView()">Enter view mode</li>
+                        <li onclick="Report_save()">Save report</li>
+                        <li onclick="Report_saveAs()">SaveAs report</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

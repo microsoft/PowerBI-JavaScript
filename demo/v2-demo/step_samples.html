@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<div id="samplesStepDiv">
+    <div id="sampleReport" class="pbi-line">
+        <div class="sampleImg" id="sampleReportImg"></div>
+        <div class="sampleTextButton">
+            <div class="pageTitle">
+                <h3>Sample Report</h3>
+                <h8>You can embed a sample report and interact with Power BI Embedded firsthand by clicking below.</h8>
+            </div>
+            <div class="settings">
+                <button class="selectButton" onclick="OpenCodeStepWithSample('Report')">Select</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sampleVisual" class="pbi-line">
+        <div class="sampleImg" id="sampleVisualImg"></div>
+        <div class="sampleTextButton">
+            <div class="pageTitle">
+                <h3>Sample Report Visual</h3>
+                <h8>You can embed a sample report visual and interact with Power BI Embedded firsthand by clicking below.</h8>
+            </div>
+            <div class="settings">
+                <button class="selectButton" onclick="OpenCodeStepWithSample('Visual')">Select</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sampleQna" class="pbi-line">
+        <div class="sampleImg" id="sampleQnaImg"></div>
+        <div class="sampleTextButton">
+            <div class="pageTitle">
+                <h3>Sample Q&A</h3>
+                <h8>You can embed a sample Q&A and interact with Power BI Embedded firsthand by clicking below.</h8>
+            </div>
+            <div class="settings">
+                <button id="GoToEmbedStepButton_Qna" class="selectButton" onclick="OpenCodeStepWithSample('Qna')">Select</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sampleDashboard" class="pbi-line">
+        <div class="sampleImg" id="sampleDashboardImg"></div>
+        <div class="sampleTextButton">
+            <div class="pageTitle">
+                <h3>Sample Dashboard</h3>
+                <h8>You can embed a sample dashboard and interact with Power BI Embedded firsthand by clicking below.</h8>
+            </div>
+            <div class="settings">
+                <button id="GoToEmbedStepButton_Dashboard" class="selectButton" onclick="OpenCodeStepWithSample('Dashboard')">Select</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sampleTile" class="pbi-line">
+        <div class="sampleImg" id="sampleTileImg"></div>
+        <div class="sampleTextButton">
+            <div class="pageTitle">
+                <h3>Sample Tile</h3>
+                <h8>You can embed a sample Tile and interact with Power BI Embedded firsthand by clicking below.</h8>
+            </div>
+            <div class="settings">
+                <button id="GoToEmbedStepButton_Tile" class="selectButton" onclick="OpenCodeStepWithSample('Tile')">Select</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    SetSession(SessionKeys.IsSampleReport, false);
+    SetSession(SessionKeys.IsSampleDashboard, false);
+});
+</script>

@@ -1,0 +1,25 @@
+<div id="step-interact-wrapper">
+    <div>
+        <div id="category-browser">
+            <div id="wrapper-operations-div" class="operations-div">
+                <div id="operation-categories" class="operations-div">
+                    <ul class="operations-ul">
+                        <li id="dashboard-general-operations" onclick="OpenDashboardGeneralOperations();" class="hideOnMobile"><a href="#">General Operations</a></li>
+                        <ul id="dashboard-general-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Dashboard_FullScreen()" class="hideOnMobile"><a href="#">Full screen</a></li>
+                            <li onclick="Dashboard_ExitFullScreen()" class="hideOnMobile"><a href="#">Exit full screen</a></li>
+                        </ul>
+                        <li id="dashboard-properties-operations" onclick="OpenDashboardPropertiesOperations();"><a href="#">Properties</a></li>
+                        <ul id="dashboard-properties-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Dashboard_GetId()"><a href="#">Get ID</a></li>
+                        </ul>
+                        <li id="dashboard-events-operations" onclick="OpenDashboardEventsOperations();"><a href="#">Events</a></li>
+                        <ul id="dashboard-events-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="DashboardEvents_TileClicked()"><a href="#">Tile clicked</a></li>
+                        </ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

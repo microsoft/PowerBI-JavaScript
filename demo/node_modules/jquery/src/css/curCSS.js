@@ -1,11 +1,11 @@
 define( [
 	"../core",
-	"../core/isAttached",
 	"./var/rboxStyle",
 	"./var/rnumnonpx",
 	"./var/getStyles",
-	"./support"
-], function( jQuery, isAttached, rboxStyle, rnumnonpx, getStyles, support ) {
+	"./support",
+	"../selector" // Get jQuery.contains
+], function( jQuery, rboxStyle, rnumnonpx, getStyles, support ) {
 
 "use strict";
 
@@ -26,7 +26,7 @@ function curCSS( elem, name, computed ) {
 	if ( computed ) {
 		ret = computed.getPropertyValue( name ) || computed[ name ];
 
-		if ( ret === "" && !isAttached( elem ) ) {
+		if ( ret === "" && !jQuery.contains( elem.ownerDocument, elem ) ) {
 			ret = jQuery.style( elem, name );
 		}
 

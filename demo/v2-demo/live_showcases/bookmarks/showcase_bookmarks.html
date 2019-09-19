@@ -1,0 +1,67 @@
+<div id="showcases-text">
+    <h3>Capture & share bookmarks</h3>
+    <br>
+    <div id="showcases-description">
+        By using bookmarks in Power BI, you can capture the current configured view of a report page, including filtering and the state of visuals.<br>
+        Use this showcase to experience the capabilities of the bookmarks API, so your users can create and share their own bookmarks.<br><br>
+        &nbsp;<b>1. Choose and Apply pre-defined bookmarks</b><br>
+        <div class="text-tab">
+                    The menu on the left displays the report's existing bookmarks. You can switch between available bookmarks by clicking on the desired bookmark's name<br><br>
+        </div>
+        &nbsp;<b>2. Capture new bookmarks</b><br>
+        <div class="text-tab">
+                    After interacting with the report (filtering, clicking on visuals etc), click on 'Capture bookmark', the captured bookmark will be added to the menu.<br><br>
+        </div>
+        &nbsp;<b>3. Share bookmarks with others</b><br>
+        <div class="text-tab">
+                    Select the bookmark you want to share and then click the 'share' icon. Copy and paste the given URL into a new browser tab to see the embedded report
+                    with the bookmark applied.<br>
+        </div>
+    </div>
+    <div class="showcases-buttons">
+        <a class="selectButton floatButton" href="https://go.microsoft.com/fwlink/?linkid=2003009" target="_blank">Documentation</a>
+        <a class="selectButton floatButton" href="https://go.microsoft.com/fwlink/?linkid=2002909" target="_blank">Get Code</a>
+    </div>
+</div>
+
+<div id="showcaseContent">
+    <div id="leftShowcaseWindow">
+        <div class="editorTitle">Bookmarks</div>
+        <div id="bookmarksWrapper">
+            <div id="bookmarksList">
+            </div>
+        </div>
+    </div>
+    <div id="showcaseEmbedArea">
+        <div class="editorTitle">Embedded view</div>
+        <div class="textAreaControls">
+            <button id="btnCaptureBookmark" class="textAreaControl" onclick="onBookmarkCaptureClicked();">
+                <img src="images\add.svg"/> Capture Bookmark
+            </button>
+        </div>
+        <div id="bookmark-embedded-view">
+            <div id="embedContainer" class="iframeContainer active"></div>
+        </div>
+    </div>
+</div>
+
+<div id="overlay"></div>
+<div id="shareDialog">
+    <div class="dialogHeader">
+        <div id="btnCloseDialog" onclick="onCloseDialogClicked();">
+            <img src="images\close.png"/>
+        </div>
+    </div>
+    <div class="dialogBody">
+        <div class="dialogText">Link to '<span id="dialogBookmarkName"></span>' created</div>
+        <div class="dialogSubText">Make sure you copy the link below.</div>
+        <input type="text" id="dialogInput" />
+        <div id="btnDialogCopy" onclick="onDialogCopyClicked();">Copy</div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        embedBookmarksReport();
+    });
+</script>

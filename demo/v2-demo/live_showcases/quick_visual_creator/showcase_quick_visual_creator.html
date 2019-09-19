@@ -1,0 +1,192 @@
+<div id="showcases-text">
+  <h3>Quick visual creator</h3>
+  <br>
+  <div id="showcases-description">
+    This showcase demonstrates one example of how you can leverage our visual APIs to quickly generate and personalize a visual.<br>
+    This is useful for quickly importing a visual into a presentation or email without having any prior Power BI experience,<br>
+    and for quick ad-hock analytics which can then be saved. Additionally, you can implement your own method for sharing or exporting the visual.</b><br><br>
+    <div class="text-small-tab">
+      <b>1. Choose the visual type from the dropdown list</b><br>
+      <div class="text-small-tab"><i>Note: On this showcase we only provide a subset of the available visual types.</i></div><br>
+      <b>2. Select the fields to define the data for displaying in your visual</b><br><br>
+      <b>3. Use the 'Properties' to personalize your visual</b><br><br>
+      <b>4. You can use the 'Print' button to export the visual to PDF</b><br>
+    </div>
+  </div>
+  <div class="showcases-buttons">
+    <a class="selectButton floatButton" href="https://go.microsoft.com/fwlink/?linkid=2095544"
+      target="_blank">Documentation</a>
+    <a class="selectButton floatButton" href="https://go.microsoft.com/fwlink/?linkid=2095545" target="_blank">Get Code</a>
+  </div>
+</div>
+
+<div id="showcaseContent">
+  <div id="leftShowcaseWindow">
+    <div class="editorTitle">Generator</div>
+    <div id="generatorWrapper">
+      <div id="generatorOptions">
+        <div id="generator-type" class="generator-disabled">
+          <b>Visual Type</b>
+          <div class="select-wrapper">
+            <div class="styled-select">
+              <select id="visual-type">
+                <option value="0">Select an option</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+                <option value="4">Option 4</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div id="generator-fields" class="generator-disabled">
+          <span><b>Fields</b></span>
+          <div class="text-small-tab">
+            <div class="select-wrapper">
+              <span class="inline-select-text">Axis:</span>
+              <div class="styled-select inline-select">
+                <select class="field">
+                  <option value="0">Select an option</option>
+                  <option value="1">Option 1</option>
+                  <option value="2">Option 2</option>
+                  <option value="3">Option 3</option>
+                </select>
+              </div>
+            </div>
+            <div class="select-wrapper">
+              <span class="inline-select-text">Legend:</span>
+              <div class="styled-select inline-select">
+                <select class="field">
+                  <option value="0">Select an option</option>
+                  <option value="1">Option 1</option>
+                  <option value="2">Option 2</option>
+                  <option value="3">Option 3</option>
+                </select>
+              </div>
+            </div>
+            <div class="select-wrapper">
+              <span class="inline-select-text">Value:</span>
+              <div class="styled-select inline-select">
+                <select class="field">
+                  <option value="0">Select an option</option>
+                  <option value="1">Option 1</option>
+                  <option value="2">Option 2</option>
+                  <option value="3">Option 3</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div id="generator-properties" class="generator-disabled">
+          <span><b>Properties</b></span>
+          <div class="text-small-tab">
+            <div id="legend" class="toggle-wrapper">
+              <span class="inline-toggle-text">Legend:</span>
+              <label class="switch" onclick="toggleProperty('legend');">
+                <input type="checkbox" id="legend-toggle" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div id="xAxis" class="toggle-wrapper">
+              <span class="inline-toggle-text">X Axis:</span>
+              <label class="switch" onclick="toggleProperty('xAxis');">
+                <input type="checkbox" id="xAxis-toggle" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div id="yAxis" class="toggle-wrapper">
+              <span class="inline-toggle-text">Y Axis:</span>
+              <label class="switch" onclick="toggleProperty('yAxis');">
+                <input type="checkbox" id="yAxis-toggle" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="toggle-wrapper">
+              <span class="inline-toggle-text">Title:</span>
+              <label class="switch" onclick="toggleProperty('title');">
+                <input type="checkbox" id="title-toggle" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="title-wrapper">
+              <span>Personalized Title:</span>
+              <div>
+                <input type="text" id="ptitle" placeholder="Auto generated..." oninput="updateTitleText();">
+                  <span id="btnEraseCustomTitle" onclick="onEraseToolClicked();">
+                      <div id="erase-tool-disabled">
+                          <img src="images\EraseToolGrey.svg" />
+                      </div>
+                      <div id="erase-tool-enabled">
+                        <img src="images\EraseTool.svg" />
+                      </div>
+                  </span>
+              </div>
+            </div>
+
+            <div class="title-wrapper-big">
+              <span>Title alignment:</span>
+              <div id="alignment-blocks-wrapper">
+                <div id="aligns-disabled">
+                    <div class="alignment-block selected">
+                      <img src="images\AlignLeftGrey.svg" />
+                    </div>
+                    <div class="alignment-block">
+                      <img src="images\AlignCenterGrey.svg" />
+                    </div>
+                    <div class="alignment-block">
+                      <img src="images\AlignRightGrey.svg" />
+                    </div>
+                </div>
+                <div id="aligns-enabled">
+                    <div id="align-left" class="alignment-block selected" onclick="onAlignClicked('left');">
+                      <img src="images\AlignLeft.svg" />
+                    </div>
+                    <div id="align-center" class="alignment-block" onclick="onAlignClicked('center');">
+                      <img src="images\AlignCenter.svg" />
+                    </div>
+                    <div id="align-right" class="alignment-block" onclick="onAlignClicked('right');">
+                      <img src="images\AlignRight.svg" />
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="showcaseEmbedArea">
+    <div class="editorTitle">Visual view</div>
+    <div class="textAreaControls">
+      <button id="btnResetVisual" class="textAreaControl" onclick="resetVisualGenerator();">
+        <img src="images\reset.svg" /> Reset
+      </button>
+      <button id="btnPrintVisual" class="textAreaControl" onclick="printVisual();">
+        <img src="images\print.svg" /> Print
+      </button>
+    </div>
+    <div id="showcase-embedded-view">
+      <div id="overlay-embed-container">
+          <span id="spinner">
+            <img src="images\ajax-loader.gif" /><br>
+            Loading showcase...
+          </span>
+      </div>
+      <div id="embedContainer" class="iframeContainer active"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    embedQuickVisualCreatorReport();
+
+    initializeDropdowns();
+    /* If the user clicks anywhere outside the select box,
+    then close all select boxes: */
+    document.addEventListener("click", closeAllSelect);
+  });
+</script>

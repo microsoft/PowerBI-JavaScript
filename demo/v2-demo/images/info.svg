@@ -1,0 +1,29 @@
+<svg width="13" height="13" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>ic_info</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(-2087 -1066)">
+<g id="ic_info">
+<g id="Ellipse">
+<mask id="mask0_outline_out">
+<rect id="mask0_outline_inv" fill="white" x="-1" y="-1" width="13" height="13" transform="translate(2088 1067)"/>
+<use xlink:href="#path0_fill" fill="black" transform="translate(2088 1067)"/>
+</mask>
+<g mask="url(#mask0_outline_out)">
+<use xlink:href="#path1_stroke_2x" transform="translate(2088 1067)" fill="#6E6E6E"/>
+</g>
+</g>
+<g id="Rectangle">
+<use xlink:href="#path2_fill" transform="translate(2093 1071)" fill="#6E6E6E"/>
+</g>
+<g id="Rectangle">
+<use xlink:href="#path3_fill" transform="translate(2093 1069)" fill="#6E6E6E"/>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" d="M 11 5.5C 11 8.53757 8.53757 11 5.5 11C 2.46243 11 0 8.53757 0 5.5C 0 2.46243 2.46243 0 5.5 0C 8.53757 0 11 2.46243 11 5.5Z"/>
+<path id="path1_stroke_2x" d="M 10 5.5C 10 7.98528 7.98528 10 5.5 10L 5.5 12C 9.08985 12 12 9.08985 12 5.5L 10 5.5ZM 5.5 10C 3.01472 10 1 7.98528 1 5.5L -1 5.5C -1 9.08985 1.91015 12 5.5 12L 5.5 10ZM 1 5.5C 1 3.01472 3.01472 1 5.5 1L 5.5 -1C 1.91015 -1 -1 1.91015 -1 5.5L 1 5.5ZM 5.5 1C 7.98528 1 10 3.01472 10 5.5L 12 5.5C 12 1.91015 9.08985 -1 5.5 -1L 5.5 1Z"/>
+<path id="path2_fill" d="M 0 0L 1 0L 1 5L 0 5L 0 0Z"/>
+<path id="path3_fill" d="M 0 0L 1 0L 1 1L 0 1L 0 0Z"/>
+</defs>
+</svg>

@@ -1,0 +1,43 @@
+<div id="showcases-text">
+    <h3>Personalize report design</h3>
+    <br>
+    <div id="showcases-description">
+        You can personalize the colors and styling of your embedded analytics using the themes API.<br>
+        Themes help define styling and colors so you can match them to your application or brand color palette, for example.<br>
+        With the themes API, you can apply a custom theme during the report load or during a session.<br>
+        In this showcase, we’ve provided a few example color palettes and styles so you can see how themes can be applied to user report views.<br>
+    </div>
+    <div class="showcases-buttons">
+        <a class="selectButton floatButton" href="https://go.microsoft.com/fwlink/?linkid=2056144" target="_blank">Documentation</a>
+        <a class="selectButton floatButton" href="https://go.microsoft.com/fwlink/?linkid=2055980" target="_blank">Get Code</a>
+    </div>
+</div>
+
+<div id="showcaseContent">
+    <div id="leftShowcaseWindow">
+        <div class="editorTitle">Data colors</div>
+        <div id="themesDataColorsWrapper">
+            <div id="themesList">
+            </div>
+        </div>
+        <div class="editorTitle">Background</div>
+        <div id="themesBackgroundWrapper">
+            <div id="backgroundsList">
+            </div>
+        </div>
+    </div>
+    <div id="showcaseEmbedArea">
+        <div class="editorTitle">Embedded view</div>
+        <div id="themes-embedded-view">
+            <div id="embedContainer" class="iframeContainer active"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        embedThemesReport();
+        createThemesList();
+        createBackgroundsList();
+    });
+</script>

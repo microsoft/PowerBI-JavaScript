@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>typescript</title>
+	<title>powerbi-client</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">typescript</a>
+					<a href="index.html" class="title">powerbi-client</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -56,7 +56,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> typescript</h1>
+			<h1> powerbi-client</h1>
 		</div>
 	</div>
 </header>
@@ -64,12 +64,40 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<a href="#read-this" id="read-this" style="color: inherit; text-decoration: none;">
-					<h1>Read This!</h1>
-				</a>
-				<p><strong>These files are not meant to be edited by hand.</strong>
-					If you need to make modifications, the respective files should be changed within the repository&#39;s top-level <code>src</code> directory.
-				Running <code>gulp LKG</code> will then appropriately update the files in this directory.</p>
+				<h1 id="powerbi-client">powerbi-client</h1>
+				<p>JavaScript library for embedding Power BI into your apps.</p>
+				<p><a href="https://travis-ci.org/Microsoft/PowerBI-JavaScript"><img src="https://img.shields.io/travis/Microsoft/PowerBI-JavaScript/master.svg" alt="Build Status"></a>
+					<a href="https://www.npmjs.com/package/powerbi-client"><img src="https://img.shields.io/npm/v/powerbi-client.svg" alt="NPM Version"></a>
+					<a href="https://bower.io/search/?q=powerbi-client"><img src="https://img.shields.io/bower/v/powerbi-client.svg" alt="Bower Version"></a>
+					<a href="https://www.nuget.org/packages/Microsoft.PowerBI.JavaScript/"><img src="https://img.shields.io/nuget/v/Microsoft.PowerBI.JavaScript.svg" alt="Nuget Version"></a>
+					<a href="https://www.npmjs.com/package/powerbi-client"><img src="https://img.shields.io/npm/dt/powerbi-client.svg" alt="NPM Total Downloads"></a>
+					<a href="https://www.npmjs.com/package/powerbi-client"><img src="https://img.shields.io/npm/dm/powerbi-client.svg" alt="NPM Monthly Downloads"></a>
+					<a href="https://github.com/Microsoft/PowerBI-JavaScript/tags"><img src="https://img.shields.io/github/tag/microsoft/powerbi-javascript.svg" alt="GitHub tag"></a>
+				<a href="https://gitter.im/Microsoft/PowerBI-JavaScript"><img src="https://img.shields.io/gitter/room/Microsoft/PowerBI-JavaScript.svg" alt="Gitter"></a></p>
+				<h2 id="wiki">Wiki</h2>
+				<p>See the <a href="https://github.com/Microsoft/PowerBI-JavaScript/wiki">wiki</a> for more details about embedding, service configuration, setting default page, page navigation, dynamically applying filters, and more.</p>
+				<h2 id="code-docs">Code Docs</h2>
+				<p>See the <a href="https://microsoft.github.io/PowerBI-JavaScript">code docs</a> for detailed information about classes, interfaces, types, etc.</p>
+				<h2 id="demo">Demo</h2>
+				<p>New <a href="https://microsoft.github.io/PowerBI-JavaScript/demo">live demo</a> for sample application using the powerbi-client library in scenarios such as page navigation, applying filters, updating settings, and more.</p>
+				<h2 id="installation">Installation</h2>
+				<p>Install via Nuget:</p>
+				<p><code>Install-Package Microsoft.PowerBI.JavaScript</code></p>
+				<p>Install from NPM:</p>
+				<p><code>npm install --save powerbi-client</code></p>
+				<p>Install from Bower:</p>
+				<p><code>bower install powerbi-client --save</code></p>
+				<p>Installing beta versions:</p>
+				<p><code>npm install --save powerbi-client@beta</code></p>
+				<h2 id="include-the-library-via-import-or-manually">Include the library via import or manually</h2>
+				<p>Ideally you would use module loader or compilation step to import using ES6 modules as:</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> pbi <span class="hljs-keyword">from</span> <span class="hljs-string">'powerbi-client'</span>;
+</code></pre>
+				<p>However, the library is exported as a Universal Module and the powerbi.js script can be included before your apps closing <code>&lt;/body&gt;</code> tag as:</p>
+				<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"/bower_components/powerbi-client/dist/powerbi.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+				<p>When included directly the library is exposd as a global named &#39;powerbi-client&#39;.
+				There is also another global <code>powerbi</code> which is an instance of the service.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -77,9 +105,6 @@
 				<ul>
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
-					</li>
-					<li class="label tsd-is-external">
-						<span>Internals</span>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_node_modules_powerbi_models_dist_models_d_.html">"node_<wbr>modules/powerbi-<wbr>models/dist/models.d"</a>
@@ -141,24 +166,6 @@
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_typings_globals_es6_promise_index_d_.html">"typings/globals/es6-<wbr>promise/index.d"</a>
 					</li>
-					<li class="label tsd-is-external">
-						<span>Externals</span>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_node_modules__types_minimatch_index_d_.html">"node_<wbr>modules/@types/minimatch/index.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.html">"node_<wbr>modules/typedoc/node_<wbr>modules/typescript/lib/lib.dom.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_node_modules_typedoc_node_modules_typescript_lib_lib_es5_d_.html">"node_<wbr>modules/typedoc/node_<wbr>modules/typescript/lib/lib.es5.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_node_modules_typedoc_node_modules_typescript_lib_lib_scripthost_d_.html">"node_<wbr>modules/typedoc/node_<wbr>modules/typescript/lib/lib.scripthost.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_node_modules_typedoc_node_modules_typescript_lib_lib_webworker_importscripts_d_.html">"node_<wbr>modules/typedoc/node_<wbr>modules/typescript/lib/lib.webworker.importscripts.d"</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -180,7 +187,6 @@
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -229,7 +235,7 @@
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>

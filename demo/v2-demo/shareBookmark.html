@@ -1,0 +1,20 @@
+<link rel="stylesheet" type="text/css" href="style/style.css">
+<link rel="stylesheet" type="text/css" href="style/layout.css">
+
+<div id="share-bookmark">
+    <div id="embedContainer" class="iframeContainer active"></div>
+</div>
+
+<script src="../node_modules/jquery/dist/jquery.js"></script>
+<script src="../node_modules/es6-promise/dist/es6-promise.js"></script>
+<script src="../node_modules/powerbi-client/dist/powerbi.js"></script>
+
+<script src="live_showcases/bookmarks/showcase_bookmarks.js"></script>
+
+<script src="scripts/session_utils.js"></script>
+
+<script>
+    $(document).ready(function() {
+        embedSharedBookmark();
+    });
+</script>
