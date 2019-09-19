@@ -41,4 +41,4 @@ function trackEvent(name, properties, flush = false) {
     }
 }
 
-trackEvent(TelemetryEventName.SessionStart, {}, true);
+trackEvent(TelemetryEventName.SessionStart, { referrer: document.referrer }, true);
