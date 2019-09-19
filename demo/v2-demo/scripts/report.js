@@ -30,6 +30,8 @@ function OpenSamplesStep() {
     $("#embed-and-interact-steps-wrapper").hide();
 
     $("#welcome-text").show();
+
+    trackEvent(TelemetryEventName.InnerSectionOpen, { section: TelemetryInnerSection.Sample, src: TelemetryEventSource.UserClick });
 }
 
 function OpenCodeStepFromNavPane()
@@ -79,10 +81,19 @@ function OpenCodeStep(mode, entityType, tokenType) {
     $('#interact-tab').removeClass(active_tabs_li);
 
     LoadEmbedSettings(mode, entityType, tokenType);
+
+    trackEvent(TelemetryEventName.InnerSectionOpen, { section: TelemetryInnerSection.Code, src: TelemetryEventSource.UserClick });
 }
 
 function bootstrapIframe(entityType) {
     const activeContainer = getActiveEmbedContainer();
+
+    // To avoid multiple bootstrap when switching between Desktop view and Phone view 
+    // and also when changing the mode (view/edit/create).
+    if (activeContainer.children.length > 0) {
+      // entity is already embedded
+      return;
+    }
 
     // Bootstrap iframe - for better performance.
     let embedUrl = GetSession(SessionKeys.EmbedUrl);
@@ -574,6 +585,7 @@ function EmbedAreaDesktopView() {
             runFunc();
         }
     }
+    trackEvent(TelemetryEventName.DesktopModeOpen, {});
 }
 
 function EmbedAreaMobileView() {
@@ -631,6 +643,7 @@ function EmbedAreaMobileView() {
         }
       }
     }
+    trackEvent(TelemetryEventName.MobileModeOpen, {});
 }
 
 function updateRunFuncSessionParameters(runFunc) {
@@ -684,5 +697,6 @@ function hideFeaturesOnMobile(){
 
 function onShowcaseTryMeClicked(showcase) {
     let showcaseUrl = location.href.substring(0, location.href.lastIndexOf("/")) + '?showcase=' + showcase;
+    trackEvent(TelemetrySectionName.Showcase, { showcaseType: showcase, src: TelemetryEventSource.Interact });
     window.open(showcaseUrl, '_blank');
 }

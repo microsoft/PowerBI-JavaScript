@@ -31,7 +31,7 @@ export interface IReportNode {
  * @implements {IFilterable}
  */
 export class Report extends embed.Embed implements IReportNode, IFilterable {
-  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied"];
+  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked"];
   static reportIdAttribute = 'powerbi-report-id';
   static filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
   static navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';

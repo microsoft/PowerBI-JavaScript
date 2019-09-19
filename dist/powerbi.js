@@ -4872,7 +4872,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Report.prototype.isMobileSettings = function (settings) {
 	        return settings && (settings.layoutType === models.LayoutType.MobileLandscape || settings.layoutType === models.LayoutType.MobilePortrait);
 	    };
-	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied"];
+	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
 	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';

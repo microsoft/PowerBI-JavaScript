@@ -22,13 +22,11 @@ const EntityType = {
     Qna: "Qna"
 };
 
-var _session = {};
-
 const SessionKeys = {
     AccessToken : "accessToken",
+    DashboardId : "dashboardId",
     EmbedUrl : "embedUrl",
     EmbedId : "embedId",
-    DashboardId : "dashboardId",
     EmbedMode: "embedMode",
     EntityType: "entityType",
     GroupId : "groupId",
@@ -36,13 +34,26 @@ const SessionKeys = {
     IsSampleDashboard: "IsSampleDashboard",
     IsSampleTile: "IsSampleTile",
     IsSampleQna: "IsSampleQna",
+    IsTelemetryEnabled: "isTelemetryEnabled",
     PageName: "PageName",
     QnaQuestion: "QnaQuestion",
     QnaMode: "QnaMode",
     SampleId: "SampleId",
+    SessionId: "SessionId",
     TokenType: "tokenType",
     VisualName: "VisualName"
 };
+
+var _session = {};
+
+function initSession() {
+    SetSession(SessionKeys.SessionId, generateNewGuid());
+    if (GetParameterByName(SessionKeys.IsTelemetryEnabled) === "false") {
+        SetSession(SessionKeys.IsTelemetryEnabled, false);
+    } else {
+        SetSession(SessionKeys.IsTelemetryEnabled, true);
+    }
+}
 
 function GetParameterByName(name, url) {
     if (!url) {
@@ -317,3 +328,5 @@ function setSession(accessToken, embedUrl, embedId, dashboardId)
     SetSession(SessionKeys.EmbedId, embedId);
     SetSession(SessionKeys.DashboardId, dashboardId);
 }
+
+initSession();
