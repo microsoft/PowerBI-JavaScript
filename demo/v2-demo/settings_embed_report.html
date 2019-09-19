@@ -1,0 +1,77 @@
+<div id="report-embed-table" class="embed-table">
+    <div id="wrapper-settings-div">
+        <div class="noOverflow"><h8>Select mode to embed your report in:</h8></div>
+        <div id="modeSelector">
+            <label class="radioContainer">
+                <div onclick="OpenViewMode();"><input type="radio" name="embedMode" value="view" checked="checked"> View mode </input>
+                <span class="checkmark"></span></div>
+            </label>
+            <div class="modeTooltip view">
+                <img class="infoImg" src="images\info.svg"/>
+                <span class="tooltipText">User can view and interact with the report</span>
+            </div>
+            <label class="radioContainer">
+                <div onclick="OpenEditMode();"><input type="radio" name="embedMode" value="edit"> Edit mode </input>
+                <span class="checkmark"></span></div>
+            </label>
+            <div class="modeTooltip edit">
+                <img class="infoImg" src="images\info.svg"/>
+                <span class="tooltipText edit">User can edit and save the report</span>
+            </div>
+            <label class="radioContainer">
+                <div onclick="OpenCreateMode();"><input type="radio" name="embedMode" value="create"> Create mode </input>
+                <span class="checkmark"></span></div>
+            </label>
+            <div class="modeTooltip create">
+                <img class="infoImg" src="images\info.svg"/>
+                <span class="tooltipText create">User can Create and save a new report</span>
+            </div>
+        </div>
+
+        <h8>Select token type:</h8>
+
+        <div id="typeSelector">
+            <label class="radioContainer">
+                <div onclick="OnTokenTypeRadioClicked(1);"><input type="radio" name="tokenType" value="1" checked="checked"> Embed token </input>
+                <span class="checkmark"></span></div>
+            </label>
+            <label class="radioContainer">
+                <div onclick="OnTokenTypeRadioClicked(0);"><input type="radio" name="tokenType" value="0"> AAD token </input>
+                <span class="checkmark"></span></div>
+            </label>
+        </div>
+
+        <div class="noOverflow"><h8>Fill in the fields below to get the code to embed your report</h8></div>
+        <div class="spacer" />
+        <div id="embedModeInput">
+            <div class="inputLine">
+                <div class="inputLineTitle">Embed Token</div>
+                <input type="text" id="txtAccessToken" onchange="UpdateSession(this, SessionKeys.AccessToken);" />
+            </div>
+            <div class="inputLine">
+                <div class="inputLineTitle">Embed URL</div>
+                <input type="text" id="txtReportEmbed" onchange="UpdateSession(this, SessionKeys.EmbedUrl);" value="https://embedded.powerbi.com/ReportEmbed"/>
+            </div>
+            <div class="inputLine">
+                <div class="inputLineTitle">Report ID</div>
+                <input type="text" id="txtEmbedReportId" onchange="UpdateSession(this, SessionKeys.EmbedId);"/>
+            </div>
+        </div>
+
+        <div id="createModeInput">
+
+            <div class="inputLine">
+                <div class="inputLineTitle">Embed Token</div>
+                <input type="text" id="txtCreateAccessToken" onchange="UpdateSession(this, SessionKeys.AccessToken);" />
+            </div>
+            <div class="inputLine">
+                <div class="inputLineTitle">Embed URL</div>
+                <input type="text" id="txtCreateReportEmbed" onchange="UpdateSession(this, SessionKeys.EmbedUrl);" value="https://embedded.powerbi.com/ReportEmbed"/>
+            </div>
+            <div class="inputLine">
+                <div class="inputLineTitle">Dataset ID</div>
+                <input type="text" id="txtEmbedDatasetId" onchange="UpdateSession(this, SessionKeys.EmbedId);"/>
+            </div>
+        </div>
+    </div>
+</div>

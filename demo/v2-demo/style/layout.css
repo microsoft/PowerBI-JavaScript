@@ -1,0 +1,382 @@
+html {
+    overflow-x: hidden;
+}
+
+body {
+    min-width: 300px;
+    background-color: #212121;
+}
+
+header
+{
+    position: relative;
+    height: 60px;
+    background: #121212;
+}
+
+label {
+    display: initial;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: normal;
+}
+
+#navbar {
+    display: table-cell;
+    width: 160px;
+    background: #212121;
+    vertical-align: top;
+}
+
+#main-ul-dev {
+    position: relative;
+    padding-top: 24px;
+    padding-left: 0px;
+}
+
+.main-ul {
+    position: absolute;
+    width: 100%;
+    list-style-type: none;
+    margin: 0px;
+    overflow: hidden;
+    padding-left: 0;
+    -webkit-margin-before: 0;
+    -webkit-padding-start: 0;
+    line-height: 30px;
+}
+
+#mainContent {
+    padding: 0 8px 8px 8px;
+    width: 100%;
+    background: #F1F1F1;
+}
+
+#showcasesContent {
+    position: relative;
+}
+
+#showcaseContent {
+    display: table;
+    padding: 32px 24px 24px 24px;
+    width: 100%;
+    background: #F1F1F1;
+    overflow: hidden;
+}
+
+#samples-step-wrapper {
+    max-width: 1250px;
+}
+
+#documentationContent {
+    background: #F1F1F1;
+    padding-left: 16px;
+}
+
+#contentWrapper {
+    height: 100%;
+    width: 100%;
+    background-color: #F1F1F1;
+    max-width: 100vw;
+    width: calc(100% - 160px);
+    display: table-cell;
+}
+
+.content {
+    height: 100%;
+    width: 100%;
+}
+
+#settings-wrapper {
+    margin-right: 10px;
+    max-height: 330px;
+    float: left;
+}
+
+#embedCodeDiv {
+    margin-right: 10px;
+    max-height: 330px;
+    float: left;
+    overflow: hidden;
+}
+
+#embedArea {
+    clear: both;
+    width: 100%;
+}
+
+.iframeContainer {
+    display: none;
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFFF;
+    padding: 0px;
+    clear: both;
+}
+
+.iframeContainer.active {
+    display: block;
+}
+
+#logWindow {
+    max-height: 330px;
+    float: left;
+    overflow: hidden;
+}
+
+.topFrame {
+    display: table-cell;
+    width: 32%;
+    width: calc((100% - 20.1px)/3);
+    height: 330px;
+}
+
+.topPanel {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    height: 330px;
+    margin: 15px 0 15px 0;
+}
+
+.bottomPanel {
+    width: 100%;
+    margin-bottom: 10px;
+    max-width: 100%;
+}
+
+#steps-nav-bar {
+    height: 48px;
+    vertical-align: top;
+    background: #FFFFFF;
+}
+
+#steps-ul {
+    height: 100%;
+}
+
+#navbar-content {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+#welcome-text, #showcases-text {
+    margin-top: 2px;
+    padding: 16px 24px 16px 24px;
+    background: #FFFFFF;
+}
+
+#sample-tool-header {
+    margin-bottom: 16px;
+    font-size: 24px;
+}
+
+#sample-tool-description, #showcases-description {
+    max-width: 1000px;
+}
+
+#showcase-embedded-view {
+    background: #FFFFFF;
+    height: calc(67vw*(9/16)*1.1);
+    position: relative;
+}
+
+#bookmark-embedded-view {
+    background: #FFFFFF;
+    height: calc(61vw*(9/16)*1.1);
+}
+
+#themes-embedded-view {
+    background: #FFFFFF;
+    height: calc(64vw*(9/16)*1.1);
+}
+
+
+#leftShowcaseWindow {
+    min-width: 20vw;
+    max-width: 20vw;
+    display: table-cell;
+    padding-right: 16px;
+}
+
+#showcaseItemsWrapper, #bookmarksWrapper, #generatorWrapper {
+    background: #FFFFFF;
+    min-height: 350px;
+}
+
+#themesDataColorsWrapper {
+    background: #FFFFFF;
+    min-height: 236px;
+    margin-bottom: 8px;
+}
+
+#themesBackgroundWrapper {
+    background: #FFFFFF;
+    min-height: 64px;
+    padding: 22px 22px;
+}
+
+#bookmarksWrapper {
+    min-height: 550px;
+}
+
+#showcaseEmbedArea {
+    display: table-cell;
+    width: 100%;
+}
+
+#insightToActionShowcaseEmbedArea {
+    width: calc(100% - 20vw);
+}
+
+#showcasesSelectDiv {
+    max-width: 1250px;
+}
+
+@media only screen and (max-width: 1280px) {
+    #distributionDialog {
+        width: 750px;
+        height: 450px;
+    }
+
+    #dialogTable {
+        height: 303px;
+    }
+
+    #dialogTooltip {
+        top: 195px;
+    }
+}
+
+
+@media only screen and (max-width: 1050px) {
+    .textAreaControl {
+        margin-right: 20px;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    #navbar-content {
+        display: block;
+    }
+
+    .content {
+        display: block;
+    }
+
+    #contentWrapper {
+        display: block;
+        width: 100%;
+    }
+
+    #main-ul-dev {
+        padding-top: 0px;
+    }
+
+    #navbar {
+        display: block;
+        width: 100%;
+        height: 48px;
+    }
+
+    .main-ul li {
+        width: 160px;
+        float: left;
+        text-align: center;
+    }
+
+    #main-nav-bar a {
+        padding-left: 0px;
+    }
+
+    #modeSelector {
+        margin-bottom: 8px;
+    }
+
+    body {
+        background-color: #F1F1F1;
+    }
+
+    .desktop-view {
+        height: calc(100vw * 0.59);
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .topPanel {
+        display: block;
+    }
+
+    .topFrame {
+        width: 100%;
+    }
+
+    .customTooltip .tooltipText {
+        top: -21px;
+        left: -170px;
+    }
+
+    .customTooltip .tooltipText::after {
+        top: 50%;
+        left: 100%; /* To the right of the tooltip */
+        margin-top: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent transparent #000000;
+        margin-left: 0px;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    #main-showcases {
+        display: none !important;
+    }
+
+    .tryShowcase {
+        display: none !important;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .main-ul li {
+        width: 33%;
+    }
+
+    body {
+        font-size: 12px;
+    }
+
+    .interactTooltip .tooltipText {
+        left: -105px;
+        top: 35px;
+    }
+
+    .interactTooltip .tooltipText::after {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 460px) {
+    .logo-text-span {
+        font-size: 18px;
+        text-align: center;
+        left: 0px;
+        font-weight: 600;
+    }
+
+    .logo-text-span {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 432px) {
+    .pbi-line {
+        width: calc(100% - 24px);
+    }
+
+    #sampleTileImg {
+        background-position: left;
+    }
+}

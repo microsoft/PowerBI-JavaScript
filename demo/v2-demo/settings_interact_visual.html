@@ -1,0 +1,54 @@
+<div id="step-interact-wrapper">
+    <div>
+        <div id="category-browser">
+            <div id="wrapper-operations-div" class="operations-div">
+                <div id="operation-categories" class="operations-div">
+                    <ul class="operations-ul">
+                        <li id="general-operations" onclick="OpenGeneralOperations();"><a href="#">General Operations</a></li>
+                        <ul id="general-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="ReportVisual_UpdateSettings()" class="hideOnMobile"><a href="#">Update settings</a></li>
+                            <li onclick="Report_PrintCurrentReport()"><a href="#">Print</a></li>
+                            <li onclick="Report_Reload()"><a href="#">Reload</a></li>
+                            <li onclick="Report_Refresh()"><a href="#">Refresh</a></li>
+                            <li onclick="Events_ReportLoaded()"><a href="#">Loaded event</a></li>
+                            <li onclick="Events_ReportRendered()"><a href="#">Rendered event</a></li>
+                            <li onclick="Report_FullScreen()" class="hideOnMobile"><a href="#">Full screen</a></li>
+                            <li onclick="Report_ExitFullScreen()" class="hideOnMobile"><a href="#">Exit full screen</a></li>
+                        </ul>
+                        <li id="reportproperties-operations" onclick="OpenReportPropertiesOperations();"><a href="#">Properties</a></li>
+                        <ul id="reportproperties-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_GetId()"><a href="#">Get ID</a></li>
+                        </ul>
+                        <li id="filters-operations" onclick="OpenFiltersOperations();"><a href="#">Filters & Slicers</a></li>
+                        <ul id="filters-operations-ul" class="function-ul" style="display: none;">
+                                <li onclick="ReportVisual_Report_SetFilters()"><a href="#">Set report filters</a></li>
+                                <li onclick="ReportVisual_Report_GetFilters()"><a href="#">Get report filters</a></li>
+                                <li onclick="ReportVisual_Report_RemoveFilters()"><a href="#">Remove report filters</a></li>
+                                <li onclick="ReportVisual_Page_SetFilters()"><a href="#">Set page filters</a></li>
+                                <li onclick="ReportVisual_Page_GetFilters()"><a href="#">Get page filters</a></li>
+                                <li onclick="ReportVisual_Page_RemoveFilters()"><a href="#">Remove page filters</a></li>
+                                <li onclick="ReportVisual_Visual_SetFilters()"><a href="#">Set visual filters</a></li>
+                                <li onclick="ReportVisual_Visual_GetFilters()"><a href="#">Get visual filters</a></li>
+                                <li onclick="ReportVisual_Visual_RemoveFilters()"><a href="#">Remove visual filters</a></li>
+                        </ul>
+                        <li id="menu-operations" onclick="OpenMenuOperations();"><a href="#">Menu Extensions</a></li>
+                        <ul id="menu-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_Extensions_OptionsMenu()"><a href="#">Extend options menu</a></li>
+                            <li onclick="Report_Extensions_ContextMenu()"><a href="#">Extend context menu</a></li>
+                        </ul>
+                        <li id="layout-operations" onclick="OpenLayoutOperations();"><a href="#">Layout</a></li>
+                        <ul id="layout-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_HideAllVisualHeaders()"><a href="#">Hide all visual headers</a></li>
+                            <li onclick="Report_ShowAllVisualHeaders()"><a href="#">Show all visual headers</a></li>
+                            <li onclick="ReportVisual_HideSingleVisualHeader()"><a href="#">Hide single visual header</a></li>
+                        </ul>
+                        <li id="data-operations" onclick="OpenDataOperations();"><a href="#">Data</a></li>
+                        <ul id="data-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Visual_DataSelected()"><a href="#">Data selected</a></li>
+                        </ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

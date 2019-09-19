@@ -1,0 +1,122 @@
+<div id="step-interact-wrapper">
+    <div>
+        <div id="category-browser">
+            <div id="wrapper-operations-div" class="operations-div">
+                <div id="operation-categories" class="operations-div">
+                    <ul class="operations-ul">
+                        <li id="general-operations" onclick="OpenGeneralOperations();"><a href="#">General Operations</a></li>
+                        <ul id="general-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_UpdateSettings()" class="hideOnMobile"><a href="#">Update settings</a></li>
+                            <li onclick="Report_PrintCurrentReport()"><a href="#">Print</a></li>
+                            <li onclick="Report_Reload()"><a href="#">Reload</a></li>
+                            <li onclick="Report_Refresh()"><a href="#">Refresh</a></li>
+                            <li onclick="Events_ReportLoaded()"><a href="#">Loaded event</a></li>
+                            <li onclick="Events_ReportRendered()"><a href="#">Rendered event</a></li>
+                            <li onclick="Report_FullScreen()" class="hideOnMobile"><a href="#">Full screen</a></li>
+                            <li onclick="Report_ExitFullScreen()" class="hideOnMobile"><a href="#">Exit full screen</a></li>
+                        </ul>
+                        <li id="reportproperties-operations" onclick="OpenReportPropertiesOperations();"><a href="#">Properties</a></li>
+                        <ul id="reportproperties-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_GetId()"><a href="#">Get ID</a></li>
+                            <li onclick="Report_GetPages()"><a href="#">Get pages</a></li>
+                            <li onclick="Page_GetVisuals()"><a href="#">Get visuals</a></li>
+                        </ul>
+                        <li id="navigation-operations" onclick="OpenNavigationOperations();" class="hideOnMobile"><a href="#">Navigation</a></li>
+                        <ul id="navigation-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_SetPage()" class="hideOnMobile hideOnReportCreate"><a href="#">Report - Set page</a></li>
+                            <li onclick="Page_SetActive()" class="hideOnMobile hideOnReportCreate"><a href="#">Page - Set active</a></li>
+                            <li onclick="Events_PageChanged()" class="hideOnMobile"><a href="#">Page changed event</a></li>
+                        </ul>
+                        <li id="authoring-operations" onclick="OpenAuthoringOperations();" class="hideOnMobile hideOnReportCreate"><a href="#">Authoring</a>
+                            <span class="tryShowcase" onclick="OpenAuthoringOperations();onShowcaseTryMeClicked('QuickVisualCreator');">
+                                (<span class="tryMeText">Showcase</span> <img src="images/tab_out.svg">)
+                            </span>
+                            <div class="newFeature">NEW</div>
+                        </li>
+                        <ul id="authoring-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_Authoring_Create()" class="hideOnMobile hideOnReportCreate"><a href="#">Create visual and personalize</a></li>
+                            <li onclick="Report_Authoring_ChangeType()" class="hideOnMobile hideOnReportCreate"><a href="#">Change visual type</a></li>
+                            <li onclick="Report_Authoring_Remove()" class="hideOnMobile hideOnReportCreate"><a href="#">Remove visual</a></li>
+                            <li onclick="Report_Authoring_Capabilities()" class="hideOnMobile hideOnReportCreate"><a href="#">Get visual capabilities</a></li>
+                            <li onclick="Report_Authoring_AddDataField()" class="hideOnMobile hideOnReportCreate"><a href="#">Add visual data field</a></li>
+                            <li onclick="Report_Authoring_RemoveDataField()" class="hideOnMobile hideOnReportCreate"><a href="#">Remove visual data field</a></li>
+                            <li onclick="Report_Authoring_GetDataField()" class="hideOnMobile hideOnReportCreate"><a href="#">Get visual data fields</a></li>
+                            <li onclick="Report_Authoring_SetProperty()" class="hideOnMobile hideOnReportCreate"><a href="#">Set visual property</a></li>
+                            <li onclick="Report_Authoring_GetProperty()" class="hideOnMobile hideOnReportCreate"><a href="#">Get visual property</a></li>
+                            <li onclick="Report_Authoring_ResetProperty()" class="hideOnMobile hideOnReportCreate"><a href="#">Reset visual property</a></li>
+                        </ul>
+                        <li id="filters-operations" onclick="OpenFiltersOperations();"><a href="#">Filters & Slicers</a><div class="highlightSection hideOnMobile"></div></li>
+                        <ul id="filters-operations-ul" class="function-ul" style="display: none;">
+                                <li onclick="Visual_SetSlicer()" class="hideOnMobile"><a href="#">Set slicer state</a><div class="newFeature">NEW</div></li>
+                                <li onclick="Visual_GetSlicer()" class="hideOnMobile"><a href="#">Get slicer state</a><div class="newFeature">NEW</div></li>
+                                <li onclick="Report_SetFilters()" class="hideOnReportCreate"><a href="#">Set report filters</a></li>
+                                <li onclick="Report_GetFilters()"><a href="#">Get report filters</a></li>
+                                <li onclick="Report_RemoveFilters()"><a href="#">Remove report filters</a></li>
+                                <li onclick="Page_SetFilters()" class="hideOnReportCreate"><a href="#">Set page filters</a></li>
+                                <li onclick="Page_GetFilters()"><a href="#">Get page filters</a></li>
+                                <li onclick="Page_RemoveFilters()"><a href="#">Remove page filters</a></li>
+                                <li onclick="Visual_SetFilters()" class="hideOnMobile hideOnReportCreate"><a href="#">Set visual filters</a></li>
+                                <li onclick="Visual_GetFilters()" class="hideOnMobile"><a href="#">Get visual filters</a></li>
+                                <li onclick="Visual_RemoveFilters()" class="hideOnMobile"><a href="#">Remove visual filters</a></li>
+                        </ul>
+                        <li id="editsave-operations" onclick="OpenEditSaveOperations();" class="hideOnMobile"><a href="#">Edit & Save</a></li>
+                        <ul id="editsave-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_switchModeEdit()" class="hideOnMobile"><a href="#">Enter edit mode</a></li>
+                            <li onclick="Report_switchModeView()" class="hideOnMobile"><a href="#">Enter view mode</a></li>
+                            <li onclick="Report_save()" class="hideOnMobile"><a href="#">Save report</a></li>
+                            <li onclick="Report_saveAs()" class="hideOnMobile"><a href="#">SaveAs report</a></li>
+                            <li onclick="Events_SaveAsTriggered()" class="hideOnMobile"><a href="#">SaveAs triggered event</a></li>
+                            <li onclick="Events_ReportSaved()" class="hideOnMobile"><a href="#">Saved event</a></li>
+                        </ul>
+                        <li id="menu-operations" onclick="OpenMenuOperations();"><a href="#">Menu Operations</a></li>
+                        <ul id="menu-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_Extensions_OptionsMenu()"><a href="#">Extend options menu</a></li>
+                            <li onclick="Report_Extensions_ContextMenu()" class="hideOnMobile"><a href="#">Extend context menu</a></li>
+                            <li onclick="Visual_Operations_SortVisualBy()" class="hideOnMobile hideOnReportCreate"><a href="#">Sort visual by</a></li>
+                        </ul>
+                        <li id="layout-operations" onclick="OpenLayoutOperations();"><a href="#">Layout</a>
+                            <span class="tryShowcase" onclick="OpenLayoutOperations();onShowcaseTryMeClicked('CustomLayout');">
+                                (<span class="tryMeText">Showcase</span> <img src="images/tab_out.svg">)
+                            </span>
+                            <div class="highlightSection"></div>
+                        </li>
+                        <ul id="layout-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Report_ApplyCustomLayout()" class="hideOnMobile hideOnReportCreate"><a href="#">Apply custom Layout</a></li>
+                            <li onclick="Page_HasLayout()"><a href="#">Check layout</a></li>
+                            <li onclick="Report_HideAllVisualHeaders()" class="hideOnReportCreate"><a href="#">Hide all visual headers</a><div class="newFeature">NEW</div></li>
+                            <li onclick="Report_ShowAllVisualHeaders()" class="hideOnReportCreate"><a href="#">Show all visual headers</a><div class="newFeature">NEW</div></li>
+                            <li onclick="Report_HideSingleVisualHeader()" class="hideOnMobile hideOnReportCreate"><a href="#">Hide single visual header</a><div class="newFeature">NEW</div></li>
+                        </ul>
+                        <li id="bookmarks-operations" onclick="OpenBookmarksOperations();" class="hideOnMobile"><a href="#">Bookmarks</a>
+                            <span class="tryShowcase" onclick="OpenBookmarksOperations();onShowcaseTryMeClicked('Bookmarks');">
+                                (<span class="tryMeText">Showcase</span> <img src="images/tab_out.svg">)
+                            </span>
+                        </li>
+                        <ul id="bookmarks-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Bookmarks_Enable()" class="hideOnMobile"><a href="#">Enable bookmarks pane</a></li>
+                            <li onclick="Bookmarks_Disable()" class="hideOnMobile"><a href="#"> Disable bookmarks pane</a></li>
+                            <li onclick="Bookmarks_Get()" class="hideOnMobile"><a href="#">Get bookmarks</a></li>
+                            <li onclick="Bookmarks_Apply()" class="hideOnMobile hideOnReportCreate"><a href="#">Apply bookmark by name</a></li>
+                            <li onclick="Bookmarks_Capture()" class="hideOnMobile"><a href="#">Capture bookmark state</a></li>
+                            <li onclick="Bookmarks_ApplyState()" class="hideOnMobile hideOnReportCreate"><a href="#">Apply bookmark state</a></li>
+                            <li onclick="Bookmarks_EnterPresentation()" class="hideOnMobile"><a href="#">Play bookmarks</a></li>
+                            <li onclick="Bookmarks_ExitPresentation()" class="hideOnMobile"><a href="#">Exit play bookmarks mode</a></li>
+                            <li onclick="Events_BookmarkApplied()" class="hideOnMobile"><a href="#">Bookmark applied event</a></li>
+                        </ul>
+                        <li id="data-operations" onclick="OpenDataOperations();"><a href="#">Data</a>
+                            <span class="tryShowcase" onclick="OpenDataOperations();onShowcaseTryMeClicked('InsightToAction');">
+                                (<span class="tryMeText">Showcase</span> <img src="images/tab_out.svg">)
+                            </span>
+                        </li>
+                        <ul id="data-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="Events_DataSelected()"><a href="#">Data selected event</a></li>
+                            <li onclick="Visual_ExportData_Summarized()" class="hideOnMobile"><a href="#">Export visual data summarized</a></li>
+                            <li onclick="Visual_ExportData_Underlying()" class="hideOnMobile"><a href="#">Export visual data underlying</a></li>
+                            <li onclick="Events_ButtonClicked()"><a href="#">Button click event</a></li>
+                        </ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
