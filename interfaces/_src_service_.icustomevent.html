@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ICustomEvent | powerbi-client</title>
+	<title>ICustomEvent | typescript</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">powerbi-client</a>
+					<a href="../index.html" class="title">typescript</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -62,7 +62,7 @@
 					<a href="_src_service_.icustomevent.html">ICustomEvent</a>
 				</li>
 			</ul>
-			<h1>Interface ICustomEvent&lt;T&gt;</h1>
+			<h1>Interface ICustomEvent&lt;T, T&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -75,13 +75,16 @@
 					<li>
 						<h4>T</h4>
 					</li>
+					<li>
+						<h4>T</h4>
+					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">CustomEvent</span>
+						<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.customevent.html" class="tsd-signature-type">CustomEvent</a>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">ICustomEvent</span>
@@ -101,9 +104,11 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#bubbling_phase" class="tsd-kind-icon">BUBBLING_<wbr>PHASE</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#capturing_phase" class="tsd-kind-icon">CAPTURING_<wbr>PHASE</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_src_service_.icustomevent.html#customevent" class="tsd-kind-icon">Custom<wbr>Event</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#none" class="tsd-kind-icon">NONE</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#bubbles" class="tsd-kind-icon">bubbles</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#cancelbubble" class="tsd-kind-icon">cancel<wbr>Bubble</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#cancelable" class="tsd-kind-icon">cancelable</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#composed" class="tsd-kind-icon">composed</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#currenttarget" class="tsd-kind-icon">current<wbr>Target</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#defaultprevented" class="tsd-kind-icon">default<wbr>Prevented</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite"><a href="_src_service_.icustomevent.html#detail" class="tsd-kind-icon">detail</a></li>
@@ -119,6 +124,7 @@
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#composedpath" class="tsd-kind-icon">composed<wbr>Path</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#initcustomevent" class="tsd-kind-icon">init<wbr>Custom<wbr>Event</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#initevent" class="tsd-kind-icon">init<wbr>Event</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_src_service_.icustomevent.html#preventdefault" class="tsd-kind-icon">prevent<wbr>Default</a></li>
@@ -136,9 +142,9 @@
 					<h3>AT_<wbr>TARGET</h3>
 					<div class="tsd-signature tsd-kind-icon">AT_<wbr>TARGET<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.AT_TARGET</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#at_target">AT_TARGET</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7102</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5147</li>
 						</ul>
 					</aside>
 				</section>
@@ -147,9 +153,9 @@
 					<h3>BUBBLING_<wbr>PHASE</h3>
 					<div class="tsd-signature tsd-kind-icon">BUBBLING_<wbr>PHASE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.BUBBLING_PHASE</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#bubbling_phase">BUBBLING_PHASE</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7103</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5148</li>
 						</ul>
 					</aside>
 				</section>
@@ -158,9 +164,9 @@
 					<h3>CAPTURING_<wbr>PHASE</h3>
 					<div class="tsd-signature tsd-kind-icon">CAPTURING_<wbr>PHASE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.CAPTURING_PHASE</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#capturing_phase">CAPTURING_PHASE</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7104</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5149</li>
 						</ul>
 					</aside>
 				</section>
@@ -170,7 +176,7 @@
 					<div class="tsd-signature tsd-kind-icon">Custom<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:5368</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:3564</li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -178,53 +184,75 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter">
 								<h5>constructor<span class="tsd-signature-symbol">: </span>function</h5>
-								<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-type-literal tsd-is-not-exported">
-									<li class="tsd-signature tsd-kind-icon">new __type<span class="tsd-signature-symbol">(</span>typeArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, eventInitDict<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">CustomEventInit</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_service_.icustomevent.html#customevent.__type" class="tsd-signature-type">__type</a></li>
+								<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-type-literal tsd-has-type-parameter tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon">new __type&lt;T&gt;<span class="tsd-signature-symbol">(</span>typeArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, eventInitDict<span class="tsd-signature-symbol">?: </span><a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.customeventinit.html" class="tsd-signature-type">CustomEventInit</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.customevent.html" class="tsd-signature-type">CustomEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in node_modules/typescript/lib/lib.d.ts:5369</li>
+												<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:3565</li>
 											</ul>
 										</aside>
+										<h4 class="tsd-type-parameters-title">Type parameters</h4>
+										<ul class="tsd-type-parameters">
+											<li>
+												<h4>T</h4>
+											</li>
+										</ul>
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
 											<li>
 												<h5>typeArg: <span class="tsd-signature-type">string</span></h5>
 											</li>
 											<li>
-												<h5><span class="tsd-flag ts-flagOptional">Optional</span> eventInitDict: <span class="tsd-signature-type">CustomEventInit</span></h5>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> eventInitDict: <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.customeventinit.html" class="tsd-signature-type">CustomEventInit</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 											</li>
 										</ul>
-										<h4 class="tsd-returns-title">Returns <a href="_src_service_.icustomevent.html#customevent.__type" class="tsd-signature-type">__type</a></h4>
+										<h4 class="tsd-returns-title">Returns <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.customevent.html" class="tsd-signature-type">CustomEvent</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
 									</li>
 							</ul>        </li>
 							<li class="tsd-parameter">
-								<h5>prototype<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CustomEvent</span></h5>
+								<h5>prototype<span class="tsd-signature-symbol">: </span><a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.customevent.html" class="tsd-signature-type">CustomEvent</a></h5>
 							</li>
 						</ul>
 					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="none" class="tsd-anchor"></a>
+					<h3>NONE</h3>
+					<div class="tsd-signature tsd-kind-icon">NONE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#none">NONE</a></p>
+						<ul>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5150</li>
+						</ul>
+					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="bubbles" class="tsd-anchor"></a>
 					<h3>bubbles</h3>
 					<div class="tsd-signature tsd-kind-icon">bubbles<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.bubbles</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#bubbles">bubbles</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7086</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5097</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Returns true or false depending on how event was initialized. True if event goes through its target&#39;s ancestors in reverse tree order, and false otherwise.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="cancelbubble" class="tsd-anchor"></a>
 					<h3>cancel<wbr>Bubble</h3>
 					<div class="tsd-signature tsd-kind-icon">cancel<wbr>Bubble<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.cancelBubble</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#cancelbubble">cancelBubble</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7087</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5098</li>
 						</ul>
 					</aside>
 				</section>
@@ -233,31 +261,53 @@
 					<h3>cancelable</h3>
 					<div class="tsd-signature tsd-kind-icon">cancelable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.cancelable</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#cancelable">cancelable</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7088</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5099</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-					<a name="currenttarget" class="tsd-anchor"></a>
-					<h3>current<wbr>Target</h3>
-					<div class="tsd-signature tsd-kind-icon">current<wbr>Target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventTarget</span></div>
+					<a name="composed" class="tsd-anchor"></a>
+					<h3>composed</h3>
+					<div class="tsd-signature tsd-kind-icon">composed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.currentTarget</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#composed">composed</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7089</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5103</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Returns true or false depending on how event was initialized. True if event invokes listeners past a ShadowRoot node that is the root of its target, and false otherwise.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="currenttarget" class="tsd-anchor"></a>
+					<h3>current<wbr>Target</h3>
+					<div class="tsd-signature tsd-kind-icon">current<wbr>Target<span class="tsd-signature-symbol">:</span> <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.eventtarget.html" class="tsd-signature-type">EventTarget</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#currenttarget">currentTarget</a></p>
+						<ul>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5108</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Returns the object whose event listener&#39;s callback is currently being
+							invoked.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="defaultprevented" class="tsd-anchor"></a>
 					<h3>default<wbr>Prevented</h3>
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Prevented<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.defaultPrevented</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#defaultprevented">defaultPrevented</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7090</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5109</li>
 						</ul>
 					</aside>
 				</section>
@@ -266,7 +316,7 @@
 					<h3>detail</h3>
 					<div class="tsd-signature tsd-kind-icon">detail<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span></div>
 					<aside class="tsd-sources">
-						<p>Overrides CustomEvent.detail</p>
+						<p>Overrides <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.customevent.html">CustomEvent</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.customevent.html#detail">detail</a></p>
 						<ul>
 							<li>Defined in src/service.ts:23</li>
 						</ul>
@@ -277,9 +327,9 @@
 					<h3>event<wbr>Phase</h3>
 					<div class="tsd-signature tsd-kind-icon">event<wbr>Phase<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.eventPhase</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#eventphase">eventPhase</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7091</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5110</li>
 						</ul>
 					</aside>
 				</section>
@@ -288,82 +338,130 @@
 					<h3>is<wbr>Trusted</h3>
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Trusted<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.isTrusted</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#istrusted">isTrusted</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7092</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5115</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Returns true if event was dispatched by the user agent, and
+							false otherwise.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="returnvalue" class="tsd-anchor"></a>
 					<h3>return<wbr>Value</h3>
 					<div class="tsd-signature tsd-kind-icon">return<wbr>Value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.returnValue</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#returnvalue">returnValue</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7093</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5116</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="srcelement" class="tsd-anchor"></a>
 					<h3>src<wbr>Element</h3>
-					<div class="tsd-signature tsd-kind-icon">src<wbr>Element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Element</span></div>
+					<div class="tsd-signature tsd-kind-icon">src<wbr>Element<span class="tsd-signature-symbol">:</span> <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.eventtarget.html" class="tsd-signature-type">EventTarget</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.srcElement</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#srcelement">srcElement</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7094</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5118</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd></dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="target" class="tsd-anchor"></a>
 					<h3>target</h3>
-					<div class="tsd-signature tsd-kind-icon">target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventTarget</span></div>
+					<div class="tsd-signature tsd-kind-icon">target<span class="tsd-signature-symbol">:</span> <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.eventtarget.html" class="tsd-signature-type">EventTarget</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.target</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#target">target</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7095</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5122</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Returns the object to which event is dispatched (its target).</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="timestamp" class="tsd-anchor"></a>
 					<h3>time<wbr>Stamp</h3>
 					<div class="tsd-signature tsd-kind-icon">time<wbr>Stamp<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.timeStamp</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#timestamp">timeStamp</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7096</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5127</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Returns the event&#39;s timestamp as the number of milliseconds measured relative to
+							the time origin.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="type" class="tsd-anchor"></a>
 					<h3>type</h3>
 					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Event.type</p>
+						<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#type">type</a></p>
 						<ul>
-							<li>Defined in node_modules/typescript/lib/lib.d.ts:7097</li>
+							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5133</li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Returns the type of event, e.g.
+								&quot;click&quot;, &quot;hashchange&quot;, or
+							&quot;submit&quot;.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
-					<a name="initcustomevent" class="tsd-anchor"></a>
-					<h3>init<wbr>Custom<wbr>Event</h3>
+					<a name="composedpath" class="tsd-anchor"></a>
+					<h3>composed<wbr>Path</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">init<wbr>Custom<wbr>Event<span class="tsd-signature-symbol">(</span>typeArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, canBubbleArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, cancelableArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, detailArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">composed<wbr>Path<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.eventtarget.html" class="tsd-signature-type">EventTarget</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from CustomEvent.initCustomEvent</p>
+								<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#composedpath">composedPath</a></p>
 								<ul>
-									<li>Defined in node_modules/typescript/lib/lib.d.ts:5365</li>
+									<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5134</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.eventtarget.html" class="tsd-signature-type">EventTarget</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="initcustomevent" class="tsd-anchor"></a>
+					<h3>init<wbr>Custom<wbr>Event</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">init<wbr>Custom<wbr>Event<span class="tsd-signature-symbol">(</span>typeArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, canBubbleArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, cancelableArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, detailArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.customevent.html">CustomEvent</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.customevent.html#initcustomevent">initCustomEvent</a></p>
+								<ul>
+									<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:3561</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -378,7 +476,7 @@
 									<h5>cancelableArg: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 								<li>
-									<h5>detailArg: <span class="tsd-signature-type">any</span></h5>
+									<h5>detailArg: <span class="tsd-signature-type">T</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -389,26 +487,26 @@
 					<a name="initevent" class="tsd-anchor"></a>
 					<h3>init<wbr>Event</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">init<wbr>Event<span class="tsd-signature-symbol">(</span>eventTypeArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, canBubbleArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, cancelableArg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">init<wbr>Event<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, bubbles<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, cancelable<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from Event.initEvent</p>
+								<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#initevent">initEvent</a></p>
 								<ul>
-									<li>Defined in node_modules/typescript/lib/lib.d.ts:7098</li>
+									<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5135</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>eventTypeArg: <span class="tsd-signature-type">string</span></h5>
+									<h5>type: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>canBubbleArg: <span class="tsd-signature-type">boolean</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> bubbles: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 								<li>
-									<h5>cancelableArg: <span class="tsd-signature-type">boolean</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> cancelable: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -424,9 +522,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from Event.preventDefault</p>
+								<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#preventdefault">preventDefault</a></p>
 								<ul>
-									<li>Defined in node_modules/typescript/lib/lib.d.ts:7099</li>
+									<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5136</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -442,11 +540,18 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from Event.stopImmediatePropagation</p>
+								<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#stopimmediatepropagation">stopImmediatePropagation</a></p>
 								<ul>
-									<li>Defined in node_modules/typescript/lib/lib.d.ts:7100</li>
+									<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5142</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Invoking this method prevents event from reaching
+										any registered event listeners after the current one finishes running and, when dispatched in a tree, also prevents event from reaching any
+									other objects.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -460,11 +565,16 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from Event.stopPropagation</p>
+								<p>Inherited from <a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html">Event</a>.<a href="_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.event.html#stoppropagation">stopPropagation</a></p>
 								<ul>
-									<li>Defined in node_modules/typescript/lib/lib.d.ts:7101</li>
+									<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.dom.d.ts:5146</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>When dispatched in a tree, invoking this method prevents event from reaching any objects other than the current object.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -477,65 +587,8 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_node_modules_powerbi_models_dist_models_d_.html">"node_<wbr>modules/powerbi-<wbr>models/dist/models.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_bookmarksmanager_.html">"src/bookmarks<wbr>Manager"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_config_.html">"src/config"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_create_.html">"src/create"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_dashboard_.html">"src/dashboard"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_defaults_.html">"src/defaults"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_embed_.html">"src/embed"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_errors_.html">"src/errors"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_factories_.html">"src/factories"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_ifilterable_.html">"src/ifilterable"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_page_.html">"src/page"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_powerbi_client_.html">"src/powerbi-<wbr>client"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_qna_.html">"src/qna"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_report_.html">"src/report"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_src_service_.html">"src/service"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_tile_.html">"src/tile"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_util_.html">"src/util"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_visual_.html">"src/visual"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_visualdescriptor_.html">"src/visual<wbr>Descriptor"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_typings_globals_es6_promise_index_d_.html">"typings/globals/es6-<wbr>promise/index.d"</a>
 					</li>
 				</ul>
 			</nav>
@@ -562,6 +615,9 @@
 								<a href="_src_service_.icustomevent.html#customevent" class="tsd-kind-icon">Custom<wbr>Event</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_src_service_.icustomevent.html#none" class="tsd-kind-icon">NONE</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_service_.icustomevent.html#bubbles" class="tsd-kind-icon">bubbles</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
@@ -569,6 +625,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_service_.icustomevent.html#cancelable" class="tsd-kind-icon">cancelable</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_src_service_.icustomevent.html#composed" class="tsd-kind-icon">composed</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_service_.icustomevent.html#currenttarget" class="tsd-kind-icon">current<wbr>Target</a>
@@ -599,6 +658,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_service_.icustomevent.html#type" class="tsd-kind-icon">type</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_src_service_.icustomevent.html#composedpath" class="tsd-kind-icon">composed<wbr>Path</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_src_service_.icustomevent.html#initcustomevent" class="tsd-kind-icon">init<wbr>Custom<wbr>Event</a>
@@ -663,6 +725,7 @@
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -711,7 +774,7 @@
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>

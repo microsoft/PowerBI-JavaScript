@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Embed | powerbi-client</title>
+	<title>Embed | typescript</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">powerbi-client</a>
+					<a href="../index.html" class="title">typescript</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -124,6 +124,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_embed_.embed.html#allowedevents" class="tsd-kind-icon">allowed<wbr>Events</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_embed_.embed.html#bootstrapconfig" class="tsd-kind-icon">bootstrap<wbr>Config</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_embed_.embed.html#config" class="tsd-kind-icon">config</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_embed_.embed.html#createconfig" class="tsd-kind-icon">create<wbr>Config</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_embed_.embed.html#element" class="tsd-kind-icon">element</a></li>
@@ -136,6 +137,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_src_embed_.embed.html#service" class="tsd-kind-icon">service</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_embed_.embed.html#accesstokenattribute" class="tsd-kind-icon">access<wbr>Token<wbr>Attribute</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_embed_.embed.html#allowedevents-1" class="tsd-kind-icon">allowed<wbr>Events</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_embed_.embed.html#defaultembedhostname" class="tsd-kind-icon">default<wbr>Embed<wbr>Host<wbr>Name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_embed_.embed.html#embedurlattribute" class="tsd-kind-icon">embed<wbr>Url<wbr>Attribute</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_embed_.embed.html#maxfrontloadtimes" class="tsd-kind-icon">max<wbr>Front<wbr>Load<wbr>Times</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_src_embed_.embed.html#nameattribute" class="tsd-kind-icon">name<wbr>Attribute</a></li>
@@ -147,11 +149,14 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_embed_.embed.html#addlocaletoembedurl" class="tsd-kind-icon">add<wbr>Locale<wbr>ToEmbed<wbr>Url</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_embed_.embed.html#configchanged" class="tsd-kind-icon">config<wbr>Changed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_embed_.embed.html#createreport" class="tsd-kind-icon">create<wbr>Report</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_embed_.embed.html#exitfullscreen" class="tsd-kind-icon">exit<wbr>Fullscreen</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_embed_.embed.html#frontloadsendconfig" class="tsd-kind-icon">front<wbr>Load<wbr>Send<wbr>Config</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_embed_.embed.html#fullscreen" class="tsd-kind-icon">fullscreen</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_embed_.embed.html#getaccesstoken" class="tsd-kind-icon">get<wbr>Access<wbr>Token</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_embed_.embed.html#getdefaultembedurl" class="tsd-kind-icon">get<wbr>Default<wbr>Embed<wbr>Url</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_embed_.embed.html#getdefaultembedurlendpoint" class="tsd-kind-icon">get<wbr>Default<wbr>Embed<wbr>Url<wbr>Endpoint</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_embed_.embed.html#getembedurl" class="tsd-kind-icon">get<wbr>Embed<wbr>Url</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_src_embed_.embed.html#getgroupid" class="tsd-kind-icon">get<wbr>Group<wbr>Id</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_src_embed_.embed.html#getid" class="tsd-kind-icon">get<wbr>Id</a></li>
@@ -182,13 +187,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Embed<span class="tsd-signature-symbol">(</span>service<span class="tsd-signature-symbol">: </span><a href="_src_service_.service.html" class="tsd-signature-type">Service</a>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, iframe<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">HTMLIFrameElement</span>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Embed<span class="tsd-signature-symbol">(</span>service<span class="tsd-signature-symbol">: </span><a href="_src_service_.service.html" class="tsd-signature-type">Service</a>, element<span class="tsd-signature-symbol">: </span><a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a>, config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, iframe<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">HTMLIFrameElement</span>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, isBootstrap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:179</li>
+									<li>Defined in src/embed.ts:201</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -204,7 +209,7 @@
 									<h5>service: <a href="_src_service_.service.html" class="tsd-signature-type">Service</a></h5>
 								</li>
 								<li>
-									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
+									<h5>element: <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></h5>
 								</li>
 								<li>
 									<h5>config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
@@ -219,6 +224,9 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> phasedRender: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> isBootstrap: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_src_embed_.embed.html" class="tsd-signature-type">Embed</a></h4>
 						</li>
@@ -230,12 +238,32 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="allowedevents" class="tsd-anchor"></a>
 					<h3>allowed<wbr>Events</h3>
-					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:117</li>
+							<li>Defined in src/embed.ts:132</li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="bootstrapconfig" class="tsd-anchor"></a>
+					<h3>bootstrap<wbr>Config</h3>
+					<div class="tsd-signature tsd-kind-icon">bootstrap<wbr>Config<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_embed_.ibootstrapembedconfiguration.html" class="tsd-signature-type">IBootstrapEmbedConfiguration</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/embed.ts:174</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Gets or sets the bootstrap configuration for the Power BI embed component received by powerbi.bootstrap().</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{IBootstrapEmbedConfiguration}</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="config" class="tsd-anchor"></a>
@@ -243,7 +271,7 @@
 					<div class="tsd-signature tsd-kind-icon">config<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:152</li>
+							<li>Defined in src/embed.ts:167</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -263,7 +291,7 @@
 					<div class="tsd-signature tsd-kind-icon">create<wbr>Config<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">models.IReportCreateConfiguration</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:159</li>
+							<li>Defined in src/embed.ts:181</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -280,10 +308,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="element" class="tsd-anchor"></a>
 					<h3>element</h3>
-					<div class="tsd-signature tsd-kind-icon">element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
+					<div class="tsd-signature tsd-kind-icon">element<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.htmlelement.html" class="tsd-signature-type">HTMLElement</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:138</li>
+							<li>Defined in src/embed.ts:153</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -303,7 +331,7 @@
 					<div class="tsd-signature tsd-kind-icon">embe<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:174</li>
+							<li>Defined in src/embed.ts:196</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -318,7 +346,7 @@
 					<div class="tsd-signature tsd-kind-icon">event<wbr>Handlers<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_src_embed_.iinternaleventhandler.html" class="tsd-signature-type">IInternalEventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:124</li>
+							<li>Defined in src/embed.ts:139</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -338,7 +366,7 @@
 					<div class="tsd-signature tsd-kind-icon">front<wbr>Load<wbr>Handler<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:179</li>
+							<li>Defined in src/embed.ts:201</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -368,7 +396,7 @@
 					<div class="tsd-signature tsd-kind-icon">iframe<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLIFrameElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:145</li>
+							<li>Defined in src/embed.ts:160</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -388,7 +416,7 @@
 					<div class="tsd-signature tsd-kind-icon">load<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:164</li>
+							<li>Defined in src/embed.ts:186</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -403,7 +431,7 @@
 					<div class="tsd-signature tsd-kind-icon">phased<wbr>Load<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:169</li>
+							<li>Defined in src/embed.ts:191</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -418,7 +446,7 @@
 					<div class="tsd-signature tsd-kind-icon">service<span class="tsd-signature-symbol">:</span> <a href="_src_service_.service.html" class="tsd-signature-type">Service</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:131</li>
+							<li>Defined in src/embed.ts:146</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -438,17 +466,27 @@
 					<div class="tsd-signature tsd-kind-icon">access<wbr>Token<wbr>Attribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-access-token&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:109</li>
+							<li>Defined in src/embed.ts:122</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="allowedevents-1" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> allowed<wbr>Events</h3>
-					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;loaded&quot;, &quot;saved&quot;, &quot;rendered&quot;, &quot;saveAsTriggered&quot;, &quot;error&quot;, &quot;dataSelected&quot;, &quot;buttonClicked&quot;]</span></div>
+					<div class="tsd-signature tsd-kind-icon">allowed<wbr>Events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;loaded&quot;, &quot;saved&quot;, &quot;rendered&quot;, &quot;saveAsTriggered&quot;, &quot;error&quot;, &quot;dataSelected&quot;, &quot;buttonClicked&quot;]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:108</li>
+							<li>Defined in src/embed.ts:121</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="defaultembedhostname" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> default<wbr>Embed<wbr>Host<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">default<wbr>Embed<wbr>Host<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;https://app.powerbi.com&quot;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in src/embed.ts:126</li>
 						</ul>
 					</aside>
 				</section>
@@ -458,7 +496,7 @@
 					<div class="tsd-signature tsd-kind-icon">embed<wbr>Url<wbr>Attribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-embed-url&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:110</li>
+							<li>Defined in src/embed.ts:123</li>
 						</ul>
 					</aside>
 				</section>
@@ -468,7 +506,7 @@
 					<div class="tsd-signature tsd-kind-icon">max<wbr>Front<wbr>Load<wbr>Times<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;2</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:115</li>
+							<li>Defined in src/embed.ts:130</li>
 						</ul>
 					</aside>
 				</section>
@@ -478,7 +516,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<wbr>Attribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-name&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:111</li>
+							<li>Defined in src/embed.ts:124</li>
 						</ul>
 					</aside>
 				</section>
@@ -488,7 +526,7 @@
 					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:113</li>
+							<li>Defined in src/embed.ts:128</li>
 						</ul>
 					</aside>
 				</section>
@@ -498,7 +536,7 @@
 					<div class="tsd-signature tsd-kind-icon">type<wbr>Attribute<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;powerbi-type&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/embed.ts:112</li>
+							<li>Defined in src/embed.ts:125</li>
 						</ul>
 					</aside>
 				</section>
@@ -515,7 +553,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:439</li>
+									<li>Defined in src/embed.ts:491</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -536,26 +574,53 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="createreport" class="tsd-anchor"></a>
-					<h3>create<wbr>Report</h3>
+					<a name="configchanged" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> config<wbr>Changed</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Report<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IReportCreateConfiguration</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">config<wbr>Changed<span class="tsd-signature-symbol">(</span>isBootstrap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:220</li>
+									<li>Defined in src/embed.ts:580</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Raise a config changed event.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>isBootstrap: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createreport" class="tsd-anchor"></a>
+					<h3>create<wbr>Report</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Report<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IReportCreateConfiguration</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/embed.ts:242</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Sends createReport configuration data.</p>
 								</div>
-								<pre><code class="lang-javascript">createReport({
+								<pre><code class="language-javascript">createReport({
   <span class="hljs-attr">datasetId</span>: <span class="hljs-string">'5dac7a4a-4452-46b3-99f6-a25915e0fe55'</span>,
-  <span class="hljs-attr">accessToken</span>: <span class="hljs-string">'eyJ0eXA ... TaE2rTSbmg'</span>,
-</code></pre>
+  <span class="hljs-attr">accessToken</span>: <span class="hljs-string">'eyJ0eXA ... TaE2rTSbmg'</span>,</code></pre>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -563,7 +628,7 @@
 									<h5>config: <span class="tsd-signature-type">models.IReportCreateConfiguration</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -577,7 +642,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:508</li>
+									<li>Defined in src/embed.ts:602</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -593,13 +658,13 @@
 					<a name="frontloadsendconfig" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> front<wbr>Load<wbr>Send<wbr>Config</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">front<wbr>Load<wbr>Send<wbr>Config<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">front<wbr>Load<wbr>Send<wbr>Config<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:632</li>
+									<li>Defined in src/embed.ts:729</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -613,7 +678,7 @@
 									<h5>config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -627,7 +692,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:500</li>
+									<li>Defined in src/embed.ts:594</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -649,7 +714,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:406</li>
+									<li>Defined in src/embed.ts:439</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -668,16 +733,64 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
-					<a name="getembedurl" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Embed<wbr>Url</h3>
+					<a name="getdefaultembedurl" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Default<wbr>Embed<wbr>Url</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Embed<wbr>Url<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Default<wbr>Embed<wbr>Url<span class="tsd-signature-symbol">(</span>hostname<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:458</li>
+									<li>Defined in src/embed.ts:525</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>hostname: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getdefaultembedurlendpoint" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> get<wbr>Default<wbr>Embed<wbr>Url<wbr>Endpoint</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Default<wbr>Embed<wbr>Url<wbr>Endpoint<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/embed.ts:589</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets default embed endpoint for each entity.
+										For example: report embed endpoint is reportEmbed.
+									This will help creating a default embed URL such as: <a href="https://app.powerbi.com/reportEmbed">https://app.powerbi.com/reportEmbed</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>endpoint.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="getembedurl" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Embed<wbr>Url</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Embed<wbr>Url<span class="tsd-signature-symbol">(</span>isBootstrap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/embed.ts:510</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -685,6 +798,12 @@
 									<p>Gets an embed url from the first available location: options, attribute.</p>
 								</div>
 							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>isBootstrap: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
@@ -699,7 +818,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:485</li>
+									<li>Defined in src/embed.ts:563</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -713,7 +832,7 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="getid" class="tsd-anchor"></a>
-					<h3>get<wbr>Id</h3>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> get<wbr>Id</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
@@ -721,7 +840,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:495</li>
+									<li>Defined in src/embed.ts:573</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -747,7 +866,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:475</li>
+									<li>Defined in src/embed.ts:553</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -770,7 +889,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:525</li>
+									<li>Defined in src/embed.ts:619</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -793,20 +912,20 @@
 					<a name="load" class="tsd-anchor"></a>
 					<h3>load</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:290</li>
+									<li>Defined in src/embed.ts:312</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Sends load configuration data.</p>
 								</div>
-								<pre><code class="lang-javascript">report.load({
+								<pre><code class="language-javascript">report.load({
   <span class="hljs-attr">type</span>: <span class="hljs-string">'report'</span>,
   <span class="hljs-attr">id</span>: <span class="hljs-string">'5dac7a4a-4452-46b3-99f6-a25915e0fe55'</span>,
   <span class="hljs-attr">accessToken</span>: <span class="hljs-string">'eyJ0eXA ... TaE2rTSbmg'</span>,
@@ -820,8 +939,7 @@
     }
   ]
 })
-  .catch(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> { ... });
-</code></pre>
+  .catch(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> { ... });</code></pre>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -832,7 +950,7 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> phasedRender: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -846,7 +964,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:323</li>
+									<li>Defined in src/embed.ts:356</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -855,7 +973,7 @@
 										If a reference to the existing handle function is specified, remove the specific handler.
 									If the handler is not specified, remove all handlers for the event name specified.</p>
 								</div>
-								<pre><code class="lang-javascript">report.off(<span class="hljs-string">'pageChanged'</span>)
+								<pre><code class="language-javascript">report.off(<span class="hljs-string">'pageChanged'</span>)
 
 or
 
@@ -863,8 +981,7 @@ or
    <span class="hljs-built_in">console</span>.log(event);
 };
 
-report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
-</code></pre>
+report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);</code></pre>
 								<dl class="tsd-comment-tags">
 									<dt>template</dt>
 									<dd><p>T</p>
@@ -900,17 +1017,16 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:354</li>
+									<li>Defined in src/embed.ts:387</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Adds an event handler for a specific event.</p>
 								</div>
-								<pre><code class="lang-javascript">report.on(<span class="hljs-string">'pageChanged'</span>, (event) =&gt; {
+								<pre><code class="language-javascript">report.on(<span class="hljs-string">'pageChanged'</span>, (event) =&gt; {
   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'PageChanged: '</span>, event.page.name);
-});
-</code></pre>
+});</code></pre>
 								<dl class="tsd-comment-tags">
 									<dt>template</dt>
 									<dd><p>T</p>
@@ -942,13 +1058,13 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 					<a name="populateconfig" class="tsd-anchor"></a>
 					<h3>populate<wbr>Config</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">populate<wbr>Config<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">populate<wbr>Config<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.ibootstrapembedconfiguration.html" class="tsd-signature-type">IBootstrapEmbedConfiguration</a>, isBootstrap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:422</li>
+									<li>Defined in src/embed.ts:455</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -959,7 +1075,10 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>config: <a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a></h5>
+									<h5>config: <a href="../interfaces/_src_embed_.ibootstrapembedconfiguration.html" class="tsd-signature-type">IBootstrapEmbedConfiguration</a></h5>
+								</li>
+								<li>
+									<h5>isBootstrap: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -970,13 +1089,13 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 					<a name="reload" class="tsd-anchor"></a>
 					<h3>reload</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">reload<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">reload<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:375</li>
+									<li>Defined in src/embed.ts:408</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -984,10 +1103,9 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 									<p>Reloads embed using existing configuration.
 									E.g. For reports this effectively clears all filters and makes the first page active which simulates resetting a report back to loaded state.</p>
 								</div>
-								<pre><code class="lang-javascript">report.reload();
-</code></pre>
+								<pre><code class="language-javascript">report.reload();</code></pre>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1001,7 +1119,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:602</li>
+									<li>Defined in src/embed.ts:699</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1023,13 +1141,13 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 					<a name="save" class="tsd-anchor"></a>
 					<h3>save</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">save<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">save<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:240</li>
+									<li>Defined in src/embed.ts:262</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1037,7 +1155,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 									<p>Saves Report.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1045,13 +1163,13 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 					<a name="saveas" class="tsd-anchor"></a>
 					<h3>save<wbr>As</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">save<wbr>As<span class="tsd-signature-symbol">(</span>saveAsParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.ISaveAsParameters</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">save<wbr>As<span class="tsd-signature-symbol">(</span>saveAsParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.ISaveAsParameters</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:255</li>
+									<li>Defined in src/embed.ts:277</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1065,7 +1183,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 									<h5>saveAsParameters: <span class="tsd-signature-type">models.ISaveAsParameters</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1073,13 +1191,13 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 					<a name="setaccesstoken" class="tsd-anchor"></a>
 					<h3>set<wbr>Access<wbr>Token</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Access<wbr>Token<span class="tsd-signature-symbol">(</span>accessToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Access<wbr>Token<span class="tsd-signature-symbol">(</span>accessToken<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:384</li>
+									<li>Defined in src/embed.ts:417</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1093,7 +1211,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 									<h5>accessToken: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_typings_globals_es6_promise_index_d_.promise.html" class="tsd-signature-type">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1107,7 +1225,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:592</li>
+									<li>Defined in src/embed.ts:689</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1135,7 +1253,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:578</li>
+									<li>Defined in src/embed.ts:675</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1157,13 +1275,13 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 					<a name="setiframe" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> set<wbr>Iframe</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Iframe<span class="tsd-signature-symbol">(</span>isLoad<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Iframe<span class="tsd-signature-symbol">(</span>isLoad<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, phasedRender<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, isBootstrap<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:539</li>
+									<li>Defined in src/embed.ts:633</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1179,6 +1297,9 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> phasedRender: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> isBootstrap: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
@@ -1186,7 +1307,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="validate" class="tsd-anchor"></a>
-					<h3>validate</h3>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> validate</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">validate<span class="tsd-signature-symbol">(</span>config<span class="tsd-signature-symbol">: </span><a href="../interfaces/_src_embed_.iembedconfigurationbase.html" class="tsd-signature-type">IEmbedConfigurationBase</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IError</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
@@ -1194,7 +1315,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:534</li>
+									<li>Defined in src/embed.ts:628</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1222,7 +1343,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/embed.ts:617</li>
+									<li>Defined in src/embed.ts:714</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1253,24 +1374,6 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_node_modules_powerbi_models_dist_models_d_.html">"node_<wbr>modules/powerbi-<wbr>models/dist/models.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_bookmarksmanager_.html">"src/bookmarks<wbr>Manager"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_config_.html">"src/config"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_create_.html">"src/create"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_dashboard_.html">"src/dashboard"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_defaults_.html">"src/defaults"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_src_embed_.html">"src/embed"</a>
 						<ul>
@@ -1278,45 +1381,6 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 								<a href="../modules/_src_embed_.__global.html">__global</a>
 							</li>
 						</ul>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_errors_.html">"src/errors"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_factories_.html">"src/factories"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_ifilterable_.html">"src/ifilterable"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_page_.html">"src/page"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_powerbi_client_.html">"src/powerbi-<wbr>client"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_qna_.html">"src/qna"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_report_.html">"src/report"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_service_.html">"src/service"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_tile_.html">"src/tile"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_util_.html">"src/util"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_visual_.html">"src/visual"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_src_visualdescriptor_.html">"src/visual<wbr>Descriptor"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_typings_globals_es6_promise_index_d_.html">"typings/globals/es6-<wbr>promise/index.d"</a>
 					</li>
 				</ul>
 			</nav>
@@ -1332,6 +1396,9 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_embed_.embed.html#allowedevents" class="tsd-kind-icon">allowed<wbr>Events</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_src_embed_.embed.html#bootstrapconfig" class="tsd-kind-icon">bootstrap<wbr>Config</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_src_embed_.embed.html#config" class="tsd-kind-icon">config</a>
@@ -1370,6 +1437,9 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 								<a href="_src_embed_.embed.html#allowedevents-1" class="tsd-kind-icon">allowed<wbr>Events</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="_src_embed_.embed.html#defaultembedhostname" class="tsd-kind-icon">default<wbr>Embed<wbr>Host<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
 								<a href="_src_embed_.embed.html#embedurlattribute" class="tsd-kind-icon">embed<wbr>Url<wbr>Attribute</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
@@ -1388,6 +1458,9 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 								<a href="_src_embed_.embed.html#addlocaletoembedurl" class="tsd-kind-icon">add<wbr>Locale<wbr>ToEmbed<wbr>Url</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_embed_.embed.html#configchanged" class="tsd-kind-icon">config<wbr>Changed</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_src_embed_.embed.html#createreport" class="tsd-kind-icon">create<wbr>Report</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -1401,6 +1474,12 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="_src_embed_.embed.html#getaccesstoken" class="tsd-kind-icon">get<wbr>Access<wbr>Token</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="_src_embed_.embed.html#getdefaultembedurl" class="tsd-kind-icon">get<wbr>Default<wbr>Embed<wbr>Url</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_src_embed_.embed.html#getdefaultembedurlendpoint" class="tsd-kind-icon">get<wbr>Default<wbr>Embed<wbr>Url<wbr>Endpoint</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="_src_embed_.embed.html#getembedurl" class="tsd-kind-icon">get<wbr>Embed<wbr>Url</a>
@@ -1464,6 +1543,9 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_src_embed_.ibootstrapembedconfiguration.html" class="tsd-kind-icon">IBootstrap<wbr>Embed<wbr>Configuration</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_src_embed_.iembedconfiguration.html" class="tsd-kind-icon">IEmbed<wbr>Configuration</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
@@ -1507,6 +1589,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -1555,7 +1638,7 @@ report.off(<span class="hljs-string">'pageChanged'</span>, logHandler);
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
