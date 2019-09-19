@@ -27,7 +27,6 @@ function OpenEmbedWorkspace(activeTabSelector, samplesStepHtml)
 
     $(".content").hide();
     $("#sampleContent").show();
-    OpenSamplesStep();
 
     LayoutShowcaseState.layoutReport = null;
     BookmarkShowcaseState.bookmarksReport = null;

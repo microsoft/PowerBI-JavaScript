@@ -89,6 +89,11 @@ $(document).ready(function() {
         {
             OpenCodeStep(mode, entityType, GetParameterByName("tokenType") || 0);
         }
+        else
+        {
+            // Open Select Step after this page loads.
+            OpenSamplesStep();
+        }
     }
 
     Log = InitLogger("txtResponse");
