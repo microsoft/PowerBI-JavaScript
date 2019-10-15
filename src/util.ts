@@ -1,4 +1,9 @@
 import { HttpPostMessage } from 'http-post-message';
+declare global {
+  interface Window {
+    msCrypto: Crypto;
+  }
+}
 
 /**
  * Raises a custom event with event data on the specified HTML element.
@@ -100,13 +105,13 @@ export function assign(...args) {
 }
 
 /**
- * Generates a random 7 character string.
+ * Generates a random 5 to 6 character string.
  * 
  * @export
  * @returns {string}
  */
 export function createRandomString(): string {
-  return (Math.random() + 1).toString(36).substring(7);
+  return getRandomValue().toString(36).substring(1);
 }
 
 /**
@@ -120,10 +125,9 @@ export function generateUUID(): string {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
     d += performance.now();
   }
-  return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    // Generate a random number, scaled from 0 to 16.
-    // Bitwise-and by 15 since we only care about the last 4 bits.
-    const r = (d + Math.random() * 16) & 15 | 0;
+  return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {    
+    // Generate a random number, scaled from 0 to 15.
+    const r = (getRandomValue() % 16);
 
     // Shift 4 times to divide by 16
     d >>= 4;
@@ -174,4 +178,15 @@ export function isRDLEmbed(embedUrl: string): boolean {
   return embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
 }
 
+/**
+ * Returns random number
+ */
+export function getRandomValue() {
 
+  // window.msCrypto for IE
+  var cryptoObj = window.crypto || window.msCrypto;
+  var randomValueArray = new Uint32Array(1);
+  cryptoObj.getRandomValues(randomValueArray);
+
+  return randomValueArray[0];
+}

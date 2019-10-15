@@ -231,3 +231,13 @@ function removeArgFromUrl(url, arg) {
 
     return url;
 }
+
+function getRandomValue() {
+
+  // window.msCrypto for IE
+  var cryptoObj = window.crypto || window.msCrypto;
+  var randomValueArray = new Uint32Array(1);
+  cryptoObj.getRandomValues(randomValueArray);
+
+  return randomValueArray[0];
+}

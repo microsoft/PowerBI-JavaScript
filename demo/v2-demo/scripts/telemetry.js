@@ -26,7 +26,7 @@ const TelemetrySectionName = {
     Showcase: "Showcase"
 };
 
-function trackEvent(name, properties, flush = false) {
+function trackEvent(name, properties, flush) {
     if (!_session[SessionKeys.IsTelemetryEnabled]) {
         return;
     }
@@ -36,7 +36,7 @@ function trackEvent(name, properties, flush = false) {
     getAppInsightsInstance().then(function(ai) {
       // Normally, the SDK sends data at fixed intervals (typically 30 secs) or whenever buffer is full (typically 500 items).
       // https://docs.microsoft.com/en-us/azure/azure-monitor/app/api-custom-events-metrics#flushing-data
-      ai.trackEvent({ name, properties });
+      ai.trackEvent({ name: name, properties: properties });
       if (flush) {
           ai.flush();
       }

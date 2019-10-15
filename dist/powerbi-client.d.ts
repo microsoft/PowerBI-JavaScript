@@ -1,6 +1,11 @@
-/*! powerbi-client v2.10.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.10.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
+    global  {
+        interface Window {
+            msCrypto: Crypto;
+        }
+    }
     /**
      * Raises a custom event with event data on the specified HTML element.
      *
@@ -40,7 +45,7 @@ declare module "util" {
      */
     export function assign(...args: any[]): any;
     /**
-     * Generates a random 7 character string.
+     * Generates a random 5 to 6 character string.
      *
      * @export
      * @returns {string}
@@ -81,6 +86,10 @@ declare module "util" {
       * @returns {boolean}
      */
     export function isRDLEmbed(embedUrl: string): boolean;
+    /**
+     * Returns random number
+     */
+    export function getRandomValue(): number;
 }
 declare module "config" {
     const config: {

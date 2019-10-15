@@ -1,4 +1,4 @@
-/*! powerbi-client v2.10.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.10.2 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -1106,13 +1106,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	exports.assign = assign;
 	/**
-	 * Generates a random 7 character string.
+	 * Generates a random 5 to 6 character string.
 	 *
 	 * @export
 	 * @returns {string}
 	 */
 	function createRandomString() {
-	    return (Math.random() + 1).toString(36).substring(7);
+	    return getRandomValue().toString(36).substring(1);
 	}
 	exports.createRandomString = createRandomString;
 	/**
@@ -1127,9 +1127,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        d += performance.now();
 	    }
 	    return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-	        // Generate a random number, scaled from 0 to 16.
-	        // Bitwise-and by 15 since we only care about the last 4 bits.
-	        var r = (d + Math.random() * 16) & 15 | 0;
+	        // Generate a random number, scaled from 0 to 15.
+	        var r = (getRandomValue() % 16);
 	        // Shift 4 times to divide by 16
 	        d >>= 4;
 	        return r.toString(16);
@@ -1178,6 +1177,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
 	}
 	exports.isRDLEmbed = isRDLEmbed;
+	/**
+	 * Returns random number
+	 */
+	function getRandomValue() {
+	    // window.msCrypto for IE
+	    var cryptoObj = window.crypto || window.msCrypto;
+	    var randomValueArray = new Uint32Array(1);
+	    cryptoObj.getRandomValues(randomValueArray);
+	    return randomValueArray[0];
+	}
+	exports.getRandomValue = getRandomValue;
 
 
 /***/ }),
@@ -1185,7 +1195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.10.1',
+	    version: '2.10.2',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -1196,7 +1206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.2.1 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.3.0 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1306,6 +1316,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		    LayoutType[LayoutType["MobilePortrait"] = 2] = "MobilePortrait";
 		    LayoutType[LayoutType["MobileLandscape"] = 3] = "MobileLandscape";
 		})(LayoutType = exports.LayoutType || (exports.LayoutType = {}));
+		var HyperlinkClickBehavior;
+		(function (HyperlinkClickBehavior) {
+		    HyperlinkClickBehavior[HyperlinkClickBehavior["Navigate"] = 0] = "Navigate";
+		    HyperlinkClickBehavior[HyperlinkClickBehavior["NavigateAndRaiseEvent"] = 1] = "NavigateAndRaiseEvent";
+		    HyperlinkClickBehavior[HyperlinkClickBehavior["RaiseEvent"] = 2] = "RaiseEvent";
+		})(HyperlinkClickBehavior = exports.HyperlinkClickBehavior || (exports.HyperlinkClickBehavior = {}));
 		var SectionVisibility;
 		(function (SectionVisibility) {
 		    SectionVisibility[SectionVisibility["AlwaysVisible"] = 0] = "AlwaysVisible";
@@ -1956,6 +1972,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var visualSettingsValidator_1 = __webpack_require__(22);
 		var commandsSettingsValidator_1 = __webpack_require__(23);
 		var customThemeValidator_1 = __webpack_require__(24);
+		var datasetBindingValidator_1 = __webpack_require__(25);
 		exports.Validators = {
 		    addBookmarkRequestValidator: new bookmarkValidator_1.AddBookmarkRequestValidator(),
 		    advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
@@ -1982,6 +1999,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    customPageSizeValidator: new pageValidator_1.CustomPageSizeValidator(),
 		    customThemeValidator: new customThemeValidator_1.CustomThemeValidator(),
 		    dashboardLoadValidator: new dashboardLoadValidator_1.DashboardLoadValidator(),
+		    datasetBindingValidator: new datasetBindingValidator_1.DatasetBindingValidator(),
 		    displayStateModeValidator: new typeValidator_1.EnumValidator([0, 1]),
 		    displayStateValidator: new layoutValidator_1.DisplayStateValidator(),
 		    exportDataRequestValidator: new exportDataValidator_1.ExportDataRequestValidator(),
@@ -1996,6 +2014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    filterTargetValidator: new anyOfValidator_1.AnyOfValidator([new filtersValidator_1.FilterColumnTargetValidator(), new filtersValidator_1.FilterHierarchyTargetValidator(), new filtersValidator_1.FilterMeasureTargetValidator()]),
 		    filtersArrayValidator: new typeValidator_1.ArrayValidator([new anyOfValidator_1.AnyOfValidator([new filtersValidator_1.BasicFilterValidator(), new filtersValidator_1.AdvancedFilterValidator(), new filtersValidator_1.RelativeDateFilterValidator()])]),
 		    filtersValidator: new filtersValidator_1.FilterValidator(),
+		    hyperlinkClickBehaviorValidator: new typeValidator_1.EnumValidator([0, 1, 2]),
 		    includeExcludeFilterValidator: new filtersValidator_1.IncludeExcludeFilterValidator(),
 		    includeExludeFilterTypeValidator: new typeValidator_1.EnumValidator([3]),
 		    layoutTypeValidator: new typeValidator_1.EnumValidator([0, 1, 2, 3]),
@@ -2549,6 +2568,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		                field: "commands",
 		                validators: [validator_1.Validators.commandsSettingsArrayValidator]
 		            },
+		            {
+		                field: "hyperlinkClickBehavior",
+		                validators: [validator_1.Validators.hyperlinkClickBehaviorValidator]
+		            }
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
 		        return multipleFieldsValidator.validate(input, path, field);
@@ -3259,6 +3282,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		                field: "theme",
 		                validators: [validator_1.Validators.customThemeValidator]
 		            },
+		            {
+		                field: "embedUrl",
+		                validators: [validator_1.Validators.stringValidator]
+		            },
+		            {
+		                field: "datasetBinding",
+		                validators: [validator_1.Validators.datasetBindingValidator]
+		            },
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
 		        return multipleFieldsValidator.validate(input, path, field);
@@ -3380,6 +3411,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "tokenType",
 		                validators: [validator_1.Validators.tokenTypeValidator]
+		            },
+		            {
+		                field: "embedUrl",
+		                validators: [validator_1.Validators.stringValidator]
 		            }
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
@@ -4454,6 +4489,51 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return CustomThemeValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.CustomThemeValidator = CustomThemeValidator;
+	
+	
+	/***/ }),
+	/* 25 */
+	/***/ (function(module, exports, __webpack_require__) {
+	
+		var __extends = (this && this.__extends) || (function () {
+		    var extendStatics = Object.setPrototypeOf ||
+		        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+		        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+		    return function (d, b) {
+		        extendStatics(d, b);
+		        function __() { this.constructor = d; }
+		        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+		    };
+		})();
+		Object.defineProperty(exports, "__esModule", { value: true });
+		var validator_1 = __webpack_require__(1);
+		var multipleFieldsValidator_1 = __webpack_require__(4);
+		var typeValidator_1 = __webpack_require__(2);
+		var DatasetBindingValidator = /** @class */ (function (_super) {
+		    __extends(DatasetBindingValidator, _super);
+		    function DatasetBindingValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    DatasetBindingValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "datasetId",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return DatasetBindingValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.DatasetBindingValidator = DatasetBindingValidator;
 	
 	
 	/***/ })
