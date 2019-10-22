@@ -5,10 +5,10 @@
         <div class="sampleTextButton">
             <div class="pageTitle">
                 <h3>Sample Report</h3>
-                <h8>You can embed a sample report and interact with Power BI Embedded firsthand by clicking below.</h8>
+                <h8>Embed a sample report and interact with Power BI Embedded firsthand.</h8>
             </div>
             <div class="settings">
-                <button class="selectButton" onclick="OpenCodeStepWithSample('Report')">Select</button>
+                <button class="selectButton" onclick="OpenCodeStepWithSample('Report')">Try it</button>
             </div>
         </div>
     </div>
@@ -18,10 +18,23 @@
         <div class="sampleTextButton">
             <div class="pageTitle">
                 <h3>Sample Report Visual</h3>
-                <h8>You can embed a sample report visual and interact with Power BI Embedded firsthand by clicking below.</h8>
+                <h8>Embed a sample report visual and interact with Power BI Embedded firsthand.</h8>
             </div>
             <div class="settings">
-                <button class="selectButton" onclick="OpenCodeStepWithSample('Visual')">Select</button>
+                <button class="selectButton" onclick="OpenCodeStepWithSample('Visual')">Try it</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="samplePaginatedReport" class="pbi-line">
+        <div class="sampleImg" id="samplePaginatedReportImg"><div class="newSample">NEW</div></div>        
+        <div class="sampleTextButton">
+            <div class="pageTitle">
+                <h3>Sample Paginated Report</h3>
+                <h8>Embed a sample paginated report and interact with Power BI Embedded firsthand. (Preview)</h8>
+            </div>
+            <div class="settings">
+                <button id="GoToEmbedStepButton_PaginatedReport" class="selectButton" onclick="OpenCodeStepWithSample('PaginatedReport')">Try it</button>
             </div>
         </div>
     </div>
@@ -31,10 +44,10 @@
         <div class="sampleTextButton">
             <div class="pageTitle">
                 <h3>Sample Q&A</h3>
-                <h8>You can embed a sample Q&A and interact with Power BI Embedded firsthand by clicking below.</h8>
+                <h8>Embed a sample Q&A and interact with Power BI Embedded firsthand.</h8>
             </div>
             <div class="settings">
-                <button id="GoToEmbedStepButton_Qna" class="selectButton" onclick="OpenCodeStepWithSample('Qna')">Select</button>
+                <button id="GoToEmbedStepButton_Qna" class="selectButton" onclick="OpenCodeStepWithSample('Qna')">Try it</button>
             </div>
         </div>
     </div>
@@ -44,10 +57,10 @@
         <div class="sampleTextButton">
             <div class="pageTitle">
                 <h3>Sample Dashboard</h3>
-                <h8>You can embed a sample dashboard and interact with Power BI Embedded firsthand by clicking below.</h8>
+                <h8>Embed a sample dashboard and interact with Power BI Embedded firsthand.</h8>
             </div>
             <div class="settings">
-                <button id="GoToEmbedStepButton_Dashboard" class="selectButton" onclick="OpenCodeStepWithSample('Dashboard')">Select</button>
+                <button id="GoToEmbedStepButton_Dashboard" class="selectButton" onclick="OpenCodeStepWithSample('Dashboard')">Try it</button>
             </div>
         </div>
     </div>
@@ -57,13 +70,13 @@
         <div class="sampleTextButton">
             <div class="pageTitle">
                 <h3>Sample Tile</h3>
-                <h8>You can embed a sample Tile and interact with Power BI Embedded firsthand by clicking below.</h8>
+                <h8>Embed a sample tile and interact with Power BI Embedded firsthand.</h8>
             </div>
             <div class="settings">
-                <button id="GoToEmbedStepButton_Tile" class="selectButton" onclick="OpenCodeStepWithSample('Tile')">Select</button>
+                <button id="GoToEmbedStepButton_Tile" class="selectButton" onclick="OpenCodeStepWithSample('Tile')">Try it</button>
             </div>
         </div>
-    </div>
+    </div>    
 </div>
 
 <script>

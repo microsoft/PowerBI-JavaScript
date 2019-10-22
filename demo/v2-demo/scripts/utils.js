@@ -122,6 +122,8 @@ function getEmbedContainerID(entityType) {
             return "tileContainer";
         case EntityType.Qna:
             return "qnaContainer";
+        case EntityType.PaginatedReport:
+            return "paginatedReportContainer";    
         default:
             return "embedContainer";
     }
@@ -137,6 +139,8 @@ function getEmbedContainerClassPrefix(entityType) {
             return ".tile";
         case EntityType.Qna:
             return ".qna";
+        case EntityType.PaginatedReport:
+            return ".paginatedReport";
         default:
             return ".report";
     }
@@ -159,6 +163,8 @@ function getEntityTypeFromParameter(urlParam) {
           return EntityType.Tile;
       case "qna":
           return EntityType.Qna;
+      case "rdl":
+          return EntityType.PaginatedReport;    
       default:
           return EntityType.Report;
   }

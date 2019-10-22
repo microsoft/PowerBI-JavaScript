@@ -3,6 +3,7 @@ const datasetUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/Sa
 const dashboardUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Dashboards/SampleDashboard';
 const tileUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Tiles/SampleTile';
 const qnaUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Datasets/SampleQna';
+const paginatedReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/SampleRdlReport';
 const layoutShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/LayoutDemoReport';
 const insightToActionShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/InsightToActionReport';
 const themesShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/ThemesReport';
@@ -19,7 +20,8 @@ const EntityType = {
     Visual : "Visual",
     Dashboard : "Dashboard",
     Tile : "Tile",
-    Qna: "Qna"
+    Qna: "Qna",
+    PaginatedReport: "PaginatedReport"
 };
 
 const SessionKeys = {
@@ -34,6 +36,7 @@ const SessionKeys = {
     IsSampleDashboard: "IsSampleDashboard",
     IsSampleTile: "IsSampleTile",
     IsSampleQna: "IsSampleQna",
+    IsSamplePaginatedReport: "IsSamplePaginatedReport",
     IsTelemetryEnabled: "isTelemetryEnabled",
     PageName: "PageName",
     QnaQuestion: "QnaQuestion",
@@ -109,6 +112,10 @@ function SetIsSample(value) {
     else if (entityType == EntityType.Qna)
     {
         SetSession(SessionKeys.IsSampleQna, value);
+    }
+    else if (entityType == EntityType.PaginatedReport)
+    {
+        SetSession(SessionKeys.IsSamplePaginatedReport, value);
     }
 }
 
@@ -276,6 +283,11 @@ function LoadSampleTileIntoSession() {
 function LoadSampleQnaIntoSession() {
     SetSession(SessionKeys.EntityType, EntityType.Qna);
     return FetchUrlIntoSession(qnaUrl, false /* updateCurrentToken */);
+}
+
+function LoadSamplePaginatedReportIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.PaginatedReport);
+    return FetchUrlIntoSession(paginatedReportUrl, false /* updateCurrentToken */);
 }
 
 function LoadLayoutShowcaseReportIntoSession() {

@@ -145,6 +145,12 @@ function LoadEmbedSettings(mode, entityType, tokenType) {
             OpenEmbedMode(mode, entityType,tokenType);
         });
     }
+    else if (entityType == EntityType.PaginatedReport)
+    {
+        $("#settings").load("settings_embed_paginatedreport.html", function() {
+            OpenEmbedMode(mode, entityType,tokenType);
+        });
+    }
 }
 
 function OpenEmbedTab() {
@@ -219,6 +225,13 @@ function OpenInteractTab() {
             LoadCodeArea("#embedCodeDiv", "");
         });
     }
+    else if (entityType == EntityType.PaginatedReport)
+    {
+        $("#settings").load("settings_interact_paginatedreport.html", function() {
+            SetToggleHandler("operation-categories");
+            LoadCodeArea("#embedCodeDiv", "");
+        });
+    }
     else
     {
         $("#settings").load("settings_interact_report.html", function() {
@@ -268,6 +281,10 @@ function getEmbedCode(mode, entityType)
     else if (entityType == EntityType.Qna)
     {
         code = GetParameterByName(SessionKeys.TokenType) === '0' /* AAD Token */ ? _Embed_QnaEmbed_Aad : _Embed_QnaEmbed;
+    }
+    else if (entityType == EntityType.PaginatedReport)
+    {
+       code = _Embed_PaginatedReportBasicEmbed
     }
     return code;
 }
@@ -420,6 +437,18 @@ function OpenEmbedMode(mode, entityType, tokenType)
             LoadSettings();
         }
     }
+    else if (entityType == EntityType.PaginatedReport) {
+        if (IsEmbeddingSamplePaginatedReport()) {
+            LoadSamplePaginatedReportIntoSession().then(function (response) {
+                SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
+                setCodeAndShowEmbedSettings(mode, entityType, tokenType);
+            });
+        }
+        else {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
+            setCodeAndShowEmbedSettings(mode, entityType, tokenType);
+        }
+    }
 }
 
 function setCodeAndShowEmbedSettings(mode, entityType, tokenType) {
@@ -457,6 +486,10 @@ function IsEmbeddingSampleTile() {
 
 function IsEmbeddingSampleQna() {
     return GetSession(SessionKeys.IsSampleQna) == true;
+}
+
+function IsEmbeddingSamplePaginatedReport() {
+    return GetSession(SessionKeys.IsSamplePaginatedReport) == true;
 }
 
 function ToggleQuestionBox(enabled) {
@@ -538,6 +571,12 @@ function ReloadSample(entityType) {
     {
         LoadSampleQnaIntoSession().then(function (response) {
             SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtQnaEmbed", "#txtDatasetId");
+        });
+    }
+    else if (entityType == EntityType.PaginatedReport)
+    {
+        LoadSamplePaginatedReportIntoSession().then(function (response) {
+            SetTextBoxesFromSessionOrUrlParam("#txtAccessToken", "#txtReportEmbed", "#txtEmbedReportId");
         });
     }
 }
