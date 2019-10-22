@@ -831,6 +831,11 @@ a:hover, a:visited, a:link, a:active
     background-image: url('../images/sampledashboard.png');
 }
 
+#samplePaginatedReportImg {
+    background-image: url('../images/samplerdlreport.png');
+    background-position: top; 
+}
+
 .showcaseIcon {
     position: relative;
     left: 50%;

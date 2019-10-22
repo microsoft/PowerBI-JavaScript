@@ -35,6 +35,22 @@ function Report_Reload() {
     SetCode(_Report_Reload);
 }
 
+function PaginatedReport_Reload() {
+    SetCode(_PaginatedReport_Reload);
+}
+
+function PaginatedReport_GetId() {
+    SetCode(_PaginatedReport_GetId);
+}
+
+function PaginatedReport_FullScreen() {
+    SetCode(_PaginatedReport_FullScreen);
+}
+
+function PaginatedReport_ExitFullScreen() {
+    SetCode(_PaginatedReport_ExitFullScreen);
+}
+
 function Report_Refresh() {
     SetCode(_Report_Refresh);
 }
