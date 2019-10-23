@@ -1,0 +1,22 @@
+<div id="step-interact-wrapper">
+    <div>
+        <div id="category-browser">
+            <div id="wrapper-operations-div" class="operations-div">
+                <div id="operation-categories" class="operations-div">
+                    <ul class="operations-ul">
+                        <li id="general-operations" onclick="OpenGeneralOperations();"><a href="#">General Operations</a></li>
+                        <ul id="general-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="PaginatedReport_Reload()"><a href="#">Reload</a></li>
+                        </ul>
+                        <li id="reportproperties-operations" onclick="OpenReportPropertiesOperations();"><a href="#">Properties</a></li>
+                        <ul id="reportproperties-operations-ul" class="function-ul" style="display: none;">
+                            <li onclick="PaginatedReport_GetId()"><a href="#">Get ID</a></li>
+                            <li onclick="PaginatedReport_FullScreen()" class="hideOnMobile"><a href="#">Full screen</a></li>
+                            <li onclick="PaginatedReport_ExitFullScreen()" class="hideOnMobile"><a href="#">Exit full screen</a></li>
+                        </ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

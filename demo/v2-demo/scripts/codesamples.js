@@ -152,6 +152,48 @@ function _Embed_BasicEmbed_Mobile() {
     });
 }
 
+// ---- Paginated Embed Code ----------------------------------------------------
+function _Embed_PaginatedReportBasicEmbed() {
+    // Read embed application token from textbox
+    var txtAccessToken = $('#txtAccessToken').val();
+
+    // Read embed URL from textbox
+    var txtEmbedUrl = $('#txtReportEmbed').val();
+
+    // Read paginated report Id from textbox
+    var txtEmbedReportId = $('#txtEmbedReportId').val();
+
+    // Read embed type from radio
+    var tokenType = $('input:radio[name=tokenType]:checked').val();
+
+    // Get models. models contains enums that can be used.
+    var models = window['powerbi-client'].models;
+
+    // Se view permissions.
+    var permissions = models.Permissions.View;  
+
+    // Embed configuration used to describe the what and how to embed.
+    // This object is used when calling powerbi.embed.
+    // This also includes settings and options such as filters.
+    // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
+    var config = {
+      type: 'report',
+      tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
+      accessToken: txtAccessToken,
+      embedUrl: txtEmbedUrl,
+      id: txtEmbedReportId,
+      permissions: permissions,
+    };
+
+    // Get a reference to the paginated embedded report HTML element
+    var paginatedReportContainer = $('#paginatedReportContainer')[0];
+
+    // Embed the paginated report and display it within the div container.
+    var report = powerbi.embed(paginatedReportContainer, config);
+
+    Log.logText("Loading Paginated Report.");
+}
+
 function _Embed_VisualEmbed() {
     // Read embed application token from textbox
     var txtAccessToken = $('#txtAccessToken').val();
@@ -1163,6 +1205,19 @@ function _Report_Reload() {
         });
 }
 
+function _PaginatedReport_Reload() {
+    // Get a reference to the paginated report HTML element
+    var paginatedReportContainer = $('#paginatedReportContainer')[0];
+
+    // Get a reference to the embedded paginated report.
+    paginatedReport = powerbi.get(paginatedReportContainer);
+
+    // Reload the displayed paginated report
+    paginatedReport.reload();
+    
+    Log.logText("Reload Paginated Report");
+}
+
 function _Report_Refresh() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
@@ -1378,6 +1433,43 @@ function _Report_ExitFullScreen() {
 
     // Exits full screen mode.
     report.exitFullscreen();
+}
+
+// ---- PaginatedReport Operations ----------------------------------------------------
+
+function _PaginatedReport_GetId() {
+    // Get a reference to the embedded report HTML element
+    var paginatedReportContainer = $('#paginatedReportContainer')[0];
+
+    // Get a reference to the embedded report.
+    paginatedReport = powerbi.get(paginatedReportContainer);
+
+    // Retrieve the report id.
+    var reportId = paginatedReport.getId();
+
+    Log.logText(reportId);
+}
+
+function _PaginatedReport_FullScreen() {
+    // Get a reference to the paginated embedded report HTML element
+    var paginatedReportContainer = $('#paginatedReportContainer')[0];
+
+    // Get a reference to the paginated embedded report.
+    paginatedReport = powerbi.get(paginatedReportContainer);
+
+    // Displays the paginated report in full screen mode.
+    paginatedReport.fullscreen();
+}
+
+function _PaginatedReport_ExitFullScreen() {
+    // Get a reference to the paginated embedded report HTML element
+    var paginatedReportContainer = $('#paginatedReportContainer')[0];
+
+    // Get a reference to the paginated embedded report.
+    paginatedReport = powerbi.get(paginatedReportContainer);
+
+    // Exits full screen mode.
+    paginatedReport.exitFullscreen();
 }
 
 function _Report_switchModeEdit() {

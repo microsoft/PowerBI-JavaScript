@@ -37,18 +37,12 @@ helps!
 
 ## Code Style
 
-Ecstatic's code base follows a relatively consistent style. The closer your
-patch blends in with the status quo, the better.
+Ecstatic lints using a number of modifications on top of airbnb. If you think
+"airbnb except it doesn't need to be transpiled for targeted platforms" you're
+pretty close.
 
-A few PROTIPS off the top of my head:
-
-1. Variables don't need to all be declared at the top, BUT variable *blocks*
-should do the whole one-var, tons-of-commas thing.
-2. Look at how spacing is done around conditionals and functions. Do it like
-that. 
-3. `else`'s and similar should be on the line *after* the preceding bracket.
-
-We can refine this as the need arises.
+Linting is executed as part of pretest. Your code should pass linting before
+being merged.
 
 ## A Few Other Minor Guidelines
 

@@ -1,12 +1,16 @@
-var express = require('express');
-var ecstatic = require('../lib/ecstatic');
-var http = require('http');
+'use strict';
 
-var app = express();
+const express = require('express');
+const ecstatic = require('../lib/ecstatic');
+const http = require('http');
+
+const app = express();
+
 app.use(ecstatic({
-  root: __dirname + '/public',
-  showdir : true
+  root: `${__dirname}/public`,
+  showdir: true,
 }));
+
 http.createServer(app).listen(8080);
 
 console.log('Listening on :8080');

@@ -1,0 +1,33 @@
+<div id="rdl-report-embed-table" class="embed-table">
+    <div id="wrapper-settings-div">
+        <h8>Select token type:</h8>
+        
+        <div id="typeSelector">
+            <label class="radioContainer">
+                <div onclick="OnTokenTypeRadioClicked(1);"><input type="radio" name="tokenType" value="1" checked="checked"> Embed token </input>
+                <span class="checkmark"></span></div>
+            </label>
+            <label class="radioContainer">
+                <div onclick="OnTokenTypeRadioClicked(0);"><input type="radio" name="tokenType" value="0"> AAD token </input>
+                <span class="checkmark"></span></div>
+            </label>
+        </div>
+
+        <div class="noOverflow"><h8>Fill in the fields below to get the code to embed your paginated report</h8></div>
+        <div class="spacer" />
+        <div id="embedModeInput">
+            <div class="inputLine">
+                <div class="inputLineTitle">Embed Token</div>
+                <input type="text" id="txtAccessToken" onchange="UpdateSession(this, SessionKeys.AccessToken);" />
+            </div>
+            <div class="inputLine">
+                <div class="inputLineTitle">Embed URL</div>
+                <input type="text" id="txtReportEmbed" onchange="UpdateSession(this, SessionKeys.EmbedUrl);" value="https://embedded.powerbi.com/ReportEmbed"/>
+            </div>
+            <div class="inputLine">
+                <div class="inputLineTitle">Report ID</div>
+                <input type="text" id="txtEmbedReportId" onchange="UpdateSession(this, SessionKeys.EmbedId);"/>
+            </div>
+        </div>
+    </div>
+</div>

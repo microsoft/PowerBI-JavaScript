@@ -2815,7 +2815,7 @@
 	 * Generates a unique element ID.
 	 */
 	function guid(prefix) {
-	  return (prefix || '') + Math.round(Math.random() * 1000000).toString();
+	  return (prefix || '') + Math.round(getRandomValue() % 1000000).toString();
 	}
 	
 	/**
