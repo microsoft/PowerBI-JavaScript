@@ -1,11 +1,6 @@
 /*! powerbi-client v2.10.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
-    global  {
-        interface Window {
-            msCrypto: Crypto;
-        }
-    }
     /**
      * Raises a custom event with event data on the specified HTML element.
      *
