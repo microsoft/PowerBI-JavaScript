@@ -1,9 +1,4 @@
 import { HttpPostMessage } from 'http-post-message';
-declare global {
-  interface Window {
-    msCrypto: Crypto;
-  }
-}
 
 /**
  * Raises a custom event with event data on the specified HTML element.

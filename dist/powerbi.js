@@ -1,4 +1,4 @@
-/*! powerbi-client v2.10.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.10.3 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -1195,7 +1195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.10.2',
+	    version: '2.10.3',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -5985,7 +5985,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.5 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.6 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -6106,7 +6106,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		     * Utility to generate random sequence of characters used as tracking id for promises.
 		     */
 		    WindowPostMessageProxy.createRandomString = function () {
-		        return (Math.random() + 1).toString(36).substring(7);
+		        // window.msCrypto for IE
+		        var cryptoObj = window.crypto || window.msCrypto;
+		        var randomValueArray = new Uint32Array(1);
+		        cryptoObj.getRandomValues(randomValueArray);
+		        return randomValueArray[0].toString(36).substring(1);
 		    };
 		    /**
 		     * Adds handler.
