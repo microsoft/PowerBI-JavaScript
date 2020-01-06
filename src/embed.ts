@@ -3,6 +3,7 @@ import * as service from './service';
 import * as sdkConfig from './config';
 import * as models from 'powerbi-models';
 import { Defaults } from './defaults';
+import { EmbedUrlNotSupported } from './errors';
 
 declare global {
   interface Document {
@@ -211,6 +212,10 @@ export abstract class Embed {
    * @param {IEmbedConfigurationBase} config
    */
   constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean, isBootstrap?: boolean) {
+    if (utils.autoAuthInEmbedUrl(config.embedUrl)) {
+      throw new Error(EmbedUrlNotSupported);
+    }
+
     Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
     this.eventHandlers = [];
     this.service = service;
@@ -249,9 +254,9 @@ export abstract class Embed {
       .then(response => {
         return response.body;
       },
-      response => {
-        throw response.body;
-      });
+        response => {
+          throw response.body;
+        });
   }
 
   /**
@@ -327,9 +332,9 @@ export abstract class Embed {
         utils.assign(this.config, config);
         return response.body;
       },
-      response => {
-        throw response.body;
-      });
+        response => {
+          throw response.body;
+        });
   }
 
   /**
@@ -386,7 +391,7 @@ export abstract class Embed {
    */
   on<T>(eventName: string, handler: service.IEventHandler<T>): void {
     if (this.allowedEvents.indexOf(eventName) === -1) {
-      throw new Error(`eventName is must be one of ${this.allowedEvents}. You passed: ${eventName}`);
+      throw new Error(`eventName must be one of ${this.allowedEvents}. You passed: ${eventName}`);
     }
 
     this.eventHandlers.push({
@@ -489,16 +494,16 @@ export abstract class Embed {
    * @param {IEmbedConfiguration} config
    */
   private addLocaleToEmbedUrl(config: IEmbedConfiguration): void {
-      if (!config.settings) {
-        return;
-      }
-      let localeSettings = config.settings.localeSettings
-      if (localeSettings && localeSettings.language) {
-        this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'language', localeSettings.language);
-      }
-      if (localeSettings && localeSettings.formatLocale) {
-        this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'formatLocale', localeSettings.formatLocale);
-      }
+    if (!config.settings) {
+      return;
+    }
+    let localeSettings = config.settings.localeSettings
+    if (localeSettings && localeSettings.language) {
+      this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'language', localeSettings.language);
+    }
+    if (localeSettings && localeSettings.formatLocale) {
+      this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'formatLocale', localeSettings.formatLocale);
+    }
   }
 
   /**
@@ -640,8 +645,8 @@ export abstract class Embed {
       iframeContent.setAttribute("scrolling", "no");
       iframeContent.setAttribute("allowfullscreen", "true");
       var node = this.element;
-      while(node.firstChild) {
-          node.removeChild(node.firstChild);
+      while (node.firstChild) {
+        node.removeChild(node.firstChild);
       }
       node.appendChild(iframeContent);
       this.iframe = <HTMLIFrameElement>node.firstChild;
@@ -673,10 +678,10 @@ export abstract class Embed {
    * Sets Iframe's title
    */
   setComponentTitle(title: string): void {
-    if(!this.iframe) {
+    if (!this.iframe) {
       return;
     }
-    if(title == null) {
+    if (title == null) {
       this.iframe.removeAttribute("title");
     } else {
       this.iframe.setAttribute("title", title);
@@ -687,7 +692,7 @@ export abstract class Embed {
    * Sets element's tabindex attribute
    */
   setComponentTabIndex(tabIndex?: number): void {
-    if(!this.element) {
+    if (!this.element) {
       return;
     }
     this.element.setAttribute("tabindex", (tabIndex == null) ? "0" : tabIndex.toString());
@@ -697,7 +702,7 @@ export abstract class Embed {
    * Removes element's tabindex attribute
    */
   removeComponentTabIndex(tabIndex?: number): void {
-    if(!this.element) {
+    if (!this.element) {
       return;
     }
     this.element.removeAttribute("tabindex");
@@ -712,15 +717,15 @@ export abstract class Embed {
    * @returns {string}
    */
   static findGroupIdFromEmbedUrl(url: string): string {
-      const groupIdRegEx = /groupId="?([^&]+)"?/
-      const groupIdMatch = url.match(groupIdRegEx);
+    const groupIdRegEx = /groupId="?([^&]+)"?/
+    const groupIdMatch = url.match(groupIdRegEx);
 
-      let groupId;
-      if (groupIdMatch) {
-          groupId = groupIdMatch[1];
-      }
+    let groupId;
+    if (groupIdMatch) {
+      groupId = groupIdMatch[1];
+    }
 
-      return groupId;
+    return groupId;
   }
 
   /**
@@ -738,13 +743,13 @@ export abstract class Embed {
 
     // contentWindow must be initialized
     if (this.iframe.contentWindow == null)
-        return;
+      return;
 
     return this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(response => {
       return response.body;
     },
-    response => {
-      throw response.body;
-    });
+      response => {
+        throw response.body;
+      });
   }
 }

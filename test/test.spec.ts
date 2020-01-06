@@ -17,6 +17,7 @@ import { spyWpmp } from './utility/mockWpmp';
 import { spyHpm } from './utility/mockHpm';
 import { spyRouter } from './utility/mockRouter';
 import * as util from '../src/util';
+import { EmbedUrlNotSupported } from '../src/errors'
 
 declare global {
   interface Window {
@@ -43,7 +44,7 @@ function ValidateDashboardConfigurationWorksAsExpected(pageView: string, excepti
   try {
     powerbi.embed(component[0], <any>dashboardEmbedConfig);
   }
-  catch(e) {
+  catch (e) {
     exceptionThrown = true;
   }
 
@@ -315,19 +316,19 @@ describe('service', function () {
     });
 
     it('if attempting to embed a dashboard with a pageView equals fitToWidth, don\'t throw error', function () {
-        ValidateDashboardConfigurationWorksAsExpected("fitToWidth", false, powerbi);
+      ValidateDashboardConfigurationWorksAsExpected("fitToWidth", false, powerbi);
     });
 
     it('if attempting to embed a dashboard with a pageView equals oneColumn, don\'t throw error', function () {
-        ValidateDashboardConfigurationWorksAsExpected("oneColumn", false, powerbi);
+      ValidateDashboardConfigurationWorksAsExpected("oneColumn", false, powerbi);
     });
 
     it('if attempting to embed a dashboard with a pageView equals actualSize, don\'t throw error', function () {
-        ValidateDashboardConfigurationWorksAsExpected("actualSize", false, powerbi);
+      ValidateDashboardConfigurationWorksAsExpected("actualSize", false, powerbi);
     });
 
     it('if attempting to embed a dashboard with an undefined pageView, don\'t throw error', function () {
-        ValidateDashboardConfigurationWorksAsExpected(undefined, false, powerbi);
+      ValidateDashboardConfigurationWorksAsExpected(undefined, false, powerbi);
     });
 
     it('should get uqiqueId from config first', function () {
@@ -379,7 +380,7 @@ describe('service', function () {
       const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
         .appendTo('#powerbi-fixture');
 
-      const configuration: embed.IEmbedConfiguration = { id: 'fakeId' , groupId: testGroupId };
+      const configuration: embed.IEmbedConfiguration = { id: 'fakeId', groupId: testGroupId };
 
       // Act
       const report = powerbi.embed($reportContainer[0], configuration);
@@ -394,7 +395,7 @@ describe('service', function () {
       const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
         .appendTo('#powerbi-fixture');
 
-      const configuration: embed.IEmbedConfiguration = {id: 'fakeId'};
+      const configuration: embed.IEmbedConfiguration = { id: 'fakeId' };
 
       // Act
       const report = powerbi.embed($reportContainer[0], configuration);
@@ -409,7 +410,7 @@ describe('service', function () {
       const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report"></div>`)
         .appendTo('#powerbi-fixture');
 
-      const configuration: embed.IEmbedConfiguration = {id: 'fakeId'};
+      const configuration: embed.IEmbedConfiguration = { id: 'fakeId' };
 
       // Act
       const report = powerbi.embed($reportContainer[0], configuration);
@@ -603,7 +604,7 @@ describe('service', function () {
 
         // Assert
         expect(datasetId).toEqual(testDatasetId);
-       });
+      });
 
       it('should return undefinded if the datasetId parameter is not in the url', function () {
         // Arrange
@@ -614,7 +615,7 @@ describe('service', function () {
 
         // Assert
         expect(datasetId).toBeUndefined();
-       });
+      });
 
       it('should get datasetId from configuration first', function () {
         // Arrange
@@ -651,7 +652,7 @@ describe('service', function () {
 
         const testDatasetId = "ABC123";
         const accessToken = 'ABC123';
-        const theme = {themeJson: {name: "Theme ABC 123"}};
+        const theme = { themeJson: { name: "Theme ABC 123" } };
         const embedUrl = `https://app.powerbi.com/reportEmbed?datasetId=${testDatasetId}`;
         const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}"</div>`)
           .appendTo('#powerbi-fixture');
@@ -668,7 +669,7 @@ describe('service', function () {
 
         const testDatasetId = "ABC123";
         const accessToken = 'ABC123';
-        const theme = {themeJson: {name: "Theme ABC 123"}};
+        const theme = { themeJson: { name: "Theme ABC 123" } };
         const embedUrl = `https://app.powerbi.com/reportEmbed?datasetId=${testDatasetId}`;
         const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}"</div>`)
           .appendTo('#powerbi-fixture');
@@ -773,7 +774,7 @@ describe('service', function () {
         const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id></div>`)
           .appendTo('#powerbi-fixture');
 
-        const theme = {themeJson: {name: "Theme ABC 123"}};
+        const theme = { themeJson: { name: "Theme ABC 123" } };
         const configuration: embed.IEmbedConfiguration = { theme: theme };
 
         // Act
@@ -790,7 +791,7 @@ describe('service', function () {
         const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}" powerbi-type="report" powerbi-report-id></div>`)
           .appendTo('#powerbi-fixture');
 
-        const theme = {themeJson: {name: "Theme ABC 123"}};
+        const theme = { themeJson: { name: "Theme ABC 123" } };
         const configuration: embed.IEmbedConfiguration = {};
 
         // Act
@@ -896,7 +897,7 @@ describe('service', function () {
       // Act
       const component = powerbi.bootstrap($element[0], {
         type: 'report',
-		embedUrl: 'fakeUrl2',
+        embedUrl: 'fakeUrl2',
       });
 
       const component2 = powerbi.embed($element[0], testConfiguration);
@@ -930,7 +931,33 @@ describe('service', function () {
       var iframe = $reportContainer.find('iframe');
       expect(iframe.attr('src')).toEqual('fakeUrl?reportId=1&language=languageName&formatLocale=formatName&uid=fakeUid');
     });
-});
+
+    it('Cannot use JS SDK if autoAuth in embed url', function () {
+      const embedUrl = `https://app.powerbi.com/reportEmbed?reportId=ABC123&autoAuth=true`;
+      const $element = $(`<div powerbi-type="dashboard" powerbi-embed-url="${embedUrl}"></div>`)
+        .appendTo('#powerbi-fixture');
+      const reportEmbedConfig = {
+        type: "report",
+        id: "fakeReportId",
+        groupId: "fakeGroupId",
+        accessToken: "fakeAccessToken",
+        embedUrl: embedUrl
+      };
+
+      var exceptionThrown = false;
+      try {
+        powerbi.embed($element[0], reportEmbedConfig);
+      }
+      catch (e) {
+        exceptionThrown = true;
+        expect(e.message).toBe(EmbedUrlNotSupported)
+      }
+
+      expect(exceptionThrown).toBe(true);
+      $element.empty();
+      $element.remove();
+    });
+  });
 
   describe('reset', function () {
     it('deletes the powerBiEmbed property on the element', function () {
@@ -1198,67 +1225,67 @@ describe('Protocol', function () {
     describe('create', function () {
       describe('report', function () {
         it('POST /report/create returns 400 if the request is invalid', function (done) {
-        // Arrange
-        const testData = {
-          uniqueId: 'uniqueId',
-          create: {
-            datasetId: "fakeId",
-            accessToken: "fakeToken",
-          }
-        };
+          // Arrange
+          const testData = {
+            uniqueId: 'uniqueId',
+            create: {
+              datasetId: "fakeId",
+              accessToken: "fakeToken",
+            }
+          };
 
-        iframeLoaded
-          .then(() => {
-            spyApp.validateCreateReport.and.returnValue(Promise.reject(null));
+          iframeLoaded
+            .then(() => {
+              spyApp.validateCreateReport.and.returnValue(Promise.reject(null));
 
-            // Act
-            hpm.post<models.IError>('/report/create', testData.create, { uid: testData.uniqueId })
-              .then(() => {
-                expect(false).toBe(true);
-                spyApp.validateReportLoad.calls.reset();
-                done();
-              })
-              .catch(response => {
-                // Assert
-                expect(spyApp.validateCreateReport).toHaveBeenCalledWith(testData.create);
-                expect(response.statusCode).toEqual(400);
+              // Act
+              hpm.post<models.IError>('/report/create', testData.create, { uid: testData.uniqueId })
+                .then(() => {
+                  expect(false).toBe(true);
+                  spyApp.validateReportLoad.calls.reset();
+                  done();
+                })
+                .catch(response => {
+                  // Assert
+                  expect(spyApp.validateCreateReport).toHaveBeenCalledWith(testData.create);
+                  expect(response.statusCode).toEqual(400);
 
-                // Cleanup
-                spyApp.validateCreateReport.calls.reset();
-                done();
-              });
-          });
+                  // Cleanup
+                  spyApp.validateCreateReport.calls.reset();
+                  done();
+                });
+            });
         });
 
         it('POST /report/create returns 202 if the request is valid', function (done) {
-        // Arrange
-        const testData = {
-          create: {
-            datasetId: "fakeId",
-            accessToken: "fakeToken",
-          }
-        };
+          // Arrange
+          const testData = {
+            create: {
+              datasetId: "fakeId",
+              accessToken: "fakeToken",
+            }
+          };
 
-        iframeLoaded
-          .then(() => {
-            spyApp.validateCreateReport.and.returnValue(Promise.resolve(null));
-            // Act
-            hpm.post<void>('/report/create', testData.create)
-              .then(response => {
-                // Assert
-                expect(spyApp.validateCreateReport).toHaveBeenCalledWith(testData.create);
-                expect(response.statusCode).toEqual(202);
-                // Cleanup
-                spyApp.validateCreateReport.calls.reset();
-                spyApp.reportLoad.calls.reset();
-                done();
-              })
-              .catch(response => {
-                expect(false).toBe(true);
-                spyApp.validateCreateReport.calls.reset();
-                done();
-              });
-          });
+          iframeLoaded
+            .then(() => {
+              spyApp.validateCreateReport.and.returnValue(Promise.resolve(null));
+              // Act
+              hpm.post<void>('/report/create', testData.create)
+                .then(response => {
+                  // Assert
+                  expect(spyApp.validateCreateReport).toHaveBeenCalledWith(testData.create);
+                  expect(response.statusCode).toEqual(202);
+                  // Cleanup
+                  spyApp.validateCreateReport.calls.reset();
+                  spyApp.reportLoad.calls.reset();
+                  done();
+                })
+                .catch(response => {
+                  expect(false).toBe(true);
+                  spyApp.validateCreateReport.calls.reset();
+                  done();
+                });
+            });
         });
       });
     });
@@ -1267,150 +1294,150 @@ describe('Protocol', function () {
       describe('report', function () {
         for (var action of ['load', 'prepare']) {
           it(`POST /report/${action} returns 400 if the request is invalid`, function (done) {
-          // Arrange
-          const testData = {
-            uniqueId: 'uniqueId',
-            load: {
-              reportId: "fakeId",
-              accessToken: "fakeToken",
-              options: {
+            // Arrange
+            const testData = {
+              uniqueId: 'uniqueId',
+              load: {
+                reportId: "fakeId",
+                accessToken: "fakeToken",
+                options: {
+                }
               }
-            }
-          };
+            };
 
-          iframeLoaded
-            .then(() => {
-              spyApp.validateReportLoad.and.returnValue(Promise.reject(null));
+            iframeLoaded
+              .then(() => {
+                spyApp.validateReportLoad.and.returnValue(Promise.reject(null));
 
-              // Act
-              hpm.post<models.IError>(`/report/${action}`, testData.load, { uid: testData.uniqueId })
-                .then(() => {
-                  expect(false).toBe(true);
-                  spyApp.validateReportLoad.calls.reset();
-                  done();
-                })
-                .catch(response => {
-                  // Assert
-                  expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
-                  expect(spyApp.reportLoad).not.toHaveBeenCalledWith(testData.load);
-                  expect(response.statusCode).toEqual(400);
-                  // Cleanup
-                  spyApp.validateReportLoad.calls.reset();
-                  done();
-                });
-            });
-        });
+                // Act
+                hpm.post<models.IError>(`/report/${action}`, testData.load, { uid: testData.uniqueId })
+                  .then(() => {
+                    expect(false).toBe(true);
+                    spyApp.validateReportLoad.calls.reset();
+                    done();
+                  })
+                  .catch(response => {
+                    // Assert
+                    expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                    expect(spyApp.reportLoad).not.toHaveBeenCalledWith(testData.load);
+                    expect(response.statusCode).toEqual(400);
+                    // Cleanup
+                    spyApp.validateReportLoad.calls.reset();
+                    done();
+                  });
+              });
+          });
 
           it(`POST /report/${action} returns 202 if the request is valid`, function (done) {
-          // Arrange
-          const testData = {
-            load: {
-              reportId: "fakeId",
-              accessToken: "fakeToken",
-              options: {
+            // Arrange
+            const testData = {
+              load: {
+                reportId: "fakeId",
+                accessToken: "fakeToken",
+                options: {
+                }
               }
-            }
-          };
+            };
 
-          iframeLoaded
-            .then(() => {
-              spyApp.validateReportLoad.and.returnValue(Promise.resolve(null));
-              // Act
-              hpm.post<void>(`/report/${action}`, testData.load)
-                .then(response => {
-                  // Assert
-                  expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
-                  expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
-                  expect(response.statusCode).toEqual(202);
-                  // Cleanup
-                  spyApp.validateReportLoad.calls.reset();
-                  spyApp.reportLoad.calls.reset();
-                  done();
-                });
-            });
-        });
+            iframeLoaded
+              .then(() => {
+                spyApp.validateReportLoad.and.returnValue(Promise.resolve(null));
+                // Act
+                hpm.post<void>(`/report/${action}`, testData.load)
+                  .then(response => {
+                    // Assert
+                    expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                    expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
+                    expect(response.statusCode).toEqual(202);
+                    // Cleanup
+                    spyApp.validateReportLoad.calls.reset();
+                    spyApp.reportLoad.calls.reset();
+                    done();
+                  });
+              });
+          });
 
           it(`POST /report/${action} causes POST /reports/:uniqueId/events/loaded`, function (done) {
-          // Arrange
-          const testData = {
-            uniqueId: 'uniqueId',
-            load: {
-              reportId: "fakeId",
-              accessToken: "fakeToken",
-              options: {
-                navContentPaneEnabled: false
+            // Arrange
+            const testData = {
+              uniqueId: 'uniqueId',
+              load: {
+                reportId: "fakeId",
+                accessToken: "fakeToken",
+                options: {
+                  navContentPaneEnabled: false
+                }
+              },
+            };
+            const testExpectedEvent = {
+              method: 'POST',
+              url: `/reports/${testData.uniqueId}/events/loaded`,
+              body: {
+                initiator: 'sdk'
               }
-            },
-          };
-          const testExpectedEvent = {
-            method: 'POST',
-            url: `/reports/${testData.uniqueId}/events/loaded`,
-            body: {
-              initiator: 'sdk'
-            }
-          };
+            };
 
-          iframeLoaded
-            .then(() => {
-              spyApp.reportLoad.and.returnValue(Promise.resolve(testData.load));
+            iframeLoaded
+              .then(() => {
+                spyApp.reportLoad.and.returnValue(Promise.resolve(testData.load));
 
-              // Act
-              hpm.post<void>(`/report/${action}`, testData.load, { uid: testData.uniqueId })
-                .then(response => {
-                  setTimeout(() => {
-                    // Assert
-                    expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
-                    expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
-                    expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
-                    // Cleanup
-                    spyApp.validateReportLoad.calls.reset();
-                    spyApp.reportLoad.calls.reset();
-                    done();
+                // Act
+                hpm.post<void>(`/report/${action}`, testData.load, { uid: testData.uniqueId })
+                  .then(response => {
+                    setTimeout(() => {
+                      // Assert
+                      expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                      expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
+                      expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
+                      // Cleanup
+                      spyApp.validateReportLoad.calls.reset();
+                      spyApp.reportLoad.calls.reset();
+                      done();
+                    });
                   });
-                });
-            });
-        });
+              });
+          });
 
           it(`POST /report/${action} causes POST /reports/:uniqueId/events/error`, function (done) {
-          // Arrange
-          const testData = {
-            uniqueId: 'uniqueId',
-            load: {
-              reportId: "fakeId",
-              accessToken: "fakeToken",
-              options: {
-                navContentPaneEnabled: false
+            // Arrange
+            const testData = {
+              uniqueId: 'uniqueId',
+              load: {
+                reportId: "fakeId",
+                accessToken: "fakeToken",
+                options: {
+                  navContentPaneEnabled: false
+                }
+              },
+              error: {
+                message: "error message"
               }
-            },
-            error: {
-              message: "error message"
-            }
-          };
-          const testExpectedEvent = {
-            method: 'POST',
-            url: `/reports/${testData.uniqueId}/events/error`,
-            body: testData.error
-          };
+            };
+            const testExpectedEvent = {
+              method: 'POST',
+              url: `/reports/${testData.uniqueId}/events/error`,
+              body: testData.error
+            };
 
-          iframeLoaded
-            .then(() => {
-              spyApp.reportLoad.and.returnValue(Promise.reject(testData.error));
+            iframeLoaded
+              .then(() => {
+                spyApp.reportLoad.and.returnValue(Promise.reject(testData.error));
 
-              // Act
-              hpm.post<void>(`/report/${action}`, testData.load, { uid: testData.uniqueId })
-                .then(response => {
-                  setTimeout(() => {
-                    // Assert
-                    expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
-                    expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
-                    expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
-                    // Cleanup
-                    spyApp.validateReportLoad.calls.reset();
-                    spyApp.reportLoad.calls.reset();
-                    done();
+                // Act
+                hpm.post<void>(`/report/${action}`, testData.load, { uid: testData.uniqueId })
+                  .then(response => {
+                    setTimeout(() => {
+                      // Assert
+                      expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.load);
+                      expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.load);
+                      expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedEvent));
+                      // Cleanup
+                      spyApp.validateReportLoad.calls.reset();
+                      spyApp.reportLoad.calls.reset();
+                      done();
+                    });
                   });
-                });
-            });
+              });
           });
         }
       });
@@ -1418,69 +1445,69 @@ describe('Protocol', function () {
       describe('dashboard', function () {
         it('POST /dashboard/load returns 202 if the request is valid', function (done) {
 
-        // Arrange
-        const testData = {
-          load: {
-            dashboardId: "fakeId",
-            accessToken: "fakeToken",
-            options: {
+          // Arrange
+          const testData = {
+            load: {
+              dashboardId: "fakeId",
+              accessToken: "fakeToken",
+              options: {
+              }
             }
-          }
-        };
+          };
 
-        iframeLoaded
-          .then(() => {
-            spyApp.validateDashboardLoad.and.returnValue(Promise.resolve(null));
-            // Act
-            hpm.post<void>('/dashboard/load', testData.load)
-              .then(response => {
-                // Assert
-                expect(spyApp.validateDashboardLoad).toHaveBeenCalledWith(testData.load);
-                expect(spyApp.dashboardLoad).toHaveBeenCalledWith(testData.load);
-                expect(response.statusCode).toEqual(202);
-                // Cleanup
-                spyApp.validateDashboardLoad.calls.reset();
-                spyApp.dashboardLoad.calls.reset();
-                done();
-              });
-          });
-      });
+          iframeLoaded
+            .then(() => {
+              spyApp.validateDashboardLoad.and.returnValue(Promise.resolve(null));
+              // Act
+              hpm.post<void>('/dashboard/load', testData.load)
+                .then(response => {
+                  // Assert
+                  expect(spyApp.validateDashboardLoad).toHaveBeenCalledWith(testData.load);
+                  expect(spyApp.dashboardLoad).toHaveBeenCalledWith(testData.load);
+                  expect(response.statusCode).toEqual(202);
+                  // Cleanup
+                  spyApp.validateDashboardLoad.calls.reset();
+                  spyApp.dashboardLoad.calls.reset();
+                  done();
+                });
+            });
+        });
 
         it('POST /dashboard/load returns 400 if the request is invalid', function (done) {
 
-        // Arrange
-        const testData = {
-          uniqueId: 'uniqueId',
-          load: {
-            dashboardId: "fakeId",
-            accessToken: "fakeToken",
-            options: {
+          // Arrange
+          const testData = {
+            uniqueId: 'uniqueId',
+            load: {
+              dashboardId: "fakeId",
+              accessToken: "fakeToken",
+              options: {
+              }
             }
-          }
-        };
+          };
 
-        iframeLoaded
-          .then(() => {
-            spyApp.validateDashboardLoad.and.returnValue(Promise.reject(null));
+          iframeLoaded
+            .then(() => {
+              spyApp.validateDashboardLoad.and.returnValue(Promise.reject(null));
 
-            // Act
-            hpm.post<models.IError>('/dashboard/load', testData.load, { uid: testData.uniqueId })
-              .then(() => {
-                expect(false).toBe(true);
-                spyApp.validateDashboardLoad.calls.reset();
-                done();
-              })
-              .catch(response => {
-                // Assert
-                expect(spyApp.validateDashboardLoad).toHaveBeenCalledWith(testData.load);
-                expect(spyApp.dashboardLoad).not.toHaveBeenCalledWith(testData.load);
-                expect(response.statusCode).toEqual(400);
-                // Cleanup
-                spyApp.validateDashboardLoad.calls.reset();
-                done();
-              });
-          });
-      });
+              // Act
+              hpm.post<models.IError>('/dashboard/load', testData.load, { uid: testData.uniqueId })
+                .then(() => {
+                  expect(false).toBe(true);
+                  spyApp.validateDashboardLoad.calls.reset();
+                  done();
+                })
+                .catch(response => {
+                  // Assert
+                  expect(spyApp.validateDashboardLoad).toHaveBeenCalledWith(testData.load);
+                  expect(spyApp.dashboardLoad).not.toHaveBeenCalledWith(testData.load);
+                  expect(response.statusCode).toEqual(400);
+                  // Cleanup
+                  spyApp.validateDashboardLoad.calls.reset();
+                  done();
+                });
+            });
+        });
       });
     });
 
@@ -4051,7 +4078,7 @@ describe('SDK-to-HPM', function () {
 
       it('report.resetTheme() sends PUT /report/theme with empty object as theme in body', function () {
         // Arrange
-        const response =  {
+        const response = {
           body: null
         };
 
