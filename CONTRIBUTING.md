@@ -58,11 +58,6 @@ The build and tests use webpack to compile all the source modules into one bundl
 ## Running the demo
 Navigate to `/demo` directory
 
-Install bower dependencies:
-```
-bower install
-```
-
 Serve the demo directory:
 ```
 npm start

@@ -28,10 +28,6 @@ Install from NPM:
 
 `npm install --save powerbi-client`
 
-Install from Bower:
-
-`bower install powerbi-client --save`
-
 Installing beta versions:
 
 `npm install --save powerbi-client@beta`
@@ -47,7 +43,7 @@ import * as pbi from 'powerbi-client';
 However, the library is exported as a Universal Module and the powerbi.js script can be included before your app's closing `</body>` tag as:
 
 ```html
-<script src="/bower_components/powerbi-client/dist/powerbi.js"></script>
+<script src="/powerbi-client/dist/powerbi.js"></script>
 ```
 
 When included directly, the library is exposed as a global named `powerbi-client`.

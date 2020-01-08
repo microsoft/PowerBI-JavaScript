@@ -1206,7 +1206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.3.0 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.3.1 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1345,6 +1345,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		    TokenType[TokenType["Aad"] = 0] = "Aad";
 		    TokenType[TokenType["Embed"] = 1] = "Embed";
 		})(TokenType = exports.TokenType || (exports.TokenType = {}));
+		var ContrastMode;
+		(function (ContrastMode) {
+		    ContrastMode[ContrastMode["None"] = 0] = "None";
+		    ContrastMode[ContrastMode["HighContrast1"] = 1] = "HighContrast1";
+		    ContrastMode[ContrastMode["HighContrast2"] = 2] = "HighContrast2";
+		    ContrastMode[ContrastMode["HighContrastBlack"] = 3] = "HighContrastBlack";
+		    ContrastMode[ContrastMode["HighContrastWhite"] = 4] = "HighContrastWhite";
+		})(ContrastMode = exports.ContrastMode || (exports.ContrastMode = {}));
 		var MenuLocation;
 		(function (MenuLocation) {
 		    MenuLocation[MenuLocation["Bottom"] = 0] = "Bottom";
@@ -1515,6 +1523,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        var filter = _super.prototype.toJSON.call(this);
 		        filter.operator = this.operator;
 		        filter.values = this.values;
+		        filter.requiresSingleSelect = !!this.requiresSingleSelect;
 		        return filter;
 		    };
 		    BasicFilter.schemaUrl = "http://powerbi.com/product/schema#basic";
@@ -1994,6 +2003,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    commandsSettingsArrayValidator: new typeValidator_1.ArrayValidator([new commandsSettingsValidator_1.CommandsSettingsValidator()]),
 		    commandsSettingsValidator: new commandsSettingsValidator_1.CommandsSettingsValidator(),
 		    conditionItemValidator: new filtersValidator_1.ConditionItemValidator(),
+		    contrastModeValidator: new typeValidator_1.EnumValidator([0, 1, 2, 3, 4]),
 		    customLayoutDisplayOptionValidator: new typeValidator_1.EnumValidator([0, 1, 2]),
 		    customLayoutValidator: new layoutValidator_1.CustomLayoutValidator(),
 		    customPageSizeValidator: new pageValidator_1.CustomPageSizeValidator(),
@@ -2898,6 +2908,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		                field: "filterType",
 		                validators: [validator_1.Validators.basicFilterTypeValidator]
 		            },
+		            {
+		                field: "requiresSingleSelect",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.booleanValidator]
+		            },
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
 		        return multipleFieldsValidator.validate(input, path, field);
@@ -3289,6 +3303,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "datasetBinding",
 		                validators: [validator_1.Validators.datasetBindingValidator]
+		            },
+		            {
+		                field: "contrastMode",
+		                validators: [validator_1.Validators.contrastModeValidator]
 		            },
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
