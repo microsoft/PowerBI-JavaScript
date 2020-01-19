@@ -30,9 +30,6 @@ function OpenSamplesStep() {
     $("#embed-and-interact-steps-wrapper").hide();
 
     $("#welcome-text").show();
-    
-    if (window.innerWidth > 540)
-        $("#playground-banner").show();
 
     trackEvent(TelemetryEventName.InnerSectionOpen, { section: TelemetryInnerSection.Sample, src: TelemetryEventSource.UserClick });
 }
@@ -58,7 +55,6 @@ function OpenCodeStep(mode, entityType, tokenType) {
     $("#embed-and-interact-steps-wrapper").show();
 
     $("#welcome-text").hide();
-    $("#playground-banner").hide();
 
     $("#highlighter").empty();
 

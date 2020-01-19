@@ -205,9 +205,7 @@ function filterTable(filterValues, table) {
 
 // Handles tooltip click action
 function onTootipClicked(tooltipId) {
-    if ( tooltipId === "closeTooltip"){
-        $('#startTooltip').hide();
-    } else if (!InsightToActionShowcaseState.tooltipNextPressed && tooltipId === "startTooltip") {
+    if (!InsightToActionShowcaseState.tooltipNextPressed && tooltipId === "startTooltip") {
         let newText = document.createTextNode("Then, click `Start campaign` menu command.");
         let startTooltipSubText = $('#startTooltip .showcaseTooltipSubText');
         const textOldHeight = startTooltipSubText[0].offsetHeight;

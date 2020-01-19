@@ -36,7 +36,7 @@
     "fetch": "^1.0.0",
     "http-server": "^0.9.0",
     "jquery": "^3.1.0",
-    "powerbi-client": "file:..",
+    "powerbi-client": "^2.10.2",
     "powerbi-report-authoring": "^1.0.0",
     "syntaxhighlighter": "4.0.1"
   },

@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.4.1): modal.js
+ * Bootstrap (v4.3.1): modal.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -15,7 +15,7 @@ import Util from './util'
  */
 
 const NAME               = 'modal'
-const VERSION            = '4.4.1'
+const VERSION            = '4.3.1'
 const DATA_KEY           = 'bs.modal'
 const EVENT_KEY          = `.${DATA_KEY}`
 const DATA_API_KEY       = '.data-api'
@@ -38,7 +38,6 @@ const DefaultType = {
 
 const Event = {
   HIDE              : `hide${EVENT_KEY}`,
-  HIDE_PREVENTED    : `hidePrevented${EVENT_KEY}`,
   HIDDEN            : `hidden${EVENT_KEY}`,
   SHOW              : `show${EVENT_KEY}`,
   SHOWN             : `shown${EVENT_KEY}`,
@@ -57,8 +56,7 @@ const ClassName = {
   BACKDROP           : 'modal-backdrop',
   OPEN               : 'modal-open',
   FADE               : 'fade',
-  SHOW               : 'show',
-  STATIC             : 'modal-static'
+  SHOW               : 'show'
 }
 
 const Selector = {
@@ -236,32 +234,8 @@ class Modal {
     return config
   }
 
-  _triggerBackdropTransition() {
-    if (this._config.backdrop === 'static') {
-      const hideEventPrevented = $.Event(Event.HIDE_PREVENTED)
-
-      $(this._element).trigger(hideEventPrevented)
-      if (hideEventPrevented.defaultPrevented) {
-        return
-      }
-
-      this._element.classList.add(ClassName.STATIC)
-
-      const modalTransitionDuration = Util.getTransitionDurationFromElement(this._element)
-
-      $(this._element).one(Util.TRANSITION_END, () => {
-        this._element.classList.remove(ClassName.STATIC)
-      })
-        .emulateTransitionEnd(modalTransitionDuration)
-      this._element.focus()
-    } else {
-      this.hide()
-    }
-  }
-
   _showElement(relatedTarget) {
     const transition = $(this._element).hasClass(ClassName.FADE)
-    const modalBody = this._dialog ? this._dialog.querySelector(Selector.MODAL_BODY) : null
 
     if (!this._element.parentNode ||
         this._element.parentNode.nodeType !== Node.ELEMENT_NODE) {
@@ -273,8 +247,8 @@ class Modal {
     this._element.removeAttribute('aria-hidden')
     this._element.setAttribute('aria-modal', true)
 
-    if ($(this._dialog).hasClass(ClassName.SCROLLABLE) && modalBody) {
-      modalBody.scrollTop = 0
+    if ($(this._dialog).hasClass(ClassName.SCROLLABLE)) {
+      this._dialog.querySelector(Selector.MODAL_BODY).scrollTop = 0
     } else {
       this._element.scrollTop = 0
     }
@@ -328,7 +302,8 @@ class Modal {
     if (this._isShown && this._config.keyboard) {
       $(this._element).on(Event.KEYDOWN_DISMISS, (event) => {
         if (event.which === ESCAPE_KEYCODE) {
-          this._triggerBackdropTransition()
+          event.preventDefault()
+          this.hide()
         }
       })
     } else if (!this._isShown) {
@@ -386,8 +361,11 @@ class Modal {
         if (event.target !== event.currentTarget) {
           return
         }
-
-        this._triggerBackdropTransition()
+        if (this._config.backdrop === 'static') {
+          this._element.focus()
+        } else {
+          this.hide()
+        }
       })
 
       if (animate) {
