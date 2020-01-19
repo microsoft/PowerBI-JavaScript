@@ -1,0 +1,11 @@
+{
+  "name": "powerbi-client",
+  "dependencies": {},
+  "globalDependencies": {
+    "es6-promise": "registry:dt/es6-promise#0.0.0+20160423074304",
+    "jasmine": "registry:dt/jasmine#2.2.0+20160505161446",
+    "jquery": "registry:dt/jquery#1.10.0+20160417213236",
+    "jsen": "registry:dt/jsen#0.0.0+20160328204314",
+    "karma-jasmine": "registry:dt/karma-jasmine#0.0.0+20160316155526"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "max-line-length": [false],
+    "member-access": false,
+    "no-console": [false],
+    "one-line": [
+      "check-whitespace",
+      "check-open-brace"
+    ],
+    "quotemark": [
+      "single",
+      "avoid-escape"
+    ],
+    "trailing-comma": [false],
+    "whitespace": [
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-module",
+      "check-separator",
+      "check-type"
+    ],
+    "object-literal-sort-keys": false
+  }
+}
