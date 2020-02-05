@@ -3,7 +3,6 @@ JavaScript library for embedding Power BI into your apps.
 
 [![Build Status](https://img.shields.io/travis/Microsoft/PowerBI-JavaScript/master.svg)](https://travis-ci.org/Microsoft/PowerBI-JavaScript)
 [![NPM Version](https://img.shields.io/npm/v/powerbi-client.svg)](https://www.npmjs.com/package/powerbi-client)
-[![Bower Version](https://img.shields.io/bower/v/powerbi-client.svg)](https://bower.io/search/?q=powerbi-client)
 [![Nuget Version](https://img.shields.io/nuget/v/Microsoft.PowerBI.JavaScript.svg)](https://www.nuget.org/packages/Microsoft.PowerBI.JavaScript/)
 [![NPM Total Downloads](https://img.shields.io/npm/dt/powerbi-client.svg)](https://www.npmjs.com/package/powerbi-client)
 [![NPM Monthly Downloads](https://img.shields.io/npm/dm/powerbi-client.svg)](https://www.npmjs.com/package/powerbi-client)
@@ -29,10 +28,6 @@ Install from NPM:
 
 `npm install --save powerbi-client`
 
-Install from Bower:
-
-`bower install powerbi-client --save`
-
 Installing beta versions:
 
 `npm install --save powerbi-client@beta`
@@ -48,7 +43,7 @@ import * as pbi from 'powerbi-client';
 However, the library is exported as a Universal Module and the powerbi.js script can be included before your app's closing `</body>` tag as:
 
 ```html
-<script src="/bower_components/powerbi-client/dist/powerbi.js"></script>
+<script src="/powerbi-client/dist/powerbi.js"></script>
 ```
 
 When included directly, the library is exposed as a global named `powerbi-client`.
