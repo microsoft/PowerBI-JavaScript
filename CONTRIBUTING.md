@@ -58,14 +58,11 @@ The build and tests use webpack to compile all the source modules into one bundl
 ## Running the demo
 Navigate to `/demo` directory
 
-<<<<<<< HEAD
-=======
 Install npm dependencies:
 ```
 npm install
 ```
 
->>>>>>> powerbi/master
 Serve the demo directory:
 ```
 npm start
