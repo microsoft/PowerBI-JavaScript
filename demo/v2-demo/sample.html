@@ -1,3 +1,7 @@
+<div id="playground-banner" onclick="openBannerLink();">
+    <p id="playground-banner-text">Influence the future of Power BI Embedded by joining our research panel.&nbsp;</p><p id="playground-banner-text-underlined">Sign up now!</p>
+    <img id="playground-banner-close" src="images\close.png" onclick="closeBanner();"/>
+</div>
 <div id="steps-nav-bar">
     <div id="steps-ul-dev">
         <ul id="steps-ul" class="steps-ul">
@@ -29,3 +33,18 @@
 
 <div id="mainContent">
 </div>
+
+<script>
+    var showBanner = true;
+    function closeBanner() {
+        showBanner = false;
+        $("#playground-banner").hide();
+    }
+
+    function openBannerLink() {
+        if (!showBanner)
+            return;
+        
+        window.open("https://www.usertesting.com/panels/7wZ4nzGa/join?RID=Playground", '_blank');
+    }
+</script>

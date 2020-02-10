@@ -1,4 +1,4 @@
-/*! powerbi-client v2.10.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.10.4 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -77,10 +77,18 @@ declare module "util" {
      * Checks if the embed url is for RDL report.
      *
      * @export
-      * @param {string} embedUrl
-      * @returns {boolean}
+     * @param {string} embedUrl
+     * @returns {boolean}
      */
     export function isRDLEmbed(embedUrl: string): boolean;
+    /**
+     * Checks if the embed url contains autoAuth=true.
+     *
+     * @export
+     * @param {string} embedUrl
+     * @returns {boolean}
+     */
+    export function autoAuthInEmbedUrl(embedUrl: string): boolean;
     /**
      * Returns random number
      */
@@ -99,6 +107,10 @@ declare module "defaults" {
         static defaultSettings: models.ISettings;
         static defaultQnaSettings: models.IQnaSettings;
     }
+}
+declare module "errors" {
+    export let APINotSupportedForRDLError: string;
+    export let EmbedUrlNotSupported: string;
 }
 declare module "embed" {
     import * as service from "service";
@@ -494,9 +506,6 @@ declare module "embed" {
          */
         private frontLoadSendConfig(config);
     }
-}
-declare module "errors" {
-    export let APINotSupportedForRDLError: string;
 }
 declare module "ifilterable" {
     import * as models from 'powerbi-models';
