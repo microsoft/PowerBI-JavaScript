@@ -111,6 +111,7 @@ function _Embed_BasicEmbed_Mobile() {
         permissions: permissions,
         pageName: "ReportSectioneb8c865100f8508cc533",
         settings: {
+            filterPaneEnabled: false,
             layoutType: models.LayoutType.MobilePortrait
         }
     };

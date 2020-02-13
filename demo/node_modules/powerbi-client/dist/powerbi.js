@@ -1,4 +1,4 @@
-/*! powerbi-client v2.10.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.10.4 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -61,7 +61,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.factories = factories;
 	var models = __webpack_require__(5);
 	exports.models = models;
-	var report_1 = __webpack_require__(6);
+	var report_1 = __webpack_require__(7);
 	exports.Report = report_1.Report;
 	var dashboard_1 = __webpack_require__(13);
 	exports.Dashboard = dashboard_1.Dashboard;
@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	var embed = __webpack_require__(2);
-	var report_1 = __webpack_require__(6);
+	var report_1 = __webpack_require__(7);
 	var create_1 = __webpack_require__(12);
 	var dashboard_1 = __webpack_require__(13);
 	var tile_1 = __webpack_require__(14);
@@ -516,6 +516,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var utils = __webpack_require__(3);
 	var sdkConfig = __webpack_require__(4);
 	var models = __webpack_require__(5);
+	var errors_1 = __webpack_require__(6);
 	/**
 	 * Base class for all Power BI embed components
 	 *
@@ -536,6 +537,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    function Embed(service, element, config, iframe, phasedRender, isBootstrap) {
 	        this.allowedEvents = [];
+	        if (utils.autoAuthInEmbedUrl(config.embedUrl)) {
+	            throw new Error(errors_1.EmbedUrlNotSupported);
+	        }
 	        Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
 	        this.eventHandlers = [];
 	        this.service = service;
@@ -700,7 +704,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Embed.prototype.on = function (eventName, handler) {
 	        if (this.allowedEvents.indexOf(eventName) === -1) {
-	            throw new Error("eventName is must be one of " + this.allowedEvents + ". You passed: " + eventName);
+	            throw new Error("eventName must be one of " + this.allowedEvents + ". You passed: " + eventName);
 	        }
 	        this.eventHandlers.push({
 	            test: function (event) { return event.name === eventName; },
@@ -1170,13 +1174,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Checks if the embed url is for RDL report.
 	 *
 	 * @export
-	  * @param {string} embedUrl
-	  * @returns {boolean}
+	 * @param {string} embedUrl
+	 * @returns {boolean}
 	 */
 	function isRDLEmbed(embedUrl) {
 	    return embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
 	}
 	exports.isRDLEmbed = isRDLEmbed;
+	/**
+	 * Checks if the embed url contains autoAuth=true.
+	 *
+	 * @export
+	 * @param {string} embedUrl
+	 * @returns {boolean}
+	 */
+	function autoAuthInEmbedUrl(embedUrl) {
+	    return embedUrl && decodeURIComponent(embedUrl).toLowerCase().indexOf("autoauth=true") >= 0;
+	}
+	exports.autoAuthInEmbedUrl = autoAuthInEmbedUrl;
 	/**
 	 * Returns random number
 	 */
@@ -1195,7 +1210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.10.3',
+	    version: '2.10.4',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -1206,7 +1221,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.3.1 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.3.2 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1523,7 +1538,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		        var filter = _super.prototype.toJSON.call(this);
 		        filter.operator = this.operator;
 		        filter.values = this.values;
-		        filter.requiresSingleSelect = !!this.requiresSingleSelect;
+		        filter.requireSingleSelection = !!this.requireSingleSelection;
 		        return filter;
 		    };
 		    BasicFilter.schemaUrl = "http://powerbi.com/product/schema#basic";
@@ -2909,8 +2924,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		                validators: [validator_1.Validators.basicFilterTypeValidator]
 		            },
 		            {
-		                field: "requiresSingleSelect",
-		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.booleanValidator]
+		                field: "requireSingleSelection",
+		                validators: [validator_1.Validators.booleanValidator]
 		            },
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
@@ -4562,6 +4577,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports) {
+
+	exports.APINotSupportedForRDLError = "This API is currently not supported for RDL reports";
+	exports.EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please use Power BI REST APIs to get the valid URL";
+
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -4572,7 +4595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var embed = __webpack_require__(2);
 	var models = __webpack_require__(5);
 	var utils = __webpack_require__(3);
-	var errors = __webpack_require__(7);
+	var errors = __webpack_require__(6);
 	var page_1 = __webpack_require__(8);
 	var defaults_1 = __webpack_require__(10);
 	var bookmarksManager_1 = __webpack_require__(11);
@@ -4982,20 +5005,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-	exports.APINotSupportedForRDLError = "This API is currently not supported for RDL reports";
-
-
-/***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var visualDescriptor_1 = __webpack_require__(9);
 	var models = __webpack_require__(5);
 	var utils = __webpack_require__(3);
-	var errors = __webpack_require__(7);
+	var errors = __webpack_require__(6);
 	/**
 	 * A Power BI report page
 	 *
@@ -5312,7 +5328,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__(3);
-	var errors = __webpack_require__(7);
+	var errors = __webpack_require__(6);
 	/**
 	 * Manages report bookmarks.
 	 *
@@ -5802,7 +5818,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var models = __webpack_require__(5);
-	var report_1 = __webpack_require__(6);
+	var report_1 = __webpack_require__(7);
 	/**
 	 * The Power BI Visual embed component
 	 *
