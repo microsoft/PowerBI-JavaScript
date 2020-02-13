@@ -166,11 +166,22 @@ export function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow
  * Checks if the embed url is for RDL report.
  * 
  * @export
-  * @param {string} embedUrl
-  * @returns {boolean}
+ * @param {string} embedUrl
+ * @returns {boolean}
  */
 export function isRDLEmbed(embedUrl: string): boolean {
   return embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
+}
+
+/**
+ * Checks if the embed url contains autoAuth=true.
+ * 
+ * @export
+ * @param {string} embedUrl
+ * @returns {boolean}
+ */
+export function autoAuthInEmbedUrl(embedUrl: string): boolean {
+  return embedUrl && decodeURIComponent(embedUrl).toLowerCase().indexOf("autoauth=true") >= 0;
 }
 
 /**
