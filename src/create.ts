@@ -1,11 +1,23 @@
+/**
+ * @hidden
+ */
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
 import * as utils from './util';
 import { Defaults } from './defaults';
 
+/**
+ * A Power BI Report creator component
+ *
+ * @export
+ * @class Create
+ * @extends {embed.Embed}
+ */
 export class Create extends embed.Embed {
-
+  /*
+   * @hidden
+   */
   constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean, isBootstrap?: boolean) {
     super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
   }
@@ -54,6 +66,10 @@ export class Create extends embed.Embed {
     }
   }
 
+  /**
+   * @hidden
+   * @returns {string}
+   */
   getDefaultEmbedUrlEndpoint(): string {
     return "reportEmbed";
   }

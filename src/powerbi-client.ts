@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import * as service from './service';
 import * as factories from './factories';
 import * as models from 'powerbi-models';

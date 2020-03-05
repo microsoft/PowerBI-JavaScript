@@ -1,5 +1,6 @@
 /**
  * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
+ * @hidden
  */
 import { IHpmFactory, IWpmpFactory, IRouterFactory } from './service';
 import config from './config';

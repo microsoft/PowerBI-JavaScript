@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
@@ -12,9 +15,14 @@ import { Defaults } from './defaults';
  * @extends {Embed}
  */
 export class Tile extends embed.Embed {
+    /** @hidden */  
     static type = "Tile";
+    /** @hidden */
     static allowedEvents = ["tileClicked", "tileLoaded"];
 
+    /**
+     * @hidden
+     */
     constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) {
       let config = <embed.IEmbedConfiguration>baseConfig;
       super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
@@ -60,6 +68,10 @@ export class Tile extends embed.Embed {
       (<embed.IEmbedConfiguration>this.config).id = this.getId();
     }
 
+    /**
+     * @hidden
+     * @returns {string}
+     */
     getDefaultEmbedUrlEndpoint(): string {
       return "tileEmbed";
     }

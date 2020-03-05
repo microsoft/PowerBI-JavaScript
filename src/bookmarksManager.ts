@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -32,7 +35,9 @@ export interface IBookmarksManager {
  * @implements {IBookmarksManager}
  */
 export class BookmarksManager implements IBookmarksManager {
-
+    /**
+     * @hidden
+     */
     constructor(private service: service.Service, private config: embed.IEmbedConfigurationBase, private iframe?: HTMLIFrameElement) {
     }
 
@@ -62,7 +67,7 @@ export class BookmarksManager implements IBookmarksManager {
     }
 
     /**
-     * Apply bookmark By name.
+     * Apply bookmark by name.
      *
      * ```javascript
      * bookmarksManager.apply(bookmarkName)
@@ -135,7 +140,7 @@ export class BookmarksManager implements IBookmarksManager {
      * Apply bookmark state.
      *
      * ```javascript
-     * bookmarksManager.applyState(bookmarkName)
+     * bookmarksManager.applyState(bookmarkState)
      * ```
      *
      * @returns {Promise<void>}

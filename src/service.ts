@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import * as embed from './embed';
 import { Report } from './report';
 import { Create } from './create';
@@ -19,22 +22,37 @@ export interface IEvent<T> {
   value: T;
 }
 
+/**
+ * @hidden
+ */
 export interface ICustomEvent<T> extends CustomEvent {
   detail: T;
 }
 
+/**
+ * @hidden
+ */
 export interface IEventHandler<T> {
   (event: ICustomEvent<T>): any;
 }
 
+/**
+ * @hidden
+ */
 export interface IHpmFactory {
   (wpmp: wpmp.WindowPostMessageProxy, targetWindow?: Window, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
 }
 
+/**
+ * @hidden
+ */
 export interface IWpmpFactory {
   (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window): wpmp.WindowPostMessageProxy;
 }
 
+/**
+ * @hidden
+ */
 export interface IRouterFactory {
   (wpmp: wpmp.WindowPostMessageProxy): router.Router;
 }
@@ -91,6 +109,7 @@ export class Service implements IService {
    * Gets or sets the access token as the global fallback token to use when a local token is not provided for a report or tile.
    *
    * @type {string}
+   * @hidden
    */
   accessToken: string;
 
@@ -100,9 +119,13 @@ export class Service implements IService {
   /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
   private embeds: embed.Embed[];
 
-  /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
+  /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. 
+   * @hidden
+  */
   hpm: hpm.HttpPostMessage;
-  /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
+  /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests 
+   * @hidden
+  */
   wpmp: wpmp.WindowPostMessageProxy;
   private router: router.Router;
   private uniqueSessionId: string;
@@ -114,6 +137,7 @@ export class Service implements IService {
    * @param {IWpmpFactory} wpmpFactory The window post message factory used in the postMessage communication layer
    * @param {IRouterFactory} routerFactory The router factory used in the postMessage communication layer
    * @param {IServiceConfiguration} [config={}]
+   * @hidden
    */
   constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config: IServiceConfiguration = {}) {
     this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
@@ -321,6 +345,7 @@ export class Service implements IService {
    * @param {IPowerBiElement} element
    * @param {embed.IEmbedConfigurationBase} config
    * @returns {embed.Embed}
+   * @hidden
    */
   private embedNew(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed {
     const componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
@@ -350,6 +375,7 @@ export class Service implements IService {
    * @param {IPowerBiElement} element
    * @param {embed.IEmbedConfigurationBase} config
    * @returns {embed.Embed}
+   * @hidden
    */
   private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed {
     const component = utils.find(x => x.element === element, this.embeds);
@@ -489,6 +515,7 @@ export class Service implements IService {
    *
    * @private
    * @param {IEvent<any>} event
+   * @hidden
    */
   private handleEvent(event: IEvent<any>): void {
     let embed = utils.find(embed => {
