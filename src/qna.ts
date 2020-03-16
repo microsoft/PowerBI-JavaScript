@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
@@ -11,9 +14,14 @@ import * as utils from './util';
  * @extends {Embed}
  */
 export class Qna extends embed.Embed {
+    /** @hidden */  
     static type = "Qna";
+    /** @hidden */  
     static allowedEvents = ["loaded", "visualRendered"];
 
+    /**
+     * @hidden
+     */
     constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) {
       super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
 
@@ -57,6 +65,10 @@ export class Qna extends embed.Embed {
       // Nothing to do in qna embed.
     }
 
+    /**
+     * @hidden
+     * @returns {string}
+     */
     getDefaultEmbedUrlEndpoint(): string {
       return "qnaEmbed";
     }

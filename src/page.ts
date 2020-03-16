@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
 import { VisualDescriptor } from './visualDescriptor';
@@ -81,6 +84,7 @@ export class Page implements IPageNode, IFilterable {
    * @param {string} [displayName]
    * @param {boolean} [isActivePage]
    * @param {models.SectionVisibility} [visibility]
+   * @hidden
    */
   constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility, defaultSize?: models.ICustomPageSize, defaultDisplayOption?: models.DisplayOption) {
     this.report = report;
