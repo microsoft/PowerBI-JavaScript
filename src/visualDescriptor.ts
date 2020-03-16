@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 import { IPageNode, Page } from './page';
@@ -59,6 +62,9 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    */
   page: IPageNode;
 
+  /**
+   * @hidden
+   */
   constructor(page: IPageNode, name: string, title: string, type: string, layout: models.IVisualLayout) {
     this.name = name;
     this.title = title;

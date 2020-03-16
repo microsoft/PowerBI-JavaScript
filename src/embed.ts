@@ -106,6 +106,7 @@ export interface IEmbedSettings extends models.ISettings, ISettings {
 export interface IQnaSettings extends models.IQnaSettings, ISettings {
 }
 
+/** @hidden */
 export interface IInternalEventHandler<T> {
   test(event: service.IEvent<T>): boolean;
   handle(event: service.ICustomEvent<T>): void;
@@ -116,26 +117,37 @@ export interface IInternalEventHandler<T> {
  *
  * @export
  * @abstract
+ * @hidden
  * @class Embed
  */
 export abstract class Embed {
+  /** @hidden */
   static allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected", "buttonClicked"];
+  /** @hidden */
   static accessTokenAttribute = 'powerbi-access-token';
+  /** @hidden */
   static embedUrlAttribute = 'powerbi-embed-url';
+  /** @hidden */
   static nameAttribute = 'powerbi-name';
+  /** @hidden */
   static typeAttribute = 'powerbi-type';
+  /** @hidden */
   static defaultEmbedHostName = "https://app.powerbi.com";
-
+  
+  /** @hidden */
   static type: string;
-
+  
+  /** @hidden */
   static maxFrontLoadTimes: number = 2;
-
+ 
+  /** @hidden */
   allowedEvents = [];
 
   /**
    * Gets or sets the event handler registered for this embed component.
    *
    * @type {IInternalEventHandler<any>[]}
+   * @hidden
    */
   eventHandlers: IInternalEventHandler<any>[];
 
@@ -143,6 +155,7 @@ export abstract class Embed {
    * Gets or sets the Power BI embed service.
    *
    * @type {service.Service}
+   * @hidden
    */
   service: service.Service;
 
@@ -150,6 +163,7 @@ export abstract class Embed {
    * Gets or sets the HTML element that contains the Power BI embed component.
    *
    * @type {HTMLElement}
+   * @hidden
    */
   element: HTMLElement;
 
@@ -157,6 +171,7 @@ export abstract class Embed {
    * Gets or sets the HTML iframe element that renders the Power BI embed component.
    *
    * @type {HTMLIFrameElement}
+   * @hidden
    */
   iframe: HTMLIFrameElement;
 
@@ -164,6 +179,7 @@ export abstract class Embed {
    * Gets or sets the configuration settings for the Power BI embed component.
    *
    * @type {IEmbedConfigurationBase}
+   * @hidden
    */
   config: IEmbedConfigurationBase;
 
@@ -171,6 +187,7 @@ export abstract class Embed {
    * Gets or sets the bootstrap configuration for the Power BI embed component received by powerbi.bootstrap().
    *
    * @type {IBootstrapEmbedConfiguration}
+   * @hidden
    */
   bootstrapConfig: IBootstrapEmbedConfiguration;
 
@@ -178,26 +195,31 @@ export abstract class Embed {
    * Gets or sets the configuration settings for creating report.
    *
    * @type {models.IReportCreateConfiguration}
+   * @hidden
    */
   createConfig: models.IReportCreateConfiguration;
 
   /**
    * Url used in the load request.
+   * @hidden
    */
   loadPath: string;
 
   /**
    * Url used in the load request.
+   * @hidden
    */
   phasedLoadPath: string;
 
   /**
    * Type of embed
+   * @hidden
    */
-  embeType: string;
+  embedtype: string;
 
   /**
    * Handler function for the 'ready' event
+   * @hidden
    */
   frontLoadHandler: () => any;
 
@@ -210,6 +232,7 @@ export abstract class Embed {
    * @param {service.Service} service
    * @param {HTMLElement} element
    * @param {IEmbedConfigurationBase} config
+   * @hidden
    */
   constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean, isBootstrap?: boolean) {
     if (utils.autoAuthInEmbedUrl(config.embedUrl)) {
@@ -221,11 +244,11 @@ export abstract class Embed {
     this.service = service;
     this.element = element;
     this.iframe = iframe;
-    this.embeType = config.type.toLowerCase();
+    this.embedtype = config.type.toLowerCase();
 
     this.populateConfig(config, isBootstrap);
 
-    if (this.embeType === 'create') {
+    if (this.embedtype === 'create') {
       this.setIframe(false /*set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
     } else {
       this.setIframe(true /*set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
@@ -440,6 +463,7 @@ export abstract class Embed {
    * @private
    * @param {string} globalAccessToken
    * @returns {string}
+   * @hidden
    */
   private getAccessToken(globalAccessToken: string): string {
     const accessToken = this.config.accessToken || this.element.getAttribute(Embed.accessTokenAttribute) || globalAccessToken;
@@ -454,6 +478,7 @@ export abstract class Embed {
   /**
    * Populate config for create and load
    *
+   * @hidden
    * @param {IEmbedConfiguration}
    * @returns {void}
    */
@@ -492,6 +517,7 @@ export abstract class Embed {
    *
    * @private
    * @param {IEmbedConfiguration} config
+   * @hidden
    */
   private addLocaleToEmbedUrl(config: IEmbedConfiguration): void {
     if (!config.settings) {
@@ -511,6 +537,7 @@ export abstract class Embed {
    *
    * @private
    * @returns {string}
+   * @hidden
    */
   private getEmbedUrl(isBootstrap: boolean): string {
     let embedUrl = this.config.embedUrl || this.element.getAttribute(Embed.embedUrlAttribute);
@@ -527,6 +554,9 @@ export abstract class Embed {
     return embedUrl;
   }
 
+  /**
+   * @hidden
+   */
   private getDefaultEmbedUrl(hostname: string): string {
     if (!hostname) {
       hostname = Embed.defaultEmbedHostName;
@@ -554,6 +584,7 @@ export abstract class Embed {
    *
    * @private
    * @returns {string}
+   * @hidden
    */
   private getUniqueId(): string {
     return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || utils.createRandomString();
@@ -564,6 +595,7 @@ export abstract class Embed {
    *
    * @private
    * @returns {string}
+   * @hidden
    */
   private getGroupId(): string {
     return this.config.groupId || Embed.findGroupIdFromEmbedUrl(this.config.embedUrl);
@@ -580,6 +612,7 @@ export abstract class Embed {
   /**
    * Raise a config changed event.
    *
+   * @hidden
    * @returns {void}
    */
   abstract configChanged(isBootstrap: boolean): void;
@@ -589,6 +622,7 @@ export abstract class Embed {
    * For example: report embed endpoint is reportEmbed.
    * This will help creating a default embed URL such as: https://app.powerbi.com/reportEmbed
    *
+   * @hidden
    * @returns {string} endpoint.
    */
   abstract getDefaultEmbedUrlEndpoint(): string;
@@ -620,6 +654,7 @@ export abstract class Embed {
    * @private
    * @param {HTMLIFrameElement} iframe
    * @returns {boolean}
+   * @hidden
    */
   private isFullscreen(iframe: HTMLIFrameElement): boolean {
     const options = ['fullscreenElement', 'webkitFullscreenElement', 'mozFullscreenScreenElement', 'msFullscreenElement'];
@@ -634,6 +669,7 @@ export abstract class Embed {
 
   /**
    * Sets Iframe for embed
+   * @hidden
    */
   private setIframe(isLoad: boolean, phasedRender?: boolean, isBootstrap?: boolean): void {
     if (!this.iframe) {
@@ -675,7 +711,7 @@ export abstract class Embed {
   }
 
   /**
-   * Sets Iframe's title
+   * Set the component title for accessibility. In case of iframes, this method will change the iframe title.
    */
   setComponentTitle(title: string): void {
     if (!this.iframe) {
@@ -712,6 +748,7 @@ export abstract class Embed {
    * Adds the ability to get groupId from url.
    * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
    *
+   * @hidden
    * @static
    * @param {string} url
    * @returns {string}
@@ -730,6 +767,7 @@ export abstract class Embed {
 
   /**
    * Sends the config for front load calls, after 'ready' message is received from the iframe
+   * @hidden
    */
   private frontLoadSendConfig(config: IEmbedConfigurationBase): Promise<void> {
     if (!config.accessToken) {
