@@ -1,6 +1,5 @@
-/**
- * @hidden
- */
+/** @ignore *//** */
+
 import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
 import { VisualDescriptor } from './visualDescriptor';

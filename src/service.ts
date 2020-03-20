@@ -1,6 +1,5 @@
-/**
- * @hidden
- */
+/** @ignore *//** */
+
 import * as embed from './embed';
 import { Report } from './report';
 import { Create } from './create';

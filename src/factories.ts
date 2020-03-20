@@ -1,7 +1,7 @@
 /**
  * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
- * @hidden
  */
+/** @ignore *//** */
 import { IHpmFactory, IWpmpFactory, IRouterFactory } from './service';
 import config from './config';
 import * as wpmp from 'window-post-message-proxy';

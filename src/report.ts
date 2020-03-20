@@ -1,6 +1,5 @@
-/**
- * @hidden
- */
+/** @ignore *//** */
+
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
