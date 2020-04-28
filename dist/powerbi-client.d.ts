@@ -95,9 +95,7 @@ declare module "util" {
     export function getRandomValue(): number;
 }
 declare module "config" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     const config: {
         version: string;
         type: string;
@@ -105,7 +103,7 @@ declare module "config" {
     export default config;
 }
 declare module "defaults" {
-    /** @hidden */
+    /** @ignore */ /** */
     import * as models from 'powerbi-models';
     /** @hidden */
     export abstract class Defaults {
@@ -122,8 +120,8 @@ declare module "embed" {
     import * as models from 'powerbi-models';
     global  {
         interface Document {
-            mozCancelFullScreen: Function;
-            msExitFullscreen: Function;
+            mozCancelFullScreen: any;
+            msExitFullscreen: any;
         }
         interface HTMLIFrameElement {
             mozRequestFullScreen: Function;
@@ -551,9 +549,7 @@ declare module "embed" {
     }
 }
 declare module "ifilterable" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import * as models from 'powerbi-models';
     /**
      * Decorates embed components that support filters
@@ -585,9 +581,7 @@ declare module "ifilterable" {
     }
 }
 declare module "visualDescriptor" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import * as models from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { IPageNode } from "page";
@@ -734,9 +728,7 @@ declare module "visualDescriptor" {
     }
 }
 declare module "page" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import { IFilterable } from "ifilterable";
     import { IReportNode } from "report";
     import { VisualDescriptor } from "visualDescriptor";
@@ -881,9 +873,7 @@ declare module "page" {
     }
 }
 declare module "report" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import * as service from "service";
     import * as embed from "embed";
     import * as models from 'powerbi-models';
@@ -1146,9 +1136,7 @@ declare module "report" {
     }
 }
 declare module "create" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import * as service from "service";
     import * as models from 'powerbi-models';
     import * as embed from "embed";
@@ -1206,9 +1194,7 @@ declare module "create" {
     }
 }
 declare module "dashboard" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import * as service from "service";
     import * as embed from "embed";
     import * as models from 'powerbi-models';
@@ -1289,9 +1275,7 @@ declare module "dashboard" {
     }
 }
 declare module "tile" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import * as service from "service";
     import * as models from 'powerbi-models';
     import * as embed from "embed";
@@ -1344,9 +1328,7 @@ declare module "tile" {
     }
 }
 declare module "qna" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import * as service from "service";
     import * as models from 'powerbi-models';
     import * as embed from "embed";
@@ -1397,9 +1379,7 @@ declare module "qna" {
     }
 }
 declare module "visual" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import * as service from "service";
     import * as embed from "embed";
     import * as models from 'powerbi-models';
@@ -1492,9 +1472,7 @@ declare module "visual" {
     }
 }
 declare module "service" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import * as embed from "embed";
     import * as wpmp from 'window-post-message-proxy';
     import * as hpm from 'http-post-message';
@@ -1720,9 +1698,7 @@ declare module "service" {
     }
 }
 declare module "bookmarksManager" {
-    /**
-     * @hidden
-     */
+    /** @ignore */ /** */
     import * as service from "service";
     import * as embed from "embed";
     import * as models from 'powerbi-models';
@@ -1814,8 +1790,8 @@ declare module "bookmarksManager" {
 declare module "factories" {
     /**
      * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
-     * @hidden
      */
+    /** @ignore */ /** */
     import { IHpmFactory, IWpmpFactory, IRouterFactory } from "service";
     export { IHpmFactory, IWpmpFactory, IRouterFactory };
     export const hpmFactory: IHpmFactory;

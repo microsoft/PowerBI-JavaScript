@@ -8,10 +8,10 @@ import { EmbedUrlNotSupported } from './errors';
 declare global {
   interface Document {
     // Mozilla Fullscreen
-    mozCancelFullScreen: Function;
+    mozCancelFullScreen: any;
 
     // Ms Fullscreen
-    msExitFullscreen: Function;
+    msExitFullscreen: any;
   }
 
   interface HTMLIFrameElement {

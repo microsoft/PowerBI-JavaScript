@@ -93,9 +93,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/**
-	 * @hidden
-	 */
+	/** @ignore */ /** */
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(7);
 	var create_1 = __webpack_require__(12);
@@ -1242,9 +1240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports) {
 
-	/**
-	 * @hidden
-	 */
+	/** @ignore */ /** */
 	var config = {
 	    version: '2.11.0',
 	    type: 'js'
@@ -4732,6 +4728,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	/** @ignore */ /** */
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
@@ -5174,6 +5171,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	/** @ignore */ /** */
 	var visualDescriptor_1 = __webpack_require__(9);
 	var models = __webpack_require__(5);
 	var utils = __webpack_require__(3);
@@ -5325,6 +5323,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ (function(module, exports) {
 
+	/** @ignore */ /** */
 	/**
 	 * A Power BI visual within a page
 	 *
@@ -5852,6 +5851,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	/** @ignore */ /** */
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
@@ -5946,6 +5946,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	/** @ignore */ /** */
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
@@ -6028,6 +6029,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	/** @ignore */ /** */
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
