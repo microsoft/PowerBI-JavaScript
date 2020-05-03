@@ -618,6 +618,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    /**
+	     * Get the correlationId for the current embed session.
+	     *
+	     * ```javascript
+	     * // Get the correlationId for the current embed session
+	     * report.getCorrelationId()
+	     *   .then(correlationId => {
+	     *     ...
+	     *   });
+	     * ```
+	     *
+	     * @returns {Promise<string>}
+	     */
+	    Embed.prototype.getCorrelationId = function () {
+	        return this.service.hpm.get("/getCorrelationId", { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
 	     * Sends load configuration data.
 	     *
 	     * ```javascript

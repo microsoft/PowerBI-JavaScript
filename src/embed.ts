@@ -313,6 +313,27 @@ export abstract class Embed {
   }
 
   /**
+   * Get the correlationId for the current embed session.
+   *
+   * ```javascript
+   * // Get the correlationId for the current embed session
+   * report.getCorrelationId()
+   *   .then(correlationId => {
+   *     ...
+   *   });
+   * ```
+   *
+   * @returns {Promise<string>}
+   */
+  getCorrelationId(): Promise<string> {
+    return this.service.hpm.get<string>(`/getCorrelationId`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => response.body,
+      response => {
+        throw response.body;
+      });
+  }
+
+  /**
    * Sends load configuration data.
    *
    * ```javascript

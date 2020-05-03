@@ -339,6 +339,20 @@ declare module "embed" {
          */
         saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void>;
         /**
+         * Get the correlationId for the current embed session.
+         *
+         * ```javascript
+         * // Get the correlationId for the current embed session
+         * report.getCorrelationId()
+         *   .then(correlationId => {
+         *     ...
+         *   });
+         * ```
+         *
+         * @returns {Promise<string>}
+         */
+        getCorrelationId(): Promise<string>;
+        /**
          * Sends load configuration data.
          *
          * ```javascript
