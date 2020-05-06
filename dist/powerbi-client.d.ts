@@ -831,6 +831,17 @@ declare module "page" {
          */
         getFilters(): Promise<models.IFilter[]>;
         /**
+         * Delete the page from the report
+         *
+         * ```javascript
+         * // Delete the page from the report
+         * page.delete();
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        delete(): Promise<void>;
+        /**
          * Removes all filters from this page of the report.
          *
          * ```javascript
@@ -966,6 +977,28 @@ declare module "report" {
          * @returns {Promise<void>}
          */
         render(config?: IReportLoadConfiguration): Promise<void>;
+        /**
+         * Add an empty page to the report
+         *
+         * ```javascript
+         * // Add a page to the report with "Sales" as the page display name
+         * report.addPage("Sales");
+         * ```
+         *
+         * @returns {Promise<Page>}
+         */
+        addPage(displayName?: string): Promise<Page>;
+        /**
+         * Delete a page from a report
+         *
+         * ```javascript
+         * // Delete a page from a report by pageName (PageName is different than the display name and can be acquired from the getPages API)
+         * report.deletePage("Sales145");
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        deletePage(pageName?: string): Promise<void>;
         /**
          * Gets filters that are applied at the report level.
          *

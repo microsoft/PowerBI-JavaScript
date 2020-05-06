@@ -114,6 +114,26 @@ export class Page implements IPageNode, IFilterable {
   }
 
   /**
+   * Delete the page from the report
+   *
+   * ```javascript
+   * // Delete the page from the report
+   * page.delete();
+   * ```
+   *
+   * @returns {Promise<void>}
+   */
+  delete(): Promise<void> {
+    return this.report.service.hpm.delete<models.IError[]>(`/report/pages/${this.name}`, { }, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+    .then(response => {
+      return response.body;
+    })
+    .catch(response => {
+      throw response.body;
+    });
+  }
+
+  /**
    * Removes all filters from this page of the report.
    *
    * ```javascript

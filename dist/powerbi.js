@@ -4832,6 +4832,48 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    /**
+	     * Add an empty page to the report
+	     *
+	     * ```javascript
+	     * // Add a page to the report with "Sales" as the page display name
+	     * report.addPage("Sales");
+	     * ```
+	     *
+	     * @returns {Promise<Page>}
+	     */
+	    Report.prototype.addPage = function (displayName) {
+	        var _this = this;
+	        var request = {
+	            displayName: displayName
+	        };
+	        return this.service.hpm.post("/report/addPage", request, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            var page = response.body;
+	            return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
+	        }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Delete a page from a report
+	     *
+	     * ```javascript
+	     * // Delete a page from a report by pageName (PageName is different than the display name and can be acquired from the getPages API)
+	     * report.deletePage("Sales145");
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Report.prototype.deletePage = function (pageName) {
+	        return this.service.hpm.delete("/report/pages/" + pageName, {}, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
 	     * Gets filters that are applied at the report level.
 	     *
 	     * ```javascript
@@ -5236,6 +5278,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Page.prototype.getFilters = function () {
 	        return this.report.service.hpm.get("/report/pages/" + this.name + "/filters", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Delete the page from the report
+	     *
+	     * ```javascript
+	     * // Delete the page from the report
+	     * page.delete();
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Page.prototype.delete = function () {
+	        return this.report.service.hpm.delete("/report/pages/" + this.name, {}, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
 	            throw response.body;
 	        });
 	    };
