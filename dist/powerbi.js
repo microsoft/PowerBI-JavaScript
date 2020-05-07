@@ -1,4 +1,4 @@
-/*! powerbi-client v2.11.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.12.0 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -1261,7 +1261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/** @ignore */ /** */
 	var config = {
-	    version: '2.11.0',
+	    version: '2.12.0',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -1272,7 +1272,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.3.3 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.3.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1486,6 +1486,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    FilterType[FilterType["RelativeDate"] = 4] = "RelativeDate";
 	    FilterType[FilterType["TopN"] = 5] = "TopN";
 	    FilterType[FilterType["Tuple"] = 6] = "Tuple";
+	    FilterType[FilterType["RelativeTime"] = 7] = "RelativeTime";
 	})(FilterType = exports.FilterType || (exports.FilterType = {}));
 	var RelativeDateFilterTimeUnit;
 	(function (RelativeDateFilterTimeUnit) {
@@ -1496,6 +1497,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    RelativeDateFilterTimeUnit[RelativeDateFilterTimeUnit["CalendarMonths"] = 4] = "CalendarMonths";
 	    RelativeDateFilterTimeUnit[RelativeDateFilterTimeUnit["Years"] = 5] = "Years";
 	    RelativeDateFilterTimeUnit[RelativeDateFilterTimeUnit["CalendarYears"] = 6] = "CalendarYears";
+	    RelativeDateFilterTimeUnit[RelativeDateFilterTimeUnit["Minutes"] = 7] = "Minutes";
+	    RelativeDateFilterTimeUnit[RelativeDateFilterTimeUnit["Hours"] = 8] = "Hours";
 	})(RelativeDateFilterTimeUnit = exports.RelativeDateFilterTimeUnit || (exports.RelativeDateFilterTimeUnit = {}));
 	var RelativeDateOperators;
 	(function (RelativeDateOperators) {
@@ -1606,6 +1609,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return RelativeDateFilter;
 	}(Filter));
 	exports.RelativeDateFilter = RelativeDateFilter;
+	var RelativeTimeFilter = /** @class */ (function (_super) {
+	    __extends(RelativeTimeFilter, _super);
+	    function RelativeTimeFilter(target, operator, timeUnitsCount, timeUnitType) {
+	        var _this = _super.call(this, target, FilterType.RelativeTime) || this;
+	        _this.operator = operator;
+	        _this.timeUnitsCount = timeUnitsCount;
+	        _this.timeUnitType = timeUnitType;
+	        _this.schemaUrl = RelativeTimeFilter.schemaUrl;
+	        return _this;
+	    }
+	    RelativeTimeFilter.prototype.toJSON = function () {
+	        var filter = _super.prototype.toJSON.call(this);
+	        filter.operator = this.operator;
+	        filter.timeUnitsCount = this.timeUnitsCount;
+	        filter.timeUnitType = this.timeUnitType;
+	        return filter;
+	    };
+	    RelativeTimeFilter.schemaUrl = "http://powerbi.com/product/schema#relativeTime";
+	    return RelativeTimeFilter;
+	}(Filter));
+	exports.RelativeTimeFilter = RelativeTimeFilter;
 	var BasicFilter = /** @class */ (function (_super) {
 	    __extends(BasicFilter, _super);
 	    function BasicFilter(target, operator) {
@@ -1985,6 +2009,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return errors ? errors.map(normalizeError) : undefined;
 	}
 	exports.validateSettings = validateSettings;
+	function validatePanes(input) {
+	    var errors = exports.Validators.reportPanesValidator.validate(input);
+	    return errors ? errors.map(normalizeError) : undefined;
+	}
+	exports.validatePanes = validatePanes;
+	function validateBookmarksPane(input) {
+	    var errors = exports.Validators.bookmarksPaneValidator.validate(input);
+	    return errors ? errors.map(normalizeError) : undefined;
+	}
+	exports.validateBookmarksPane = validateBookmarksPane;
+	function validateFiltersPane(input) {
+	    var errors = exports.Validators.filtersPanesValidator.validate(input);
+	    return errors ? errors.map(normalizeError) : undefined;
+	}
+	exports.validateFiltersPane = validateFiltersPane;
+	function validateFieldsPane(input) {
+	    var errors = exports.Validators.fieldsPanesValidator.validate(input);
+	    return errors ? errors.map(normalizeError) : undefined;
+	}
+	exports.validateFieldsPane = validateFieldsPane;
+	function validatePageNavigationPane(input) {
+	    var errors = exports.Validators.pageNavigationPaneValidator.validate(input);
+	    return errors ? errors.map(normalizeError) : undefined;
+	}
+	exports.validatePageNavigationPane = validatePageNavigationPane;
+	function validateSelectionPane(input) {
+	    var errors = exports.Validators.selectionPaneValidator.validate(input);
+	    return errors ? errors.map(normalizeError) : undefined;
+	}
+	exports.validateSelectionPane = validateSelectionPane;
+	function validateSyncSlicersPane(input) {
+	    var errors = exports.Validators.syncSlicersPaneValidator.validate(input);
+	    return errors ? errors.map(normalizeError) : undefined;
+	}
+	exports.validateSyncSlicersPane = validateSyncSlicersPane;
+	function validateVisualizationsPane(input) {
+	    var errors = exports.Validators.visualizationsPanesValidator.validate(input);
+	    return errors ? errors.map(normalizeError) : undefined;
+	}
+	exports.validateVisualizationsPane = validateVisualizationsPane;
 	function validateCustomPageSize(input) {
 	    var errors = exports.Validators.customPageSizeValidator.validate(input);
 	    return errors ? errors.map(normalizeError) : undefined;
@@ -2095,12 +2159,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	var commandsSettingsValidator_1 = __webpack_require__(23);
 	var customThemeValidator_1 = __webpack_require__(24);
 	var datasetBindingValidator_1 = __webpack_require__(25);
+	var panesValidator_1 = __webpack_require__(26);
 	exports.Validators = {
 	    addBookmarkRequestValidator: new bookmarkValidator_1.AddBookmarkRequestValidator(),
 	    advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
 	    advancedFilterValidator: new filtersValidator_1.AdvancedFilterValidator(),
 	    anyArrayValidator: new typeValidator_1.ArrayValidator([new anyOfValidator_1.AnyOfValidator([new typeValidator_1.StringValidator(), new typeValidator_1.NumberValidator(), new typeValidator_1.BooleanValidator()])]),
-	    anyFilterValidator: new anyOfValidator_1.AnyOfValidator([new filtersValidator_1.BasicFilterValidator(), new filtersValidator_1.AdvancedFilterValidator(), new filtersValidator_1.IncludeExcludeFilterValidator(), new filtersValidator_1.NotSupportedFilterValidator(), new filtersValidator_1.RelativeDateFilterValidator(), new filtersValidator_1.TopNFilterValidator()]),
+	    anyFilterValidator: new anyOfValidator_1.AnyOfValidator([new filtersValidator_1.BasicFilterValidator(), new filtersValidator_1.AdvancedFilterValidator(), new filtersValidator_1.IncludeExcludeFilterValidator(), new filtersValidator_1.NotSupportedFilterValidator(), new filtersValidator_1.RelativeDateFilterValidator(), new filtersValidator_1.TopNFilterValidator(), new filtersValidator_1.RelativeTimeFilterValidator()]),
 	    anyValueValidator: new anyOfValidator_1.AnyOfValidator([new typeValidator_1.StringValidator(), new typeValidator_1.NumberValidator(), new typeValidator_1.BooleanValidator()]),
 	    applyBookmarkByNameRequestValidator: new bookmarkValidator_1.ApplyBookmarkByNameRequestValidator(),
 	    applyBookmarkStateRequestValidator: new bookmarkValidator_1.ApplyBookmarkStateRequestValidator(),
@@ -2110,6 +2175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    basicFilterValidator: new filtersValidator_1.BasicFilterValidator(),
 	    booleanArrayValidator: new typeValidator_1.BooleanArrayValidator(),
 	    booleanValidator: new typeValidator_1.BooleanValidator(),
+	    bookmarksPaneValidator: new panesValidator_1.BookmarksPaneValidator(),
 	    commandDisplayOptionValidator: new typeValidator_1.EnumValidator([0, 1, 2]),
 	    commandExtensionSelectorValidator: new anyOfValidator_1.AnyOfValidator([new selectorsValidator_1.VisualSelectorValidator(), new selectorsValidator_1.VisualTypeSelectorValidator()]),
 	    commandExtensionValidator: new extensionsValidator_1.CommandExtensionValidator(),
@@ -2130,6 +2196,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    extensionPointsValidator: new extensionsValidator_1.ExtensionPointsValidator(),
 	    extensionValidator: new extensionsValidator_1.ExtensionValidator(),
 	    fieldRequiredValidator: new fieldRequiredValidator_1.FieldRequiredValidator(),
+	    fieldsPaneValidator: new panesValidator_1.FieldsPaneValidator(),
 	    filterColumnTargetValidator: new filtersValidator_1.FilterColumnTargetValidator(),
 	    filterConditionsValidator: new typeValidator_1.ArrayValidator([new filtersValidator_1.ConditionItemValidator()]),
 	    filterHierarchyTargetValidator: new filtersValidator_1.FilterHierarchyTargetValidator(),
@@ -2137,6 +2204,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    filterTargetValidator: new anyOfValidator_1.AnyOfValidator([new filtersValidator_1.FilterColumnTargetValidator(), new filtersValidator_1.FilterHierarchyTargetValidator(), new filtersValidator_1.FilterMeasureTargetValidator()]),
 	    filtersArrayValidator: new typeValidator_1.ArrayValidator([new anyOfValidator_1.AnyOfValidator([new filtersValidator_1.BasicFilterValidator(), new filtersValidator_1.AdvancedFilterValidator(), new filtersValidator_1.RelativeDateFilterValidator()])]),
 	    filtersValidator: new filtersValidator_1.FilterValidator(),
+	    filtersPaneValidator: new panesValidator_1.FiltersPaneValidator(),
 	    hyperlinkClickBehaviorValidator: new typeValidator_1.EnumValidator([0, 1, 2]),
 	    includeExcludeFilterValidator: new filtersValidator_1.IncludeExcludeFilterValidator(),
 	    includeExludeFilterTypeValidator: new typeValidator_1.EnumValidator([3]),
@@ -2149,11 +2217,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    numberArrayValidator: new typeValidator_1.NumberArrayValidator(),
 	    numberValidator: new typeValidator_1.NumberValidator(),
 	    pageLayoutValidator: new mapValidator_1.MapValidator([new typeValidator_1.StringValidator()], [new layoutValidator_1.VisualLayoutValidator()]),
+	    pageNavigationPaneValidator: new panesValidator_1.PageNavigationPaneValidator(),
 	    pageSizeTypeValidator: new typeValidator_1.EnumValidator([0, 1, 2, 3, 4, 5]),
 	    pageSizeValidator: new pageValidator_1.PageSizeValidator(),
 	    pageValidator: new pageValidator_1.PageValidator(),
 	    pageViewFieldValidator: new pageValidator_1.PageViewFieldValidator(),
 	    pagesLayoutValidator: new mapValidator_1.MapValidator([new typeValidator_1.StringValidator()], [new layoutValidator_1.PageLayoutValidator()]),
+	    reportPanesValidator: new panesValidator_1.ReportPanesValidator(),
 	    permissionsValidator: new typeValidator_1.EnumValidator([0, 1, 2, 4, 7]),
 	    playBookmarkRequestValidator: new bookmarkValidator_1.PlayBookmarkRequestValidator(),
 	    qnaInterpretInputDataValidator: new qnaValidator_1.QnaInterpretInputDataValidator(),
@@ -2162,9 +2232,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    relativeDateFilterTimeUnitTypeValidator: new typeValidator_1.EnumValidator([0, 1, 2, 3, 4, 5, 6]),
 	    relativeDateFilterTypeValidator: new typeValidator_1.EnumValidator([4]),
 	    relativeDateFilterValidator: new filtersValidator_1.RelativeDateFilterValidator(),
+	    relativeTimeFilterTimeUnitTypeValidator: new typeValidator_1.EnumValidator([7, 8]),
+	    relativeTimeFilterTypeValidator: new typeValidator_1.EnumValidator([7]),
+	    relativeTimeFilterValidator: new filtersValidator_1.RelativeTimeFilterValidator(),
 	    reportCreateValidator: new reportCreateValidator_1.ReportCreateValidator(),
 	    reportLoadValidator: new reportLoadValidator_1.ReportLoadValidator(),
 	    saveAsParametersValidator: new saveAsParametersValidator_1.SaveAsParametersValidator(),
+	    selectionPaneValidator: new panesValidator_1.SelectionPaneValidator(),
 	    settingsValidator: new settingsValidator_1.SettingsValidator(),
 	    singleCommandSettingsValidator: new commandsSettingsValidator_1.SingleCommandSettingsValidator(),
 	    slicerSelectorValidator: new anyOfValidator_1.AnyOfValidator([new selectorsValidator_1.VisualSelectorValidator(), new selectorsValidator_1.SlicerTargetSelectorValidator()]),
@@ -2173,6 +2247,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    slicerValidator: new slicersValidator_1.SlicerValidator(),
 	    stringArrayValidator: new typeValidator_1.StringArrayValidator(),
 	    stringValidator: new typeValidator_1.StringValidator(),
+	    syncSlicersPaneValidator: new panesValidator_1.SyncSlicersPaneValidator(),
 	    tileLoadValidator: new tileLoadValidator_1.TileLoadValidator(),
 	    tokenTypeValidator: new typeValidator_1.EnumValidator([0, 1]),
 	    topNFilterTypeValidator: new typeValidator_1.EnumValidator([5]),
@@ -2183,6 +2258,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    visualHeaderSettingsValidator: new visualSettingsValidator_1.VisualHeaderSettingsValidator(),
 	    visualHeaderValidator: new visualSettingsValidator_1.VisualHeaderValidator(),
 	    visualHeadersValidator: new typeValidator_1.ArrayValidator([new visualSettingsValidator_1.VisualHeaderValidator()]),
+	    visualizationsPaneValidator: new panesValidator_1.VisualizationsPaneValidator(),
 	    visualLayoutValidator: new layoutValidator_1.VisualLayoutValidator(),
 	    visualSelectorValidator: new selectorsValidator_1.VisualSelectorValidator(),
 	    visualSettingsValidator: new visualSettingsValidator_1.VisualSettingsValidator(),
@@ -2703,6 +2779,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            {
 	                field: "hyperlinkClickBehavior",
 	                validators: [validator_1.Validators.hyperlinkClickBehaviorValidator]
+	            },
+	            {
+	                field: "panes",
+	                validators: [validator_1.Validators.reportPanesValidator]
 	            }
 	        ];
 	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
@@ -3129,6 +3209,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return RelativeDateFilterValidator;
 	}(typeValidator_1.ObjectValidator));
 	exports.RelativeDateFilterValidator = RelativeDateFilterValidator;
+	var RelativeTimeFilterValidator = /** @class */ (function (_super) {
+	    __extends(RelativeTimeFilterValidator, _super);
+	    function RelativeTimeFilterValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    RelativeTimeFilterValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "target",
+	                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filterTargetValidator]
+	            },
+	            {
+	                field: "operator",
+	                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.relativeDateFilterOperatorValidator]
+	            },
+	            {
+	                field: "timeUnitsCount",
+	                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.numberValidator]
+	            },
+	            {
+	                field: "timeUnitType",
+	                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.relativeTimeFilterTimeUnitTypeValidator]
+	            },
+	            {
+	                field: "filterType",
+	                validators: [validator_1.Validators.relativeTimeFilterTypeValidator]
+	            },
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return RelativeTimeFilterValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.RelativeTimeFilterValidator = RelativeTimeFilterValidator;
 	var TopNFilterValidator = /** @class */ (function (_super) {
 	    __extends(TopNFilterValidator, _super);
 	    function TopNFilterValidator() {
@@ -4728,6 +4849,257 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return DatasetBindingValidator;
 	}(typeValidator_1.ObjectValidator));
 	exports.DatasetBindingValidator = DatasetBindingValidator;
+	
+	
+	/***/ }),
+	/* 26 */
+	/***/ (function(module, exports, __webpack_require__) {
+	
+	var __extends = (this && this.__extends) || (function () {
+	    var extendStatics = function (d, b) {
+	        extendStatics = Object.setPrototypeOf ||
+	            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+	            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+	        return extendStatics(d, b);
+	    };
+	    return function (d, b) {
+	        extendStatics(d, b);
+	        function __() { this.constructor = d; }
+	        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	    };
+	})();
+	Object.defineProperty(exports, "__esModule", { value: true });
+	var validator_1 = __webpack_require__(1);
+	var multipleFieldsValidator_1 = __webpack_require__(4);
+	var typeValidator_1 = __webpack_require__(2);
+	var ReportPanesValidator = /** @class */ (function (_super) {
+	    __extends(ReportPanesValidator, _super);
+	    function ReportPanesValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    ReportPanesValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "bookmarks",
+	                validators: [validator_1.Validators.bookmarksPaneValidator]
+	            },
+	            {
+	                field: "fields",
+	                validators: [validator_1.Validators.fieldsPaneValidator]
+	            },
+	            {
+	                field: "filters",
+	                validators: [validator_1.Validators.filtersPaneValidator]
+	            },
+	            {
+	                field: "pageNavigation",
+	                validators: [validator_1.Validators.pageNavigationPaneValidator]
+	            },
+	            {
+	                field: "selection",
+	                validators: [validator_1.Validators.selectionPaneValidator]
+	            },
+	            {
+	                field: "syncSlicers",
+	                validators: [validator_1.Validators.syncSlicersPaneValidator]
+	            },
+	            {
+	                field: "visualizations",
+	                validators: [validator_1.Validators.visualizationsPaneValidator]
+	            }
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return ReportPanesValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.ReportPanesValidator = ReportPanesValidator;
+	var BookmarksPaneValidator = /** @class */ (function (_super) {
+	    __extends(BookmarksPaneValidator, _super);
+	    function BookmarksPaneValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    BookmarksPaneValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "visible",
+	                validators: [validator_1.Validators.booleanValidator]
+	            },
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return BookmarksPaneValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.BookmarksPaneValidator = BookmarksPaneValidator;
+	var FieldsPaneValidator = /** @class */ (function (_super) {
+	    __extends(FieldsPaneValidator, _super);
+	    function FieldsPaneValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    FieldsPaneValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "expanded",
+	                validators: [validator_1.Validators.booleanValidator]
+	            },
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return FieldsPaneValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.FieldsPaneValidator = FieldsPaneValidator;
+	var FiltersPaneValidator = /** @class */ (function (_super) {
+	    __extends(FiltersPaneValidator, _super);
+	    function FiltersPaneValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    FiltersPaneValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "visible",
+	                validators: [validator_1.Validators.booleanValidator]
+	            },
+	            {
+	                field: "expanded",
+	                validators: [validator_1.Validators.booleanValidator]
+	            },
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return FiltersPaneValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.FiltersPaneValidator = FiltersPaneValidator;
+	var PageNavigationPaneValidator = /** @class */ (function (_super) {
+	    __extends(PageNavigationPaneValidator, _super);
+	    function PageNavigationPaneValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    PageNavigationPaneValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "visible",
+	                validators: [validator_1.Validators.booleanValidator]
+	            },
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return PageNavigationPaneValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.PageNavigationPaneValidator = PageNavigationPaneValidator;
+	var SelectionPaneValidator = /** @class */ (function (_super) {
+	    __extends(SelectionPaneValidator, _super);
+	    function SelectionPaneValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    SelectionPaneValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "visible",
+	                validators: [validator_1.Validators.booleanValidator]
+	            },
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return SelectionPaneValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.SelectionPaneValidator = SelectionPaneValidator;
+	var SyncSlicersPaneValidator = /** @class */ (function (_super) {
+	    __extends(SyncSlicersPaneValidator, _super);
+	    function SyncSlicersPaneValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    SyncSlicersPaneValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "visible",
+	                validators: [validator_1.Validators.booleanValidator]
+	            },
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return SyncSlicersPaneValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.SyncSlicersPaneValidator = SyncSlicersPaneValidator;
+	var VisualizationsPaneValidator = /** @class */ (function (_super) {
+	    __extends(VisualizationsPaneValidator, _super);
+	    function VisualizationsPaneValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    VisualizationsPaneValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "expanded",
+	                validators: [validator_1.Validators.booleanValidator]
+	            },
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return VisualizationsPaneValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.VisualizationsPaneValidator = VisualizationsPaneValidator;
 	
 	
 	/***/ })
