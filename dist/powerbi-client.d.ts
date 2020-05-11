@@ -1,4 +1,4 @@
-/*! powerbi-client v2.12.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.12.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -1857,7 +1857,7 @@ declare module "powerbi-client" {
     export { Report } from "report";
     export { Dashboard } from "dashboard";
     export { Tile } from "tile";
-    export { IEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings } from "embed";
+    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings } from "embed";
     export { Page } from "page";
     export { Qna } from "qna";
     export { Visual } from "visual";

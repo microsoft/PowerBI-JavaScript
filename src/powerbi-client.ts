@@ -23,9 +23,12 @@ export {
 } from './tile';
 export {
   IEmbedConfiguration,
+  IQnaEmbedConfiguration,
+  IVisualEmbedConfiguration,
   Embed,
   ILocaleSettings,
-  IEmbedSettings
+  IEmbedSettings,
+  IQnaSettings,
 } from './embed';
 export {
   Page
