@@ -50,6 +50,16 @@ build:
             - '**/*'
           exclude:
             - '**/node_modules/**/*.*'
+        - to: 'source'
+          include:
+            - '**/*'
+          exclude:
+            - '**/.pipelines/**/*.*'
+            - '**/.vscode/**/*.*'
+            - '**/test/**/*.*'
+            - '**/demo/**/*.*'
+            - '**/dist/**/*.*'
+            - '**/node_modules/**/*.*'
 
     - !!buildcommand
       name: 'Package'
