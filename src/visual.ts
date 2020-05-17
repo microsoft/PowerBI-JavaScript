@@ -1,6 +1,5 @@
-/**
- * @hidden
- */
+/** @ignore *//** */
+
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -16,7 +15,7 @@ import { Page } from './page';
 export class Visual extends Report {
   /** @hidden */
   static type = "visual";
-  
+
   /** @hidden */
   static GetPagesNotSupportedError = "Get pages is not supported while embedding a visual.";
   /** @hidden */

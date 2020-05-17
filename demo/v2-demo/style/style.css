@@ -1869,24 +1869,26 @@ input:checked + .slider.round {
 #playground-banner {
     height: 48px;
     text-align: center;
-    background-color: #F2C811;
+    color: #000000;
+    background-color: #FBEEB5;
     padding: 12px;
     border-bottom: solid 1px #F1F1F1;
     cursor: pointer;
 }
 
 #playground-banner:hover {
-    background-color: #ddb612;
+    background-color: #F7DE6D;
 }
 
 #playground-banner-text, #playground-banner-text-underlined {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 400;
     display: inline-block;
 }
 
 #playground-banner-text-underlined {
     text-decoration: underline;
+    font-weight: 600;
 }
 
 #playground-banner-close {

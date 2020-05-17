@@ -3128,6 +3128,36 @@ describe('SDK-to-HPM', function () {
             done();
           });
       });
+
+      it('report.addPage() sends POST /report/addPage with displayName', function () {
+        // Arrange
+        const displayName = "testName";
+        const expectedRequest = {
+          displayName: displayName
+        };
+        const expectedHeaders = { uid: uniqueId };
+
+        spyHpm.post.and.returnValue(Promise.resolve(page1));
+
+        // Act
+        report.addPage(displayName);
+
+        // Assert
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/addPage', expectedRequest, expectedHeaders, iframe.contentWindow);
+      });
+
+      it('report.deletePage() sends POST /report/addPage with displayName', function () {
+        // Arrange
+        const name = "testName";
+        const expectedHeaders = { uid: uniqueId };
+
+        spyHpm.delete.and.returnValue(Promise.resolve(null));
+
+        // Act
+        report.deletePage(name);
+
+        expect(spyHpm.delete).toHaveBeenCalledWith(`/report/pages/${name}`, { }, expectedHeaders, iframe.contentWindow);
+      });
     });
 
     describe('filters', function () {

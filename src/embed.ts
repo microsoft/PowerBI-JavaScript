@@ -8,10 +8,10 @@ import { EmbedUrlNotSupported } from './errors';
 declare global {
   interface Document {
     // Mozilla Fullscreen
-    mozCancelFullScreen: Function;
+    mozCancelFullScreen: any;
 
     // Ms Fullscreen
-    msExitFullscreen: Function;
+    msExitFullscreen: any;
   }
 
   interface HTMLIFrameElement {
@@ -308,6 +308,27 @@ export abstract class Embed {
         return response.body;
       })
       .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
+   * Get the correlationId for the current embed session.
+   *
+   * ```javascript
+   * // Get the correlationId for the current embed session
+   * report.getCorrelationId()
+   *   .then(correlationId => {
+   *     ...
+   *   });
+   * ```
+   *
+   * @returns {Promise<string>}
+   */
+  getCorrelationId(): Promise<string> {
+    return this.service.hpm.get<string>(`/getCorrelationId`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => response.body,
+      response => {
         throw response.body;
       });
   }
