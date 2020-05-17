@@ -335,15 +335,20 @@ RedirectableRequest.prototype._processResponse = function (response) {
     }
 
     // Drop the Host header, as the redirect might lead to a different host
-    if (!this._isRedirect) {
-      removeMatchingHeaders(/^host$/i, this._options.headers);
-    }
+    var previousHostName = removeMatchingHeaders(/^host$/i, this._options.headers) ||
+      url.parse(this._currentUrl).hostname;
 
     // Create the redirected request
     var redirectUrl = url.resolve(this._currentUrl, location);
     debug("redirecting to", redirectUrl);
     this._isRedirect = true;
-    Object.assign(this._options, url.parse(redirectUrl));
+    var redirectUrlParts = url.parse(redirectUrl);
+    Object.assign(this._options, redirectUrlParts);
+
+    // Drop the Authorization header if redirecting to another host
+    if (redirectUrlParts.hostname !== previousHostName) {
+      removeMatchingHeaders(/^authorization$/i, this._options.headers);
+    }
 
     // Evaluate the beforeRedirect callback
     if (typeof this._options.beforeRedirect === "function") {
@@ -465,11 +470,14 @@ function urlToOptions(urlObject) {
 }
 
 function removeMatchingHeaders(regex, headers) {
+  var lastValue;
   for (var header in headers) {
     if (regex.test(header)) {
+      lastValue = headers[header];
       delete headers[header];
     }
   }
+  return lastValue;
 }
 
 function createErrorType(code, defaultMessage) {
