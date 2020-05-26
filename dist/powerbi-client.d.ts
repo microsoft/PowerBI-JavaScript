@@ -1711,6 +1711,13 @@ declare module "service" {
          * @returns {(Report | Tile)}
          */
         find(uniqueId: string): embed.Embed;
+        /**
+         * Removes embed components whose container element is same as the given element
+         *
+         * @param {Embed} component
+         * @param {HTMLElement} element
+         * @returns {void}
+         */
         addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void;
         /**
          * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.

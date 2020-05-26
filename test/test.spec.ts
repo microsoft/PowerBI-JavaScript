@@ -97,6 +97,46 @@ describe('service', function () {
       const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
       expect(iframes.length).toEqual(2);
     });
+
+    it('embeds all components found in the DOM without id attribute', function () {
+      // Arrange
+      const elements = [
+        '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
+        '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
+      ];
+
+      elements.forEach(element => {
+        $(element).appendTo('#powerbi-fixture');
+      });
+
+      // Act
+      powerbi.init();
+
+      // Assert
+      // If embed element has iframe inside it, assume embed action occurred
+      const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
+      expect(iframes.length).toEqual(2);
+    });
+
+    it('embeds all components found in the DOM with duplicate id attribute', function () {
+      // Arrange
+      const elements = [
+        '<div id="reportContainer1" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
+        '<div id="reportContainer1" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
+      ];
+
+      elements.forEach(element => {
+        $(element).appendTo('#powerbi-fixture');
+      });
+
+      // Act
+      powerbi.init();
+
+      // Assert
+      // If embed element has iframe inside it, assume embed action occurred
+      const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
+      expect(iframes.length).toEqual(2);
+    });
   });
 
   describe('get', function () {

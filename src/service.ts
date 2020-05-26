@@ -453,10 +453,17 @@ export class Service implements IService {
     return utils.find(x => x.config.uniqueId === uniqueId, this.embeds);
   }
 
+  /**
+   * Removes embed components whose container element is same as the given element
+   * 
+   * @param {Embed} component 
+   * @param {HTMLElement} element
+   * @returns {void}
+   */
   addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void {
     // remove embeds over the same div element.
     this.embeds = this.embeds.filter(function(embed) {
-      return embed.element.id !== element.id;
+      return embed.element !== element;
     });
 
     this.embeds.push(component);
