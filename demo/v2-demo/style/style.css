@@ -10,18 +10,40 @@ body {
     margin:0;
     padding:0;
     height:100%;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
 }
 
 h1 {
     margin-bottom: 15px;
 }
 
+h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
 h3 {
     margin: 0;
+    font-size: 24px;
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
 }
 
 h8 {
     font-weight: 600;
+}
+
+button:focus {
+    outline: none !important;
+}
+
+a {
+    color: #337ab7;
+    text-decoration: none;
 }
 
 a:hover, a:visited, a:link, a:active
@@ -83,10 +105,6 @@ a:hover, a:visited, a:link, a:active
     margin-bottom: 5px;
     background: #F1F1F1;
     padding-left: 4px;
-}
-
-a {
-    text-decoration: none;
 }
 
 .pbi-line {
@@ -317,11 +335,13 @@ a {
     background: url('../images/expand.svg') center left;
     background-repeat: no-repeat;
     padding-right: 18px;
+    cursor: pointer;
 }
 
 .operations-ul > li.active:before {
     background: url('../images/collapse.svg') center left;
     background-repeat: no-repeat;
+    cursor: pointer;
 }
 
 .operations-ul a {
@@ -470,11 +490,13 @@ a {
 .textAreaControl {
     background-color: transparent;
     border: none;
-    outline:none;
+    outline: none;
     margin-right: 40px;
     height: 40px;
     opacity: 1;
     min-width: 80px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .textAreaControl img {
@@ -482,7 +504,6 @@ a {
     top: -2px;
     padding-right: 3px;
     right: 2px;
-    object-fit: scale-down;
 }
 
 .textAreaControl.regular img {
@@ -536,6 +557,7 @@ a {
     width: 160px;
     height: 32px;
     text-align: center;
+    cursor: pointer;
 }
 
 .selectButton:hover {
@@ -618,7 +640,7 @@ a {
     cursor: default;
 }
 
-.desktop-view iframe, .mobile-view iframe, #showcase-embedded-view iframe, #bookmark-embedded-view iframe {
+.desktop-view iframe, .mobile-view iframe, #showcase-embedded-view iframe, #bookmark-embedded-view iframe, #share-bookmark iframe, #themes-embedded-view iframe {
     border: none;
 }
 
@@ -809,6 +831,11 @@ a {
     background-image: url('../images/sampledashboard.png');
 }
 
+#samplePaginatedReportImg {
+    background-image: url('../images/samplerdlreport.png');
+    background-position: top; 
+}
+
 .showcaseIcon {
     position: relative;
     left: 50%;
@@ -935,8 +962,12 @@ a {
     opacity: 0.7;
 }
 
-#visualsList, #bookmarksList {
+#visualsList, #bookmarksList, #themesList {
     padding: 8px 0 8px 0;
+}
+
+#generatorOptions {
+    padding: 8px 16px;
 }
 
 .checkboxContainer {
@@ -1001,7 +1032,7 @@ a {
     transform: rotate(45deg);
 }
 
-.bookmarkContainer {
+.showcaseRadioContainer {
     display: block;
     position: relative;
     padding-left: 26px;
@@ -1012,13 +1043,17 @@ a {
     padding: 8px 8px 8px 40px;
 }
 
-.bookmarkContainer input {
+.themesRadioContainer {
+    height: 50px;
+}
+
+.showcaseRadioContainer input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
 }
 
-.bookmarkCheckmark {
+.showcaseRadioCheckmark {
     position: absolute;
     top: 11px;
     left: 12px;
@@ -1033,21 +1068,21 @@ a {
     -webkit-transition: all 100ms ease;
 }
 
-.bookmarkContainer input:checked ~ .bookmarkCheckmark {
+.showcaseRadioContainer input:checked ~ .showcaseRadioCheckmark {
     border-color: #3E65FF;
 }
 
-.bookmarkCheckmark:after {
+.showcaseRadioCheckmark:after {
     content: "";
     position: absolute;
     display: none;
 }
 
-.bookmarkContainer input:checked ~ .bookmarkCheckmark:after {
+.showcaseRadioContainer input:checked ~ .showcaseRadioCheckmark:after {
     display: block;
 }
 
-.bookmarkContainer .bookmarkCheckmark:after {
+.showcaseRadioContainer .showcaseRadioCheckmark:after {
     top: 3px;
     left: 3px;
     width: 8px;
@@ -1074,6 +1109,21 @@ a {
     z-index: 11;
 }
 
+#overlay-embed-container {
+    background-color:white;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 11;
+    text-align: center;
+    font-family: Segoe UI;
+    font-size: 20px;
+}
+
+#overlay-embed-container.overlay-text {
+    padding-top: calc(30% - 20px);
+}
+
 #shareDialog {
     display: none;
     position: fixed;
@@ -1088,7 +1138,7 @@ a {
     z-index: 12;
 }
 
-.dialogHeader {
+#shareDialog .dialogHeader {
     height: 40px;
 }
 
@@ -1130,7 +1180,7 @@ a {
     background-color: #213BD1;
 }
 
-.dialogBody {
+#shareDialog .dialogBody {
     padding: 8px 24px 0px 24px;
     text-align: center;
     font-family: Segoe UI;
@@ -1156,6 +1206,10 @@ a {
 .showcases-buttons {
     height: 32px;
     margin-top: 16px;
+}
+
+.text-small-tab {
+  padding-left: 1em;
 }
 
 .text-tab {
@@ -1265,4 +1319,597 @@ a {
 
 .twoColumnsIcon {
     min-width: 107px;
+}
+
+.themeDataColor {
+    margin-right: 3px;
+}
+
+.themeBackgroundColor {
+    margin-right: 6px;
+    outline: 1px solid #000000;
+    cursor: pointer;
+    vertical-align: sub;
+}
+
+.themeBackgroundColor.selected {
+    outline: 2px solid #F2C811;
+}
+
+#startTooltip, #dialogTooltip {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    -webkit-transition: opacity 0.5s ease-in-out;
+    position: absolute;
+    background-color: #3b3a39;
+    width: 300px;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.25);
+    z-index: -1;
+    padding: 16px 24px;
+    top: 0px;
+    left: 0px
+}
+
+#dialogTooltip {
+    top: 320px;
+    left: -12px;
+}
+
+#startTooltip.showTooltip, #dialogTooltip.showTooltip {
+    opacity: 1;
+    z-index: 15;
+}
+
+#startTooltip::after, #dialogTooltip::after {
+    content: " ";
+    position: absolute;
+    right: calc(50% - 10px);
+    top: 100%;
+    border-width: 10px;
+    border-style: solid;
+    border-color: #3b3a39 transparent transparent transparent;
+}
+
+#startTooltip .tooltipNumber {
+    float: left;
+    margin-left: 16px;
+    line-height: 20px;
+    font-size: 14px;
+    padding: 6px 0px;
+    color: #FFFFFF;
+}
+
+.btnCloseTooltip {
+    position: absolute;
+    right: 16px;
+    top: 8px;
+}
+
+.btnCloseTooltip img {
+    height: 10px;
+    width: 10px;
+    cursor: pointer;
+}
+
+.showcaseTooltipText {
+    font-weight: 600;
+    line-height: 28px;
+    font-size: 20px;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.showcaseTooltipSubText {
+    font-style: normal;
+    font-weight: normal;
+    line-height: 20px;
+    font-size: 14px;
+    color: #FFFFFF;
+}
+
+.tooltipFooter {
+    margin-top: 52px;
+    height: 32px;
+}
+
+.btnShowcaseTooltip {
+    height: 32px;
+    width: 84px;
+    text-align: center;
+    line-height: 30px;
+    font-weight: 600;
+    float: left;
+    cursor: pointer;
+    transition: background-color .2s;
+    user-select: none;
+    color: #000000;
+}
+
+.yellowBtn {
+    background-color: #F2C811;
+    border: none !important;
+    border-radius: 2px;
+}
+
+.yellowBtn:hover {
+    background-color: #ddb612;
+}
+
+.whiteBtn {
+    background-color: #FFFFFF;
+    border-radius: 2px;
+}
+
+.whiteBtn:hover {
+    background-color: #F4F4F4;
+}
+
+#dialogMask {
+    position: absolute;
+    display: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.insightToActionDialog {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #FFFFFF;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.25);
+    z-index: 12;
+    padding: 16px 24px;
+    transform: translate(-50%, -50%);
+}
+
+#distributionDialog {
+    width: 952px;
+    height: 572px;
+}
+
+#sendDialog {
+    width: 600px;
+    height: 400px;
+}
+
+#distributionDialog .dialogHeader, #sendDialog .dialogHeader {
+    height: 48px;
+}
+
+#distributionDialog .dialogFooter, #sendDialog .dialogFooter {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 64px;
+    padding: 16px 24px;
+}
+
+#distributionDialog .dialogFooter {
+    border-top: solid;
+    border-width: 1px;
+    border-color: #EAEAEA;
+}
+
+#dialogTable {
+    height: 425px;
+    color: #212121;
+    overflow-y: scroll;
+    padding-right: 10px;
+    margin-bottom: 5px;
+}
+
+#dialogTable::-webkit-scrollbar-track
+{
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+#dialogTable::-webkit-scrollbar 
+{
+    width: 6px;
+    height: 10px;
+    background-color: transparent;
+}
+
+#dialogTable::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+    background-color: #E1E1E1;
+}
+
+.dialogHeaderText {
+    font-weight: 600;
+    line-height: 28px;
+    font-size: 20px;
+}
+
+#btnCloseDistributionDialog {
+    float: right;
+    position: relative;
+    cursor: pointer;
+    margin-top: 2px;
+}
+
+.insightToActionDialogBtn {
+    float: left;
+    width: 110px;
+    height: 32px;
+    text-align: center;
+    line-height: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s;
+    user-select: none;
+    border: solid;
+    border-width: 1px;
+    border-color: #6E6E6E;
+    margin-right: 8px;
+    color: #000000;
+}
+
+.sendBtn {
+    float: right;
+}
+
+.cancelBtn {
+    float: right;
+    margin-right: 0px;
+}
+
+#dialogTable table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#dialogTable th, #dialogTable td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#dialogTable td {
+    font-size: 12px;
+    color: #666666;
+}
+
+#dialogTable td.nameCell {
+    font-size: 14px;
+    color: #000000;
+}
+
+.checkAllBtn {
+    user-select: none;
+}
+
+.sendDialogField {
+    color: #000000;
+    font-weight: 500;
+    line-height: 20px;
+    font-size: 16px;
+    padding: 8px 0px;
+}
+
+#sendDialog input[type=text], #sendDialog textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    resize: none;
+}
+
+#sendDialog textarea {
+    height: 130px;
+}
+
+#messageSent {
+    transition: opacity 1.5s ease;
+    -webkit-transition: opacity 1.5s ease;
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+    left: calc(50% - 34px);
+    bottom: 8px;
+    width: 68px;
+    padding: 2px 6px;
+    border: 1px solid #aaaaaa;
+    background-color: #000000;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+#messageSent.show {
+    opacity: 1;
+    z-index: 5;
+}
+
+#generator-fields, #generator-properties, .title-wrapper {
+  margin-top: 8px;
+}
+
+input#ptitle[type="text"] {
+  margin-top: 8px;
+  border: 1px solid #A19F9D;
+  border-radius: 2px;
+  height: 32px;
+  width: calc(100% - 30px);
+  padding-left: 8px;
+}
+
+#btnEraseCustomTitle {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+#alignment-blocks-wrapper {
+  height: 32px;
+  margin-top: 8px;
+}
+
+.alignment-block {
+  height: 25px;
+  width: 25px;
+  padding: 1px 4px;
+  margin-right: 6px;
+  float: left;
+  cursor: pointer;
+  user-select: none;
+}
+
+.alignment-block.selected {
+  background-color: #F2C811;
+}
+
+.title-wrapper-big {
+  margin-top: 12px;
+}
+
+/* Select Menu */
+
+.styled-select {
+  position: relative;
+  font-family: Segoe UI;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.styled-select select {
+  display: none; /*hide original SELECT element: */
+}
+
+.inline-select-text, .inline-toggle-text {
+  line-height: 32px;
+}
+
+.select-wrapper, .toggle-wrapper {
+  height: 32px;
+  margin-top: 8px;
+}
+
+.inline-select {
+  float: right;
+  width: calc(100% - 80px);
+}
+
+.select-selected {
+  background-color: #FFFFFF;
+}
+
+/* Style the arrow inside the select element: */
+.select-selected:after {
+  position: absolute;
+  top: 9px;
+  right: 5px;
+  display: block;
+  content: " ";
+  background: url(../images/collapse.svg) center left;
+  background-repeat: no-repeat;
+  height: 16px;
+  width: 16px;
+}
+
+/* style the items (options), including the selected item: */
+.select-selected, .select-items div {
+  color: #000000;
+  padding: 5px 10px;
+  border: 1px solid #A19F9D;
+  cursor: pointer;
+}
+
+.select-selected {
+  border-radius: 2px;
+}
+
+.select-items div {
+  border-color: transparent #A19F9D #A19F9D #A19F9D;
+}
+
+.select-items {
+  position: absolute;
+  background-color: #FFFFFF;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+/* Hide the items when the select box is closed */
+.select-hide {
+  display: none;
+}
+
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Toggle Button */
+
+.inline-toggle-text {
+  float: left;
+  width: 54px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  float: left;
+  width: 40px;
+  height: 20px;
+  margin: 7px 0 7px 16px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FFFFFF;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 4px;
+  bottom: 3px;
+  background-color: #605E5C;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #F2C811;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+  background-color: #FFFFFF;
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 40px;
+  border-color: #605E5C;
+  border: 1px solid;
+}
+
+input:checked + .slider.round {
+  border-color: #F2C811;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.generator-disabled {
+  color: #A19F9D;
+  pointer-events: none;
+}
+
+.generator-disabled .select-selected {
+  color: #A19F9D;
+}
+
+.toggle-wrapper.disabled {
+  pointer-events: none;
+}
+
+.generator-disabled .slider, .generator-disabled input:checked + .slider, .toggle-wrapper.disabled input:checked + .slider {
+  background-color: #C8C6C4;
+  border-color: #C8C6C4;
+}
+
+.generator-disabled .alignment-block.selected {
+  background-color: #F3F2F1;
+}
+
+#aligns-disabled, #erase-tool-disabled {
+  display: none;
+}
+
+#erase-tool-enabled {
+  display: inherit;
+}
+
+.generator-disabled #aligns-enabled, .generator-disabled #erase-tool-enabled {
+  display: none;
+}
+
+.generator-disabled #aligns-disabled, .generator-disabled #erase-tool-disabled {
+  display: inherit;
+}
+
+#overlay-embed-container #spinner {
+  top: calc(50% - 20px);
+  right: calc(50% - 60px);
+  position: absolute;
+  font-size: 14px;
+}
+
+/* Playground Banner */
+
+#playground-banner {
+    height: 48px;
+    text-align: center;
+    background-color: #F2C811;
+    padding: 12px;
+    border-bottom: solid 1px #F1F1F1;
+    cursor: pointer;
+}
+
+#playground-banner:hover {
+    background-color: #ddb612;
+}
+
+#playground-banner-text, #playground-banner-text-underlined {
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+#playground-banner-text-underlined {
+    text-decoration: underline;
+}
+
+#playground-banner-close {
+    float: right;
+    margin-top: 4px;
+    margin-right: 8px;
+}
+
+@media only screen and (max-width: 675px) {
+    #playground-banner-text-underlined {
+        display: none;
+    }
+}
+
+
+@media only screen and (max-width: 605px) {
+    #playground-banner-text {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 540px) {
+    #playground-banner {
+        display: none;
+    }
 }

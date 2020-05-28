@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 import { IPageNode, Page } from './page';
@@ -59,6 +62,9 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    */
   page: IPageNode;
 
+  /**
+   * @hidden
+   */
   constructor(page: IPageNode, name: string, title: string, type: string, layout: models.IVisualLayout) {
     this.name = name;
     this.title = title;
@@ -174,5 +180,35 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
         response => {
           throw response.body;
         });
+  }
+
+  /**
+   * Clone existing visual to a new instance.
+   *
+   * @returns {(Promise<models.ICloneVisualResponse>)}
+   */
+  clone(request: models.ICloneVisualRequest = {}): Promise<models.ICloneVisualResponse> {
+    return this.page.report.service.hpm.post<models.ICloneVisualResponse>(`/report/pages/${this.page.name}/visuals/${this.name}/clone`, request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+      .then(response => response.body,
+        response => {
+          throw response.body;
+        });
+  }
+
+  /**
+   * Sort a visual by dataField and direction.
+   *
+   * @param request: Sort by visual request.
+   *
+   * ```javascript
+   * visual.sortBy(request)
+   *  .then(() => { ... });
+   * ```
+   */
+  sortBy(request: models.ISortByVisualRequest): Promise<void> {
+    return this.page.report.service.hpm.put<models.IError[]>(`/report/pages/${this.page.name}/visuals/${this.name}/sortBy`, request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+      .catch(response => {
+        throw response.body;
+      });
   }
 }

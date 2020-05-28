@@ -27,7 +27,6 @@ function OpenEmbedWorkspace(activeTabSelector, samplesStepHtml)
 
     $(".content").hide();
     $("#sampleContent").show();
-    OpenSamplesStep();
 
     LayoutShowcaseState.layoutReport = null;
     BookmarkShowcaseState.bookmarksReport = null;
@@ -44,6 +43,7 @@ function OpenDocumentationSection() {
 
     $(".content").hide();
     $("#documentationContent").show();
+    trackEvent(TelemetryEventName.SectionOpen, { section: TelemetrySectionName.Documentation, src: TelemetryEventSource.UserClick });
 }
 
 function OpenShowcasesSection() {
@@ -58,6 +58,7 @@ function OpenShowcasesSection() {
 
     $(".content").hide();
     $("#showcasesContent").show();
+    trackEvent(TelemetryEventName.SectionOpen, { section: TelemetrySectionName.Showcase, src: TelemetryEventSource.UserClick });
 }
 
 function SetActiveStyle(id)
@@ -67,13 +68,17 @@ function SetActiveStyle(id)
 }
 
 const ShowcasesHtmls = {
-    CustomLayout : "./live_showcases/custom_layout/showcase_custom_layout.html",
-    Bookmarks : "./live_showcases/bookmarks/showcase_bookmarks.html"
+    CustomLayout: "./live_showcases/custom_layout/showcase_custom_layout.html",
+    Bookmarks: "./live_showcases/bookmarks/showcase_bookmarks.html",
+    Themes: "./live_showcases/themes/showcase_themes.html",
+    InsightToAction: "./live_showcases/insight_to_action/showcase_insight_to_action.html",
+    QuickVisualCreator: "./live_showcases/quick_visual_creator/showcase_quick_visual_creator.html",
 };
 
 function OpenShowcase(showcaseType) {
     $("#showcasesContent").load(ShowcasesHtmls[showcaseType]);
     showcasesContentLoaded = false;
+    trackEvent(TelemetrySectionName.Showcase, { showcaseType: showcaseType, src: TelemetryEventSource.UserClick });
 }
 
 function OpenShowcaseFromURL(showcase) {
@@ -82,4 +87,5 @@ function OpenShowcaseFromURL(showcase) {
 
     $(".content").hide();
     $("#showcasesContent").show();
+    trackEvent(TelemetrySectionName.Showcase, { showcaseType: showcase, src: TelemetryEventSource.Url });
 }

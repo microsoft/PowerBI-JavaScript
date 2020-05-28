@@ -3,7 +3,11 @@ const datasetUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/Sa
 const dashboardUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Dashboards/SampleDashboard';
 const tileUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Tiles/SampleTile';
 const qnaUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Datasets/SampleQna';
+const paginatedReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/SampleRdlReport';
 const layoutShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/LayoutDemoReport';
+const insightToActionShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/InsightToActionReport';
+const themesShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/ThemesReport';
+const quickVisualCreatorShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/EmptyReport';
 
 var LastReportSampleUrl = null;
 var ReportRefreshTokenTimer = 0;
@@ -16,16 +20,15 @@ const EntityType = {
     Visual : "Visual",
     Dashboard : "Dashboard",
     Tile : "Tile",
-    Qna: "Qna"
+    Qna: "Qna",
+    PaginatedReport: "PaginatedReport"
 };
-
-var _session = {};
 
 const SessionKeys = {
     AccessToken : "accessToken",
+    DashboardId : "dashboardId",
     EmbedUrl : "embedUrl",
     EmbedId : "embedId",
-    DashboardId : "dashboardId",
     EmbedMode: "embedMode",
     EntityType: "entityType",
     GroupId : "groupId",
@@ -33,13 +36,27 @@ const SessionKeys = {
     IsSampleDashboard: "IsSampleDashboard",
     IsSampleTile: "IsSampleTile",
     IsSampleQna: "IsSampleQna",
+    IsSamplePaginatedReport: "IsSamplePaginatedReport",
+    IsTelemetryEnabled: "isTelemetryEnabled",
     PageName: "PageName",
     QnaQuestion: "QnaQuestion",
     QnaMode: "QnaMode",
     SampleId: "SampleId",
+    SessionId: "SessionId",
     TokenType: "tokenType",
     VisualName: "VisualName"
 };
+
+var _session = {};
+
+function initSession() {
+    SetSession(SessionKeys.SessionId, generateNewGuid());
+    if (GetParameterByName(SessionKeys.IsTelemetryEnabled) === "false") {
+        SetSession(SessionKeys.IsTelemetryEnabled, false);
+    } else {
+        SetSession(SessionKeys.IsTelemetryEnabled, true);
+    }
+}
 
 function GetParameterByName(name, url) {
     if (!url) {
@@ -95,6 +112,10 @@ function SetIsSample(value) {
     else if (entityType == EntityType.Qna)
     {
         SetSession(SessionKeys.IsSampleQna, value);
+    }
+    else if (entityType == EntityType.PaginatedReport)
+    {
+        SetSession(SessionKeys.IsSamplePaginatedReport, value);
     }
 }
 
@@ -180,7 +201,7 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
         {
             let embedContainerId = getEmbedContainerID(capitalizeFirstLetter(embedConfig.type));
 
-            let embedContainer = powerbi.embeds.find(function(embedElement) {return (embedElement.element.id == embedContainerId)});
+            let embedContainer = powerbi.embeds.filter(function(embedElement) { return embedElement.element.id === embedContainerId; })[0];
             if (embedContainer)
             {
                 embedContainer.setAccessToken(embedConfig.embedToken.token);
@@ -264,9 +285,29 @@ function LoadSampleQnaIntoSession() {
     return FetchUrlIntoSession(qnaUrl, false /* updateCurrentToken */);
 }
 
+function LoadSamplePaginatedReportIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.PaginatedReport);
+    return FetchUrlIntoSession(paginatedReportUrl, false /* updateCurrentToken */);
+}
+
 function LoadLayoutShowcaseReportIntoSession() {
     SetSession(SessionKeys.EntityType, EntityType.Report);
     return FetchUrlIntoSession(layoutShowcaseReportUrl, false /* updateCurrentToken */);
+}
+
+function LoadInsightToActionShowcaseReportIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Report);
+    return FetchUrlIntoSession(insightToActionShowcaseReportUrl, false /* updateCurrentToken */);
+}
+
+function LoadThemesShowcaseReportIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Report);
+    return FetchUrlIntoSession(themesShowcaseReportUrl, false /* updateCurrentToken */);
+}
+
+function LoadQuickVisualCreatorShowcaseReportIntoSession() {
+    SetSession(SessionKeys.EntityType, EntityType.Report);
+    return FetchUrlIntoSession(quickVisualCreatorShowcaseReportUrl, false /* updateCurrentToken */);
 }
 
 function WarmStartSampleReportEmbed() {
@@ -299,3 +340,5 @@ function setSession(accessToken, embedUrl, embedId, dashboardId)
     SetSession(SessionKeys.EmbedId, embedId);
     SetSession(SessionKeys.DashboardId, dashboardId);
 }
+
+initSession();

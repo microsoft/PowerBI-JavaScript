@@ -4,15 +4,15 @@
         <div class="spacer" />
         <div id="modeSelector">
             <label class="radioContainer">
-                <div onclick="ToggleQuestionBox(false);"><input type="radio" name="qnaMode" value="Interactive"> Show Q&A </input>
+                <div onclick="ToggleQuestionBox(false);"><input type="radio" name="qnaMode" value="Interactive" id="InteractiveNoQuestion"> Show Q&A </input>
                 <span class="checkmark"></span></div>
             </label>
             <label class="radioContainer">
-                <div onclick="ToggleQuestionBox(true);"><input type="radio" name="qnaMode" value="Interactive" checked="checked"> Show Q&A, use predefined question </input>
+                <div onclick="ToggleQuestionBox(true);"><input type="radio" name="qnaMode" value="Interactive" checked="checked" id="Interactive"> Show Q&A, use predefined question </input>
                 <span class="checkmark"></span></div>
             </label>
             <label class="radioContainer">
-                <div onclick="ToggleQuestionBox(true);"><input type="radio" name="qnaMode" value="ResultOnly"> Show answer only, use predefined question </input>
+                <div onclick="ToggleQuestionBox(true);"><input type="radio" name="qnaMode" value="ResultOnly" id="ResultOnly"> Show answer only, use predefined question </input>
                 <span class="checkmark"></span></div>
             </label>
         </div>

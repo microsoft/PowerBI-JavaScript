@@ -1,18 +1,30 @@
+/**
+ * @hidden
+ */
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
 import * as utils from './util';
 import { Defaults } from './defaults';
 
+/**
+ * A Power BI Report creator component
+ *
+ * @export
+ * @class Create
+ * @extends {embed.Embed}
+ */
 export class Create extends embed.Embed {
-
-  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean) {
-    super(service, element, config, /* iframe */ undefined, phasedRender);
+  /*
+   * @hidden
+   */
+  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean, isBootstrap?: boolean) {
+    super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
   }
 
   /**
    * Gets the dataset ID from the first available location: createConfig or embed url.
-   * 
+   *
    * @returns {string}
    */
   getId(): string {
@@ -33,35 +45,54 @@ export class Create extends embed.Embed {
   }
 
   /**
-   * Populate config for create
-   * 
-   * @param {IEmbedConfigurationBase}
+   * Handle config changes.
+   *
    * @returns {void}
    */
-  populateConfig(baseConfig: embed.IEmbedConfigurationBase): void {
-      super.populateConfig(baseConfig);
+  configChanged(isBootstrap: boolean): void {
+    if (isBootstrap) {
+      return;
+    }
 
-      // TODO: Change when Object.assign is available.
-      const settings = utils.assign({}, Defaults.defaultSettings, baseConfig.settings);
-      this.config = utils.assign({ settings }, baseConfig);
+    const config = <embed.IEmbedConfiguration>this.config;
 
-      const config = <embed.IEmbedConfiguration>this.config;
-
-      this.createConfig = {
-          datasetId: config.datasetId || this.getId(),
-          accessToken: config.accessToken,
-          tokenType: config.tokenType,
-          settings: settings,
-          groupId:  config.groupId
-      }
+    this.createConfig = {
+        accessToken: config.accessToken,
+        datasetId: config.datasetId || this.getId(),
+        groupId:  config.groupId,
+        settings: config.settings,
+        tokenType: config.tokenType,
+        theme: config.theme
+    }
   }
 
   /**
-   * Adds the ability to get datasetId from url. 
+   * @hidden
+   * @returns {string}
+   */
+  getDefaultEmbedUrlEndpoint(): string {
+    return "reportEmbed";
+  }
+
+  /**
+   * checks if the report is saved.
+   *
+   * ```javascript
+   * report.isSaved()
+   * ```
+   *
+   * @returns {Promise<boolean>}
+   */
+  isSaved(): Promise<boolean> {
+    return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
+  }
+
+  /**
+   * Adds the ability to get datasetId from url.
    * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
-   * 
+   *
    * By extracting the ID we can ensure that the ID is always explicitly provided as part of the create configuration.
-   * 
+   *
    * @static
    * @param {string} url
    * @returns {string}

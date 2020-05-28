@@ -1,6 +1,7 @@
-var gulp = require('gulp-help')(require('gulp'));
+var gulp = require('gulp');
 var ghPages = require('gulp-gh-pages'),
   header = require('gulp-header'),
+  help = require('gulp-help-four'),
   rename = require('gulp-rename'),
   concat = require('gulp-concat'),
   uglify = require('gulp-uglify'),
@@ -18,9 +19,11 @@ var ghPages = require('gulp-gh-pages'),
   webpackStream = require('webpack-stream'),
   webpackConfig = require('./webpack.config'),
   webpackTestConfig = require('./webpack.test.config'),
-  runSequence = require('run-sequence'),
+  runSequence = require('gulp4-run-sequence'),
   argv = require('yargs').argv;
 ;
+
+help(gulp, undefined);
 
 var package = require('./package.json');
 var webpackBanner = package.name + " v" + package.version + " | (c) 2016 Microsoft Corporation " + package.license;
@@ -198,9 +201,9 @@ gulp.task('compile:spec', 'Compile spec tests', function () {
 });
 
 gulp.task('test:js', 'Run js tests', function (done) {
-  new karma.Server.start({
+  new karma.Server({
     configFile: __dirname + '/karma.conf.js',
     singleRun: argv.watch ? false : true,
     captureTimeout: argv.timeout || 60000
-  }, done);
+  }, done).start();
 });

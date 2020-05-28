@@ -1,3 +1,4 @@
+import { HttpPostMessage } from 'http-post-message';
 
 /**
  * Raises a custom event with event data on the specified HTML element.
@@ -99,13 +100,34 @@ export function assign(...args) {
 }
 
 /**
- * Generates a random 7 character string.
+ * Generates a random 5 to 6 character string.
  * 
  * @export
  * @returns {string}
  */
 export function createRandomString(): string {
-  return (Math.random() + 1).toString(36).substring(7);
+  return getRandomValue().toString(36).substring(1);
+}
+
+/**
+ * Generates a 20 charachter uuid.
+ * 
+ * @export
+ * @returns {string}
+ */
+export function generateUUID(): string {
+  let d = new Date().getTime();
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    d += performance.now();
+  }
+  return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {    
+    // Generate a random number, scaled from 0 to 15.
+    const r = (getRandomValue() % 16);
+
+    // Shift 4 times to divide by 16
+    d >>= 4;
+    return r.toString(16);
+  });
 }
 
 /**
@@ -121,4 +143,56 @@ export function addParamToUrl(url: string, paramName: string, value: string): st
   let parameterPrefix = url.indexOf('?') > 0 ? '&' : '?';
   url += parameterPrefix + paramName + '=' + value;
   return url;
+}
+
+/**
+ * Checks if the report is saved.
+ * 
+ * @export
+ * @param {HttpPostMessage} hpm
+ * @param {string} uid
+ * @param {Window} contentWindow
+ * @returns {Promise<boolean>}
+ */
+export function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow: Window): Promise<boolean> {
+  return hpm.get<boolean>('/report/hasUnsavedChanges', { uid }, contentWindow)
+    .then(response => !response.body,
+    response => {
+      throw response.body;
+    });
+}
+
+/**
+ * Checks if the embed url is for RDL report.
+ * 
+ * @export
+ * @param {string} embedUrl
+ * @returns {boolean}
+ */
+export function isRDLEmbed(embedUrl: string): boolean {
+  return embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
+}
+
+/**
+ * Checks if the embed url contains autoAuth=true.
+ * 
+ * @export
+ * @param {string} embedUrl
+ * @returns {boolean}
+ */
+export function autoAuthInEmbedUrl(embedUrl: string): boolean {
+  return embedUrl && decodeURIComponent(embedUrl).toLowerCase().indexOf("autoauth=true") >= 0;
+}
+
+/**
+ * Returns random number
+ */
+export function getRandomValue() {
+
+  // window.msCrypto for IE
+  var cryptoObj = window.crypto || window.msCrypto;
+  var randomValueArray = new Uint32Array(1);
+  cryptoObj.getRandomValues(randomValueArray);
+
+  return randomValueArray[0];
 }

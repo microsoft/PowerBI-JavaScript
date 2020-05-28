@@ -1,11 +1,13 @@
+/**
+ * @hidden
+ */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
-import * as wpmp from 'window-post-message-proxy';
-import * as hpm from 'http-post-message';
 import * as utils from './util';
+import * as errors from './errors';
 import { IFilterable } from './ifilterable';
-import { IPageNode, Page } from './page';
+import { Page } from './page';
 import { Defaults } from './defaults';
 import { IReportLoadConfiguration } from 'powerbi-models';
 import { BookmarksManager } from './bookmarksManager';
@@ -32,11 +34,17 @@ export interface IReportNode {
  * @implements {IFilterable}
  */
 export class Report extends embed.Embed implements IReportNode, IFilterable {
-  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied"];
+  /** @hidden */
+  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked"];
+  /** @hidden */
   static reportIdAttribute = 'powerbi-report-id';
+  /** @hidden */
   static filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
+  /** @hidden */
   static navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
+  /** @hidden */
   static typeAttribute = 'powerbi-type';
+  /** @hidden */
   static type = "Report";
 
   public bookmarksManager: BookmarksManager;
@@ -47,19 +55,11 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @param {service.Service} service
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfiguration} config
+   * @hidden
    */
-  constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, iframe?: HTMLIFrameElement) {
+  constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement) {
     const config = <embed.IEmbedConfiguration>baseConfig;
-
-    const filterPaneEnabled = (config.settings && config.settings.filterPaneEnabled) || !(element.getAttribute(Report.filterPaneEnabledAttribute) === "false");
-    const navContentPaneEnabled = (config.settings && config.settings.navContentPaneEnabled) || !(element.getAttribute(Report.navContentPaneEnabledAttribute) === "false");
-    const settings = utils.assign({
-      filterPaneEnabled,
-      navContentPaneEnabled
-    }, config.settings);
-    const configCopy = utils.assign({ settings }, config);
-
-    super(service, element, configCopy, iframe, phasedRender);
+    super(service, element, config, iframe, phasedRender, isBootstrap);
     this.loadPath = "/report/load";
     this.phasedLoadPath = "/report/prepare";
     Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
@@ -76,6 +76,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @static
    * @param {string} url
    * @returns {string}
+   * @hidden
    */
   static findIdFromEmbedUrl(url: string): string {
     const reportIdRegEx = /reportId="?([^&]+)"?/
@@ -129,6 +130,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<models.IFilter[]>}
    */
   getFilters(): Promise<models.IFilter[]> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.service.hpm.get<models.IFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => response.body,
       response => {
@@ -165,11 +170,15 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<Page[]>}
    */
   getPages(): Promise<Page[]> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.service.hpm.get<models.IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body
           .map(page => {
-            return new Page(this, page.name, page.displayName, page.isActive, page.visibility);
+            return new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
           });
       }, response => {
         throw response.body;
@@ -203,6 +212,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
    */
   print(): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.service.hpm.post<models.IError[]>('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body;
@@ -222,6 +235,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<void>}
    */
   removeFilters(): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.setFilters([]);
   }
 
@@ -237,6 +254,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<void>}
    */
   setPage(pageName: string): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     const page: models.IPage = {
       name: pageName,
       displayName: null,
@@ -267,6 +288,11 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<void>}
    */
   setFilters(filters: models.IFilter[]): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
+
     return this.service.hpm.put<models.IError[]>(`/report/filters`, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .catch(response => {
         throw response.body;
@@ -290,6 +316,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<void>}
    */
   updateSettings(settings: models.ISettings): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl) && settings.customLayout != null) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
     return this.service.hpm.patch<models.IError[]>('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .catch(response => {
         throw response.body;
@@ -304,24 +334,41 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
-   * Populate config for load config
+   * Handle config changes.
    *
-   * @param {IEmbedConfigurationBase}
    * @returns {void}
    */
-  populateConfig(baseConfig: embed.IEmbedConfigurationBase): void {
-    let config = <embed.IEmbedConfiguration>baseConfig;
-    if (config.settings && (config.settings.layoutType === models.LayoutType.MobileLandscape || config.settings.layoutType === models.LayoutType.MobilePortrait))
-        config.embedUrl = utils.addParamToUrl(config.embedUrl, "isMobile", "true")
+  configChanged(isBootstrap: boolean): void {
+    let config = <embed.IEmbedConfiguration>this.config;
 
-    super.populateConfig(config);
+    if (this.isMobileSettings(config.settings))
+      config.embedUrl = utils.addParamToUrl(config.embedUrl, "isMobile", "true");
 
-    // TODO: Change when Object.assign is available.
-    const settings = utils.assign({}, Defaults.defaultSettings, config.settings);
-    config = utils.assign({ settings }, config);
+    // Calculate settings from HTML element attributes if available.
+    let filterPaneEnabledAttribute = this.element.getAttribute(Report.filterPaneEnabledAttribute);
+    let navContentPaneEnabledAttribute = this.element.getAttribute(Report.navContentPaneEnabledAttribute);
+
+    let elementAttrSettings: embed.IEmbedSettings = {
+      filterPaneEnabled: (filterPaneEnabledAttribute == null) ? Defaults.defaultSettings.filterPaneEnabled : (filterPaneEnabledAttribute !== "false"),
+      navContentPaneEnabled: (navContentPaneEnabledAttribute == null) ? Defaults.defaultSettings.navContentPaneEnabled : (navContentPaneEnabledAttribute !== "false")
+    };
+
+    // Set the settings back into the config.
+    this.config.settings = utils.assign({}, elementAttrSettings, config.settings);
+
+    if (isBootstrap) {
+      return;
+    }
 
     config.id = this.getId();
-    this.config = config;
+  }
+
+  /**
+   * @hidden
+   * @returns {string}
+   */
+  getDefaultEmbedUrlEndpoint(): string {
+    return "reportEmbed";
   }
 
   /**
@@ -331,7 +378,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    */
   switchMode(viewMode: models.ViewMode | string): Promise<void> {
     let newMode: string;
-    if (typeof viewMode === "string"){
+    if (typeof viewMode === "string") {
       newMode = viewMode;
     }
     else {
@@ -365,6 +412,69 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     });
   }
 
+  /**
+   * checks if the report is saved.
+   *
+   * ```javascript
+   * report.isSaved()
+   * ```
+   *
+   * @returns {Promise<boolean>}
+   */
+  isSaved(): Promise<boolean> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
+    return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
+  }
+
+  /**
+   * Apply a theme to the report
+   *
+   * ```javascript
+   * report.applyTheme(theme);
+   * ```
+   */
+  applyTheme(theme: models.IReportTheme): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
+    return this.applyThemeInternal(theme);
+  }
+
+  /**
+  * Reset and apply the default theme of the report
+  *
+  * ```javascript
+  * report.resetTheme();
+  * ```
+  */
+  resetTheme(): Promise<void> {
+    if (utils.isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(errors.APINotSupportedForRDLError);
+    }
+
+    return this.applyThemeInternal(<models.IReportTheme>{});
+  }
+
+  /**
+   * @hidden
+   */
+  private applyThemeInternal(theme: models.IReportTheme): Promise<void> {
+    return this.service.hpm.put<models.IError[]>('/report/theme', theme, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
+   * @hidden
+   */
   private viewModeToString(viewMode: models.ViewMode): string {
     let mode: string;
     switch (viewMode) {
@@ -377,5 +487,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     }
 
     return mode;
+  }
+  
+  /**
+   * @hidden
+   */
+  private isMobileSettings(settings: embed.IEmbedSettings): boolean {
+    return settings && (settings.layoutType === models.LayoutType.MobileLandscape || settings.layoutType === models.LayoutType.MobilePortrait);
   }
 }

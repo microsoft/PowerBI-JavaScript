@@ -32,4 +32,15 @@ function OpenCodeStepWithSample(entityType) {
       SetSession(SessionKeys.IsSampleQna, true);
       OpenCodeStep(EmbedViewMode, EntityType.Qna)
     }
+    else if (entityType == EntityType.PaginatedReport)
+    {
+      SetSession(SessionKeys.IsSamplePaginatedReport, true);
+      OpenCodeStep(EmbedViewMode, EntityType.PaginatedReport)
+    }
+    else {
+      assert(false);
+      trackEvent(TelemetryEventName.CodeStepError, {});
+      return;
+    }
+    trackEvent(TelemetrySectionName.SampleTool, { entityType: entityType, src: TelemetryEventSource.UserClick });
 }

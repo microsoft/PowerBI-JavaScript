@@ -13,9 +13,14 @@ function OpenDataOperations() {
     $("#data-operations").toggleClass("active");
 }
 
-function OpenExtensionsOperations() {
-    $("#extensions-operations-ul").toggle();
-    $("#extensions-operations").toggleClass("active");
+function OpenAuthoringOperations() {
+    $("#authoring-operations-ul").toggle();
+    $("#authoring-operations").toggleClass("active");
+}
+
+function OpenMenuOperations() {
+    $("#menu-operations-ul").toggle();
+    $("#menu-operations").toggleClass("active");
 }
 
 function OpenReportPropertiesOperations() {
@@ -41,11 +46,6 @@ function OpenLayoutOperations() {
 function OpenNavigationOperations() {
     $("#navigation-operations-ul").toggle();
     $("#navigation-operations").toggleClass("active");
-}
-
-function OpenVisualDataOperations() {
-    $("#visual-data-operations-ul").toggle();
-    $("#visual-data-operations").toggleClass("active");
 }
 
 function OpenDashboardGeneralOperations() {

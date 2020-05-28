@@ -35,6 +35,22 @@ function Report_Reload() {
     SetCode(_Report_Reload);
 }
 
+function PaginatedReport_Reload() {
+    SetCode(_PaginatedReport_Reload);
+}
+
+function PaginatedReport_GetId() {
+    SetCode(_PaginatedReport_GetId);
+}
+
+function PaginatedReport_FullScreen() {
+    SetCode(_PaginatedReport_FullScreen);
+}
+
+function PaginatedReport_ExitFullScreen() {
+    SetCode(_PaginatedReport_ExitFullScreen);
+}
+
 function Report_Refresh() {
     SetCode(_Report_Refresh);
 }
@@ -53,6 +69,10 @@ function Report_Extensions_ContextMenu() {
 
 function Report_Extensions_OptionsMenu() {
     SetCode(_Report_Extensions_OptionsMenu);
+}
+
+function Visual_Operations_SortVisualBy() {
+    SetCode(_Visual_Operations_SortVisualBy);
 }
 
 function Report_ApplyCustomLayout() {
@@ -82,7 +102,7 @@ function Page_GetFilters() {
 }
 
 function Page_GetVisuals() {
-  SetCode(_Page_GetVisuals);
+    SetCode(_Page_GetVisuals);
 }
 
 function Page_SetFilters() {
@@ -112,6 +132,30 @@ function Events_SaveAsTriggered() {
 
 function Events_BookmarkApplied() {
     SetCode(_Events_BookmarkApplied);
+}
+
+function Events_ReportLoaded() {
+    SetCode(_Events_ReportLoaded);
+}
+
+function Events_ReportRendered() {
+    SetCode(_Events_ReportRendered);
+}
+
+function Events_ReportSaved() {
+    SetCode(_Events_ReportSaved);
+}
+
+function Events_TileLoaded() {
+    SetCode(_Events_TileLoaded);
+}
+
+function Events_TileClicked() {
+    SetCode(_Events_TileClicked);
+}
+
+function Events_ButtonClicked() {
+    SetCode(_Events_ButtonClicked)
 }
 
 // ---- Edit and Save Operations ----------------------------------------------------
@@ -230,4 +274,90 @@ function Visual_ExportData_Summarized() {
 
 function Visual_ExportData_Underlying() {
     SetCode(_Visual_ExportData_Underlying);
+}
+
+function ReportVisual_UpdateSettings() {
+    SetCode(_ReportVisual_UpdateSettings);
+}
+
+function ReportVisual_Report_SetFilters() {
+    SetCode(_ReportVisual_Report_SetFilters);
+}
+
+function ReportVisual_Report_GetFilters() {
+    SetCode(_ReportVisual_Report_GetFilters);
+}
+
+function ReportVisual_Report_RemoveFilters() {
+    SetCode(_ReportVisual_Report_RemoveFilters);
+}
+
+function ReportVisual_Page_SetFilters() {
+    SetCode(_ReportVisual_Page_SetFilters);
+}
+
+function ReportVisual_Page_GetFilters() {
+    SetCode(_ReportVisual_Page_GetFilters);
+}
+
+function ReportVisual_Page_RemoveFilters() {
+    SetCode(_ReportVisual_Page_RemoveFilters);
+}
+
+function ReportVisual_Visual_SetFilters() {
+    SetCode(_ReportVisual_Visual_SetFilters);
+}
+
+function ReportVisual_Visual_GetFilters() {
+    SetCode(_ReportVisual_Visual_GetFilters);
+}
+
+function ReportVisual_Visual_RemoveFilters() {
+    SetCode(_ReportVisual_Visual_RemoveFilters);
+}
+
+function ReportVisual_HideSingleVisualHeader() {
+    SetCode(_ReportVisual_HideSingleVisualHeader);
+}
+
+// ---- Report Authoring ----------------------------------------------------
+
+function Report_Authoring_Create() {
+    SetCode(_Report_Authoring_Create);
+}
+
+function Report_Authoring_ChangeType() {
+    SetCode(_Report_Authoring_ChangeType);
+}
+
+function Report_Authoring_Remove() {
+    SetCode(_Report_Authoring_Remove);
+}
+
+function Report_Authoring_Capabilities() {
+    SetCode(_Report_Authoring_Capabilities);
+}
+
+function Report_Authoring_AddDataField() {
+    SetCode(_Report_Authoring_AddDataField);
+}
+
+function Report_Authoring_RemoveDataField() {
+    SetCode(_Report_Authoring_RemoveDataField);
+}
+
+function Report_Authoring_GetDataField() {
+    SetCode(_Report_Authoring_GetDataField);
+}
+
+function Report_Authoring_GetProperty() {
+    SetCode(_Report_Authoring_GetProperty);
+}
+
+function Report_Authoring_SetProperty() {
+    SetCode(_Report_Authoring_SetProperty);
+}
+
+function Report_Authoring_ResetProperty() {
+    SetCode(_Report_Authoring_ResetProperty);
 }

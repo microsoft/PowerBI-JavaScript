@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import * as embed from './embed';
 import { Report } from './report';
 import { Create } from './create';
@@ -19,22 +22,37 @@ export interface IEvent<T> {
   value: T;
 }
 
+/**
+ * @hidden
+ */
 export interface ICustomEvent<T> extends CustomEvent {
   detail: T;
 }
 
+/**
+ * @hidden
+ */
 export interface IEventHandler<T> {
   (event: ICustomEvent<T>): any;
 }
 
+/**
+ * @hidden
+ */
 export interface IHpmFactory {
   (wpmp: wpmp.WindowPostMessageProxy, targetWindow?: Window, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
 }
 
+/**
+ * @hidden
+ */
 export interface IWpmpFactory {
   (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window): wpmp.WindowPostMessageProxy;
 }
 
+/**
+ * @hidden
+ */
 export interface IRouterFactory {
   (wpmp: wpmp.WindowPostMessageProxy): router.Router;
 }
@@ -91,6 +109,7 @@ export class Service implements IService {
    * Gets or sets the access token as the global fallback token to use when a local token is not provided for a report or tile.
    *
    * @type {string}
+   * @hidden
    */
   accessToken: string;
 
@@ -100,13 +119,16 @@ export class Service implements IService {
   /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
   private embeds: embed.Embed[];
 
-  /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
+  /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. 
+   * @hidden
+  */
   hpm: hpm.HttpPostMessage;
-  /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
+  /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests 
+   * @hidden
+  */
   wpmp: wpmp.WindowPostMessageProxy;
   private router: router.Router;
-
-  private static DefaultInitEmbedUrl: string = "http://app.powerbi.com/reportEmbed";
+  private uniqueSessionId: string;
 
   /**
    * Creates an instance of a Power BI Service.
@@ -115,11 +137,13 @@ export class Service implements IService {
    * @param {IWpmpFactory} wpmpFactory The window post message factory used in the postMessage communication layer
    * @param {IRouterFactory} routerFactory The router factory used in the postMessage communication layer
    * @param {IServiceConfiguration} [config={}]
+   * @hidden
    */
   constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config: IServiceConfiguration = {}) {
     this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
     this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
     this.router = routerFactory(this.wpmp);
+    this.uniqueSessionId = utils.generateUUID();
 
     /**
      * Adds handler for report events.
@@ -271,18 +295,32 @@ export class Service implements IService {
    * @returns {embed.Embed}
    */
   load(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}): embed.Embed {
-    return this.embedInternal(element, config, /* phasedRender */ true);
+    return this.embedInternal(element, config, /* phasedRender */ true, /* isBootstrap */ false);
   }
 
-  embedInternal(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}, phasedRender?: boolean): embed.Embed {
+  /**
+   * Given an HTML element and entityType, creates a new component instance, and bootstrap the iframe for embedding.
+   *
+   * @param {HTMLElement} element
+   * @param {embed.IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
+   */
+  bootstrap(element: HTMLElement, config: embed.IBootstrapEmbedConfiguration): embed.Embed {
+    return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
+  }
+
+  embedInternal(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed {
     let component: embed.Embed;
     let powerBiElement = <IPowerBiElement>element;
 
     if (powerBiElement.powerBiEmbed) {
+      if (isBootstrap) {
+        throw new Error(`Attempted to bootstrap element ${element.outerHTML}, but the element is already a powerbi element.`);
+      }
+
       component = this.embedExisting(powerBiElement, config, phasedRender);
     }
     else {
-      component = this.embedNew(powerBiElement, config, phasedRender);
+      component = this.embedNew(powerBiElement, config, phasedRender, isBootstrap);
     }
 
     return component;
@@ -296,6 +334,10 @@ export class Service implements IService {
     return this.embeds.length;
   }
 
+  getSdkSessionId(): string {
+    return this.uniqueSessionId;
+  }
+
   /**
    * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
    *
@@ -303,8 +345,9 @@ export class Service implements IService {
    * @param {IPowerBiElement} element
    * @param {embed.IEmbedConfigurationBase} config
    * @returns {embed.Embed}
+   * @hidden
    */
-  private embedNew(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed {
+  private embedNew(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed {
     const componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
     if (!componentType) {
       throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${embed.Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
@@ -318,7 +361,7 @@ export class Service implements IService {
       throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
     }
 
-    const component = new Component(this, element, config, phasedRender);
+    const component = new Component(this, element, config, phasedRender, isBootstrap);
     element.powerBiEmbed = component;
 
     this.addOrOverwriteEmbed(component, element);
@@ -332,6 +375,7 @@ export class Service implements IService {
    * @param {IPowerBiElement} element
    * @param {embed.IEmbedConfigurationBase} config
    * @returns {embed.Embed}
+   * @hidden
    */
   private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed {
     const component = utils.find(x => x.element === element, this.embeds);
@@ -355,7 +399,7 @@ export class Service implements IService {
        * When loading report after create we want to use existing Iframe to optimize load period
        */
       if(config.type === "report" && component.config.type === "create") {
-        const report = new Report(this, element, config, /* phasedRender */ false, element.powerBiEmbed.iframe);
+        const report = new Report(this, element, config, /* phasedRender */ false, /* isBootstrap */ false, element.powerBiEmbed.iframe);
         report.load(config);
         element.powerBiEmbed = report;
 
@@ -367,7 +411,8 @@ export class Service implements IService {
       throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
     }
 
-    component.load(config, phasedRender);
+    component.populateConfig(config, /* isBootstrap */ false);
+    component.load(component.config, phasedRender);
 
     return component;
   }
@@ -431,6 +476,12 @@ export class Service implements IService {
       return;
     }
 
+    /** Removes the element frontLoad listener if exists. */
+    let embedElement = powerBiElement.powerBiEmbed;
+    if (embedElement.frontLoadHandler) {
+      embedElement.element.removeEventListener('ready', embedElement.frontLoadHandler, false);
+    }
+
     /** Removes the component from an internal list of components. */
     utils.remove(x => x === powerBiElement.powerBiEmbed, this.embeds);
     /** Deletes a property from the HTML element. */
@@ -464,6 +515,7 @@ export class Service implements IService {
    *
    * @private
    * @param {IEvent<any>} event
+   * @hidden
    */
   private handleEvent(event: IEvent<any>): void {
     let embed = utils.find(embed => {

@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
@@ -6,25 +9,30 @@ import { Defaults } from './defaults';
 
 /**
  * The Power BI tile embed component
- * 
+ *
  * @export
  * @class Tile
  * @extends {Embed}
  */
 export class Tile extends embed.Embed {
+    /** @hidden */  
     static type = "Tile";
+    /** @hidden */
     static allowedEvents = ["tileClicked", "tileLoaded"];
 
-    constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean) {
+    /**
+     * @hidden
+     */
+    constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) {
       let config = <embed.IEmbedConfiguration>baseConfig;
-      super(service, element, config, /* iframe */ undefined, phasedRender);
+      super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
       this.loadPath = "/tile/load";
       Array.prototype.push.apply(this.allowedEvents, Tile.allowedEvents);
     }
 
     /**
      * The ID of the tile
-     * 
+     *
      * @returns {string}
      */
     getId(): string {
@@ -47,28 +55,31 @@ export class Tile extends embed.Embed {
     }
 
     /**
-     * Populate config for load config
-     * 
-     * @param {IEmbedConfigurationBase}
+     * Handle config changes.
+     *
      * @returns {void}
      */
-    populateConfig(baseConfig: embed.IEmbedConfigurationBase): void {
-      let config = <embed.IEmbedConfiguration>baseConfig;
+    configChanged(isBootstrap: boolean): void {
+      if (isBootstrap) {
+        return;
+      }
 
-      super.populateConfig(config);
+      // Populate tile id into config object.
+      (<embed.IEmbedConfiguration>this.config).id = this.getId();
+    }
 
-      // TODO: Change when Object.assign is available.
-      const settings = utils.assign({}, Defaults.defaultSettings, config.settings);
-      config = utils.assign({ settings }, config);
-
-      config.id = this.getId();
-      this.config = config;
+    /**
+     * @hidden
+     * @returns {string}
+     */
+    getDefaultEmbedUrlEndpoint(): string {
+      return "tileEmbed";
     }
 
     /**
      * Adds the ability to get tileId from url.
      * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
-     * 
+     *
      * @static
      * @param {string} url
      * @returns {string}

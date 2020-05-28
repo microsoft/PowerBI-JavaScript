@@ -1,5 +1,8 @@
+/**
+ * @hidden
+ */
 const config = {
-  version: '2.6.5',
+  version: '2.11.0',
   type: 'js'
 };
 

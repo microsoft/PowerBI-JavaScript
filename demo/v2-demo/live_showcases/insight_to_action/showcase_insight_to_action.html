@@ -1,0 +1,115 @@
+<div id="startTooltip">
+    <div class="btnCloseTooltip" onclick="onTootipClicked('closeTooltip');">
+        <img src="images\closeWhite.png"/>
+    </div>
+    <div class="showcaseTooltipText">Start a campaign with these customers</div>
+    <div class="showcaseTooltipSubText">Hover over the table, and click on the three dots icon '...' at the upper right corner.</div>
+    <div class="tooltipFooter">
+        <div class="btnShowcaseTooltip yellowBtn" onclick="onTootipClicked('startTooltip');">
+            Next
+        </div>
+        <div class="tooltipNumber">
+            1 of 2
+        </div>
+    </div>
+</div>
+
+<div id="showcases-text">
+    <h3>Insight to action</h3>
+    <br>
+    <div id="showcases-description">
+            This showcase demonstrates one example of how to leverage the <a href="https://go.microsoft.com/fwlink/?linkid=2063102">‘menu extensions’</a> and <a href="https://go.microsoft.com/fwlink/?linkid=2062683">‘export data’</a> APIs to give users the ability to take meaningful actions within seconds from analytics. The sample contains a basic customer relationship management module. The main table shows a list of customers who have not engaged with your service lately, and might not return. You can send these customers an offer to try and retain them.<br><br>
+        &nbsp;<b>1. Choose a list of customers</b><br>
+        <div class="text-tab">
+            The sales report shows a list of possible churning customers. Use the slicers to define the list of customers you want to engage with.<br><br>
+        </div>
+        &nbsp;<b>2. Take actions to get them engaged</b><br>
+        <div class="text-tab">
+            Follow the instructions on the tooltips to take actions straight from within the report.<br>
+        </div>
+    </div>
+    <div class="showcases-buttons">
+        <a class="selectButton floatButton" href="https://go.microsoft.com/fwlink/?linkid=2063102" target="_blank">Documentation</a>
+        <a class="selectButton floatButton" href="https://go.microsoft.com/fwlink/?linkid=2062950" target="_blank">Get Code</a>
+    </div>
+</div>
+
+<div id="showcaseContent">
+    <div id="insightToActionShowcaseEmbedArea">
+        <div class="editorTitle">Embedded view</div>
+        <div id="showcase-embedded-view">
+            <div id="embedContainer" class="iframeContainer active"></div>
+            <div id="dialogMask"></div>
+            <div id="distributionDialog" class="insightToActionDialog">
+                <div class="dialogHeader">
+                    <span class="dialogHeaderText">Campaign distribution list</span>
+                    <span id="btnCloseDistributionDialog" onclick="onCloseDialog('distributionDialog');">
+                        <img src="images\close.png"/>
+                    </span>
+                </div>
+                <div class="dialogBody">
+                    <div id="dialogTable"></div>
+                </div>
+                <div class="dialogFooter">
+                    <div class="insightToActionDialogBtn whiteBtn" onclick="onSendClicked('coupon');">
+                        Send coupon
+                    </div>
+                    <div class="insightToActionDialogBtn whiteBtn" onclick="onSendClicked('discount');">
+                        Send discount
+                    </div>
+                    <div class="insightToActionDialogBtn cancelBtn whiteBtn" onclick="onCloseDialog('distributionDialog');">
+                        Cancel
+                    </div>
+                </div>
+                <div id="dialogTooltip">
+                    <div class="btnCloseTooltip" onclick="onTootipClicked('dialogTooltip');">
+                        <img src="images\closeWhite.png"/>
+                    </div>
+                    <div class="showcaseTooltipText">Send offer</div>
+                    <div class="showcaseTooltipSubText">Choose the customers and send them an offering</div>
+                    <div class="tooltipFooter">
+                        <div class="btnShowcaseTooltip yellowBtn" onclick="onTootipClicked('dialogTooltip');">
+                            Got it
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sendDialog" class="insightToActionDialog">
+                <div class="dialogHeader">
+                    <span class="dialogHeaderText"></span>
+                    <span id="btnCloseDistributionDialog" onclick="onCloseDialog('sendDialog');">
+                        <img src="images\close.png"/>
+                    </span>
+                </div>
+                <div class="dialogBody">
+                    <div class="sendDialogRow">
+                        <div class="sendDialogField">Title</div>
+                        <input type="text" id="title" name="title" value="Special offer just for you" />
+                    </div>
+                    <div class="sendDialogRow">
+                        <div class="sendDialogField">Body</div>
+                        <textarea name="messageBody"></textarea>
+                    </div>
+                </div>
+                <div class="dialogFooter">
+                    <div class="insightToActionDialogBtn cancelBtn whiteBtn" onclick="onCloseDialog('sendDialog');">
+                        Cancel
+                    </div>
+                    <div class="insightToActionDialogBtn sendBtn yellowBtn" onclick="onSendDialogSendClicked();">
+                        Send
+                    </div>
+                </div>
+            </div>
+            <div id="messageSent">Sent</div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function() {
+        embedInsightsToActionReport();
+        window.addEventListener("resize", setTooltipPosition);
+    });
+</script>

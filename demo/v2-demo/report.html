@@ -42,6 +42,7 @@
                 <div class="visualContainer iframeContainer"></div>
                 <div class="tileContainer iframeContainer"></div>
                 <div class="qnaContainer iframeContainer"></div>
+                <div class="paginatedReportContainer iframeContainer"></div>
             </div>
             <div class="mobile-view">
                 <div class="phone-frame">
@@ -54,6 +55,7 @@
                         <div class="visualMobileContainer iframeContainer"></div>
                         <div class="tileMobileContainer iframeContainer"></div>
                         <div class="qnaMobileContainer iframeContainer"></div>
+                        <div class="paginatedReportMobileContainer iframeContainer"></div>
                     </div>
                     <div class="phone-bottom">
                         <div class="phone-button"></div>
@@ -74,17 +76,7 @@ $(document).ready(function() {
     const mode = modeUrlParam ? modeUrlParam : "view";
 
     const entityTypeUrlParam = GetParameterByName("entityType");
-    let entityType;
-    if (entityTypeUrlParam == "dashboard") {
-        entityType = EntityType.Dashboard;
-    } else if (entityTypeUrlParam == "tile") {
-        entityType = EntityType.Tile;
-    }
-    else if (entityTypeUrlParam == "visual") {
-        entityType = EntityType.Visual;
-    } else {
-        entityType = EntityType.Report;
-    }
+    let entityType = getEntityTypeFromParameter(entityTypeUrlParam);
 
     // set mode and type in session.
     SetSession(SessionKeys.EntityType, entityType);
@@ -97,7 +89,7 @@ $(document).ready(function() {
 
         if (GetParameterByName("embedUrl") || GetParameterByName("embedId") || GetParameterByName("accessToken") || GetParameterByName("entityType"))
         {
-            OpenCodeStep(mode, entityType, 0);
+            OpenCodeStep(mode, entityType, GetParameterByName("tokenType") || 0);
         }
         else
         {

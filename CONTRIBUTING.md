@@ -58,9 +58,9 @@ The build and tests use webpack to compile all the source modules into one bundl
 ## Running the demo
 Navigate to `/demo` directory
 
-Install bower dependencies:
+Install npm dependencies:
 ```
-bower install
+npm install
 ```
 
 Serve the demo directory:
@@ -84,4 +84,12 @@ npm run gulp -- build:docs
 If the docs are correct then you may publish them to gh-pages using this command
 ```
 npm run gulp -- ghpages
+```
+
+## Known issues
+Running demo fails with an error ERR_INVALID_REDIRECT
+This happens due to version 10 of http-server. To solve the problem, please install http-server@0.9.0 globally using:
+
+```
+npm install -g http-server@0.9.0
 ```
