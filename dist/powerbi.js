@@ -92,7 +92,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
-
 	/**
 	 * @hidden
 	 */
@@ -517,7 +516,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return Service;
 	}());
 	exports.Service = Service;
-
 
 /***/ }),
 /* 2 */
