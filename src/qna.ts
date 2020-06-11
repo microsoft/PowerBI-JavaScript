@@ -1,12 +1,10 @@
-/** @ignore *//** */
-
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
 import * as utils from './util';
 
 /**
- * The Power BI Qna embed component
+ * The Power BI Q&A embed component
  *
  * @export
  * @class Qna
@@ -30,7 +28,7 @@ export class Qna extends embed.Embed {
     }
 
     /**
-     * The ID of the Qna embed component
+     * The ID of the Q&A embed component
      *
      * @returns {string}
      */
@@ -61,7 +59,7 @@ export class Qna extends embed.Embed {
      * @returns {void}
      */
     configChanged(isBootstrap: boolean): void {
-      // Nothing to do in qna embed.
+      // Nothing to do in Q&A embed.
     }
 
     /**

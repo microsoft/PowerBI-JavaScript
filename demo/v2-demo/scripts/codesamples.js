@@ -786,7 +786,7 @@ function _Embed_QnaEmbed() {
     // Read question from textbox
     var txtQuestion = $('#txtQuestion').val();
 
-    // Read Qna mode
+    // Read Q&A mode
     var qnaMode = $("input[name='qnaMode']:checked").val();
 
     // Get models. models contains enums that can be used.
@@ -825,7 +825,7 @@ function _Embed_QnaEmbed_Aad() {
     // Read question from textbox
     var txtQuestion = $('#txtQuestion').val();
 
-    // Read Qna mode
+    // Read Q&A mode
     var qnaMode = $("input[name='qnaMode']:checked").val();
 
     // Get models. models contains enums that can be used.

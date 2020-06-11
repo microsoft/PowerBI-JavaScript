@@ -1,4 +1,3 @@
-/** @ignore *//** */
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
@@ -44,7 +43,8 @@ export class Create extends embed.Embed {
 
   /**
    * Handle config changes.
-   *
+   * 
+   * @hidden
    * @returns {void}
    */
   configChanged(isBootstrap: boolean): void {
@@ -94,6 +94,7 @@ export class Create extends embed.Embed {
    * @static
    * @param {string} url
    * @returns {string}
+   * @hidden
    */
   static findIdFromEmbedUrl(url: string): string {
     const datasetIdRegEx = /datasetId="?([^&]+)"?/

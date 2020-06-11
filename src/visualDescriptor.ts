@@ -1,5 +1,3 @@
-/** @ignore *//** */
-
 import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 import { IPageNode, Page } from './page';

@@ -1,5 +1,3 @@
-/** @ignore *//** */
-
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -71,11 +69,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
    *
    * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
-   *
+   * @hidden
    * @static
    * @param {string} url
-   * @returns {string}
-   * @hidden
+   * @returns {string} 
    */
   static findIdFromEmbedUrl(url: string): string {
     const reportIdRegEx = /reportId="?([^&]+)"?/
@@ -371,6 +368,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Validate load configuration.
+   * 
+   * @hidden
    */
   validate(config: embed.IEmbedConfigurationBase): models.IError[] {
     return models.validateReportLoad(config);

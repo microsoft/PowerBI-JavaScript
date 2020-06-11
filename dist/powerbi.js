@@ -93,7 +93,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/** @ignore */ /** */
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(7);
 	var create_1 = __webpack_require__(12);
@@ -226,6 +225,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {HTMLElement} [container]
 	     * @param {embed.IEmbedConfiguration} [config=undefined]
 	     * @returns {embed.Embed[]}
+	     * @hidden
 	     */
 	    Service.prototype.init = function (container, config) {
 	        var _this = this;
@@ -270,6 +270,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Service.prototype.bootstrap = function (element, config) {
 	        return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
 	    };
+	    /** @hidden */
 	    Service.prototype.embedInternal = function (element, config, phasedRender, isBootstrap) {
 	        if (config === void 0) { config = {}; }
 	        var component;
@@ -285,12 +286,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return component;
 	    };
+	    /** @hidden */
 	    Service.prototype.getNumberOfComponents = function () {
 	        if (!this.embeds) {
 	            return 0;
 	        }
 	        return this.embeds.length;
 	    };
+	    /** @hidden */
 	    Service.prototype.getSdkSessionId = function () {
 	        return this.uniqueSessionId;
 	    };
@@ -365,6 +368,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * Note: Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
 	     * This handler is typically useful only for applications that are rendered on the server so that all required data is available when the handler is called.
+	     *
+	     * @hidden
 	     */
 	    Service.prototype.enableAutoEmbed = function () {
 	        var _this = this;
@@ -388,6 +393,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {string} uniqueId
 	     * @returns {(Report | Tile)}
+	     * @hidden
 	     */
 	    Service.prototype.find = function (uniqueId) {
 	        return utils.find(function (x) { return x.config.uniqueId === uniqueId; }, this.embeds);
@@ -398,6 +404,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {Embed} component
 	     * @param {HTMLElement} element
 	     * @returns {void}
+	     * @hidden
 	     */
 	    Service.prototype.addOrOverwriteEmbed = function (component, element) {
 	        // remove embeds over the same div element.
@@ -442,6 +449,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * handles tile events
 	     *
 	     * @param {IEvent<any>} event
+	     * @hidden
 	     */
 	    Service.prototype.handleTileEvents = function (event) {
 	        if (event.type === 'tile') {
@@ -580,7 +588,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
 	     *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
 	     * ```
-	     *
+	     * @hidden
 	     * @param {models.IReportCreateConfiguration} config
 	     * @returns {Promise<void>}
 	     */
@@ -663,7 +671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * })
 	     *   .catch(error => { ... });
 	     * ```
-	     *
+	     * @hidden
 	     * @param {models.ILoadConfiguration} config
 	     * @param {boolean} phasedRender
 	     * @returns {Promise<void>}
@@ -5126,7 +5134,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/** @ignore */ /** */
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
@@ -5171,11 +5178,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
 	     *
 	     * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
-	     *
+	     * @hidden
 	     * @static
 	     * @param {string} url
 	     * @returns {string}
-	     * @hidden
 	     */
 	    Report.findIdFromEmbedUrl = function (url) {
 	        var reportIdRegEx = /reportId="?([^&]+)"?/;
@@ -5444,6 +5450,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    /**
 	     * Validate load configuration.
+	     *
+	     * @hidden
 	     */
 	    Report.prototype.validate = function (config) {
 	        return models.validateReportLoad(config);
@@ -5611,7 +5619,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/** @ignore */ /** */
 	var visualDescriptor_1 = __webpack_require__(9);
 	var models = __webpack_require__(5);
 	var utils = __webpack_require__(3);
@@ -5782,7 +5789,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ (function(module, exports) {
 
-	/** @ignore */ /** */
 	/**
 	 * A Power BI visual within a page
 	 *
@@ -6131,6 +6137,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Handle config changes.
 	     *
+	     * @hidden
 	     * @returns {void}
 	     */
 	    Create.prototype.configChanged = function (isBootstrap) {
@@ -6175,6 +6182,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @static
 	     * @param {string} url
 	     * @returns {string}
+	     * @hidden
 	     */
 	    Create.findIdFromEmbedUrl = function (url) {
 	        var datasetIdRegEx = /datasetId="?([^&]+)"?/;
@@ -6230,7 +6238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
 	     *
 	     * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
-	     *
+	     * @hidden
 	     * @static
 	     * @param {string} url
 	     * @returns {string}
@@ -6259,6 +6267,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    /**
 	     * Validate load configuration.
+	     *
+	     * @hidden
 	     */
 	    Dashboard.prototype.validate = function (baseConfig) {
 	        var config = baseConfig;
@@ -6310,7 +6320,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/** @ignore */ /** */
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
@@ -6379,6 +6388,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Adds the ability to get tileId from url.
 	     * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
 	     *
+	     * @hidden
 	     * @static
 	     * @param {string} url
 	     * @returns {string}
@@ -6405,7 +6415,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/** @ignore */ /** */
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
@@ -6414,7 +6423,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var models = __webpack_require__(5);
 	var embed = __webpack_require__(2);
 	/**
-	 * The Power BI Qna embed component
+	 * The Power BI Q&A embed component
 	 *
 	 * @export
 	 * @class Qna
@@ -6432,7 +6441,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        Array.prototype.push.apply(this.allowedEvents, Qna.allowedEvents);
 	    }
 	    /**
-	     * The ID of the Qna embed component
+	     * The ID of the Q&A embed component
 	     *
 	     * @returns {string}
 	     */
@@ -6460,7 +6469,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {void}
 	     */
 	    Qna.prototype.configChanged = function (isBootstrap) {
-	        // Nothing to do in qna embed.
+	        // Nothing to do in Q&A embed.
 	    };
 	    /**
 	     * @hidden
@@ -6488,7 +6497,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/** @ignore */ /** */
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }

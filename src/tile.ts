@@ -1,5 +1,3 @@
-/** @ignore *//** */
-
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
@@ -79,6 +77,7 @@ export class Tile extends embed.Embed {
      * Adds the ability to get tileId from url.
      * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
      *
+     * @hidden
      * @static
      * @param {string} url
      * @returns {string}

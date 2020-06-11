@@ -103,7 +103,6 @@ declare module "config" {
     export default config;
 }
 declare module "defaults" {
-    /** @ignore */ /** */
     import * as models from 'powerbi-models';
     /** @hidden */
     export abstract class Defaults {
@@ -179,7 +178,7 @@ declare module "embed" {
         visualName: string;
     }
     /**
-     * Configuration settings for Power BI QNA embed component
+     * Configuration settings for Power BI Q&A embed component
      *
      * @export
      * @interface IEmbedConfiguration
@@ -321,7 +320,7 @@ declare module "embed" {
          *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
          *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
          * ```
-         *
+         * @hidden
          * @param {models.IReportCreateConfiguration} config
          * @returns {Promise<void>}
          */
@@ -372,7 +371,7 @@ declare module "embed" {
          * })
          *   .catch(error => { ... });
          * ```
-         *
+         * @hidden
          * @param {models.ILoadConfiguration} config
          * @param {boolean} phasedRender
          * @returns {Promise<void>}
@@ -526,6 +525,8 @@ declare module "embed" {
         private isFullscreen(iframe);
         /**
          * Validate load and create configuration.
+         *
+         * @hidden
          */
         abstract validate(config: IEmbedConfigurationBase): models.IError[];
         /**
@@ -563,7 +564,6 @@ declare module "embed" {
     }
 }
 declare module "ifilterable" {
-    /** @ignore */ /** */
     import * as models from 'powerbi-models';
     /**
      * Decorates embed components that support filters
@@ -595,7 +595,6 @@ declare module "ifilterable" {
     }
 }
 declare module "visualDescriptor" {
-    /** @ignore */ /** */
     import * as models from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { IPageNode } from "page";
@@ -742,7 +741,6 @@ declare module "visualDescriptor" {
     }
 }
 declare module "page" {
-    /** @ignore */ /** */
     import { IFilterable } from "ifilterable";
     import { IReportNode } from "report";
     import { VisualDescriptor } from "visualDescriptor";
@@ -898,7 +896,6 @@ declare module "page" {
     }
 }
 declare module "report" {
-    /** @ignore */ /** */
     import * as service from "service";
     import * as embed from "embed";
     import * as models from 'powerbi-models';
@@ -954,11 +951,10 @@ declare module "report" {
          * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
          *
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
-         *
+         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
-         * @hidden
          */
         static findIdFromEmbedUrl(url: string): string;
         /**
@@ -1115,6 +1111,8 @@ declare module "report" {
         updateSettings(settings: models.ISettings): Promise<void>;
         /**
          * Validate load configuration.
+         *
+         * @hidden
          */
         validate(config: embed.IEmbedConfigurationBase): models.IError[];
         /**
@@ -1183,7 +1181,6 @@ declare module "report" {
     }
 }
 declare module "create" {
-    /** @ignore */ /** */
     import * as service from "service";
     import * as models from 'powerbi-models';
     import * as embed from "embed";
@@ -1209,6 +1206,7 @@ declare module "create" {
         /**
          * Handle config changes.
          *
+         * @hidden
          * @returns {void}
          */
         configChanged(isBootstrap: boolean): void;
@@ -1236,12 +1234,12 @@ declare module "create" {
          * @static
          * @param {string} url
          * @returns {string}
+         * @hidden
          */
         static findIdFromEmbedUrl(url: string): string;
     }
 }
 declare module "dashboard" {
-    /** @ignore */ /** */
     import * as service from "service";
     import * as embed from "embed";
     import * as models from 'powerbi-models';
@@ -1287,7 +1285,7 @@ declare module "dashboard" {
          * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
          *
          * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
-         *
+         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
@@ -1301,6 +1299,8 @@ declare module "dashboard" {
         getId(): string;
         /**
          * Validate load configuration.
+         *
+         * @hidden
          */
         validate(baseConfig: embed.IEmbedConfigurationBase): models.IError[];
         /**
@@ -1322,7 +1322,6 @@ declare module "dashboard" {
     }
 }
 declare module "tile" {
-    /** @ignore */ /** */
     import * as service from "service";
     import * as models from 'powerbi-models';
     import * as embed from "embed";
@@ -1367,6 +1366,7 @@ declare module "tile" {
          * Adds the ability to get tileId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
          *
+         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
@@ -1375,12 +1375,11 @@ declare module "tile" {
     }
 }
 declare module "qna" {
-    /** @ignore */ /** */
     import * as service from "service";
     import * as models from 'powerbi-models';
     import * as embed from "embed";
     /**
-     * The Power BI Qna embed component
+     * The Power BI Q&A embed component
      *
      * @export
      * @class Qna
@@ -1396,7 +1395,7 @@ declare module "qna" {
          */
         constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
         /**
-         * The ID of the Qna embed component
+         * The ID of the Q&A embed component
          *
          * @returns {string}
          */
@@ -1426,7 +1425,6 @@ declare module "qna" {
     }
 }
 declare module "visual" {
-    /** @ignore */ /** */
     import * as service from "service";
     import * as embed from "embed";
     import * as models from 'powerbi-models';
@@ -1519,7 +1517,6 @@ declare module "visual" {
     }
 }
 declare module "service" {
-    /** @ignore */ /** */
     import * as embed from "embed";
     import * as wpmp from 'window-post-message-proxy';
     import * as hpm from 'http-post-message';
@@ -1636,6 +1633,7 @@ declare module "service" {
          * @param {HTMLElement} [container]
          * @param {embed.IEmbedConfiguration} [config=undefined]
          * @returns {embed.Embed[]}
+         * @hidden
          */
         init(container?: HTMLElement, config?: embed.IEmbedConfiguration): embed.Embed[];
         /**
@@ -1666,8 +1664,11 @@ declare module "service" {
          * @param {embed.IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
          */
         bootstrap(element: HTMLElement, config: embed.IBootstrapEmbedConfiguration): embed.Embed;
+        /** @hidden */
         embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed;
+        /** @hidden */
         getNumberOfComponents(): number;
+        /** @hidden */
         getSdkSessionId(): string;
         /**
          * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
@@ -1695,6 +1696,8 @@ declare module "service" {
          *
          * Note: Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
          * This handler is typically useful only for applications that are rendered on the server so that all required data is available when the handler is called.
+         *
+         * @hidden
          */
         enableAutoEmbed(): void;
         /**
@@ -1709,6 +1712,7 @@ declare module "service" {
          *
          * @param {string} uniqueId
          * @returns {(Report | Tile)}
+         * @hidden
          */
         find(uniqueId: string): embed.Embed;
         /**
@@ -1717,6 +1721,7 @@ declare module "service" {
          * @param {Embed} component
          * @param {HTMLElement} element
          * @returns {void}
+         * @hidden
          */
         addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void;
         /**
@@ -1730,6 +1735,7 @@ declare module "service" {
          * handles tile events
          *
          * @param {IEvent<any>} event
+         * @hidden
          */
         handleTileEvents(event: IEvent<any>): void;
         /**
@@ -1752,12 +1758,11 @@ declare module "service" {
     }
 }
 declare module "bookmarksManager" {
-    /** @ignore */ /** */
     import * as service from "service";
     import * as embed from "embed";
     import * as models from 'powerbi-models';
     /**
-     * Report bookmarks management APIs.
+     * APIs for managing the report bookmarks.
      *
      * @export
      * @interface IBookmarksManager
@@ -1845,7 +1850,6 @@ declare module "factories" {
     /**
      * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
      */
-    /** @ignore */ /** */
     import { IHpmFactory, IWpmpFactory, IRouterFactory } from "service";
     export { IHpmFactory, IWpmpFactory, IRouterFactory };
     export const hpmFactory: IHpmFactory;
