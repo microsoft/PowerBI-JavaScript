@@ -78,24 +78,84 @@ describe('service', function () {
   });
 
   describe('init', function () {
-    it('embeds all components found in the DOM', function () {
-      // Arrange
-      const elements = [
-        '<div id="reportContainer1" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
-        '<div id="reportContainer2" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
-      ];
+    describe('embeds all components found in the DOM', function () {
+      let powerbi: service.Service; // redefined for this scope
 
-      elements.forEach(element => {
-        $(element).appendTo('#powerbi-fixture');
+      beforeEach(function() {
+        powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+        powerbi.accessToken = 'ABC123';
       });
 
-      // Act
-      powerbi.init();
+      afterEach(function () {
+        powerbi.wpmp.stop();
+        powerbi = null;
+      });
 
-      // Assert
-      // If embed element has iframe inside it, assume embed action occurred
-      const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
-      expect(iframes.length).toEqual(2);
+      it('should work with multiple elements without id', function () {
+        // Arrange
+        const elements = [
+          '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
+          '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
+        ];
+
+        elements.forEach(element => {
+          $(element).appendTo('#powerbi-fixture');
+        });
+
+        // Act
+        powerbi.init();
+
+        // Assert
+        // If embed element has iframe inside it, assume embed action occurred
+        const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
+        expect(iframes.length).toEqual(2);
+        // Check the number of components controlled by powerbi
+        expect(powerbi.getNumberOfComponents()).toEqual(2);
+      });
+
+      it('should work with multiple elements with id', function () {
+        // Arrange
+        const elements = [
+          '<div id="first-report" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
+          '<div id="second-report" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
+        ];
+
+        elements.forEach(element => {
+          $(element).appendTo('#powerbi-fixture');
+        });
+
+        // Act
+        powerbi.init();
+
+        // Assert
+        // If embed element has iframe inside it, assume embed action occurred
+        const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
+        expect(iframes.length).toEqual(2);
+        // Check the number of components controlled by powerbi
+        expect(powerbi.getNumberOfComponents()).toEqual(2);
+      });
+
+      it('should work with multiple elements with duplicated id', function () {
+        // Arrange
+        const elements = [
+          '<div id="report" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
+          '<div id="report" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
+        ];
+
+        elements.forEach(element => {
+          $(element).appendTo('#powerbi-fixture');
+        });
+
+        // Act
+        powerbi.init();
+
+        // Assert
+        // If embed element has iframe inside it, assume embed action occurred
+        const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
+        expect(iframes.length).toEqual(2);
+        // Check the number of components controlled by powerbi
+        expect(powerbi.getNumberOfComponents()).toEqual(2);
+      });
     });
 
     it('embeds all components found in the DOM without id attribute', function () {
