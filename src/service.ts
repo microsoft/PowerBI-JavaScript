@@ -19,22 +19,37 @@ export interface IEvent<T> {
   value: T;
 }
 
+/**
+ * @hidden
+ */
 export interface ICustomEvent<T> extends CustomEvent {
   detail: T;
 }
 
+/**
+ * @hidden
+ */
 export interface IEventHandler<T> {
   (event: ICustomEvent<T>): any;
 }
 
+/**
+ * @hidden
+ */
 export interface IHpmFactory {
   (wpmp: wpmp.WindowPostMessageProxy, targetWindow?: Window, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
 }
 
+/**
+ * @hidden
+ */
 export interface IWpmpFactory {
   (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window): wpmp.WindowPostMessageProxy;
 }
 
+/**
+ * @hidden
+ */
 export interface IRouterFactory {
   (wpmp: wpmp.WindowPostMessageProxy): router.Router;
 }
@@ -91,6 +106,7 @@ export class Service implements IService {
    * Gets or sets the access token as the global fallback token to use when a local token is not provided for a report or tile.
    *
    * @type {string}
+   * @hidden
    */
   accessToken: string;
 
@@ -100,9 +116,13 @@ export class Service implements IService {
   /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
   private embeds: embed.Embed[];
 
-  /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
+  /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. 
+   * @hidden
+  */
   hpm: hpm.HttpPostMessage;
-  /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
+  /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests 
+   * @hidden
+  */
   wpmp: wpmp.WindowPostMessageProxy;
   private router: router.Router;
   private uniqueSessionId: string;
@@ -114,6 +134,7 @@ export class Service implements IService {
    * @param {IWpmpFactory} wpmpFactory The window post message factory used in the postMessage communication layer
    * @param {IRouterFactory} routerFactory The router factory used in the postMessage communication layer
    * @param {IServiceConfiguration} [config={}]
+   * @hidden
    */
   constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config: IServiceConfiguration = {}) {
     this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
@@ -239,6 +260,7 @@ export class Service implements IService {
    * @param {HTMLElement} [container]
    * @param {embed.IEmbedConfiguration} [config=undefined]
    * @returns {embed.Embed[]}
+   * @hidden
    */
   init(container?: HTMLElement, config: embed.IEmbedConfiguration = undefined): embed.Embed[] {
     container = (container && container instanceof HTMLElement) ? container : document.body;
@@ -284,6 +306,7 @@ export class Service implements IService {
     return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
   }
 
+  /** @hidden */
   embedInternal(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed {
     let component: embed.Embed;
     let powerBiElement = <IPowerBiElement>element;
@@ -302,6 +325,7 @@ export class Service implements IService {
     return component;
   }
 
+  /** @hidden */
   getNumberOfComponents(): number {
     if (!this.embeds) {
       return 0;
@@ -310,6 +334,7 @@ export class Service implements IService {
     return this.embeds.length;
   }
 
+  /** @hidden */
   getSdkSessionId(): string {
     return this.uniqueSessionId;
   }
@@ -321,6 +346,7 @@ export class Service implements IService {
    * @param {IPowerBiElement} element
    * @param {embed.IEmbedConfigurationBase} config
    * @returns {embed.Embed}
+   * @hidden
    */
   private embedNew(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed {
     const componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
@@ -350,6 +376,7 @@ export class Service implements IService {
    * @param {IPowerBiElement} element
    * @param {embed.IEmbedConfigurationBase} config
    * @returns {embed.Embed}
+   * @hidden
    */
   private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed {
     const component = utils.find(x => x.element === element, this.embeds);
@@ -397,6 +424,8 @@ export class Service implements IService {
    *
    * Note: Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
    * This handler is typically useful only for applications that are rendered on the server so that all required data is available when the handler is called.
+   * 
+   * @hidden
    */
   enableAutoEmbed(): void {
     window.addEventListener('DOMContentLoaded', (event: Event) => this.init(document.body), false);
@@ -423,15 +452,24 @@ export class Service implements IService {
    *
    * @param {string} uniqueId
    * @returns {(Report | Tile)}
+   * @hidden
    */
   find(uniqueId: string): embed.Embed {
     return utils.find(x => x.config.uniqueId === uniqueId, this.embeds);
   }
 
+  /**
+   * Removes embed components whose container element is same as the given element
+   * 
+   * @param {Embed} component 
+   * @param {HTMLElement} element
+   * @returns {void}
+   * @hidden
+   */
   addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void {
     // remove embeds over the same div element.
     this.embeds = this.embeds.filter(function(embed) {
-      return embed.element.id !== element.id;
+      return embed.element !== element;
     });
 
     this.embeds.push(component);
@@ -477,6 +515,7 @@ export class Service implements IService {
    * handles tile events
    *
    * @param {IEvent<any>} event
+   * @hidden
    */
   handleTileEvents (event: IEvent<any>): void {
       if (event.type === 'tile'){
@@ -489,6 +528,7 @@ export class Service implements IService {
    *
    * @private
    * @param {IEvent<any>} event
+   * @hidden
    */
   private handleEvent(event: IEvent<any>): void {
     let embed = utils.find(embed => {

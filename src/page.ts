@@ -81,6 +81,7 @@ export class Page implements IPageNode, IFilterable {
    * @param {string} [displayName]
    * @param {boolean} [isActivePage]
    * @param {models.SectionVisibility} [visibility]
+   * @hidden
    */
   constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility, defaultSize?: models.ICustomPageSize, defaultDisplayOption?: models.DisplayOption) {
     this.report = report;
@@ -108,6 +109,26 @@ export class Page implements IPageNode, IFilterable {
       response => {
         throw response.body;
       });
+  }
+
+  /**
+   * Delete the page from the report
+   *
+   * ```javascript
+   * // Delete the page from the report
+   * page.delete();
+   * ```
+   *
+   * @returns {Promise<void>}
+   */
+  delete(): Promise<void> {
+    return this.report.service.hpm.delete<models.IError[]>(`/report/pages/${this.name}`, { }, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+    .then(response => {
+      return response.body;
+    })
+    .catch(response => {
+      throw response.body;
+    });
   }
 
   /**

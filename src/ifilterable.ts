@@ -1,3 +1,4 @@
+
 import * as models from 'powerbi-models';
 
 /**

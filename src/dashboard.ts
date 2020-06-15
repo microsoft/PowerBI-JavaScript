@@ -28,15 +28,20 @@ export interface IDashboardNode {
  * @implements {IFilterable}
  */
 export class Dashboard extends embed.Embed implements IDashboardNode {
+    /** @hidden */  
     static allowedEvents = ["tileClicked", "error"];
+    /** @hidden */  
     static dashboardIdAttribute = 'powerbi-dashboard-id';
+    /** @hidden */  
     static typeAttribute = 'powerbi-type';
+    /** @hidden */  
     static type = "Dashboard";
 
     /**
      * Creates an instance of a Power BI Dashboard.
      *
      * @param {service.Service} service
+     * @hidden
      * @param {HTMLElement} element
      */
     constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) {
@@ -52,7 +57,7 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
      * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
      *
      * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
-     *
+     * @hidden
      * @static
      * @param {string} url
      * @returns {string}
@@ -87,6 +92,8 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
 
     /**
      * Validate load configuration.
+     * 
+     * @hidden
      */
     validate(baseConfig: embed.IEmbedConfigurationBase): models.IError[] {
       const config = baseConfig as embed.IEmbedConfiguration;
@@ -96,7 +103,7 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
 
     /**
      * Handle config changes.
-     *
+     * @hidden
      * @returns {void}
      */
     configChanged(isBootstrap: boolean): void {
@@ -108,12 +115,17 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
       (<embed.IEmbedConfiguration>this.config).id = this.getId();
     }
 
+    /**
+     * @hidden
+     * @returns {string}
+     */
     getDefaultEmbedUrlEndpoint(): string {
       return "dashboardEmbed";
     }
 
     /**
      * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
+     * @hidden
      */
     private ValidatePageView(pageView: models.PageView): models.IError[] {
       if (pageView && pageView !== "fitToWidth" && pageView !== "oneColumn" && pageView !== "actualSize") {

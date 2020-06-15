@@ -1,4 +1,4 @@
-/*! powerbi-client v2.10.4 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.12.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -95,6 +95,7 @@ declare module "util" {
     export function getRandomValue(): number;
 }
 declare module "config" {
+    /** @ignore */ /** */
     const config: {
         version: string;
         type: string;
@@ -103,6 +104,7 @@ declare module "config" {
 }
 declare module "defaults" {
     import * as models from 'powerbi-models';
+    /** @hidden */
     export abstract class Defaults {
         static defaultSettings: models.ISettings;
         static defaultQnaSettings: models.IQnaSettings;
@@ -117,8 +119,8 @@ declare module "embed" {
     import * as models from 'powerbi-models';
     global  {
         interface Document {
-            mozCancelFullScreen: Function;
-            msExitFullscreen: Function;
+            mozCancelFullScreen: any;
+            msExitFullscreen: any;
         }
         interface HTMLIFrameElement {
             mozRequestFullScreen: Function;
@@ -176,7 +178,7 @@ declare module "embed" {
         visualName: string;
     }
     /**
-     * Configuration settings for Power BI QNA embed component
+     * Configuration settings for Power BI Q&A embed component
      *
      * @export
      * @interface IEmbedConfiguration
@@ -197,6 +199,7 @@ declare module "embed" {
     }
     export interface IQnaSettings extends models.IQnaSettings, ISettings {
     }
+    /** @hidden */
     export interface IInternalEventHandler<T> {
         test(event: service.IEvent<T>): boolean;
         handle(event: service.ICustomEvent<T>): void;
@@ -206,74 +209,95 @@ declare module "embed" {
      *
      * @export
      * @abstract
+     * @hidden
      * @class Embed
      */
     export abstract class Embed {
+        /** @hidden */
         static allowedEvents: string[];
+        /** @hidden */
         static accessTokenAttribute: string;
+        /** @hidden */
         static embedUrlAttribute: string;
+        /** @hidden */
         static nameAttribute: string;
+        /** @hidden */
         static typeAttribute: string;
+        /** @hidden */
         static defaultEmbedHostName: string;
+        /** @hidden */
         static type: string;
+        /** @hidden */
         static maxFrontLoadTimes: number;
+        /** @hidden */
         allowedEvents: any[];
         /**
          * Gets or sets the event handler registered for this embed component.
          *
          * @type {IInternalEventHandler<any>[]}
+         * @hidden
          */
         eventHandlers: IInternalEventHandler<any>[];
         /**
          * Gets or sets the Power BI embed service.
          *
          * @type {service.Service}
+         * @hidden
          */
         service: service.Service;
         /**
          * Gets or sets the HTML element that contains the Power BI embed component.
          *
          * @type {HTMLElement}
+         * @hidden
          */
         element: HTMLElement;
         /**
          * Gets or sets the HTML iframe element that renders the Power BI embed component.
          *
          * @type {HTMLIFrameElement}
+         * @hidden
          */
         iframe: HTMLIFrameElement;
         /**
          * Gets or sets the configuration settings for the Power BI embed component.
          *
          * @type {IEmbedConfigurationBase}
+         * @hidden
          */
         config: IEmbedConfigurationBase;
         /**
          * Gets or sets the bootstrap configuration for the Power BI embed component received by powerbi.bootstrap().
          *
          * @type {IBootstrapEmbedConfiguration}
+         * @hidden
          */
         bootstrapConfig: IBootstrapEmbedConfiguration;
         /**
          * Gets or sets the configuration settings for creating report.
          *
          * @type {models.IReportCreateConfiguration}
+         * @hidden
          */
         createConfig: models.IReportCreateConfiguration;
         /**
          * Url used in the load request.
+         * @hidden
          */
         loadPath: string;
         /**
          * Url used in the load request.
+         * @hidden
          */
         phasedLoadPath: string;
         /**
          * Type of embed
+         * @hidden
          */
-        embeType: string;
+        embedtype: string;
         /**
          * Handler function for the 'ready' event
+         * @hidden
          */
         frontLoadHandler: () => any;
         /**
@@ -285,6 +309,7 @@ declare module "embed" {
          * @param {service.Service} service
          * @param {HTMLElement} element
          * @param {IEmbedConfigurationBase} config
+         * @hidden
          */
         constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean, isBootstrap?: boolean);
         /**
@@ -295,7 +320,7 @@ declare module "embed" {
          *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
          *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
          * ```
-         *
+         * @hidden
          * @param {models.IReportCreateConfiguration} config
          * @returns {Promise<void>}
          */
@@ -312,6 +337,20 @@ declare module "embed" {
          * @returns {Promise<void>}
          */
         saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void>;
+        /**
+         * Get the correlationId for the current embed session.
+         *
+         * ```javascript
+         * // Get the correlationId for the current embed session
+         * report.getCorrelationId()
+         *   .then(correlationId => {
+         *     ...
+         *   });
+         * ```
+         *
+         * @returns {Promise<string>}
+         */
+        getCorrelationId(): Promise<string>;
         /**
          * Sends load configuration data.
          *
@@ -332,7 +371,7 @@ declare module "embed" {
          * })
          *   .catch(error => { ... });
          * ```
-         *
+         * @hidden
          * @param {models.ILoadConfiguration} config
          * @param {boolean} phasedRender
          * @returns {Promise<void>}
@@ -395,11 +434,13 @@ declare module "embed" {
          * @private
          * @param {string} globalAccessToken
          * @returns {string}
+         * @hidden
          */
         private getAccessToken(globalAccessToken);
         /**
          * Populate config for create and load
          *
+         * @hidden
          * @param {IEmbedConfiguration}
          * @returns {void}
          */
@@ -409,6 +450,7 @@ declare module "embed" {
          *
          * @private
          * @param {IEmbedConfiguration} config
+         * @hidden
          */
         private addLocaleToEmbedUrl(config);
         /**
@@ -416,8 +458,12 @@ declare module "embed" {
          *
          * @private
          * @returns {string}
+         * @hidden
          */
         private getEmbedUrl(isBootstrap);
+        /**
+         * @hidden
+         */
         private getDefaultEmbedUrl(hostname);
         /**
          * Gets a unique ID from the first available location: options, attribute.
@@ -425,6 +471,7 @@ declare module "embed" {
          *
          * @private
          * @returns {string}
+         * @hidden
          */
         private getUniqueId();
         /**
@@ -432,6 +479,7 @@ declare module "embed" {
          *
          * @private
          * @returns {string}
+         * @hidden
          */
         private getGroupId();
         /**
@@ -444,6 +492,7 @@ declare module "embed" {
         /**
          * Raise a config changed event.
          *
+         * @hidden
          * @returns {void}
          */
         abstract configChanged(isBootstrap: boolean): void;
@@ -452,6 +501,7 @@ declare module "embed" {
          * For example: report embed endpoint is reportEmbed.
          * This will help creating a default embed URL such as: https://app.powerbi.com/reportEmbed
          *
+         * @hidden
          * @returns {string} endpoint.
          */
         abstract getDefaultEmbedUrlEndpoint(): string;
@@ -470,18 +520,22 @@ declare module "embed" {
          * @private
          * @param {HTMLIFrameElement} iframe
          * @returns {boolean}
+         * @hidden
          */
         private isFullscreen(iframe);
         /**
          * Validate load and create configuration.
+         *
+         * @hidden
          */
         abstract validate(config: IEmbedConfigurationBase): models.IError[];
         /**
          * Sets Iframe for embed
+         * @hidden
          */
         private setIframe(isLoad, phasedRender?, isBootstrap?);
         /**
-         * Sets Iframe's title
+         * Set the component title for accessibility. In case of iframes, this method will change the iframe title.
          */
         setComponentTitle(title: string): void;
         /**
@@ -496,6 +550,7 @@ declare module "embed" {
          * Adds the ability to get groupId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
          *
+         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
@@ -503,6 +558,7 @@ declare module "embed" {
         static findGroupIdFromEmbedUrl(url: string): string;
         /**
          * Sends the config for front load calls, after 'ready' message is received from the iframe
+         * @hidden
          */
         private frontLoadSendConfig(config);
     }
@@ -593,6 +649,9 @@ declare module "visualDescriptor" {
          * @type {IPageNode}
          */
         page: IPageNode;
+        /**
+         * @hidden
+         */
         constructor(page: IPageNode, name: string, title: string, type: string, layout: models.IVisualLayout);
         /**
          * Gets all visual level filters of the current visual.
@@ -755,6 +814,7 @@ declare module "page" {
          * @param {string} [displayName]
          * @param {boolean} [isActivePage]
          * @param {models.SectionVisibility} [visibility]
+         * @hidden
          */
         constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility, defaultSize?: models.ICustomPageSize, defaultDisplayOption?: models.DisplayOption);
         /**
@@ -768,6 +828,17 @@ declare module "page" {
          * @returns {(Promise<models.IFilter[]>)}
          */
         getFilters(): Promise<models.IFilter[]>;
+        /**
+         * Delete the page from the report
+         *
+         * ```javascript
+         * // Delete the page from the report
+         * page.delete();
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        delete(): Promise<void>;
         /**
          * Removes all filters from this page of the report.
          *
@@ -853,11 +924,17 @@ declare module "report" {
      * @implements {IFilterable}
      */
     export class Report extends embed.Embed implements IReportNode, IFilterable {
+        /** @hidden */
         static allowedEvents: string[];
+        /** @hidden */
         static reportIdAttribute: string;
+        /** @hidden */
         static filterPaneEnabledAttribute: string;
+        /** @hidden */
         static navContentPaneEnabledAttribute: string;
+        /** @hidden */
         static typeAttribute: string;
+        /** @hidden */
         static type: string;
         bookmarksManager: BookmarksManager;
         /**
@@ -866,6 +943,7 @@ declare module "report" {
          * @param {service.Service} service
          * @param {HTMLElement} element
          * @param {embed.IEmbedConfiguration} config
+         * @hidden
          */
         constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
         /**
@@ -873,7 +951,7 @@ declare module "report" {
          * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
          *
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
-         *
+         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
@@ -895,6 +973,28 @@ declare module "report" {
          * @returns {Promise<void>}
          */
         render(config?: IReportLoadConfiguration): Promise<void>;
+        /**
+         * Add an empty page to the report
+         *
+         * ```javascript
+         * // Add a page to the report with "Sales" as the page display name
+         * report.addPage("Sales");
+         * ```
+         *
+         * @returns {Promise<Page>}
+         */
+        addPage(displayName?: string): Promise<Page>;
+        /**
+         * Delete a page from a report
+         *
+         * ```javascript
+         * // Delete a page from a report by pageName (PageName is different than the display name and can be acquired from the getPages API)
+         * report.deletePage("Sales145");
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        deletePage(pageName?: string): Promise<void>;
         /**
          * Gets filters that are applied at the report level.
          *
@@ -1011,6 +1111,8 @@ declare module "report" {
         updateSettings(settings: models.ISettings): Promise<void>;
         /**
          * Validate load configuration.
+         *
+         * @hidden
          */
         validate(config: embed.IEmbedConfigurationBase): models.IError[];
         /**
@@ -1019,6 +1121,10 @@ declare module "report" {
          * @returns {void}
          */
         configChanged(isBootstrap: boolean): void;
+        /**
+         * @hidden
+         * @returns {string}
+         */
         getDefaultEmbedUrlEndpoint(): string;
         /**
          * Switch Report view mode.
@@ -1060,8 +1166,17 @@ declare module "report" {
         * ```
         */
         resetTheme(): Promise<void>;
+        /**
+         * @hidden
+         */
         private applyThemeInternal(theme);
+        /**
+         * @hidden
+         */
         private viewModeToString(viewMode);
+        /**
+         * @hidden
+         */
         private isMobileSettings(settings);
     }
 }
@@ -1069,6 +1184,13 @@ declare module "create" {
     import * as service from "service";
     import * as models from 'powerbi-models';
     import * as embed from "embed";
+    /**
+     * A Power BI Report creator component
+     *
+     * @export
+     * @class Create
+     * @extends {embed.Embed}
+     */
     export class Create extends embed.Embed {
         constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean, isBootstrap?: boolean);
         /**
@@ -1084,9 +1206,14 @@ declare module "create" {
         /**
          * Handle config changes.
          *
+         * @hidden
          * @returns {void}
          */
         configChanged(isBootstrap: boolean): void;
+        /**
+         * @hidden
+         * @returns {string}
+         */
         getDefaultEmbedUrlEndpoint(): string;
         /**
          * checks if the report is saved.
@@ -1107,6 +1234,7 @@ declare module "create" {
          * @static
          * @param {string} url
          * @returns {string}
+         * @hidden
          */
         static findIdFromEmbedUrl(url: string): string;
     }
@@ -1136,14 +1264,19 @@ declare module "dashboard" {
      * @implements {IFilterable}
      */
     export class Dashboard extends embed.Embed implements IDashboardNode {
+        /** @hidden */
         static allowedEvents: string[];
+        /** @hidden */
         static dashboardIdAttribute: string;
+        /** @hidden */
         static typeAttribute: string;
+        /** @hidden */
         static type: string;
         /**
          * Creates an instance of a Power BI Dashboard.
          *
          * @param {service.Service} service
+         * @hidden
          * @param {HTMLElement} element
          */
         constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
@@ -1152,7 +1285,7 @@ declare module "dashboard" {
          * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
          *
          * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
-         *
+         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
@@ -1166,17 +1299,24 @@ declare module "dashboard" {
         getId(): string;
         /**
          * Validate load configuration.
+         *
+         * @hidden
          */
         validate(baseConfig: embed.IEmbedConfigurationBase): models.IError[];
         /**
          * Handle config changes.
-         *
+         * @hidden
          * @returns {void}
          */
         configChanged(isBootstrap: boolean): void;
+        /**
+         * @hidden
+         * @returns {string}
+         */
         getDefaultEmbedUrlEndpoint(): string;
         /**
          * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
+         * @hidden
          */
         private ValidatePageView(pageView);
     }
@@ -1193,8 +1333,13 @@ declare module "tile" {
      * @extends {Embed}
      */
     export class Tile extends embed.Embed {
+        /** @hidden */
         static type: string;
+        /** @hidden */
         static allowedEvents: string[];
+        /**
+         * @hidden
+         */
         constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * The ID of the tile
@@ -1212,11 +1357,16 @@ declare module "tile" {
          * @returns {void}
          */
         configChanged(isBootstrap: boolean): void;
+        /**
+         * @hidden
+         * @returns {string}
+         */
         getDefaultEmbedUrlEndpoint(): string;
         /**
          * Adds the ability to get tileId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
          *
+         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
@@ -1229,18 +1379,23 @@ declare module "qna" {
     import * as models from 'powerbi-models';
     import * as embed from "embed";
     /**
-     * The Power BI Qna embed component
+     * The Power BI Q&A embed component
      *
      * @export
      * @class Qna
      * @extends {Embed}
      */
     export class Qna extends embed.Embed {
+        /** @hidden */
         static type: string;
+        /** @hidden */
         static allowedEvents: string[];
+        /**
+         * @hidden
+         */
         constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
         /**
-         * The ID of the Qna embed component
+         * The ID of the Q&A embed component
          *
          * @returns {string}
          */
@@ -1258,6 +1413,10 @@ declare module "qna" {
          * @returns {void}
          */
         configChanged(isBootstrap: boolean): void;
+        /**
+         * @hidden
+         * @returns {string}
+         */
         getDefaultEmbedUrlEndpoint(): string;
         /**
          * Validate load configuration.
@@ -1278,8 +1437,11 @@ declare module "visual" {
      * @class Visual
      */
     export class Visual extends Report {
+        /** @hidden */
         static type: string;
+        /** @hidden */
         static GetPagesNotSupportedError: string;
+        /** @hidden */
         static SetPageNotSupportedError: string;
         /**
          * Creates an instance of a Power BI Single Visual.
@@ -1287,6 +1449,7 @@ declare module "visual" {
          * @param {service.Service} service
          * @param {HTMLElement} element
          * @param {embed.IEmbedConfiguration} config
+         * @hidden
          */
         constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
         load(baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean): Promise<void>;
@@ -1347,6 +1510,9 @@ declare module "visual" {
          * @returns {Promise<void>}
          */
         removeFilters(filtersLevel?: models.FiltersLevel): Promise<void>;
+        /**
+         * @hidden
+         */
         private getFiltersLevelUrl(filtersLevel);
     }
 }
@@ -1361,18 +1527,33 @@ declare module "service" {
         name: string;
         value: T;
     }
+    /**
+     * @hidden
+     */
     export interface ICustomEvent<T> extends CustomEvent {
         detail: T;
     }
+    /**
+     * @hidden
+     */
     export interface IEventHandler<T> {
         (event: ICustomEvent<T>): any;
     }
+    /**
+     * @hidden
+     */
     export interface IHpmFactory {
         (wpmp: wpmp.WindowPostMessageProxy, targetWindow?: Window, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
     }
+    /**
+     * @hidden
+     */
     export interface IWpmpFactory {
         (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window): wpmp.WindowPostMessageProxy;
     }
+    /**
+     * @hidden
+     */
     export interface IRouterFactory {
         (wpmp: wpmp.WindowPostMessageProxy): router.Router;
     }
@@ -1412,15 +1593,20 @@ declare module "service" {
          * Gets or sets the access token as the global fallback token to use when a local token is not provided for a report or tile.
          *
          * @type {string}
+         * @hidden
          */
         accessToken: string;
         /**The Configuration object for the service*/
         private config;
         /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
         private embeds;
-        /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
+        /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods.
+         * @hidden
+        */
         hpm: hpm.HttpPostMessage;
-        /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
+        /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests
+         * @hidden
+        */
         wpmp: wpmp.WindowPostMessageProxy;
         private router;
         private uniqueSessionId;
@@ -1431,6 +1617,7 @@ declare module "service" {
          * @param {IWpmpFactory} wpmpFactory The window post message factory used in the postMessage communication layer
          * @param {IRouterFactory} routerFactory The router factory used in the postMessage communication layer
          * @param {IServiceConfiguration} [config={}]
+         * @hidden
          */
         constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IServiceConfiguration);
         /**
@@ -1446,6 +1633,7 @@ declare module "service" {
          * @param {HTMLElement} [container]
          * @param {embed.IEmbedConfiguration} [config=undefined]
          * @returns {embed.Embed[]}
+         * @hidden
          */
         init(container?: HTMLElement, config?: embed.IEmbedConfiguration): embed.Embed[];
         /**
@@ -1476,8 +1664,11 @@ declare module "service" {
          * @param {embed.IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
          */
         bootstrap(element: HTMLElement, config: embed.IBootstrapEmbedConfiguration): embed.Embed;
+        /** @hidden */
         embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed;
+        /** @hidden */
         getNumberOfComponents(): number;
+        /** @hidden */
         getSdkSessionId(): string;
         /**
          * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
@@ -1486,6 +1677,7 @@ declare module "service" {
          * @param {IPowerBiElement} element
          * @param {embed.IEmbedConfigurationBase} config
          * @returns {embed.Embed}
+         * @hidden
          */
         private embedNew(element, config, phasedRender?, isBootstrap?);
         /**
@@ -1495,6 +1687,7 @@ declare module "service" {
          * @param {IPowerBiElement} element
          * @param {embed.IEmbedConfigurationBase} config
          * @returns {embed.Embed}
+         * @hidden
          */
         private embedExisting(element, config, phasedRender?);
         /**
@@ -1503,6 +1696,8 @@ declare module "service" {
          *
          * Note: Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
          * This handler is typically useful only for applications that are rendered on the server so that all required data is available when the handler is called.
+         *
+         * @hidden
          */
         enableAutoEmbed(): void;
         /**
@@ -1517,8 +1712,17 @@ declare module "service" {
          *
          * @param {string} uniqueId
          * @returns {(Report | Tile)}
+         * @hidden
          */
         find(uniqueId: string): embed.Embed;
+        /**
+         * Removes embed components whose container element is same as the given element
+         *
+         * @param {Embed} component
+         * @param {HTMLElement} element
+         * @returns {void}
+         * @hidden
+         */
         addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void;
         /**
          * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
@@ -1531,6 +1735,7 @@ declare module "service" {
          * handles tile events
          *
          * @param {IEvent<any>} event
+         * @hidden
          */
         handleTileEvents(event: IEvent<any>): void;
         /**
@@ -1538,6 +1743,7 @@ declare module "service" {
          *
          * @private
          * @param {IEvent<any>} event
+         * @hidden
          */
         private handleEvent(event);
         /**
@@ -1556,7 +1762,7 @@ declare module "bookmarksManager" {
     import * as embed from "embed";
     import * as models from 'powerbi-models';
     /**
-     * Report bookmarks management APIs.
+     * APIs for managing the report bookmarks.
      *
      * @export
      * @interface IBookmarksManager
@@ -1579,6 +1785,9 @@ declare module "bookmarksManager" {
         private service;
         private config;
         private iframe;
+        /**
+         * @hidden
+         */
         constructor(service: service.Service, config: embed.IEmbedConfigurationBase, iframe?: HTMLIFrameElement);
         /**
          * Gets bookmarks that are defined in the report.
@@ -1595,7 +1804,7 @@ declare module "bookmarksManager" {
          */
         getBookmarks(): Promise<models.IReportBookmark[]>;
         /**
-         * Apply bookmark By name.
+         * Apply bookmark by name.
          *
          * ```javascript
          * bookmarksManager.apply(bookmarkName)
@@ -1629,7 +1838,7 @@ declare module "bookmarksManager" {
          * Apply bookmark state.
          *
          * ```javascript
-         * bookmarksManager.applyState(bookmarkName)
+         * bookmarksManager.applyState(bookmarkState)
          * ```
          *
          * @returns {Promise<void>}
@@ -1648,6 +1857,9 @@ declare module "factories" {
     export const routerFactory: IRouterFactory;
 }
 declare module "powerbi-client" {
+    /**
+     * @hidden
+     */
     import * as service from "service";
     import * as factories from "factories";
     import * as models from 'powerbi-models';
@@ -1656,7 +1868,7 @@ declare module "powerbi-client" {
     export { Report } from "report";
     export { Dashboard } from "dashboard";
     export { Tile } from "tile";
-    export { IEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings } from "embed";
+    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings } from "embed";
     export { Page } from "page";
     export { Qna } from "qna";
     export { Visual } from "visual";

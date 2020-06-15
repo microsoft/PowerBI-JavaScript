@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 import * as service from './service';
 import * as factories from './factories';
 import * as models from 'powerbi-models';
@@ -20,9 +23,12 @@ export {
 } from './tile';
 export {
   IEmbedConfiguration,
+  IQnaEmbedConfiguration,
+  IVisualEmbedConfiguration,
   Embed,
   ILocaleSettings,
-  IEmbedSettings
+  IEmbedSettings,
+  IQnaSettings,
 } from './embed';
 export {
   Page

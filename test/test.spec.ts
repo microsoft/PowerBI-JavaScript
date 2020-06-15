@@ -97,6 +97,46 @@ describe('service', function () {
       const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
       expect(iframes.length).toEqual(2);
     });
+
+    it('embeds all components found in the DOM without id attribute', function () {
+      // Arrange
+      const elements = [
+        '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
+        '<div powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
+      ];
+
+      elements.forEach(element => {
+        $(element).appendTo('#powerbi-fixture');
+      });
+
+      // Act
+      powerbi.init();
+
+      // Assert
+      // If embed element has iframe inside it, assume embed action occurred
+      const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
+      expect(iframes.length).toEqual(2);
+    });
+
+    it('embeds all components found in the DOM with duplicate id attribute', function () {
+      // Arrange
+      const elements = [
+        '<div id="reportContainer1" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=ABC123" powerbi-type="report"></div>',
+        '<div id="reportContainer1" powerbi-embed-url="https://embedded.powerbi.com/appTokenReportEmbed?reportId=XYZ456" powerbi-type="report"></div>',
+      ];
+
+      elements.forEach(element => {
+        $(element).appendTo('#powerbi-fixture');
+      });
+
+      // Act
+      powerbi.init();
+
+      // Assert
+      // If embed element has iframe inside it, assume embed action occurred
+      const iframes = document.querySelectorAll('[powerbi-embed-url] iframe');
+      expect(iframes.length).toEqual(2);
+    });
   });
 
   describe('get', function () {
@@ -3127,6 +3167,36 @@ describe('SDK-to-HPM', function () {
             expect(pages[1].name).toEqual(testData.expectedResponse.body[1].name);
             done();
           });
+      });
+
+      it('report.addPage() sends POST /report/addPage with displayName', function () {
+        // Arrange
+        const displayName = "testName";
+        const expectedRequest = {
+          displayName: displayName
+        };
+        const expectedHeaders = { uid: uniqueId };
+
+        spyHpm.post.and.returnValue(Promise.resolve(page1));
+
+        // Act
+        report.addPage(displayName);
+
+        // Assert
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/addPage', expectedRequest, expectedHeaders, iframe.contentWindow);
+      });
+
+      it('report.deletePage() sends POST /report/addPage with displayName', function () {
+        // Arrange
+        const name = "testName";
+        const expectedHeaders = { uid: uniqueId };
+
+        spyHpm.delete.and.returnValue(Promise.resolve(null));
+
+        // Act
+        report.deletePage(name);
+
+        expect(spyHpm.delete).toHaveBeenCalledWith(`/report/pages/${name}`, { }, expectedHeaders, iframe.contentWindow);
       });
     });
 

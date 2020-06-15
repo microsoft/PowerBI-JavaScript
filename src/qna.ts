@@ -4,16 +4,21 @@ import * as embed from './embed';
 import * as utils from './util';
 
 /**
- * The Power BI Qna embed component
+ * The Power BI Q&A embed component
  *
  * @export
  * @class Qna
  * @extends {Embed}
  */
 export class Qna extends embed.Embed {
+    /** @hidden */  
     static type = "Qna";
+    /** @hidden */  
     static allowedEvents = ["loaded", "visualRendered"];
 
+    /**
+     * @hidden
+     */
     constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) {
       super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
 
@@ -23,7 +28,7 @@ export class Qna extends embed.Embed {
     }
 
     /**
-     * The ID of the Qna embed component
+     * The ID of the Q&A embed component
      *
      * @returns {string}
      */
@@ -54,9 +59,13 @@ export class Qna extends embed.Embed {
      * @returns {void}
      */
     configChanged(isBootstrap: boolean): void {
-      // Nothing to do in qna embed.
+      // Nothing to do in Q&A embed.
     }
 
+    /**
+     * @hidden
+     * @returns {string}
+     */
     getDefaultEmbedUrlEndpoint(): string {
       return "qnaEmbed";
     }

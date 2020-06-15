@@ -10,7 +10,7 @@ import { Defaults } from './defaults';
 import { IReportLoadConfiguration } from 'powerbi-models';
 
 /**
- * Report bookmarks management APIs.
+ * APIs for managing the report bookmarks.
  *
  * @export
  * @interface IBookmarksManager
@@ -32,7 +32,9 @@ export interface IBookmarksManager {
  * @implements {IBookmarksManager}
  */
 export class BookmarksManager implements IBookmarksManager {
-
+    /**
+     * @hidden
+     */
     constructor(private service: service.Service, private config: embed.IEmbedConfigurationBase, private iframe?: HTMLIFrameElement) {
     }
 
@@ -62,7 +64,7 @@ export class BookmarksManager implements IBookmarksManager {
     }
 
     /**
-     * Apply bookmark By name.
+     * Apply bookmark by name.
      *
      * ```javascript
      * bookmarksManager.apply(bookmarkName)
@@ -135,7 +137,7 @@ export class BookmarksManager implements IBookmarksManager {
      * Apply bookmark state.
      *
      * ```javascript
-     * bookmarksManager.applyState(bookmarkName)
+     * bookmarksManager.applyState(bookmarkState)
      * ```
      *
      * @returns {Promise<void>}

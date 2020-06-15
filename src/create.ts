@@ -4,8 +4,17 @@ import * as embed from './embed';
 import * as utils from './util';
 import { Defaults } from './defaults';
 
+/**
+ * A Power BI Report creator component
+ *
+ * @export
+ * @class Create
+ * @extends {embed.Embed}
+ */
 export class Create extends embed.Embed {
-
+  /*
+   * @hidden
+   */
   constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean, isBootstrap?: boolean) {
     super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
   }
@@ -34,7 +43,8 @@ export class Create extends embed.Embed {
 
   /**
    * Handle config changes.
-   *
+   * 
+   * @hidden
    * @returns {void}
    */
   configChanged(isBootstrap: boolean): void {
@@ -54,6 +64,10 @@ export class Create extends embed.Embed {
     }
   }
 
+  /**
+   * @hidden
+   * @returns {string}
+   */
   getDefaultEmbedUrlEndpoint(): string {
     return "reportEmbed";
   }
@@ -80,6 +94,7 @@ export class Create extends embed.Embed {
    * @static
    * @param {string} url
    * @returns {string}
+   * @hidden
    */
   static findIdFromEmbedUrl(url: string): string {
     const datasetIdRegEx = /datasetId="?([^&]+)"?/

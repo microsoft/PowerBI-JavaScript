@@ -31,11 +31,17 @@ export interface IReportNode {
  * @implements {IFilterable}
  */
 export class Report extends embed.Embed implements IReportNode, IFilterable {
+  /** @hidden */
   static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked"];
+  /** @hidden */
   static reportIdAttribute = 'powerbi-report-id';
+  /** @hidden */
   static filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
+  /** @hidden */
   static navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
+  /** @hidden */
   static typeAttribute = 'powerbi-type';
+  /** @hidden */
   static type = "Report";
 
   public bookmarksManager: BookmarksManager;
@@ -46,6 +52,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @param {service.Service} service
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfiguration} config
+   * @hidden
    */
   constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement) {
     const config = <embed.IEmbedConfiguration>baseConfig;
@@ -62,10 +69,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
    *
    * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
-   *
+   * @hidden
    * @static
    * @param {string} url
-   * @returns {string}
+   * @returns {string} 
    */
   static findIdFromEmbedUrl(url: string): string {
     const reportIdRegEx = /reportId="?([^&]+)"?/
@@ -97,6 +104,50 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    */
   render(config?: IReportLoadConfiguration): Promise<void> {
     return this.service.hpm.post<models.IError[]>(`/report/render`, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    .then(response => {
+      return response.body;
+    })
+    .catch(response => {
+      throw response.body;
+    });
+  }
+
+  /**
+   * Add an empty page to the report
+   *
+   * ```javascript
+   * // Add a page to the report with "Sales" as the page display name
+   * report.addPage("Sales");
+   * ```
+   *
+   * @returns {Promise<Page>}
+   */
+  addPage(displayName?: string): Promise<Page> {
+    var request = {
+      displayName: displayName
+    };
+
+    return this.service.hpm.post<models.IPage>(`/report/addPage`, request, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    .then(response => {
+      var page = response.body;
+      return new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
+    }, response => {
+      throw response.body;
+    });
+  }
+
+  /**
+   * Delete a page from a report
+   *
+   * ```javascript
+   * // Delete a page from a report by pageName (PageName is different than the display name and can be acquired from the getPages API)
+   * report.deletePage("Sales145");
+   * ```
+   *
+   * @returns {Promise<void>}
+   */
+  deletePage(pageName?: string): Promise<void> {
+    return this.service.hpm.delete<models.IError[]>(`/report/pages/${pageName}`, { }, { uid: this.config.uniqueId }, this.iframe.contentWindow)
     .then(response => {
       return response.body;
     })
@@ -317,6 +368,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Validate load configuration.
+   * 
+   * @hidden
    */
   validate(config: embed.IEmbedConfigurationBase): models.IError[] {
     return models.validateReportLoad(config);
@@ -352,6 +405,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     config.id = this.getId();
   }
 
+  /**
+   * @hidden
+   * @returns {string}
+   */
   getDefaultEmbedUrlEndpoint(): string {
     return "reportEmbed";
   }
@@ -444,6 +501,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     return this.applyThemeInternal(<models.IReportTheme>{});
   }
 
+  /**
+   * @hidden
+   */
   private applyThemeInternal(theme: models.IReportTheme): Promise<void> {
     return this.service.hpm.put<models.IError[]>('/report/theme', theme, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
@@ -454,6 +514,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       });
   }
 
+  /**
+   * @hidden
+   */
   private viewModeToString(viewMode: models.ViewMode): string {
     let mode: string;
     switch (viewMode) {
@@ -467,7 +530,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
     return mode;
   }
-
+  
+  /**
+   * @hidden
+   */
   private isMobileSettings(settings: embed.IEmbedSettings): boolean {
     return settings && (settings.layoutType === models.LayoutType.MobileLandscape || settings.layoutType === models.LayoutType.MobilePortrait);
   }

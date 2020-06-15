@@ -12,9 +12,14 @@ import { Defaults } from './defaults';
  * @extends {Embed}
  */
 export class Tile extends embed.Embed {
+    /** @hidden */  
     static type = "Tile";
+    /** @hidden */
     static allowedEvents = ["tileClicked", "tileLoaded"];
 
+    /**
+     * @hidden
+     */
     constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) {
       let config = <embed.IEmbedConfiguration>baseConfig;
       super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
@@ -60,6 +65,10 @@ export class Tile extends embed.Embed {
       (<embed.IEmbedConfiguration>this.config).id = this.getId();
     }
 
+    /**
+     * @hidden
+     * @returns {string}
+     */
     getDefaultEmbedUrlEndpoint(): string {
       return "tileEmbed";
     }
@@ -68,6 +77,7 @@ export class Tile extends embed.Embed {
      * Adds the ability to get tileId from url.
      * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
      *
+     * @hidden
      * @static
      * @param {string} url
      * @returns {string}

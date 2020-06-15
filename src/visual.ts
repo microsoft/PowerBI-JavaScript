@@ -11,9 +11,12 @@ import { Page } from './page';
  * @class Visual
  */
 export class Visual extends Report {
+  /** @hidden */
   static type = "visual";
 
+  /** @hidden */
   static GetPagesNotSupportedError = "Get pages is not supported while embedding a visual.";
+  /** @hidden */
   static SetPageNotSupportedError = "Set page is not supported while embedding a visual.";
 
   /**
@@ -22,6 +25,7 @@ export class Visual extends Report {
    * @param {service.Service} service
    * @param {HTMLElement} element
    * @param {embed.IEmbedConfiguration} config
+   * @hidden
    */
   constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement) {
     super(service, element, baseConfig, phasedRender, isBootstrap, iframe);
@@ -168,6 +172,9 @@ export class Visual extends Report {
     return this.setFilters([], filtersLevel);
   }
 
+  /**
+   * @hidden
+   */
   private getFiltersLevelUrl(filtersLevel: models.FiltersLevel): string {
     const config = <embed.IVisualEmbedConfiguration>this.config;
     switch (filtersLevel) {
