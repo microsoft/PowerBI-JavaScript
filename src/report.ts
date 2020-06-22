@@ -1,6 +1,3 @@
-/**
- * @hidden
- */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -72,11 +69,10 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
    *
    * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
-   *
+   * @hidden
    * @static
    * @param {string} url
-   * @returns {string}
-   * @hidden
+   * @returns {string} 
    */
   static findIdFromEmbedUrl(url: string): string {
     const reportIdRegEx = /reportId="?([^&]+)"?/
@@ -108,6 +104,50 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    */
   render(config?: IReportLoadConfiguration): Promise<void> {
     return this.service.hpm.post<models.IError[]>(`/report/render`, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    .then(response => {
+      return response.body;
+    })
+    .catch(response => {
+      throw response.body;
+    });
+  }
+
+  /**
+   * Add an empty page to the report
+   *
+   * ```javascript
+   * // Add a page to the report with "Sales" as the page display name
+   * report.addPage("Sales");
+   * ```
+   *
+   * @returns {Promise<Page>}
+   */
+  addPage(displayName?: string): Promise<Page> {
+    var request = {
+      displayName: displayName
+    };
+
+    return this.service.hpm.post<models.IPage>(`/report/addPage`, request, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+    .then(response => {
+      var page = response.body;
+      return new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
+    }, response => {
+      throw response.body;
+    });
+  }
+
+  /**
+   * Delete a page from a report
+   *
+   * ```javascript
+   * // Delete a page from a report by pageName (PageName is different than the display name and can be acquired from the getPages API)
+   * report.deletePage("Sales145");
+   * ```
+   *
+   * @returns {Promise<void>}
+   */
+  deletePage(pageName?: string): Promise<void> {
+    return this.service.hpm.delete<models.IError[]>(`/report/pages/${pageName}`, { }, { uid: this.config.uniqueId }, this.iframe.contentWindow)
     .then(response => {
       return response.body;
     })
@@ -328,6 +368,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
   /**
    * Validate load configuration.
+   * 
+   * @hidden
    */
   validate(config: embed.IEmbedConfigurationBase): models.IError[] {
     return models.validateReportLoad(config);

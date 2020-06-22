@@ -1,6 +1,3 @@
-/**
- * @hidden
- */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -13,7 +10,7 @@ import { Defaults } from './defaults';
 import { IReportLoadConfiguration } from 'powerbi-models';
 
 /**
- * Report bookmarks management APIs.
+ * APIs for managing the report bookmarks.
  *
  * @export
  * @interface IBookmarksManager

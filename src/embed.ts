@@ -8,10 +8,10 @@ import { EmbedUrlNotSupported } from './errors';
 declare global {
   interface Document {
     // Mozilla Fullscreen
-    mozCancelFullScreen: Function;
+    mozCancelFullScreen: any;
 
     // Ms Fullscreen
-    msExitFullscreen: Function;
+    msExitFullscreen: any;
   }
 
   interface HTMLIFrameElement {
@@ -80,7 +80,7 @@ export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
 }
 
 /**
- * Configuration settings for Power BI QNA embed component
+ * Configuration settings for Power BI Q&A embed component
  *
  * @export
  * @interface IEmbedConfiguration
@@ -263,7 +263,7 @@ export abstract class Embed {
    *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
    *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
    * ```
-   *
+   * @hidden
    * @param {models.IReportCreateConfiguration} config
    * @returns {Promise<void>}
    */
@@ -313,6 +313,27 @@ export abstract class Embed {
   }
 
   /**
+   * Get the correlationId for the current embed session.
+   *
+   * ```javascript
+   * // Get the correlationId for the current embed session
+   * report.getCorrelationId()
+   *   .then(correlationId => {
+   *     ...
+   *   });
+   * ```
+   *
+   * @returns {Promise<string>}
+   */
+  getCorrelationId(): Promise<string> {
+    return this.service.hpm.get<string>(`/getCorrelationId`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => response.body,
+      response => {
+        throw response.body;
+      });
+  }
+
+  /**
    * Sends load configuration data.
    *
    * ```javascript
@@ -332,7 +353,7 @@ export abstract class Embed {
    * })
    *   .catch(error => { ... });
    * ```
-   *
+   * @hidden
    * @param {models.ILoadConfiguration} config
    * @param {boolean} phasedRender
    * @returns {Promise<void>}
@@ -664,6 +685,8 @@ export abstract class Embed {
 
   /**
    * Validate load and create configuration.
+   * 
+   * @hidden
    */
   abstract validate(config: IEmbedConfigurationBase): models.IError[];
 

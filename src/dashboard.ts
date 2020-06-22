@@ -1,6 +1,3 @@
-/**
- * @hidden
- */
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
@@ -60,7 +57,7 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
      * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
      *
      * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
-     *
+     * @hidden
      * @static
      * @param {string} url
      * @returns {string}
@@ -95,6 +92,8 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
 
     /**
      * Validate load configuration.
+     * 
+     * @hidden
      */
     validate(baseConfig: embed.IEmbedConfigurationBase): models.IError[] {
       const config = baseConfig as embed.IEmbedConfiguration;

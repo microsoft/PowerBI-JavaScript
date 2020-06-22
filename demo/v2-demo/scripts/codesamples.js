@@ -37,8 +37,14 @@ function _Embed_BasicEmbed() {
         id: txtEmbedReportId,
         permissions: permissions,
         settings: {
-            filterPaneEnabled: true,
-            navContentPaneEnabled: true
+          panes: {
+            filters: {
+              visible: true
+            },
+            pageNavigation: {
+              visible: true
+            }
+          }
         }
     };
 
@@ -111,8 +117,12 @@ function _Embed_BasicEmbed_Mobile() {
         permissions: permissions,
         pageName: "ReportSectioneb8c865100f8508cc533",
         settings: {
-            filterPaneEnabled: false,
-            layoutType: models.LayoutType.MobilePortrait
+          panes: {
+            filters: {
+              visible: false
+            }
+          },
+          layoutType: models.LayoutType.MobilePortrait
         }
     };
 
@@ -401,8 +411,14 @@ function _Mock_Embed_BasicEmbed(isEdit) {
         permissions: permissions,
         viewMode: viewMode,
         settings: {
-            filterPaneEnabled: true,
-            navContentPaneEnabled: true,
+            panes: {
+              filters: {
+                visible: true
+              },
+              pageNavigation: {
+                visible: true
+              }
+            },
             useCustomSaveAsDialog: true
         }
     };
@@ -485,8 +501,14 @@ function _Embed_BasicEmbed_EditMode() {
         permissions: models.Permissions.All /*gives maximum permissions*/,
         viewMode: models.ViewMode.Edit,
         settings: {
-            filterPaneEnabled: true,
-            navContentPaneEnabled: true
+            panes: {
+              filters: {
+                visible: true
+              },
+              pageNavigation: {
+                visible: true
+              }
+            }
         }
     };
 
@@ -559,8 +581,14 @@ function _Embed_EmbedWithDefaultFilter() {
         embedUrl: txtEmbedUrl,
         id: txtEmbedReportId,
         settings: {
-            filterPaneEnabled: false,
-            navContentPaneEnabled: false
+            panes: {
+              filters: {
+                visible: false
+              },
+              pageNavigation: {
+                visible: false
+              }
+            }
         },
         filters: [filter]
     };
@@ -758,7 +786,7 @@ function _Embed_QnaEmbed() {
     // Read question from textbox
     var txtQuestion = $('#txtQuestion').val();
 
-    // Read Qna mode
+    // Read Q&A mode
     var qnaMode = $("input[name='qnaMode']:checked").val();
 
     // Get models. models contains enums that can be used.
@@ -797,7 +825,7 @@ function _Embed_QnaEmbed_Aad() {
     // Read question from textbox
     var txtQuestion = $('#txtQuestion').val();
 
-    // Read Qna mode
+    // Read Q&A mode
     var qnaMode = $("input[name='qnaMode']:checked").val();
 
     // Get models. models contains enums that can be used.
@@ -841,8 +869,14 @@ function _Report_GetId() {
 function _Report_UpdateSettings() {
     // The new settings that you want to apply to the report.
     const newSettings = {
-        navContentPaneEnabled: true,
-        filterPaneEnabled: false
+        panes: {
+          filters: {
+            visible: false
+          },
+          pageNavigation: {
+            visible: true
+          }
+        }
     };
 
     // Get a reference to the embedded report HTML element
@@ -1281,8 +1315,6 @@ function _Report_ApplyCustomLayout() {
     };
 
     let settings = {
-        filterPaneEnabled: false,
-        navContentPaneEnabled: false,
         layoutType: models.LayoutType.Custom,
         customLayout: {
             pageSize: pageSize,
@@ -1290,6 +1322,14 @@ function _Report_ApplyCustomLayout() {
             pagesLayout: {
                 "ReportSection600dd9293d71ade01765": pageLayout
             }
+        },
+        panes: {
+          filters: {
+            visible: false
+          },
+          pageNavigation: {
+            visible: false
+          }
         }
     }
 
@@ -2175,7 +2215,11 @@ function _Visual_DataSelected() {
 function _Bookmarks_Enable() {
     // The new settings that you want to apply to the report.
     const newSettings = {
-        bookmarksPaneEnabled: true
+        panes: {
+          bookmarks: {
+            visible: true
+          }
+        }
     };
 
     // Get a reference to the embedded report HTML element
@@ -2194,7 +2238,11 @@ function _Bookmarks_Enable() {
 function _Bookmarks_Disable() {
     // The new settings that you want to apply to the report.
     const newSettings = {
-        bookmarksPaneEnabled: false
+      panes: {
+        bookmarks: {
+          visible: false
+        }
+      }
     };
 
     // Get a reference to the embedded report HTML element
@@ -2659,7 +2707,11 @@ function _Visual_ExportData_Underlying() {
 function _ReportVisual_UpdateSettings() {
     // The new settings that you want to apply to the report.
     const newSettings = {
-        filterPaneEnabled: true
+        panes: {
+          filters: {
+            visible: true
+          }
+        }
     };
 
     // Get a reference to the embedded report HTML element

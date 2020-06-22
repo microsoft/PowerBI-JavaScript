@@ -1,6 +1,3 @@
-/**
- * @hidden
- */
 import * as embed from './embed';
 import { Report } from './report';
 import { Create } from './create';
@@ -263,6 +260,7 @@ export class Service implements IService {
    * @param {HTMLElement} [container]
    * @param {embed.IEmbedConfiguration} [config=undefined]
    * @returns {embed.Embed[]}
+   * @hidden
    */
   init(container?: HTMLElement, config: embed.IEmbedConfiguration = undefined): embed.Embed[] {
     container = (container && container instanceof HTMLElement) ? container : document.body;
@@ -308,6 +306,7 @@ export class Service implements IService {
     return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
   }
 
+  /** @hidden */
   embedInternal(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed {
     let component: embed.Embed;
     let powerBiElement = <IPowerBiElement>element;
@@ -326,6 +325,7 @@ export class Service implements IService {
     return component;
   }
 
+  /** @hidden */
   getNumberOfComponents(): number {
     if (!this.embeds) {
       return 0;
@@ -334,6 +334,7 @@ export class Service implements IService {
     return this.embeds.length;
   }
 
+  /** @hidden */
   getSdkSessionId(): string {
     return this.uniqueSessionId;
   }
@@ -423,6 +424,8 @@ export class Service implements IService {
    *
    * Note: Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
    * This handler is typically useful only for applications that are rendered on the server so that all required data is available when the handler is called.
+   * 
+   * @hidden
    */
   enableAutoEmbed(): void {
     window.addEventListener('DOMContentLoaded', (event: Event) => this.init(document.body), false);
@@ -449,11 +452,20 @@ export class Service implements IService {
    *
    * @param {string} uniqueId
    * @returns {(Report | Tile)}
+   * @hidden
    */
   find(uniqueId: string): embed.Embed {
     return utils.find(x => x.config.uniqueId === uniqueId, this.embeds);
   }
 
+  /**
+   * Removes embed components whose container element is same as the given element
+   * 
+   * @param {Embed} component 
+   * @param {HTMLElement} element
+   * @returns {void}
+   * @hidden
+   */
   addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void {
     // remove embeds over the same div element.
     this.embeds = this.embeds.filter(function(embed) {
@@ -503,6 +515,7 @@ export class Service implements IService {
    * handles tile events
    *
    * @param {IEvent<any>} event
+   * @hidden
    */
   handleTileEvents (event: IEvent<any>): void {
       if (event.type === 'tile'){

@@ -27,9 +27,9 @@ let VisualCreatorShowcaseState = {
 // Define the available data roles for the visual types
 const visualTypeToDataRoles = [
     { name: 'pieChart', displayName: 'Pie chart', dataRoles: ['Legend', 'Values', 'Tooltips'] },
-    { name: 'columnChart', displayName: 'Column chart', dataRoles: ['Axis', 'Value', 'Tooltips'] },
+    { name: 'columnChart', displayName: 'Column chart', dataRoles: ['Axis', 'Values', 'Tooltips'] },
     { name: 'areaChart', displayName: 'Area chart', dataRoles: ['Axis', 'Legend', 'Values'] },
-    { name: 'waterfallChart', displayName: 'Waterfall Chart', dataRoles: ['Category', 'Breakdown', 'Y Axis'] },
+    { name: 'waterfallChart', displayName: 'Waterfall Chart', dataRoles: ['Category', 'Breakdown', 'Values'] },
 ];
 
 // Define the available fields for each data role
