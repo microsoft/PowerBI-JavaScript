@@ -5566,6 +5566,48 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this.applyThemeInternal({});
 	    };
 	    /**
+	    * Reset user's filters, slicers, and other data view changes to the default state of the report
+	    *
+	    * ```javascript
+	    * report.resetPersistentFilters();
+	    * ```
+	    */
+	    Report.prototype.resetPersistentFilters = function () {
+	        return this.service.hpm.delete("/report/userState", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	    * Save user's filters, slicers, and other data view changes of the report
+	    *
+	    * ```javascript
+	    * report.savePersistentFilters();
+	    * ```
+	    */
+	    Report.prototype.savePersistentFilters = function () {
+	        return this.service.hpm.post("/report/userState", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	      * Returns if there are user's filters, slicers, or other data view changes applied on the report.
+	      * If persistent filters is disable, returns false.
+	      *
+	      * ```javascript
+	      * report.arePersistentFiltersApplied();
+	      * ```
+	      *
+	      * @returns {Promise<boolean>}
+	      */
+	    Report.prototype.arePersistentFiltersApplied = function () {
+	        return this.service.hpm.get("/report/isUserStateApplied", { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
 	     * @hidden
 	     */
 	    Report.prototype.applyThemeInternal = function (theme) {
