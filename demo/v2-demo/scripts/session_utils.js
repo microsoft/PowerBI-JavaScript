@@ -1,6 +1,6 @@
 const reportUrl = 'https://powerbi-payground-be-staging-1.azurewebsites.net/Reports/SampleReport';
 const datasetUrl = 'https://powerbi-payground-be-staging-1.azurewebsites.net/Reports/SampleCreate';
-const dashboardUrl = 'https://powerbi-payground-be-staging-1.azurewebsites.net/Dashboards/SampleDashboard';
+const dashboardUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Dashboards/SampleDashboard';
 const tileUrl = 'https://powerbi-payground-be-staging-1.azurewebsites.net/Tiles/SampleTile';
 const qnaUrl = 'https://powerbi-payground-be-staging-1.azurewebsites.net/Datasets/SampleQna';
 const paginatedReportUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Reports/SampleRdlReport';
