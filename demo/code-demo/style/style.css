@@ -1,0 +1,628 @@
+html {
+    margin:0;
+    padding:0;
+    height:100%;
+}
+
+body {
+    background-color: rgb(241, 241, 241);
+    font-family: 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
+    margin:0;
+    padding:0;
+    height:100%;
+}
+
+h3 {
+    margin: 0;
+}
+
+hr {
+    border-color: #DDDDDD;
+}
+
+header {
+    display: block;
+    width: 100%;
+    top: 0px;
+    z-index: 1030;
+    color: rgb(8, 122, 165);
+    background-color: rgb(24, 24, 25);
+    height: 100px;
+}
+
+a:hover, a:visited, a:link, a:active
+{
+    text-decoration: none;
+}
+
+#nextStep {
+    float: right;
+}
+
+#result-wrap {
+    margin-top: 10px;
+}
+
+#user-embed-details {
+    width: 100%;
+}
+
+#user-embed-details tr {
+    width: 100%;
+}
+
+#user-embed-details input[type="text"] {
+    width: 100%;
+    border: none;
+    margin-bottom: 5px;
+}
+
+#report-embed-table {
+    width: 100%;
+}
+
+#report-embed-table tr {
+    width: 100%;
+}
+
+.inputLine > span {
+    width: 30%;
+}
+
+#report-embed-table input[type="text"] {
+    width: 73%;
+    border: none;
+    margin-bottom: 5px;
+}
+
+#report-embed-checkbox input {
+    width: auto;
+    border: none;
+    margin-bottom: 5px;
+}
+
+#oldSample {
+    display: block;
+    float: right;
+    margin-right: 30px;
+}
+
+#deprecationNote {
+    margin-bottom: 30px;
+}
+
+#deprecationNote .pageTitle {
+    margin-bottom: 15px;
+    font-weight: normal;
+    color: red;
+}
+
+#sampleReportImgDiv img {
+    width: 265px;
+    height: 180px;
+}
+
+#sampleReportImgDiv {
+    margin-top: 17px;
+    margin-right: 32px;
+    float: left;
+}
+
+#sampleReportDescription {
+    float: left;
+    margin-top: 17px;
+    max-width: 400px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.btn.btn-margin {
+    margin-bottom: 5px;
+}
+
+.halfWidth.right {
+    width: 750px;
+    min-height: 100px;
+    float: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.halfWidth.left {
+    width: 750px;
+    min-height: 100px;
+    float: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-right: 40px;
+}
+
+.break-float {
+    clear: both;
+    width: 100%;
+}
+
+.pbi-line {
+    display: inline-block;
+    width: 100%;
+}
+
+#top-nav-bar {
+    margin-top: 10px;
+}
+
+#top-nav-bar a {
+    color: white;
+    display: inline-block;
+}
+
+#top-nav-bar a:hover {
+    color: rgb(8, 122, 165);
+}
+
+#top-nav-bar .active {
+    color: rgb(0, 174, 239);
+}
+
+#steps-nav-bar a {
+    color: black;
+    display: inline-block;
+}
+
+#steps-nav-bar a:hover {
+    font-weight: bold;
+}
+
+#steps-nav-bar .active {
+    color: white;
+}
+
+.main-ul {
+    list-style-type: none;
+    margin: 0px 30px;
+    padding: 0;
+    overflow: hidden;
+    float: right;
+}
+
+.main-ul .active {
+    background-color: rgb(245, 211, 65);
+}
+
+.main-li {
+    float: left;
+}
+
+.main-li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+}
+
+.main-li a:visited {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+    background-color: rgb(245, 211, 65);
+}
+
+.main-li a:hover {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+    background-color: rgb(245, 211, 65);
+}
+
+.main-li a:active {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+    background-color: rgb(245, 211, 65);
+}
+
+.main-title {
+    font-family: 'Segoe UI Web Light', 'Segoe UI Light', 'Segoe WP Light', 'Segoe UI', 'Segoe WP', Tahoma, Arial, sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#navbar {
+    float: left;
+    width: 100%;
+}
+
+#top-ul-dev {
+    float: left;
+}
+
+.top-ul {
+    list-style-type: none;
+    margin: 0px;
+    overflow: hidden;
+    -webkit-margin-before: 0;
+    -webkit-padding-start: 0;
+    line-height: 30px;
+}
+
+.top-ul li {
+    float: left;
+    margin-right: 40px;
+    text-align: center;
+    line-height: 22px;
+    font-size: 17px;
+}
+
+#top-docs {
+    margin-right: 0px;
+}
+
+.top-li-active {
+    color: white;
+    border-bottom: 1px solid white;
+    padding-bottom: 3px;
+}
+
+#steps-ul-dev {
+    float: left;
+    width: 100%;
+}
+
+.steps-ul {
+    list-style-type: none;
+    margin: 0px;
+    overflow: hidden;
+    -webkit-margin-before: 0;
+    -webkit-padding-start: 0;
+    line-height: 30px;
+    width: 100%;
+}
+
+.steps-ul li {
+    float: none;
+    text-align: left;
+    line-height: 22px;
+    font-weight: 400;
+    height: 40px;
+    width: 100%;
+    margin-bottom: 10px;
+    vertical-align: middle;
+}
+
+#steps-interact {
+    margin-right: 0px;
+}
+
+.steps-li-active {
+    color: white;
+    text-decoration: none;
+    background-color: #666666;
+}
+
+.operations-div {
+    height: 100%;
+    width: 95%;
+    background-color: rgb(231, 232, 233);
+    text-align: center;
+    overflow-y: scroll;
+    position: relative;
+}
+
+#operations-ul a {
+    text-decoration: none;
+    color: rgb(27, 27, 27);
+    width: 100%;
+    text-align: center;
+}
+
+#operations-ul li:hover {
+    border-bottom:  3px solid #444444;
+}
+
+#operations-ul {
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+    -webkit-padding-start: 0;
+}
+
+#operations-ul li {
+    margin: 0px 30px 0px 0px;
+    display: inline-block;
+    /* font-size: 14px; */
+    color: #444444;
+}
+
+#operations-ul > .active {
+    border-bottom: 3px #444444 solid;
+}
+
+#wrapper-operations-div {
+    padding: 10px 20px 15px 20px;
+    background-color: rgb(231, 232, 233);
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+#report-operations-div::-webkit-scrollbar-track, #page-operations-div::-webkit-scrollbar-track, #events-operations-div::-webkit-scrollbar-track
+{
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+#report-operations-div::-webkit-scrollbar, #page-operations-div::-webkit-scrollbar, #events-operations-div::-webkit-scrollbar
+{
+    width:10px;
+    height:10px;
+    background-color: transparent;
+}
+
+#report-operations-div::-webkit-scrollbar-thumb, page-operations-div::-webkit-scrollbar-thumb, #events-operations-div::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+    background-color: #888888;
+}
+
+#operations-ul-wrapper img {
+    width: 20px;
+    position: relative;
+    top: 3px; 
+}
+
+#operation-categories {
+    margin-bottom: 0px;
+}
+
+#selected-catogory-button {
+    background-color: transparent;
+    border: none;
+    color: rgb(27, 27, 27);
+    min-width: 120px;
+    text-align: left;
+}
+
+.function-ul {
+    width: 100%;
+    clear: both;
+    margin: 0;
+    padding: 0px 20px 0px 0px;
+}
+
+.function-ul li {
+    width: 100%;
+    clear: both;
+    cursor: default;
+}
+
+.function-ul a {
+    text-decoration: none;
+    color: rgb(27, 27, 27);
+}
+
+.function-ul .active {
+    background-color: rgb(88, 88, 90);
+    color: white;
+}
+
+.function-ul a:hover {
+    background-color: #888888;
+}
+
+.function-ul li {
+    list-style-type: none;
+    margin: 0px;
+    overflow: hidden;
+    -webkit-margin-before: 0;
+    -webkit-padding-start: 0;
+    margin: 5px 0px;
+    text-align: left;
+    padding: 3px;
+}
+
+.td-field-name {
+    width: 130px;
+    text-align: right;
+    color: #888888;
+    padding-right: 5px;
+}
+
+.pageTitle {
+    margin-bottom: 10px;
+}
+
+.pageTitle h3 {
+    margin-bottom: 15px;
+    font-weight: normal;
+}
+
+.editorTitle {
+    margin-bottom: 5px;
+}
+
+#GoToInteractStep {
+    display: inline-block;
+    position: relative;
+}
+
+.textAreaControls {
+    text-align: right;
+    position: relative;
+    z-index: 1;
+    height: 30px;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.textAreaControl {
+    color: rgb(127, 127, 127);
+    background-color: transparent;
+    border: none;
+    margin-right: 5px;
+}
+
+.textAreaControl img {
+    width: 16px;
+    height: 16px;
+    position: relative;
+    top: -2px;
+}
+
+.responseTextArea {
+    width: 100%;
+    height: 300px;
+    border: none;
+    padding-top: 40px;
+    position: relative;
+    top: -30px;
+    padding-left: 10px;
+    margin-bottom: -30px;
+}
+
+.responseDiv {
+    width: 100%;
+    float: left;
+}
+
+.blueButton {
+    background-color: rgb(36, 169, 225);
+    border: none;
+    color: white;
+    padding: 5px 30px;
+}
+
+.spacer {
+    height: 10px;
+}
+
+.scrollbar
+{
+    margin-left: 30px;
+    float: left;
+    height: 300px;
+    width: 65px;
+    background: #F5F5F5;
+    overflow-y: scroll;
+    margin-bottom: 25px;
+}
+
+#txtCode {
+    width: 100%;
+    height: 300px;
+    border: none;
+    padding: 20px;
+    position: relative;
+    top: -30px;
+    background: #FFFFFF;
+	overflow: auto;
+	white-space: pre-wrap;
+}
+
+#GoToEmbedStepButton {
+    margin-top: 12px;
+}
+
+#authStepDiv {
+    max-width: 500px;
+}
+
+#report-embed-table .inputLine {
+    margin: 5px 0px;
+}
+
+.pageTitle h4 {
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0px 0px 5px 0px;
+}
+
+.top-div {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background-color: white;
+    border: solid black 1px;
+}
+
+.active-top {
+    background-color: rgb(36, 169, 225);
+}
+
+.step-div {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background-color: white;
+    border: solid black 1px;
+}
+
+.active-step {
+    background-color: rgb(36, 169, 225);
+}
+
+.editorTitleText {
+    display: inline-block;
+}
+
+#selected-catogory-button-wrapper img {
+    width: 20px;
+    position: relative;
+    top: -1px;
+}
+
+.checkbox.input {
+    width: auto;
+}
+
+.stepsButton {
+
+height: 100%;
+
+padding: 10px 0px 0px 10px;
+
+line-height: 20px;
+}
+
+.video {
+    width: 90%;
+    height: 500px;
+    max-width: 800px;
+}
+
+.title {
+    font-size: 17px;
+    font-weight: 400px;
+}
+
+#embedModeInput {
+
+}
+
+#createModeInput {
+    display: none;
+}
+
+.inputLineTitle {
+    width: 25%;
+    display: inline-block;
+}
+
+#modeSelector {
+    margin-bottom: 20px;
+    cursor: default;
+}
+
+#reportContainer iframe {
+    border: none;
+}

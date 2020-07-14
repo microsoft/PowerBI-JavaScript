@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<div id="authStepDiv">
+    <div id="sampleReport" class="pbi-line">
+        <div id="deprecationNote">
+            <div class="pageTitle">
+                <h3>Deprecation Note</h3>
+            </div>
+            This sample is deprecated. please use the new sample available
+            <a href="https://microsoft.github.io/PowerBI-JavaScript/demo/v2-demo/index.html">here</a>.
+
+            <br/>
+
+            The new sample accommodates the changes announced in the embedded offering described in
+            <a href="https://powerbi.microsoft.com/en-us/documentation/powerbi-developer-embedding/">Power BI Documentation page</a>.
+        </div>
+
+        <div class="pageTitle">
+            <h3>Sample Report</h3>
+            <h8>You can embed a sample report and interact with Power BI Embedded firsthand by clicking below.</h8>
+        </div>
+        <div class="settings">
+            <button id="GoToEmbedStepButton" class="blueButton" onclick="OpenEmbedStepWithSample()">Embed sample report</button>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    SetTextBoxesFromSessionOrUrlParam("#auth_txtAccessToken", "#auth_txtReportEmbed", "#auth_txtEmbedReportId");
+    SetSession(SessionKeys.IsSampleReport, false);
+});
+</script>

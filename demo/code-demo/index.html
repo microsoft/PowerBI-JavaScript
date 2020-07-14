@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="syntaxHighlighter/theme.css">
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <link rel="stylesheet" type="text/css" href="style/layout.css">
+    <link rel="stylesheet" type="text/css" href="style/syntaxHighlighterOverride.css">
+
+</head>
+
+<body>
+    <header>
+        <div id="navbar">
+          <div class="logo-text">
+              <div class="logo-text-span">Microsoft Power BI – Report Embed Sample</div>
+          </div>
+          <div id="top-nav-bar">
+            <div id="top-ul-dev">
+                <ul id="top-ul" class="top-ul">
+                    <li id="top-sample" class="top-li-active" onclick="OpenSampleSection();">
+                        <div><a href="#">Sample</a></div>
+                    </li>
+                    <li id="top-anyReport" class="top-li-active" onclick="OpenAnyReportSection();">
+                        <div><a href="#">Any Report</a></div>
+                    </li>
+                    <li id="top-docs" onclick="OpenDocumentationSection();">
+                        <div><a href="#">Documentation</a></div>
+                    </li>
+                </ul>
+            </div>
+          </div>
+        </div>
+    </header>
+
+    <div id="contentWrapper">
+        <div id ="sampleContent" class="content">
+        </div>
+
+        <div id ="documentationContent" class="content">
+        </div>
+
+        <div id ="anyReportContent" class="content">
+        </div>
+    </div>
+
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/es6-promise/dist/es6-promise.js"></script>
+    <script src="../node_modules/powerbi-client/dist/powerbi.js"></script>
+
+    <script src="scripts/codesamples.js"></script>
+    
+    <script src="scripts/index.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/logger.js"></script>
+    <script src="scripts/session_utils.js"></script>
+    <script src="scripts/function_mapping.js"></script>
+    
+    <script src="scripts/report.js"></script>
+    
+    <script src="scripts/step_authorize.js"></script>
+    <script src="scripts/step_embed.js"></script>
+    <script src="scripts/step_interact.js"></script>
+
+</body>
+</html>

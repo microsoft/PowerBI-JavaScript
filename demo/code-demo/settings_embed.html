@@ -1,0 +1,50 @@
+<div id="report-embed-table">
+    <div class="pageTitle">
+        <h4>Embed Report</h4>
+    </div>
+
+    <h8>Select mode to embed your report in:</h8>
+    <div class="spacer"></div>
+    <div id="modeSelector">
+        <div onclick="OpenViewMode();"><input type="radio" name="embedMode" value="view" checked="checked"> View mode </input></div>
+        <div onclick="OpenEditMode();"><input type="radio" name="embedMode" value="edit"> Edit mode</input></div>
+        <div onclick="OpenCreateMode();"><input type="radio" name="embedMode" value="create"> Create mode</input></div>
+    </div>
+
+    <div id="embedModeInput">
+        <h8>Fill in the fields below to get the code to embed your report.</h8>
+        <div class="spacer"></div>
+
+        <div class="inputLine">
+            <div class="inputLineTitle">Embed Token</div>
+            <input type="text" id="txtAccessToken" onchange="UpdateSession(this, SessionKeys.AccessToken);" />
+        </div>
+        <div class="inputLine">
+            <div class="inputLineTitle">Embed URL</div>
+            <input type="text" id="txtReportEmbed" onchange="UpdateSession(this, SessionKeys.EmbedUrl);" value="https://embedded.powerbi.com/appTokenReportEmbed"/>
+        </div>
+        <div class="inputLine">
+            <div class="inputLineTitle">Report Id</div>
+            <input type="text" id="txtEmbedReportId" onchange="UpdateSession(this, SessionKeys.EmbedId);"/>
+        </div>
+    </div>
+
+    <div id="createModeInput">
+        <h8>Fill in the fields below to get the code to embed your report.</h8>
+        <div class="spacer"></div>
+        
+        <div class="inputLine">
+            <div class="inputLineTitle">Embed Token</div>
+            <input type="text" id="txtCreateAccessToken" onchange="UpdateSession(this, SessionKeys.AccessToken);" />
+        </div>
+        <div class="inputLine">
+            <div class="inputLineTitle">Embed URL</div>
+            <input type="text" id="txtCreateReportEmbed" onchange="UpdateSession(this, SessionKeys.EmbedUrl);" value="https://embedded.powerbi.com/appTokenReportEmbed"/>
+        </div>
+        <div class="inputLine">
+            <div class="inputLineTitle">Dataset Id</div>
+            <input type="text" id="txtEmbedDatasetId" onchange="UpdateSession(this, SessionKeys.EmbedId);"/>
+        </div>
+    </div>
+
+</div>

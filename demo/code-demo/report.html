@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<div id="authorize-step-wrapper">
+</div>
+<div id="embed-and-interact-steps-wrapper">
+    <div class="topPanel">
+        <div id="settings"></div>
+        <div id="embedCodeDiv"></div>
+        <div id="logWindow"></div>
+    </div>
+
+    <div class="bottomPanel">
+        <div id="embedArea">
+            <div class="editorTitle">
+                <div class="editorTitleText">Embedded report</div>
+            </div>            
+            <div id="reportContainer"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $("#authorize-step-wrapper").load("step_authorize.html");
+
+    LoadLogWindow("#logWindow");
+    
+    var modeUrlParam = GetParameterByName("mode");
+    var mode = modeUrlParam ? modeUrlParam : "view";
+
+    if (GetParameterByName("embedUrl") || GetParameterByName("embedId") || GetParameterByName("accessToken"))
+    {
+        OpenEmbedStep(mode);
+    }
+    else
+    {
+        // Open Authorization Step after this page loads.
+        OpenAuthStep();
+    }
+
+    Log = InitLogger("txtResponse");
+});
+</script>
