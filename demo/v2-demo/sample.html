@@ -1,7 +1,3 @@
-<div id="playground-banner" onclick="openBannerLink();">
-    <p id="playground-banner-text">Help us learn about your Power BI Embedded experience.&nbsp;</p><p id="playground-banner-text-underlined">Take our survey now!</p>
-    <img id="playground-banner-close" src="images\close.png" onclick="closeBanner();"/>
-</div>
 <div id="steps-nav-bar">
     <div id="steps-ul-dev">
         <ul id="steps-ul" class="steps-ul">
@@ -33,18 +29,3 @@
 
 <div id="mainContent">
 </div>
-
-<script>
-    var showBanner = true;
-    function closeBanner() {
-        showBanner = false;
-        $("#playground-banner").hide();
-    }
-
-    function openBannerLink() {
-        if (!showBanner)
-            return;
-        
-        window.open("https://aka.ms/pbiesurvey_general", '_blank');
-    }
-</script>
