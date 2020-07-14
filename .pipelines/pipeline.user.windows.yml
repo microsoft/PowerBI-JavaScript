@@ -70,12 +70,13 @@ build:
       arguments: 'build.ps1'
       command: '.pipelines\cdpx_run_ps.cmd'
       artifacts:
-        - from: 'dist'
-          to: 'build_artifacts'
+        - to: 'build_artifacts'
           include:
-            - '**/*'
-          exclude:
-            - '**/node_modules/**/*.*'
+            - 'dist/**/*'
+            - 'LICENSE.txt'
+            - 'package.json'
+            - 'README.md'
+
         - to: 'source'
           include:
             - '**/*'
@@ -97,7 +98,8 @@ package:
       arguments: 'package.ps1'
       command: '.pipelines\cdpx_run_ps.cmd'
       artifacts:
-        - include:
+        - to: 'tgz-package'
+          include:
             - "**/*.tgz"
 
     - !!buildcommand
