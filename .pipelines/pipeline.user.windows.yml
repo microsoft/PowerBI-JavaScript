@@ -16,7 +16,7 @@ artifact_publish_options:
 # Enable signing on all declared artifacts.
 signing_options:
   profile: 'external_distribution'
-  codesign_validation_glob_pattern: 'regex|.+(?:exe|dll)$;-|*.nd.dll;-|.gdn\\**'
+  codesign_validation_glob_pattern: 'regex|.+(?:exe|dll)$;-|*.nd.dll;-|**\\.gdn\\**'
 
 static_analysis_options:
   moderncop_options:
