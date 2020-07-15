@@ -32,7 +32,7 @@ export interface IReportNode {
  */
 export class Report extends embed.Embed implements IReportNode, IFilterable {
   /** @hidden */
-  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked"];
+  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered"];
   /** @hidden */
   static reportIdAttribute = 'powerbi-report-id';
   /** @hidden */
