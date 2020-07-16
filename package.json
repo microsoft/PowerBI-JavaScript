@@ -14,6 +14,7 @@
     "build": "gulp build",
     "start": "http-server ./demo",
     "prestart": "cd demo && npm install",
+    "pretest": "typings install && gulp build",
     "test": "gulp test",
     "gulp": "gulp",
     "typings": "typings"
