@@ -1,4 +1,4 @@
-/*! powerbi-client v2.13.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.13.2 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -1276,7 +1276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/** @ignore */ /** */
 	var config = {
-	    version: '2.13.0',
+	    version: '2.13.2',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -5757,7 +5757,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return settings && (settings.layoutType === models.LayoutType.MobileLandscape || settings.layoutType === models.LayoutType.MobilePortrait);
 	    };
 	    /** @hidden */
-	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked"];
+	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered"];
 	    /** @hidden */
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    /** @hidden */
