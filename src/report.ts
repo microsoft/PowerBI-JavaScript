@@ -32,7 +32,7 @@ export interface IReportNode {
  */
 export class Report extends embed.Embed implements IReportNode, IFilterable {
   /** @hidden */
-  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked"];
+  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered"];
   /** @hidden */
   static reportIdAttribute = 'powerbi-report-id';
   /** @hidden */
@@ -104,12 +104,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    */
   render(config?: IReportLoadConfiguration): Promise<void> {
     return this.service.hpm.post<models.IError[]>(`/report/render`, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-    .then(response => {
-      return response.body;
-    })
-    .catch(response => {
-      throw response.body;
-    });
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
   }
 
   /**
@@ -128,12 +128,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     };
 
     return this.service.hpm.post<models.IPage>(`/report/addPage`, request, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-    .then(response => {
-      var page = response.body;
-      return new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
-    }, response => {
-      throw response.body;
-    });
+      .then(response => {
+        var page = response.body;
+        return new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
+      }, response => {
+        throw response.body;
+      });
   }
 
   /**
@@ -147,13 +147,13 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {Promise<void>}
    */
   deletePage(pageName?: string): Promise<void> {
-    return this.service.hpm.delete<models.IError[]>(`/report/pages/${pageName}`, { }, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-    .then(response => {
-      return response.body;
-    })
-    .catch(response => {
-      throw response.body;
-    });
+    return this.service.hpm.delete<models.IError[]>(`/report/pages/${pageName}`, {}, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
   }
 
   /**
@@ -176,9 +176,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
     return this.service.hpm.get<models.IFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => response.body,
-      response => {
-        throw response.body;
-      });
+        response => {
+          throw response.body;
+        });
   }
 
   /**
@@ -451,7 +451,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       })
       .catch(response => {
         throw response.body;
-    });
+      });
   }
 
   /**
@@ -502,6 +502,52 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   }
 
   /**
+  * Reset user's filters, slicers, and other data view changes to the default state of the report
+  *
+  * ```javascript
+  * report.resetPersistentFilters();
+  * ```
+  */
+  resetPersistentFilters(): Promise<void> {
+    return this.service.hpm.delete<models.IError[]>(`/report/userState`, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
+  * Save user's filters, slicers, and other data view changes of the report
+  *
+  * ```javascript
+  * report.savePersistentFilters();
+  * ```
+  */
+  savePersistentFilters(): Promise<void> {
+    return this.service.hpm.post<models.IError[]>(`/report/userState`, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
+    * Returns if there are user's filters, slicers, or other data view changes applied on the report.
+    * If persistent filters is disable, returns false.
+    *
+    * ```javascript
+    * report.arePersistentFiltersApplied();
+    * ```
+    *
+    * @returns {Promise<boolean>}
+    */
+  arePersistentFiltersApplied(): Promise<boolean> {
+    return this.service.hpm.get<boolean>(`/report/isUserStateApplied`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => response.body,
+        response => {
+          throw response.body;
+        });
+  }
+
+  /**
    * @hidden
    */
   private applyThemeInternal(theme: models.IReportTheme): Promise<void> {
@@ -530,7 +576,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
 
     return mode;
   }
-  
+
   /**
    * @hidden
    */

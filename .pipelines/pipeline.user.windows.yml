@@ -13,8 +13,10 @@ artifact_publish_options:
   publish_to_pipeline_artifacts: true
   publish_to_cloudvault_artifacts: false
 
+# Enable signing on all declared artifacts.
 signing_options:
   profile: 'external_distribution'
+  codesign_validation_glob_pattern: 'regex|.+(?:exe|dll)$;-|*.nd.dll;-|.gdn\\**'
 
 static_analysis_options:
   moderncop_options:
@@ -68,12 +70,13 @@ build:
       arguments: 'build.ps1'
       command: '.pipelines\cdpx_run_ps.cmd'
       artifacts:
-        - from: 'dist'
-          to: 'build_artifacts'
+        - to: 'build_artifacts'
           include:
-            - '**/*'
-          exclude:
-            - '**/node_modules/**/*.*'
+            - 'dist/**/*'
+            - 'LICENSE.txt'
+            - 'package.json'
+            - 'README.md'
+
         - to: 'source'
           include:
             - '**/*'
@@ -85,12 +88,18 @@ build:
             - '**/dist/**/*.*'
             - '**/node_modules/**/*.*'
 
+# All build stage artifacts get signed right after the build stage
+# because the global signing profile is defined.
+
+package:
+  commands:
     - !!buildcommand
       name: 'Package'
       arguments: 'package.ps1'
       command: '.pipelines\cdpx_run_ps.cmd'
       artifacts:
-        - include:
+        - to: 'tgz-package'
+          include:
             - "**/*.tgz"
 
     - !!buildcommand
@@ -100,7 +109,7 @@ build:
       artifacts:
         - to: 'Release'
           include:
-            - "**/*.nupkg"
+            - "**/Microsoft.PowerBI.JavaScript.*.nupkg"
 
 test:
   commands:

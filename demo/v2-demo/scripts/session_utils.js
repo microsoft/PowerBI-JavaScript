@@ -1,13 +1,13 @@
-const reportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/SampleReport';
-const datasetUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/SampleCreate';
-const dashboardUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Dashboards/SampleDashboard';
-const tileUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Tiles/SampleTile';
-const qnaUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Datasets/SampleQna';
-const paginatedReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/SampleRdlReport';
-const layoutShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/LayoutDemoReport';
-const insightToActionShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/InsightToActionReport';
-const themesShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/ThemesReport';
-const quickVisualCreatorShowcaseReportUrl = 'https://powerbiplaygroundbe.azurewebsites.net/api/Reports/EmptyReport';
+const reportUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Reports/SampleReport';
+const datasetUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Reports/SampleCreate';
+const dashboardUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Dashboards/SampleDashboard';
+const tileUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Tiles/SampleTile';
+const qnaUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Datasets/SampleQna';
+const paginatedReportUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Reports/SampleRdlReport';
+const layoutShowcaseReportUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Reports/LayoutDemoReport';
+const insightToActionShowcaseReportUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Reports/InsightToActionReport';
+const themesShowcaseReportUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Reports/ThemesReport';
+const quickVisualCreatorShowcaseReportUrl = 'https://playgroundbe-bck-1.azurewebsites.net/Reports/EmptyReport';
 
 var LastReportSampleUrl = null;
 var ReportRefreshTokenTimer = 0;
@@ -194,21 +194,21 @@ function SetTextBoxesFromSessionOrUrlParam(accessTokenSelector, embedUrlSelector
 
 function FetchUrlIntoSession(url, updateCurrentToken) {
     return $.getJSON(url, function (embedConfig) {
-        setSession(embedConfig.embedToken.token, embedConfig.embedUrl, embedConfig.id, embedConfig.dashboardId);
-        SetSession(SessionKeys.SampleId, embedConfig.id);
+        setSession(embedConfig.EmbedToken.Token, embedConfig.EmbedUrl, embedConfig.Id, embedConfig.DashboardId);
+        SetSession(SessionKeys.SampleId, embedConfig.Id);
 
         if (updateCurrentToken)
         {
-            let embedContainerId = getEmbedContainerID(capitalizeFirstLetter(embedConfig.type));
+            let embedContainerId = getEmbedContainerID(capitalizeFirstLetter(embedConfig.Type));
 
             let embedContainer = powerbi.embeds.filter(function(embedElement) { return embedElement.element.id === embedContainerId; })[0];
             if (embedContainer)
             {
-                embedContainer.setAccessToken(embedConfig.embedToken.token);
+                embedContainer.setAccessToken(embedConfig.EmbedToken.Token);
             }
         }
 
-        if (embedConfig.type === "report" || embedConfig.type === "visual")
+        if (embedConfig.Type === "report" || embedConfig.Type === "visual")
         {
             // Set single visual embed sample details.
             SetSession(SessionKeys.PageName, "ReportSectioneb8c865100f8508cc533");
@@ -217,7 +217,7 @@ function FetchUrlIntoSession(url, updateCurrentToken) {
             LastReportSampleUrl = url;
         }
 
-        TokenExpirationRefreshListener(embedConfig.minutesToExpiration, capitalizeFirstLetter(embedConfig.type));
+        TokenExpirationRefreshListener(embedConfig.MinutesToExpiration, capitalizeFirstLetter(embedConfig.Type));
     });
 }
 
