@@ -1,8 +1,7 @@
 try {
   # package.json is in root folder, while version.ps1 runs in .pipelines folder.
   $version = (Get-Content "package.json") -join "`n" | ConvertFrom-Json | Select -ExpandProperty "version"
-  $revision = $env:CDP_DEFINITION_BUILD_COUNT_DAY
-  $buildNumber = "$version.$revision"
+  $buildNumber = "$version"
 
   Write-Host "Build Number is" $buildNumber
 
