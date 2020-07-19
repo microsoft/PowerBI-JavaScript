@@ -1,4 +1,4 @@
-/*! powerbi-client v2.12.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.13.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -1166,6 +1166,33 @@ declare module "report" {
         * ```
         */
         resetTheme(): Promise<void>;
+        /**
+        * Reset user's filters, slicers, and other data view changes to the default state of the report
+        *
+        * ```javascript
+        * report.resetPersistentFilters();
+        * ```
+        */
+        resetPersistentFilters(): Promise<void>;
+        /**
+        * Save user's filters, slicers, and other data view changes of the report
+        *
+        * ```javascript
+        * report.savePersistentFilters();
+        * ```
+        */
+        savePersistentFilters(): Promise<void>;
+        /**
+          * Returns if there are user's filters, slicers, or other data view changes applied on the report.
+          * If persistent filters is disable, returns false.
+          *
+          * ```javascript
+          * report.arePersistentFiltersApplied();
+          * ```
+          *
+          * @returns {Promise<boolean>}
+          */
+        arePersistentFiltersApplied(): Promise<boolean>;
         /**
          * @hidden
          */
