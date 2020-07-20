@@ -1,3 +1,4 @@
+import * as utils from '../src/util';
 import * as service from '../src/service';
 import * as embed from '../src/embed';
 import * as report from '../src/report';
@@ -504,7 +505,7 @@ describe('service', function () {
       // Act
       const component2 = powerbi.embed($element[0], testConfiguration);
 
-      const actualConfig = (<jasmine.Spy>component.load).calls.mostRecent().args[0];
+      const actualConfig = <embed.IEmbedConfiguration>component2.config;
 
       // Assert
       expect(component.load).toHaveBeenCalled();
@@ -2709,6 +2710,11 @@ describe('SDK-to-HPM', function () {
   let embedCreateConfiguration: embed.IEmbedConfiguration;
   let visualEmbedConfiguration: embed.IVisualEmbedConfiguration;
 
+  let reportConfigurationBck: embed.IEmbedConfigurationBase;
+  let createConfigurationBck: embed.IEmbedConfigurationBase;
+  let dashboardEmbedConfigurationBck: embed.IEmbedConfigurationBase;
+  let visualEmbedConfigurationBck: embed.IEmbedConfigurationBase;
+
   const iframeSrc = "base/test/utility/noop.html";
 
   beforeAll(function () {
@@ -2789,6 +2795,13 @@ describe('SDK-to-HPM', function () {
     powerbi.wpmp.stop();
   });
 
+  beforeEach(function() {
+    reportConfigurationBck = report.config;
+    createConfigurationBck = create.config;
+    dashboardEmbedConfigurationBck = dashboard.config;
+    visualEmbedConfigurationBck = embeddedVisual.config;
+  });
+
   afterEach(function () {
     spyHpm.get.calls.reset();
     spyHpm.post.calls.reset();
@@ -2801,6 +2814,11 @@ describe('SDK-to-HPM', function () {
     spyRouter.patch.calls.reset();
     spyRouter.put.calls.reset();
     spyRouter.delete.calls.reset();
+
+    report.config = reportConfigurationBck;
+    create.config = createConfigurationBck;
+    dashboard.config = dashboardEmbedConfigurationBck;
+    embeddedVisual.config = visualEmbedConfigurationBck;
   });
 
   describe('report', function () {
@@ -2820,7 +2838,10 @@ describe('SDK-to-HPM', function () {
         spyHpm.post.and.returnValue(Promise.resolve(testData.response));
 
         // Act
-        report.load(testData.loadConfiguration);
+        let expectedConfiguration = utils.assign({}, report.config, testData.loadConfiguration)
+        report.config = expectedConfiguration;
+        report.iframeLoaded = true;
+        report.load();
 
         // Assert
         const expectedHeaders = {
@@ -2830,7 +2851,7 @@ describe('SDK-to-HPM', function () {
           sdkSessionId: sdkSessionId
         };
 
-        expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, expectedHeaders, iframe.contentWindow);
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/load', expectedConfiguration, expectedHeaders, iframe.contentWindow);
       });
 
       it('report.load() returns promise that rejects with validation error if the load configuration is invalid', function (done) {
@@ -2850,7 +2871,9 @@ describe('SDK-to-HPM', function () {
         spyHpm.post.and.returnValue(Promise.reject(testData.errorResponse));
 
         // Act
-        report.load(testData.loadConfiguration)
+        let expectedConfiguration = utils.assign({}, report.config, testData.loadConfiguration);
+        report.config = expectedConfiguration;
+        report.load()
           .catch(error => {
             const expectedHeaders = {
               bootstrapped: undefined,
@@ -2858,7 +2881,7 @@ describe('SDK-to-HPM', function () {
               uid: uniqueId,
               sdkSessionId: sdkSessionId
             };
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, expectedHeaders, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', expectedConfiguration, expectedHeaders, iframe.contentWindow);
             expect(error).toEqual(testData.errorResponse.body);
             // Assert
             done();
@@ -2880,7 +2903,9 @@ describe('SDK-to-HPM', function () {
         spyHpm.post.and.returnValue(Promise.resolve(testData.response));
 
         // Act
-        report.load(testData.loadConfiguration)
+        let expectedConfiguration = utils.assign({}, report.config, testData.loadConfiguration);
+        report.config = expectedConfiguration;
+        report.load()
           .then(response => {
             const expectedHeaders = {
               bootstrapped: undefined,
@@ -2889,7 +2914,7 @@ describe('SDK-to-HPM', function () {
               sdkSessionId: sdkSessionId
             };
 
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', testData.loadConfiguration, expectedHeaders, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', expectedConfiguration, expectedHeaders, iframe.contentWindow);
             expect(response).toEqual(null);
             // Assert
             done();
@@ -2911,16 +2936,18 @@ describe('SDK-to-HPM', function () {
         spyHpm.post.and.returnValue(Promise.resolve(testData.response));
 
         // Act
-        report.load(testData.loadConfiguration)
+        let expectedConfiguration = utils.assign({}, report.config, testData.loadConfiguration);
+        report.config = expectedConfiguration;
+        report.load()
           .then(response => {
-            expect(report.config).toEqual(jasmine.objectContaining(testData.loadConfiguration));
+            expect(report.config).toEqual(jasmine.objectContaining(expectedConfiguration));
             expect(response).toEqual(null);
             // Assert
             done();
           });
       });
 
-      it('powerbi.embed with visual name sends POST /report/load with custom layout configuration in body', function () {
+      it('powerbi.embed with visual name sends POST /report/load with custom layout configuration in body', function (done) {
 
         let testData = {
           loadConfiguration: visualEmbedConfiguration,
@@ -2938,6 +2965,8 @@ describe('SDK-to-HPM', function () {
           visualName: visualEmbedConfiguration.visualName,
           width: visualEmbedConfiguration.width,
           height: visualEmbedConfiguration.height,
+          groupId: undefined,
+          uniqueId: embeddedVisual.config.uniqueId,
           settings: {
             filterPaneEnabled: false,
             navContentPaneEnabled: false,
@@ -2972,26 +3001,31 @@ describe('SDK-to-HPM', function () {
               }
             }
           }
-        }
+        };
 
         spyHpm.post.and.returnValue(Promise.resolve(testData.response));
 
         // Act
-        embeddedVisual.load(visualEmbedConfiguration);
+        let inputConfig = utils.assign({}, embeddedVisual.config, visualEmbedConfiguration);
+        embeddedVisual.config = inputConfig;
+        embeddedVisual.iframeLoaded = true;
 
-        // Assert
-        expect(spyHpm.post).toHaveBeenCalled();
+        embeddedVisual.load().then(() => {
+          // Assert
+          expect(spyHpm.post).toHaveBeenCalled();
 
-        let spyArgs = spyHpm.post.calls.mostRecent().args;
-        expect(spyArgs[0]).toEqual('/report/load');
-        expect(spyArgs[1]).toEqual(expectedConfiguration);
-        expect(spyArgs[2]).toEqual({
-          bootstrapped: undefined,
-          sdkVersion: sdkConfig.default.version,
-          uid: visualUniqueId,
-          sdkSessionId: sdkSessionId
+          let spyArgs = spyHpm.post.calls.mostRecent().args;
+          expect(spyArgs[0]).toEqual('/report/load');
+          expect(spyArgs[1]).toEqual(expectedConfiguration);
+          expect(spyArgs[2]).toEqual({
+            bootstrapped: undefined,
+            sdkVersion: sdkConfig.default.version,
+            uid: visualUniqueId,
+            sdkSessionId: sdkSessionId
+          });
+          expect(spyArgs[3]).toEqual(visualFrame.contentWindow);
+          done();
         });
-        expect(spyArgs[3]).toEqual(visualFrame.contentWindow);
       });
 
       it('embeddedVisual.getFilters(models.FiltersLevel.Report) sends GET /report/filters', function () {
@@ -3519,7 +3553,7 @@ describe('SDK-to-HPM', function () {
     });
 
     describe('reload', function () {
-      it('report.reload() sends POST /report/load with configuration in body', function () {
+      it('report.reload() sends POST /report/load with configuration in body', function (done) {
         // Arrange
         const testData = {
           loadConfiguration: {
@@ -3532,7 +3566,9 @@ describe('SDK-to-HPM', function () {
         };
 
         spyHpm.post.and.returnValue(Promise.resolve(testData.response));
-        report.load(testData.loadConfiguration)
+        let expectedConfiguration = utils.assign({}, report.config, testData.loadConfiguration);
+        report.config = expectedConfiguration;
+        report.load()
           .then(() => {
             spyHpm.post.calls.reset();
 
@@ -3547,7 +3583,8 @@ describe('SDK-to-HPM', function () {
             };
 
             // Assert
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.loadConfiguration), expectedHeaders, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', expectedConfiguration, expectedHeaders, iframe.contentWindow);
+            done();
           });
       });
     });
@@ -3727,7 +3764,9 @@ describe('SDK-to-HPM', function () {
         spyHpm.post.and.returnValue(Promise.resolve(testData.response));
 
         // Act
-        dashboard.load(testData.loadConfiguration);
+        let expectedConfiguration = utils.assign({}, dashboard.config, testData.loadConfiguration);
+        dashboard.config = expectedConfiguration;
+        dashboard.load();
 
         const expectedHeaders = {
           bootstrapped: undefined,
@@ -3737,7 +3776,7 @@ describe('SDK-to-HPM', function () {
         };
 
         // Assert
-        expect(spyHpm.post).toHaveBeenCalledWith('/dashboard/load', testData.loadConfiguration, expectedHeaders, dashboardIframe.contentWindow);
+        expect(spyHpm.post).toHaveBeenCalledWith('/dashboard/load', expectedConfiguration, expectedHeaders, dashboardIframe.contentWindow);
       });
     });
   });
@@ -4395,7 +4434,6 @@ describe('SDK-to-MockApp', function () {
   let report2: report.Report;
 
   beforeAll(function () {
-
     powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory, {
       wpmpName: 'SDK-to-MockApp HostWpmp',
       logMessages
@@ -4482,10 +4520,12 @@ describe('SDK-to-MockApp', function () {
           .then(() => {
             spyApp.validateReportLoad.and.returnValue(Promise.reject(testData.expectedErrors));
             // Act
-            report.load(testData.loadConfig)
+            let expectedConfiguration = utils.assign({}, report.config, testData.loadConfig);
+            report.config = expectedConfiguration;
+            report.load()
               .catch(errors => {
                 // Assert
-                expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.loadConfig);
+                expect(spyApp.validateReportLoad).toHaveBeenCalledWith(expectedConfiguration);
                 expect(spyApp.reportLoad).not.toHaveBeenCalled();
                 expect(errors).toEqual(jasmine.objectContaining(testData.expectedErrors));
                 done();
@@ -4507,11 +4547,13 @@ describe('SDK-to-MockApp', function () {
             spyApp.validateReportLoad.and.returnValue(Promise.resolve(null));
             spyApp.reportLoad.and.returnValue(Promise.resolve(null));
             // Act
-            report.load(testData.loadConfig)
+            let expectedConfiguration = utils.assign({}, report.config, testData.loadConfig);
+            report.config = expectedConfiguration;
+            report.load()
               .then(response => {
                 // Assert
-                expect(spyApp.validateReportLoad).toHaveBeenCalledWith(testData.loadConfig);
-                expect(spyApp.reportLoad).toHaveBeenCalledWith(testData.loadConfig);
+                expect(spyApp.validateReportLoad).toHaveBeenCalledWith(expectedConfiguration);
+                expect(spyApp.reportLoad).toHaveBeenCalledWith(expectedConfiguration);
                 expect(response).toEqual(undefined);
                 done();
               });

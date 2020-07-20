@@ -401,7 +401,8 @@ export class Service implements IService {
        */
       if(config.type === "report" && component.config.type === "create") {
         const report = new Report(this, element, config, /* phasedRender */ false, /* isBootstrap */ false, element.powerBiEmbed.iframe);
-        report.load(config);
+        component.populateConfig(config, /* isBootstrap */ false);
+        report.load();
         element.powerBiEmbed = report;
 
         this.addOrOverwriteEmbed(component, element);
@@ -413,7 +414,7 @@ export class Service implements IService {
     }
 
     component.populateConfig(config, /* isBootstrap */ false);
-    component.load(component.config, phasedRender);
+    component.load(phasedRender);
 
     return component;
   }

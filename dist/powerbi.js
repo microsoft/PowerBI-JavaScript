@@ -1,4 +1,4 @@
-/*! powerbi-client v2.13.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.13.3 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -351,7 +351,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	             */
 	            if (config.type === "report" && component.config.type === "create") {
 	                var report = new report_1.Report(this, element, config, /* phasedRender */ false, /* isBootstrap */ false, element.powerBiEmbed.iframe);
-	                report.load(config);
+	                component.populateConfig(config, /* isBootstrap */ false);
+	                report.load();
 	                element.powerBiEmbed = report;
 	                this.addOrOverwriteEmbed(component, element);
 	                return report;
@@ -359,7 +360,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but the existing element contains an embed of type: " + this.config.type + " which does not match the new type: " + config.type);
 	        }
 	        component.populateConfig(config, /* isBootstrap */ false);
-	        component.load(component.config, phasedRender);
+	        component.load(phasedRender);
 	        return component;
 	    };
 	    /**
@@ -571,6 +572,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.service = service;
 	        this.element = element;
 	        this.iframe = iframe;
+	        this.iframeLoaded = false;
 	        this.embedtype = config.type.toLowerCase();
 	        this.populateConfig(config, isBootstrap);
 	        if (this.embedtype === 'create') {
@@ -676,21 +678,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {boolean} phasedRender
 	     * @returns {Promise<void>}
 	     */
-	    Embed.prototype.load = function (config, phasedRender) {
-	        var _this = this;
-	        if (!config.accessToken) {
+	    Embed.prototype.load = function (phasedRender) {
+	        if (!this.config.accessToken) {
+	            console.debug("Power BI SDK iframe is loaded but powerbi.embed is not called yet.");
 	            return;
 	        }
-	        var path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
+	        if (!this.iframeLoaded) {
+	            console.debug("Power BI SDK is trying to post /report/load before iframe is ready.");
+	            return;
+	        }
+	        var path = phasedRender && this.config.type === 'report' ? this.phasedLoadPath : this.loadPath;
 	        var headers = {
 	            uid: this.config.uniqueId,
 	            sdkSessionId: this.service.getSdkSessionId(),
 	            bootstrapped: this.config.bootstrapped,
 	            sdkVersion: sdkConfig.default.version
 	        };
-	        return this.service.hpm.post(path, config, headers, this.iframe.contentWindow)
+	        return this.service.hpm.post(path, this.config, headers, this.iframe.contentWindow)
 	            .then(function (response) {
-	            utils.assign(_this.config, config);
 	            return response.body;
 	        }, function (response) {
 	            throw response.body;
@@ -766,7 +771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * ```
 	     */
 	    Embed.prototype.reload = function () {
-	        return this.load(this.config);
+	        return this.load();
 	    };
 	    /**
 	     * Set accessToken.
@@ -970,9 +975,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    throw errors;
 	                }
 	            }
-	            this.iframe.addEventListener('load', function () { return _this.load(_this.config, phasedRender); }, false);
+	            this.iframe.addEventListener('load', function () {
+	                _this.iframeLoaded = true;
+	                _this.load(phasedRender);
+	            }, false);
 	            if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
-	                this.frontLoadHandler = function () { return _this.frontLoadSendConfig(_this.config); };
+	                this.frontLoadHandler = function () {
+	                    _this.frontLoadSendConfig(_this.config);
+	                };
 	                // 'ready' event is fired by the embedded element (not by the iframe)
 	                this.element.addEventListener('ready', this.frontLoadHandler, false);
 	            }
@@ -1276,7 +1286,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/** @ignore */ /** */
 	var config = {
-	    version: '2.13.2',
+	    version: '2.13.3',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -6681,8 +6691,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function Visual(service, element, baseConfig, phasedRender, isBootstrap, iframe) {
 	        _super.call(this, service, element, baseConfig, phasedRender, isBootstrap, iframe);
 	    }
-	    Visual.prototype.load = function (baseConfig, phasedRender) {
-	        var config = baseConfig;
+	    Visual.prototype.load = function (phasedRender) {
+	        var config = this.config;
 	        if (!config.accessToken) {
 	            // bootstrap flow.
 	            return;
@@ -6729,7 +6739,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            pageSize: pageSize,
 	            pagesLayout: pagesLayout
 	        };
-	        return _super.prototype.load.call(this, config, phasedRender);
+	        this.config = config;
+	        return _super.prototype.load.call(this, phasedRender);
 	    };
 	    /**
 	     * Gets the list of pages within the report - not supported in visual embed.

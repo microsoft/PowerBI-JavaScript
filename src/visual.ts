@@ -31,8 +31,8 @@ export class Visual extends Report {
     super(service, element, baseConfig, phasedRender, isBootstrap, iframe);
   }
 
-  load(baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean): Promise<void> {
-    var config = <embed.IVisualEmbedConfiguration>baseConfig;
+  load(phasedRender?: boolean): Promise<void> {
+    var config = <embed.IVisualEmbedConfiguration>this.config;
 
     if (!config.accessToken) {
       // bootstrap flow.
@@ -88,7 +88,8 @@ export class Visual extends Report {
       pagesLayout: pagesLayout
     };
 
-    return super.load(config, phasedRender);
+    this.config = config;
+    return super.load(phasedRender);
   }
 
   /**

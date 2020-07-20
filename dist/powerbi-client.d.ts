@@ -1,4 +1,4 @@
-/*! powerbi-client v2.13.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.13.3 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -260,6 +260,15 @@ declare module "embed" {
          */
         iframe: HTMLIFrameElement;
         /**
+         * Saves the iframe state. Each iframe should be loaded only once.
+         * After first load, .embed will go into embedExisting path which will send
+         * a postMessage of /report/load instead of creating a new iframe.
+         *
+         * @type {boolean}
+         * @hidden
+         */
+        iframeLoaded: boolean;
+        /**
          * Gets or sets the configuration settings for the Power BI embed component.
          *
          * @type {IEmbedConfigurationBase}
@@ -376,7 +385,7 @@ declare module "embed" {
          * @param {boolean} phasedRender
          * @returns {Promise<void>}
          */
-        load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void>;
+        load(phasedRender?: boolean): Promise<void>;
         /**
          * Removes one or more event handlers from the list of handlers.
          * If a reference to the existing handle function is specified, remove the specific handler.
@@ -1479,7 +1488,7 @@ declare module "visual" {
          * @hidden
          */
         constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
-        load(baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean): Promise<void>;
+        load(phasedRender?: boolean): Promise<void>;
         /**
          * Gets the list of pages within the report - not supported in visual embed.
          *
