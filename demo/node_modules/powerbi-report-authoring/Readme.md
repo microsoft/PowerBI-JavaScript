@@ -7,7 +7,7 @@ While powerbi-client library helps for embedding Power BI reports into your apps
 ## Wiki
 See [powerbi-client wiki](https://github.com/Microsoft/PowerBI-JavaScript/wiki) for more details about embedding Power BI reports.
 
-See [powerbi-report-authoring wiki](https://github.com/Microsoft/PowerBI-JavaScript/wiki) for more details about authoring Power BI reports in embed session.
+See [powerbi-report-authoring wiki](https://github.com/Microsoft/PowerBI-report-authoring/wiki) for more details about authoring Power BI reports in embed session.
 
 Install from NPM:
 

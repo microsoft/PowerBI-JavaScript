@@ -2,9 +2,9 @@ var url = require("url");
 var URL = url.URL;
 var http = require("http");
 var https = require("https");
-var assert = require("assert");
 var Writable = require("stream").Writable;
-var debug = require("debug")("follow-redirects");
+var assert = require("assert");
+var debug = require("./debug");
 
 // Create handlers that pass events from native requests
 var eventHandlers = Object.create(null);
