@@ -1608,6 +1608,8 @@ declare module "service" {
     }
     export interface IService {
         hpm: hpm.HttpPostMessage;
+        preComponentCreation: (frame: HTMLIFrameElement) => void;
+        customEventHandler: (event: IEvent<any>) => void;
     }
     /**
      * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
@@ -1644,6 +1646,14 @@ declare module "service" {
          * @hidden
         */
         wpmp: wpmp.WindowPostMessageProxy;
+        /** An external function used to add custom functionality to embed setIframe. Used in playground safe-eval.
+        * @hidden
+        */
+        preComponentCreation: (frame: HTMLIFrameElement) => void;
+        /** A custom event handler used to override the SDK default event handler. Used in playground safe-eval.
+       * @hidden
+       */
+        customEventHandler: (event: IEvent<any>) => void;
         private router;
         private uniqueSessionId;
         /**

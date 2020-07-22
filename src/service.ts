@@ -72,6 +72,8 @@ export interface IServiceConfiguration extends IDebugOptions {
 
 export interface IService {
   hpm: hpm.HttpPostMessage;
+  preComponentCreation: (frame: HTMLIFrameElement) => void;
+  customEventHandler: (event: IEvent<any>) => void;
 }
 
 /**
@@ -124,6 +126,14 @@ export class Service implements IService {
    * @hidden
   */
   wpmp: wpmp.WindowPostMessageProxy;
+  /** An external function used to add custom functionality to embed setIframe. Used in playground safe-eval.
+  * @hidden
+  */
+  public preComponentCreation: (frame: HTMLIFrameElement) => void = null;
+   /** A custom event handler used to override the SDK default event handler. Used in playground safe-eval.
+  * @hidden
+  */
+  public customEventHandler: (event: IEvent<any>) => void = null;
   private router: router.Router;
   private uniqueSessionId: string;
 
@@ -532,6 +542,11 @@ export class Service implements IService {
    * @hidden
    */
   private handleEvent(event: IEvent<any>): void {
+    if (this.customEventHandler != null) {
+      this.customEventHandler(event);
+      return;
+    }
+
     let embed = utils.find(embed => {
       return (embed.config.uniqueId === event.id);
     }, this.embeds);
