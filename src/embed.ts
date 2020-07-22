@@ -2,7 +2,6 @@ import * as utils from './util';
 import * as service from './service';
 import * as sdkConfig from './config';
 import * as models from 'powerbi-models';
-import { Defaults } from './defaults';
 import { EmbedUrlNotSupported } from './errors';
 
 declare global {

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.13.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.14.0 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -101,14 +101,6 @@ declare module "config" {
         type: string;
     };
     export default config;
-}
-declare module "defaults" {
-    import * as models from 'powerbi-models';
-    /** @hidden */
-    export abstract class Defaults {
-        static defaultSettings: models.ISettings;
-        static defaultQnaSettings: models.IQnaSettings;
-    }
 }
 declare module "errors" {
     export let APINotSupportedForRDLError: string;
@@ -1214,6 +1206,13 @@ declare module "report" {
          * @hidden
          */
         private isMobileSettings(settings);
+    }
+}
+declare module "defaults" {
+    import * as models from 'powerbi-models';
+    /** @hidden */
+    export abstract class Defaults {
+        static defaultQnaSettings: models.IQnaSettings;
     }
 }
 declare module "create" {

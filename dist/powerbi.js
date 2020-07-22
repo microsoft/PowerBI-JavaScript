@@ -1,4 +1,4 @@
-/*! powerbi-client v2.13.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.14.0 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -60,23 +60,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(17);
+	var factories = __webpack_require__(16);
 	exports.factories = factories;
 	var models = __webpack_require__(5);
 	exports.models = models;
 	var report_1 = __webpack_require__(7);
 	exports.Report = report_1.Report;
-	var dashboard_1 = __webpack_require__(13);
+	var dashboard_1 = __webpack_require__(12);
 	exports.Dashboard = dashboard_1.Dashboard;
-	var tile_1 = __webpack_require__(14);
+	var tile_1 = __webpack_require__(13);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
 	var page_1 = __webpack_require__(8);
 	exports.Page = page_1.Page;
-	var qna_1 = __webpack_require__(15);
+	var qna_1 = __webpack_require__(14);
 	exports.Qna = qna_1.Qna;
-	var visual_1 = __webpack_require__(16);
+	var visual_1 = __webpack_require__(15);
 	exports.Visual = visual_1.Visual;
 	var visualDescriptor_1 = __webpack_require__(9);
 	exports.VisualDescriptor = visualDescriptor_1.VisualDescriptor;
@@ -95,12 +95,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(7);
-	var create_1 = __webpack_require__(12);
-	var dashboard_1 = __webpack_require__(13);
-	var tile_1 = __webpack_require__(14);
+	var create_1 = __webpack_require__(11);
+	var dashboard_1 = __webpack_require__(12);
+	var tile_1 = __webpack_require__(13);
 	var page_1 = __webpack_require__(8);
-	var qna_1 = __webpack_require__(15);
-	var visual_1 = __webpack_require__(16);
+	var qna_1 = __webpack_require__(14);
+	var visual_1 = __webpack_require__(15);
 	var utils = __webpack_require__(3);
 	/**
 	 * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
@@ -1301,7 +1301,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/** @ignore */ /** */
 	var config = {
-	    version: '2.13.3',
+	    version: '2.14.0',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -5285,8 +5285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var utils = __webpack_require__(3);
 	var errors = __webpack_require__(6);
 	var page_1 = __webpack_require__(8);
-	var defaults_1 = __webpack_require__(10);
-	var bookmarksManager_1 = __webpack_require__(11);
+	var bookmarksManager_1 = __webpack_require__(10);
 	/**
 	 * The Power BI Report embed component
 	 *
@@ -5610,8 +5609,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var filterPaneEnabledAttribute = this.element.getAttribute(Report.filterPaneEnabledAttribute);
 	        var navContentPaneEnabledAttribute = this.element.getAttribute(Report.navContentPaneEnabledAttribute);
 	        var elementAttrSettings = {
-	            filterPaneEnabled: (filterPaneEnabledAttribute == null) ? defaults_1.Defaults.defaultSettings.filterPaneEnabled : (filterPaneEnabledAttribute !== "false"),
-	            navContentPaneEnabled: (navContentPaneEnabledAttribute == null) ? defaults_1.Defaults.defaultSettings.navContentPaneEnabled : (navContentPaneEnabledAttribute !== "false")
+	            filterPaneEnabled: (filterPaneEnabledAttribute == null) ? undefined : (filterPaneEnabledAttribute !== "false"),
+	            navContentPaneEnabled: (navContentPaneEnabledAttribute == null) ? undefined : (navContentPaneEnabledAttribute !== "false")
 	        };
 	        // Set the settings back into the config.
 	        this.config.settings = utils.assign({}, elementAttrSettings, config.settings);
@@ -6124,25 +6123,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 10 */
-/***/ (function(module, exports) {
-
-	/** @hidden */
-	var Defaults = (function () {
-	    function Defaults() {
-	    }
-	    Defaults.defaultSettings = {
-	        filterPaneEnabled: true
-	    };
-	    Defaults.defaultQnaSettings = {
-	        filterPaneEnabled: false
-	    };
-	    return Defaults;
-	}());
-	exports.Defaults = Defaults;
-
-
-/***/ }),
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__(3);
@@ -6273,7 +6253,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -6382,7 +6362,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -6500,7 +6480,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -6595,7 +6575,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -6677,7 +6657,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -6858,13 +6838,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var config_1 = __webpack_require__(4);
-	var wpmp = __webpack_require__(18);
-	var hpm = __webpack_require__(19);
-	var router = __webpack_require__(20);
+	var wpmp = __webpack_require__(17);
+	var hpm = __webpack_require__(18);
+	var router = __webpack_require__(19);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -6892,7 +6872,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! window-post-message-proxy v0.2.6 | (c) 2016 Microsoft Corporation MIT */
@@ -7196,7 +7176,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -7380,7 +7360,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */
