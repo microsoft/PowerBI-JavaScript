@@ -122,14 +122,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function Service(hpmFactory, wpmpFactory, routerFactory, config) {
 	        var _this = this;
 	        if (config === void 0) { config = {}; }
-	        /** An external function used to add custom functionality to embed setIframe. Used in playground safe-eval.
-	        * @hidden
-	        */
-	        this.preComponentCreation = null;
-	        /** A custom event handler used to override the SDK default event handler. Used in playground safe-eval.
-	       * @hidden
-	       */
-	        this.customEventHandler = null;
 	        this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
 	        this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
 	        this.router = routerFactory(this.wpmp);
@@ -473,10 +465,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @hidden
 	     */
 	    Service.prototype.handleEvent = function (event) {
-	        if (this.customEventHandler != null) {
-	            this.customEventHandler(event);
-	            return;
-	        }
 	        var embed = utils.find(function (embed) {
 	            return (embed.config.uniqueId === event.id);
 	        }, this.embeds);
@@ -975,9 +963,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var node = this.element;
 	            while (node.firstChild) {
 	                node.removeChild(node.firstChild);
-	            }
-	            if (this.service.preComponentCreation != null) {
-	                this.service.preComponentCreation(iframeContent);
 	            }
 	            node.appendChild(iframeContent);
 	            this.iframe = node.firstChild;

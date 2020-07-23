@@ -723,10 +723,6 @@ export abstract class Embed {
         node.removeChild(node.firstChild);
       }
 
-      if (this.service.preComponentCreation != null) {
-        this.service.preComponentCreation(iframeContent);
-      }
-
       node.appendChild(iframeContent);
       this.iframe = <HTMLIFrameElement>node.firstChild;
     }
