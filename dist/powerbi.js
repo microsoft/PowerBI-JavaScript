@@ -1,4 +1,4 @@
-/*! powerbi-client v2.14.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.14.1 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -694,6 +694,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            bootstrapped: this.config.bootstrapped,
 	            sdkVersion: sdkConfig.default.version
 	        };
+	        var timeNow = new Date();
+	        if (this.lastLoadRequest && utils.getTimeDiffInMilliseconds(this.lastLoadRequest, timeNow) < 100) {
+	            console.debug("Power BI SDK sent more than two /report/load requests in the last 100ms interval.");
+	            return;
+	        }
+	        this.lastLoadRequest = timeNow;
 	        return this.service.hpm.post(path, this.config, headers, this.iframe.contentWindow)
 	            .then(function (response) {
 	            return response.body;
@@ -1278,6 +1284,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return randomValueArray[0];
 	}
 	exports.getRandomValue = getRandomValue;
+	/**
+	 * Returns the time interval between two dates in milliseconds
+	 * @export
+	 * @param {Date} start
+	 * @param {Date} end
+	 * @returns {number}
+	 */
+	function getTimeDiffInMilliseconds(start, end) {
+	    return Math.abs(start.getTime() - end.getTime());
+	}
+	exports.getTimeDiffInMilliseconds = getTimeDiffInMilliseconds;
 
 
 /***/ }),
@@ -1286,7 +1303,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/** @ignore */ /** */
 	var config = {
-	    version: '2.14.0',
+	    version: '2.14.1',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });

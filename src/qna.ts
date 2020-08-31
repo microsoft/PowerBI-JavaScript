@@ -1,7 +1,6 @@
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
-import * as utils from './util';
 
 /**
  * The Power BI Q&A embed component

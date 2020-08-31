@@ -1,8 +1,6 @@
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
-import * as utils from './util';
-import { Defaults } from './defaults';
 
 /**
  * The Power BI tile embed component

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.14.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.14.1 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -93,6 +93,14 @@ declare module "util" {
      * Returns random number
      */
     export function getRandomValue(): number;
+    /**
+     * Returns the time interval between two dates in milliseconds
+     * @export
+     * @param {Date} start
+     * @param {Date} end
+     * @returns {number}
+     */
+    export function getTimeDiffInMilliseconds(start: Date, end: Date): number;
 }
 declare module "config" {
     /** @ignore */ /** */
@@ -301,6 +309,11 @@ declare module "embed" {
          * @hidden
          */
         frontLoadHandler: () => any;
+        /**
+         * The time the last /load request was sent
+         * @hidden
+         */
+        lastLoadRequest: Date;
         /**
          * Creates an instance of Embed.
          *
@@ -1206,13 +1219,6 @@ declare module "report" {
          * @hidden
          */
         private isMobileSettings(settings);
-    }
-}
-declare module "defaults" {
-    import * as models from 'powerbi-models';
-    /** @hidden */
-    export abstract class Defaults {
-        static defaultQnaSettings: models.IQnaSettings;
     }
 }
 declare module "create" {

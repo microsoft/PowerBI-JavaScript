@@ -132,13 +132,13 @@ export abstract class Embed {
   static typeAttribute = 'powerbi-type';
   /** @hidden */
   static defaultEmbedHostName = "https://app.powerbi.com";
-  
+
   /** @hidden */
   static type: string;
-  
+
   /** @hidden */
   static maxFrontLoadTimes: number = 2;
- 
+
   /** @hidden */
   allowedEvents = [];
 
@@ -231,6 +231,12 @@ export abstract class Embed {
    * @hidden
    */
   frontLoadHandler: () => any;
+
+  /**
+   * The time the last /load request was sent
+   * @hidden
+   */
+  lastLoadRequest: Date;
 
   /**
    * Creates an instance of Embed.
@@ -338,9 +344,9 @@ export abstract class Embed {
   getCorrelationId(): Promise<string> {
     return this.service.hpm.get<string>(`/getCorrelationId`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => response.body,
-      response => {
-        throw response.body;
-      });
+        response => {
+          throw response.body;
+        });
   }
 
   /**
@@ -387,13 +393,21 @@ export abstract class Embed {
       sdkVersion: sdkConfig.default.version
     };
 
+    const timeNow: Date = new Date();
+    if (this.lastLoadRequest && utils.getTimeDiffInMilliseconds(this.lastLoadRequest, timeNow) < 100) {
+      console.debug("Power BI SDK sent more than two /report/load requests in the last 100ms interval.");
+      return;
+    }
+
+    this.lastLoadRequest = timeNow;
+
     return this.service.hpm.post<void>(path, this.config, headers, this.iframe.contentWindow)
       .then(response => {
         return response.body;
       },
-      response => {
-        throw response.body;
-      });
+        response => {
+          throw response.body;
+        });
   }
 
   /**
@@ -827,9 +841,9 @@ export abstract class Embed {
     if (this.iframe.contentWindow == null)
       return;
 
-      return this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(response => {
-        return response.body;
-      },
+    return this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(response => {
+      return response.body;
+    },
       response => {
         throw response.body;
       });

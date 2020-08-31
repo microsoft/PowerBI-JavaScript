@@ -1,13 +1,8 @@
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
-import * as wpmp from 'window-post-message-proxy';
-import * as hpm from 'http-post-message';
 import * as utils from './util';
 import * as errors from './errors';
-import { IPageNode, Page } from './page';
-import { Defaults } from './defaults';
-import { IReportLoadConfiguration } from 'powerbi-models';
 
 /**
  * APIs for managing the report bookmarks.
