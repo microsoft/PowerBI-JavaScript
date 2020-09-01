@@ -2729,6 +2729,8 @@ describe('SDK-to-HPM', function () {
       return <Router.Router><any>spyRouter;
     };
 
+    spyOn(utils, "getTimeDiffInMilliseconds").and.callFake(() => 700); // Prevent requests from being throttled.
+
     powerbi = new service.Service(spyHpmFactory, noop, spyRouterFactory, { wpmpName: 'SDK-to-HPM report wpmp' });
 
     $reportElement = $(`<div class="powerbi-report-container"></div>`)
@@ -2822,9 +2824,6 @@ describe('SDK-to-HPM', function () {
   });
 
   describe('report', function () {
-    beforeEach(() => {
-      report.lastLoadRequest = new Date(2018, 1, 1);
-    });
 
     describe('load', function () {
       it('report.load() sends POST /report/load with configuration in body', function () {
@@ -3575,7 +3574,6 @@ describe('SDK-to-HPM', function () {
         report.load()
           .then(() => {
             spyHpm.post.calls.reset();
-            report.lastLoadRequest = new Date(2018, 1, 1);
 
             // Act
             report.reload();
@@ -3771,7 +3769,6 @@ describe('SDK-to-HPM', function () {
         // Act
         let expectedConfiguration = utils.assign({}, dashboard.config, testData.loadConfiguration);
         dashboard.config = expectedConfiguration;
-        dashboard.lastLoadRequest = new Date(2018, 1, 1);
         dashboard.load();
 
         const expectedHeaders = {
@@ -4507,6 +4504,11 @@ describe('SDK-to-MockApp', function () {
   });
 
   describe('report', function () {
+
+    beforeEach(function () {
+      spyOn(utils, "getTimeDiffInMilliseconds").and.callFake(() => 700); // Prevent requests from being throttled.
+    });
+
     describe('load', function () {
       it(`report.load() returns promise that rejects with validation errors if load configuration is invalid`, function (done) {
         // Arrange
@@ -4528,7 +4530,6 @@ describe('SDK-to-MockApp', function () {
             // Act
             let expectedConfiguration = utils.assign({}, report.config, testData.loadConfig);
             report.config = expectedConfiguration;
-            report.lastLoadRequest = new Date(2018, 1, 1);
             report.load()
               .catch(errors => {
                 // Assert
@@ -4556,7 +4557,6 @@ describe('SDK-to-MockApp', function () {
             // Act
             let expectedConfiguration = utils.assign({}, report.config, testData.loadConfig);
             report.config = expectedConfiguration;
-            report.lastLoadRequest = new Date(2018, 1, 1);
             report.load()
               .then(response => {
                 // Assert
