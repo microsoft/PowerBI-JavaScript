@@ -1,4 +1,4 @@
-/*! powerbi-client v2.13.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.14.1 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -60,23 +60,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(17);
+	var factories = __webpack_require__(16);
 	exports.factories = factories;
 	var models = __webpack_require__(5);
 	exports.models = models;
 	var report_1 = __webpack_require__(7);
 	exports.Report = report_1.Report;
-	var dashboard_1 = __webpack_require__(13);
+	var dashboard_1 = __webpack_require__(12);
 	exports.Dashboard = dashboard_1.Dashboard;
-	var tile_1 = __webpack_require__(14);
+	var tile_1 = __webpack_require__(13);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
 	var page_1 = __webpack_require__(8);
 	exports.Page = page_1.Page;
-	var qna_1 = __webpack_require__(15);
+	var qna_1 = __webpack_require__(14);
 	exports.Qna = qna_1.Qna;
-	var visual_1 = __webpack_require__(16);
+	var visual_1 = __webpack_require__(15);
 	exports.Visual = visual_1.Visual;
 	var visualDescriptor_1 = __webpack_require__(9);
 	exports.VisualDescriptor = visualDescriptor_1.VisualDescriptor;
@@ -95,12 +95,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(7);
-	var create_1 = __webpack_require__(12);
-	var dashboard_1 = __webpack_require__(13);
-	var tile_1 = __webpack_require__(14);
+	var create_1 = __webpack_require__(11);
+	var dashboard_1 = __webpack_require__(12);
+	var tile_1 = __webpack_require__(13);
 	var page_1 = __webpack_require__(8);
-	var qna_1 = __webpack_require__(15);
-	var visual_1 = __webpack_require__(16);
+	var qna_1 = __webpack_require__(14);
+	var visual_1 = __webpack_require__(15);
 	var utils = __webpack_require__(3);
 	/**
 	 * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
@@ -351,7 +351,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	             */
 	            if (config.type === "report" && component.config.type === "create") {
 	                var report = new report_1.Report(this, element, config, /* phasedRender */ false, /* isBootstrap */ false, element.powerBiEmbed.iframe);
-	                report.load(config);
+	                component.populateConfig(config, /* isBootstrap */ false);
+	                report.load();
 	                element.powerBiEmbed = report;
 	                this.addOrOverwriteEmbed(component, element);
 	                return report;
@@ -359,7 +360,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but the existing element contains an embed of type: " + this.config.type + " which does not match the new type: " + config.type);
 	        }
 	        component.populateConfig(config, /* isBootstrap */ false);
-	        component.load(component.config, phasedRender);
+	        component.load(phasedRender);
 	        return component;
 	    };
 	    /**
@@ -571,6 +572,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.service = service;
 	        this.element = element;
 	        this.iframe = iframe;
+	        this.iframeLoaded = false;
 	        this.embedtype = config.type.toLowerCase();
 	        this.populateConfig(config, isBootstrap);
 	        if (this.embedtype === 'create') {
@@ -676,21 +678,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {boolean} phasedRender
 	     * @returns {Promise<void>}
 	     */
-	    Embed.prototype.load = function (config, phasedRender) {
-	        var _this = this;
-	        if (!config.accessToken) {
+	    Embed.prototype.load = function (phasedRender) {
+	        if (!this.config.accessToken) {
+	            console.debug("Power BI SDK iframe is loaded but powerbi.embed is not called yet.");
 	            return;
 	        }
-	        var path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
+	        if (!this.iframeLoaded) {
+	            console.debug("Power BI SDK is trying to post /report/load before iframe is ready.");
+	            return;
+	        }
+	        var path = phasedRender && this.config.type === 'report' ? this.phasedLoadPath : this.loadPath;
 	        var headers = {
 	            uid: this.config.uniqueId,
 	            sdkSessionId: this.service.getSdkSessionId(),
 	            bootstrapped: this.config.bootstrapped,
 	            sdkVersion: sdkConfig.default.version
 	        };
-	        return this.service.hpm.post(path, config, headers, this.iframe.contentWindow)
+	        var timeNow = new Date();
+	        if (this.lastLoadRequest && utils.getTimeDiffInMilliseconds(this.lastLoadRequest, timeNow) < 100) {
+	            console.debug("Power BI SDK sent more than two /report/load requests in the last 100ms interval.");
+	            return;
+	        }
+	        this.lastLoadRequest = timeNow;
+	        return this.service.hpm.post(path, this.config, headers, this.iframe.contentWindow)
 	            .then(function (response) {
-	            utils.assign(_this.config, config);
 	            return response.body;
 	        }, function (response) {
 	            throw response.body;
@@ -766,7 +777,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * ```
 	     */
 	    Embed.prototype.reload = function () {
-	        return this.load(this.config);
+	        return this.load();
 	    };
 	    /**
 	     * Set accessToken.
@@ -970,9 +981,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    throw errors;
 	                }
 	            }
-	            this.iframe.addEventListener('load', function () { return _this.load(_this.config, phasedRender); }, false);
+	            this.iframe.addEventListener('load', function () {
+	                _this.iframeLoaded = true;
+	                _this.load(phasedRender);
+	            }, false);
 	            if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
-	                this.frontLoadHandler = function () { return _this.frontLoadSendConfig(_this.config); };
+	                this.frontLoadHandler = function () {
+	                    _this.frontLoadSendConfig(_this.config);
+	                };
 	                // 'ready' event is fired by the embedded element (not by the iframe)
 	                this.element.addEventListener('ready', this.frontLoadHandler, false);
 	            }
@@ -1268,6 +1284,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return randomValueArray[0];
 	}
 	exports.getRandomValue = getRandomValue;
+	/**
+	 * Returns the time interval between two dates in milliseconds
+	 * @export
+	 * @param {Date} start
+	 * @param {Date} end
+	 * @returns {number}
+	 */
+	function getTimeDiffInMilliseconds(start, end) {
+	    return Math.abs(start.getTime() - end.getTime());
+	}
+	exports.getTimeDiffInMilliseconds = getTimeDiffInMilliseconds;
 
 
 /***/ }),
@@ -1276,7 +1303,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/** @ignore */ /** */
 	var config = {
-	    version: '2.13.2',
+	    version: '2.14.1',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -5260,8 +5287,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var utils = __webpack_require__(3);
 	var errors = __webpack_require__(6);
 	var page_1 = __webpack_require__(8);
-	var defaults_1 = __webpack_require__(10);
-	var bookmarksManager_1 = __webpack_require__(11);
+	var bookmarksManager_1 = __webpack_require__(10);
 	/**
 	 * The Power BI Report embed component
 	 *
@@ -5585,8 +5611,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var filterPaneEnabledAttribute = this.element.getAttribute(Report.filterPaneEnabledAttribute);
 	        var navContentPaneEnabledAttribute = this.element.getAttribute(Report.navContentPaneEnabledAttribute);
 	        var elementAttrSettings = {
-	            filterPaneEnabled: (filterPaneEnabledAttribute == null) ? defaults_1.Defaults.defaultSettings.filterPaneEnabled : (filterPaneEnabledAttribute !== "false"),
-	            navContentPaneEnabled: (navContentPaneEnabledAttribute == null) ? defaults_1.Defaults.defaultSettings.navContentPaneEnabled : (navContentPaneEnabledAttribute !== "false")
+	            filterPaneEnabled: (filterPaneEnabledAttribute == null) ? undefined : (filterPaneEnabledAttribute !== "false"),
+	            navContentPaneEnabled: (navContentPaneEnabledAttribute == null) ? undefined : (navContentPaneEnabledAttribute !== "false")
 	        };
 	        // Set the settings back into the config.
 	        this.config.settings = utils.assign({}, elementAttrSettings, config.settings);
@@ -6099,25 +6125,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 10 */
-/***/ (function(module, exports) {
-
-	/** @hidden */
-	var Defaults = (function () {
-	    function Defaults() {
-	    }
-	    Defaults.defaultSettings = {
-	        filterPaneEnabled: true
-	    };
-	    Defaults.defaultQnaSettings = {
-	        filterPaneEnabled: false
-	    };
-	    return Defaults;
-	}());
-	exports.Defaults = Defaults;
-
-
-/***/ }),
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__(3);
@@ -6248,7 +6255,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -6357,7 +6364,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -6475,7 +6482,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -6570,7 +6577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -6652,7 +6659,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -6681,8 +6688,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function Visual(service, element, baseConfig, phasedRender, isBootstrap, iframe) {
 	        _super.call(this, service, element, baseConfig, phasedRender, isBootstrap, iframe);
 	    }
-	    Visual.prototype.load = function (baseConfig, phasedRender) {
-	        var config = baseConfig;
+	    Visual.prototype.load = function (phasedRender) {
+	        var config = this.config;
 	        if (!config.accessToken) {
 	            // bootstrap flow.
 	            return;
@@ -6729,7 +6736,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            pageSize: pageSize,
 	            pagesLayout: pagesLayout
 	        };
-	        return _super.prototype.load.call(this, config, phasedRender);
+	        this.config = config;
+	        return _super.prototype.load.call(this, phasedRender);
 	    };
 	    /**
 	     * Gets the list of pages within the report - not supported in visual embed.
@@ -6832,13 +6840,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var config_1 = __webpack_require__(4);
-	var wpmp = __webpack_require__(18);
-	var hpm = __webpack_require__(19);
-	var router = __webpack_require__(20);
+	var wpmp = __webpack_require__(17);
+	var hpm = __webpack_require__(18);
+	var router = __webpack_require__(19);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -6866,7 +6874,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! window-post-message-proxy v0.2.6 | (c) 2016 Microsoft Corporation MIT */
@@ -7170,7 +7178,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -7354,7 +7362,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */

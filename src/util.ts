@@ -120,7 +120,7 @@ export function generateUUID(): string {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
     d += performance.now();
   }
-  return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {    
+  return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     // Generate a random number, scaled from 0 to 15.
     const r = (getRandomValue() % 16);
 
@@ -157,9 +157,9 @@ export function addParamToUrl(url: string, paramName: string, value: string): st
 export function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow: Window): Promise<boolean> {
   return hpm.get<boolean>('/report/hasUnsavedChanges', { uid }, contentWindow)
     .then(response => !response.body,
-    response => {
-      throw response.body;
-    });
+      response => {
+        throw response.body;
+      });
 }
 
 /**
@@ -195,4 +195,15 @@ export function getRandomValue() {
   cryptoObj.getRandomValues(randomValueArray);
 
   return randomValueArray[0];
+}
+
+/**
+ * Returns the time interval between two dates in milliseconds
+ * @export
+ * @param {Date} start
+ * @param {Date} end
+ * @returns {number}
+ */
+export function getTimeDiffInMilliseconds(start: Date, end: Date): number {
+  return Math.abs(start.getTime() - end.getTime());
 }
