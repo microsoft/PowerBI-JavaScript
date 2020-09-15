@@ -2,7 +2,6 @@ import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
 import * as utils from './util';
-import { Defaults } from './defaults';
 
 /**
  * A Power BI Report creator component

@@ -1,6 +1,6 @@
 import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
-import { IPageNode, Page } from './page';
+import { IPageNode } from './page';
 
 /**
  * A Visual node within a report hierarchy

@@ -1,4 +1,4 @@
-/*! powerbi-client v2.13.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.14.1 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -93,6 +93,14 @@ declare module "util" {
      * Returns random number
      */
     export function getRandomValue(): number;
+    /**
+     * Returns the time interval between two dates in milliseconds
+     * @export
+     * @param {Date} start
+     * @param {Date} end
+     * @returns {number}
+     */
+    export function getTimeDiffInMilliseconds(start: Date, end: Date): number;
 }
 declare module "config" {
     /** @ignore */ /** */
@@ -101,14 +109,6 @@ declare module "config" {
         type: string;
     };
     export default config;
-}
-declare module "defaults" {
-    import * as models from 'powerbi-models';
-    /** @hidden */
-    export abstract class Defaults {
-        static defaultSettings: models.ISettings;
-        static defaultQnaSettings: models.IQnaSettings;
-    }
 }
 declare module "errors" {
     export let APINotSupportedForRDLError: string;
@@ -260,6 +260,15 @@ declare module "embed" {
          */
         iframe: HTMLIFrameElement;
         /**
+         * Saves the iframe state. Each iframe should be loaded only once.
+         * After first load, .embed will go into embedExisting path which will send
+         * a postMessage of /report/load instead of creating a new iframe.
+         *
+         * @type {boolean}
+         * @hidden
+         */
+        iframeLoaded: boolean;
+        /**
          * Gets or sets the configuration settings for the Power BI embed component.
          *
          * @type {IEmbedConfigurationBase}
@@ -300,6 +309,11 @@ declare module "embed" {
          * @hidden
          */
         frontLoadHandler: () => any;
+        /**
+         * The time the last /load request was sent
+         * @hidden
+         */
+        lastLoadRequest: Date;
         /**
          * Creates an instance of Embed.
          *
@@ -376,7 +390,7 @@ declare module "embed" {
          * @param {boolean} phasedRender
          * @returns {Promise<void>}
          */
-        load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void>;
+        load(phasedRender?: boolean): Promise<void>;
         /**
          * Removes one or more event handlers from the list of handlers.
          * If a reference to the existing handle function is specified, remove the specific handler.
@@ -1479,7 +1493,7 @@ declare module "visual" {
          * @hidden
          */
         constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
-        load(baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean): Promise<void>;
+        load(phasedRender?: boolean): Promise<void>;
         /**
          * Gets the list of pages within the report - not supported in visual embed.
          *

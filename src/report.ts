@@ -5,7 +5,6 @@ import * as utils from './util';
 import * as errors from './errors';
 import { IFilterable } from './ifilterable';
 import { Page } from './page';
-import { Defaults } from './defaults';
 import { IReportLoadConfiguration } from 'powerbi-models';
 import { BookmarksManager } from './bookmarksManager';
 
@@ -391,8 +390,8 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     let navContentPaneEnabledAttribute = this.element.getAttribute(Report.navContentPaneEnabledAttribute);
 
     let elementAttrSettings: embed.IEmbedSettings = {
-      filterPaneEnabled: (filterPaneEnabledAttribute == null) ? Defaults.defaultSettings.filterPaneEnabled : (filterPaneEnabledAttribute !== "false"),
-      navContentPaneEnabled: (navContentPaneEnabledAttribute == null) ? Defaults.defaultSettings.navContentPaneEnabled : (navContentPaneEnabledAttribute !== "false")
+      filterPaneEnabled: (filterPaneEnabledAttribute == null) ? undefined : (filterPaneEnabledAttribute !== "false"),
+      navContentPaneEnabled: (navContentPaneEnabledAttribute == null) ? undefined : (navContentPaneEnabledAttribute !== "false")
     };
 
     // Set the settings back into the config.

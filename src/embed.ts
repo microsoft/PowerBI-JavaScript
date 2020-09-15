@@ -2,7 +2,6 @@ import * as utils from './util';
 import * as service from './service';
 import * as sdkConfig from './config';
 import * as models from 'powerbi-models';
-import { Defaults } from './defaults';
 import { EmbedUrlNotSupported } from './errors';
 
 declare global {
@@ -133,13 +132,13 @@ export abstract class Embed {
   static typeAttribute = 'powerbi-type';
   /** @hidden */
   static defaultEmbedHostName = "https://app.powerbi.com";
-  
+
   /** @hidden */
   static type: string;
-  
+
   /** @hidden */
   static maxFrontLoadTimes: number = 2;
- 
+
   /** @hidden */
   allowedEvents = [];
 
@@ -174,6 +173,16 @@ export abstract class Embed {
    * @hidden
    */
   iframe: HTMLIFrameElement;
+
+  /**
+   * Saves the iframe state. Each iframe should be loaded only once.
+   * After first load, .embed will go into embedExisting path which will send 
+   * a postMessage of /report/load instead of creating a new iframe.
+   *
+   * @type {boolean}
+   * @hidden
+   */
+  iframeLoaded: boolean;
 
   /**
    * Gets or sets the configuration settings for the Power BI embed component.
@@ -224,6 +233,12 @@ export abstract class Embed {
   frontLoadHandler: () => any;
 
   /**
+   * The time the last /load request was sent
+   * @hidden
+   */
+  lastLoadRequest: Date;
+
+  /**
    * Creates an instance of Embed.
    *
    * Note: there is circular reference between embeds and the service, because
@@ -244,6 +259,7 @@ export abstract class Embed {
     this.service = service;
     this.element = element;
     this.iframe = iframe;
+    this.iframeLoaded = false;
     this.embedtype = config.type.toLowerCase();
 
     this.populateConfig(config, isBootstrap);
@@ -328,9 +344,9 @@ export abstract class Embed {
   getCorrelationId(): Promise<string> {
     return this.service.hpm.get<string>(`/getCorrelationId`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => response.body,
-      response => {
-        throw response.body;
-      });
+        response => {
+          throw response.body;
+        });
   }
 
   /**
@@ -358,12 +374,18 @@ export abstract class Embed {
    * @param {boolean} phasedRender
    * @returns {Promise<void>}
    */
-  load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void> {
-    if (!config.accessToken) {
+  load(phasedRender?: boolean): Promise<void> {
+    if (!this.config.accessToken) {
+      console.debug("Power BI SDK iframe is loaded but powerbi.embed is not called yet.");
       return;
     }
 
-    const path = phasedRender && config.type === 'report' ? this.phasedLoadPath : this.loadPath;
+    if (!this.iframeLoaded) {
+      console.debug("Power BI SDK is trying to post /report/load before iframe is ready.");
+      return;
+    }
+
+    const path = phasedRender && this.config.type === 'report' ? this.phasedLoadPath : this.loadPath;
     const headers = {
       uid: this.config.uniqueId,
       sdkSessionId: this.service.getSdkSessionId(),
@@ -371,9 +393,16 @@ export abstract class Embed {
       sdkVersion: sdkConfig.default.version
     };
 
-    return this.service.hpm.post<void>(path, config, headers, this.iframe.contentWindow)
+    const timeNow: Date = new Date();
+    if (this.lastLoadRequest && utils.getTimeDiffInMilliseconds(this.lastLoadRequest, timeNow) < 100) {
+      console.debug("Power BI SDK sent more than two /report/load requests in the last 100ms interval.");
+      return;
+    }
+
+    this.lastLoadRequest = timeNow;
+
+    return this.service.hpm.post<void>(path, this.config, headers, this.iframe.contentWindow)
       .then(response => {
-        utils.assign(this.config, config);
         return response.body;
       },
         response => {
@@ -455,7 +484,7 @@ export abstract class Embed {
    * ```
    */
   reload(): Promise<void> {
-    return this.load(this.config);
+    return this.load();
   }
 
   /**
@@ -707,6 +736,7 @@ export abstract class Embed {
       while (node.firstChild) {
         node.removeChild(node.firstChild);
       }
+
       node.appendChild(iframeContent);
       this.iframe = <HTMLIFrameElement>node.firstChild;
     }
@@ -720,10 +750,15 @@ export abstract class Embed {
         }
       }
 
-      this.iframe.addEventListener('load', () => this.load(this.config, phasedRender), false);
+      this.iframe.addEventListener('load', () => {
+        this.iframeLoaded = true;
+        this.load(phasedRender);
+      }, false);
 
       if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
-        this.frontLoadHandler = () => this.frontLoadSendConfig(this.config);
+        this.frontLoadHandler = () => {
+          this.frontLoadSendConfig(this.config);
+        }
 
         // 'ready' event is fired by the embedded element (not by the iframe)
         this.element.addEventListener('ready', this.frontLoadHandler, false);

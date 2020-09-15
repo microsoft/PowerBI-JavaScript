@@ -1,10 +1,6 @@
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
-import * as wpmp from 'window-post-message-proxy';
-import * as hpm from 'http-post-message';
-import * as utils from './util';
-import { Defaults } from './defaults';
 
 /**
  * A Dashboard node within a dashboard hierarchy
