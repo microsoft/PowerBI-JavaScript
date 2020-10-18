@@ -1,4 +1,4 @@
-/*! powerbi-client v2.14.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.15.0 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -1812,7 +1812,7 @@ declare module "bookmarksManager" {
         getBookmarks(): Promise<models.IReportBookmark[]>;
         apply(bookmarkName: string): Promise<void>;
         play(playMode: models.BookmarksPlayMode): Promise<void>;
-        capture(): Promise<models.IReportBookmark>;
+        capture(options?: models.ICaptureBookmarkOptions): Promise<models.IReportBookmark>;
         applyState(state: string): Promise<void>;
     }
     /**
@@ -1851,6 +1851,7 @@ declare module "bookmarksManager" {
          * bookmarksManager.apply(bookmarkName)
          * ```
          *
+         * @param {string} bookmarkName The name of the bookmark to be applied
          * @returns {Promise<void>}
          */
         apply(bookmarkName: string): Promise<void>;
@@ -1859,9 +1860,10 @@ declare module "bookmarksManager" {
          *
          * ```javascript
          * // Enter presentation mode.
-         * bookmarksManager.play(true)
+         * bookmarksManager.play(models.BookmarksPlayMode.Presentation)
          * ```
          *
+         * @param {models.BookmarksPlayMode} playMode Play mode can be either `Presentation` or `Off`
          * @returns {Promise<void>}
          */
         play(playMode: models.BookmarksPlayMode): Promise<void>;
@@ -1869,12 +1871,13 @@ declare module "bookmarksManager" {
          * Capture bookmark from current state.
          *
          * ```javascript
-         * bookmarksManager.capture()
+         * bookmarksManager.capture(options)
          * ```
          *
+         * @param {models.ICaptureBookmarkOptions} [options] Options for bookmark capturing
          * @returns {Promise<models.IReportBookmark>}
          */
-        capture(): Promise<models.IReportBookmark>;
+        capture(options?: models.ICaptureBookmarkOptions): Promise<models.IReportBookmark>;
         /**
          * Apply bookmark state.
          *
@@ -1882,6 +1885,7 @@ declare module "bookmarksManager" {
          * bookmarksManager.applyState(bookmarkState)
          * ```
          *
+         * @param {string} state A base64 bookmark state to be applied
          * @returns {Promise<void>}
          */
         applyState(state: string): Promise<void>;
