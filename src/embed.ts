@@ -72,6 +72,10 @@ export interface IEmbedConfiguration extends IEmbedConfigurationBase {
   height?: number;
   width?: number;
   theme?: models.IReportTheme;
+  slicers?: models.ISlicer[];
+  bookmark?: models.IApplyBookmarkRequest;
+  datasetBinding?: models.IDatasetBinding;
+  contrastMode?: models.ContrastMode;
 }
 
 export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
