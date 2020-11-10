@@ -5854,7 +5854,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return settings && (settings.layoutType === models.LayoutType.MobileLandscape || settings.layoutType === models.LayoutType.MobilePortrait);
 	    };
 	    /** @hidden */
-	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered"];
+	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged"];
 	    /** @hidden */
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    /** @hidden */
