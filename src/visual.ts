@@ -1,8 +1,11 @@
 import * as service from './service';
 import * as embed from './embed';
 import * as models from 'powerbi-models';
+import * as utils from './util';
+import * as errors from './errors';
 import { Report } from './report'
 import { Page } from './page';
+import { VisualDescriptor } from './visualDescriptor';
 
 /**
  * The Power BI Visual embed component
@@ -109,6 +112,42 @@ export class Visual extends Report {
    */
   setPage(pageName: string): Promise<void> {
     throw Visual.SetPageNotSupportedError;
+  }
+
+  /**
+   * Gets the embedded visual descriptor object that contains the visual name, type, etc.
+   *
+   * ```javascript
+   * visual.getVisualDescriptor()
+   *   .then(visualDetails => { ... });
+   * ```
+   *
+   * @returns {Promise<VisualDescriptor>}
+   */
+  getVisualDescriptor(): Promise<VisualDescriptor> {
+    const config = <embed.IVisualEmbedConfiguration>this.config;
+
+    return this.service.hpm.get<models.IVisual[]>(`/report/pages/${config.pageName}/visuals`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        // Find the embedded visual from visuals of this page
+        // TODO: Use the Array.find method when ES6 is available
+        const embeddedVisuals = response.body.filter(pageVisual => pageVisual.name === config.visualName);
+
+        if (embeddedVisuals.length === 0) {
+          const visualNotFoundError: models.IError = {
+            message: "visualNotFound",
+            detailedMessage: "Visual not found"
+          };
+
+          throw visualNotFoundError;
+        }
+
+        const embeddedVisual = embeddedVisuals[0];
+        const currentPage = this.page(config.pageName);
+        return new VisualDescriptor(currentPage, embeddedVisual.name, embeddedVisual.title, embeddedVisual.type, embeddedVisual.layout);
+      }, response => {
+        throw response.body;
+      });
   }
 
   /**

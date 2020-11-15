@@ -3132,6 +3132,61 @@ describe('SDK-to-HPM', function () {
         // Assert
         expect(attempt).toThrow(visual.Visual.SetPageNotSupportedError);
       });
+
+      describe('getVisualDescriptor', function () {
+        it('embeddedVisual.getVisualDescriptor() sends GET /report/pages/xyz/visuals', function () {
+          // Arrange
+  
+          // Act
+          embeddedVisual.getVisualDescriptor();
+  
+          // Assert
+          expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/ReportSection1/visuals`, { uid: visualUniqueId }, visualFrame.contentWindow);
+        });
+  
+        it('embeddedVisual.getVisualDescriptor() returns promise that rejects with server error if there was error getting visual details', function (done) {
+          // Arrange
+          const testData = {
+            expectedError: {
+              body: {
+                message: 'internal server error'
+              }
+            }
+          };
+  
+          spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+  
+          // Act
+          embeddedVisual.getVisualDescriptor()
+            .catch(error => {
+              // Assert
+              expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/ReportSection1/visuals`, { uid: visualUniqueId }, visualFrame.contentWindow);
+              expect(error).toEqual(testData.expectedError.body);
+              done();
+            });
+        });
+  
+        it('embeddedVisual.getVisualDescriptor() returns promise that resolves with visual details', function (done) {
+          // Arrange
+          const fakeVisualDescriptor = new visualDescriptor.VisualDescriptor(page1, visualEmbedConfiguration.visualName, 'title', 'type', {});
+          const testData = {
+            expectedResponse: {
+              body: [fakeVisualDescriptor]
+            }
+          };
+
+          spyHpm.get.and.returnValue(Promise.resolve(testData.expectedResponse));
+
+          // Act
+          embeddedVisual.getVisualDescriptor()
+            .then(visualDescriptor => {
+              // Assert
+              expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/ReportSection1/visuals`, { uid: visualUniqueId }, visualFrame.contentWindow);
+              expect(visualDescriptor.name).toEqual(fakeVisualDescriptor.name);
+              done();
+            });
+        });
+      });
     });
 
     describe('pages', function () {

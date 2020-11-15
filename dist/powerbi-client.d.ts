@@ -1475,6 +1475,7 @@ declare module "visual" {
     import * as models from 'powerbi-models';
     import { Report } from "report";
     import { Page } from "page";
+    import { VisualDescriptor } from "visualDescriptor";
     /**
      * The Power BI Visual embed component
      *
@@ -1511,6 +1512,17 @@ declare module "visual" {
          * @returns {Promise<void>}
          */
         setPage(pageName: string): Promise<void>;
+        /**
+         * Gets the embedded visual descriptor object that contains the visual name, type, etc.
+         *
+         * ```javascript
+         * visual.getVisualDescriptor()
+         *   .then(visualDetails => { ... });
+         * ```
+         *
+         * @returns {Promise<VisualDescriptor>}
+         */
+        getVisualDescriptor(): Promise<VisualDescriptor>;
         /**
          * Gets filters that are applied to the filter level.
          * Default filter level is visual level.

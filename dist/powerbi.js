@@ -6747,6 +6747,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	var models = __webpack_require__(5);
 	var report_1 = __webpack_require__(7);
+	var visualDescriptor_1 = __webpack_require__(9);
 	/**
 	 * The Power BI Visual embed component
 	 *
@@ -6833,6 +6834,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Visual.prototype.setPage = function (pageName) {
 	        throw Visual.SetPageNotSupportedError;
+	    };
+	    /**
+	     * Gets the embedded visual descriptor object that contains the visual name, type, etc.
+	     *
+	     * ```javascript
+	     * visual.getVisualDescriptor()
+	     *   .then(visualDetails => { ... });
+	     * ```
+	     *
+	     * @returns {Promise<VisualDescriptor>}
+	     */
+	    Visual.prototype.getVisualDescriptor = function () {
+	        var _this = this;
+	        var config = this.config;
+	        return this.service.hpm.get("/report/pages/" + config.pageName + "/visuals", { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            // Find the embedded visual from visuals of this page
+	            // TODO: Use the Array.find method when ES6 is available
+	            var embeddedVisuals = response.body.filter(function (pageVisual) { return pageVisual.name === config.visualName; });
+	            if (embeddedVisuals.length === 0) {
+	                var visualNotFoundError = {
+	                    message: "visualNotFound",
+	                    detailedMessage: "Visual not found"
+	                };
+	                throw visualNotFoundError;
+	            }
+	            var embeddedVisual = embeddedVisuals[0];
+	            var currentPage = _this.page(config.pageName);
+	            return new visualDescriptor_1.VisualDescriptor(currentPage, embeddedVisual.name, embeddedVisual.title, embeddedVisual.type, embeddedVisual.layout);
+	        }, function (response) {
+	            throw response.body;
+	        });
 	    };
 	    /**
 	     * Gets filters that are applied to the filter level.
