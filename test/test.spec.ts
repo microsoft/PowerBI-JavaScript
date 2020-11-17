@@ -3278,7 +3278,25 @@ describe('SDK-to-HPM', function () {
         expect(spyHpm.post).toHaveBeenCalledWith('/report/addPage', expectedRequest, expectedHeaders, iframe.contentWindow);
       });
 
-      it('report.deletePage() sends POST /report/addPage with displayName', function () {
+      it('report.renamePage() sends PUT /report/pages/{name} with displayName', function () {
+        // Arrange
+        const name = "testName";
+        const displayName = "newName";
+        const expectedHeaders = { uid: uniqueId };
+        const expectedRequest = {
+          name,
+          displayName
+        };
+
+        spyHpm.put.and.returnValue(Promise.resolve(null));
+
+        // Act
+        report.renamePage(name, displayName);
+
+        expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${name}/name`, expectedRequest, expectedHeaders, iframe.contentWindow);
+      });
+
+      it('report.deletePage() sends DELETE /report/pages/{name}', function () {
         // Arrange
         const name = "testName";
         const expectedHeaders = { uid: uniqueId };
@@ -4061,6 +4079,27 @@ describe('SDK-to-HPM', function () {
             done();
           });
       });
+    });
+  });
+
+  describe('setDisplayName', function () {
+    it('page.setDisplayName(displayName) sends PUT /report/pages/{pageName}/name', function () {
+      // Arrange
+      const displayName = "newName";
+      const testData = {
+        page: {
+          name: page1.name,
+          displayName,
+        }
+      };
+
+      spyHpm.put.and.returnValue(Promise.resolve(null));
+
+      // Act
+      page1.setDisplayName(displayName);
+
+      // Assert
+      expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/name`, testData.page, { uid: uniqueId }, iframe.contentWindow);
     });
   });
 

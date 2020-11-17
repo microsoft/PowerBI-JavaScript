@@ -185,6 +185,27 @@ export class Page implements IPageNode, IFilterable {
   }
 
   /**
+   * Set displayName to the current page.
+   *
+   * ```javascript
+   * page.setName(displayName);
+   * ```
+   *
+   * @returns {Promise<void>}
+   */
+  setDisplayName(displayName: string): Promise<void> {
+    const page: models.IPage = {
+      name: this.name,
+      displayName,
+    };
+
+    return this.report.service.hpm.put<models.IError[]>(`/report/pages/${this.name}/name`, page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
    * Gets all the visuals on the page.
    *
    * ```javascript

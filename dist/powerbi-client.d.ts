@@ -890,6 +890,16 @@ declare module "page" {
          */
         setFilters(filters: models.IFilter[]): Promise<void>;
         /**
+         * Set displayName to the current page.
+         *
+         * ```javascript
+         * page.setName(displayName);
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        setDisplayName(displayName: string): Promise<void>;
+        /**
          * Gets all the visuals on the page.
          *
          * ```javascript
@@ -1007,12 +1017,23 @@ declare module "report" {
          *
          * ```javascript
          * // Delete a page from a report by pageName (PageName is different than the display name and can be acquired from the getPages API)
-         * report.deletePage("Sales145");
+         * report.deletePage("ReportSection145");
          * ```
          *
          * @returns {Promise<void>}
          */
-        deletePage(pageName?: string): Promise<void>;
+        deletePage(pageName: string): Promise<void>;
+        /**
+         * Rename a page from a report
+         *
+         * ```javascript
+         * // Rename a page from a report by changing displayName (pageName is different from the display name and can be acquired from the getPages API)
+         * report.renamePage("ReportSection145", "Sales");
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        renamePage(pageName: string, displayName: string): Promise<void>;
         /**
          * Gets filters that are applied at the report level.
          *

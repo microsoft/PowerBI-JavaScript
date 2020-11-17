@@ -140,13 +140,38 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * ```javascript
    * // Delete a page from a report by pageName (PageName is different than the display name and can be acquired from the getPages API)
-   * report.deletePage("Sales145");
+   * report.deletePage("ReportSection145");
    * ```
    *
    * @returns {Promise<void>}
    */
-  deletePage(pageName?: string): Promise<void> {
+  deletePage(pageName: string): Promise<void> {
     return this.service.hpm.delete<models.IError[]>(`/report/pages/${pageName}`, {}, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+      .then(response => {
+        return response.body;
+      })
+      .catch(response => {
+        throw response.body;
+      });
+  }
+
+  /**
+   * Rename a page from a report
+   *
+   * ```javascript
+   * // Rename a page from a report by changing displayName (pageName is different from the display name and can be acquired from the getPages API)
+   * report.renamePage("ReportSection145", "Sales");
+   * ```
+   *
+   * @returns {Promise<void>}
+   */
+  renamePage(pageName: string, displayName: string): Promise<void> {
+    const page: models.IPage = {
+      name: pageName,
+      displayName,
+    };
+
+    return this.service.hpm.put<models.IError[]>(`/report/pages/${pageName}/name`, page, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body;
       })

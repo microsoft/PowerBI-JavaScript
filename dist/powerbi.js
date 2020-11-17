@@ -5457,13 +5457,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * ```javascript
 	     * // Delete a page from a report by pageName (PageName is different than the display name and can be acquired from the getPages API)
-	     * report.deletePage("Sales145");
+	     * report.deletePage("ReportSection145");
 	     * ```
 	     *
 	     * @returns {Promise<void>}
 	     */
 	    Report.prototype.deletePage = function (pageName) {
 	        return this.service.hpm.delete("/report/pages/" + pageName, {}, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) {
+	            return response.body;
+	        })
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Rename a page from a report
+	     *
+	     * ```javascript
+	     * // Rename a page from a report by changing displayName (pageName is different from the display name and can be acquired from the getPages API)
+	     * report.renamePage("ReportSection145", "Sales");
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Report.prototype.renamePage = function (pageName, displayName) {
+	        var page = {
+	            name: pageName,
+	            displayName: displayName,
+	        };
+	        return this.service.hpm.put("/report/pages/" + pageName + "/name", page, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) {
 	            return response.body;
 	        })
@@ -5986,6 +6009,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Page.prototype.setFilters = function (filters) {
 	        return this.report.service.hpm.put("/report/pages/" + this.name + "/filters", filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Set displayName to the current page.
+	     *
+	     * ```javascript
+	     * page.setName(displayName);
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    Page.prototype.setDisplayName = function (displayName) {
+	        var page = {
+	            name: this.name,
+	            displayName: displayName,
+	        };
+	        return this.report.service.hpm.put("/report/pages/" + this.name + "/name", page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
 	            .catch(function (response) {
 	            throw response.body;
 	        });
