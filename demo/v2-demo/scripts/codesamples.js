@@ -891,7 +891,7 @@ function _Report_UpdateSettings() {
             Log.logText("Filter pane was removed.");
         })
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 }
 
@@ -1342,7 +1342,7 @@ function _Report_ApplyCustomLayout() {
             Log.logText("Custom layout applied, to remove custom layout, reload the report using 'Reload' API.")
         })
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 }
 
@@ -1374,7 +1374,7 @@ function _Report_HideAllVisualHeaders() {
             Log.logText("Visual header was successfully hidden for all the visuals in the report.");
         })
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 
 }
@@ -1406,7 +1406,7 @@ function _Report_ShowAllVisualHeaders() {
             Log.logText("Visual header was successfully shown for all the visuals in the report.");
         })
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 
 }
@@ -1450,7 +1450,7 @@ function _Report_HideSingleVisualHeader() {
             Log.logText("Visual header was successfully hidden for 'Category Breakdown' visual.");
         })
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 }
 
@@ -1598,7 +1598,7 @@ function _Report_Extensions_OptionsMenu() {
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 
     // Report.on will add an event handler to commandTriggered event which prints to console window.
@@ -1644,7 +1644,7 @@ function _Report_Extensions_ContextMenu() {
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 
     // Report.on will add an event handler to commandTriggered event which prints to console window.
@@ -2231,7 +2231,7 @@ function _Bookmarks_Enable() {
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 }
 
@@ -2254,7 +2254,7 @@ function _Bookmarks_Disable() {
     // Update the settings by passing in the new settings you have configured.
     report.updateSettings(newSettings)
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 }
 
@@ -2726,7 +2726,7 @@ function _ReportVisual_UpdateSettings() {
             Log.logText("Filter pane was added.");
         })
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 }
 
@@ -2769,7 +2769,7 @@ function _ReportVisual_HideSingleVisualHeader() {
             Log.logText("Visual header was successfully hidden for 'Sentiment by Year and Months' visual.");
         })
         .catch(function (error) {
-            Log.log(errors);
+            Log.log(error);
         });
 }
 

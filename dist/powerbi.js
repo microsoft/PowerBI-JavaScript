@@ -1,4 +1,4 @@
-/*! powerbi-client v2.14.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.15.1 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -1303,7 +1303,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/** @ignore */ /** */
 	var config = {
-	    version: '2.14.1',
+	    version: '2.15.1',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -1314,7 +1314,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.4.0 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.6.0 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1429,7 +1429,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateCreateReport = exports.validateReportLoad = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.AdvancedFilter = exports.TupleFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = exports.Validators = void 0;
+	exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateCreateReport = exports.validateReportLoad = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.AdvancedFilter = exports.TupleFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = exports.Validators = void 0;
 	exports.Validators = __webpack_require__(1).Validators;
 	var TraceType;
 	(function (TraceType) {
@@ -1857,6 +1857,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return !!(arg.table && arg.column && arg.aggregationFunction);
 	}
 	exports.isColumnAggr = isColumnAggr;
+	var PageNavigationPosition;
+	(function (PageNavigationPosition) {
+	    PageNavigationPosition[PageNavigationPosition["Bottom"] = 0] = "Bottom";
+	    PageNavigationPosition[PageNavigationPosition["Left"] = 1] = "Left";
+	})(PageNavigationPosition = exports.PageNavigationPosition || (exports.PageNavigationPosition = {}));
 	var QnaMode;
 	(function (QnaMode) {
 	    QnaMode[QnaMode["Interactive"] = 0] = "Interactive";
@@ -2047,6 +2052,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return errors ? errors.map(normalizeError) : undefined;
 	}
 	exports.validateApplyBookmarkStateRequest = validateApplyBookmarkStateRequest;
+	function validateCaptureBookmarkRequest(input) {
+	    var errors = exports.Validators.captureBookmarkRequestValidator.validate(input);
+	    return errors ? errors.map(normalizeError) : undefined;
+	}
+	exports.validateCaptureBookmarkRequest = validateCaptureBookmarkRequest;
 	function validateSettings(input) {
 	    var errors = exports.Validators.settingsValidator.validate(input);
 	    return errors ? errors.map(normalizeError) : undefined;
@@ -2222,6 +2232,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    booleanArrayValidator: new typeValidator_1.BooleanArrayValidator(),
 	    booleanValidator: new typeValidator_1.BooleanValidator(),
 	    bookmarksPaneValidator: new panesValidator_1.BookmarksPaneValidator(),
+	    captureBookmarkOptionsValidator: new bookmarkValidator_1.CaptureBookmarkOptionsValidator(),
+	    captureBookmarkRequestValidator: new bookmarkValidator_1.CaptureBookmarkRequestValidator(),
 	    commandDisplayOptionValidator: new typeValidator_1.EnumValidator([0, 1, 2]),
 	    commandExtensionSelectorValidator: new anyOfValidator_1.AnyOfValidator([new selectorsValidator_1.VisualSelectorValidator(), new selectorsValidator_1.VisualTypeSelectorValidator()]),
 	    commandExtensionValidator: new extensionsValidator_1.CommandExtensionValidator(),
@@ -2264,6 +2276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    numberValidator: new typeValidator_1.NumberValidator(),
 	    pageLayoutValidator: new mapValidator_1.MapValidator([new typeValidator_1.StringValidator()], [new layoutValidator_1.VisualLayoutValidator()]),
 	    pageNavigationPaneValidator: new panesValidator_1.PageNavigationPaneValidator(),
+	    pageNavigationPositionValidator: new typeValidator_1.EnumValidator([0, 1]),
 	    pageSizeTypeValidator: new typeValidator_1.EnumValidator([0, 1, 2, 3, 4, 5]),
 	    pageSizeValidator: new pageValidator_1.PageSizeValidator(),
 	    pageValidator: new pageValidator_1.PageValidator(),
@@ -2840,6 +2853,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                validators: [validator_1.Validators.reportPanesValidator]
 	            },
 	            {
+	                field: "personalBookmarksEnabled",
+	                validators: [validator_1.Validators.booleanValidator]
+	            },
+	            {
 	                field: "persistentFiltersEnabled",
 	                validators: [validator_1.Validators.booleanValidator]
 	            },
@@ -2874,7 +2891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	})();
 	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.ApplyBookmarkStateRequestValidator = exports.ApplyBookmarkByNameRequestValidator = exports.AddBookmarkRequestValidator = exports.PlayBookmarkRequestValidator = void 0;
+	exports.CaptureBookmarkRequestValidator = exports.CaptureBookmarkOptionsValidator = exports.ApplyBookmarkStateRequestValidator = exports.ApplyBookmarkByNameRequestValidator = exports.AddBookmarkRequestValidator = exports.PlayBookmarkRequestValidator = void 0;
 	var validator_1 = __webpack_require__(1);
 	var multipleFieldsValidator_1 = __webpack_require__(4);
 	var typeValidator_1 = __webpack_require__(2);
@@ -2986,6 +3003,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return ApplyBookmarkStateRequestValidator;
 	}(typeValidator_1.ObjectValidator));
 	exports.ApplyBookmarkStateRequestValidator = ApplyBookmarkStateRequestValidator;
+	var CaptureBookmarkOptionsValidator = /** @class */ (function (_super) {
+	    __extends(CaptureBookmarkOptionsValidator, _super);
+	    function CaptureBookmarkOptionsValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    CaptureBookmarkOptionsValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "personalizeVisuals",
+	                validators: [validator_1.Validators.booleanValidator]
+	            }
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return CaptureBookmarkOptionsValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.CaptureBookmarkOptionsValidator = CaptureBookmarkOptionsValidator;
+	var CaptureBookmarkRequestValidator = /** @class */ (function (_super) {
+	    __extends(CaptureBookmarkRequestValidator, _super);
+	    function CaptureBookmarkRequestValidator() {
+	        return _super !== null && _super.apply(this, arguments) || this;
+	    }
+	    CaptureBookmarkRequestValidator.prototype.validate = function (input, path, field) {
+	        if (input == null) {
+	            return null;
+	        }
+	        var errors = _super.prototype.validate.call(this, input, path, field);
+	        if (errors) {
+	            return errors;
+	        }
+	        var fields = [
+	            {
+	                field: "options",
+	                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.captureBookmarkOptionsValidator]
+	            }
+	        ];
+	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+	        return multipleFieldsValidator.validate(input, path, field);
+	    };
+	    return CaptureBookmarkRequestValidator;
+	}(typeValidator_1.ObjectValidator));
+	exports.CaptureBookmarkRequestValidator = CaptureBookmarkRequestValidator;
 	
 	
 	/***/ }),
@@ -5102,6 +5169,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                field: "visible",
 	                validators: [validator_1.Validators.booleanValidator]
 	            },
+	            {
+	                field: "position",
+	                validators: [validator_1.Validators.pageNavigationPositionValidator]
+	            },
 	        ];
 	        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
 	        return multipleFieldsValidator.validate(input, path, field);
@@ -5783,7 +5854,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return settings && (settings.layoutType === models.LayoutType.MobileLandscape || settings.layoutType === models.LayoutType.MobilePortrait);
 	    };
 	    /** @hidden */
-	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered"];
+	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged"];
 	    /** @hidden */
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    /** @hidden */
@@ -6174,6 +6245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * bookmarksManager.apply(bookmarkName)
 	     * ```
 	     *
+	     * @param {string} bookmarkName The name of the bookmark to be applied
 	     * @returns {Promise<void>}
 	     */
 	    BookmarksManager.prototype.apply = function (bookmarkName) {
@@ -6193,9 +6265,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * ```javascript
 	     * // Enter presentation mode.
-	     * bookmarksManager.play(true)
+	     * bookmarksManager.play(models.BookmarksPlayMode.Presentation)
 	     * ```
 	     *
+	     * @param {models.BookmarksPlayMode} playMode Play mode can be either `Presentation` or `Off`
 	     * @returns {Promise<void>}
 	     */
 	    BookmarksManager.prototype.play = function (playMode) {
@@ -6214,16 +6287,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Capture bookmark from current state.
 	     *
 	     * ```javascript
-	     * bookmarksManager.capture()
+	     * bookmarksManager.capture(options)
 	     * ```
 	     *
+	     * @param {models.ICaptureBookmarkOptions} [options] Options for bookmark capturing
 	     * @returns {Promise<models.IReportBookmark>}
 	     */
-	    BookmarksManager.prototype.capture = function () {
+	    BookmarksManager.prototype.capture = function (options) {
 	        if (utils.isRDLEmbed(this.config.embedUrl)) {
 	            return Promise.reject(errors.APINotSupportedForRDLError);
 	        }
-	        return this.service.hpm.post("/report/bookmarks/capture", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	        var request = {
+	            options: options
+	        };
+	        return this.service.hpm.post("/report/bookmarks/capture", request, { uid: this.config.uniqueId }, this.iframe.contentWindow)
 	            .then(function (response) { return response.body; }, function (response) {
 	            throw response.body;
 	        });
@@ -6235,6 +6312,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * bookmarksManager.applyState(bookmarkState)
 	     * ```
 	     *
+	     * @param {string} state A base64 bookmark state to be applied
 	     * @returns {Promise<void>}
 	     */
 	    BookmarksManager.prototype.applyState = function (state) {

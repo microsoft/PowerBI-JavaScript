@@ -1,6 +1,6 @@
 /** @ignore *//** */
 const config = {
-  version: '2.14.1',
+  version: '2.15.1',
   type: 'js'
 };
 
