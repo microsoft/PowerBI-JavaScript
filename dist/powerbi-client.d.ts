@@ -1076,15 +1076,11 @@ declare module "report" {
          *
          * Note: Because you are creating the page manually there is no guarantee that the page actually exists in the report, and subsequent requests could fail.
          *
-         * ```javascript
-         * const page = report.page('ReportSection1');
-         * page.setActive();
-         * ```
-         *
          * @param {string} name
          * @param {string} [displayName]
          * @param {boolean} [isActive]
          * @returns {Page}
+         * @hidden
          */
         page(name: string, displayName?: string, isActive?: boolean, visibility?: models.SectionVisibility): Page;
         /**

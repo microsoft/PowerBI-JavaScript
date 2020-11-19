@@ -5565,15 +5565,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * Note: Because you are creating the page manually there is no guarantee that the page actually exists in the report, and subsequent requests could fail.
 	     *
-	     * ```javascript
-	     * const page = report.page('ReportSection1');
-	     * page.setActive();
-	     * ```
-	     *
 	     * @param {string} name
 	     * @param {string} [displayName]
 	     * @param {boolean} [isActive]
 	     * @returns {Page}
+	     * @hidden
 	     */
 	    Report.prototype.page = function (name, displayName, isActive, visibility) {
 	        return new page_1.Page(this, name, displayName, isActive, visibility);
