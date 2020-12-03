@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "http-post-message": "^0.2",
-    "powerbi-models": "^1.6",
+    "powerbi-models": "^1.7.0",
     "powerbi-router": "^0.1",
     "window-post-message-proxy": "^0.2"
   },

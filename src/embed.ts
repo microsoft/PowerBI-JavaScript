@@ -22,92 +22,29 @@ declare global {
   }
 }
 
-/**
- * Prepare configuration for Power BI embed components.
- *
- * @export
- * @interface IBootstrapEmbedConfiguration
- */
-export interface IBootstrapEmbedConfiguration {
-  hostname?: string;
-  embedUrl?: string;
-  settings?: ISettings;
-  uniqueId?: string;
-  type?: string;
-  groupId?: string;
-  bootstrapped?: boolean;
-}
+//TODO: Require a specific version of powerbi-models in package.json
+export type IBootstrapEmbedConfiguration = models.IBootstrapEmbedConfiguration;
 
-/**
- * Base Configuration settings for Power BI embed components
- *
- * @export
- * @interface IEmbedConfigurationBase
- * @extends IBootstrapEmbedConfiguration
- */
-export interface IEmbedConfigurationBase extends IBootstrapEmbedConfiguration {
-  accessToken?: string;
-  tokenType?: models.TokenType;
-}
+export type IEmbedConfigurationBase = models.IEmbedConfigurationBase;
 
 // TODO: Re-use ILoadConfiguration interface to prevent duplicating properties.
-// Current issue is that they are optional when embedding since they can be specificed as attributes but they are required when loading.
-/**
- * Configuration settings for Power BI embed components
- *
- * @export
- * @interface IEmbedConfiguration
- */
-export interface IEmbedConfiguration extends IEmbedConfigurationBase {
-  id?: string;
-  settings?: IEmbedSettings;
-  pageName?: string;
-  filters?: models.IFilter[];
-  pageView?: models.PageView;
-  datasetId?: string;
-  permissions?: models.Permissions;
-  viewMode?: models.ViewMode;
-  action?: string;
-  dashboardId?: string;
-  height?: number;
-  width?: number;
-  theme?: models.IReportTheme;
-  slicers?: models.ISlicer[];
-  bookmark?: models.IApplyBookmarkRequest;
-  datasetBinding?: models.IDatasetBinding;
-  contrastMode?: models.ContrastMode;
-}
+export type IEmbedConfiguration = models.IEmbedConfiguration;
 
-export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
-  visualName: string;
-}
+export type IVisualEmbedConfiguration = models.IVisualEmbedConfiguration;
 
-/**
- * Configuration settings for Power BI Q&A embed component
- *
- * @export
- * @interface IEmbedConfiguration
- */
-export interface IQnaEmbedConfiguration extends IEmbedConfigurationBase {
-  datasetIds: string[];
-  question?: string;
-  viewMode?: models.QnaMode;
-}
+export type IReportEmbedConfiguration = models.IReportEmbedConfiguration;
 
-export interface ILocaleSettings {
-  language?: string;
-  formatLocale?: string;
-}
+export type IDashboardEmbedConfiguration = models.IDashboardEmbedConfiguration ;
 
-export interface ISettings {
-  localeSettings?: ILocaleSettings;
-}
+export type ITileEmbedConfiguration = models.ITileEmbedConfiguration;
 
-export interface IEmbedSettings extends models.ISettings, ISettings {
-}
+export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
 
-export interface IQnaSettings extends models.IQnaSettings, ISettings {
-}
+export type ILocaleSettings = models.ILocaleSettings;
+
+export type IQnaSettings = models.IQnaSettings;
+
+export type IEmbedSettings = models.ISettings;
 
 /** @hidden */
 export interface IInternalEventHandler<T> {
@@ -570,10 +507,10 @@ export abstract class Embed {
    * Adds locale parameters to embedUrl
    *
    * @private
-   * @param {IEmbedConfiguration} config
+   * @param {IEmbedConfiguration | models.ICommonEmbedConfiguration} config
    * @hidden
    */
-  private addLocaleToEmbedUrl(config: IEmbedConfiguration): void {
+  private addLocaleToEmbedUrl(config: IEmbedConfiguration | models.ICommonEmbedConfiguration): void {
     if (!config.settings) {
       return;
     }

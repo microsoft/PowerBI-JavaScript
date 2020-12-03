@@ -5,7 +5,7 @@ import * as utils from './util';
 import * as errors from './errors';
 import { IFilterable } from './ifilterable';
 import { Page } from './page';
-import { IReportLoadConfiguration } from 'powerbi-models';
+import { IReportLoadConfiguration, IReportEmbedConfiguration } from 'powerbi-models';
 import { BookmarksManager } from './bookmarksManager';
 
 /**
@@ -17,7 +17,7 @@ import { BookmarksManager } from './bookmarksManager';
 export interface IReportNode {
   iframe: HTMLIFrameElement;
   service: service.IService;
-  config: embed.IEmbedConfiguration
+  config: embed.IEmbedConfiguration | IReportEmbedConfiguration
 }
 
 /**
@@ -54,7 +54,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @hidden
    */
   constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement) {
-    const config = <embed.IEmbedConfiguration>baseConfig;
+    const config = <embed.IReportEmbedConfiguration>baseConfig;
     super(service, element, config, iframe, phasedRender, isBootstrap);
     this.loadPath = "/report/load";
     this.phasedLoadPath = "/report/prepare";
@@ -101,7 +101,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * @returns {Promise<void>}
    */
-  render(config?: IReportLoadConfiguration): Promise<void> {
+  render(config?: IReportLoadConfiguration | embed.IReportEmbedConfiguration): Promise<void> {
     return this.service.hpm.post<models.IError[]>(`/report/render`, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
       .then(response => {
         return response.body;
@@ -211,7 +211,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {string}
    */
   getId(): string {
-    let config = <embed.IEmbedConfiguration>this.config;
+    let config = <embed.IReportEmbedConfiguration>this.config;
     const reportId = config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(config.embedUrl);
 
     if (typeof reportId !== 'string' || reportId.length === 0) {
@@ -401,7 +401,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {void}
    */
   configChanged(isBootstrap: boolean): void {
-    let config = <embed.IEmbedConfiguration>this.config;
+    let config = <embed.IReportEmbedConfiguration>this.config;
 
     if (this.isMobileSettings(config.settings))
       config.embedUrl = utils.addParamToUrl(config.embedUrl, "isMobile", "true");

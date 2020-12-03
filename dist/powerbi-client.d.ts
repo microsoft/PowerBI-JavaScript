@@ -127,82 +127,17 @@ declare module "embed" {
             msRequestFullscreen: Function;
         }
     }
-    /**
-     * Prepare configuration for Power BI embed components.
-     *
-     * @export
-     * @interface IBootstrapEmbedConfiguration
-     */
-    export interface IBootstrapEmbedConfiguration {
-        hostname?: string;
-        embedUrl?: string;
-        settings?: ISettings;
-        uniqueId?: string;
-        type?: string;
-        groupId?: string;
-        bootstrapped?: boolean;
-    }
-    /**
-     * Base Configuration settings for Power BI embed components
-     *
-     * @export
-     * @interface IEmbedConfigurationBase
-     * @extends IBootstrapEmbedConfiguration
-     */
-    export interface IEmbedConfigurationBase extends IBootstrapEmbedConfiguration {
-        accessToken?: string;
-        tokenType?: models.TokenType;
-    }
-    /**
-     * Configuration settings for Power BI embed components
-     *
-     * @export
-     * @interface IEmbedConfiguration
-     */
-    export interface IEmbedConfiguration extends IEmbedConfigurationBase {
-        id?: string;
-        settings?: IEmbedSettings;
-        pageName?: string;
-        filters?: models.IFilter[];
-        pageView?: models.PageView;
-        datasetId?: string;
-        permissions?: models.Permissions;
-        viewMode?: models.ViewMode;
-        action?: string;
-        dashboardId?: string;
-        height?: number;
-        width?: number;
-        theme?: models.IReportTheme;
-        slicers?: models.ISlicer[];
-        bookmark?: models.IApplyBookmarkRequest;
-        datasetBinding?: models.IDatasetBinding;
-        contrastMode?: models.ContrastMode;
-    }
-    export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
-        visualName: string;
-    }
-    /**
-     * Configuration settings for Power BI Q&A embed component
-     *
-     * @export
-     * @interface IEmbedConfiguration
-     */
-    export interface IQnaEmbedConfiguration extends IEmbedConfigurationBase {
-        datasetIds: string[];
-        question?: string;
-        viewMode?: models.QnaMode;
-    }
-    export interface ILocaleSettings {
-        language?: string;
-        formatLocale?: string;
-    }
-    export interface ISettings {
-        localeSettings?: ILocaleSettings;
-    }
-    export interface IEmbedSettings extends models.ISettings, ISettings {
-    }
-    export interface IQnaSettings extends models.IQnaSettings, ISettings {
-    }
+    export type IBootstrapEmbedConfiguration = models.IBootstrapEmbedConfiguration;
+    export type IEmbedConfigurationBase = models.IEmbedConfigurationBase;
+    export type IEmbedConfiguration = models.IEmbedConfiguration;
+    export type IVisualEmbedConfiguration = models.IVisualEmbedConfiguration;
+    export type IReportEmbedConfiguration = models.IReportEmbedConfiguration;
+    export type IDashboardEmbedConfiguration = models.IDashboardEmbedConfiguration;
+    export type ITileEmbedConfiguration = models.ITileEmbedConfiguration;
+    export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
+    export type ILocaleSettings = models.ILocaleSettings;
+    export type IQnaSettings = models.IQnaSettings;
+    export type IEmbedSettings = models.ISettings;
     /** @hidden */
     export interface IInternalEventHandler<T> {
         test(event: service.IEvent<T>): boolean;
@@ -467,7 +402,7 @@ declare module "embed" {
          * Adds locale parameters to embedUrl
          *
          * @private
-         * @param {IEmbedConfiguration} config
+         * @param {IEmbedConfiguration | models.ICommonEmbedConfiguration} config
          * @hidden
          */
         private addLocaleToEmbedUrl(config);
@@ -929,7 +864,7 @@ declare module "report" {
     import * as models from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { Page } from "page";
-    import { IReportLoadConfiguration } from 'powerbi-models';
+    import { IReportLoadConfiguration, IReportEmbedConfiguration } from 'powerbi-models';
     import { BookmarksManager } from "bookmarksManager";
     /**
      * A Report node within a report hierarchy
@@ -940,7 +875,7 @@ declare module "report" {
     export interface IReportNode {
         iframe: HTMLIFrameElement;
         service: service.IService;
-        config: embed.IEmbedConfiguration;
+        config: embed.IEmbedConfiguration | IReportEmbedConfiguration;
     }
     /**
      * The Power BI Report embed component
@@ -1000,7 +935,7 @@ declare module "report" {
          *
          * @returns {Promise<void>}
          */
-        render(config?: IReportLoadConfiguration): Promise<void>;
+        render(config?: IReportLoadConfiguration | embed.IReportEmbedConfiguration): Promise<void>;
         /**
          * Add an empty page to the report
          *
@@ -1254,7 +1189,7 @@ declare module "create" {
      * @extends {embed.Embed}
      */
     export class Create extends embed.Embed {
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean, isBootstrap?: boolean);
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration | models.IReportCreateConfiguration, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * Gets the dataset ID from the first available location: createConfig or embed url.
          *
@@ -1323,7 +1258,6 @@ declare module "dashboard" {
      * @class Dashboard
      * @extends {embed.Embed}
      * @implements {IDashboardNode}
-     * @implements {IFilterable}
      */
     export class Dashboard extends embed.Embed implements IDashboardNode {
         /** @hidden */
@@ -1595,6 +1529,7 @@ declare module "service" {
     import * as wpmp from 'window-post-message-proxy';
     import * as hpm from 'http-post-message';
     import * as router from 'powerbi-router';
+    import * as models from 'powerbi-models';
     export interface IEvent<T> {
         type: string;
         id: string;
@@ -1647,6 +1582,7 @@ declare module "service" {
     export interface IService {
         hpm: hpm.HttpPostMessage;
     }
+    export type IComponentEmbedConfiguration = embed.IReportEmbedConfiguration | embed.IDashboardEmbedConfiguration | embed.ITileEmbedConfiguration | embed.IVisualEmbedConfiguration | embed.IQnaEmbedConfiguration;
     /**
      * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
      *
@@ -1700,7 +1636,7 @@ declare module "service" {
          * @param {embed.IEmbedConfiguration} [config={}]
          * @returns {embed.Embed}
          */
-        createReport(element: HTMLElement, config: embed.IEmbedConfiguration): embed.Embed;
+        createReport(element: HTMLElement, config: embed.IEmbedConfiguration | models.IReportCreateConfiguration): embed.Embed;
         /**
          * TODO: Add a description here
          *
@@ -1719,7 +1655,7 @@ declare module "service" {
          * @param {embed.IEmbedConfigurationBase} [config={}]
          * @returns {embed.Embed}
          */
-        embed(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
+        embed(element: HTMLElement, config?: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase): embed.Embed;
         /**
          * Given a configuration based on an HTML element,
          * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
@@ -1730,16 +1666,16 @@ declare module "service" {
          * @param {embed.IEmbedConfigurationBase} [config={}]
          * @returns {embed.Embed}
          */
-        load(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
+        load(element: HTMLElement, config?: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase): embed.Embed;
         /**
          * Given an HTML element and entityType, creates a new component instance, and bootstrap the iframe for embedding.
          *
          * @param {HTMLElement} element
          * @param {embed.IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
          */
-        bootstrap(element: HTMLElement, config: embed.IBootstrapEmbedConfiguration): embed.Embed;
+        bootstrap(element: HTMLElement, config: IComponentEmbedConfiguration | embed.IBootstrapEmbedConfiguration): embed.Embed;
         /** @hidden */
-        embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed;
+        embedInternal(element: HTMLElement, config?: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed;
         /** @hidden */
         getNumberOfComponents(): number;
         /** @hidden */
@@ -1828,7 +1764,7 @@ declare module "service" {
          * @param {embed.IEmbedConfigurationBase} [config={}]
          * @param {HTMLElement} [element=undefined]
          */
-        preload(config: embed.IEmbedConfigurationBase, element?: HTMLElement): HTMLIFrameElement;
+        preload(config: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase, element?: HTMLElement): HTMLIFrameElement;
     }
 }
 declare module "bookmarksManager" {
@@ -1946,7 +1882,7 @@ declare module "powerbi-client" {
     export { Report } from "report";
     export { Dashboard } from "dashboard";
     export { Tile } from "tile";
-    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings } from "embed";
+    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, IReportEmbedConfiguration, IDashboardEmbedConfiguration, ITileEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings } from "embed";
     export { Page } from "page";
     export { Qna } from "qna";
     export { Visual } from "visual";
