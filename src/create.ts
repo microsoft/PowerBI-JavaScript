@@ -80,8 +80,8 @@ export class Create extends embed.Embed {
    *
    * @returns {Promise<boolean>}
    */
-  isSaved(): Promise<boolean> {
-    return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
+  async isSaved(): Promise<boolean> {
+    return await utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
   }
 
   /**

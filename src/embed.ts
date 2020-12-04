@@ -11,6 +11,9 @@ declare global {
 
     // Ms Fullscreen
     msExitFullscreen: any;
+
+    // Safari Fullscreen
+    webkitExitFullscreen: void;
   }
 
   interface HTMLIFrameElement {
@@ -19,10 +22,12 @@ declare global {
 
     // Ms Fullscreen
     msRequestFullscreen: Function;
+
+    // Safari Fullscreen
+    webkitRequestFullscreen: {(): void};
   }
 }
 
-//TODO: Require a specific version of powerbi-models in package.json
 export type IBootstrapEmbedConfiguration = models.IBootstrapEmbedConfiguration;
 
 export type IEmbedConfigurationBase = models.IEmbedConfigurationBase;
@@ -224,19 +229,18 @@ export abstract class Embed {
    * @param {models.IReportCreateConfiguration} config
    * @returns {Promise<void>}
    */
-  createReport(config: models.IReportCreateConfiguration): Promise<void> {
+  async createReport(config: models.IReportCreateConfiguration): Promise<void> {
     const errors = models.validateCreateReport(config);
     if (errors) {
       throw errors;
     }
 
-    return this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      },
-        response => {
-          throw response.body;
-        });
+    try {
+      const response = await this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -244,14 +248,13 @@ export abstract class Embed {
    *
    * @returns {Promise<void>}
    */
-  save(): Promise<void> {
-    return this.service.hpm.post<models.IError[]>('/report/save', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+  async save(): Promise<void> {
+    try {
+      const response = await this.service.hpm.post<void>('/report/save', null, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -259,14 +262,13 @@ export abstract class Embed {
    *
    * @returns {Promise<void>}
    */
-  saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void> {
-    return this.service.hpm.post<models.IError[]>('/report/saveAs', saveAsParameters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+  async saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void> {
+    try {
+      const response = await this.service.hpm.post<void>('/report/saveAs', saveAsParameters, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -282,12 +284,13 @@ export abstract class Embed {
    *
    * @returns {Promise<string>}
    */
-  getCorrelationId(): Promise<string> {
-    return this.service.hpm.get<string>(`/getCorrelationId`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => response.body,
-        response => {
-          throw response.body;
-        });
+  async getCorrelationId(): Promise<string> {
+    try {
+      const response = await this.service.hpm.get<string>(`/getCorrelationId`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -315,7 +318,7 @@ export abstract class Embed {
    * @param {boolean} phasedRender
    * @returns {Promise<void>}
    */
-  load(phasedRender?: boolean): Promise<void> {
+  async load(phasedRender?: boolean): Promise<void> {
     if (!this.config.accessToken) {
       console.debug("Power BI SDK iframe is loaded but powerbi.embed is not called yet.");
       return;
@@ -342,13 +345,12 @@ export abstract class Embed {
 
     this.lastLoadRequest = timeNow;
 
-    return this.service.hpm.post<void>(path, this.config, headers, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      },
-        response => {
-          throw response.body;
-        });
+    try {
+      const response = await this.service.hpm.post<void>(path, this.config, headers, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -424,8 +426,8 @@ export abstract class Embed {
    * report.reload();
    * ```
    */
-  reload(): Promise<void> {
-    return this.load();
+  async reload(): Promise<void> {
+    return await this.load();
   }
 
   /**
@@ -433,19 +435,19 @@ export abstract class Embed {
    *
    * @returns {Promise<void>}
    */
-  setAccessToken(accessToken: string): Promise<void> {
+  async setAccessToken(accessToken: string): Promise<void> {
     var embedType = this.config.type;
     embedType = (embedType === 'create' || embedType === 'visual' || embedType === 'qna') ? 'report' : embedType;
-    return this.service.hpm.post<models.IError[]>('/' + embedType + '/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        this.config.accessToken = accessToken;
-        this.element.setAttribute(Embed.accessTokenAttribute, accessToken);
-        this.service.accessToken = accessToken;
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+    try {
+      const response = await this.service.hpm.post<void>('/' + embedType + '/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+
+      this.config.accessToken = accessToken;
+      this.element.setAttribute(Embed.accessTokenAttribute, accessToken);
+      this.service.accessToken = accessToken;
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -768,7 +770,7 @@ export abstract class Embed {
    * Sends the config for front load calls, after 'ready' message is received from the iframe
    * @hidden
    */
-  private frontLoadSendConfig(config: IEmbedConfigurationBase): Promise<void> {
+  private async frontLoadSendConfig(config: IEmbedConfigurationBase): Promise<void> {
     if (!config.accessToken) {
       return;
     }
@@ -782,11 +784,11 @@ export abstract class Embed {
     if (this.iframe.contentWindow == null)
       return;
 
-    return this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(response => {
+    try {
+      const response = await this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow);
       return response.body;
-    },
-      response => {
-        throw response.body;
-      });
+    } catch (response) {
+      throw response.body;
+    }
   }
 }

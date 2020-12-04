@@ -1118,7 +1118,7 @@ describe('embed', function () {
       var report = powerbi.get($container[0]);
       report.fullscreen();
 
-      expect(document.webkitFullscreenElement === $iframe[0]);
+      expect(document["webkitFullscreenElement"] === $iframe[0]);
     });
   });
 
@@ -1128,7 +1128,7 @@ describe('embed', function () {
       report.fullscreen();
       report.exitFullscreen();
 
-      expect(document.webkitFullscreenElement !== $iframe[0]);
+      expect(document["webkitFullscreenElement"] !== $iframe[0]);
     });
   });
 });
@@ -1596,6 +1596,7 @@ describe('Protocol', function () {
                 // Assert
                 expect(spyApp.getPages).toHaveBeenCalled();
                 const pages = response.body;
+                // @ts-ignore as testData is not of type IFilter
                 expect(pages).toEqual(testData.expectedPages);
                 // Cleanup
                 spyApp.getPages.calls.reset();
@@ -1909,6 +1910,7 @@ describe('Protocol', function () {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
                 expect(response.statusCode).toEqual(200);
+                // @ts-ignore as testData is not of type IFilter
                 expect(response.body).toEqual(testData.filters);
                 // Cleanup
                 spyApp.getFilters.calls.reset();
@@ -2061,6 +2063,7 @@ describe('Protocol', function () {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
                 expect(response.statusCode).toEqual(200);
+                // @ts-ignore as testData is not of type IFilter
                 expect(response.body).toEqual(testData.filters);
                 // Cleanup
                 spyApp.getFilters.calls.reset();
@@ -2217,6 +2220,7 @@ describe('Protocol', function () {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
                 expect(response.statusCode).toEqual(200);
+                // @ts-ignore as testData is not of type IFilter
                 expect(response.body).toEqual(testData.filters);
                 // Cleanup
                 spyApp.getFilters.calls.reset();
@@ -3909,6 +3913,7 @@ describe('SDK-to-HPM', function () {
           .then(filters => {
             // Assert
             expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
+            // @ts-ignore as testData is not of type IFilter
             expect(filters).toEqual(testData.expectedResponse.body);
             done();
           });
@@ -4155,6 +4160,7 @@ describe('SDK-to-HPM', function () {
           .then(filters => {
             // Assert
             expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
+            // @ts-ignore as testData is not of type IFilter
             expect(filters).toEqual(testData.expectedResponse.body);
             done();
           });
@@ -4269,6 +4275,13 @@ describe('SDK-to-HPM', function () {
           }
         };
 
+        const expectedHeaders = {
+          bootstrapped: undefined,
+          sdkVersion: sdkConfig.default.version,
+          uid: uniqueId,
+          sdkSessionId: sdkSessionId
+        };
+
         spyHpm.post.and.returnValue(Promise.resolve(testData.response));
         report.applyTheme(testData.theme)
           .then(() => {
@@ -4278,7 +4291,7 @@ describe('SDK-to-HPM', function () {
             report.reload();
 
             // Assert
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.theme), { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.theme), expectedHeaders, iframe.contentWindow);
           });
       });
 
@@ -4286,6 +4299,13 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const response = {
           body: null
+        };
+
+        const expectedHeaders = {
+          bootstrapped: undefined,
+          sdkVersion: sdkConfig.default.version,
+          uid: uniqueId,
+          sdkSessionId: sdkSessionId
         };
 
         spyHpm.post.and.returnValue(Promise.resolve(response));
@@ -4297,7 +4317,7 @@ describe('SDK-to-HPM', function () {
             report.reload();
 
             // Assert
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining({}), { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining({}), expectedHeaders, iframe.contentWindow);
           });
       });
     });
@@ -4763,6 +4783,7 @@ describe('SDK-to-MockApp', function () {
               .then(filters => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
+                // @ts-ignore as testData is not of type IFilter
                 expect(filters).toEqual(testData.filters);
                 done();
               });
@@ -4969,6 +4990,7 @@ describe('SDK-to-MockApp', function () {
               .then(filters => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
+                // @ts-ignore as testData is not of type IFilter as testData is not of type IFilter
                 expect(filters).toEqual(testData.filters);
                 done();
               });

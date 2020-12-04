@@ -1,4 +1,4 @@
-/*! powerbi-client v2.15.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.16.0 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -117,14 +117,18 @@ declare module "errors" {
 declare module "embed" {
     import * as service from "service";
     import * as models from 'powerbi-models';
-    global  {
+    global {
         interface Document {
             mozCancelFullScreen: any;
             msExitFullscreen: any;
+            webkitExitFullscreen: void;
         }
         interface HTMLIFrameElement {
             mozRequestFullScreen: Function;
             msRequestFullscreen: Function;
+            webkitRequestFullscreen: {
+                (): void;
+            };
         }
     }
     export type IBootstrapEmbedConfiguration = models.IBootstrapEmbedConfiguration;
@@ -389,7 +393,7 @@ declare module "embed" {
          * @returns {string}
          * @hidden
          */
-        private getAccessToken(globalAccessToken);
+        private getAccessToken;
         /**
          * Populate config for create and load
          *
@@ -405,7 +409,7 @@ declare module "embed" {
          * @param {IEmbedConfiguration | models.ICommonEmbedConfiguration} config
          * @hidden
          */
-        private addLocaleToEmbedUrl(config);
+        private addLocaleToEmbedUrl;
         /**
          * Gets an embed url from the first available location: options, attribute.
          *
@@ -413,11 +417,11 @@ declare module "embed" {
          * @returns {string}
          * @hidden
          */
-        private getEmbedUrl(isBootstrap);
+        private getEmbedUrl;
         /**
          * @hidden
          */
-        private getDefaultEmbedUrl(hostname);
+        private getDefaultEmbedUrl;
         /**
          * Gets a unique ID from the first available location: options, attribute.
          * If neither is provided generate a unique string.
@@ -426,7 +430,7 @@ declare module "embed" {
          * @returns {string}
          * @hidden
          */
-        private getUniqueId();
+        private getUniqueId;
         /**
          * Gets the group ID from the first available location: options, embeddedUrl.
          *
@@ -434,7 +438,7 @@ declare module "embed" {
          * @returns {string}
          * @hidden
          */
-        private getGroupId();
+        private getGroupId;
         /**
          * Gets the report ID from the first available location: options, attribute.
          *
@@ -475,7 +479,7 @@ declare module "embed" {
          * @returns {boolean}
          * @hidden
          */
-        private isFullscreen(iframe);
+        private isFullscreen;
         /**
          * Validate load and create configuration.
          *
@@ -486,7 +490,7 @@ declare module "embed" {
          * Sets Iframe for embed
          * @hidden
          */
-        private setIframe(isLoad, phasedRender?, isBootstrap?);
+        private setIframe;
         /**
          * Set the component title for accessibility. In case of iframes, this method will change the iframe title.
          */
@@ -513,11 +517,12 @@ declare module "embed" {
          * Sends the config for front load calls, after 'ready' message is received from the iframe
          * @hidden
          */
-        private frontLoadSendConfig(config);
+        private frontLoadSendConfig;
     }
 }
 declare module "ifilterable" {
     import * as models from 'powerbi-models';
+    import { IHttpPostMessageResponse } from 'http-post-message';
     /**
      * Decorates embed components that support filters
      * Examples include reports and pages
@@ -536,21 +541,22 @@ declare module "ifilterable" {
          * Replaces all filters on the current object with the specified filter values.
          *
          * @param {(models.IFilter[])} filters
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        setFilters(filters: models.IFilter[]): Promise<void>;
+        setFilters(filters: models.IFilter[]): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Removes all filters from the current object.
          *
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        removeFilters(): Promise<void>;
+        removeFilters(): Promise<IHttpPostMessageResponse<void>>;
     }
 }
 declare module "visualDescriptor" {
     import * as models from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { IPageNode } from "page";
+    import { IHttpPostMessageResponse } from 'http-post-message';
     /**
      * A Visual node within a report hierarchy
      *
@@ -624,9 +630,9 @@ declare module "visualDescriptor" {
          * visual.removeFilters();
          * ```
          *
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        removeFilters(): Promise<void>;
+        removeFilters(): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Sets the filters on the current visual to 'filters'.
          *
@@ -636,9 +642,9 @@ declare module "visualDescriptor" {
          * ```
          *
          * @param {(models.IFilter[])} filters
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        setFilters(filters: models.IFilter[]): Promise<void>;
+        setFilters(filters: models.IFilter[]): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Exports Visual data.
          * Can export up to 30K rows.
@@ -661,7 +667,7 @@ declare module "visualDescriptor" {
          *  .then(() => { ... });
          * ```
          */
-        setSlicerState(state: models.ISlicerState): Promise<void>;
+        setSlicerState(state: models.ISlicerState): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Get slicer state.
          * Works only for visuals of type slicer.
@@ -690,10 +696,11 @@ declare module "visualDescriptor" {
          *  .then(() => { ... });
          * ```
          */
-        sortBy(request: models.ISortByVisualRequest): Promise<void>;
+        sortBy(request: models.ISortByVisualRequest): Promise<IHttpPostMessageResponse<void>>;
     }
 }
 declare module "page" {
+    import { IHttpPostMessageResponse } from 'http-post-message';
     import { IFilterable } from "ifilterable";
     import { IReportNode } from "report";
     import { VisualDescriptor } from "visualDescriptor";
@@ -799,9 +806,9 @@ declare module "page" {
          * page.removeFilters();
          * ```
          *
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        removeFilters(): Promise<void>;
+        removeFilters(): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Makes the current page the active page of the report.
          *
@@ -809,9 +816,9 @@ declare module "page" {
          * page.setActive();
          * ```
          *
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        setActive(): Promise<void>;
+        setActive(): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Sets all filters on the current page.
          *
@@ -821,9 +828,9 @@ declare module "page" {
          * ```
          *
          * @param {(models.IFilter[])} filters
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        setFilters(filters: models.IFilter[]): Promise<void>;
+        setFilters(filters: models.IFilter[]): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Set displayName to the current page.
          *
@@ -831,9 +838,9 @@ declare module "page" {
          * page.setName(displayName);
          * ```
          *
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        setDisplayName(displayName: string): Promise<void>;
+        setDisplayName(displayName: string): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Gets all the visuals on the page.
          *
@@ -866,6 +873,7 @@ declare module "report" {
     import { Page } from "page";
     import { IReportLoadConfiguration, IReportEmbedConfiguration } from 'powerbi-models';
     import { BookmarksManager } from "bookmarksManager";
+    import { IHttpPostMessageResponse } from 'http-post-message';
     /**
      * A Report node within a report hierarchy
      *
@@ -1029,9 +1037,9 @@ declare module "report" {
          * report.removeFilters();
          * ```
          *
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        removeFilters(): Promise<void>;
+        removeFilters(): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Sets the active page of the report.
          *
@@ -1041,9 +1049,9 @@ declare module "report" {
          * ```
          *
          * @param {string} pageName
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        setPage(pageName: string): Promise<void>;
+        setPage(pageName: string): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Sets filters at the report level.
          *
@@ -1059,9 +1067,9 @@ declare module "report" {
          * ```
          *
          * @param {(models.IFilter[])} filters
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        setFilters(filters: models.IFilter[]): Promise<void>;
+        setFilters(filters: models.IFilter[]): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Updates visibility settings for the filter pane and the page navigation pane.
          *
@@ -1076,9 +1084,9 @@ declare module "report" {
          * ```
          *
          * @param {models.ISettings} settings
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        updateSettings(settings: models.ISettings): Promise<void>;
+        updateSettings(settings: models.ISettings): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Validate load configuration.
          *
@@ -1143,7 +1151,7 @@ declare module "report" {
         * report.resetPersistentFilters();
         * ```
         */
-        resetPersistentFilters(): Promise<void>;
+        resetPersistentFilters(): Promise<IHttpPostMessageResponse<void>>;
         /**
         * Save user's filters, slicers, and other data view changes of the report
         *
@@ -1151,7 +1159,7 @@ declare module "report" {
         * report.savePersistentFilters();
         * ```
         */
-        savePersistentFilters(): Promise<void>;
+        savePersistentFilters(): Promise<IHttpPostMessageResponse<void>>;
         /**
           * Returns if there are user's filters, slicers, or other data view changes applied on the report.
           * If persistent filters is disable, returns false.
@@ -1166,15 +1174,15 @@ declare module "report" {
         /**
          * @hidden
          */
-        private applyThemeInternal(theme);
+        private applyThemeInternal;
         /**
          * @hidden
          */
-        private viewModeToString(viewMode);
+        private viewModeToString;
         /**
          * @hidden
          */
-        private isMobileSettings(settings);
+        private isMobileSettings;
     }
 }
 declare module "create" {
@@ -1314,7 +1322,7 @@ declare module "dashboard" {
          * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
          * @hidden
          */
-        private ValidatePageView(pageView);
+        private ValidatePageView;
     }
 }
 declare module "tile" {
@@ -1374,6 +1382,7 @@ declare module "qna" {
     import * as service from "service";
     import * as models from 'powerbi-models';
     import * as embed from "embed";
+    import { IHttpPostMessageResponse } from 'http-post-message';
     /**
      * The Power BI Q&A embed component
      *
@@ -1399,10 +1408,10 @@ declare module "qna" {
         /**
          * Change the question of the Q&A embed component
          *
-         * @param question - question which will render Q&A data
-         * @returns {string}
+         * @param {string} question - question which will render Q&A data
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        setQuestion(question: string): Promise<void>;
+        setQuestion(question: string): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Handle config changes.
          *
@@ -1427,6 +1436,7 @@ declare module "visual" {
     import { Report } from "report";
     import { Page } from "page";
     import { VisualDescriptor } from "visualDescriptor";
+    import { IHttpPostMessageResponse } from 'http-post-message';
     /**
      * The Power BI Visual embed component
      *
@@ -1460,9 +1470,9 @@ declare module "visual" {
          * Sets the active page of the report - not supported in visual embed.
          *
          * @param {string} pageName
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        setPage(pageName: string): Promise<void>;
+        setPage(pageName: string): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Gets the embedded visual descriptor object that contains the visual name, type, etc.
          *
@@ -1504,9 +1514,9 @@ declare module "visual" {
          * ```
          *
          * @param {(models.IFilter[])} filters
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        setFilters(filters: models.IFilter[], filtersLevel?: models.FiltersLevel): Promise<void>;
+        setFilters(filters: models.IFilter[], filtersLevel?: models.FiltersLevel): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Removes all filters from the current filter level.
          * Default filter level is visual level.
@@ -1515,13 +1525,13 @@ declare module "visual" {
          * visual.removeFilters(filtersLevel);
          * ```
          *
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        removeFilters(filtersLevel?: models.FiltersLevel): Promise<void>;
+        removeFilters(filtersLevel?: models.FiltersLevel): Promise<IHttpPostMessageResponse<void>>;
         /**
          * @hidden
          */
-        private getFiltersLevelUrl(filtersLevel);
+        private getFiltersLevelUrl;
     }
 }
 declare module "service" {
@@ -1689,7 +1699,7 @@ declare module "service" {
          * @returns {embed.Embed}
          * @hidden
          */
-        private embedNew(element, config, phasedRender?, isBootstrap?);
+        private embedNew;
         /**
          * Given an element that already contains an embed component, load with a new configuration.
          *
@@ -1699,7 +1709,7 @@ declare module "service" {
          * @returns {embed.Embed}
          * @hidden
          */
-        private embedExisting(element, config, phasedRender?);
+        private embedExisting;
         /**
          * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
          * and automatically attempts to embed a powerbi component based on information from other powerbi-* attributes.
@@ -1755,7 +1765,7 @@ declare module "service" {
          * @param {IEvent<any>} event
          * @hidden
          */
-        private handleEvent(event);
+        private handleEvent;
         /**
          * API for warm starting powerbi embedded endpoints.
          * Use this API to preload Power BI Embedded in the background.
@@ -1771,6 +1781,7 @@ declare module "bookmarksManager" {
     import * as service from "service";
     import * as embed from "embed";
     import * as models from 'powerbi-models';
+    import { IHttpPostMessageResponse } from 'http-post-message';
     /**
      * APIs for managing the report bookmarks.
      *
@@ -1779,10 +1790,10 @@ declare module "bookmarksManager" {
      */
     export interface IBookmarksManager {
         getBookmarks(): Promise<models.IReportBookmark[]>;
-        apply(bookmarkName: string): Promise<void>;
-        play(playMode: models.BookmarksPlayMode): Promise<void>;
+        apply(bookmarkName: string): Promise<IHttpPostMessageResponse<void>>;
+        play(playMode: models.BookmarksPlayMode): Promise<IHttpPostMessageResponse<void>>;
         capture(options?: models.ICaptureBookmarkOptions): Promise<models.IReportBookmark>;
-        applyState(state: string): Promise<void>;
+        applyState(state: string): Promise<IHttpPostMessageResponse<void>>;
     }
     /**
      * Manages report bookmarks.
@@ -1794,7 +1805,7 @@ declare module "bookmarksManager" {
     export class BookmarksManager implements IBookmarksManager {
         private service;
         private config;
-        private iframe;
+        private iframe?;
         /**
          * @hidden
          */
@@ -1821,9 +1832,9 @@ declare module "bookmarksManager" {
          * ```
          *
          * @param {string} bookmarkName The name of the bookmark to be applied
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        apply(bookmarkName: string): Promise<void>;
+        apply(bookmarkName: string): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Play bookmarks: Enter or Exit bookmarks presentation mode.
          *
@@ -1833,9 +1844,9 @@ declare module "bookmarksManager" {
          * ```
          *
          * @param {models.BookmarksPlayMode} playMode Play mode can be either `Presentation` or `Off`
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        play(playMode: models.BookmarksPlayMode): Promise<void>;
+        play(playMode: models.BookmarksPlayMode): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Capture bookmark from current state.
          *
@@ -1855,9 +1866,9 @@ declare module "bookmarksManager" {
          * ```
          *
          * @param {string} state A base64 bookmark state to be applied
-         * @returns {Promise<void>}
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        applyState(state: string): Promise<void>;
+        applyState(state: string): Promise<IHttpPostMessageResponse<void>>;
     }
 }
 declare module "factories" {
@@ -1882,12 +1893,12 @@ declare module "powerbi-client" {
     export { Report } from "report";
     export { Dashboard } from "dashboard";
     export { Tile } from "tile";
-    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, IReportEmbedConfiguration, IDashboardEmbedConfiguration, ITileEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings } from "embed";
+    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, IReportEmbedConfiguration, IDashboardEmbedConfiguration, ITileEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings, } from "embed";
     export { Page } from "page";
     export { Qna } from "qna";
     export { Visual } from "visual";
     export { VisualDescriptor } from "visualDescriptor";
-    global  {
+    global {
         interface Window {
             powerbi: service.Service;
         }

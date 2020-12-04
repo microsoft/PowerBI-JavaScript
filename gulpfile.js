@@ -40,7 +40,7 @@ gulp.task('ghpages', 'Deploy documentation to gh-pages', ['nojekyll'], function 
 gulp.task("docs", 'Compile documentation from src code', function () {
   return gulp
     .src([
-      "typings/globals/es6-promise/index.d.ts",
+      "node_modules/es6-promise/es6-promise.d.ts",
       "node_modules/powerbi-models/dist/models.d.ts",
       "src/**/*.ts"
     ])
@@ -48,21 +48,19 @@ gulp.task("docs", 'Compile documentation from src code', function () {
       mode: 'modules',
       includeDeclarations: true,
 
-      // Output options (see typedoc docs) 
+      // Output options (see typedoc docs)
       out: "./docs",
       json: "./docs/json/" + package.name + ".json",
 
-      // TypeDoc options (see typedoc docs) 
+      // TypeDoc options (see typedoc docs)
       ignoreCompilerErrors: true,
       version: true
-    }))
-    ;
+    }));
 });
 
 gulp.task('copydemotodocs', 'Copy the demo to the docs', function () {
   return gulp.src(["demo/**/*"])
-    .pipe(gulp.dest("docs/demo"))
-    ;
+    .pipe(gulp.dest("docs/demo"));
 });
 
 gulp.task('nojekyll', 'Add .nojekyll file to docs directory', function (done) {
@@ -153,20 +151,32 @@ gulp.task('lint:ts', 'Lints all TypeScript', function () {
 });
 
 gulp.task('min:js', 'Creates minified JavaScript file', function () {
-  return gulp.src(['!./dist/*.min.js', './dist/*.js'])
-    .pipe(uglify({
-      preserveComments: 'license'
+  webpackConfig.plugins = [
+    new webpack.BannerPlugin(webpackBanner)
+  ];
+  
+  // Create minified bundle without source map
+  webpackConfig.mode = 'production';
+  webpackConfig.devtool = 'none'
+
+  return gulp.src(['./src/powerbi-client.ts'])
+    .pipe(webpackStream({
+      config: webpackConfig
     }))
     .pipe(rename({
       suffix: '.min'
     }))
-    .pipe(gulp.dest('./dist'));
+    .pipe(uglify({
+      preserveComments: 'license'
+    }))
+    .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('compile:ts', 'Compile typescript for powerbi-client library', function () {
   webpackConfig.plugins = [
     new webpack.BannerPlugin(webpackBanner)
   ];
+  webpackConfig.mode = "development";
 
   return gulp.src(['./src/powerbi-client.ts'])
     .pipe(webpackStream(webpackConfig))
@@ -181,7 +191,9 @@ gulp.task('compile:dts', 'Generate one dts file from modules', function () {
 
   var settings = {
     out: "powerbi-client.js",
-    declaration: true
+    declaration: true,
+    module: "system",
+    moduleResolution: "node"
   };
 
   var tsResult = tsProject.src()
