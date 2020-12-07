@@ -128,7 +128,7 @@ export class BookmarksManager implements IBookmarksManager {
     }
 
     var request: models.ICaptureBookmarkRequest = {
-      options: options
+      options: options || {}
     };
 
     try {
