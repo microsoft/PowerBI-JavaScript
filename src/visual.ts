@@ -5,6 +5,7 @@ import { Report } from './report'
 import { Page } from './page';
 import { VisualDescriptor } from './visualDescriptor';
 import { IHttpPostMessageResponse } from 'http-post-message';
+import { IReportLoadConfiguration } from 'powerbi-models';
 
 /**
  * The Power BI Visual embed component
@@ -20,6 +21,8 @@ export class Visual extends Report {
   static GetPagesNotSupportedError = "Get pages is not supported while embedding a visual.";
   /** @hidden */
   static SetPageNotSupportedError = "Set page is not supported while embedding a visual.";
+  /** @hidden */
+  static RenderNotSupportedError = "render is not supported while embedding a visual.";
 
   /**
    * Creates an instance of a Power BI Single Visual.
@@ -33,6 +36,9 @@ export class Visual extends Report {
     super(service, element, baseConfig, phasedRender, isBootstrap, iframe);
   }
 
+  /**
+   * @hidden
+   */
   load(phasedRender?: boolean): Promise<void> {
     var config = <embed.IVisualEmbedConfiguration>this.config;
 
@@ -111,6 +117,16 @@ export class Visual extends Report {
    */
   setPage(pageName: string): Promise<IHttpPostMessageResponse<void>> {
     throw Visual.SetPageNotSupportedError;
+  }
+
+  /**
+   * Render a preloaded report, using phased embedding API
+   *
+   * @hidden
+   * @returns {Promise<void>}
+   */
+  async render(config?: IReportLoadConfiguration | embed.IReportEmbedConfiguration): Promise<void> {
+    throw Visual.RenderNotSupportedError
   }
 
   /**
