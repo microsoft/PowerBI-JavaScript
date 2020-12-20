@@ -47,7 +47,7 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
   type: string;
 
   /**
-   * The visual layout: position, size and visiblity.
+   * The visual layout: position, size and visibility.
    *
    * @type {string}
    */

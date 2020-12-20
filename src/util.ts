@@ -110,7 +110,7 @@ export function createRandomString(): string {
 }
 
 /**
- * Generates a 20 charachter uuid.
+ * Generates a 20 character uuid.
  * 
  * @export
  * @returns {string}

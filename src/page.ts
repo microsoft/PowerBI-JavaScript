@@ -148,7 +148,7 @@ export class Page implements IPageNode, IFilterable {
   /**
    * Makes the current page the active page of the report.
    *
-   * ```javascripot
+   * ```javascript
    * page.setActive();
    * ```
    *

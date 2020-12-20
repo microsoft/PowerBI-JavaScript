@@ -7073,7 +7073,7 @@ var Page = /** @class */ (function () {
     /**
      * Makes the current page the active page of the report.
      *
-     * ```javascripot
+     * ```javascript
      * page.setActive();
      * ```
      *
@@ -8504,7 +8504,7 @@ var Service = /** @class */ (function () {
     Service.prototype.embedExisting = function (element, config, phasedRender) {
         var component = utils.find(function (x) { return x.element === element; }, this.embeds);
         if (!component) {
-            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
+            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
         }
         // TODO: Multiple embedding to the same iframe is not supported in QnA
         if (config.type && config.type.toLowerCase() === "qna") {
@@ -8611,7 +8611,7 @@ var Service = /** @class */ (function () {
                 iframe.remove();
             }
             else {
-                /** Workaround for IE: unhandled rejection TypeError: object doesn't support propert or method 'remove' */
+                /** Workaround for IE: unhandled rejection TypeError: object doesn't support property or method 'remove' */
                 iframe.parentElement.removeChild(iframe);
             }
         }
@@ -8972,7 +8972,7 @@ function createRandomString() {
 }
 exports.createRandomString = createRandomString;
 /**
- * Generates a 20 charachter uuid.
+ * Generates a 20 character uuid.
  *
  * @export
  * @returns {string}
@@ -9163,6 +9163,9 @@ var Visual = /** @class */ (function (_super) {
     function Visual(service, element, baseConfig, phasedRender, isBootstrap, iframe) {
         return _super.call(this, service, element, baseConfig, phasedRender, isBootstrap, iframe) || this;
     }
+    /**
+     * @hidden
+     */
     Visual.prototype.load = function (phasedRender) {
         var config = this.config;
         if (!config.accessToken) {
@@ -9230,6 +9233,19 @@ var Visual = /** @class */ (function (_super) {
      */
     Visual.prototype.setPage = function (pageName) {
         throw Visual.SetPageNotSupportedError;
+    };
+    /**
+     * Render a preloaded report, using phased embedding API
+     *
+     * @hidden
+     * @returns {Promise<void>}
+     */
+    Visual.prototype.render = function (config) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                throw Visual.RenderNotSupportedError;
+            });
+        });
     };
     /**
      * Gets the embedded visual descriptor object that contains the visual name, type, etc.
@@ -9386,6 +9402,8 @@ var Visual = /** @class */ (function (_super) {
     Visual.GetPagesNotSupportedError = "Get pages is not supported while embedding a visual.";
     /** @hidden */
     Visual.SetPageNotSupportedError = "Set page is not supported while embedding a visual.";
+    /** @hidden */
+    Visual.RenderNotSupportedError = "render is not supported while embedding a visual.";
     return Visual;
 }(report_1.Report));
 exports.Visual = Visual;

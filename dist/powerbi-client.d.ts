@@ -47,7 +47,7 @@ declare module "util" {
      */
     export function createRandomString(): string;
     /**
-     * Generates a 20 charachter uuid.
+     * Generates a 20 character uuid.
      *
      * @export
      * @returns {string}
@@ -597,7 +597,7 @@ declare module "visualDescriptor" {
          */
         type: string;
         /**
-         * The visual layout: position, size and visiblity.
+         * The visual layout: position, size and visibility.
          *
          * @type {string}
          */
@@ -812,7 +812,7 @@ declare module "page" {
         /**
          * Makes the current page the active page of the report.
          *
-         * ```javascripot
+         * ```javascript
          * page.setActive();
          * ```
          *
@@ -1437,6 +1437,7 @@ declare module "visual" {
     import { Page } from "page";
     import { VisualDescriptor } from "visualDescriptor";
     import { IHttpPostMessageResponse } from 'http-post-message';
+    import { IReportLoadConfiguration } from 'powerbi-models';
     /**
      * The Power BI Visual embed component
      *
@@ -1450,6 +1451,8 @@ declare module "visual" {
         static GetPagesNotSupportedError: string;
         /** @hidden */
         static SetPageNotSupportedError: string;
+        /** @hidden */
+        static RenderNotSupportedError: string;
         /**
          * Creates an instance of a Power BI Single Visual.
          *
@@ -1459,6 +1462,9 @@ declare module "visual" {
          * @hidden
          */
         constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
+        /**
+         * @hidden
+         */
         load(phasedRender?: boolean): Promise<void>;
         /**
          * Gets the list of pages within the report - not supported in visual embed.
@@ -1473,6 +1479,13 @@ declare module "visual" {
          * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
         setPage(pageName: string): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Render a preloaded report, using phased embedding API
+         *
+         * @hidden
+         * @returns {Promise<void>}
+         */
+        render(config?: IReportLoadConfiguration | embed.IReportEmbedConfiguration): Promise<void>;
         /**
          * Gets the embedded visual descriptor object that contains the visual name, type, etc.
          *
@@ -1620,7 +1633,7 @@ declare module "service" {
         private config;
         /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
         private embeds;
-        /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods.
+        /** TODO: Look for way to make hpm private without sacrificing ease of maintenance. This should be private but in embed needs to call methods.
          * @hidden
         */
         hpm: hpm.HttpPostMessage;

@@ -118,7 +118,7 @@ export class Service implements IService {
   /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
   private embeds: embed.Embed[];
 
-  /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. 
+  /** TODO: Look for way to make hpm private without sacrificing ease of maintenance. This should be private but in embed needs to call methods. 
    * @hidden
   */
   hpm: hpm.HttpPostMessage;
@@ -383,7 +383,7 @@ export class Service implements IService {
   private embedExisting(element: IPowerBiElement, config: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed {
     const component = utils.find(x => x.element === element, this.embeds);
     if (!component) {
-      throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
+      throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
     }
 
     // TODO: Multiple embedding to the same iframe is not supported in QnA
@@ -508,7 +508,7 @@ export class Service implements IService {
         iframe.remove();
       }
       else {
-          /** Workaround for IE: unhandled rejection TypeError: object doesn't support propert or method 'remove' */
+          /** Workaround for IE: unhandled rejection TypeError: object doesn't support property or method 'remove' */
           iframe.parentElement.removeChild(iframe);
       }
     }
