@@ -5,8 +5,9 @@ import * as utils from './util';
 import * as errors from './errors';
 import { IFilterable } from './ifilterable';
 import { Page } from './page';
-import { IReportLoadConfiguration } from 'powerbi-models';
+import { IReportLoadConfiguration, IReportEmbedConfiguration } from 'powerbi-models';
 import { BookmarksManager } from './bookmarksManager';
+import { IHttpPostMessageResponse } from 'http-post-message';
 
 /**
  * A Report node within a report hierarchy
@@ -17,7 +18,7 @@ import { BookmarksManager } from './bookmarksManager';
 export interface IReportNode {
   iframe: HTMLIFrameElement;
   service: service.IService;
-  config: embed.IEmbedConfiguration
+  config: embed.IEmbedConfiguration | IReportEmbedConfiguration
 }
 
 /**
@@ -31,7 +32,7 @@ export interface IReportNode {
  */
 export class Report extends embed.Embed implements IReportNode, IFilterable {
   /** @hidden */
-  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered"];
+  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged"];
   /** @hidden */
   static reportIdAttribute = 'powerbi-report-id';
   /** @hidden */
@@ -54,7 +55,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @hidden
    */
   constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement) {
-    const config = <embed.IEmbedConfiguration>baseConfig;
+    const config = <embed.IReportEmbedConfiguration>baseConfig;
     super(service, element, config, iframe, phasedRender, isBootstrap);
     this.loadPath = "/report/load";
     this.phasedLoadPath = "/report/prepare";
@@ -71,7 +72,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @hidden
    * @static
    * @param {string} url
-   * @returns {string} 
+   * @returns {string}
    */
   static findIdFromEmbedUrl(url: string): string {
     const reportIdRegEx = /reportId="?([^&]+)"?/
@@ -101,14 +102,13 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * @returns {Promise<void>}
    */
-  render(config?: IReportLoadConfiguration): Promise<void> {
-    return this.service.hpm.post<models.IError[]>(`/report/render`, config, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+  async render(config?: IReportLoadConfiguration | embed.IReportEmbedConfiguration): Promise<void> {
+    try {
+      const response = await this.service.hpm.post<void>(`/report/render`, config, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -121,18 +121,18 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * @returns {Promise<Page>}
    */
-  addPage(displayName?: string): Promise<Page> {
+  async addPage(displayName?: string): Promise<Page> {
     var request = {
       displayName: displayName
     };
 
-    return this.service.hpm.post<models.IPage>(`/report/addPage`, request, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        var page = response.body;
-        return new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
-      }, response => {
-        throw response.body;
-      });
+    try {
+      const response = await this.service.hpm.post<models.IPage>(`/report/addPage`, request, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      var page = response.body;
+      return new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -140,19 +140,42 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * ```javascript
    * // Delete a page from a report by pageName (PageName is different than the display name and can be acquired from the getPages API)
-   * report.deletePage("Sales145");
+   * report.deletePage("ReportSection145");
    * ```
    *
    * @returns {Promise<void>}
    */
-  deletePage(pageName?: string): Promise<void> {
-    return this.service.hpm.delete<models.IError[]>(`/report/pages/${pageName}`, {}, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+  async deletePage(pageName: string): Promise<void> {
+    try {
+      const response = await this.service.hpm.delete<void>(`/report/pages/${pageName}`, {}, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
+   * Rename a page from a report
+   *
+   * ```javascript
+   * // Rename a page from a report by changing displayName (pageName is different from the display name and can be acquired from the getPages API)
+   * report.renamePage("ReportSection145", "Sales");
+   * ```
+   *
+   * @returns {Promise<void>}
+   */
+  async renamePage(pageName: string, displayName: string): Promise<void> {
+    const page: models.IPage = {
+      name: pageName,
+      displayName,
+    };
+
+    try {
+      const response = await this.service.hpm.put<void>(`/report/pages/${pageName}/name`, page, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -168,16 +191,17 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * @returns {Promise<models.IFilter[]>}
    */
-  getFilters(): Promise<models.IFilter[]> {
+  async getFilters(): Promise<models.IFilter[]> {
     if (utils.isRDLEmbed(this.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
-    return this.service.hpm.get<models.IFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => response.body,
-        response => {
-          throw response.body;
-        });
+    try {
+      const response = await this.service.hpm.get<models.IFilter[]>(`/report/filters`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -186,7 +210,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {string}
    */
   getId(): string {
-    let config = <embed.IEmbedConfiguration>this.config;
+    let config = <embed.IReportEmbedConfiguration>this.config;
     const reportId = config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(config.embedUrl);
 
     if (typeof reportId !== 'string' || reportId.length === 0) {
@@ -208,20 +232,20 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * @returns {Promise<Page[]>}
    */
-  getPages(): Promise<Page[]> {
+  async getPages(): Promise<Page[]> {
     if (utils.isRDLEmbed(this.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
-    return this.service.hpm.get<models.IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body
-          .map(page => {
-            return new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
-          });
-      }, response => {
-        throw response.body;
-      });
+    try {
+      const response = await this.service.hpm.get<models.IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body
+        .map(page => {
+          return new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
+        });
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -233,15 +257,11 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * Note: Because you are creating the page manually there is no guarantee that the page actually exists in the report, and subsequent requests could fail.
    *
-   * ```javascript
-   * const page = report.page('ReportSection1');
-   * page.setActive();
-   * ```
-   *
    * @param {string} name
    * @param {string} [displayName]
    * @param {boolean} [isActive]
    * @returns {Page}
+   * @hidden
    */
   page(name: string, displayName?: string, isActive?: boolean, visibility?: models.SectionVisibility): Page {
     return new Page(this, name, displayName, isActive, visibility);
@@ -250,18 +270,17 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   /**
    * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
    */
-  print(): Promise<void> {
+  async print(): Promise<void> {
     if (utils.isRDLEmbed(this.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
-    return this.service.hpm.post<models.IError[]>('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+    try {
+      const response = await this.service.hpm.post<void>('/report/print', null, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -271,14 +290,14 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * report.removeFilters();
    * ```
    *
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  removeFilters(): Promise<void> {
+  async removeFilters(): Promise<IHttpPostMessageResponse<void>> {
     if (utils.isRDLEmbed(this.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
-    return this.setFilters([]);
+    return await this.setFilters([]);
   }
 
   /**
@@ -290,9 +309,9 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * ```
    *
    * @param {string} pageName
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  setPage(pageName: string): Promise<void> {
+  async setPage(pageName: string): Promise<IHttpPostMessageResponse<void>> {
     if (utils.isRDLEmbed(this.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
@@ -303,10 +322,11 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
       isActive: true
     };
 
-    return this.service.hpm.put<models.IError[]>('/report/pages/active', page, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+    try {
+      return await this.service.hpm.put<void>('/report/pages/active', page, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -324,18 +344,18 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * ```
    *
    * @param {(models.IFilter[])} filters
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  setFilters(filters: models.IFilter[]): Promise<void> {
+  async setFilters(filters: models.IFilter[]): Promise<IHttpPostMessageResponse<void>> {
     if (utils.isRDLEmbed(this.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
-
-    return this.service.hpm.put<models.IError[]>(`/report/filters`, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+    try {
+      return await this.service.hpm.put<void>(`/report/filters`, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -352,17 +372,18 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * ```
    *
    * @param {models.ISettings} settings
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  updateSettings(settings: models.ISettings): Promise<void> {
+  async updateSettings(settings: models.ISettings): Promise<IHttpPostMessageResponse<void>> {
     if (utils.isRDLEmbed(this.config.embedUrl) && settings.customLayout != null) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
-    return this.service.hpm.patch<models.IError[]>('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+    try {
+      return await this.service.hpm.patch<void>('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -380,7 +401,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * @returns {void}
    */
   configChanged(isBootstrap: boolean): void {
-    let config = <embed.IEmbedConfiguration>this.config;
+    let config = <embed.IReportEmbedConfiguration>this.config;
 
     if (this.isMobileSettings(config.settings))
       config.embedUrl = utils.addParamToUrl(config.embedUrl, "isMobile", "true");
@@ -417,7 +438,7 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * @returns {Promise<void>}
    */
-  switchMode(viewMode: models.ViewMode | string): Promise<void> {
+  async switchMode(viewMode: models.ViewMode | string): Promise<void> {
     let newMode: string;
     if (typeof viewMode === "string") {
       newMode = viewMode;
@@ -427,13 +448,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     }
 
     let url = '/report/switchMode/' + newMode;
-    return this.service.hpm.post<models.IError[]>(url, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+    try {
+      const response = await this.service.hpm.post<void>(url, null, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -443,14 +463,13 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   * report.refresh();
   * ```
   */
-  refresh(): Promise<void> {
-    return this.service.hpm.post<models.IError[]>('/report/refresh', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+  async refresh(): Promise<void> {
+    try {
+      const response = await this.service.hpm.post<void>('/report/refresh', null, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -462,12 +481,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    *
    * @returns {Promise<boolean>}
    */
-  isSaved(): Promise<boolean> {
+  async isSaved(): Promise<boolean> {
     if (utils.isRDLEmbed(this.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
-    return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
+    return await utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
   }
 
   /**
@@ -477,12 +496,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
    * report.applyTheme(theme);
    * ```
    */
-  applyTheme(theme: models.IReportTheme): Promise<void> {
+  async applyTheme(theme: models.IReportTheme): Promise<void> {
     if (utils.isRDLEmbed(this.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
-    return this.applyThemeInternal(theme);
+    return await this.applyThemeInternal(theme);
   }
 
   /**
@@ -492,12 +511,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   * report.resetTheme();
   * ```
   */
-  resetTheme(): Promise<void> {
+  async resetTheme(): Promise<void> {
     if (utils.isRDLEmbed(this.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
-    return this.applyThemeInternal(<models.IReportTheme>{});
+    return await this.applyThemeInternal(<models.IReportTheme>{});
   }
 
   /**
@@ -507,11 +526,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   * report.resetPersistentFilters();
   * ```
   */
-  resetPersistentFilters(): Promise<void> {
-    return this.service.hpm.delete<models.IError[]>(`/report/userState`, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+  async resetPersistentFilters(): Promise<IHttpPostMessageResponse<void>> {
+    try {
+      return await this.service.hpm.delete<void>(`/report/userState`, null, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -521,11 +541,12 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
   * report.savePersistentFilters();
   * ```
   */
-  savePersistentFilters(): Promise<void> {
-    return this.service.hpm.post<models.IError[]>(`/report/userState`, null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+  async savePersistentFilters(): Promise<IHttpPostMessageResponse<void>> {
+    try {
+      return await this.service.hpm.post<void>(`/report/userState`, null, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -538,25 +559,25 @@ export class Report extends embed.Embed implements IReportNode, IFilterable {
     *
     * @returns {Promise<boolean>}
     */
-  arePersistentFiltersApplied(): Promise<boolean> {
-    return this.service.hpm.get<boolean>(`/report/isUserStateApplied`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => response.body,
-        response => {
-          throw response.body;
-        });
+  async arePersistentFiltersApplied(): Promise<boolean> {
+    try {
+      const response = await this.service.hpm.get<boolean>(`/report/isUserStateApplied`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
    * @hidden
    */
-  private applyThemeInternal(theme: models.IReportTheme): Promise<void> {
-    return this.service.hpm.put<models.IError[]>('/report/theme', theme, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+  private async applyThemeInternal(theme: models.IReportTheme): Promise<void> {
+    try {
+      const response = await this.service.hpm.put<void>('/report/theme', theme, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**

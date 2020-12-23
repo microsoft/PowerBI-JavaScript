@@ -12,10 +12,10 @@ module.exports = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.ts', '.js']
+    extensions: ['.webpack.js', '.web.js', '.ts', '.js']
   },
   module: {
-    loaders: [
+    rules: [
       { test: /\.map$/, loader: 'ignore-loader' },
       { test: /\.d.ts$/, loader: 'ignore-loader' },
       { test: /\.ts$/, exclude: /\.d.ts$/, loader: 'ts-loader' },

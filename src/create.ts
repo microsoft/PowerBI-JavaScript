@@ -14,7 +14,7 @@ export class Create extends embed.Embed {
   /*
    * @hidden
    */
-  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean, isBootstrap?: boolean) {
+  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration | models.IReportCreateConfiguration, phasedRender?: boolean, isBootstrap?: boolean) {
     super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
   }
 
@@ -51,7 +51,7 @@ export class Create extends embed.Embed {
       return;
     }
 
-    const config = <embed.IEmbedConfiguration>this.config;
+    const config = <embed.IEmbedConfiguration | models.IReportCreateConfiguration>this.config;
 
     this.createConfig = {
         accessToken: config.accessToken,
@@ -80,8 +80,8 @@ export class Create extends embed.Embed {
    *
    * @returns {Promise<boolean>}
    */
-  isSaved(): Promise<boolean> {
-    return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
+  async isSaved(): Promise<boolean> {
+    return await utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
   }
 
   /**

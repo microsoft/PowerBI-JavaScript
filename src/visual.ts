@@ -3,6 +3,8 @@ import * as embed from './embed';
 import * as models from 'powerbi-models';
 import { Report } from './report'
 import { Page } from './page';
+import { VisualDescriptor } from './visualDescriptor';
+import { IHttpPostMessageResponse } from 'http-post-message';
 
 /**
  * The Power BI Visual embed component
@@ -105,10 +107,46 @@ export class Visual extends Report {
    * Sets the active page of the report - not supported in visual embed.
    *
    * @param {string} pageName
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  setPage(pageName: string): Promise<void> {
+  setPage(pageName: string): Promise<IHttpPostMessageResponse<void>> {
     throw Visual.SetPageNotSupportedError;
+  }
+
+  /**
+   * Gets the embedded visual descriptor object that contains the visual name, type, etc.
+   *
+   * ```javascript
+   * visual.getVisualDescriptor()
+   *   .then(visualDetails => { ... });
+   * ```
+   *
+   * @returns {Promise<VisualDescriptor>}
+   */
+  async getVisualDescriptor(): Promise<VisualDescriptor> {
+    const config = <embed.IVisualEmbedConfiguration>this.config;
+
+    try {
+      const response = await this.service.hpm.get<models.IVisual[]>(`/report/pages/${config.pageName}/visuals`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      // Find the embedded visual from visuals of this page
+      // TODO: Use the Array.find method when ES6 is available
+      const embeddedVisuals = response.body.filter(pageVisual => pageVisual.name === config.visualName);
+
+      if (embeddedVisuals.length === 0) {
+        const visualNotFoundError: models.IError = {
+          message: "visualNotFound",
+          detailedMessage: "Visual not found"
+        };
+
+        throw visualNotFoundError;
+      }
+
+      const embeddedVisual = embeddedVisuals[0];
+      const currentPage = this.page(config.pageName);
+      return new VisualDescriptor(currentPage, embeddedVisual.name, embeddedVisual.title, embeddedVisual.type, embeddedVisual.layout);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -124,13 +162,14 @@ export class Visual extends Report {
    *
    * @returns {Promise<models.IFilter[]>}
    */
-  getFilters(filtersLevel?: models.FiltersLevel): Promise<models.IFilter[]> {
+  async getFilters(filtersLevel?: models.FiltersLevel): Promise<models.IFilter[]> {
     const url: string = this.getFiltersLevelUrl(filtersLevel);
-    return this.service.hpm.get<models.IFilter[]>(url, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => response.body,
-      response => {
-        throw response.body;
-      });
+    try {
+      const response = await this.service.hpm.get<models.IFilter[]>(url, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -149,14 +188,15 @@ export class Visual extends Report {
    * ```
    *
    * @param {(models.IFilter[])} filters
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  setFilters(filters: models.IFilter[], filtersLevel?: models.FiltersLevel): Promise<void> {
+  async setFilters(filters: models.IFilter[], filtersLevel?: models.FiltersLevel): Promise<IHttpPostMessageResponse<void>> {
     const url: string = this.getFiltersLevelUrl(filtersLevel);
-    return this.service.hpm.put<models.IError[]>(url, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+    try {
+      return await this.service.hpm.put<void>(url, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -167,10 +207,10 @@ export class Visual extends Report {
    * visual.removeFilters(filtersLevel);
    * ```
    *
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  removeFilters(filtersLevel?: models.FiltersLevel): Promise<void> {
-    return this.setFilters([], filtersLevel);
+  async removeFilters(filtersLevel?: models.FiltersLevel): Promise<IHttpPostMessageResponse<void>> {
+    return await this.setFilters([], filtersLevel);
   }
 
   /**

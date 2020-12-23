@@ -1,6 +1,7 @@
 import * as service from './service';
 import * as models from 'powerbi-models';
 import * as embed from './embed';
+import { IHttpPostMessageResponse } from 'http-post-message';
 
 /**
  * The Power BI Q&A embed component
@@ -38,18 +39,19 @@ export class Qna extends embed.Embed {
     /**
      * Change the question of the Q&A embed component
      *
-     * @param question - question which will render Q&A data
-     * @returns {string}
+     * @param {string} question - question which will render Q&A data
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
      */
-    setQuestion(question: string): Promise<void> {
+    async setQuestion(question: string): Promise<IHttpPostMessageResponse<void>> {
       const qnaData: models.IQnaInterpretInputData = {
         question: question
       };
 
-      return this.service.hpm.post<models.IError[]>('/qna/interpret', qnaData, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-        .catch(response => {
-          throw response.body;
-        });
+      try {
+        return await this.service.hpm.post<void>('/qna/interpret', qnaData, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      } catch (response) {
+        throw response.body;
+      }
     }
 
     /**

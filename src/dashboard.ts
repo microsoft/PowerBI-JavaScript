@@ -21,7 +21,6 @@ export interface IDashboardNode {
  * @class Dashboard
  * @extends {embed.Embed}
  * @implements {IDashboardNode}
- * @implements {IFilterable}
  */
 export class Dashboard extends embed.Embed implements IDashboardNode {
     /** @hidden */  
@@ -76,7 +75,7 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
      * @returns {string}
      */
     getId(): string {
-        let config = <embed.IEmbedConfiguration>this.config;
+        let config = <embed.IDashboardEmbedConfiguration>this.config;
         const dashboardId = config.id || this.element.getAttribute(Dashboard.dashboardIdAttribute) || Dashboard.findIdFromEmbedUrl(config.embedUrl);
 
         if (typeof dashboardId !== 'string' || dashboardId.length === 0) {
@@ -92,7 +91,7 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
      * @hidden
      */
     validate(baseConfig: embed.IEmbedConfigurationBase): models.IError[] {
-      const config = baseConfig as embed.IEmbedConfiguration;
+      const config = baseConfig as embed.IDashboardEmbedConfiguration;
       let error = models.validateDashboardLoad(config);
       return error ? error : this.ValidatePageView(config.pageView);
     }
@@ -108,7 +107,7 @@ export class Dashboard extends embed.Embed implements IDashboardNode {
       }
 
       // Populate dashboard id into config object.
-      (<embed.IEmbedConfiguration>this.config).id = this.getId();
+      (<embed.IDashboardEmbedConfiguration>this.config).id = this.getId();
     }
 
     /**

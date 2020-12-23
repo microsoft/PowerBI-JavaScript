@@ -11,6 +11,9 @@ declare global {
 
     // Ms Fullscreen
     msExitFullscreen: any;
+
+    // Safari Fullscreen
+    webkitExitFullscreen: void;
   }
 
   interface HTMLIFrameElement {
@@ -19,91 +22,34 @@ declare global {
 
     // Ms Fullscreen
     msRequestFullscreen: Function;
+
+    // Safari Fullscreen
+    webkitRequestFullscreen: {(): void};
   }
 }
 
-/**
- * Prepare configuration for Power BI embed components.
- *
- * @export
- * @interface IBootstrapEmbedConfiguration
- */
-export interface IBootstrapEmbedConfiguration {
-  hostname?: string;
-  embedUrl?: string;
-  settings?: ISettings;
-  uniqueId?: string;
-  type?: string;
-  groupId?: string;
-  bootstrapped?: boolean;
-}
+export type IBootstrapEmbedConfiguration = models.IBootstrapEmbedConfiguration;
 
-/**
- * Base Configuration settings for Power BI embed components
- *
- * @export
- * @interface IEmbedConfigurationBase
- * @extends IBootstrapEmbedConfiguration
- */
-export interface IEmbedConfigurationBase extends IBootstrapEmbedConfiguration {
-  accessToken?: string;
-  tokenType?: models.TokenType;
-}
+export type IEmbedConfigurationBase = models.IEmbedConfigurationBase;
 
 // TODO: Re-use ILoadConfiguration interface to prevent duplicating properties.
-// Current issue is that they are optional when embedding since they can be specificed as attributes but they are required when loading.
-/**
- * Configuration settings for Power BI embed components
- *
- * @export
- * @interface IEmbedConfiguration
- */
-export interface IEmbedConfiguration extends IEmbedConfigurationBase {
-  id?: string;
-  settings?: IEmbedSettings;
-  pageName?: string;
-  filters?: models.IFilter[];
-  pageView?: models.PageView;
-  datasetId?: string;
-  permissions?: models.Permissions;
-  viewMode?: models.ViewMode;
-  action?: string;
-  dashboardId?: string;
-  height?: number;
-  width?: number;
-  theme?: models.IReportTheme;
-}
+export type IEmbedConfiguration = models.IEmbedConfiguration;
 
-export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
-  visualName: string;
-}
+export type IVisualEmbedConfiguration = models.IVisualEmbedConfiguration;
 
-/**
- * Configuration settings for Power BI Q&A embed component
- *
- * @export
- * @interface IEmbedConfiguration
- */
-export interface IQnaEmbedConfiguration extends IEmbedConfigurationBase {
-  datasetIds: string[];
-  question?: string;
-  viewMode?: models.QnaMode;
-}
+export type IReportEmbedConfiguration = models.IReportEmbedConfiguration;
 
-export interface ILocaleSettings {
-  language?: string;
-  formatLocale?: string;
-}
+export type IDashboardEmbedConfiguration = models.IDashboardEmbedConfiguration ;
 
-export interface ISettings {
-  localeSettings?: ILocaleSettings;
-}
+export type ITileEmbedConfiguration = models.ITileEmbedConfiguration;
 
-export interface IEmbedSettings extends models.ISettings, ISettings {
-}
+export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
 
-export interface IQnaSettings extends models.IQnaSettings, ISettings {
-}
+export type ILocaleSettings = models.ILocaleSettings;
+
+export type IQnaSettings = models.IQnaSettings;
+
+export type IEmbedSettings = models.ISettings;
 
 /** @hidden */
 export interface IInternalEventHandler<T> {
@@ -283,19 +229,18 @@ export abstract class Embed {
    * @param {models.IReportCreateConfiguration} config
    * @returns {Promise<void>}
    */
-  createReport(config: models.IReportCreateConfiguration): Promise<void> {
+  async createReport(config: models.IReportCreateConfiguration): Promise<void> {
     const errors = models.validateCreateReport(config);
     if (errors) {
       throw errors;
     }
 
-    return this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      },
-        response => {
-          throw response.body;
-        });
+    try {
+      const response = await this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -303,14 +248,13 @@ export abstract class Embed {
    *
    * @returns {Promise<void>}
    */
-  save(): Promise<void> {
-    return this.service.hpm.post<models.IError[]>('/report/save', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+  async save(): Promise<void> {
+    try {
+      const response = await this.service.hpm.post<void>('/report/save', null, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -318,14 +262,13 @@ export abstract class Embed {
    *
    * @returns {Promise<void>}
    */
-  saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void> {
-    return this.service.hpm.post<models.IError[]>('/report/saveAs', saveAsParameters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+  async saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void> {
+    try {
+      const response = await this.service.hpm.post<void>('/report/saveAs', saveAsParameters, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -341,12 +284,13 @@ export abstract class Embed {
    *
    * @returns {Promise<string>}
    */
-  getCorrelationId(): Promise<string> {
-    return this.service.hpm.get<string>(`/getCorrelationId`, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => response.body,
-        response => {
-          throw response.body;
-        });
+  async getCorrelationId(): Promise<string> {
+    try {
+      const response = await this.service.hpm.get<string>(`/getCorrelationId`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -374,7 +318,7 @@ export abstract class Embed {
    * @param {boolean} phasedRender
    * @returns {Promise<void>}
    */
-  load(phasedRender?: boolean): Promise<void> {
+  async load(phasedRender?: boolean): Promise<void> {
     if (!this.config.accessToken) {
       console.debug("Power BI SDK iframe is loaded but powerbi.embed is not called yet.");
       return;
@@ -401,13 +345,12 @@ export abstract class Embed {
 
     this.lastLoadRequest = timeNow;
 
-    return this.service.hpm.post<void>(path, this.config, headers, this.iframe.contentWindow)
-      .then(response => {
-        return response.body;
-      },
-        response => {
-          throw response.body;
-        });
+    try {
+      const response = await this.service.hpm.post<void>(path, this.config, headers, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -483,8 +426,8 @@ export abstract class Embed {
    * report.reload();
    * ```
    */
-  reload(): Promise<void> {
-    return this.load();
+  async reload(): Promise<void> {
+    return await this.load();
   }
 
   /**
@@ -492,19 +435,19 @@ export abstract class Embed {
    *
    * @returns {Promise<void>}
    */
-  setAccessToken(accessToken: string): Promise<void> {
+  async setAccessToken(accessToken: string): Promise<void> {
     var embedType = this.config.type;
     embedType = (embedType === 'create' || embedType === 'visual' || embedType === 'qna') ? 'report' : embedType;
-    return this.service.hpm.post<models.IError[]>('/' + embedType + '/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => {
-        this.config.accessToken = accessToken;
-        this.element.setAttribute(Embed.accessTokenAttribute, accessToken);
-        this.service.accessToken = accessToken;
-        return response.body;
-      })
-      .catch(response => {
-        throw response.body;
-      });
+    try {
+      const response = await this.service.hpm.post<void>('/' + embedType + '/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+
+      this.config.accessToken = accessToken;
+      this.element.setAttribute(Embed.accessTokenAttribute, accessToken);
+      this.service.accessToken = accessToken;
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -566,10 +509,10 @@ export abstract class Embed {
    * Adds locale parameters to embedUrl
    *
    * @private
-   * @param {IEmbedConfiguration} config
+   * @param {IEmbedConfiguration | models.ICommonEmbedConfiguration} config
    * @hidden
    */
-  private addLocaleToEmbedUrl(config: IEmbedConfiguration): void {
+  private addLocaleToEmbedUrl(config: IEmbedConfiguration | models.ICommonEmbedConfiguration): void {
     if (!config.settings) {
       return;
     }
@@ -827,7 +770,7 @@ export abstract class Embed {
    * Sends the config for front load calls, after 'ready' message is received from the iframe
    * @hidden
    */
-  private frontLoadSendConfig(config: IEmbedConfigurationBase): Promise<void> {
+  private async frontLoadSendConfig(config: IEmbedConfigurationBase): Promise<void> {
     if (!config.accessToken) {
       return;
     }
@@ -841,11 +784,11 @@ export abstract class Embed {
     if (this.iframe.contentWindow == null)
       return;
 
-    return this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow).then(response => {
+    try {
+      const response = await this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow);
       return response.body;
-    },
-      response => {
-        throw response.body;
-      });
+    } catch (response) {
+      throw response.body;
+    }
   }
 }
