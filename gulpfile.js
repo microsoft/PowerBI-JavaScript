@@ -3,7 +3,6 @@ var ghPages = require('gulp-gh-pages'),
   header = require('gulp-header'),
   help = require('gulp-help-four'),
   rename = require('gulp-rename'),
-  uglify = require('gulp-uglify'),
   replace = require('gulp-replace'),
   tslint = require("gulp-tslint"),
   ts = require('gulp-typescript'),
@@ -165,9 +164,6 @@ gulp.task('min:js', 'Creates minified JavaScript file', function () {
     }))
     .pipe(rename({
       suffix: '.min'
-    }))
-    .pipe(uglify({
-      preserveComments: 'license'
     }))
     .pipe(gulp.dest('dist/'));
 });

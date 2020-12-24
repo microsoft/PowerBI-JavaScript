@@ -1,6 +1,6 @@
 {
   "name": "powerbi-client",
-  "version": "2.16.1",
+  "version": "2.16.2",
   "description": "JavaScript library for embedding Power BI into your apps. Provides service which makes it easy to embed different types of components and an object model which allows easy interaction with these components such as changing pages, applying filters, and responding to data selection.",
   "main": "dist/powerbi.js",
   "types": "dist/powerbi-client.d.ts",
@@ -48,7 +48,6 @@
     "gulp-tslint": "^7.1.0",
     "gulp-typedoc": "^2.0.0",
     "gulp-typescript": "^4.0.1",
-    "gulp-uglify": "^1.5.1",
     "gulp4-run-sequence": "^1.0.0",
     "http-server": "^0.12.1",
     "ignore-loader": "^0.1.1",
