@@ -1,4 +1,4 @@
-/*! powerbi-client v2.16.3 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.16.4 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -5864,7 +5864,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.16.3',
+    version: '2.16.4',
     type: 'js'
 };
 exports.default = config;
@@ -5883,7 +5883,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -6050,7 +6050,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -6888,7 +6888,7 @@ var config_1 = __webpack_require__(/*! ./config */ "./src/config.ts");
 var wpmp = __webpack_require__(/*! window-post-message-proxy */ "./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js");
 var hpm = __webpack_require__(/*! http-post-message */ "./node_modules/http-post-message/dist/httpPostMessage.js");
 var router = __webpack_require__(/*! powerbi-router */ "./node_modules/powerbi-router/dist/router.js");
-exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
+var hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
     if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
     if (sdkType === void 0) { sdkType = config_1.default.type; }
     return new hpm.HttpPostMessage(wpmp, {
@@ -6896,7 +6896,8 @@ exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
         'x-sdk-version': sdkVersion
     }, defaultTargetWindow);
 };
-exports.wpmpFactory = function (name, logMessages, eventSourceOverrideWindow) {
+exports.hpmFactory = hpmFactory;
+var wpmpFactory = function (name, logMessages, eventSourceOverrideWindow) {
     return new wpmp.WindowPostMessageProxy({
         processTrackingProperties: {
             addTrackingProperties: hpm.HttpPostMessage.addTrackingProperties,
@@ -6909,9 +6910,11 @@ exports.wpmpFactory = function (name, logMessages, eventSourceOverrideWindow) {
         eventSourceOverrideWindow: eventSourceOverrideWindow
     });
 };
-exports.routerFactory = function (wpmp) {
+exports.wpmpFactory = wpmpFactory;
+var routerFactory = function (wpmp) {
     return new router.Router(wpmp);
 };
+exports.routerFactory = routerFactory;
 
 
 /***/ }),
@@ -7251,7 +7254,7 @@ exports.Page = Page;
 /***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.models = exports.factories = exports.service = void 0;
+exports.VisualDescriptor = exports.Visual = exports.Qna = exports.Page = exports.Embed = exports.Tile = exports.Dashboard = exports.Report = exports.models = exports.factories = exports.service = void 0;
 /**
  * @hidden
  */
@@ -7299,7 +7302,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -7446,7 +7449,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -8716,7 +8719,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -9094,7 +9097,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {

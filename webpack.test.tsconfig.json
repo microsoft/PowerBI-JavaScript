@@ -9,7 +9,6 @@
     "demo",
     "dist",
     "docs",
-    "test",
     "tmp",
     ".publish"
   ]
