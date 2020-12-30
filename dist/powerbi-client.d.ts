@@ -1,4 +1,4 @@
-/*! powerbi-client v2.16.4 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.16.5 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**

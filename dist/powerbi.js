@@ -1,4 +1,4 @@
-/*! powerbi-client v2.16.4 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.16.5 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -288,12 +288,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/*! powerbi-models v1.7.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-models v1.7.1 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
 		module.exports = factory();
 	else {}
-})(window, function() {
+})(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -5864,7 +5864,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.16.4',
+    version: '2.16.5',
     type: 'js'
 };
 exports.default = config;
