@@ -5,6 +5,7 @@ module.exports = {
     'powerbi': './src/powerbi-client.ts'
   },
   output: {
+    globalObject: "this",
     path: __dirname + "/dist",
     filename: '[name].js',
     library: package.name,

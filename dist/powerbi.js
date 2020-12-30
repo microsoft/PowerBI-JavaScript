@@ -1,4 +1,4 @@
-/*! powerbi-client v2.16.2 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.16.3 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -8,7 +8,7 @@
 		exports["powerbi-client"] = factory();
 	else
 		root["powerbi-client"] = factory();
-})(window, function() {
+})(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -5864,7 +5864,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.16.2',
+    version: '2.16.3',
     type: 'js'
 };
 exports.default = config;
