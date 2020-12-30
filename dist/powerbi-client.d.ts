@@ -655,9 +655,9 @@ declare module "visualDescriptor" {
          *  .then(data => { ... });
          * ```
          *
-         * @returns {(Promise<models.ExportDataType>)}
+         * @returns {(Promise<models.IExportDataResult>)}
          */
-        exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<models.ExportDataType>;
+        exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<models.IExportDataResult>;
         /**
          * Set slicer state.
          * Works only for visuals of type slicer.

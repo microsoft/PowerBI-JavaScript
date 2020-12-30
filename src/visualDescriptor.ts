@@ -132,16 +132,16 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    *  .then(data => { ... });
    * ```
    *
-   * @returns {(Promise<models.ExportDataType>)}
+   * @returns {(Promise<models.IExportDataResult>)}
    */
-  async exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<models.ExportDataType> {
-    let exportDataRequestBody: models.IExportDataRequest = {
+  async exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<models.IExportDataResult> {
+    const exportDataRequestBody: models.IExportDataRequest = {
       rows: rows,
       exportDataType: exportDataType
     };
 
     try {
-      const response = await this.page.report.service.hpm.post<models.ExportDataType>(`/report/pages/${this.page.name}/visuals/${this.name}/exportData`, exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow);
+      const response = await this.page.report.service.hpm.post<models.IExportDataResult>(`/report/pages/${this.page.name}/visuals/${this.name}/exportData`, exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow);
       return response.body;
     } catch (response) {
       throw response.body;

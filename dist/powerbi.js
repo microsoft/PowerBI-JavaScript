@@ -9560,7 +9560,7 @@ var VisualDescriptor = /** @class */ (function () {
      *  .then(data => { ... });
      * ```
      *
-     * @returns {(Promise<models.ExportDataType>)}
+     * @returns {(Promise<models.IExportDataResult>)}
      */
     VisualDescriptor.prototype.exportData = function (exportDataType, rows) {
         return __awaiter(this, void 0, void 0, function () {
