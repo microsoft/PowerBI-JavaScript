@@ -1,10 +1,21 @@
 import { IHttpPostMessageResponse } from 'http-post-message';
+import {
+  DisplayOption,
+  FiltersOperations,
+  ICustomPageSize,
+  IFilter,
+  IPage,
+  IUpdateFiltersRequest,
+  IVisual,
+  LayoutType,
+  PageLevelFilters,
+  SectionVisibility
+} from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
 import { VisualDescriptor } from './visualDescriptor';
-import * as models from 'powerbi-models';
-import * as utils from './util';
-import * as errors from './errors';
+import { isRDLEmbed } from './util';
+import { APINotSupportedForRDLError } from './errors';
 
 /**
  * A Page node within a report hierarchy
@@ -58,21 +69,23 @@ export class Page implements IPageNode, IFilterable {
    * 0 - Always Visible
    * 1 - Hidden in View Mode
    *
-   * @type {models.SectionVisibility}
+   * @type {SectionVisibility}
    */
-   visibility: models.SectionVisibility;
+  visibility: SectionVisibility;
 
   /**
    * Page size as saved in the report.
-   * @type {models.ICustomPageSize}
+   *
+   * @type {ICustomPageSize}
    */
-  defaultSize: models.ICustomPageSize;
+  defaultSize: ICustomPageSize;
 
   /**
    * Page display options as saved in the report.
-   * @type {models.ICustomPageSize}
+   *
+   * @type {ICustomPageSize}
    */
-  defaultDisplayOption: models.DisplayOption;
+  defaultDisplayOption: DisplayOption;
 
   /**
    * Creates an instance of a Power BI report page.
@@ -81,10 +94,10 @@ export class Page implements IPageNode, IFilterable {
    * @param {string} name
    * @param {string} [displayName]
    * @param {boolean} [isActivePage]
-   * @param {models.SectionVisibility} [visibility]
+   * @param {SectionVisibility} [visibility]
    * @hidden
    */
-  constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility, defaultSize?: models.ICustomPageSize, defaultDisplayOption?: models.DisplayOption) {
+  constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption) {
     this.report = report;
     this.name = name;
     this.displayName = displayName;
@@ -102,12 +115,68 @@ export class Page implements IPageNode, IFilterable {
    *  .then(filters => { ... });
    * ```
    *
-   * @returns {(Promise<models.IFilter[]>)}
+   * @returns {(Promise<IFilter[]>)}
    */
-  async getFilters(): Promise<models.IFilter[]> {
+  async getFilters(): Promise<IFilter[]> {
     try {
-      const response = await this.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.name}/filters`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+      const response = await this.report.service.hpm.get<IFilter[]>(`/report/pages/${this.name}/filters`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
       return response.body;
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
+   * Update the filters for the current page according to the operation: Add, replace all, replace by target or remove.
+   *
+   * ```javascript
+   * page.updateFilters(FiltersOperations.Add, filters)
+   *   .catch(errors => { ... });
+   * ```
+   *
+   * @param {(IFilter[])} filters
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async updateFilters(operation: FiltersOperations, filters?: IFilter[]): Promise<IHttpPostMessageResponse<void>> {
+    const updateFiltersRequest: IUpdateFiltersRequest = {
+      filtersOperation: operation,
+      filters: filters as PageLevelFilters[]
+    };
+
+    try {
+      return await this.report.service.hpm.post<void>(`/report/pages/${this.name}/filters`, updateFiltersRequest, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
+   * Removes all filters from this page of the report.
+   *
+   * ```javascript
+   * page.removeFilters();
+   * ```
+   *
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async removeFilters(): Promise<IHttpPostMessageResponse<void>> {
+    return await this.updateFilters(FiltersOperations.RemoveAll);
+  }
+
+  /**
+   * Sets all filters on the current page.
+   *
+   * ```javascript
+   * page.setFilters(filters)
+   *   .catch(errors => { ... });
+   * ```
+   *
+   * @param {(IFilter[])} filters
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async setFilters(filters: IFilter[]): Promise<IHttpPostMessageResponse<void>> {
+    try {
+      return await this.report.service.hpm.put<void>(`/report/pages/${this.name}/filters`, filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
     } catch (response) {
       throw response.body;
     }
@@ -125,24 +194,11 @@ export class Page implements IPageNode, IFilterable {
    */
   async delete(): Promise<void> {
     try {
-      const response = await this.report.service.hpm.delete<void>(`/report/pages/${this.name}`, { }, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+      const response = await this.report.service.hpm.delete<void>(`/report/pages/${this.name}`, {}, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
       return response.body;
     } catch (response) {
       throw response.body;
     }
-  }
-
-  /**
-   * Removes all filters from this page of the report.
-   *
-   * ```javascript
-   * page.removeFilters();
-   * ```
-   *
-   * @returns {Promise<IHttpPostMessageResponse<void>>}
-   */
-  async removeFilters(): Promise<IHttpPostMessageResponse<void>> {
-    return await this.setFilters([]);
   }
 
   /**
@@ -155,7 +211,7 @@ export class Page implements IPageNode, IFilterable {
    * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
   async setActive(): Promise<IHttpPostMessageResponse<void>> {
-    const page: models.IPage = {
+    const page: IPage = {
       name: this.name,
       displayName: null,
       isActive: true
@@ -163,25 +219,6 @@ export class Page implements IPageNode, IFilterable {
 
     try {
       return await this.report.service.hpm.put<void>('/report/pages/active', page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
-    } catch (response) {
-      throw response.body;
-    }
-  }
-
-  /**
-   * Sets all filters on the current page.
-   *
-   * ```javascript
-   * page.setFilters(filters);
-   *   .catch(errors => { ... });
-   * ```
-   *
-   * @param {(models.IFilter[])} filters
-   * @returns {Promise<IHttpPostMessageResponse<void>>}
-   */
-  async setFilters(filters: models.IFilter[]): Promise<IHttpPostMessageResponse<void>> {
-    try {
-      return await this.report.service.hpm.put<void>(`/report/pages/${this.name}/filters`, filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
     } catch (response) {
       throw response.body;
     }
@@ -197,9 +234,9 @@ export class Page implements IPageNode, IFilterable {
    * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
   async setDisplayName(displayName: string): Promise<IHttpPostMessageResponse<void>> {
-    const page: models.IPage = {
+    const page: IPage = {
       name: this.name,
-      displayName,
+      displayName: displayName,
     };
 
     try {
@@ -220,19 +257,17 @@ export class Page implements IPageNode, IFilterable {
    * @returns {Promise<VisualDescriptor[]>}
    */
   async getVisuals(): Promise<VisualDescriptor[]> {
-    if (utils.isRDLEmbed(this.report.config.embedUrl)) {
-      return Promise.reject(errors.APINotSupportedForRDLError);
+    if (isRDLEmbed(this.report.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
     }
 
     try {
-      const response = await this.report.service.hpm.get<models.IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+      const response = await this.report.service.hpm.get<IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
       return response.body
-          .map(visual => {
-            return new VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout);
-          });
-      } catch (response) {
-        throw response.body;
-      }
+        .map(visual => new VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout));
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -246,11 +281,11 @@ export class Page implements IPageNode, IFilterable {
    * @returns {(Promise<boolean>)}
    */
   async hasLayout(layoutType): Promise<boolean> {
-    if (utils.isRDLEmbed(this.report.config.embedUrl)) {
-      return Promise.reject(errors.APINotSupportedForRDLError);
+    if (isRDLEmbed(this.report.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
     }
 
-    let layoutTypeEnum = models.LayoutType[layoutType];
+    const layoutTypeEnum = LayoutType[layoutType];
     try {
       const response = await this.report.service.hpm.get<boolean>(`/report/pages/${this.name}/layoutTypes/${layoutTypeEnum}`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
       return response.body;

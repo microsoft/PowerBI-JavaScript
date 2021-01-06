@@ -40,7 +40,7 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
   /**
    * Phase 1
    */
-  
+
   /**
    * Dashboard Embed
    */
@@ -58,13 +58,13 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
           }, error => {
             hpm.post(`/dashboards/${uniqueId}/events/error`, error);
           });
-          
+
         res.send(202);
       }, error => {
         res.send(400, error);
       });
   });
-  
+
   /**
    * Create Report
    */
@@ -208,6 +208,30 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
       });
   });
 
+  router.post('/report/filters', (req, res) => {
+    const uniqueId = req.headers['uid'];
+    const operation = req.body.filtersOperation
+    const filters = req.body.filters;
+
+    return Promise.all(filters ? filters.map(filter => app.validateFilter(filter)) : [Promise.resolve(null)])
+      .then(() => {
+        app.updateFilters(operation, filters)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post(`/reports/${uniqueId}/events/filtersApplied`, {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
+          });
+
+        res.send(202);
+      }, error => {
+        res.send(400, error);
+      });
+  });
+
   /**
    * Phase 3
    */
@@ -225,6 +249,36 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
           }, error => {
             res.send(500, error);
           });
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+
+  router.post('/report/pages/:pageName/filters', (req, res) => {
+    const pageName = req.params.pageName;
+    const uniqueId = req.headers['uid'];
+    const operation = req.body.filtersOperation
+    const filters = req.body.filters;
+    const page: models.IPage = {
+      name: pageName,
+      displayName: null
+    };
+
+    return app.validatePage(page)
+      .then(() => Promise.all(filters ? filters.map(filter => app.validateFilter(filter)) : [Promise.resolve(null)]))
+      .then(() => {
+        app.updateFilters(operation, filters)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filtersApplied`, {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
+          });
+
+        res.send(202);
       }, errors => {
         res.send(400, errors);
       });
@@ -279,6 +333,42 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
           }, error => {
             res.send(500, error);
           });
+      }, errors => {
+        res.send(400, errors);
+      });
+  });
+
+  router.post('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
+    const pageName = req.params.pageName;
+    const visualName = req.params.visualName;
+    const uniqueId = req.headers['uid'];
+    const operation = req.body.filtersOperation
+    const filters = req.body.filters; const page: models.IPage = {
+      name: pageName,
+      displayName: null
+    };
+    const visual: models.IVisual = {
+      name: visualName,
+      title: 'title',
+      type: 'type',
+      layout: {},
+    };
+
+    return app.validateVisual(page, visual)
+      .then(() => Promise.all(filters ? filters.map(filter => app.validateFilter(filter)) : [Promise.resolve(null)]))
+      .then(() => {
+        app.updateFilters(operation, filters)
+          .then(filter => {
+            const initiator = "sdk";
+            hpm.post(`/reports/${uniqueId}/pages/${pageName}/visuals/${visualName}/events/filtersApplied`, {
+              initiator,
+              filter
+            });
+          }, error => {
+            hpm.post(`/reports/${uniqueId}/events/error`, error);
+          });
+
+        res.send(202);
       }, errors => {
         res.send(400, errors);
       });
@@ -363,7 +453,7 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
     res.send(202);
   });
 
-   router.post('report/switchMode/Edit', (req, res) => {
+  router.post('report/switchMode/Edit', (req, res) => {
     app.switchMode();
     res.send(202);
   });
