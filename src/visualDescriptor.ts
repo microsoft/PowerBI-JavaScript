@@ -1,6 +1,7 @@
 import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 import { IPageNode } from './page';
+import { IHttpPostMessageResponse } from 'http-post-message';
 
 /**
  * A Visual node within a report hierarchy
@@ -46,7 +47,7 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
   type: string;
 
   /**
-   * The visual layout: position, size and visiblity.
+   * The visual layout: position, size and visibility.
    *
    * @type {string}
    */
@@ -80,12 +81,13 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    *
    * @returns {(Promise<models.IFilter[]>)}
    */
-  getFilters(): Promise<models.IFilter[]> {
-    return this.page.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.page.name}/visuals/${this.name}/filters`, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-      .then(response => response.body,
-        response => {
-          throw response.body;
-        });
+  async getFilters(): Promise<models.IFilter[]> {
+    try {
+      const response = await this.page.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.page.name}/visuals/${this.name}/filters`, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -95,10 +97,10 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    * visual.removeFilters();
    * ```
    *
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  removeFilters(): Promise<void> {
-    return this.setFilters([]);
+  async removeFilters(): Promise<IHttpPostMessageResponse<void>> {
+    return await this.setFilters([]);
   }
 
   /**
@@ -110,13 +112,14 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    * ```
    *
    * @param {(models.IFilter[])} filters
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  setFilters(filters: models.IFilter[]): Promise<void> {
-    return this.page.report.service.hpm.put<models.IError[]>(`/report/pages/${this.page.name}/visuals/${this.name}/filters`, filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+  async setFilters(filters: models.IFilter[]): Promise<IHttpPostMessageResponse<void>> {
+    try {
+      return await this.page.report.service.hpm.put<void>(`/report/pages/${this.page.name}/visuals/${this.name}/filters`, filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -129,19 +132,20 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    *  .then(data => { ... });
    * ```
    *
-   * @returns {(Promise<models.ExportDataType>)}
+   * @returns {(Promise<models.IExportDataResult>)}
    */
-  exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<models.ExportDataType> {
-    let exportDataRequestBody: models.IExportDataRequest = {
+  async exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<models.IExportDataResult> {
+    const exportDataRequestBody: models.IExportDataRequest = {
       rows: rows,
       exportDataType: exportDataType
     };
 
-    return this.page.report.service.hpm.post<models.ExportDataType>(`/report/pages/${this.page.name}/visuals/${this.name}/exportData`, exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-      .then(response => response.body,
-        response => {
-          throw response.body;
-        });
+    try {
+      const response = await this.page.report.service.hpm.post<models.IExportDataResult>(`/report/pages/${this.page.name}/visuals/${this.name}/exportData`, exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -153,11 +157,12 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    *  .then(() => { ... });
    * ```
    */
-  setSlicerState(state: models.ISlicerState): Promise<void> {
-    return this.page.report.service.hpm.put<models.IError[]>(`/report/pages/${this.page.name}/visuals/${this.name}/slicer`, state, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+  async setSlicerState(state: models.ISlicerState): Promise<IHttpPostMessageResponse<void>> {
+    try {
+      return await this.page.report.service.hpm.put<void>(`/report/pages/${this.page.name}/visuals/${this.name}/slicer`, state, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -171,12 +176,13 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    *
    * @returns {(Promise<models.ISlicerState>)}
    */
-  getSlicerState(): Promise<models.ISlicerState> {
-    return this.page.report.service.hpm.get<models.ISlicerState>(`/report/pages/${this.page.name}/visuals/${this.name}/slicer`, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-      .then(response => response.body,
-        response => {
-          throw response.body;
-        });
+  async getSlicerState(): Promise<models.ISlicerState> {
+    try {
+      const response = await this.page.report.service.hpm.get<models.ISlicerState>(`/report/pages/${this.page.name}/visuals/${this.name}/slicer`, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -184,12 +190,13 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    *
    * @returns {(Promise<models.ICloneVisualResponse>)}
    */
-  clone(request: models.ICloneVisualRequest = {}): Promise<models.ICloneVisualResponse> {
-    return this.page.report.service.hpm.post<models.ICloneVisualResponse>(`/report/pages/${this.page.name}/visuals/${this.name}/clone`, request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-      .then(response => response.body,
-        response => {
-          throw response.body;
-        });
+  async clone(request: models.ICloneVisualRequest = {}): Promise<models.ICloneVisualResponse> {
+    try {
+      const response = await this.page.report.service.hpm.post<models.ICloneVisualResponse>(`/report/pages/${this.page.name}/visuals/${this.name}/clone`, request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -202,10 +209,11 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
    *  .then(() => { ... });
    * ```
    */
-  sortBy(request: models.ISortByVisualRequest): Promise<void> {
-    return this.page.report.service.hpm.put<models.IError[]>(`/report/pages/${this.page.name}/visuals/${this.name}/sortBy`, request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+  async sortBy(request: models.ISortByVisualRequest): Promise<IHttpPostMessageResponse<void>> {
+    try {
+      return await this.page.report.service.hpm.put<void>(`/report/pages/${this.page.name}/visuals/${this.name}/sortBy`, request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 }

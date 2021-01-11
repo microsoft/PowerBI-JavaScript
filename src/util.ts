@@ -110,7 +110,7 @@ export function createRandomString(): string {
 }
 
 /**
- * Generates a 20 charachter uuid.
+ * Generates a 20 character uuid.
  * 
  * @export
  * @returns {string}
@@ -154,12 +154,13 @@ export function addParamToUrl(url: string, paramName: string, value: string): st
  * @param {Window} contentWindow
  * @returns {Promise<boolean>}
  */
-export function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow: Window): Promise<boolean> {
-  return hpm.get<boolean>('/report/hasUnsavedChanges', { uid }, contentWindow)
-    .then(response => !response.body,
-      response => {
-        throw response.body;
-      });
+export async function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow: Window): Promise<boolean> {
+  try {
+    const response = await hpm.get<boolean>('/report/hasUnsavedChanges', { uid }, contentWindow);
+    return !response.body;
+  } catch (response) {
+    throw response.body;
+  }
 }
 
 /**

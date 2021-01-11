@@ -1178,7 +1178,7 @@ describe('embed', function () {
       var report = powerbi.get($container[0]);
       report.fullscreen();
 
-      expect(document.webkitFullscreenElement === $iframe[0]);
+      expect(document["webkitFullscreenElement"] === $iframe[0]);
     });
   });
 
@@ -1188,7 +1188,7 @@ describe('embed', function () {
       report.fullscreen();
       report.exitFullscreen();
 
-      expect(document.webkitFullscreenElement !== $iframe[0]);
+      expect(document["webkitFullscreenElement"] !== $iframe[0]);
     });
   });
 });
@@ -1656,6 +1656,7 @@ describe('Protocol', function () {
                 // Assert
                 expect(spyApp.getPages).toHaveBeenCalled();
                 const pages = response.body;
+                // @ts-ignore as testData is not of type IFilter
                 expect(pages).toEqual(testData.expectedPages);
                 // Cleanup
                 spyApp.getPages.calls.reset();
@@ -1969,6 +1970,7 @@ describe('Protocol', function () {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
                 expect(response.statusCode).toEqual(200);
+                // @ts-ignore as testData is not of type IFilter
                 expect(response.body).toEqual(testData.filters);
                 // Cleanup
                 spyApp.getFilters.calls.reset();
@@ -2121,6 +2123,7 @@ describe('Protocol', function () {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
                 expect(response.statusCode).toEqual(200);
+                // @ts-ignore as testData is not of type IFilter
                 expect(response.body).toEqual(testData.filters);
                 // Cleanup
                 spyApp.getFilters.calls.reset();
@@ -2277,6 +2280,7 @@ describe('Protocol', function () {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
                 expect(response.statusCode).toEqual(200);
+                // @ts-ignore as testData is not of type IFilter
                 expect(response.body).toEqual(testData.filters);
                 // Cleanup
                 spyApp.getFilters.calls.reset();
@@ -3192,6 +3196,61 @@ describe('SDK-to-HPM', function () {
         // Assert
         expect(attempt).toThrow(visual.Visual.SetPageNotSupportedError);
       });
+
+      describe('getVisualDescriptor', function () {
+        it('embeddedVisual.getVisualDescriptor() sends GET /report/pages/xyz/visuals', function () {
+          // Arrange
+  
+          // Act
+          embeddedVisual.getVisualDescriptor();
+  
+          // Assert
+          expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/ReportSection1/visuals`, { uid: visualUniqueId }, visualFrame.contentWindow);
+        });
+  
+        it('embeddedVisual.getVisualDescriptor() returns promise that rejects with server error if there was error getting visual details', function (done) {
+          // Arrange
+          const testData = {
+            expectedError: {
+              body: {
+                message: 'internal server error'
+              }
+            }
+          };
+  
+          spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+  
+          // Act
+          embeddedVisual.getVisualDescriptor()
+            .catch(error => {
+              // Assert
+              expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/ReportSection1/visuals`, { uid: visualUniqueId }, visualFrame.contentWindow);
+              expect(error).toEqual(testData.expectedError.body);
+              done();
+            });
+        });
+  
+        it('embeddedVisual.getVisualDescriptor() returns promise that resolves with visual details', function (done) {
+          // Arrange
+          const fakeVisualDescriptor = new visualDescriptor.VisualDescriptor(page1, visualEmbedConfiguration.visualName, 'title', 'type', {});
+          const testData = {
+            expectedResponse: {
+              body: [fakeVisualDescriptor]
+            }
+          };
+
+          spyHpm.get.and.returnValue(Promise.resolve(testData.expectedResponse));
+
+          // Act
+          embeddedVisual.getVisualDescriptor()
+            .then(visualDescriptor => {
+              // Assert
+              expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/ReportSection1/visuals`, { uid: visualUniqueId }, visualFrame.contentWindow);
+              expect(visualDescriptor.name).toEqual(fakeVisualDescriptor.name);
+              done();
+            });
+        });
+      });
     });
 
     describe('pages', function () {
@@ -3283,7 +3342,25 @@ describe('SDK-to-HPM', function () {
         expect(spyHpm.post).toHaveBeenCalledWith('/report/addPage', expectedRequest, expectedHeaders, iframe.contentWindow);
       });
 
-      it('report.deletePage() sends POST /report/addPage with displayName', function () {
+      it('report.renamePage() sends PUT /report/pages/{name} with displayName', function () {
+        // Arrange
+        const name = "testName";
+        const displayName = "newName";
+        const expectedHeaders = { uid: uniqueId };
+        const expectedRequest = {
+          name,
+          displayName
+        };
+
+        spyHpm.put.and.returnValue(Promise.resolve(null));
+
+        // Act
+        report.renamePage(name, displayName);
+
+        expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${name}/name`, expectedRequest, expectedHeaders, iframe.contentWindow);
+      });
+
+      it('report.deletePage() sends DELETE /report/pages/{name}', function () {
         // Arrange
         const name = "testName";
         const expectedHeaders = { uid: uniqueId };
@@ -3896,6 +3973,7 @@ describe('SDK-to-HPM', function () {
           .then(filters => {
             // Assert
             expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
+            // @ts-ignore as testData is not of type IFilter
             expect(filters).toEqual(testData.expectedResponse.body);
             done();
           });
@@ -4069,6 +4147,27 @@ describe('SDK-to-HPM', function () {
     });
   });
 
+  describe('setDisplayName', function () {
+    it('page.setDisplayName(displayName) sends PUT /report/pages/{pageName}/name', function () {
+      // Arrange
+      const displayName = "newName";
+      const testData = {
+        page: {
+          name: page1.name,
+          displayName,
+        }
+      };
+
+      spyHpm.put.and.returnValue(Promise.resolve(null));
+
+      // Act
+      page1.setDisplayName(displayName);
+
+      // Assert
+      expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/name`, testData.page, { uid: uniqueId }, iframe.contentWindow);
+    });
+  });
+
   describe('visual', function () {
     describe('filters', function () {
       it('visual.getFilters() sends GET /report/pages/xyz/visuals/uvw/filters', function () {
@@ -4121,6 +4220,7 @@ describe('SDK-to-HPM', function () {
           .then(filters => {
             // Assert
             expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, { uid: uniqueId }, iframe.contentWindow);
+            // @ts-ignore as testData is not of type IFilter
             expect(filters).toEqual(testData.expectedResponse.body);
             done();
           });
@@ -4235,6 +4335,13 @@ describe('SDK-to-HPM', function () {
           }
         };
 
+        const expectedHeaders = {
+          bootstrapped: undefined,
+          sdkVersion: sdkConfig.default.version,
+          uid: uniqueId,
+          sdkSessionId: sdkSessionId
+        };
+
         spyHpm.post.and.returnValue(Promise.resolve(testData.response));
         report.applyTheme(testData.theme)
           .then(() => {
@@ -4244,7 +4351,7 @@ describe('SDK-to-HPM', function () {
             report.reload();
 
             // Assert
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.theme), { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining(testData.theme), expectedHeaders, iframe.contentWindow);
           });
       });
 
@@ -4252,6 +4359,13 @@ describe('SDK-to-HPM', function () {
         // Arrange
         const response = {
           body: null
+        };
+
+        const expectedHeaders = {
+          bootstrapped: undefined,
+          sdkVersion: sdkConfig.default.version,
+          uid: uniqueId,
+          sdkSessionId: sdkSessionId
         };
 
         spyHpm.post.and.returnValue(Promise.resolve(response));
@@ -4263,7 +4377,7 @@ describe('SDK-to-HPM', function () {
             report.reload();
 
             // Assert
-            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining({}), { uid: uniqueId, sdkSessionId: sdkSessionId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/load', jasmine.objectContaining({}), expectedHeaders, iframe.contentWindow);
           });
       });
     });
@@ -4729,6 +4843,7 @@ describe('SDK-to-MockApp', function () {
               .then(filters => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
+                // @ts-ignore as testData is not of type IFilter
                 expect(filters).toEqual(testData.filters);
                 done();
               });
@@ -4935,6 +5050,7 @@ describe('SDK-to-MockApp', function () {
               .then(filters => {
                 // Assert
                 expect(spyApp.getFilters).toHaveBeenCalled();
+                // @ts-ignore as testData is not of type IFilter as testData is not of type IFilter
                 expect(filters).toEqual(testData.filters);
                 done();
               });
