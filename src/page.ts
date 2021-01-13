@@ -1,3 +1,4 @@
+import { IHttpPostMessageResponse } from 'http-post-message';
 import { IFilterable } from './ifilterable';
 import { IReportNode } from './report';
 import { VisualDescriptor } from './visualDescriptor';
@@ -103,12 +104,13 @@ export class Page implements IPageNode, IFilterable {
    *
    * @returns {(Promise<models.IFilter[]>)}
    */
-  getFilters(): Promise<models.IFilter[]> {
-    return this.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.name}/filters`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
-      .then(response => response.body,
-      response => {
-        throw response.body;
-      });
+  async getFilters(): Promise<models.IFilter[]> {
+    try {
+      const response = await this.report.service.hpm.get<models.IFilter[]>(`/report/pages/${this.name}/filters`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -121,14 +123,13 @@ export class Page implements IPageNode, IFilterable {
    *
    * @returns {Promise<void>}
    */
-  delete(): Promise<void> {
-    return this.report.service.hpm.delete<models.IError[]>(`/report/pages/${this.name}`, { }, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
-    .then(response => {
+  async delete(): Promise<void> {
+    try {
+      const response = await this.report.service.hpm.delete<void>(`/report/pages/${this.name}`, { }, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
       return response.body;
-    })
-    .catch(response => {
+    } catch (response) {
       throw response.body;
-    });
+    }
   }
 
   /**
@@ -138,32 +139,33 @@ export class Page implements IPageNode, IFilterable {
    * page.removeFilters();
    * ```
    *
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  removeFilters(): Promise<void> {
-    return this.setFilters([]);
+  async removeFilters(): Promise<IHttpPostMessageResponse<void>> {
+    return await this.setFilters([]);
   }
 
   /**
    * Makes the current page the active page of the report.
    *
-   * ```javascripot
+   * ```javascript
    * page.setActive();
    * ```
    *
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  setActive(): Promise<void> {
+  async setActive(): Promise<IHttpPostMessageResponse<void>> {
     const page: models.IPage = {
       name: this.name,
       displayName: null,
       isActive: true
     };
 
-    return this.report.service.hpm.put<models.IError[]>('/report/pages/active', page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+    try {
+      return await this.report.service.hpm.put<void>('/report/pages/active', page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -175,13 +177,36 @@ export class Page implements IPageNode, IFilterable {
    * ```
    *
    * @param {(models.IFilter[])} filters
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  setFilters(filters: models.IFilter[]): Promise<void> {
-    return this.report.service.hpm.put<models.IError[]>(`/report/pages/${this.name}/filters`, filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+  async setFilters(filters: models.IFilter[]): Promise<IHttpPostMessageResponse<void>> {
+    try {
+      return await this.report.service.hpm.put<void>(`/report/pages/${this.name}/filters`, filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
+   * Set displayName to the current page.
+   *
+   * ```javascript
+   * page.setName(displayName);
+   * ```
+   *
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async setDisplayName(displayName: string): Promise<IHttpPostMessageResponse<void>> {
+    const page: models.IPage = {
+      name: this.name,
+      displayName,
+    };
+
+    try {
+      return await this.report.service.hpm.put<void>(`/report/pages/${this.name}/name`, page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -194,20 +219,20 @@ export class Page implements IPageNode, IFilterable {
    *
    * @returns {Promise<VisualDescriptor[]>}
    */
-  getVisuals(): Promise<VisualDescriptor[]> {
+  async getVisuals(): Promise<VisualDescriptor[]> {
     if (utils.isRDLEmbed(this.report.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
-    return this.report.service.hpm.get<models.IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
-      .then(response => {
-        return response.body
+    try {
+      const response = await this.report.service.hpm.get<models.IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+      return response.body
           .map(visual => {
             return new VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout);
           });
-      }, response => {
+      } catch (response) {
         throw response.body;
-      });
+      }
   }
 
   /**
@@ -220,16 +245,17 @@ export class Page implements IPageNode, IFilterable {
    *
    * @returns {(Promise<boolean>)}
    */
-  hasLayout(layoutType): Promise<boolean> {
+  async hasLayout(layoutType): Promise<boolean> {
     if (utils.isRDLEmbed(this.report.config.embedUrl)) {
       return Promise.reject(errors.APINotSupportedForRDLError);
     }
 
     let layoutTypeEnum = models.LayoutType[layoutType];
-    return this.report.service.hpm.get<boolean>(`/report/pages/${this.name}/layoutTypes/${layoutTypeEnum}`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
-      .then(response => response.body,
-      response => {
-        throw response.body;
-      });
+    try {
+      const response = await this.report.service.hpm.get<boolean>(`/report/pages/${this.name}/layoutTypes/${layoutTypeEnum}`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 }

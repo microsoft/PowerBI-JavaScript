@@ -19,7 +19,7 @@ export class Tile extends embed.Embed {
      * @hidden
      */
     constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) {
-      let config = <embed.IEmbedConfiguration>baseConfig;
+      let config = <embed.ITileEmbedConfiguration>baseConfig;
       super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
       this.loadPath = "/tile/load";
       Array.prototype.push.apply(this.allowedEvents, Tile.allowedEvents);
@@ -31,7 +31,7 @@ export class Tile extends embed.Embed {
      * @returns {string}
      */
     getId(): string {
-        let config = <embed.IEmbedConfiguration>this.config;
+        let config = <embed.ITileEmbedConfiguration>this.config;
         const tileId = config.id || Tile.findIdFromEmbedUrl(this.config.embedUrl);
 
         if (typeof tileId !== 'string' || tileId.length === 0) {
@@ -45,7 +45,7 @@ export class Tile extends embed.Embed {
      * Validate load configuration.
      */
     validate(config: embed.IEmbedConfigurationBase): models.IError[] {
-        let embedConfig = <embed.IEmbedConfiguration>config;
+        let embedConfig = <embed.ITileEmbedConfiguration>config;
         return models.validateTileLoad(embedConfig);
     }
 
@@ -60,7 +60,7 @@ export class Tile extends embed.Embed {
       }
 
       // Populate tile id into config object.
-      (<embed.IEmbedConfiguration>this.config).id = this.getId();
+      (<embed.ITileEmbedConfiguration>this.config).id = this.getId();
     }
 
     /**

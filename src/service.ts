@@ -74,6 +74,8 @@ export interface IService {
   hpm: hpm.HttpPostMessage;
 }
 
+export type IComponentEmbedConfiguration = embed.IReportEmbedConfiguration | embed.IDashboardEmbedConfiguration | embed.ITileEmbedConfiguration| embed.IVisualEmbedConfiguration | embed.IQnaEmbedConfiguration;
+
 /**
  * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
  *
@@ -116,7 +118,7 @@ export class Service implements IService {
   /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
   private embeds: embed.Embed[];
 
-  /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. 
+  /** TODO: Look for way to make hpm private without sacrificing ease of maintenance. This should be private but in embed needs to call methods. 
    * @hidden
   */
   hpm: hpm.HttpPostMessage;
@@ -244,7 +246,7 @@ export class Service implements IService {
    * @param {embed.IEmbedConfiguration} [config={}]
    * @returns {embed.Embed}
    */
-  createReport(element: HTMLElement, config: embed.IEmbedConfiguration): embed.Embed {
+  createReport(element: HTMLElement, config: embed.IEmbedConfiguration | models.IReportCreateConfiguration): embed.Embed {
     config.type = 'create';
     let powerBiElement = <IPowerBiElement>element;
     const component = new Create(this, powerBiElement, config);
@@ -278,7 +280,7 @@ export class Service implements IService {
    * @param {embed.IEmbedConfigurationBase} [config={}]
    * @returns {embed.Embed}
    */
-  embed(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}): embed.Embed {
+  embed(element: HTMLElement, config: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase = {}): embed.Embed {
     return this.embedInternal(element, config);
   }
 
@@ -292,7 +294,7 @@ export class Service implements IService {
    * @param {embed.IEmbedConfigurationBase} [config={}]
    * @returns {embed.Embed}
    */
-  load(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}): embed.Embed {
+  load(element: HTMLElement, config: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase = {}): embed.Embed {
     return this.embedInternal(element, config, /* phasedRender */ true, /* isBootstrap */ false);
   }
 
@@ -302,12 +304,12 @@ export class Service implements IService {
    * @param {HTMLElement} element
    * @param {embed.IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
    */
-  bootstrap(element: HTMLElement, config: embed.IBootstrapEmbedConfiguration): embed.Embed {
+  bootstrap(element: HTMLElement, config: IComponentEmbedConfiguration | embed.IBootstrapEmbedConfiguration): embed.Embed {
     return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
   }
 
   /** @hidden */
-  embedInternal(element: HTMLElement, config: embed.IEmbedConfigurationBase = {}, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed {
+  embedInternal(element: HTMLElement, config: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase = {}, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed {
     let component: embed.Embed;
     let powerBiElement = <IPowerBiElement>element;
 
@@ -348,7 +350,7 @@ export class Service implements IService {
    * @returns {embed.Embed}
    * @hidden
    */
-  private embedNew(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed {
+  private embedNew(element: IPowerBiElement, config: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed {
     const componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
     if (!componentType) {
       throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${embed.Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
@@ -378,10 +380,10 @@ export class Service implements IService {
    * @returns {embed.Embed}
    * @hidden
    */
-  private embedExisting(element: IPowerBiElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed {
+  private embedExisting(element: IPowerBiElement, config: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed {
     const component = utils.find(x => x.element === element, this.embeds);
     if (!component) {
-      throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded comopnent associated, but could not find the existing comopnent in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
+      throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
     }
 
     // TODO: Multiple embedding to the same iframe is not supported in QnA
@@ -506,7 +508,7 @@ export class Service implements IService {
         iframe.remove();
       }
       else {
-          /** Workaround for IE: unhandled rejection TypeError: object doesn't support propert or method 'remove' */
+          /** Workaround for IE: unhandled rejection TypeError: object doesn't support property or method 'remove' */
           iframe.parentElement.removeChild(iframe);
       }
     }
@@ -560,7 +562,7 @@ export class Service implements IService {
    * @param {embed.IEmbedConfigurationBase} [config={}]
    * @param {HTMLElement} [element=undefined]
    */
-  preload(config: embed.IEmbedConfigurationBase, element?: HTMLElement) {
+  preload(config: IComponentEmbedConfiguration | embed.IEmbedConfigurationBase, element?: HTMLElement) {
     var iframeContent = document.createElement("iframe");
     iframeContent.setAttribute("style", "display:none;");
     iframeContent.setAttribute("src", config.embedUrl);
