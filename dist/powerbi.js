@@ -1,4 +1,4 @@
-/*! powerbi-client v2.17.0 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.17.1 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -5973,7 +5973,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.17.0',
+    version: '2.17.1',
     type: 'js'
 };
 exports.default = config;
@@ -8774,6 +8774,10 @@ var Service = /** @class */ (function () {
         if (embedElement.frontLoadHandler) {
             embedElement.element.removeEventListener('ready', embedElement.frontLoadHandler, false);
         }
+        /** Removes all event handlers. */
+        embedElement.allowedEvents.forEach(function (eventName) {
+            embedElement.off(eventName);
+        });
         /** Removes the component from an internal list of components. */
         utils.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
         /** Deletes a property from the HTML element. */
