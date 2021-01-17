@@ -37,14 +37,14 @@ function _Embed_BasicEmbed() {
         id: txtEmbedReportId,
         permissions: permissions,
         settings: {
-          panes: {
-            filters: {
-              visible: true
-            },
-            pageNavigation: {
-              visible: true
+            panes: {
+                filters: {
+                    visible: true
+                },
+                pageNavigation: {
+                    visible: true
+                }
             }
-          }
         }
     };
 
@@ -117,12 +117,12 @@ function _Embed_BasicEmbed_Mobile() {
         permissions: permissions,
         pageName: "ReportSectioneb8c865100f8508cc533",
         settings: {
-          panes: {
-            filters: {
-              visible: false
-            }
-          },
-          layoutType: models.LayoutType.MobilePortrait
+            panes: {
+                filters: {
+                    visible: false
+                }
+            },
+            layoutType: models.LayoutType.MobilePortrait
         }
     };
 
@@ -181,19 +181,19 @@ function _Embed_PaginatedReportBasicEmbed() {
     var models = window['powerbi-client'].models;
 
     // Se view permissions.
-    var permissions = models.Permissions.View;  
+    var permissions = models.Permissions.View;
 
     // Embed configuration used to describe the what and how to embed.
     // This object is used when calling powerbi.embed.
     // This also includes settings and options such as filters.
     // You can find more information at https://github.com/Microsoft/PowerBI-JavaScript/wiki/Embed-Configuration-Details.
     var config = {
-      type: 'report',
-      tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
-      accessToken: txtAccessToken,
-      embedUrl: txtEmbedUrl,
-      id: txtEmbedReportId,
-      permissions: permissions,
+        type: 'report',
+        tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
+        accessToken: txtAccessToken,
+        embedUrl: txtEmbedUrl,
+        id: txtEmbedReportId,
+        permissions: permissions,
     };
 
     // Get a reference to the paginated embedded report HTML element
@@ -412,12 +412,12 @@ function _Mock_Embed_BasicEmbed(isEdit) {
         viewMode: viewMode,
         settings: {
             panes: {
-              filters: {
-                visible: true
-              },
-              pageNavigation: {
-                visible: true
-              }
+                filters: {
+                    visible: true
+                },
+                pageNavigation: {
+                    visible: true
+                }
             },
             useCustomSaveAsDialog: true
         }
@@ -502,12 +502,12 @@ function _Embed_BasicEmbed_EditMode() {
         viewMode: models.ViewMode.Edit,
         settings: {
             panes: {
-              filters: {
-                visible: true
-              },
-              pageNavigation: {
-                visible: true
-              }
+                filters: {
+                    visible: true
+                },
+                pageNavigation: {
+                    visible: true
+                }
             }
         }
     };
@@ -582,12 +582,12 @@ function _Embed_EmbedWithDefaultFilter() {
         id: txtEmbedReportId,
         settings: {
             panes: {
-              filters: {
-                visible: false
-              },
-              pageNavigation: {
-                visible: false
-              }
+                filters: {
+                    visible: false
+                },
+                pageNavigation: {
+                    visible: false
+                }
             }
         },
         filters: [filter]
@@ -866,16 +866,16 @@ function _Report_GetId() {
     Log.logText("Report id: \"" + reportId + "\"");
 }
 
-function _Report_UpdateSettings() {
+async function _Report_UpdateSettings() {
     // The new settings that you want to apply to the report.
     const newSettings = {
         panes: {
-          filters: {
-            visible: false
-          },
-          pageNavigation: {
-            visible: true
-          }
+            filters: {
+                visible: false
+            },
+            pageNavigation: {
+                visible: true
+            }
         }
     };
 
@@ -886,16 +886,16 @@ function _Report_UpdateSettings() {
     report = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    report.updateSettings(newSettings)
-        .then(function () {
-            Log.logText("Filter pane was removed.");
-        })
-        .catch(function (error) {
-            Log.log(errors);
-        });
+    try {
+        await report.updateSettings(newSettings);
+        Log.logText("Filter pane was removed.");
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Report_GetPages() {
+async function _Report_GetPages() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -904,20 +904,20 @@ function _Report_GetPages() {
 
     // Retrieve the page collection and loop through to collect the
     // page name and display name of each page and display the value.
-    report.getPages()
-        .then(function (pages) {
-            var log = "Report pages:";
-            pages.forEach(function (page) {
-                log += "\n" + page.name + " - " + page.displayName;
-            });
-            Log.logText(log);
-        })
-        .catch(function (error) {
-            Log.log(error);
+    try {
+        const pages = await report.getPages();
+        var log = "Report pages:";
+        pages.forEach(function (page) {
+            log += "\n" + page.name + " - " + page.displayName;
         });
+        Log.logText(log);
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Report_SetPage() {
+async function _Report_SetPage() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -926,16 +926,16 @@ function _Report_SetPage() {
 
     // setPage will change the selected view to the page you indicate.
     // This is the actual page name not the display name.
-    report.setPage("ReportSectiona271643cba2213c935be")
-        .then(function () {
-            Log.logText("Page was set to: ReportSectiona271643cba2213c935be");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await report.setPage("ReportSectiona271643cba2213c935be");
+        Log.logText("Page was set to: ReportSectiona271643cba2213c935be");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_GetFilters() {
+async function _Report_GetFilters() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -943,16 +943,16 @@ function _Report_GetFilters() {
     report = powerbi.get(embedContainer);
 
     // Get the filters applied to the report.
-    report.getFilters()
-        .then(function (filters) {
-            Log.log(filters);
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        const filters = await report.getFilters();
+        Log.log(filters);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_SetFilters() {
+async function _Report_SetFilters() {
     // Build the filter you want to use. For more information, See Constructing
     // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
     const filter = {
@@ -973,16 +973,16 @@ function _Report_SetFilters() {
 
     // Set the filter for the report.
     // Pay attention that setFilters receives an array.
-    report.setFilters([filter])
-        .then(function () {
-            Log.logText("Report filter was set.");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await report.setFilters([filter]);
+        Log.logText("Report filter was set.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_RemoveFilters() {
+async function _Report_RemoveFilters() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -990,16 +990,16 @@ function _Report_RemoveFilters() {
     report = powerbi.get(embedContainer);
 
     // Remove the filters currently applied to the report.
-    report.removeFilters()
-        .then(function () {
-            Log.logText("Report filters were removed.");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await report.removeFilters();
+        Log.logText("Report filters were removed.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _ReportVisual_Report_SetFilters() {
+async function _ReportVisual_Report_SetFilters() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -1023,16 +1023,16 @@ function _ReportVisual_Report_SetFilters() {
 
     // Set the filter for the report.
     // Pay attention that setFilters receives an array.
-    visual.setFilters([filter], models.FiltersLevel.Report)
-        .then(function () {
-            Log.logText("Report filter was set.");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await visual.setFilters([filter], models.FiltersLevel.Report);
+        Log.logText("Report filter was set.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _ReportVisual_Report_GetFilters() {
+async function _ReportVisual_Report_GetFilters() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -1043,16 +1043,16 @@ function _ReportVisual_Report_GetFilters() {
     visual = powerbi.get(embedContainer);
 
     // Get the filters applied to the report.
-    visual.getFilters(models.FiltersLevel.Report)
-        .then(function (filters) {
-            Log.log(filters);
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        const filters = await visual.getFilters(models.FiltersLevel.Report);
+        Log.log(filters);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _ReportVisual_Report_RemoveFilters() {
+async function _ReportVisual_Report_RemoveFilters() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -1063,16 +1063,16 @@ function _ReportVisual_Report_RemoveFilters() {
     report = powerbi.get(embedContainer);
 
     // Remove the filters currently applied to the report.
-    report.removeFilters(models.FiltersLevel.Report)
-        .then(function () {
-            Log.logText("Report filters were removed.");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await report.removeFilters(models.FiltersLevel.Report);
+        Log.logText("Report filters were removed.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _ReportVisual_Page_SetFilters() {
+async function _ReportVisual_Page_SetFilters() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -1096,16 +1096,16 @@ function _ReportVisual_Page_SetFilters() {
 
     // Set the filter for the report.
     // Pay attention that setFilters receives an array.
-    visual.setFilters([filter], models.FiltersLevel.Page)
-        .then(function () {
-            Log.logText("Page filter was set.");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await visual.setFilters([filter], models.FiltersLevel.Page);
+        Log.logText("Page filter was set.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _ReportVisual_Page_GetFilters() {
+async function _ReportVisual_Page_GetFilters() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -1116,16 +1116,16 @@ function _ReportVisual_Page_GetFilters() {
     visual = powerbi.get(embedContainer);
 
     // Get the filters applied to the report.
-    visual.getFilters(models.FiltersLevel.Page)
-        .then(function (filters) {
-            Log.log(filters);
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        const filters = await visual.getFilters(models.FiltersLevel.Page);
+        Log.log(filters);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _ReportVisual_Page_RemoveFilters() {
+async function _ReportVisual_Page_RemoveFilters() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -1136,16 +1136,16 @@ function _ReportVisual_Page_RemoveFilters() {
     report = powerbi.get(embedContainer);
 
     // Remove the filters currently applied to the report.
-    report.removeFilters(models.FiltersLevel.Page)
-        .then(function () {
-            Log.logText("Page filters were removed.");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await report.removeFilters(models.FiltersLevel.Page);
+        Log.logText("Page filters were removed.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _ReportVisual_Visual_SetFilters() {
+async function _ReportVisual_Visual_SetFilters() {
     // Build the filter you want to use. For more information, See Constructing
     // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
     const filter = {
@@ -1166,16 +1166,16 @@ function _ReportVisual_Visual_SetFilters() {
 
     // Set the filter for the report.
     // Pay attention that setFilters receives an array.
-    visual.setFilters([filter])
-        .then(function () {
-            Log.logText("Report filter was set.");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await visual.setFilters([filter]);
+        Log.logText("Report filter was set.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _ReportVisual_Visual_GetFilters() {
+async function _ReportVisual_Visual_GetFilters() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -1183,16 +1183,16 @@ function _ReportVisual_Visual_GetFilters() {
     visual = powerbi.get(embedContainer);
 
     // Get the filters applied to the report.
-    visual.getFilters()
-        .then(function (filters) {
-            Log.log(filters);
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        const filters = await visual.getFilters();
+        Log.log(filters);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _ReportVisual_Visual_RemoveFilters() {
+async function _ReportVisual_Visual_RemoveFilters() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -1200,16 +1200,16 @@ function _ReportVisual_Visual_RemoveFilters() {
     report = powerbi.get(embedContainer);
 
     // Remove the filters currently applied to the report.
-    report.removeFilters()
-        .then(function () {
-            Log.logText("Report filters were removed.");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await report.removeFilters();
+        Log.logText("Report filters were removed.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_PrintCurrentReport() {
+async function _Report_PrintCurrentReport() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -1217,13 +1217,15 @@ function _Report_PrintCurrentReport() {
     report = powerbi.get(embedContainer);
 
     // Trigger the print dialog for your browser.
-    report.print()
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await report.print();
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_Reload() {
+async function _Report_Reload() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -1231,13 +1233,13 @@ function _Report_Reload() {
     report = powerbi.get(embedContainer);
 
     // Reload the displayed report
-    report.reload()
-        .then(function (result) {
-            Log.logText("Reloaded");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await report.reload();
+        Log.logText("Reloaded");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
 function _PaginatedReport_Reload() {
@@ -1249,11 +1251,11 @@ function _PaginatedReport_Reload() {
 
     // Reload the displayed paginated report
     paginatedReport.reload();
-    
+
     Log.logText("Reload Paginated Report");
 }
 
-function _Report_Refresh() {
+async function _Report_Refresh() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -1261,16 +1263,16 @@ function _Report_Refresh() {
     report = powerbi.get(embedContainer);
 
     // Refresh the displayed report
-    report.refresh()
-        .then(function (result) {
-            Log.logText("Refreshed");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await report.refresh();
+        Log.logText("Refreshed");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_ApplyCustomLayout() {
+async function _Report_ApplyCustomLayout() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -1324,12 +1326,12 @@ function _Report_ApplyCustomLayout() {
             }
         },
         panes: {
-          filters: {
-            visible: false
-          },
-          pageNavigation: {
-            visible: false
-          }
+            filters: {
+                visible: false
+            },
+            pageNavigation: {
+                visible: false
+            }
         }
     }
 
@@ -1337,16 +1339,16 @@ function _Report_ApplyCustomLayout() {
     report = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    report.updateSettings(settings)
-        .then(function () {
-            Log.logText("Custom layout applied, to remove custom layout, reload the report using 'Reload' API.")
-        })
-        .catch(function (error) {
-            Log.log(errors);
-        });
+    try {
+        await report.updateSettings(settings);
+        Log.logText("Custom layout applied, to remove custom layout, reload the report using 'Reload' API.");
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Report_HideAllVisualHeaders() {
+async function _Report_HideAllVisualHeaders() {
 
     // New settings to hide all the visual headers in the report
     const newSettings = {
@@ -1369,17 +1371,16 @@ function _Report_HideAllVisualHeaders() {
     report = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    report.updateSettings(newSettings)
-        .then(function () {
-            Log.logText("Visual header was successfully hidden for all the visuals in the report.");
-        })
-        .catch(function (error) {
-            Log.log(errors);
-        });
-
+    try {
+        await report.updateSettings(newSettings);
+        Log.logText("Visual header was successfully hidden for all the visuals in the report.");
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Report_ShowAllVisualHeaders() {
+async function _Report_ShowAllVisualHeaders() {
     // New settings to show all the visual headers in the report
     const newSettings = {
         visualSettings: {
@@ -1401,17 +1402,16 @@ function _Report_ShowAllVisualHeaders() {
     report = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    report.updateSettings(newSettings)
-        .then(function () {
-            Log.logText("Visual header was successfully shown for all the visuals in the report.");
-        })
-        .catch(function (error) {
-            Log.log(errors);
-        });
-
+    try {
+        await report.updateSettings(newSettings);
+        Log.logText("Visual header was successfully shown for all the visuals in the report.");
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Report_HideSingleVisualHeader() {
+async function _Report_HideSingleVisualHeader() {
 
     // Define settings to hide the header of a single visual
     var newSettings = {
@@ -1445,13 +1445,13 @@ function _Report_HideSingleVisualHeader() {
     report = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    report.updateSettings(newSettings)
-        .then(function () {
-            Log.logText("Visual header was successfully hidden for 'Category Breakdown' visual.");
-        })
-        .catch(function (error) {
-            Log.log(errors);
-        });
+    try {
+        await report.updateSettings(newSettings);
+        Log.logText("Visual header was successfully hidden for 'Category Breakdown' visual.");
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
 function _Report_FullScreen() {
@@ -1565,7 +1565,7 @@ function _Report_saveAs() {
     report.saveAs(saveAsParameters);
 }
 
-function _Report_Extensions_OptionsMenu() {
+async function _Report_Extensions_OptionsMenu() {
     const base64Icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAu9JREFUeJzt3U9OE2Ech/FnSiKsXbh340pg5Qk8gofAY3gGtBqWXsKNIR5BF0ZkQ9h6A2pC62LAEP5ITdv3R+f7fJJ3QUh4ZzpPmaaZmReGZxf4ABwDE2C24Jhc/K33wE7D/dB/2gIOgCmLH/S7xhQYA5uN9klz2gK+sLoDf30cXsypB+KAdgf/coyb7Jnutctq/+3/63Sw3WD/VmpUvQFL8BroCubtgL2CeXXNMe3f/ZfjqMH+rVTFO2fZJsCjwrnX+sPgEAKYFc+/1q/hED4DaAEGEM4AwhlAOAMIZwDhDCCcAYQzgHAGEM4AwhlAOAMIZwDhDCCcAYQzgHAGEM4AwhlAOAMIZwDhDCCcAYQzgHAGEM4AwhlAOAMIZwDhDCCcAYQzgHAGEM4AwhlAOAMIZwDhDCDcbQEs+3n7qx7Vqvf/vjH3egctnrfvqB13rnfQ+nn7jtrxd72DDXpj4BVK8RR4DHzq6M/5X1nzZ97qv82A3Q3gDfCidltUoAOmHf0nxGfFG6MaPztqn7evWpOO/lygUH4TGM4AwhlAOAMIZwDhDCCcAYQzgHAGEM4AwhlAOAMIZwDhDCCcAYQbAb+rN0JlJiPgtHorVOZkRH+NuDIddvS3C33Dy8LTTLm4LPwX8AQvDU/zDvh4+cMm/amg+pYlR5vxmVuuBN+iv0XMm0OHO86Bfa4c/NvO+9vAHvCS/h6yG3eSaq1MgBP6//AHwPervxzCB79Z8fxr/Rr6TWA4AwhnAOEMIJwBhDOAcAYQzgDCGUA4AwhnAOEMIJwBhDOAcAYQzgDCGUA4AwhnAOEMIJwBhDOAcAYQzgDCGUA4AwhnAOEMIJwBhDOAcAYQzgDCGUA4AwhnAOEMIJwBhDOAcAYQbggBVK53MCmceymGEMBp4dwnhXMvxRACqFzvwLUWHoAdah5wfQ48b7B/msOY9gHsN9kzzaX1ege3Pm9ftVqsd3Djeft6eLbpl0M5As5Y/KCfAT+AtwzwnP8HNwiKJyPkCoYAAAAASUVORK5CYII=";
 
     // The new settings that you want to apply to the report.
@@ -1596,10 +1596,12 @@ function _Report_Extensions_OptionsMenu() {
     report = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    report.updateSettings(newSettings)
-        .catch(function (error) {
-            Log.log(errors);
-        });
+    try {
+        await report.updateSettings(newSettings);
+    }
+    catch (error) {
+        Log.log(error);
+    }
 
     // Report.on will add an event handler to commandTriggered event which prints to console window.
     report.on("commandTriggered", function (event) {
@@ -1614,7 +1616,7 @@ function _Report_Extensions_OptionsMenu() {
     Log.logText("Open visual options menu by clicking the three dots icon and click on added items to see events in Log window.");
 }
 
-function _Report_Extensions_ContextMenu() {
+async function _Report_Extensions_ContextMenu() {
     // The new settings that you want to apply to the report.
     const newSettings = {
         extensions: [
@@ -1642,10 +1644,12 @@ function _Report_Extensions_ContextMenu() {
     report = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    report.updateSettings(newSettings)
-        .catch(function (error) {
-            Log.log(errors);
-        });
+    try {
+        await report.updateSettings(newSettings);
+    }
+    catch (error) {
+        Log.log(error);
+    }
 
     // Report.on will add an event handler to commandTriggered event which prints to console window.
     report.on("commandTriggered", function (event) {
@@ -1660,7 +1664,7 @@ function _Report_Extensions_ContextMenu() {
     Log.logText("Open visual context menu by right click on data points and click on added items to see events in Log window.");
 }
 
-function _Visual_Operations_SortVisualBy() {
+async function _Visual_Operations_SortVisualBy() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -1681,65 +1685,51 @@ function _Visual_Operations_SortVisualBy() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and get the visuals for the first page.
-    report.getPages()
-        .then(function (pages) {
+    try {
+        const pages = await report.getPages();
 
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive
-            })[0];
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive
+        })[0];
 
-            activePage.getVisuals()
-                .then(function (visuals) {
-                    // Retrieve the target visual.
-                    var visual = visuals.filter(function (visual) {
-                        return visual.name === "VisualContainer6";
-                    })[0];
+        const visuals = await activePage.getVisuals();
 
-                    // Sort the visual's data by direction and data field.
-                    visual.sortBy(sortByRequest)
-                        .then(function () {
-                            Log.logText("\"Total Category Volume Over Time by Region\" visual was sorted according to the request.")
-                        })
-                        .catch(function (errors) {
-                            Log.log(errors);
-                        });
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Retrieve the target visual.
+        var visual = visuals.filter(function (visual) {
+            return visual.name === "VisualContainer6";
+        })[0];
+
+        // Sort the visual's data by direction and data field.
+        await visual.sortBy(sortByRequest);
+        Log.logText("\"Total Category Volume Over Time by Region\" visual was sorted according to the request.")
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
 // ---- Page Operations ----------------------------------------------------
 
-function _Page_SetActive() {
+async function _Page_SetActive() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
     // Get a reference to the embedded report.
     report = powerbi.get(embedContainer);
 
-    // Retrieve the page collection, and then set the second page to be active.
-    report.getPages()
-        .then(function (pages) {
-            pages[3].setActive()
-                .then(function () {
-                    Log.logText("Active page was set to: \"" + pages[3].displayName + "\"");
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    // Retrieve active page.
+    try {
+        const pages = await report.getPages();
+        await pages[3].setActive();
+        Log.logText("Active page was set to: \"" + pages[3].displayName + "\"");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Page_GetFilters() {
+async function _Page_GetFilters() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -1747,27 +1737,22 @@ function _Page_GetFilters() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and get the filters for the first page.
-    report.getPages()
-        .then(function (pages) {
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive
-            })[0];
+    try {
+        const pages = await report.getPages();
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive
+        })[0];
 
-            activePage.getFilters()
-                .then(function (filters) {
-                    Log.log(filters);
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        const filters = await activePage.getFilters();
+        Log.log(filters);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Page_GetVisuals() {
+async function _Page_GetVisuals() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -1775,35 +1760,30 @@ function _Page_GetVisuals() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and get the visuals for the first page.
-    report.getPages()
-        .then(function (pages) {
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive
-            })[0];
+    try {
+        const pages = await report.getPages();
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive
+        })[0];
 
-            activePage.getVisuals()
-                .then(function (visuals) {
-                    Log.log(
-                        visuals.map(function (visual) {
-                            return {
-                                name: visual.name,
-                                type: visual.type,
-                                title: visual.title,
-                                layout: visual.layout
-                            };
-                        }));
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        const visuals = await activePage.getVisuals();
+        Log.log(
+            visuals.map(function (visual) {
+                return {
+                    name: visual.name,
+                    type: visual.type,
+                    title: visual.title,
+                    layout: visual.layout
+                };
+            }));
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Page_SetFilters() {
+async function _Page_SetFilters() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -1824,27 +1804,23 @@ function _Page_SetFilters() {
 
     // Retrieve the page collection and then set the filters for the first page.
     // Pay attention that setFilters receives an array.
-    report.getPages()
-        .then(function (pages) {
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive
-            })[0];
+    try {
+        const pages = await report.getPages();
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive
+        })[0];
 
-            activePage.setFilters([filter])
-                .then(function () {
-                    Log.logText("Page filter was set.");
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        await activePage.setFilters([filter]);
+        Log.logText("Page filter was set.");
+
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Page_RemoveFilters() {
+async function _Page_RemoveFilters() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -1852,27 +1828,22 @@ function _Page_RemoveFilters() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and remove the filters for the first page.
-    report.getPages()
-        .then(function (pages) {
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive
-            })[0];
+    try {
+        const pages = await report.getPages();
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive
+        })[0];
 
-            activePage.removeFilters()
-                .then(function () {
-                    Log.logText("Page filters were removed.");
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        await activePage.removeFilters();
+        Log.logText("Page filters were removed.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Page_HasLayout() {
+async function _Page_HasLayout() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -1883,12 +1854,16 @@ function _Page_HasLayout() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and check if the first page has a MobilePortrait layout.
-    report.getPages().then(function (pages) {
-        pages[0].hasLayout(models.LayoutType.MobilePortrait).then(function (hasLayout) {
-            hasLayout = hasLayout ? "has" : "doesn't have";
-            Log.logText("Page \"" + pages[0].name + "\" " + hasLayout + " mobile portrait layout.");
-        })
-    });
+    try {
+        const pages = await report.getPages();
+        const hasLayout = await pages[0].hasLayout(models.LayoutType.MobilePortrait);
+
+        var hasLayoutText = hasLayout ? "has" : "doesn't have";
+        Log.logText("Page \"" + pages[0].name + "\" " + hasLayoutText + " mobile portrait layout.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
 // ---- Event Listener ----------------------------------------------------
@@ -2153,20 +2128,20 @@ function _DashboardEvents_TileClicked() {
 
 // ---- Qna Events Listener ----------------------------------------------------
 
-function _Qna_SetQuestion() {
+async function _Qna_SetQuestion() {
     // Get a reference to the embedded Q&A HTML element
     var qnaContainer = $('#qnaContainer')[0];
 
     // Get a reference to the embedded Q&A.
     qna = powerbi.get(qnaContainer);
 
-    qna.setQuestion("2014 total units YTD by manufacturer, region as treemap chart")
-        .then(function (result) {
-            log.log(result);
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        const result = await qna.setQuestion("2014 total units YTD by manufacturer, region as treemap chart");
+        Log.log(result);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
 function _Qna_QuestionChanged() {
@@ -2212,13 +2187,13 @@ function _Visual_DataSelected() {
 }
 
 // ---- Bookmarks Operations ----------------------------------------------------
-function _Bookmarks_Enable() {
+async function _Bookmarks_Enable() {
     // The new settings that you want to apply to the report.
     const newSettings = {
         panes: {
-          bookmarks: {
-            visible: true
-          }
+            bookmarks: {
+                visible: true
+            }
         }
     };
 
@@ -2229,20 +2204,22 @@ function _Bookmarks_Enable() {
     report = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    report.updateSettings(newSettings)
-        .catch(function (error) {
-            Log.log(errors);
-        });
+    try {
+        await report.updateSettings(newSettings);
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Bookmarks_Disable() {
+async function _Bookmarks_Disable() {
     // The new settings that you want to apply to the report.
     const newSettings = {
-      panes: {
-        bookmarks: {
-          visible: false
+        panes: {
+            bookmarks: {
+                visible: false
+            }
         }
-      }
     };
 
     // Get a reference to the embedded report HTML element
@@ -2252,13 +2229,15 @@ function _Bookmarks_Disable() {
     report = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    report.updateSettings(newSettings)
-        .catch(function (error) {
-            Log.log(errors);
-        });
+    try {
+        await report.updateSettings(newSettings);
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Bookmarks_Get() {
+async function _Bookmarks_Get() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2267,19 +2246,19 @@ function _Bookmarks_Get() {
 
     // Retrieve the bookmark collection and loop through to print the
     // bookmarks' name and display name.
-    report.bookmarksManager.getBookmarks()
-        .then(function (bookmarks) {
-            bookmarks.forEach(function (bookmark) {
-                var log = bookmark.name + " - " + bookmark.displayName;
-                Log.logText(log);
-            });
-        })
-        .catch(function (error) {
-            Log.log(error);
+    try {
+        const bookmarks = await report.bookmarksManager.getBookmarks();
+        bookmarks.forEach(function (bookmark) {
+            var log = bookmark.name + " - " + bookmark.displayName;
+            Log.logText(log);
         });
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Bookmarks_Apply() {
+async function _Bookmarks_Apply() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2289,16 +2268,16 @@ function _Bookmarks_Apply() {
     // bookmarksManager.apply will apply the bookmark with the
     // given name on the report.
     // This is the actual bookmark name not the display name.
-    report.bookmarksManager.apply("Bookmarkaf5fe203dc1e280a4822")
-        .then(function () {
-            Log.logText("Bookmark \"Q4 2014\" applied.");
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+    try {
+        await report.bookmarksManager.apply("Bookmarkaf5fe203dc1e280a4822");
+        Log.logText("Bookmark \"Q4 2014\" applied.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Bookmarks_Capture() {
+async function _Bookmarks_Capture() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2307,17 +2286,17 @@ function _Bookmarks_Capture() {
 
     // Capture the current bookmark and prints the bookmark's
     // state string to Log window.
-    report.bookmarksManager.capture()
-        .then(function (capturedBookmark) {
-            var log = "Captured bookmark state: " + capturedBookmark.state;
-            Log.logText(log);
-        })
-        .catch(function (error) {
-            Log.log(error);
-        });
+    try {
+        const capturedBookmark = await report.bookmarksManager.capture();
+        var log = "Captured bookmark state: " + capturedBookmark.state;
+        Log.logText(log);
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Bookmarks_ApplyState() {
+async function _Bookmarks_ApplyState() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2326,16 +2305,16 @@ function _Bookmarks_ApplyState() {
 
     // bookmarksManager.applyState will apply the bookmark which
     // represented by the given state string.
-    report.bookmarksManager.applyState("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")
-        .then(function () {
-            Log.logText("Bookmark applied from given state.");
-        })
-        .catch(function (error) {
-            Log.log(error);
-        });
+    try {
+        await report.bookmarksManager.applyState("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");
+        Log.logText("Bookmark applied from given state.");
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Bookmarks_EnterPresentation() {
+async function _Bookmarks_EnterPresentation() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -2346,13 +2325,16 @@ function _Bookmarks_EnterPresentation() {
     report = powerbi.get(embedContainer);
 
     // Enter bookmarks play mode
-    report.bookmarksManager.play(models.BookmarksPlayMode.Presentation)
-        .then(function () {
-            Log.logText("Bookmarks play mode is on, check the play bar at the bottom of the report.");
-        });
+    try {
+        await report.bookmarksManager.play(models.BookmarksPlayMode.Presentation);
+        Log.logText("Bookmarks play mode is on, check the play bar at the bottom of the report.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Bookmarks_ExitPresentation() {
+async function _Bookmarks_ExitPresentation() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -2363,13 +2345,16 @@ function _Bookmarks_ExitPresentation() {
     report = powerbi.get(embedContainer);
 
     // Exit bookmarks play mode
-    report.bookmarksManager.play(models.BookmarksPlayMode.Off)
-        .then(function () {
-            Log.logText("Bookmarks play mode is off.");
-        });
+    try {
+        await report.bookmarksManager.play(models.BookmarksPlayMode.Off);
+        Log.logText("Bookmarks play mode is off.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Visual_GetSlicer() {
+async function _Visual_GetSlicer() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2377,39 +2362,31 @@ function _Visual_GetSlicer() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and get the visuals for the first page.
-    report.getPages()
-        .then(function (pages) {
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive;
-            })[0];
+    try {
+        const pages = await report.getPages();
 
-            activePage.getVisuals()
-                .then(function (visuals) {
-                    // Retrieve the target visual.
-                    var slicer = visuals.filter(function (visual) {
-                        return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
-                    })[0];
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive;
+        })[0];
 
-                    // Get the slicer state which contains the slicer filter.
-                    slicer.getSlicerState()
-                        .then(function (state) {
-                            Log.log(state);
-                        })
-                        .catch(function (errors) {
-                            Log.log(errors);
-                        });
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        const visuals = await activePage.getVisuals();
+
+        // Retrieve the target visual.
+        var slicer = visuals.filter(function (visual) {
+            return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
+        })[0];
+
+        // Get the slicer state which contains the slicer filter.
+        const state = await slicer.getSlicerState();
+        Log.log(state);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Visual_SetSlicer() {
+async function _Visual_SetSlicer() {
     // Build the filter you want to use. For more information, See Constructing
     // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
     const filter = {
@@ -2439,39 +2416,31 @@ function _Visual_SetSlicer() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and get the visuals for the first page.
-    report.getPages()
-        .then(function (pages) {
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive;
-            })[0];
+    try {
+        const pages = await report.getPages();
 
-            activePage.getVisuals()
-                .then(function (visuals) {
-                    // Retrieve the target visual.
-                    var slicer = visuals.filter(function (visual) {
-                        return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
-                    })[0];
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive;
+        })[0];
 
-                    // Set the slicer state which contains the slicer filters.
-                    slicer.setSlicerState({ filters: [filter] })
-                        .then(function () {
-                            Log.logText("Date slicer was set.");
-                        })
-                        .catch(function (errors) {
-                            Log.log(errors);
-                        });
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        const visuals = await activePage.getVisuals();
+
+        // Retrieve the target visual.
+        var slicer = visuals.filter(function (visual) {
+            return visual.type == "slicer" && visual.name == "4d55baaa5eddde4cdf90";
+        })[0];
+
+        // Set the slicer state which contains the slicer filters.
+        await slicer.setSlicerState({ filters: [filter] });
+        Log.logText("Date slicer was set.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Visual_SetFilters() {
+async function _Visual_SetFilters() {
     // Build the filter you want to use. For more information, See Constructing
     // Filters in https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters.
     const filter = {
@@ -2497,42 +2466,32 @@ function _Visual_SetFilters() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and get the visuals for the first page.
-    report.getPages()
-        .then(function (pages) {
+    try {
+        const pages = await report.getPages();
 
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive
-            })[0];
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive
+        })[0];
 
-            activePage.getVisuals()
-                .then(function (visuals) {
+        const visuals = await activePage.getVisuals();
 
-                    // Retrieve the target visual.
-                    var visual = visuals.filter(function (visual) {
-                        return visual.name == "VisualContainer4";
-                    })[0];
+        // Retrieve the target visual.
+        var visual = visuals.filter(function (visual) {
+            return visual.name == "VisualContainer4";
+        })[0];
 
-                    // Set the filter for the visual.
-                    // Pay attention that setFilters receives an array.
-                    visual.setFilters([filter])
-                        .then(function () {
-                            Log.logText("Filter was set for \"Category Breakdown\" table.")
-                        })
-                        .catch(function (errors) {
-                            Log.log(errors);
-                        });
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Set the filter for the visual.
+        // Pay attention that setFilters receives an array.
+        await visual.setFilters([filter]);
+        Log.logText("Filter was set for \"Category Breakdown\" table.")
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Visual_GetFilters() {
+async function _Visual_GetFilters() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2540,40 +2499,30 @@ function _Visual_GetFilters() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and get the visuals for the first page.
-    report.getPages()
-        .then(function (pages) {
+    try {
+        const pages = await report.getPages();
 
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive
-            })[0];
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive
+        })[0];
 
-            activePage.getVisuals()
-                .then(function (visuals) {
+        const visuals = await activePage.getVisuals();
 
-                    // Retrieve the target visual.
-                    var visual = visuals.filter(function (visual) {
-                        return visual.name == "VisualContainer4";
-                    })[0];
+        // Retrieve the target visual.
+        var visual = visuals.filter(function (visual) {
+            return visual.name == "VisualContainer4";
+        })[0];
 
-                    visual.getFilters()
-                        .then(function (filters) {
-                            Log.log(filters);
-                        })
-                        .catch(function (errors) {
-                            Log.log(errors);
-                        });
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        const filters = await visual.getFilters();
+        Log.log(filters);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Visual_RemoveFilters() {
+async function _Visual_RemoveFilters() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2581,40 +2530,30 @@ function _Visual_RemoveFilters() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and get the visuals for the first page.
-    report.getPages()
-        .then(function (pages) {
+    try {
+        const pages = await report.getPages();
 
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive
-            })[0];
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive
+        })[0];
 
-            activePage.getVisuals()
-                .then(function (visuals) {
+        const visuals = await activePage.getVisuals();
 
-                    // Retrieve the target visual.
-                    var visual = visuals.filter(function (visual) {
-                        return visual.name == "VisualContainer4";
-                    })[0];
+        // Retrieve the target visual.
+        var visual = visuals.filter(function (visual) {
+            return visual.name == "VisualContainer4";
+        })[0];
 
-                    visual.removeFilters()
-                        .then(function () {
-                            Log.logText("\"Sentiment by Year and Months\" visual filters were removed.");
-                        })
-                        .catch(function (errors) {
-                            Log.log(errors);
-                        });
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        await visual.removeFilters();
+        Log.logText("\"Sentiment by Year and Months\" visual filters were removed.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Visual_ExportData_Summarized() {
+async function _Visual_ExportData_Summarized() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -2625,41 +2564,30 @@ function _Visual_ExportData_Summarized() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and get the visuals for the first page.
-    report.getPages()
-        .then(function (pages) {
+    try {
+        const pages = await report.getPages();
 
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive
-            })[0];
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive
+        })[0];
 
-            activePage.getVisuals()
-                .then(function (visuals) {
+        const visuals = await activePage.getVisuals();
 
-                    // Retrieve the target visual.
-                    var visual = visuals.filter(function (visual) {
-                        return visual.name == "VisualContainer4";
-                    })[0];
+        // Retrieve the target visual.
+        var visual = visuals.filter(function (visual) {
+            return visual.name == "VisualContainer4";
+        })[0];
 
-                    // Exports visual data
-                    visual.exportData(models.ExportDataType.Summarized)
-                        .then(function (result) {
-                            Log.logCsv(result.data);
-                        })
-                        .catch(function (errors) {
-                            Log.log(errors);
-                        });
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        const result = await visual.exportData(models.ExportDataType.Summarized);
+        Log.logCsv(result.data);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Visual_ExportData_Underlying() {
+async function _Visual_ExportData_Underlying() {
     // Get models. models contains enums that can be used.
     var models = window['powerbi-client'].models;
 
@@ -2670,47 +2598,37 @@ function _Visual_ExportData_Underlying() {
     report = powerbi.get(embedContainer);
 
     // Retrieve the page collection and get the visuals for the first page.
-    report.getPages()
-        .then(function (pages) {
+    try {
+        const pages = await report.getPages();
 
-            // Retrieve active page.
-            var activePage = pages.filter(function (page) {
-                return page.isActive
-            })[0];
+        // Retrieve active page.
+        var activePage = pages.filter(function (page) {
+            return page.isActive
+        })[0];
 
-            activePage.getVisuals()
-                .then(function (visuals) {
+        const visuals = await activePage.getVisuals();
 
-                    // Retrieve the target visual.
-                    var visual = visuals.filter(function (visual) {
-                        return visual.name == "VisualContainer4";
-                    })[0];
+        // Retrieve the target visual.
+        var visual = visuals.filter(function (visual) {
+            return visual.name == "VisualContainer4";
+        })[0];
 
-                    // Exports visual data
-                    visual.exportData(models.ExportDataType.Underlying)
-                        .then(function (result) {
-                            Log.logCsv(result.data);
-                        })
-                        .catch(function (errors) {
-                            Log.log(errors);
-                        });
-                })
-                .catch(function (errors) {
-                    Log.log(errors);
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Exports visual data
+        const result = await visual.exportData(models.ExportDataType.Underlying);
+        Log.logCsv(result.data);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _ReportVisual_UpdateSettings() {
+async function _ReportVisual_UpdateSettings() {
     // The new settings that you want to apply to the report.
     const newSettings = {
         panes: {
-          filters: {
-            visible: true
-          }
+            filters: {
+                visible: true
+            }
         }
     };
 
@@ -2721,16 +2639,16 @@ function _ReportVisual_UpdateSettings() {
     visual = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    visual.updateSettings(newSettings)
-        .then(function () {
-            Log.logText("Filter pane was added.");
-        })
-        .catch(function (error) {
-            Log.log(errors);
-        });
+    try {
+        await visual.updateSettings(newSettings);
+        Log.logText("Filter pane was added.");
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _ReportVisual_HideSingleVisualHeader() {
+async function _ReportVisual_HideSingleVisualHeader() {
 
     // Define settings to hide the header of a single visual
     var newSettings = {
@@ -2764,16 +2682,16 @@ function _ReportVisual_HideSingleVisualHeader() {
     visual = powerbi.get(embedContainer);
 
     // Update the settings by passing in the new settings you have configured.
-    visual.updateSettings(newSettings)
-        .then(function () {
-            Log.logText("Visual header was successfully hidden for 'Sentiment by Year and Months' visual.");
-        })
-        .catch(function (error) {
-            Log.log(errors);
-        });
+    try {
+        await visual.updateSettings(newSettings);
+        Log.logText("Visual header was successfully hidden for 'Sentiment by Year and Months' visual.");
+    }
+    catch (error) {
+        Log.log(error);
+    }
 }
 
-function _Report_Authoring_Create() {
+async function _Report_Authoring_Create() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2782,38 +2700,37 @@ function _Report_Authoring_Create() {
 
     // Util function - setting authoring page as active
     // For implementation please check 'Navigation > Page - Set active' code sample.
-    SetAuthoringPageActive(report)
-        .then(function (page) {
+    try {
+        const page = await SetAuthoringPageActive(report);
 
-            // Creating new visual
-            // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Visualization
-            page.createVisual('clusteredColumnChart')
-                .then(function (response) {
-                    let visual = response.visual;
+        // Creating new visual
+        // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Visualization
+        const response = await page.createVisual('clusteredColumnChart');
 
-                    // Defining data fields
-                    const regionColumn = { column: 'Region', table: 'Geo', schema: 'http://powerbi.com/product/schema#column' };
-                    const totalUnitsMeasure = { measure: 'Total Units', table: 'SalesFact', schema: 'http://powerbi.com/product/schema#measure' };
-                    const totalVanArsdelUnitsMeasure = { measure: 'Total VanArsdel Units', table: 'SalesFact', schema: 'http://powerbi.com/product/schema#measure' };
+        let visual = response.visual;
 
-                    // Setting visual data fields
-                    visual.addDataField('Category', regionColumn);
-                    visual.addDataField('Y', totalUnitsMeasure);
-                    visual.addDataField('Y', totalVanArsdelUnitsMeasure);
+        // Defining data fields
+        const regionColumn = { column: 'Region', table: 'Geo', schema: 'http://powerbi.com/product/schema#column' };
+        const totalUnitsMeasure = { measure: 'Total Units', table: 'SalesFact', schema: 'http://powerbi.com/product/schema#measure' };
+        const totalVanArsdelUnitsMeasure = { measure: 'Total VanArsdel Units', table: 'SalesFact', schema: 'http://powerbi.com/product/schema#measure' };
 
-                    // Personalizing the visual
-                    visual.setProperty({ objectName: "title", propertyName: "textSize" }, { schema: 'http://powerbi.com/product/schema#property', value: 8 });
-                    visual.setProperty({ objectName: "title", propertyName: "fontColor" }, { schema: 'http://powerbi.com/product/schema#property', value: '#000000' });
+        // Setting visual data fields
+        visual.addDataField('Category', regionColumn);
+        visual.addDataField('Y', totalUnitsMeasure);
+        visual.addDataField('Y', totalVanArsdelUnitsMeasure);
 
-                    // Visit: https://github.com/microsoft/powerbi-report-authoring/wiki for full documentation
-                });
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Personalizing the visual
+        visual.setProperty({ objectName: "title", propertyName: "textSize" }, { schema: 'http://powerbi.com/product/schema#property', value: 8 });
+        visual.setProperty({ objectName: "title", propertyName: "fontColor" }, { schema: 'http://powerbi.com/product/schema#property', value: '#000000' });
+
+        // Visit: https://github.com/microsoft/powerbi-report-authoring/wiki for full documentation
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_Authoring_ChangeType() {
+async function _Report_Authoring_ChangeType() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2822,33 +2739,27 @@ function _Report_Authoring_ChangeType() {
 
     // Util function - setting authoring page as active
     // For implementation please check 'Navigation > Page - Set active' code sample.
-    SetAuthoringPageActive(report)
-        .then(function (page) {
-            page.getVisuals().then(function (visuals) {
-                if (visuals.length < 1) {
-                    Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
-                    return;
-                }
+    try {
+        const page = await SetAuthoringPageActive(report);
+        const visuals = await page.getVisuals();
+        if (visuals.length < 1) {
+            Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
+            return;
+        }
 
-                // Getting the last visual that was added
-                let visual = visuals[visuals.length - 1];
+        // Getting the last visual that was added
+        let visual = visuals[visuals.length - 1];
 
-                // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Visualization
-                visual.changeType('waterfallChart')
-                    .then(function () {
-                        Log.logText("Last visual type was changed.");
-                    })
-                    .catch(function (errors) {
-                        Log.log(errors);
-                    });
-            })
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Visualization
+        await visual.changeType('waterfallChart');
+        Log.logText("Last visual type was changed.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_Authoring_Remove() {
+async function _Report_Authoring_Remove() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2857,33 +2768,27 @@ function _Report_Authoring_Remove() {
 
     // Util function - setting authoring page as active
     // For implementation please check 'Navigation > Page - Set active' code sample.
-    SetAuthoringPageActive(report)
-        .then(function (page) {
-            page.getVisuals().then(function (visuals) {
-                if (visuals.length < 1) {
-                    Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
-                    return;
-                }
+    try {
+        const page = await SetAuthoringPageActive(report);
+        const visuals = await page.getVisuals();
+        if (visuals.length < 1) {
+            Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
+            return;
+        }
 
-                // Getting the last visual that was added
-                let visual = visuals[visuals.length - 1];
+        // Getting the last visual that was added
+        let visual = visuals[visuals.length - 1];
 
-                // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Visualization
-                page.deleteVisual(visual.name)
-                    .then(function () {
-                        Log.logText("Last visual was deleted.");
-                    })
-                    .catch(function (errors) {
-                        Log.log(errors);
-                    });
-            })
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Visualization
+        await page.deleteVisual(visual.name);
+        Log.logText("Last visual was deleted.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_Authoring_Capabilities() {
+async function _Report_Authoring_Capabilities() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2892,33 +2797,29 @@ function _Report_Authoring_Capabilities() {
 
     // Util function - setting authoring page as active
     // For implementation please check 'Navigation > Page - Set active' code sample.
-    SetAuthoringPageActive(report)
-        .then(function (page) {
-            page.getVisuals().then(function (visuals) {
-                if (visuals.length < 1) {
-                    Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
-                    return;
-                }
+    try {
+        const page = await SetAuthoringPageActive(report);
+        const visuals = await page.getVisuals();
+        if (visuals.length < 1) {
+            Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
+            return;
+        }
 
-                // Getting the last visual that was added
-                let visual = visuals[visuals.length - 1];
+        // Getting the last visual that was added
+        let visual = visuals[visuals.length - 1];
 
-                // Getting visual capabilities
-                // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Data-binding
-                visual.getCapabilities().then(function (capabilities) {
-                    Log.logText("Visual capabilities:");
-                    Log.log(capabilities);
-                }).catch(function (errors) {
-                    Log.log(errors);
-                });
-            })
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Getting visual capabilities
+        // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Data-binding
+        const capabilities = await visual.getCapabilities();
+        Log.logText("Visual capabilities:");
+        Log.log(capabilities);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_Authoring_AddDataField() {
+async function _Report_Authoring_AddDataField() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2927,57 +2828,43 @@ function _Report_Authoring_AddDataField() {
 
     // Util function - setting authoring page as active
     // For implementation please check 'Navigation > Page - Set active' code sample.
-    SetAuthoringPageActive(report)
-        .then(function (page) {
-            page.getVisuals().then(function (visuals) {
-                if (visuals.length < 1) {
-                    Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
-                    return;
-                }
+    try {
+        const page = await SetAuthoringPageActive(report);
+        const visuals = await page.getVisuals();
+        if (visuals.length < 1) {
+            Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
+            return;
+        }
 
-                // Getting the last visual that was added
-                let visual = visuals[visuals.length - 1];
+        // Getting the last visual that was added
+        let visual = visuals[visuals.length - 1];
 
-                // Getting 'Y' role data fields
-                // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Data-binding
-                visual.getDataFields('Y')
-                    .then(function (dataFields) {
+        // Getting 'Y' role data fields
+        // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Data-binding
+        const dataFields = await visual.getDataFields('Y');
 
-                        // Removing the second data field of 'Y' role, in order to add Legend/Breakdown
-                        if (dataFields.length > 1)
-                            visual.removeDataField('Y', 1);
+        // Removing the second data field of 'Y' role, in order to add Legend/Breakdown
+        if (dataFields.length > 1)
+            visual.removeDataField('Y', 1);
 
-                        // Adding Legend/Breakdown data role
-                        if (visual.type === 'clusteredColumnChart') {
-                            const quarterColumn = { column: 'Quarter', table: 'Date', schema: 'http://powerbi.com/product/schema#column' };
-                            visual.addDataField('Series', quarterColumn)
-                                .then(function () {
-                                    Log.logText("Data field was added to last visual.");
-                                })
-                                .catch(function (errors) {
-                                    Log.log(errors);
-                                });
-                        } else {
-                            const categoryColumn = { column: 'Category', table: 'Product', schema: 'http://powerbi.com/product/schema#column' };
-                            visual.addDataField('Breakdown', categoryColumn)
-                                .then(function () {
-                                    Log.logText("Data field was added to last visual.");
-                                })
-                                .catch(function (errors) {
-                                    Log.log(errors);
-                                });
-                        }
-                    }).catch(function (errors) {
-                        Log.log(errors);
-                    });
-            })
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Adding Legend/Breakdown data role
+        if (visual.type === 'clusteredColumnChart') {
+            const quarterColumn = { column: 'Quarter', table: 'Date', schema: 'http://powerbi.com/product/schema#column' };
+            await visual.addDataField('Series', quarterColumn);
+            Log.logText("Data field was added to last visual.");
+        }
+        else {
+            const categoryColumn = { column: 'Category', table: 'Product', schema: 'http://powerbi.com/product/schema#column' };
+            await visual.addDataField('Breakdown', categoryColumn);
+            Log.logText("Data field was added to last visual.");
+        }
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_Authoring_RemoveDataField() {
+async function _Report_Authoring_RemoveDataField() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -2986,46 +2873,37 @@ function _Report_Authoring_RemoveDataField() {
 
     // Util function - setting authoring page as active
     // For implementation please check 'Navigation > Page - Set active' code sample.
-    SetAuthoringPageActive(report)
-        .then(function (page) {
-            page.getVisuals().then(function (visuals) {
-                if (visuals.length < 1) {
-                    Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
-                    return;
-                }
+    try {
+        const page = await SetAuthoringPageActive(report);
+        const visuals = await page.getVisuals();
 
-                // Getting the last visual that was added
-                let visual = visuals[visuals.length - 1];
-                let dataRole = visual.type === 'clusteredColumnChart' ? 'Series' : 'Breakdown';
+        if (visuals.length < 1) {
+            Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
+            return;
+        }
 
-                // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Data-binding
-                visual.getDataFields(dataRole)
-                    .then(function (dataFields) {
+        // Getting the last visual that was added
+        let visual = visuals[visuals.length - 1];
+        let dataRole = visual.type === 'clusteredColumnChart' ? 'Series' : 'Breakdown';
 
-                        // Removing Legend/Breakdown data field
-                        if (dataFields.length > 0) {
-                            visual.removeDataField(dataRole, 0)
-                                .then(function () {
-                                    Log.logText("Data field was removed from last visual.");
-                                })
-                                .catch(function (errors) {
-                                    Log.log(errors);
-                                });
-                        } else {
-                            Log.logText("Please add additional data field first.");
-                        }
-                    })
-                    .catch(function (errors) {
-                        Log.log(errors);
-                    });
-            })
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Data-binding
+        const dataFields = await visual.getDataFields(dataRole);
+
+        // Removing Legend/Breakdown data field
+        if (dataFields.length > 0) {
+            await visual.removeDataField(dataRole, 0);
+            Log.logText("Data field was removed from last visual.");
+        }
+        else {
+            Log.log("Please add additional data field first.");
+        }
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_Authoring_GetDataField() {
+async function _Report_Authoring_GetDataField() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -3034,35 +2912,29 @@ function _Report_Authoring_GetDataField() {
 
     // Util function - setting authoring page as active
     // For implementation please check 'Navigation > Page - Set active' code sample.
-    SetAuthoringPageActive(report)
-        .then(function (page) {
-            page.getVisuals().then(function (visuals) {
-                if (visuals.length < 1) {
-                    Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
-                    return;
-                }
+    try {
+        const page = await SetAuthoringPageActive(report);
+        const visuals = await page.getVisuals();
+        if (visuals.length < 1) {
+            Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
+            return;
+        }
 
-                // Getting the last visual that was added
-                let visual = visuals[visuals.length - 1];
+        // Getting the last visual that was added
+        let visual = visuals[visuals.length - 1];
 
-                // Getting 'Y' role data fields
-                // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Data-binding
-                visual.getDataFields('Y')
-                    .then(function (dataFields) {
-                        Log.logText("Visual 'Y' fields:");
-                        Log.log(dataFields);
-                    })
-                    .catch(function (errors) {
-                        Log.log(errors);
-                    });
-            })
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Getting 'Y' role data fields
+        // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Data-binding
+        const dataFields = await visual.getDataFields('Y');
+        Log.logText("Visual 'Y' fields:");
+        Log.log(dataFields);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_Authoring_GetProperty() {
+async function _Report_Authoring_GetProperty() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -3071,32 +2943,29 @@ function _Report_Authoring_GetProperty() {
 
     // Util function - setting authoring page as active
     // For implementation please check 'Navigation > Page - Set active' code sample.
-    SetAuthoringPageActive(report)
-        .then(function (page) {
-            page.getVisuals().then(function (visuals) {
-                if (visuals.length < 1) {
-                    Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
-                    return;
-                }
+    try {
+        const page = await SetAuthoringPageActive(report);
+        const visuals = await page.getVisuals();
+        if (visuals.length < 1) {
+            Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
+            return;
+        }
 
-                // Getting the last visual that was added
-                let visual = visuals[visuals.length - 1];
+        // Getting the last visual that was added
+        let visual = visuals[visuals.length - 1];
 
-                // Get legend position property
-                // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Properties
-                visual.getProperty({ objectName: "legend", propertyName: "position" })
-                    .then(function (property) {
-                        Log.logText("Last visual - legend position property:");
-                        Log.log(property);
-                    });
-            })
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Get legend position property
+        // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Properties
+        const property = await visual.getProperty({ objectName: "legend", propertyName: "position" });
+        Log.logText("Last visual - legend position property:");
+        Log.log(property);
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_Authoring_SetProperty() {
+async function _Report_Authoring_SetProperty() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -3105,34 +2974,28 @@ function _Report_Authoring_SetProperty() {
 
     // Util function - setting authoring page as active
     // For implementation please check 'Navigation > Page - Set active' code sample.
-    SetAuthoringPageActive(report)
-        .then(function (page) {
-            page.getVisuals().then(function (visuals) {
-                if (visuals.length < 1) {
-                    Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
-                    return;
-                }
+    try {
+        const page = await SetAuthoringPageActive(report);
+        const visuals = await page.getVisuals();
+        if (visuals.length < 1) {
+            Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
+            return;
+        }
 
-                // Getting the last visual that was added
-                let visual = visuals[visuals.length - 1];
+        // Getting the last visual that was added
+        let visual = visuals[visuals.length - 1];
 
-                // Set legend position to bottom center
-                // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Properties
-                visual.setProperty({ objectName: "legend", propertyName: "position" }, { schema: 'http://powerbi.com/product/schema#property', value: 'BottomCenter' })
-                    .then(function () {
-                        Log.logText("Last visual legend position was set to bottom center.");
-                    })
-                    .catch(function (errors) {
-                        Log.log(errors);
-                    });
-            })
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Set legend position to bottom center
+        // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Properties
+        await visual.setProperty({ objectName: "legend", propertyName: "position" }, { schema: 'http://powerbi.com/product/schema#property', value: 'BottomCenter' });
+        Log.logText("Last visual legend position was set to bottom center.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
 
-function _Report_Authoring_ResetProperty() {
+async function _Report_Authoring_ResetProperty() {
     // Get a reference to the embedded report HTML element
     var embedContainer = $('#embedContainer')[0];
 
@@ -3141,29 +3004,23 @@ function _Report_Authoring_ResetProperty() {
 
     // Util function - setting authoring page as active
     // For implementation please check 'Navigation > Page - Set active' code sample.
-    SetAuthoringPageActive(report)
-        .then(function (page) {
-            page.getVisuals().then(function (visuals) {
-                if (visuals.length < 1) {
-                    Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
-                    return;
-                }
+    try {
+        const page = await SetAuthoringPageActive(report);
+        const visuals = await page.getVisuals();
+        if (visuals.length < 1) {
+            Log.logText("No visuals on authoring page. Please run 'Create visual and personalize' first.");
+            return;
+        }
 
-                // Getting the last visual that was added
-                let visual = visuals[visuals.length - 1];
+        // Getting the last visual that was added
+        let visual = visuals[visuals.length - 1];
 
-                // Reset visual legend position
-                // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Properties
-                visual.resetProperty({ objectName: "legend", propertyName: "position" })
-                    .then(function () {
-                        Log.logText("Last visual legend position property was reset to default value.");
-                    })
-                    .catch(function (errors) {
-                        Log.log(errors);
-                    });
-            })
-        })
-        .catch(function (errors) {
-            Log.log(errors);
-        });
+        // Reset visual legend position
+        // Documentation link: https://github.com/microsoft/powerbi-report-authoring/wiki/Properties
+        await visual.resetProperty({ objectName: "legend", propertyName: "position" });
+        Log.logText("Last visual legend position property was reset to default value.");
+    }
+    catch (errors) {
+        Log.log(errors);
+    }
 }
