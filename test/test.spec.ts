@@ -3140,14 +3140,14 @@ describe('SDK-to-HPM', function () {
       describe('getVisualDescriptor', function () {
         it('embeddedVisual.getVisualDescriptor() sends GET /report/pages/xyz/visuals', function () {
           // Arrange
-  
+
           // Act
           embeddedVisual.getVisualDescriptor();
-  
+
           // Assert
           expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/ReportSection1/visuals`, { uid: visualUniqueId }, visualFrame.contentWindow);
         });
-  
+
         it('embeddedVisual.getVisualDescriptor() returns promise that rejects with server error if there was error getting visual details', function (done) {
           // Arrange
           const testData = {
@@ -3157,9 +3157,9 @@ describe('SDK-to-HPM', function () {
               }
             }
           };
-  
+
           spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
-  
+
           // Act
           embeddedVisual.getVisualDescriptor()
             .catch(error => {
@@ -3169,7 +3169,7 @@ describe('SDK-to-HPM', function () {
               done();
             });
         });
-  
+
         it('embeddedVisual.getVisualDescriptor() returns promise that resolves with visual details', function (done) {
           // Arrange
           const fakeVisualDescriptor = new visualDescriptor.VisualDescriptor(page1, visualEmbedConfiguration.visualName, 'title', 'type', {});
@@ -3454,18 +3454,18 @@ describe('SDK-to-HPM', function () {
         report.removeFilters();
 
         // Assert
-        expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', [], { uid: uniqueId }, iframe.contentWindow);
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', { filtersOperation: models.FiltersOperations.RemoveAll, filters: undefined }, { uid: uniqueId }, iframe.contentWindow);
       });
 
       it('report.removeFilters() returns promise that resolves with null if request is accepted', function (done) {
         // Arrange
-        spyHpm.put.and.returnValue(Promise.resolve(null));
+        spyHpm.post.and.returnValue(Promise.resolve(null));
 
         // Act
         report.removeFilters()
           .then(response => {
             // Assert
-            expect(spyHpm.put).toHaveBeenCalledWith('/report/filters', [], { uid: uniqueId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith('/report/filters', { filtersOperation: models.FiltersOperations.RemoveAll, filters: undefined }, { uid: uniqueId }, iframe.contentWindow);
             expect(response).toEqual(null);
             done();
           });
@@ -3996,18 +3996,18 @@ describe('SDK-to-HPM', function () {
         page1.removeFilters();
 
         // Assert
-        expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/filters`, [], { uid: uniqueId }, iframe.contentWindow);
+        expect(spyHpm.post).toHaveBeenCalledWith(`/report/pages/${page1.name}/filters`, { filtersOperation: models.FiltersOperations.RemoveAll, filters: undefined }, { uid: uniqueId }, iframe.contentWindow);
       });
 
       it('page.removeFilters() returns promise that resolves with null if request is accepted', function (done) {
         // Arrange
-        spyHpm.put.and.returnValue(Promise.resolve(null));
+        spyHpm.post.and.returnValue(Promise.resolve(null));
 
         // Act
         page1.removeFilters()
           .then(response => {
             // Assert
-            expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/filters`, [], { uid: uniqueId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith(`/report/pages/${page1.name}/filters`, { filtersOperation: models.FiltersOperations.RemoveAll, filters: undefined }, { uid: uniqueId }, iframe.contentWindow);
             expect(response).toEqual(null);
             done();
           });
@@ -4243,7 +4243,7 @@ describe('SDK-to-HPM', function () {
         visual1.removeFilters();
 
         // Assert
-        expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, [], { uid: uniqueId }, iframe.contentWindow);
+        expect(spyHpm.post).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, { filtersOperation: models.FiltersOperations.RemoveAll, filters: undefined }, { uid: uniqueId }, iframe.contentWindow);
       });
 
       it('visual.removeFilters() returns promise that resolves with null if request is accepted', function (done) {
@@ -4254,7 +4254,7 @@ describe('SDK-to-HPM', function () {
         visual1.removeFilters()
           .then(response => {
             // Assert
-            expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, [], { uid: uniqueId }, iframe.contentWindow);
+            expect(spyHpm.post).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, { filtersOperation: models.FiltersOperations.RemoveAll, filters: undefined }, { uid: uniqueId }, iframe.contentWindow);
             expect(response).toEqual(null);
             done();
           });
@@ -4843,12 +4843,12 @@ describe('SDK-to-MockApp', function () {
         // Arrange
         iframeLoaded
           .then(() => {
-            spyApp.setFilters.and.returnValue(Promise.resolve(null));
+            spyApp.updateFilters.and.returnValue(Promise.resolve(null));
             // Act
             report.removeFilters()
               .then(response => {
                 // Assert
-                expect(spyApp.setFilters).toHaveBeenCalled();
+                expect(spyApp.updateFilters).toHaveBeenCalledWith(models.FiltersOperations.RemoveAll, undefined);
                 done();
               });
           });
@@ -5050,12 +5050,12 @@ describe('SDK-to-MockApp', function () {
         // Arrange
         iframeLoaded
           .then(() => {
-            spyApp.setFilters.and.returnValue(Promise.resolve(null));
+            spyApp.updateFilters.and.returnValue(Promise.resolve(null));
             // Act
             page1.removeFilters()
               .then(response => {
                 // Assert
-                expect(spyApp.setFilters).toHaveBeenCalled();
+                expect(spyApp.updateFilters).toHaveBeenCalledWith(models.FiltersOperations.RemoveAll, undefined);
                 done();
               });
           });

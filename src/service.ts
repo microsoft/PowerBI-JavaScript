@@ -497,6 +497,11 @@ export class Service implements IService {
       embedElement.element.removeEventListener('ready', embedElement.frontLoadHandler, false);
     }
 
+    /** Removes all event handlers. */
+    embedElement.allowedEvents.forEach(eventName => {
+      embedElement.off(eventName);
+    });
+
     /** Removes the component from an internal list of components. */
     utils.remove(x => x === powerBiElement.powerBiEmbed, this.embeds);
     /** Deletes a property from the HTML element. */
