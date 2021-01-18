@@ -1,9 +1,9 @@
 /**
  * @hidden
  */
+import * as models from 'powerbi-models';
 import * as service from './service';
 import * as factories from './factories';
-import * as models from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 
 export {

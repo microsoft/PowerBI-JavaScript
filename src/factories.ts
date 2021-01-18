@@ -1,11 +1,11 @@
 /**
  * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
  */
-import { IHpmFactory, IWpmpFactory, IRouterFactory } from './service';
+import { WindowPostMessageProxy } from 'window-post-message-proxy';
+import { HttpPostMessage } from 'http-post-message';
+import { Router } from 'powerbi-router';
 import config from './config';
-import * as wpmp from 'window-post-message-proxy';
-import * as hpm from 'http-post-message';
-import * as router from 'powerbi-router';
+import { IHpmFactory, IWpmpFactory, IRouterFactory } from './service';
 
 export {
   IHpmFactory,
@@ -14,26 +14,26 @@ export {
 };
 
 export const hpmFactory: IHpmFactory = (wpmp, defaultTargetWindow, sdkVersion = config.version, sdkType = config.type) => {
-  return new hpm.HttpPostMessage(wpmp, {
+  return new HttpPostMessage(wpmp, {
     'x-sdk-type': sdkType,
     'x-sdk-version': sdkVersion
   }, defaultTargetWindow);
 };
 
 export const wpmpFactory: IWpmpFactory = (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window) => {
-  return new wpmp.WindowPostMessageProxy({
+  return new WindowPostMessageProxy({
     processTrackingProperties: {
-      addTrackingProperties: hpm.HttpPostMessage.addTrackingProperties,
-      getTrackingProperties: hpm.HttpPostMessage.getTrackingProperties,
+      addTrackingProperties: HttpPostMessage.addTrackingProperties,
+      getTrackingProperties: HttpPostMessage.getTrackingProperties,
     },
-    isErrorMessage: hpm.HttpPostMessage.isErrorMessage,
+    isErrorMessage: HttpPostMessage.isErrorMessage,
     suppressWarnings: true,
-    name,
-    logMessages,
-    eventSourceOverrideWindow
+    name: name,
+    logMessages: logMessages,
+    eventSourceOverrideWindow: eventSourceOverrideWindow
   });
 };
 
 export const routerFactory: IRouterFactory = (wpmp) => {
-  return new router.Router(wpmp);
+  return new Router(wpmp);
 };

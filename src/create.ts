@@ -1,6 +1,6 @@
-import * as service from './service';
-import * as models from 'powerbi-models';
-import * as embed from './embed';
+import { IReportCreateConfiguration, IError, validateCreateReport } from 'powerbi-models';
+import { Service } from './service';
+import { Embed, IEmbedConfigurationBase, IEmbedConfiguration } from './embed';
 import * as utils from './util';
 
 /**
@@ -8,13 +8,13 @@ import * as utils from './util';
  *
  * @export
  * @class Create
- * @extends {embed.Embed}
+ * @extends {Embed}
  */
-export class Create extends embed.Embed {
+export class Create extends Embed {
   /*
    * @hidden
    */
-  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration | models.IReportCreateConfiguration, phasedRender?: boolean, isBootstrap?: boolean) {
+  constructor(service: Service, element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration, phasedRender?: boolean, isBootstrap?: boolean) {
     super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
   }
 
@@ -36,13 +36,13 @@ export class Create extends embed.Embed {
   /**
    * Validate create report configuration.
    */
-  validate(config: embed.IEmbedConfigurationBase): models.IError[] {
-    return models.validateCreateReport(config);
+  validate(config: IEmbedConfigurationBase): IError[] {
+    return validateCreateReport(config);
   }
 
   /**
    * Handle config changes.
-   * 
+   *
    * @hidden
    * @returns {void}
    */
@@ -51,16 +51,16 @@ export class Create extends embed.Embed {
       return;
     }
 
-    const config = <embed.IEmbedConfiguration | models.IReportCreateConfiguration>this.config;
+    const config = this.config as IEmbedConfiguration | IReportCreateConfiguration;
 
     this.createConfig = {
-        accessToken: config.accessToken,
-        datasetId: config.datasetId || this.getId(),
-        groupId:  config.groupId,
-        settings: config.settings,
-        tokenType: config.tokenType,
-        theme: config.theme
-    }
+      accessToken: config.accessToken,
+      datasetId: config.datasetId || this.getId(),
+      groupId: config.groupId,
+      settings: config.settings,
+      tokenType: config.tokenType,
+      theme: config.theme
+    };
   }
 
   /**
@@ -96,10 +96,10 @@ export class Create extends embed.Embed {
    * @hidden
    */
   static findIdFromEmbedUrl(url: string): string {
-    const datasetIdRegEx = /datasetId="?([^&]+)"?/
+    const datasetIdRegEx = /datasetId="?([^&]+)"?/;
     const datasetIdMatch = url.match(datasetIdRegEx);
 
-    let datasetId;
+    let datasetId: string;
     if (datasetIdMatch) {
       datasetId = datasetIdMatch[1];
     }
