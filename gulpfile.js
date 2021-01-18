@@ -211,5 +211,7 @@ gulp.task('test:js', 'Run js tests', function (done) {
         configFile: __dirname + '/karma.conf.js',
         singleRun: argv.watch ? false : true,
         captureTimeout: argv.timeout || 60000
-    }, done).start();
+    },  function() {
+      done();
+  }).start();
 });
