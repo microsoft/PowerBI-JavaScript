@@ -73,7 +73,7 @@ Open the address to view in the browser:
 http://127.0.0.1:8080/
 ```
 
-## Updating the documenatation (For those with push permissions only)
+## Updating the documentation (For those with push permissions only)
 First run the command to build the docs and open it to verify the changes are as expected.
 
 ```
