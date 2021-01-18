@@ -1,4 +1,4 @@
-/*! powerbi-client v2.16.5 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.17.1 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -288,7 +288,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/*! powerbi-models v1.7.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-models v1.8.0 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
 		module.exports = factory();
@@ -398,7 +398,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateCreateReport = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.AdvancedFilter = exports.TupleFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
+exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateUpdateFiltersRequest = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateCreateReport = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.AdvancedFilter = exports.TupleFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
 var validator_1 = __webpack_require__(1);
 var TraceType;
 (function (TraceType) {
@@ -483,6 +483,13 @@ var MenuLocation;
     MenuLocation[MenuLocation["Bottom"] = 0] = "Bottom";
     MenuLocation[MenuLocation["Top"] = 1] = "Top";
 })(MenuLocation = exports.MenuLocation || (exports.MenuLocation = {}));
+var FiltersOperations;
+(function (FiltersOperations) {
+    FiltersOperations[FiltersOperations["RemoveAll"] = 0] = "RemoveAll";
+    FiltersOperations[FiltersOperations["ReplaceAll"] = 1] = "ReplaceAll";
+    FiltersOperations[FiltersOperations["Add"] = 2] = "Add";
+    FiltersOperations[FiltersOperations["Replace"] = 3] = "Replace";
+})(FiltersOperations = exports.FiltersOperations || (exports.FiltersOperations = {}));
 var FiltersLevel;
 (function (FiltersLevel) {
     FiltersLevel[FiltersLevel["Report"] = 0] = "Report";
@@ -1127,10 +1134,15 @@ function validatePage(input) {
 }
 exports.validatePage = validatePage;
 function validateFilter(input) {
-    var errors = validator_1.Validators.filtersValidator.validate(input);
+    var errors = validator_1.Validators.filterValidator.validate(input);
     return errors ? errors.map(normalizeError) : undefined;
 }
 exports.validateFilter = validateFilter;
+function validateUpdateFiltersRequest(input) {
+    var errors = validator_1.Validators.updateFiltersRequestValidator.validate(input);
+    return errors ? errors.map(normalizeError) : undefined;
+}
+exports.validateUpdateFiltersRequest = validateUpdateFiltersRequest;
 function validateSaveAsParameters(input) {
     var errors = validator_1.Validators.saveAsParametersValidator.validate(input);
     return errors ? errors.map(normalizeError) : undefined;
@@ -1249,12 +1261,16 @@ exports.Validators = {
     fieldRequiredValidator: new fieldRequiredValidator_1.FieldRequiredValidator(),
     fieldsPaneValidator: new panesValidator_1.FieldsPaneValidator(),
     filterColumnTargetValidator: new filtersValidator_1.FilterColumnTargetValidator(),
+    filterDisplaySettingsValidator: new filtersValidator_1.FilterDisplaySettingsValidator(),
     filterConditionsValidator: new typeValidator_1.ArrayValidator([new filtersValidator_1.ConditionItemValidator()]),
     filterHierarchyTargetValidator: new filtersValidator_1.FilterHierarchyTargetValidator(),
     filterMeasureTargetValidator: new filtersValidator_1.FilterMeasureTargetValidator(),
     filterTargetValidator: new anyOfValidator_1.AnyOfValidator([new filtersValidator_1.FilterColumnTargetValidator(), new filtersValidator_1.FilterHierarchyTargetValidator(), new filtersValidator_1.FilterMeasureTargetValidator()]),
-    filtersArrayValidator: new typeValidator_1.ArrayValidator([new anyOfValidator_1.AnyOfValidator([new filtersValidator_1.BasicFilterValidator(), new filtersValidator_1.AdvancedFilterValidator(), new filtersValidator_1.RelativeDateFilterValidator(), new filtersValidator_1.RelativeTimeFilterValidator()])]),
-    filtersValidator: new filtersValidator_1.FilterValidator(),
+    filterValidator: new filtersValidator_1.FilterValidator(),
+    filterTypeValidator: new typeValidator_1.EnumValidator([0, 1, 2, 3, 4, 5, 6, 7]),
+    filtersArrayValidator: new typeValidator_1.ArrayValidator([new filtersValidator_1.FilterValidator()]),
+    filtersOperationsUpdateValidator: new typeValidator_1.EnumValidator([1, 2, 3]),
+    filtersOperationsRemoveAllValidator: new typeValidator_1.EnumValidator([0]),
     filtersPaneValidator: new panesValidator_1.FiltersPaneValidator(),
     hyperlinkClickBehaviorValidator: new typeValidator_1.EnumValidator([0, 1, 2]),
     includeExcludeFilterValidator: new filtersValidator_1.IncludeExcludeFilterValidator(),
@@ -1307,6 +1323,7 @@ exports.Validators = {
     tokenTypeValidator: new typeValidator_1.EnumValidator([0, 1]),
     topNFilterTypeValidator: new typeValidator_1.EnumValidator([5]),
     topNFilterValidator: new filtersValidator_1.TopNFilterValidator(),
+    updateFiltersRequestValidator: new anyOfValidator_1.AnyOfValidator([new filtersValidator_1.UpdateFiltersRequestValidator(), new filtersValidator_1.RemoveFiltersRequestValidator()]),
     viewModeValidator: new typeValidator_1.EnumValidator([0, 1]),
     visualCommandSelectorValidator: new anyOfValidator_1.AnyOfValidator([new selectorsValidator_1.VisualSelectorValidator(), new selectorsValidator_1.VisualTypeSelectorValidator()]),
     visualHeaderSelectorValidator: new anyOfValidator_1.AnyOfValidator([new selectorsValidator_1.VisualSelectorValidator(), new selectorsValidator_1.VisualTypeSelectorValidator()]),
@@ -2481,7 +2498,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConditionItemValidator = exports.FilterValidator = exports.IncludeExcludeFilterValidator = exports.NotSupportedFilterValidator = exports.TopNFilterValidator = exports.RelativeTimeFilterValidator = exports.RelativeDateFilterValidator = exports.AdvancedFilterValidator = exports.BasicFilterValidator = exports.FilterMeasureTargetValidator = exports.FilterKeyHierarchyTargetValidator = exports.FilterHierarchyTargetValidator = exports.FilterKeyColumnsTargetValidator = exports.FilterColumnTargetValidator = void 0;
+exports.ConditionItemValidator = exports.RemoveFiltersRequestValidator = exports.UpdateFiltersRequestValidator = exports.FilterValidator = exports.IncludeExcludeFilterValidator = exports.NotSupportedFilterValidator = exports.TopNFilterValidator = exports.RelativeTimeFilterValidator = exports.RelativeDateFilterValidator = exports.AdvancedFilterValidator = exports.BasicFilterValidator = exports.FilterValidatorBase = exports.FilterDisplaySettingsValidator = exports.FilterMeasureTargetValidator = exports.FilterKeyHierarchyTargetValidator = exports.FilterHierarchyTargetValidator = exports.FilterKeyColumnsTargetValidator = exports.FilterColumnTargetValidator = void 0;
 var multipleFieldsValidator_1 = __webpack_require__(3);
 var typeValidator_1 = __webpack_require__(4);
 var validator_1 = __webpack_require__(1);
@@ -2626,6 +2643,76 @@ var FilterMeasureTargetValidator = /** @class */ (function (_super) {
     return FilterMeasureTargetValidator;
 }(typeValidator_1.ObjectValidator));
 exports.FilterMeasureTargetValidator = FilterMeasureTargetValidator;
+var FilterDisplaySettingsValidator = /** @class */ (function (_super) {
+    __extends(FilterDisplaySettingsValidator, _super);
+    function FilterDisplaySettingsValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    FilterDisplaySettingsValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "isLockedInViewMode",
+                validators: [validator_1.Validators.booleanValidator]
+            },
+            {
+                field: "isHiddenInViewMode",
+                validators: [validator_1.Validators.booleanValidator]
+            },
+            {
+                field: "displayName",
+                validators: [validator_1.Validators.stringValidator]
+            }
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return FilterDisplaySettingsValidator;
+}(typeValidator_1.ObjectValidator));
+exports.FilterDisplaySettingsValidator = FilterDisplaySettingsValidator;
+var FilterValidatorBase = /** @class */ (function (_super) {
+    __extends(FilterValidatorBase, _super);
+    function FilterValidatorBase() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    FilterValidatorBase.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "target",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filterTargetValidator]
+            },
+            {
+                field: "$schema",
+                validators: [validator_1.Validators.stringValidator]
+            },
+            {
+                field: "filterType",
+                validators: [validator_1.Validators.filterTypeValidator]
+            },
+            {
+                field: "displaySettings",
+                validators: [validator_1.Validators.filterDisplaySettingsValidator]
+            },
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return FilterValidatorBase;
+}(typeValidator_1.ObjectValidator));
+exports.FilterValidatorBase = FilterValidatorBase;
 var BasicFilterValidator = /** @class */ (function (_super) {
     __extends(BasicFilterValidator, _super);
     function BasicFilterValidator() {
@@ -2640,10 +2727,6 @@ var BasicFilterValidator = /** @class */ (function (_super) {
             return errors;
         }
         var fields = [
-            {
-                field: "target",
-                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filterTargetValidator]
-            },
             {
                 field: "operator",
                 validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
@@ -2665,7 +2748,7 @@ var BasicFilterValidator = /** @class */ (function (_super) {
         return multipleFieldsValidator.validate(input, path, field);
     };
     return BasicFilterValidator;
-}(typeValidator_1.ObjectValidator));
+}(FilterValidatorBase));
 exports.BasicFilterValidator = BasicFilterValidator;
 var AdvancedFilterValidator = /** @class */ (function (_super) {
     __extends(AdvancedFilterValidator, _super);
@@ -2681,10 +2764,6 @@ var AdvancedFilterValidator = /** @class */ (function (_super) {
             return errors;
         }
         var fields = [
-            {
-                field: "target",
-                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filterTargetValidator]
-            },
             {
                 field: "logicalOperator",
                 validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
@@ -2702,7 +2781,7 @@ var AdvancedFilterValidator = /** @class */ (function (_super) {
         return multipleFieldsValidator.validate(input, path, field);
     };
     return AdvancedFilterValidator;
-}(typeValidator_1.ObjectValidator));
+}(FilterValidatorBase));
 exports.AdvancedFilterValidator = AdvancedFilterValidator;
 var RelativeDateFilterValidator = /** @class */ (function (_super) {
     __extends(RelativeDateFilterValidator, _super);
@@ -2718,10 +2797,6 @@ var RelativeDateFilterValidator = /** @class */ (function (_super) {
             return errors;
         }
         var fields = [
-            {
-                field: "target",
-                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filterTargetValidator]
-            },
             {
                 field: "operator",
                 validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.relativeDateFilterOperatorValidator]
@@ -2747,7 +2822,7 @@ var RelativeDateFilterValidator = /** @class */ (function (_super) {
         return multipleFieldsValidator.validate(input, path, field);
     };
     return RelativeDateFilterValidator;
-}(typeValidator_1.ObjectValidator));
+}(FilterValidatorBase));
 exports.RelativeDateFilterValidator = RelativeDateFilterValidator;
 var RelativeTimeFilterValidator = /** @class */ (function (_super) {
     __extends(RelativeTimeFilterValidator, _super);
@@ -2763,10 +2838,6 @@ var RelativeTimeFilterValidator = /** @class */ (function (_super) {
             return errors;
         }
         var fields = [
-            {
-                field: "target",
-                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filterTargetValidator]
-            },
             {
                 field: "operator",
                 validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.relativeDateFilterOperatorValidator]
@@ -2788,7 +2859,7 @@ var RelativeTimeFilterValidator = /** @class */ (function (_super) {
         return multipleFieldsValidator.validate(input, path, field);
     };
     return RelativeTimeFilterValidator;
-}(typeValidator_1.ObjectValidator));
+}(FilterValidatorBase));
 exports.RelativeTimeFilterValidator = RelativeTimeFilterValidator;
 var TopNFilterValidator = /** @class */ (function (_super) {
     __extends(TopNFilterValidator, _super);
@@ -2804,10 +2875,6 @@ var TopNFilterValidator = /** @class */ (function (_super) {
             return errors;
         }
         var fields = [
-            {
-                field: "target",
-                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filterTargetValidator]
-            },
             {
                 field: "operator",
                 validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
@@ -2829,7 +2896,7 @@ var TopNFilterValidator = /** @class */ (function (_super) {
         return multipleFieldsValidator.validate(input, path, field);
     };
     return TopNFilterValidator;
-}(typeValidator_1.ObjectValidator));
+}(FilterValidatorBase));
 exports.TopNFilterValidator = TopNFilterValidator;
 var NotSupportedFilterValidator = /** @class */ (function (_super) {
     __extends(NotSupportedFilterValidator, _super);
@@ -2845,10 +2912,6 @@ var NotSupportedFilterValidator = /** @class */ (function (_super) {
             return errors;
         }
         var fields = [
-            {
-                field: "target",
-                validators: [validator_1.Validators.filterTargetValidator]
-            },
             {
                 field: "message",
                 validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
@@ -2866,7 +2929,7 @@ var NotSupportedFilterValidator = /** @class */ (function (_super) {
         return multipleFieldsValidator.validate(input, path, field);
     };
     return NotSupportedFilterValidator;
-}(typeValidator_1.ObjectValidator));
+}(FilterValidatorBase));
 exports.NotSupportedFilterValidator = NotSupportedFilterValidator;
 var IncludeExcludeFilterValidator = /** @class */ (function (_super) {
     __extends(IncludeExcludeFilterValidator, _super);
@@ -2882,10 +2945,6 @@ var IncludeExcludeFilterValidator = /** @class */ (function (_super) {
             return errors;
         }
         var fields = [
-            {
-                field: "target",
-                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filterTargetValidator]
-            },
             {
                 field: "isExclude",
                 validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.booleanValidator]
@@ -2903,7 +2962,7 @@ var IncludeExcludeFilterValidator = /** @class */ (function (_super) {
         return multipleFieldsValidator.validate(input, path, field);
     };
     return IncludeExcludeFilterValidator;
-}(typeValidator_1.ObjectValidator));
+}(FilterValidatorBase));
 exports.IncludeExcludeFilterValidator = IncludeExcludeFilterValidator;
 var FilterValidator = /** @class */ (function (_super) {
     __extends(FilterValidator, _super);
@@ -2919,6 +2978,56 @@ var FilterValidator = /** @class */ (function (_super) {
     return FilterValidator;
 }(typeValidator_1.ObjectValidator));
 exports.FilterValidator = FilterValidator;
+var UpdateFiltersRequestValidator = /** @class */ (function (_super) {
+    __extends(UpdateFiltersRequestValidator, _super);
+    function UpdateFiltersRequestValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UpdateFiltersRequestValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var fields = [
+            {
+                field: "filtersOperation",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filtersOperationsUpdateValidator]
+            },
+            {
+                field: "filters",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filtersArrayValidator]
+            }
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return UpdateFiltersRequestValidator;
+}(typeValidator_1.ObjectValidator));
+exports.UpdateFiltersRequestValidator = UpdateFiltersRequestValidator;
+var RemoveFiltersRequestValidator = /** @class */ (function (_super) {
+    __extends(RemoveFiltersRequestValidator, _super);
+    function RemoveFiltersRequestValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    RemoveFiltersRequestValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var fields = [
+            {
+                field: "filtersOperation",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filtersOperationsRemoveAllValidator]
+            },
+            {
+                field: "filters",
+                validators: [validator_1.Validators.fieldForbiddenValidator, validator_1.Validators.filtersArrayValidator]
+            }
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return RemoveFiltersRequestValidator;
+}(typeValidator_1.ObjectValidator));
+exports.RemoveFiltersRequestValidator = RemoveFiltersRequestValidator;
 var ConditionItemValidator = /** @class */ (function (_super) {
     __extends(ConditionItemValidator, _super);
     function ConditionItemValidator() {
@@ -5864,7 +5973,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.16.5',
+    version: '2.17.1',
     type: 'js'
 };
 exports.default = config;
@@ -6964,10 +7073,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Page = void 0;
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var visualDescriptor_1 = __webpack_require__(/*! ./visualDescriptor */ "./src/visualDescriptor.ts");
-var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
-var utils = __webpack_require__(/*! ./util */ "./src/util.ts");
-var errors = __webpack_require__(/*! ./errors */ "./src/errors.ts");
+var util_1 = __webpack_require__(/*! ./util */ "./src/util.ts");
+var errors_1 = __webpack_require__(/*! ./errors */ "./src/errors.ts");
 /**
  * A Power BI report page
  *
@@ -6984,7 +7093,7 @@ var Page = /** @class */ (function () {
      * @param {string} name
      * @param {string} [displayName]
      * @param {boolean} [isActivePage]
-     * @param {models.SectionVisibility} [visibility]
+     * @param {SectionVisibility} [visibility]
      * @hidden
      */
     function Page(report, name, displayName, isActivePage, visibility, defaultSize, defaultDisplayOption) {
@@ -7004,7 +7113,7 @@ var Page = /** @class */ (function () {
      *  .then(filters => { ... });
      * ```
      *
-     * @returns {(Promise<models.IFilter[]>)}
+     * @returns {(Promise<IFilter[]>)}
      */
     Page.prototype.getFilters = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -7026,30 +7135,35 @@ var Page = /** @class */ (function () {
         });
     };
     /**
-     * Delete the page from the report
+     * Update the filters for the current page according to the operation: Add, replace all, replace by target or remove.
      *
      * ```javascript
-     * // Delete the page from the report
-     * page.delete();
+     * page.updateFilters(FiltersOperations.Add, filters)
+     *   .catch(errors => { ... });
      * ```
      *
-     * @returns {Promise<void>}
+     * @param {(IFilter[])} filters
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
      */
-    Page.prototype.delete = function () {
+    Page.prototype.updateFilters = function (operation, filters) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_2;
+            var updateFiltersRequest, response_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.report.service.hpm.delete("/report/pages/" + this.name, {}, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        updateFiltersRequest = {
+                            filtersOperation: operation,
+                            filters: filters
+                        };
+                        _a.label = 1;
                     case 1:
-                        response = _a.sent();
-                        return [2 /*return*/, response.body];
-                    case 2:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.report.service.hpm.post("/report/pages/" + this.name + "/filters", updateFiltersRequest, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3:
                         response_2 = _a.sent();
                         throw response_2.body;
-                    case 3: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -7067,8 +7181,65 @@ var Page = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.setFilters([])];
+                    case 0: return [4 /*yield*/, this.updateFilters(powerbi_models_1.FiltersOperations.RemoveAll)];
                     case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * Sets all filters on the current page.
+     *
+     * ```javascript
+     * page.setFilters(filters)
+     *   .catch(errors => { ... });
+     * ```
+     *
+     * @param {(IFilter[])} filters
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Page.prototype.setFilters = function (filters) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.report.service.hpm.put("/report/pages/" + this.name + "/filters", filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2:
+                        response_3 = _a.sent();
+                        throw response_3.body;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Delete the page from the report
+     *
+     * ```javascript
+     * // Delete the page from the report
+     * page.delete();
+     * ```
+     *
+     * @returns {Promise<void>}
+     */
+    Page.prototype.delete = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, response_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.report.service.hpm.delete("/report/pages/" + this.name, {}, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response.body];
+                    case 2:
+                        response_4 = _a.sent();
+                        throw response_4.body;
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -7084,7 +7255,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.setActive = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var page, response_3;
+            var page, response_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -7099,37 +7270,9 @@ var Page = /** @class */ (function () {
                         return [4 /*yield*/, this.report.service.hpm.put('/report/pages/active', page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
-                        response_3 = _a.sent();
-                        throw response_3.body;
+                        response_5 = _a.sent();
+                        throw response_5.body;
                     case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    /**
-     * Sets all filters on the current page.
-     *
-     * ```javascript
-     * page.setFilters(filters);
-     *   .catch(errors => { ... });
-     * ```
-     *
-     * @param {(models.IFilter[])} filters
-     * @returns {Promise<IHttpPostMessageResponse<void>>}
-     */
-    Page.prototype.setFilters = function (filters) {
-        return __awaiter(this, void 0, void 0, function () {
-            var response_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.report.service.hpm.put("/report/pages/" + this.name + "/filters", filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                    case 2:
-                        response_4 = _a.sent();
-                        throw response_4.body;
-                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -7145,7 +7288,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.setDisplayName = function (displayName) {
         return __awaiter(this, void 0, void 0, function () {
-            var page, response_5;
+            var page, response_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -7159,8 +7302,8 @@ var Page = /** @class */ (function () {
                         return [4 /*yield*/, this.report.service.hpm.put("/report/pages/" + this.name + "/name", page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
-                        response_5 = _a.sent();
-                        throw response_5.body;
+                        response_6 = _a.sent();
+                        throw response_6.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -7178,13 +7321,13 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.getVisuals = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_6;
+            var response, response_7;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.report.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.report.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
                     case 1:
@@ -7193,12 +7336,10 @@ var Page = /** @class */ (function () {
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body
-                                .map(function (visual) {
-                                return new visualDescriptor_1.VisualDescriptor(_this, visual.name, visual.title, visual.type, visual.layout);
-                            })];
+                                .map(function (visual) { return new visualDescriptor_1.VisualDescriptor(_this, visual.name, visual.title, visual.type, visual.layout); })];
                     case 3:
-                        response_6 = _a.sent();
-                        throw response_6.body;
+                        response_7 = _a.sent();
+                        throw response_7.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -7216,14 +7357,14 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.hasLayout = function (layoutType) {
         return __awaiter(this, void 0, void 0, function () {
-            var layoutTypeEnum, response, response_7;
+            var layoutTypeEnum, response, response_8;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.report.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.report.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
-                        layoutTypeEnum = models.LayoutType[layoutType];
+                        layoutTypeEnum = powerbi_models_1.LayoutType[layoutType];
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -7232,8 +7373,8 @@ var Page = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_7 = _a.sent();
-                        throw response_7.body;
+                        response_8 = _a.sent();
+                        throw response_8.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -7496,10 +7637,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Report = void 0;
-var embed = __webpack_require__(/*! ./embed */ "./src/embed.ts");
-var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
-var utils = __webpack_require__(/*! ./util */ "./src/util.ts");
-var errors = __webpack_require__(/*! ./errors */ "./src/errors.ts");
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
+var util_1 = __webpack_require__(/*! ./util */ "./src/util.ts");
+var errors_1 = __webpack_require__(/*! ./errors */ "./src/errors.ts");
 var page_1 = __webpack_require__(/*! ./page */ "./src/page.ts");
 var bookmarksManager_1 = __webpack_require__(/*! ./bookmarksManager */ "./src/bookmarksManager.ts");
 /**
@@ -7507,7 +7648,7 @@ var bookmarksManager_1 = __webpack_require__(/*! ./bookmarksManager */ "./src/bo
  *
  * @export
  * @class Report
- * @extends {embed.Embed}
+ * @extends {Embed}
  * @implements {IReportNode}
  * @implements {IFilterable}
  */
@@ -7516,9 +7657,9 @@ var Report = /** @class */ (function (_super) {
     /**
      * Creates an instance of a Power BI Report.
      *
-     * @param {service.Service} service
+     * @param {Service} service
      * @param {HTMLElement} element
-     * @param {embed.IEmbedConfiguration} config
+     * @param {IEmbedConfiguration} config
      * @hidden
      */
     function Report(service, element, baseConfig, phasedRender, isBootstrap, iframe) {
@@ -7536,6 +7677,7 @@ var Report = /** @class */ (function (_super) {
      * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
      *
      * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
+     *
      * @hidden
      * @static
      * @param {string} url
@@ -7694,7 +7836,7 @@ var Report = /** @class */ (function (_super) {
      *   });
      * ```
      *
-     * @returns {Promise<models.IFilter[]>}
+     * @returns {Promise<IFilter[]>}
      */
     Report.prototype.getFilters = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -7702,8 +7844,8 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
                     case 1:
@@ -7715,6 +7857,98 @@ var Report = /** @class */ (function (_super) {
                     case 3:
                         response_5 = _a.sent();
                         throw response_5.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Update the filters at the report level according to the operation: Add, replace all, replace by target or remove.
+     *
+     * ```javascript
+     * report.updateFilters(FiltersOperations.Add, filters)
+     *   .catch(errors => { ... });
+     * ```
+     *
+     * @param {(IFilter[])} filters
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.updateFilters = function (operation, filters) {
+        return __awaiter(this, void 0, void 0, function () {
+            var updateFiltersRequest, response_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        updateFiltersRequest = {
+                            filtersOperation: operation,
+                            filters: filters
+                        };
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.service.hpm.post("/report/filters", updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3:
+                        response_6 = _a.sent();
+                        throw response_6.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Removes all filters at the report level.
+     *
+     * ```javascript
+     * report.removeFilters();
+     * ```
+     *
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.removeFilters = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                    return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                }
+                return [2 /*return*/, this.updateFilters(powerbi_models_1.FiltersOperations.RemoveAll)];
+            });
+        });
+    };
+    /**
+     * Sets filters at the report level.
+     *
+     * ```javascript
+     * const filters: [
+     *    ...
+     * ];
+     *
+     * report.setFilters(filters)
+     *  .catch(errors => {
+     *    ...
+     *  });
+     * ```
+     *
+     * @param {(IFilter[])} filters
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.setFilters = function (filters) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response_7;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.service.hpm.put("/report/filters", filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3:
+                        response_7 = _a.sent();
+                        throw response_7.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -7747,13 +7981,13 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.getPages = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_6;
+            var response, response_8;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
                     case 1:
@@ -7762,12 +7996,10 @@ var Report = /** @class */ (function (_super) {
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body
-                                .map(function (page) {
-                                return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption);
-                            })];
+                                .map(function (page) { return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption); })];
                     case 3:
-                        response_6 = _a.sent();
-                        throw response_6.body;
+                        response_8 = _a.sent();
+                        throw response_8.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -7796,12 +8028,12 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.print = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_7;
+            var response, response_9;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
                     case 1:
@@ -7811,32 +8043,9 @@ var Report = /** @class */ (function (_super) {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_7 = _a.sent();
-                        throw response_7.body;
+                        response_9 = _a.sent();
+                        throw response_9.body;
                     case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    /**
-     * Removes all filters at the report level.
-     *
-     * ```javascript
-     * report.removeFilters();
-     * ```
-     *
-     * @returns {Promise<IHttpPostMessageResponse<void>>}
-     */
-    Report.prototype.removeFilters = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
-                        }
-                        return [4 /*yield*/, this.setFilters([])];
-                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -7854,12 +8063,12 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.setPage = function (pageName) {
         return __awaiter(this, void 0, void 0, function () {
-            var page, response_8;
+            var page, response_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         page = {
                             name: pageName,
@@ -7872,47 +8081,8 @@ var Report = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.service.hpm.put('/report/pages/active', page, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
-                        response_8 = _a.sent();
-                        throw response_8.body;
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    /**
-     * Sets filters at the report level.
-     *
-     * ```javascript
-     * const filters: [
-     *    ...
-     * ];
-     *
-     * report.setFilters(filters)
-     *  .catch(errors => {
-     *    ...
-     *  });
-     * ```
-     *
-     * @param {(models.IFilter[])} filters
-     * @returns {Promise<IHttpPostMessageResponse<void>>}
-     */
-    Report.prototype.setFilters = function (filters) {
-        return __awaiter(this, void 0, void 0, function () {
-            var response_9;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
-                        }
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.service.hpm.put("/report/filters", filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
-                    case 2: return [2 /*return*/, _a.sent()];
-                    case 3:
-                        response_9 = _a.sent();
-                        throw response_9.body;
+                        response_10 = _a.sent();
+                        throw response_10.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -7931,17 +8101,17 @@ var Report = /** @class */ (function (_super) {
      *   .catch(error => { ... });
      * ```
      *
-     * @param {models.ISettings} settings
+     * @param {ISettings} settings
      * @returns {Promise<IHttpPostMessageResponse<void>>}
      */
     Report.prototype.updateSettings = function (settings) {
         return __awaiter(this, void 0, void 0, function () {
-            var response_10;
+            var response_11;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl) && settings.customLayout != null) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl) && settings.customLayout != null) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
                     case 1:
@@ -7949,8 +8119,8 @@ var Report = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.service.hpm.patch('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
-                        response_10 = _a.sent();
-                        throw response_10.body;
+                        response_11 = _a.sent();
+                        throw response_11.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -7962,7 +8132,7 @@ var Report = /** @class */ (function (_super) {
      * @hidden
      */
     Report.prototype.validate = function (config) {
-        return models.validateReportLoad(config);
+        return powerbi_models_1.validateReportLoad(config);
     };
     /**
      * Handle config changes.
@@ -7971,8 +8141,9 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.configChanged = function (isBootstrap) {
         var config = this.config;
-        if (this.isMobileSettings(config.settings))
-            config.embedUrl = utils.addParamToUrl(config.embedUrl, "isMobile", "true");
+        if (this.isMobileSettings(config.settings)) {
+            config.embedUrl = util_1.addParamToUrl(config.embedUrl, "isMobile", "true");
+        }
         // Calculate settings from HTML element attributes if available.
         var filterPaneEnabledAttribute = this.element.getAttribute(Report.filterPaneEnabledAttribute);
         var navContentPaneEnabledAttribute = this.element.getAttribute(Report.navContentPaneEnabledAttribute);
@@ -7981,7 +8152,7 @@ var Report = /** @class */ (function (_super) {
             navContentPaneEnabled: (navContentPaneEnabledAttribute == null) ? undefined : (navContentPaneEnabledAttribute !== "false")
         };
         // Set the settings back into the config.
-        this.config.settings = utils.assign({}, elementAttrSettings, config.settings);
+        this.config.settings = util_1.assign({}, elementAttrSettings, config.settings);
         if (isBootstrap) {
             return;
         }
@@ -8001,7 +8172,7 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.switchMode = function (viewMode) {
         return __awaiter(this, void 0, void 0, function () {
-            var newMode, url, response, response_11;
+            var newMode, url, response, response_12;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8020,23 +8191,23 @@ var Report = /** @class */ (function (_super) {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_11 = _a.sent();
-                        throw response_11.body;
+                        response_12 = _a.sent();
+                        throw response_12.body;
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
     /**
-    * Refreshes data sources for the report.
-    *
-    * ```javascript
-    * report.refresh();
-    * ```
-    */
+     * Refreshes data sources for the report.
+     *
+     * ```javascript
+     * report.refresh();
+     * ```
+     */
     Report.prototype.refresh = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_12;
+            var response, response_13;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8046,8 +8217,8 @@ var Report = /** @class */ (function (_super) {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_12 = _a.sent();
-                        throw response_12.body;
+                        response_13 = _a.sent();
+                        throw response_13.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -8067,10 +8238,10 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
-                        return [4 /*yield*/, utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow)];
+                        return [4 /*yield*/, util_1.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -8088,8 +8259,8 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         return [4 /*yield*/, this.applyThemeInternal(theme)];
                     case 1: return [2 /*return*/, _a.sent()];
@@ -8098,19 +8269,19 @@ var Report = /** @class */ (function (_super) {
         });
     };
     /**
-    * Reset and apply the default theme of the report
-    *
-    * ```javascript
-    * report.resetTheme();
-    * ```
-    */
+     * Reset and apply the default theme of the report
+     *
+     * ```javascript
+     * report.resetTheme();
+     * ```
+     */
     Report.prototype.resetTheme = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         return [4 /*yield*/, this.applyThemeInternal({})];
                     case 1: return [2 /*return*/, _a.sent()];
@@ -8119,44 +8290,20 @@ var Report = /** @class */ (function (_super) {
         });
     };
     /**
-    * Reset user's filters, slicers, and other data view changes to the default state of the report
-    *
-    * ```javascript
-    * report.resetPersistentFilters();
-    * ```
-    */
+     * Reset user's filters, slicers, and other data view changes to the default state of the report
+     *
+     * ```javascript
+     * report.resetPersistentFilters();
+     * ```
+     */
     Report.prototype.resetPersistentFilters = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var response_13;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.service.hpm.delete("/report/userState", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                    case 2:
-                        response_13 = _a.sent();
-                        throw response_13.body;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    /**
-    * Save user's filters, slicers, and other data view changes of the report
-    *
-    * ```javascript
-    * report.savePersistentFilters();
-    * ```
-    */
-    Report.prototype.savePersistentFilters = function () {
         return __awaiter(this, void 0, void 0, function () {
             var response_14;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.service.hpm.post("/report/userState", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                        return [4 /*yield*/, this.service.hpm.delete("/report/userState", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         response_14 = _a.sent();
@@ -8167,26 +8314,21 @@ var Report = /** @class */ (function (_super) {
         });
     };
     /**
-      * Returns if there are user's filters, slicers, or other data view changes applied on the report.
-      * If persistent filters is disable, returns false.
-      *
-      * ```javascript
-      * report.arePersistentFiltersApplied();
-      * ```
-      *
-      * @returns {Promise<boolean>}
-      */
-    Report.prototype.arePersistentFiltersApplied = function () {
+     * Save user's filters, slicers, and other data view changes of the report
+     *
+     * ```javascript
+     * report.savePersistentFilters();
+     * ```
+     */
+    Report.prototype.savePersistentFilters = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_15;
+            var response_15;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.service.hpm.get("/report/isUserStateApplied", { uid: this.config.uniqueId }, this.iframe.contentWindow)];
-                    case 1:
-                        response = _a.sent();
-                        return [2 /*return*/, response.body];
+                        return [4 /*yield*/, this.service.hpm.post("/report/userState", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                    case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         response_15 = _a.sent();
                         throw response_15.body;
@@ -8196,16 +8338,23 @@ var Report = /** @class */ (function (_super) {
         });
     };
     /**
-     * @hidden
+     * Returns if there are user's filters, slicers, or other data view changes applied on the report.
+     * If persistent filters is disable, returns false.
+     *
+     * ```javascript
+     * report.arePersistentFiltersApplied();
+     * ```
+     *
+     * @returns {Promise<boolean>}
      */
-    Report.prototype.applyThemeInternal = function (theme) {
+    Report.prototype.arePersistentFiltersApplied = function () {
         return __awaiter(this, void 0, void 0, function () {
             var response, response_16;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.service.hpm.put('/report/theme', theme, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                        return [4 /*yield*/, this.service.hpm.get("/report/isUserStateApplied", { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -8220,13 +8369,35 @@ var Report = /** @class */ (function (_super) {
     /**
      * @hidden
      */
+    Report.prototype.applyThemeInternal = function (theme) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, response_17;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.service.hpm.put('/report/theme', theme, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response.body];
+                    case 2:
+                        response_17 = _a.sent();
+                        throw response_17.body;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * @hidden
+     */
     Report.prototype.viewModeToString = function (viewMode) {
         var mode;
         switch (viewMode) {
-            case models.ViewMode.Edit:
+            case powerbi_models_1.ViewMode.Edit:
                 mode = "edit";
                 break;
-            case models.ViewMode.View:
+            case powerbi_models_1.ViewMode.View:
                 mode = "view";
                 break;
         }
@@ -8236,7 +8407,7 @@ var Report = /** @class */ (function (_super) {
      * @hidden
      */
     Report.prototype.isMobileSettings = function (settings) {
-        return settings && (settings.layoutType === models.LayoutType.MobileLandscape || settings.layoutType === models.LayoutType.MobilePortrait);
+        return settings && (settings.layoutType === powerbi_models_1.LayoutType.MobileLandscape || settings.layoutType === powerbi_models_1.LayoutType.MobilePortrait);
     };
     /** @hidden */
     Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged"];
@@ -8251,7 +8422,7 @@ var Report = /** @class */ (function (_super) {
     /** @hidden */
     Report.type = "Report";
     return Report;
-}(embed.Embed));
+}(embed_1.Embed));
 exports.Report = Report;
 
 
@@ -8603,6 +8774,10 @@ var Service = /** @class */ (function () {
         if (embedElement.frontLoadHandler) {
             embedElement.element.removeEventListener('ready', embedElement.frontLoadHandler, false);
         }
+        /** Removes all event handlers. */
+        embedElement.allowedEvents.forEach(function (eventName) {
+            embedElement.off(eventName);
+        });
         /** Removes the component from an internal list of components. */
         utils.remove(function (x) { return x === powerBiElement.powerBiEmbed; }, this.embeds);
         /** Deletes a property from the HTML element. */
@@ -9144,7 +9319,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Visual = void 0;
-var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var report_1 = __webpack_require__(/*! ./report */ "./src/report.ts");
 var visualDescriptor_1 = __webpack_require__(/*! ./visualDescriptor */ "./src/visualDescriptor.ts");
 /**
@@ -9158,9 +9333,9 @@ var Visual = /** @class */ (function (_super) {
     /**
      * Creates an instance of a Power BI Single Visual.
      *
-     * @param {service.Service} service
+     * @param {Service} service
      * @param {HTMLElement} element
-     * @param {embed.IEmbedConfiguration} config
+     * @param {IEmbedConfiguration} config
      * @hidden
      */
     function Visual(service, element, baseConfig, phasedRender, isBootstrap, iframe) {
@@ -9185,7 +9360,7 @@ var Visual = /** @class */ (function (_super) {
         var width = config.width ? config.width : this.iframe.offsetWidth;
         var height = config.height ? config.height : this.iframe.offsetHeight;
         var pageSize = {
-            type: models.PageSizeType.Custom,
+            type: powerbi_models_1.PageSizeType.Custom,
             width: width,
             height: height,
         };
@@ -9193,14 +9368,14 @@ var Visual = /** @class */ (function (_super) {
         pagesLayout[config.pageName] = {
             defaultLayout: {
                 displayState: {
-                    mode: models.VisualContainerDisplayMode.Hidden
+                    mode: powerbi_models_1.VisualContainerDisplayMode.Hidden
                 }
             },
             visualsLayout: {}
         };
         pagesLayout[config.pageName].visualsLayout[config.visualName] = {
             displayState: {
-                mode: models.VisualContainerDisplayMode.Visible
+                mode: powerbi_models_1.VisualContainerDisplayMode.Visible
             },
             x: 1,
             y: 1,
@@ -9211,9 +9386,9 @@ var Visual = /** @class */ (function (_super) {
         config.settings = config.settings || {};
         config.settings.filterPaneEnabled = false;
         config.settings.navContentPaneEnabled = false;
-        config.settings.layoutType = models.LayoutType.Custom;
+        config.settings.layoutType = powerbi_models_1.LayoutType.Custom;
         config.settings.customLayout = {
-            displayOption: models.DisplayOption.FitToPage,
+            displayOption: powerbi_models_1.DisplayOption.FitToPage,
             pageSize: pageSize,
             pagesLayout: pagesLayout
         };
@@ -9221,7 +9396,7 @@ var Visual = /** @class */ (function (_super) {
         return _super.prototype.load.call(this, phasedRender);
     };
     /**
-     * Gets the list of pages within the report - not supported in visual embed.
+     * Gets the list of pages within the report - not supported in visual
      *
      * @returns {Promise<Page[]>}
      */
@@ -9229,7 +9404,7 @@ var Visual = /** @class */ (function (_super) {
         throw Visual.GetPagesNotSupportedError;
     };
     /**
-     * Sets the active page of the report - not supported in visual embed.
+     * Sets the active page of the report - not supported in visual
      *
      * @param {string} pageName
      * @returns {Promise<IHttpPostMessageResponse<void>>}
@@ -9303,7 +9478,7 @@ var Visual = /** @class */ (function (_super) {
      *   });
      * ```
      *
-     * @returns {Promise<models.IFilter[]>}
+     * @returns {Promise<IFilter[]>}
      */
     Visual.prototype.getFilters = function (filtersLevel) {
         return __awaiter(this, void 0, void 0, function () {
@@ -9328,6 +9503,48 @@ var Visual = /** @class */ (function (_super) {
         });
     };
     /**
+     * Updates filters at the filter level.
+     * Default filter level is visual level.
+     *
+     * ```javascript
+     * const filters: [
+     *    ...
+     * ];
+     *
+     * visual.updateFilters(FiltersOperations.Add, filters, filtersLevel)
+     *  .catch(errors => {
+     *    ...
+     *  });
+     * ```
+     *
+     * @param {(IFilter[])} filters
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Visual.prototype.updateFilters = function (operation, filters, filtersLevel) {
+        return __awaiter(this, void 0, void 0, function () {
+            var updateFiltersRequest, url, response_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        updateFiltersRequest = {
+                            filtersOperation: operation,
+                            filters: filters
+                        };
+                        url = this.getFiltersLevelUrl(filtersLevel);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.service.hpm.put(url, updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3:
+                        response_3 = _a.sent();
+                        throw response_3.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
      * Sets filters at the filter level.
      * Default filter level is visual level.
      *
@@ -9342,12 +9559,12 @@ var Visual = /** @class */ (function (_super) {
      *  });
      * ```
      *
-     * @param {(models.IFilter[])} filters
+     * @param {(IFilter[])} filters
      * @returns {Promise<IHttpPostMessageResponse<void>>}
      */
     Visual.prototype.setFilters = function (filters, filtersLevel) {
         return __awaiter(this, void 0, void 0, function () {
-            var url, response_3;
+            var url, response_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9358,8 +9575,8 @@ var Visual = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.service.hpm.put(url, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
-                        response_3 = _a.sent();
-                        throw response_3.body;
+                        response_4 = _a.sent();
+                        throw response_4.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9379,7 +9596,7 @@ var Visual = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.setFilters([], filtersLevel)];
+                    case 0: return [4 /*yield*/, this.updateFilters(powerbi_models_1.FiltersOperations.RemoveAll, undefined, filtersLevel)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -9391,9 +9608,9 @@ var Visual = /** @class */ (function (_super) {
     Visual.prototype.getFiltersLevelUrl = function (filtersLevel) {
         var config = this.config;
         switch (filtersLevel) {
-            case models.FiltersLevel.Report:
+            case powerbi_models_1.FiltersLevel.Report:
                 return "/report/filters";
-            case models.FiltersLevel.Page:
+            case powerbi_models_1.FiltersLevel.Page:
                 return "/report/pages/" + config.pageName + "/filters";
             default:
                 return "/report/pages/" + config.pageName + "/visuals/" + config.visualName + "/filters";
@@ -9419,7 +9636,7 @@ exports.Visual = Visual;
   !*** ./src/visualDescriptor.ts ***!
   \*********************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -9459,6 +9676,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VisualDescriptor = void 0;
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 /**
  * A Power BI visual within a page
  *
@@ -9485,7 +9703,7 @@ var VisualDescriptor = /** @class */ (function () {
      *  .then(filters => { ... });
      * ```
      *
-     * @returns {(Promise<models.IFilter[]>)}
+     * @returns {(Promise<IFilter[]>)}
      */
     VisualDescriptor.prototype.getFilters = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -9507,6 +9725,40 @@ var VisualDescriptor = /** @class */ (function () {
         });
     };
     /**
+     * Update the filters for the current visual according to the operation: Add, replace all, replace by target or remove.
+     *
+     * ```javascript
+     * visual.updateFilters(FiltersOperations.Add, filters)
+     *   .catch(errors => { ... });
+     * ```
+     *
+     * @param {(IFilter[])} filters
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    VisualDescriptor.prototype.updateFilters = function (operation, filters) {
+        return __awaiter(this, void 0, void 0, function () {
+            var updateFiltersRequest, response_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        updateFiltersRequest = {
+                            filtersOperation: operation,
+                            filters: filters
+                        };
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", updateFiltersRequest, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3:
+                        response_2 = _a.sent();
+                        throw response_2.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
      * Removes all filters from the current visual.
      *
      * ```javascript
@@ -9519,7 +9771,7 @@ var VisualDescriptor = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.setFilters([])];
+                    case 0: return [4 /*yield*/, this.updateFilters(powerbi_models_1.FiltersOperations.RemoveAll)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -9533,12 +9785,12 @@ var VisualDescriptor = /** @class */ (function () {
      *   .catch(errors => { ... });
      * ```
      *
-     * @param {(models.IFilter[])} filters
+     * @param {(IFilter[])} filters
      * @returns {Promise<IHttpPostMessageResponse<void>>}
      */
     VisualDescriptor.prototype.setFilters = function (filters) {
         return __awaiter(this, void 0, void 0, function () {
-            var response_2;
+            var response_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9546,8 +9798,8 @@ var VisualDescriptor = /** @class */ (function () {
                         return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
-                        response_2 = _a.sent();
-                        throw response_2.body;
+                        response_3 = _a.sent();
+                        throw response_3.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -9557,17 +9809,17 @@ var VisualDescriptor = /** @class */ (function () {
      * Exports Visual data.
      * Can export up to 30K rows.
      * @param rows: Optional. Default value is 30K, maximum value is 30K as well.
-     * @param exportDataType: Optional. Default is models.ExportDataType.Summarized.
+     * @param exportDataType: Optional. Default is ExportDataType.Summarized.
      * ```javascript
      * visual.exportData()
      *  .then(data => { ... });
      * ```
      *
-     * @returns {(Promise<models.IExportDataResult>)}
+     * @returns {(Promise<IExportDataResult>)}
      */
     VisualDescriptor.prototype.exportData = function (exportDataType, rows) {
         return __awaiter(this, void 0, void 0, function () {
-            var exportDataRequestBody, response, response_3;
+            var exportDataRequestBody, response, response_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9583,8 +9835,8 @@ var VisualDescriptor = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_3 = _a.sent();
-                        throw response_3.body;
+                        response_4 = _a.sent();
+                        throw response_4.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9601,7 +9853,7 @@ var VisualDescriptor = /** @class */ (function () {
      */
     VisualDescriptor.prototype.setSlicerState = function (state) {
         return __awaiter(this, void 0, void 0, function () {
-            var response_4;
+            var response_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9609,8 +9861,8 @@ var VisualDescriptor = /** @class */ (function () {
                         return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/slicer", state, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
-                        response_4 = _a.sent();
-                        throw response_4.body;
+                        response_5 = _a.sent();
+                        throw response_5.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -9625,11 +9877,11 @@ var VisualDescriptor = /** @class */ (function () {
      *  .then(state => { ... });
      * ```
      *
-     * @returns {(Promise<models.ISlicerState>)}
+     * @returns {(Promise<ISlicerState>)}
      */
     VisualDescriptor.prototype.getSlicerState = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_5;
+            var response, response_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9639,8 +9891,8 @@ var VisualDescriptor = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_5 = _a.sent();
-                        throw response_5.body;
+                        response_6 = _a.sent();
+                        throw response_6.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -9649,12 +9901,12 @@ var VisualDescriptor = /** @class */ (function () {
     /**
      * Clone existing visual to a new instance.
      *
-     * @returns {(Promise<models.ICloneVisualResponse>)}
+     * @returns {(Promise<ICloneVisualResponse>)}
      */
     VisualDescriptor.prototype.clone = function (request) {
         if (request === void 0) { request = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_6;
+            var response, response_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9664,8 +9916,8 @@ var VisualDescriptor = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_6 = _a.sent();
-                        throw response_6.body;
+                        response_7 = _a.sent();
+                        throw response_7.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -9683,7 +9935,7 @@ var VisualDescriptor = /** @class */ (function () {
      */
     VisualDescriptor.prototype.sortBy = function (request) {
         return __awaiter(this, void 0, void 0, function () {
-            var response_7;
+            var response_8;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9691,8 +9943,8 @@ var VisualDescriptor = /** @class */ (function () {
                         return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/sortBy", request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
-                        response_7 = _a.sent();
-                        throw response_7.body;
+                        response_8 = _a.sent();
+                        throw response_8.body;
                     case 3: return [2 /*return*/];
                 }
             });
