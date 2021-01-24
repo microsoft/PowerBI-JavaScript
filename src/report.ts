@@ -402,8 +402,11 @@ export class Report extends Embed implements IReportNode, IFilterable {
    *
    * ```javascript
    * const newSettings = {
-   *   navContentPaneEnabled: true,
-   *   filterPaneEnabled: false
+   *   panes: {
+   *     filters: {
+   *       visible: false
+   *     }
+   *   }
    * };
    *
    * report.updateSettings(newSettings)
