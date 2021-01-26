@@ -232,7 +232,7 @@ export class Visual extends Report {
 
     const url: string = this.getFiltersLevelUrl(filtersLevel);
     try {
-      return await this.service.hpm.put<void>(url, updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return await this.service.hpm.post<void>(url, updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow);
     } catch (response) {
       throw response.body;
     }

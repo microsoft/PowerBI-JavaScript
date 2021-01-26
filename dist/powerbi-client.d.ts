@@ -1,4 +1,4 @@
-/*! powerbi-client v2.17.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.17.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -1133,8 +1133,11 @@ declare module "report" {
          *
          * ```javascript
          * const newSettings = {
-         *   navContentPaneEnabled: true,
-         *   filterPaneEnabled: false
+         *   panes: {
+         *     filters: {
+         *       visible: false
+         *     }
+         *   }
          * };
          *
          * report.updateSettings(newSettings)

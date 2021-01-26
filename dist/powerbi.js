@@ -1,4 +1,4 @@
-/*! powerbi-client v2.17.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.17.2 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -5973,7 +5973,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.17.1',
+    version: '2.17.2',
     type: 'js'
 };
 exports.default = config;
@@ -8104,8 +8104,11 @@ var Report = /** @class */ (function (_super) {
      *
      * ```javascript
      * const newSettings = {
-     *   navContentPaneEnabled: true,
-     *   filterPaneEnabled: false
+     *   panes: {
+     *     filters: {
+     *       visible: false
+     *     }
+     *   }
      * };
      *
      * report.updateSettings(newSettings)
@@ -9547,7 +9550,7 @@ var Visual = /** @class */ (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.service.hpm.put(url, updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                        return [4 /*yield*/, this.service.hpm.post(url, updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         response_3 = _a.sent();
