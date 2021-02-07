@@ -16,7 +16,7 @@
     "prestart": "cd demo && npm install",
     "test": "gulp test",
     "gulp": "gulp",
-    "testc": "npm test -- --chrome --watch"
+    "tests": "npm test -- --chrome --watch --debug"
   },
   "keywords": [
     "microsoft",
@@ -55,6 +55,7 @@
     "gulp-replace": "^0.5.4",
     "gulp-typedoc": "^2.0.0",
     "gulp-typescript": "^4.0.1",
+    "gulp-watch": "^5.0.1",
     "gulp4-run-sequence": "^1.0.0",
     "http-server": "^0.12.1",
     "ignore-loader": "^0.1.1",

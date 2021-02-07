@@ -8,7 +8,6 @@ else if (argv.firefox) {
   browserName = 'Firefox'
 }
 const flags = [
-  '--disable-gpu',
   '--disable-extensions',
   '--no-proxy-server',
   '--js-flags="--max_old_space_size=6500"',
@@ -34,7 +33,7 @@ module.exports = function (config) {
       'karma-spec-reporter',
       'karma-phantomjs-launcher',
       'karma-coverage',
-      'karma-jasmine-html-reporter',
+      'karma-jasmine-html-reporter'
     ],
     customLaunchers: {
       'Chrome_headless': {
@@ -49,8 +48,8 @@ module.exports = function (config) {
         { type: 'text-summary' }
       ]
     },
-    logLevel: argv.debug ? config.LOG_DEBUG : config.LOG_INFO,
     retryLimit: 0,
+    logLevel: argv.debug ? config.LOG_DEBUG : config.LOG_INFO,
     client: {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
       args: argv.logMessages ? ['logMessages'] : []
