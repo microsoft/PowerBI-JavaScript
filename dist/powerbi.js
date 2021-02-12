@@ -1,4 +1,4 @@
-/*! powerbi-client v2.17.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.17.2 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -5758,8 +5758,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BookmarksManager = void 0;
-var utils = __webpack_require__(/*! ./util */ "./src/util.ts");
-var errors = __webpack_require__(/*! ./errors */ "./src/errors.ts");
+var util_1 = __webpack_require__(/*! ./util */ "./src/util.ts");
+var errors_1 = __webpack_require__(/*! ./errors */ "./src/errors.ts");
 /**
  * Manages report bookmarks.
  *
@@ -5787,7 +5787,7 @@ var BookmarksManager = /** @class */ (function () {
      *   });
      * ```
      *
-     * @returns {Promise<models.IReportBookmark[]>}
+     * @returns {Promise<IReportBookmark[]>}
      */
     BookmarksManager.prototype.getBookmarks = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -5795,8 +5795,8 @@ var BookmarksManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
                     case 1:
@@ -5829,8 +5829,8 @@ var BookmarksManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         request = {
                             name: bookmarkName
@@ -5853,10 +5853,10 @@ var BookmarksManager = /** @class */ (function () {
      *
      * ```javascript
      * // Enter presentation mode.
-     * bookmarksManager.play(models.BookmarksPlayMode.Presentation)
+     * bookmarksManager.play(BookmarksPlayMode.Presentation)
      * ```
      *
-     * @param {models.BookmarksPlayMode} playMode Play mode can be either `Presentation` or `Off`
+     * @param {BookmarksPlayMode} playMode Play mode can be either `Presentation` or `Off`
      * @returns {Promise<IHttpPostMessageResponse<void>>}
      */
     BookmarksManager.prototype.play = function (playMode) {
@@ -5865,8 +5865,8 @@ var BookmarksManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         playBookmarkRequest = {
                             playMode: playMode
@@ -5891,8 +5891,8 @@ var BookmarksManager = /** @class */ (function () {
      * bookmarksManager.capture(options)
      * ```
      *
-     * @param {models.ICaptureBookmarkOptions} [options] Options for bookmark capturing
-     * @returns {Promise<models.IReportBookmark>}
+     * @param {ICaptureBookmarkOptions} [options] Options for bookmark capturing
+     * @returns {Promise<IReportBookmark>}
      */
     BookmarksManager.prototype.capture = function (options) {
         return __awaiter(this, void 0, void 0, function () {
@@ -5900,8 +5900,8 @@ var BookmarksManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         request = {
                             options: options || {}
@@ -5937,8 +5937,8 @@ var BookmarksManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (utils.isRDLEmbed(this.config.embedUrl)) {
-                            return [2 /*return*/, Promise.reject(errors.APINotSupportedForRDLError)];
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         request = {
                             state: state
@@ -5973,7 +5973,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.17.1',
+    version: '2.17.2',
     type: 'js'
 };
 exports.default = config;
@@ -6039,15 +6039,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Create = void 0;
-var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
-var embed = __webpack_require__(/*! ./embed */ "./src/embed.ts");
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
 var utils = __webpack_require__(/*! ./util */ "./src/util.ts");
 /**
  * A Power BI Report creator component
  *
  * @export
  * @class Create
- * @extends {embed.Embed}
+ * @extends {Embed}
  */
 var Create = /** @class */ (function (_super) {
     __extends(Create, _super);
@@ -6073,7 +6073,7 @@ var Create = /** @class */ (function (_super) {
      * Validate create report configuration.
      */
     Create.prototype.validate = function (config) {
-        return models.validateCreateReport(config);
+        return powerbi_models_1.validateCreateReport(config);
     };
     /**
      * Handle config changes.
@@ -6142,7 +6142,7 @@ var Create = /** @class */ (function (_super) {
         return datasetId;
     };
     return Create;
-}(embed.Embed));
+}(embed_1.Embed));
 exports.Create = Create;
 
 
@@ -6170,14 +6170,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Dashboard = void 0;
-var embed = __webpack_require__(/*! ./embed */ "./src/embed.ts");
-var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
 /**
  * A Power BI Dashboard embed component
  *
  * @export
  * @class Dashboard
- * @extends {embed.Embed}
+ * @extends {Embed}
  * @implements {IDashboardNode}
  */
 var Dashboard = /** @class */ (function (_super) {
@@ -6201,6 +6201,7 @@ var Dashboard = /** @class */ (function (_super) {
      * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
      *
      * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
+     *
      * @hidden
      * @static
      * @param {string} url
@@ -6235,11 +6236,12 @@ var Dashboard = /** @class */ (function (_super) {
      */
     Dashboard.prototype.validate = function (baseConfig) {
         var config = baseConfig;
-        var error = models.validateDashboardLoad(config);
-        return error ? error : this.ValidatePageView(config.pageView);
+        var error = powerbi_models_1.validateDashboardLoad(config);
+        return error ? error : this.validatePageView(config.pageView);
     };
     /**
      * Handle config changes.
+     *
      * @hidden
      * @returns {void}
      */
@@ -6258,10 +6260,11 @@ var Dashboard = /** @class */ (function (_super) {
         return "dashboardEmbed";
     };
     /**
-     * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
+     * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in PageView
+     *
      * @hidden
      */
-    Dashboard.prototype.ValidatePageView = function (pageView) {
+    Dashboard.prototype.validatePageView = function (pageView) {
         if (pageView && pageView !== "fitToWidth" && pageView !== "oneColumn" && pageView !== "actualSize") {
             return [{ message: "pageView must be one of the followings: fitToWidth, oneColumn, actualSize" }];
         }
@@ -6275,7 +6278,7 @@ var Dashboard = /** @class */ (function (_super) {
     /** @hidden */
     Dashboard.type = "Dashboard";
     return Dashboard;
-}(embed.Embed));
+}(embed_1.Embed));
 exports.Dashboard = Dashboard;
 
 
@@ -6326,9 +6329,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Embed = void 0;
-var utils = __webpack_require__(/*! ./util */ "./src/util.ts");
-var sdkConfig = __webpack_require__(/*! ./config */ "./src/config.ts");
 var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var util_1 = __webpack_require__(/*! ./util */ "./src/util.ts");
+var sdkConfig = __webpack_require__(/*! ./config */ "./src/config.ts");
 var errors_1 = __webpack_require__(/*! ./errors */ "./src/errors.ts");
 /**
  * Base class for all Power BI embed components
@@ -6353,7 +6356,7 @@ var Embed = /** @class */ (function () {
     function Embed(service, element, config, iframe, phasedRender, isBootstrap) {
         /** @hidden */
         this.allowedEvents = [];
-        if (utils.autoAuthInEmbedUrl(config.embedUrl)) {
+        if (util_1.autoAuthInEmbedUrl(config.embedUrl)) {
             throw new Error(errors_1.EmbedUrlNotSupported);
         }
         Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
@@ -6365,10 +6368,10 @@ var Embed = /** @class */ (function () {
         this.embedtype = config.type.toLowerCase();
         this.populateConfig(config, isBootstrap);
         if (this.embedtype === 'create') {
-            this.setIframe(false /*set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
+            this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
         }
         else {
-            this.setIframe(true /*set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
+            this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
         }
     }
     /**
@@ -6379,6 +6382,7 @@ var Embed = /** @class */ (function () {
      *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
      *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
      * ```
+     *
      * @hidden
      * @param {models.IReportCreateConfiguration} config
      * @returns {Promise<void>}
@@ -6508,6 +6512,7 @@ var Embed = /** @class */ (function () {
      * })
      *   .catch(error => { ... });
      * ```
+     *
      * @hidden
      * @param {models.ILoadConfiguration} config
      * @param {boolean} phasedRender
@@ -6535,7 +6540,7 @@ var Embed = /** @class */ (function () {
                             sdkVersion: sdkConfig.default.version
                         };
                         timeNow = new Date();
-                        if (this.lastLoadRequest && utils.getTimeDiffInMilliseconds(this.lastLoadRequest, timeNow) < 100) {
+                        if (this.lastLoadRequest && util_1.getTimeDiffInMilliseconds(this.lastLoadRequest, timeNow) < 100) {
                             console.debug("Power BI SDK sent more than two /report/load requests in the last 100ms interval.");
                             return [2 /*return*/];
                         }
@@ -6574,13 +6579,13 @@ var Embed = /** @class */ (function () {
      *
      * @template T
      * @param {string} eventName
-     * @param {service.IEventHandler<T>} [handler]
+     * @param {IEventHandler<T>} [handler]
      */
     Embed.prototype.off = function (eventName, handler) {
         var _this = this;
         var fakeEvent = { name: eventName, type: null, id: null, value: null };
         if (handler) {
-            utils.remove(function (eventHandler) { return eventHandler.test(fakeEvent) && (eventHandler.handle === handler); }, this.eventHandlers);
+            util_1.remove(function (eventHandler) { return eventHandler.test(fakeEvent) && (eventHandler.handle === handler); }, this.eventHandlers);
             this.element.removeEventListener(eventName, handler);
         }
         else {
@@ -6588,7 +6593,7 @@ var Embed = /** @class */ (function () {
                 .filter(function (eventHandler) { return eventHandler.test(fakeEvent); });
             eventHandlersToRemove
                 .forEach(function (eventHandlerToRemove) {
-                utils.remove(function (eventHandler) { return eventHandler === eventHandlerToRemove; }, _this.eventHandlers);
+                util_1.remove(function (eventHandler) { return eventHandler === eventHandlerToRemove; }, _this.eventHandlers);
                 _this.element.removeEventListener(eventName, eventHandlerToRemove.handle);
             });
         }
@@ -6689,14 +6694,14 @@ var Embed = /** @class */ (function () {
      */
     Embed.prototype.populateConfig = function (config, isBootstrap) {
         if (this.bootstrapConfig) {
-            this.config = utils.assign({}, this.bootstrapConfig, config);
+            this.config = util_1.assign({}, this.bootstrapConfig, config);
             // reset bootstrapConfig because we do not want to merge it in re-embed scenario.
             this.bootstrapConfig = null;
         }
         else {
             // Copy config - important for multiple iframe scenario.
             // Otherwise, if a user uses the same config twice, same unique Id which will be used in different iframes.
-            this.config = utils.assign({}, config);
+            this.config = util_1.assign({}, config);
         }
         this.config.embedUrl = this.getEmbedUrl(isBootstrap);
         this.config.groupId = this.getGroupId();
@@ -6725,10 +6730,10 @@ var Embed = /** @class */ (function () {
         }
         var localeSettings = config.settings.localeSettings;
         if (localeSettings && localeSettings.language) {
-            this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'language', localeSettings.language);
+            this.config.embedUrl = util_1.addParamToUrl(this.config.embedUrl, 'language', localeSettings.language);
         }
         if (localeSettings && localeSettings.formatLocale) {
-            this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'formatLocale', localeSettings.formatLocale);
+            this.config.embedUrl = util_1.addParamToUrl(this.config.embedUrl, 'formatLocale', localeSettings.formatLocale);
         }
     };
     /**
@@ -6776,7 +6781,7 @@ var Embed = /** @class */ (function () {
      * @hidden
      */
     Embed.prototype.getUniqueId = function () {
-        return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || utils.createRandomString();
+        return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || util_1.createRandomString();
     };
     /**
      * Gets the group ID from the first available location: options, embeddedUrl.
@@ -6820,13 +6825,14 @@ var Embed = /** @class */ (function () {
     };
     /**
      * Sets Iframe for embed
+     *
      * @hidden
      */
     Embed.prototype.setIframe = function (isLoad, phasedRender, isBootstrap) {
         var _this = this;
         if (!this.iframe) {
             var iframeContent = document.createElement("iframe");
-            var embedUrl = this.config.uniqueId ? utils.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
+            var embedUrl = this.config.uniqueId ? util_1.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
             iframeContent.style.width = '100%';
             iframeContent.style.height = '100%';
             iframeContent.setAttribute("src", embedUrl);
@@ -6889,7 +6895,7 @@ var Embed = /** @class */ (function () {
     /**
      * Removes element's tabindex attribute
      */
-    Embed.prototype.removeComponentTabIndex = function (tabIndex) {
+    Embed.prototype.removeComponentTabIndex = function (_tabIndex) {
         if (!this.element) {
             return;
         }
@@ -6915,6 +6921,7 @@ var Embed = /** @class */ (function () {
     };
     /**
      * Sends the config for front load calls, after 'ready' message is received from the iframe
+     *
      * @hidden
      */
     Embed.prototype.frontLoadSendConfig = function (config) {
@@ -6931,8 +6938,9 @@ var Embed = /** @class */ (function () {
                             throw errors;
                         }
                         // contentWindow must be initialized
-                        if (this.iframe.contentWindow == null)
+                        if (this.iframe.contentWindow == null) {
                             return [2 /*return*/];
+                        }
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -6993,26 +7001,29 @@ exports.EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please u
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.routerFactory = exports.wpmpFactory = exports.hpmFactory = void 0;
+/**
+ * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
+ */
+var window_post_message_proxy_1 = __webpack_require__(/*! window-post-message-proxy */ "./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js");
+var http_post_message_1 = __webpack_require__(/*! http-post-message */ "./node_modules/http-post-message/dist/httpPostMessage.js");
+var powerbi_router_1 = __webpack_require__(/*! powerbi-router */ "./node_modules/powerbi-router/dist/router.js");
 var config_1 = __webpack_require__(/*! ./config */ "./src/config.ts");
-var wpmp = __webpack_require__(/*! window-post-message-proxy */ "./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js");
-var hpm = __webpack_require__(/*! http-post-message */ "./node_modules/http-post-message/dist/httpPostMessage.js");
-var router = __webpack_require__(/*! powerbi-router */ "./node_modules/powerbi-router/dist/router.js");
 var hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
     if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
     if (sdkType === void 0) { sdkType = config_1.default.type; }
-    return new hpm.HttpPostMessage(wpmp, {
+    return new http_post_message_1.HttpPostMessage(wpmp, {
         'x-sdk-type': sdkType,
         'x-sdk-version': sdkVersion
     }, defaultTargetWindow);
 };
 exports.hpmFactory = hpmFactory;
 var wpmpFactory = function (name, logMessages, eventSourceOverrideWindow) {
-    return new wpmp.WindowPostMessageProxy({
+    return new window_post_message_proxy_1.WindowPostMessageProxy({
         processTrackingProperties: {
-            addTrackingProperties: hpm.HttpPostMessage.addTrackingProperties,
-            getTrackingProperties: hpm.HttpPostMessage.getTrackingProperties,
+            addTrackingProperties: http_post_message_1.HttpPostMessage.addTrackingProperties,
+            getTrackingProperties: http_post_message_1.HttpPostMessage.getTrackingProperties,
         },
-        isErrorMessage: hpm.HttpPostMessage.isErrorMessage,
+        isErrorMessage: http_post_message_1.HttpPostMessage.isErrorMessage,
         suppressWarnings: true,
         name: name,
         logMessages: logMessages,
@@ -7021,7 +7032,7 @@ var wpmpFactory = function (name, logMessages, eventSourceOverrideWindow) {
 };
 exports.wpmpFactory = wpmpFactory;
 var routerFactory = function (wpmp) {
-    return new router.Router(wpmp);
+    return new powerbi_router_1.Router(wpmp);
 };
 exports.routerFactory = routerFactory;
 
@@ -7399,12 +7410,12 @@ exports.VisualDescriptor = exports.Visual = exports.Qna = exports.Page = exports
 /**
  * @hidden
  */
+var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+exports.models = models;
 var service = __webpack_require__(/*! ./service */ "./src/service.ts");
 exports.service = service;
 var factories = __webpack_require__(/*! ./factories */ "./src/factories.ts");
 exports.factories = factories;
-var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
-exports.models = models;
 var report_1 = __webpack_require__(/*! ./report */ "./src/report.ts");
 Object.defineProperty(exports, "Report", { enumerable: true, get: function () { return report_1.Report; } });
 var dashboard_1 = __webpack_require__(/*! ./dashboard */ "./src/dashboard.ts");
@@ -7490,8 +7501,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Qna = void 0;
-var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
-var embed = __webpack_require__(/*! ./embed */ "./src/embed.ts");
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
 /**
  * The Power BI Q&A embed component
  *
@@ -7552,7 +7563,7 @@ var Qna = /** @class */ (function (_super) {
      *
      * @returns {void}
      */
-    Qna.prototype.configChanged = function (isBootstrap) {
+    Qna.prototype.configChanged = function (_isBootstrap) {
         // Nothing to do in Q&A embed.
     };
     /**
@@ -7566,14 +7577,14 @@ var Qna = /** @class */ (function (_super) {
      * Validate load configuration.
      */
     Qna.prototype.validate = function (config) {
-        return models.validateLoadQnaConfiguration(config);
+        return powerbi_models_1.validateLoadQnaConfiguration(config);
     };
     /** @hidden */
     Qna.type = "Qna";
     /** @hidden */
     Qna.allowedEvents = ["loaded", "visualRendered"];
     return Qna;
-}(embed.Embed));
+}(embed_1.Embed));
 exports.Qna = Qna;
 
 
@@ -8093,8 +8104,11 @@ var Report = /** @class */ (function (_super) {
      *
      * ```javascript
      * const newSettings = {
-     *   navContentPaneEnabled: true,
-     *   filterPaneEnabled: false
+     *   panes: {
+     *     filters: {
+     *       visible: false
+     *     }
+     *   }
      * };
      *
      * report.updateSettings(newSettings)
@@ -8437,7 +8451,7 @@ exports.Report = Report;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Service = void 0;
-var embed = __webpack_require__(/*! ./embed */ "./src/embed.ts");
+var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
 var report_1 = __webpack_require__(/*! ./report */ "./src/report.ts");
 var create_1 = __webpack_require__(/*! ./create */ "./src/create.ts");
 var dashboard_1 = __webpack_require__(/*! ./dashboard */ "./src/dashboard.ts");
@@ -8473,7 +8487,7 @@ var Service = /** @class */ (function () {
         /**
          * Adds handler for report events.
          */
-        this.router.post("/reports/:uniqueId/events/:eventName", function (req, res) {
+        this.router.post("/reports/:uniqueId/events/:eventName", function (req, _res) {
             var event = {
                 type: 'report',
                 id: req.params.uniqueId,
@@ -8482,7 +8496,7 @@ var Service = /** @class */ (function () {
             };
             _this.handleEvent(event);
         });
-        this.router.post("/reports/:uniqueId/pages/:pageName/events/:eventName", function (req, res) {
+        this.router.post("/reports/:uniqueId/pages/:pageName/events/:eventName", function (req, _res) {
             var event = {
                 type: 'report',
                 id: req.params.uniqueId,
@@ -8491,7 +8505,7 @@ var Service = /** @class */ (function () {
             };
             _this.handleEvent(event);
         });
-        this.router.post("/reports/:uniqueId/pages/:pageName/visuals/:visualName/events/:eventName", function (req, res) {
+        this.router.post("/reports/:uniqueId/pages/:pageName/visuals/:visualName/events/:eventName", function (req, _res) {
             var event = {
                 type: 'report',
                 id: req.params.uniqueId,
@@ -8500,7 +8514,7 @@ var Service = /** @class */ (function () {
             };
             _this.handleEvent(event);
         });
-        this.router.post("/dashboards/:uniqueId/events/:eventName", function (req, res) {
+        this.router.post("/dashboards/:uniqueId/events/:eventName", function (req, _res) {
             var event = {
                 type: 'dashboard',
                 id: req.params.uniqueId,
@@ -8509,7 +8523,7 @@ var Service = /** @class */ (function () {
             };
             _this.handleEvent(event);
         });
-        this.router.post("/tile/:uniqueId/events/:eventName", function (req, res) {
+        this.router.post("/tile/:uniqueId/events/:eventName", function (req, _res) {
             var event = {
                 type: 'tile',
                 id: req.params.uniqueId,
@@ -8521,7 +8535,7 @@ var Service = /** @class */ (function () {
         /**
          * Adds handler for Q&A events.
          */
-        this.router.post("/qna/:uniqueId/events/:eventName", function (req, res) {
+        this.router.post("/qna/:uniqueId/events/:eventName", function (req, _res) {
             var event = {
                 type: 'qna',
                 id: req.params.uniqueId,
@@ -8533,7 +8547,7 @@ var Service = /** @class */ (function () {
         /**
          * Adds handler for front load 'ready' message.
          */
-        this.router.post("/ready/:uniqueId", function (req, res) {
+        this.router.post("/ready/:uniqueId", function (req, _res) {
             var event = {
                 type: 'report',
                 id: req.params.uniqueId,
@@ -8551,9 +8565,10 @@ var Service = /** @class */ (function () {
     }
     /**
      * Creates new report
+     *
      * @param {HTMLElement} element
-     * @param {embed.IEmbedConfiguration} [config={}]
-     * @returns {embed.Embed}
+     * @param {IEmbedConfiguration} [config={}]
+     * @returns {Embed}
      */
     Service.prototype.createReport = function (element, config) {
         config.type = 'create';
@@ -8567,15 +8582,15 @@ var Service = /** @class */ (function () {
      * TODO: Add a description here
      *
      * @param {HTMLElement} [container]
-     * @param {embed.IEmbedConfiguration} [config=undefined]
-     * @returns {embed.Embed[]}
+     * @param {IEmbedConfiguration} [config=undefined]
+     * @returns {Embed[]}
      * @hidden
      */
     Service.prototype.init = function (container, config) {
         var _this = this;
         if (config === void 0) { config = undefined; }
         container = (container && container instanceof HTMLElement) ? container : document.body;
-        var elements = Array.prototype.slice.call(container.querySelectorAll("[" + embed.Embed.embedUrlAttribute + "]"));
+        var elements = Array.prototype.slice.call(container.querySelectorAll("[" + embed_1.Embed.embedUrlAttribute + "]"));
         return elements.map(function (element) { return _this.embed(element, config); });
     };
     /**
@@ -8584,8 +8599,8 @@ var Service = /** @class */ (function () {
      * otherwise creates a new component instance.
      *
      * @param {HTMLElement} element
-     * @param {embed.IEmbedConfigurationBase} [config={}]
-     * @returns {embed.Embed}
+     * @param {IEmbedConfigurationBase} [config={}]
+     * @returns {Embed}
      */
     Service.prototype.embed = function (element, config) {
         if (config === void 0) { config = {}; }
@@ -8598,8 +8613,8 @@ var Service = /** @class */ (function () {
      * This is used for the phased embedding API, once element is loaded successfully, one can call 'render' on it.
      *
      * @param {HTMLElement} element
-     * @param {embed.IEmbedConfigurationBase} [config={}]
-     * @returns {embed.Embed}
+     * @param {IEmbedConfigurationBase} [config={}]
+     * @returns {Embed}
      */
     Service.prototype.load = function (element, config) {
         if (config === void 0) { config = {}; }
@@ -8609,7 +8624,7 @@ var Service = /** @class */ (function () {
      * Given an HTML element and entityType, creates a new component instance, and bootstrap the iframe for embedding.
      *
      * @param {HTMLElement} element
-     * @param {embed.IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
+     * @param {IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
      */
     Service.prototype.bootstrap = function (element, config) {
         return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
@@ -8646,18 +8661,18 @@ var Service = /** @class */ (function () {
      *
      * @private
      * @param {IPowerBiElement} element
-     * @param {embed.IEmbedConfigurationBase} config
-     * @returns {embed.Embed}
+     * @param {IEmbedConfigurationBase} config
+     * @returns {Embed}
      * @hidden
      */
     Service.prototype.embedNew = function (element, config, phasedRender, isBootstrap) {
-        var componentType = config.type || element.getAttribute(embed.Embed.typeAttribute);
+        var componentType = config.type || element.getAttribute(embed_1.Embed.typeAttribute);
         if (!componentType) {
-            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed.Embed.typeAttribute + "=\"" + report_1.Report.type.toLowerCase() + "\"'.");
+            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed_1.Embed.typeAttribute + "=\"" + report_1.Report.type.toLowerCase() + "\"'.");
         }
         // Saves the type as part of the configuration so that it can be referenced later at a known location.
         config.type = componentType;
-        var Component = utils.find(function (component) { return componentType === component.type.toLowerCase(); }, Service.components);
+        var Component = utils.find(function (embedComponent) { return componentType === embedComponent.type.toLowerCase(); }, Service.components);
         if (!Component) {
             throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
         }
@@ -8671,8 +8686,8 @@ var Service = /** @class */ (function () {
      *
      * @private
      * @param {IPowerBiElement} element
-     * @param {embed.IEmbedConfigurationBase} config
-     * @returns {embed.Embed}
+     * @param {IEmbedConfigurationBase} config
+     * @returns {Embed}
      * @hidden
      */
     Service.prototype.embedExisting = function (element, config, phasedRender) {
@@ -8718,7 +8733,7 @@ var Service = /** @class */ (function () {
      */
     Service.prototype.enableAutoEmbed = function () {
         var _this = this;
-        window.addEventListener('DOMContentLoaded', function (event) { return _this.init(document.body); }, false);
+        window.addEventListener('DOMContentLoaded', function (_event) { return _this.init(document.body); }, false);
     };
     /**
      * Returns an instance of the component associated with the element.
@@ -8834,7 +8849,7 @@ var Service = /** @class */ (function () {
      * Use this API to preload Power BI Embedded in the background.
      *
      * @public
-     * @param {embed.IEmbedConfigurationBase} [config={}]
+     * @param {IEmbedConfigurationBase} [config={}]
      * @param {HTMLElement} [element=undefined]
      */
     Service.prototype.preload = function (config, element) {
@@ -8905,8 +8920,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Tile = void 0;
-var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
-var embed = __webpack_require__(/*! ./embed */ "./src/embed.ts");
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
 /**
  * The Power BI tile embed component
  *
@@ -8945,7 +8960,7 @@ var Tile = /** @class */ (function (_super) {
      */
     Tile.prototype.validate = function (config) {
         var embedConfig = config;
-        return models.validateTileLoad(embedConfig);
+        return powerbi_models_1.validateTileLoad(embedConfig);
     };
     /**
      * Handle config changes.
@@ -8989,7 +9004,7 @@ var Tile = /** @class */ (function (_super) {
     /** @hidden */
     Tile.allowedEvents = ["tileClicked", "tileLoaded"];
     return Tile;
-}(embed.Embed));
+}(embed_1.Embed));
 exports.Tile = Tile;
 
 
@@ -9248,6 +9263,7 @@ function getRandomValue() {
 exports.getRandomValue = getRandomValue;
 /**
  * Returns the time interval between two dates in milliseconds
+ *
  * @export
  * @param {Date} start
  * @param {Date} end
@@ -9409,7 +9425,7 @@ var Visual = /** @class */ (function (_super) {
      * @param {string} pageName
      * @returns {Promise<IHttpPostMessageResponse<void>>}
      */
-    Visual.prototype.setPage = function (pageName) {
+    Visual.prototype.setPage = function (_pageName) {
         throw Visual.SetPageNotSupportedError;
     };
     /**
@@ -9418,7 +9434,7 @@ var Visual = /** @class */ (function (_super) {
      * @hidden
      * @returns {Promise<void>}
      */
-    Visual.prototype.render = function (config) {
+    Visual.prototype.render = function (_config) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 throw Visual.RenderNotSupportedError;
@@ -9534,7 +9550,7 @@ var Visual = /** @class */ (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.service.hpm.put(url, updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                        return [4 /*yield*/, this.service.hpm.post(url, updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         response_3 = _a.sent();
@@ -9808,6 +9824,7 @@ var VisualDescriptor = /** @class */ (function () {
     /**
      * Exports Visual data.
      * Can export up to 30K rows.
+     *
      * @param rows: Optional. Default value is 30K, maximum value is 30K as well.
      * @param exportDataType: Optional. Default is ExportDataType.Summarized.
      * ```javascript
@@ -9845,6 +9862,7 @@ var VisualDescriptor = /** @class */ (function () {
     /**
      * Set slicer state.
      * Works only for visuals of type slicer.
+     *
      * @param state: A new state which contains the slicer filters.
      * ```javascript
      * visual.setSlicerState()

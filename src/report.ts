@@ -71,7 +71,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
    * @hidden
    */
   constructor(service: Service, element: HTMLElement, baseConfig: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement) {
-    const config = <IReportEmbedConfiguration>baseConfig;
+    const config = baseConfig as IReportEmbedConfiguration;
     super(service, element, config, iframe, phasedRender, isBootstrap);
     this.loadPath = "/report/load";
     this.phasedLoadPath = "/report/prepare";
@@ -297,7 +297,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
    * @returns {string}
    */
   getId(): string {
-    const config = <IReportEmbedConfiguration>this.config;
+    const config = this.config as IReportEmbedConfiguration;
     const reportId = config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(config.embedUrl);
 
     if (typeof reportId !== 'string' || reportId.length === 0) {
@@ -327,7 +327,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
     try {
       const response = await this.service.hpm.get<IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow);
       return response.body
-        .map(page => new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption));
+        .map((page) => new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption));
     } catch (response) {
       throw response.body;
     }
@@ -402,8 +402,11 @@ export class Report extends Embed implements IReportNode, IFilterable {
    *
    * ```javascript
    * const newSettings = {
-   *   navContentPaneEnabled: true,
-   *   filterPaneEnabled: false
+   *   panes: {
+   *     filters: {
+   *       visible: false
+   *     }
+   *   }
    * };
    *
    * report.updateSettings(newSettings)
@@ -440,8 +443,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
    * @returns {void}
    */
   configChanged(isBootstrap: boolean): void {
-    const config = <IReportEmbedConfiguration>this.config;
-
+    const config = this.config as IReportEmbedConfiguration;
     if (this.isMobileSettings(config.settings)) {
       config.embedUrl = addParamToUrl(config.embedUrl, "isMobile", "true");
     }

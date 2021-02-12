@@ -20,6 +20,8 @@ import { spyRouter } from './utility/mockRouter';
 import * as util from '../src/util';
 import { EmbedUrlNotSupported } from '../src/errors'
 
+// Avoid adding new tests to this file, create another spec file instead.
+
 declare global {
   interface Window {
     __karma__: any;
