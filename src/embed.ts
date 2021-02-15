@@ -1,7 +1,7 @@
-import * as utils from './util';
-import * as service from './service';
-import * as sdkConfig from './config';
 import * as models from 'powerbi-models';
+import { addParamToUrl, assign, autoAuthInEmbedUrl, createRandomString, getTimeDiffInMilliseconds, remove } from './util';
+import { Service, IEventHandler, IEvent, ICustomEvent } from './service';
+import * as sdkConfig from './config';
 import { EmbedUrlNotSupported } from './errors';
 
 declare global {
@@ -24,7 +24,7 @@ declare global {
     msRequestFullscreen: Function;
 
     // Safari Fullscreen
-    webkitRequestFullscreen: {(): void};
+    webkitRequestFullscreen: { (): void };
   }
 }
 
@@ -39,7 +39,7 @@ export type IVisualEmbedConfiguration = models.IVisualEmbedConfiguration;
 
 export type IReportEmbedConfiguration = models.IReportEmbedConfiguration;
 
-export type IDashboardEmbedConfiguration = models.IDashboardEmbedConfiguration ;
+export type IDashboardEmbedConfiguration = models.IDashboardEmbedConfiguration;
 
 export type ITileEmbedConfiguration = models.ITileEmbedConfiguration;
 
@@ -53,8 +53,8 @@ export type IEmbedSettings = models.ISettings;
 
 /** @hidden */
 export interface IInternalEventHandler<T> {
-  test(event: service.IEvent<T>): boolean;
-  handle(event: service.ICustomEvent<T>): void;
+  test(event: IEvent<T>): boolean;
+  handle(event: ICustomEvent<T>): void;
 }
 
 /**
@@ -83,10 +83,10 @@ export abstract class Embed {
   static type: string;
 
   /** @hidden */
-  static maxFrontLoadTimes: number = 2;
+  static maxFrontLoadTimes = 2;
 
   /** @hidden */
-  allowedEvents = [];
+  allowedEvents: string[] = [];
 
   /**
    * Gets or sets the event handler registered for this embed component.
@@ -102,7 +102,7 @@ export abstract class Embed {
    * @type {service.Service}
    * @hidden
    */
-  service: service.Service;
+  service: Service;
 
   /**
    * Gets or sets the HTML element that contains the Power BI embed component.
@@ -122,7 +122,7 @@ export abstract class Embed {
 
   /**
    * Saves the iframe state. Each iframe should be loaded only once.
-   * After first load, .embed will go into embedExisting path which will send 
+   * After first load, .embed will go into embedExisting path which will send
    * a postMessage of /report/load instead of creating a new iframe.
    *
    * @type {boolean}
@@ -156,30 +156,35 @@ export abstract class Embed {
 
   /**
    * Url used in the load request.
+   *
    * @hidden
    */
   loadPath: string;
 
   /**
    * Url used in the load request.
+   *
    * @hidden
    */
   phasedLoadPath: string;
 
   /**
    * Type of embed
+   *
    * @hidden
    */
   embedtype: string;
 
   /**
    * Handler function for the 'ready' event
+   *
    * @hidden
    */
   frontLoadHandler: () => any;
 
   /**
    * The time the last /load request was sent
+   *
    * @hidden
    */
   lastLoadRequest: Date;
@@ -195,8 +200,8 @@ export abstract class Embed {
    * @param {IEmbedConfigurationBase} config
    * @hidden
    */
-  constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean, isBootstrap?: boolean) {
-    if (utils.autoAuthInEmbedUrl(config.embedUrl)) {
+  constructor(service: Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean, isBootstrap?: boolean) {
+    if (autoAuthInEmbedUrl(config.embedUrl)) {
       throw new Error(EmbedUrlNotSupported);
     }
 
@@ -211,9 +216,9 @@ export abstract class Embed {
     this.populateConfig(config, isBootstrap);
 
     if (this.embedtype === 'create') {
-      this.setIframe(false /*set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
+      this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
     } else {
-      this.setIframe(true /*set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
+      this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
     }
   }
 
@@ -225,6 +230,7 @@ export abstract class Embed {
    *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
    *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
    * ```
+   *
    * @hidden
    * @param {models.IReportCreateConfiguration} config
    * @returns {Promise<void>}
@@ -313,6 +319,7 @@ export abstract class Embed {
    * })
    *   .catch(error => { ... });
    * ```
+   *
    * @hidden
    * @param {models.ILoadConfiguration} config
    * @param {boolean} phasedRender
@@ -338,7 +345,7 @@ export abstract class Embed {
     };
 
     const timeNow: Date = new Date();
-    if (this.lastLoadRequest && utils.getTimeDiffInMilliseconds(this.lastLoadRequest, timeNow) < 100) {
+    if (this.lastLoadRequest && getTimeDiffInMilliseconds(this.lastLoadRequest, timeNow) < 100) {
       console.debug("Power BI SDK sent more than two /report/load requests in the last 100ms interval.");
       return;
     }
@@ -372,21 +379,21 @@ export abstract class Embed {
    *
    * @template T
    * @param {string} eventName
-   * @param {service.IEventHandler<T>} [handler]
+   * @param {IEventHandler<T>} [handler]
    */
-  off<T>(eventName: string, handler?: service.IEventHandler<T>): void {
-    const fakeEvent: service.IEvent<any> = { name: eventName, type: null, id: null, value: null };
+  off<T>(eventName: string, handler?: IEventHandler<T>): void {
+    const fakeEvent: IEvent<any> = { name: eventName, type: null, id: null, value: null };
     if (handler) {
-      utils.remove(eventHandler => eventHandler.test(fakeEvent) && (eventHandler.handle === handler), this.eventHandlers);
+      remove((eventHandler) => eventHandler.test(fakeEvent) && (eventHandler.handle === handler), this.eventHandlers);
       this.element.removeEventListener(eventName, <any>handler);
     }
     else {
       const eventHandlersToRemove = this.eventHandlers
-        .filter(eventHandler => eventHandler.test(fakeEvent));
+        .filter((eventHandler) => eventHandler.test(fakeEvent));
 
       eventHandlersToRemove
-        .forEach(eventHandlerToRemove => {
-          utils.remove(eventHandler => eventHandler === eventHandlerToRemove, this.eventHandlers);
+        .forEach((eventHandlerToRemove) => {
+          remove((eventHandler) => eventHandler === eventHandlerToRemove, this.eventHandlers);
           this.element.removeEventListener(eventName, <any>eventHandlerToRemove.handle);
         });
     }
@@ -405,17 +412,17 @@ export abstract class Embed {
    * @param {string} eventName
    * @param {service.IEventHandler<T>} handler
    */
-  on<T>(eventName: string, handler: service.IEventHandler<T>): void {
+  on<T>(eventName: string, handler: IEventHandler<T>): void {
     if (this.allowedEvents.indexOf(eventName) === -1) {
       throw new Error(`eventName must be one of ${this.allowedEvents}. You passed: ${eventName}`);
     }
 
     this.eventHandlers.push({
-      test: (event: service.IEvent<T>) => event.name === eventName,
+      test: (event: IEvent<T>) => event.name === eventName,
       handle: handler
     });
 
-    this.element.addEventListener(eventName, <any>handler)
+    this.element.addEventListener(eventName, <any>handler);
   }
 
   /**
@@ -436,7 +443,7 @@ export abstract class Embed {
    * @returns {Promise<void>}
    */
   async setAccessToken(accessToken: string): Promise<void> {
-    var embedType = this.config.type;
+    let embedType = this.config.type;
     embedType = (embedType === 'create' || embedType === 'visual' || embedType === 'qna') ? 'report' : embedType;
     try {
       const response = await this.service.hpm.post<void>('/' + embedType + '/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow);
@@ -477,7 +484,7 @@ export abstract class Embed {
    */
   populateConfig(config: IBootstrapEmbedConfiguration, isBootstrap: boolean): void {
     if (this.bootstrapConfig) {
-      this.config = utils.assign({}, this.bootstrapConfig, config);
+      this.config = assign({}, this.bootstrapConfig, config);
 
       // reset bootstrapConfig because we do not want to merge it in re-embed scenario.
       this.bootstrapConfig = null;
@@ -485,7 +492,7 @@ export abstract class Embed {
     else {
       // Copy config - important for multiple iframe scenario.
       // Otherwise, if a user uses the same config twice, same unique Id which will be used in different iframes.
-      this.config = utils.assign({}, config);
+      this.config = assign({}, config);
     }
 
     this.config.embedUrl = this.getEmbedUrl(isBootstrap);
@@ -516,12 +523,12 @@ export abstract class Embed {
     if (!config.settings) {
       return;
     }
-    let localeSettings = config.settings.localeSettings
+    const localeSettings = config.settings.localeSettings;
     if (localeSettings && localeSettings.language) {
-      this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'language', localeSettings.language);
+      this.config.embedUrl = addParamToUrl(this.config.embedUrl, 'language', localeSettings.language);
     }
     if (localeSettings && localeSettings.formatLocale) {
-      this.config.embedUrl = utils.addParamToUrl(this.config.embedUrl, 'formatLocale', localeSettings.formatLocale);
+      this.config.embedUrl = addParamToUrl(this.config.embedUrl, 'formatLocale', localeSettings.formatLocale);
     }
   }
 
@@ -555,7 +562,7 @@ export abstract class Embed {
       hostname = Embed.defaultEmbedHostName;
     }
 
-    let endpoint = this.getDefaultEmbedUrlEndpoint();
+    const endpoint = this.getDefaultEmbedUrlEndpoint();
 
     // Trim spaces to fix user mistakes.
     hostname = hostname.toLowerCase().trim();
@@ -580,7 +587,7 @@ export abstract class Embed {
    * @hidden
    */
   private getUniqueId(): string {
-    return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || utils.createRandomString();
+    return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || createRandomString();
   }
 
   /**
@@ -652,36 +659,37 @@ export abstract class Embed {
   private isFullscreen(iframe: HTMLIFrameElement): boolean {
     const options = ['fullscreenElement', 'webkitFullscreenElement', 'mozFullscreenScreenElement', 'msFullscreenElement'];
 
-    return options.some(option => document[option] === iframe);
+    return options.some((option) => document[option] === iframe);
   }
 
   /**
    * Validate load and create configuration.
-   * 
+   *
    * @hidden
    */
   abstract validate(config: IEmbedConfigurationBase): models.IError[];
 
   /**
    * Sets Iframe for embed
+   *
    * @hidden
    */
   private setIframe(isLoad: boolean, phasedRender?: boolean, isBootstrap?: boolean): void {
     if (!this.iframe) {
-      var iframeContent = document.createElement("iframe");
-      var embedUrl = this.config.uniqueId ? utils.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
+      const iframeContent = document.createElement("iframe");
+      const embedUrl = this.config.uniqueId ? addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
       iframeContent.style.width = '100%';
       iframeContent.style.height = '100%';
       iframeContent.setAttribute("src", embedUrl);
       iframeContent.setAttribute("scrolling", "no");
       iframeContent.setAttribute("allowfullscreen", "true");
-      var node = this.element;
+      const node = this.element;
       while (node.firstChild) {
         node.removeChild(node.firstChild);
       }
 
       node.appendChild(iframeContent);
-      this.iframe = <HTMLIFrameElement>node.firstChild;
+      this.iframe = node.firstChild as HTMLIFrameElement;
     }
 
     if (isLoad) {
@@ -701,7 +709,7 @@ export abstract class Embed {
       if (this.service.getNumberOfComponents() <= Embed.maxFrontLoadTimes) {
         this.frontLoadHandler = () => {
           this.frontLoadSendConfig(this.config);
-        }
+        };
 
         // 'ready' event is fired by the embedded element (not by the iframe)
         this.element.addEventListener('ready', this.frontLoadHandler, false);
@@ -738,7 +746,7 @@ export abstract class Embed {
   /**
    * Removes element's tabindex attribute
    */
-  removeComponentTabIndex(tabIndex?: number): void {
+  removeComponentTabIndex(_tabIndex?: number): void {
     if (!this.element) {
       return;
     }
@@ -755,10 +763,10 @@ export abstract class Embed {
    * @returns {string}
    */
   static findGroupIdFromEmbedUrl(url: string): string {
-    const groupIdRegEx = /groupId="?([^&]+)"?/
+    const groupIdRegEx = /groupId="?([^&]+)"?/;
     const groupIdMatch = url.match(groupIdRegEx);
 
-    let groupId;
+    let groupId: string;
     if (groupIdMatch) {
       groupId = groupIdMatch[1];
     }
@@ -768,6 +776,7 @@ export abstract class Embed {
 
   /**
    * Sends the config for front load calls, after 'ready' message is received from the iframe
+   *
    * @hidden
    */
   private async frontLoadSendConfig(config: IEmbedConfigurationBase): Promise<void> {
@@ -781,8 +790,9 @@ export abstract class Embed {
     }
 
     // contentWindow must be initialized
-    if (this.iframe.contentWindow == null)
+    if (this.iframe.contentWindow == null) {
       return;
+    }
 
     try {
       const response = await this.service.hpm.post<void>("/frontload/config", config, { uid: this.config.uniqueId }, this.iframe.contentWindow);

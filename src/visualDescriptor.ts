@@ -162,6 +162,7 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
   /**
    * Exports Visual data.
    * Can export up to 30K rows.
+   *
    * @param rows: Optional. Default value is 30K, maximum value is 30K as well.
    * @param exportDataType: Optional. Default is ExportDataType.Summarized.
    * ```javascript
@@ -188,6 +189,7 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
   /**
    * Set slicer state.
    * Works only for visuals of type slicer.
+   *
    * @param state: A new state which contains the slicer filters.
    * ```javascript
    * visual.setSlicerState()

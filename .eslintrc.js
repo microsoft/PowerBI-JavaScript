@@ -90,8 +90,8 @@ module.exports = {
         }
       }
     ],
-    "@typescript-eslint/member-ordering": "warn",
-    "@typescript-eslint/naming-convention": "warn",
+    "@typescript-eslint/member-ordering": "off",
+    "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/no-array-constructor": "warn",
     "@typescript-eslint/no-empty-function": "warn",
     "@typescript-eslint/no-empty-interface": "warn",
@@ -112,7 +112,7 @@ module.exports = {
     "@typescript-eslint/no-unnecessary-type-assertion": "warn",
     "@typescript-eslint/no-unsafe-assignment": "warn",
     "@typescript-eslint/no-unsafe-call": "warn",
-    "@typescript-eslint/no-unsafe-member-access": "warn",
+    "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-unsafe-return": "warn",
     "@typescript-eslint/no-unused-expressions": "warn",
     "@typescript-eslint/no-unused-vars": "warn",
@@ -122,7 +122,7 @@ module.exports = {
     "@typescript-eslint/prefer-for-of": "warn",
     "@typescript-eslint/prefer-function-type": "warn",
     "@typescript-eslint/prefer-namespace-keyword": "warn",
-    "@typescript-eslint/prefer-regexp-exec": "warn",
+    "@typescript-eslint/prefer-regexp-exec": "off",
     "@typescript-eslint/quotes": [
       "off",
       {
@@ -176,7 +176,6 @@ module.exports = {
       "Boolean",
       "boolean",
       "Undefined",
-      "undefined"
     ],
     "id-match": "warn",
     "import/order": "warn",
@@ -223,7 +222,7 @@ module.exports = {
       "warn",
       "never"
     ],
-    "prefer-arrow/prefer-arrow-functions": "warn",
+    "prefer-arrow/prefer-arrow-functions": "off",
     "prefer-const": "warn",
     "prefer-rest-params": "warn",
     "quote-props": [

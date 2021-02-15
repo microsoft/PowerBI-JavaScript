@@ -12,6 +12,7 @@ var ghPages = require('gulp-gh-pages'),
   moment = require('moment'),
   karma = require('karma'),
   typedoc = require('gulp-typedoc'),
+  watch = require('gulp-watch'),
   webpack = require('webpack'),
   webpackStream = require('webpack-stream'),
   webpackConfig = require('./webpack.config'),
@@ -211,5 +212,23 @@ gulp.task('test:js', 'Run js tests', function (done) {
         configFile: __dirname + '/karma.conf.js',
         singleRun: argv.watch ? false : true,
         captureTimeout: argv.timeout || 60000
-    }, done).start();
+    },  function() {
+      done();
+  })
+  .on('browser_register', (browser) => {
+    if (argv.chrome) {
+        browser.socket.on('disconnect', function (reason) {
+          if (reason === "transport close" || reason === "transport error") {
+              done(0);
+              process.exit(0);
+          }
+      });
+    }
+  })
+  .start();
+  if (argv.chrome) {
+    return watch(["src/**/*.ts", "test/**/*.ts"], function () {
+        runSequence('compile:spec');
+    });
+  }
 });

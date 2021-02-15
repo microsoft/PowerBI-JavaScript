@@ -264,7 +264,7 @@ export class Page implements IPageNode, IFilterable {
     try {
       const response = await this.report.service.hpm.get<IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
       return response.body
-        .map(visual => new VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout));
+        .map((visual) => new VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout));
     } catch (response) {
       throw response.body;
     }
@@ -280,7 +280,7 @@ export class Page implements IPageNode, IFilterable {
    *
    * @returns {(Promise<boolean>)}
    */
-  async hasLayout(layoutType): Promise<boolean> {
+  async hasLayout(layoutType: LayoutType): Promise<boolean> {
     if (isRDLEmbed(this.report.config.embedUrl)) {
       return Promise.reject(APINotSupportedForRDLError);
     }

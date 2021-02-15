@@ -1,6 +1,6 @@
 {
   "name": "powerbi-client",
-  "version": "2.17.1",
+  "version": "2.17.2",
   "description": "JavaScript library for embedding Power BI into your apps. Provides service which makes it easy to embed different types of components and an object model which allows easy interaction with these components such as changing pages, applying filters, and responding to data selection.",
   "main": "dist/powerbi.js",
   "types": "dist/powerbi-client.d.ts",
@@ -15,7 +15,8 @@
     "start": "http-server ./demo",
     "prestart": "cd demo && npm install",
     "test": "gulp test",
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "tests": "npm test -- --chrome --watch --debug"
   },
   "keywords": [
     "microsoft",
@@ -54,6 +55,7 @@
     "gulp-replace": "^0.5.4",
     "gulp-typedoc": "^2.0.0",
     "gulp-typescript": "^4.0.1",
+    "gulp-watch": "^5.0.1",
     "gulp4-run-sequence": "^1.0.0",
     "http-server": "^0.12.1",
     "ignore-loader": "^0.1.1",
@@ -65,6 +67,7 @@
     "karma-coverage": "^2.0.3",
     "karma-firefox-launcher": "^1.2.0",
     "karma-jasmine": "^0.3.8",
+    "karma-jasmine-html-reporter": "^0.2.2",
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-spec-reporter": "0.0.32",
     "moment": "^2.14.1",

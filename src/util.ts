@@ -2,14 +2,14 @@ import { HttpPostMessage } from 'http-post-message';
 
 /**
  * Raises a custom event with event data on the specified HTML element.
- * 
+ *
  * @export
  * @param {HTMLElement} element
  * @param {string} eventName
  * @param {*} eventData
  */
 export function raiseCustomEvent(element: HTMLElement, eventName: string, eventData: any): void {
-  let customEvent;
+  let customEvent: CustomEvent;
   if (typeof CustomEvent === 'function') {
     customEvent = new CustomEvent(eventName, {
       detail: eventData,
@@ -26,7 +26,7 @@ export function raiseCustomEvent(element: HTMLElement, eventName: string, eventD
 
 /**
  * Finds the index of the first value in an array that matches the specified predicate.
- * 
+ *
  * @export
  * @template T
  * @param {(x: T) => boolean} predicate
@@ -38,7 +38,7 @@ export function findIndex<T>(predicate: (x: T) => boolean, xs: T[]): number {
     throw new Error(`You attempted to call find with second parameter that was not an array. You passed: ${xs}`);
   }
 
-  let index;
+  let index: number;
   xs.some((x, i) => {
     if (predicate(x)) {
       index = i;
@@ -51,7 +51,7 @@ export function findIndex<T>(predicate: (x: T) => boolean, xs: T[]): number {
 
 /**
  * Finds the first value in an array that matches the specified predicate.
- * 
+ *
  * @export
  * @template T
  * @param {(x: T) => boolean} predicate
@@ -72,7 +72,7 @@ export function remove<T>(predicate: (x: T) => boolean, xs: T[]): void {
 // TODO: replace in favor of using polyfill
 /**
  * Copies the values of all enumerable properties from one or more source objects to a target object, and returns the target object.
- * 
+ *
  * @export
  * @param {any} args
  * @returns
@@ -101,7 +101,7 @@ export function assign(...args) {
 
 /**
  * Generates a random 5 to 6 character string.
- * 
+ *
  * @export
  * @returns {string}
  */
@@ -111,7 +111,7 @@ export function createRandomString(): string {
 
 /**
  * Generates a 20 character uuid.
- * 
+ *
  * @export
  * @returns {string}
  */
@@ -132,7 +132,7 @@ export function generateUUID(): string {
 
 /**
  * Adds a parameter to the given url
- * 
+ *
  * @export
  * @param {string} url
  * @param {string} paramName
@@ -140,14 +140,14 @@ export function generateUUID(): string {
  * @returns {string}
  */
 export function addParamToUrl(url: string, paramName: string, value: string): string {
-  let parameterPrefix = url.indexOf('?') > 0 ? '&' : '?';
+  const parameterPrefix = url.indexOf('?') > 0 ? '&' : '?';
   url += parameterPrefix + paramName + '=' + value;
   return url;
 }
 
 /**
  * Checks if the report is saved.
- * 
+ *
  * @export
  * @param {HttpPostMessage} hpm
  * @param {string} uid
@@ -156,7 +156,7 @@ export function addParamToUrl(url: string, paramName: string, value: string): st
  */
 export async function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow: Window): Promise<boolean> {
   try {
-    const response = await hpm.get<boolean>('/report/hasUnsavedChanges', { uid }, contentWindow);
+    const response = await hpm.get<boolean>('/report/hasUnsavedChanges', { uid: uid }, contentWindow);
     return !response.body;
   } catch (response) {
     throw response.body;
@@ -165,7 +165,7 @@ export async function isSavedInternal(hpm: HttpPostMessage, uid: string, content
 
 /**
  * Checks if the embed url is for RDL report.
- * 
+ *
  * @export
  * @param {string} embedUrl
  * @returns {boolean}
@@ -176,7 +176,7 @@ export function isRDLEmbed(embedUrl: string): boolean {
 
 /**
  * Checks if the embed url contains autoAuth=true.
- * 
+ *
  * @export
  * @param {string} embedUrl
  * @returns {boolean}
@@ -188,11 +188,11 @@ export function autoAuthInEmbedUrl(embedUrl: string): boolean {
 /**
  * Returns random number
  */
-export function getRandomValue() {
+export function getRandomValue(): number {
 
   // window.msCrypto for IE
-  var cryptoObj = window.crypto || window.msCrypto;
-  var randomValueArray = new Uint32Array(1);
+  const cryptoObj = window.crypto || window.msCrypto;
+  const randomValueArray = new Uint32Array(1);
   cryptoObj.getRandomValues(randomValueArray);
 
   return randomValueArray[0];
@@ -200,6 +200,7 @@ export function getRandomValue() {
 
 /**
  * Returns the time interval between two dates in milliseconds
+ *
  * @export
  * @param {Date} start
  * @param {Date} end

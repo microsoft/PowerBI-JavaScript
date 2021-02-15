@@ -1,9 +1,18 @@
-import * as service from './service';
-import * as embed from './embed';
-import * as models from 'powerbi-models';
-import * as utils from './util';
-import * as errors from './errors';
+import {
+  BookmarksPlayMode,
+  IApplyBookmarkByNameRequest,
+  IApplyBookmarkStateRequest,
+  ICaptureBookmarkOptions,
+  ICaptureBookmarkRequest,
+  IPlayBookmarkRequest,
+  IReportBookmark
+
+} from 'powerbi-models';
 import { IHttpPostMessageResponse } from 'http-post-message';
+import { Service } from './service';
+import { IEmbedConfigurationBase } from './embed';
+import { isRDLEmbed } from './util';
+import { APINotSupportedForRDLError } from './errors';
 
 /**
  * APIs for managing the report bookmarks.
@@ -12,10 +21,10 @@ import { IHttpPostMessageResponse } from 'http-post-message';
  * @interface IBookmarksManager
  */
 export interface IBookmarksManager {
-  getBookmarks(): Promise<models.IReportBookmark[]>;
+  getBookmarks(): Promise<IReportBookmark[]>;
   apply(bookmarkName: string): Promise<IHttpPostMessageResponse<void>>;
-  play(playMode: models.BookmarksPlayMode): Promise<IHttpPostMessageResponse<void>>;
-  capture(options?: models.ICaptureBookmarkOptions): Promise<models.IReportBookmark>;
+  play(playMode: BookmarksPlayMode): Promise<IHttpPostMessageResponse<void>>;
+  capture(options?: ICaptureBookmarkOptions): Promise<IReportBookmark>;
   applyState(state: string): Promise<IHttpPostMessageResponse<void>>;
 }
 
@@ -30,7 +39,7 @@ export class BookmarksManager implements IBookmarksManager {
   /**
    * @hidden
    */
-  constructor(private service: service.Service, private config: embed.IEmbedConfigurationBase, private iframe?: HTMLIFrameElement) {
+  constructor(private service: Service, private config: IEmbedConfigurationBase, private iframe?: HTMLIFrameElement) {
   }
 
   /**
@@ -44,15 +53,15 @@ export class BookmarksManager implements IBookmarksManager {
    *   });
    * ```
    *
-   * @returns {Promise<models.IReportBookmark[]>}
+   * @returns {Promise<IReportBookmark[]>}
    */
-  async getBookmarks(): Promise<models.IReportBookmark[]> {
-    if (utils.isRDLEmbed(this.config.embedUrl)) {
-      return Promise.reject(errors.APINotSupportedForRDLError);
+  async getBookmarks(): Promise<IReportBookmark[]> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
     }
 
     try {
-      const response = await this.service.hpm.get<models.IReportBookmark[]>(`/report/bookmarks`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      const response = await this.service.hpm.get<IReportBookmark[]>(`/report/bookmarks`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
       return response.body;
     } catch (response) {
       throw response.body;
@@ -70,11 +79,11 @@ export class BookmarksManager implements IBookmarksManager {
    * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
   async apply(bookmarkName: string): Promise<IHttpPostMessageResponse<void>> {
-    if (utils.isRDLEmbed(this.config.embedUrl)) {
-      return Promise.reject(errors.APINotSupportedForRDLError);
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
     }
 
-    var request: models.IApplyBookmarkByNameRequest = {
+    const request: IApplyBookmarkByNameRequest = {
       name: bookmarkName
     };
 
@@ -90,18 +99,18 @@ export class BookmarksManager implements IBookmarksManager {
    *
    * ```javascript
    * // Enter presentation mode.
-   * bookmarksManager.play(models.BookmarksPlayMode.Presentation)
+   * bookmarksManager.play(BookmarksPlayMode.Presentation)
    * ```
    *
-   * @param {models.BookmarksPlayMode} playMode Play mode can be either `Presentation` or `Off`
+   * @param {BookmarksPlayMode} playMode Play mode can be either `Presentation` or `Off`
    * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  async play(playMode: models.BookmarksPlayMode): Promise<IHttpPostMessageResponse<void>> {
-    if (utils.isRDLEmbed(this.config.embedUrl)) {
-      return Promise.reject(errors.APINotSupportedForRDLError);
+  async play(playMode: BookmarksPlayMode): Promise<IHttpPostMessageResponse<void>> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
     }
 
-    var playBookmarkRequest: models.IPlayBookmarkRequest = {
+    const playBookmarkRequest: IPlayBookmarkRequest = {
       playMode: playMode
     };
 
@@ -119,20 +128,20 @@ export class BookmarksManager implements IBookmarksManager {
    * bookmarksManager.capture(options)
    * ```
    *
-   * @param {models.ICaptureBookmarkOptions} [options] Options for bookmark capturing
-   * @returns {Promise<models.IReportBookmark>}
+   * @param {ICaptureBookmarkOptions} [options] Options for bookmark capturing
+   * @returns {Promise<IReportBookmark>}
    */
-  async capture(options?: models.ICaptureBookmarkOptions): Promise<models.IReportBookmark> {
-    if (utils.isRDLEmbed(this.config.embedUrl)) {
-      return Promise.reject(errors.APINotSupportedForRDLError);
+  async capture(options?: ICaptureBookmarkOptions): Promise<IReportBookmark> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
     }
 
-    var request: models.ICaptureBookmarkRequest = {
+    const request: ICaptureBookmarkRequest = {
       options: options || {}
     };
 
     try {
-      const response = await this.service.hpm.post<models.IReportBookmark>(`/report/bookmarks/capture`, request, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      const response = await this.service.hpm.post<IReportBookmark>(`/report/bookmarks/capture`, request, { uid: this.config.uniqueId }, this.iframe.contentWindow);
       return response.body;
     } catch (response) {
       throw response.body;
@@ -150,11 +159,11 @@ export class BookmarksManager implements IBookmarksManager {
    * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
   async applyState(state: string): Promise<IHttpPostMessageResponse<void>> {
-    if (utils.isRDLEmbed(this.config.embedUrl)) {
-      return Promise.reject(errors.APINotSupportedForRDLError);
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
     }
 
-    var request: models.IApplyBookmarkStateRequest = {
+    const request: IApplyBookmarkStateRequest = {
       state: state
     };
 

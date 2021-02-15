@@ -133,7 +133,7 @@ export class Visual extends Report {
    * @param {string} pageName
    * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  setPage(pageName: string): Promise<IHttpPostMessageResponse<void>> {
+  setPage(_pageName: string): Promise<IHttpPostMessageResponse<void>> {
     throw Visual.SetPageNotSupportedError;
   }
 
@@ -143,7 +143,7 @@ export class Visual extends Report {
    * @hidden
    * @returns {Promise<void>}
    */
-  async render(config?: IReportLoadConfiguration | IReportEmbedConfiguration): Promise<void> {
+  async render(_config?: IReportLoadConfiguration | IReportEmbedConfiguration): Promise<void> {
     throw Visual.RenderNotSupportedError;
   }
 
@@ -232,7 +232,7 @@ export class Visual extends Report {
 
     const url: string = this.getFiltersLevelUrl(filtersLevel);
     try {
-      return await this.service.hpm.put<void>(url, updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return await this.service.hpm.post<void>(url, updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow);
     } catch (response) {
       throw response.body;
     }
