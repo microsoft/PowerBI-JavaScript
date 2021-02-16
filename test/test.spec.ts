@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 import * as utils from '../src/util';
 import * as service from '../src/service';
 import * as embed from '../src/embed';

@@ -1,4 +1,6 @@
-/*! powerbi-client v2.17.2 | (c) 2016 Microsoft Corporation MIT */
+// powerbi-client v2.17.2
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -5720,6 +5722,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -5970,6 +5974,8 @@ exports.BookmarksManager = BookmarksManager;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
@@ -5988,6 +5994,8 @@ exports.default = config;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6155,6 +6163,8 @@ exports.Create = Create;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6291,6 +6301,8 @@ exports.Dashboard = Dashboard;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -6984,6 +6996,8 @@ exports.Embed = Embed;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmbedUrlNotSupported = exports.APINotSupportedForRDLError = void 0;
 exports.APINotSupportedForRDLError = "This API is currently not supported for RDL reports";
@@ -6999,6 +7013,8 @@ exports.EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please u
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.routerFactory = exports.wpmpFactory = exports.hpmFactory = void 0;
 /**
@@ -7046,6 +7062,8 @@ exports.routerFactory = routerFactory;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7405,6 +7423,8 @@ exports.Page = Page;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VisualDescriptor = exports.Visual = exports.Qna = exports.Page = exports.Embed = exports.Tile = exports.Dashboard = exports.Report = exports.models = exports.factories = exports.service = void 0;
 /**
@@ -7450,6 +7470,8 @@ window.powerbi = powerbi;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -7597,6 +7619,8 @@ exports.Qna = Qna;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -8449,6 +8473,8 @@ exports.Report = Report;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Service = void 0;
 var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
@@ -8905,6 +8931,8 @@ exports.Service = Service;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -9017,6 +9045,8 @@ exports.Tile = Tile;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9284,6 +9314,8 @@ exports.getTimeDiffInMilliseconds = getTimeDiffInMilliseconds;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -9654,6 +9686,8 @@ exports.Visual = Visual;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {

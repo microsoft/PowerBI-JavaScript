@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 export const spyRouter = {
   get: jasmine.createSpy("get"),
   post: jasmine.createSpy("post"),

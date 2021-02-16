@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 /**
  * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
  */
