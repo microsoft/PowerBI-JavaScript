@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IFilterable | typescript - v3.7.5</title>
+	<title>IFilterable | typescript - v3.7.7</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">typescript - v3.7.5</a>
+					<a href="../index.html" class="title">typescript - v3.7.7</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -111,6 +111,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_ifilterable_.ifilterable.html#getfilters" class="tsd-kind-icon">get<wbr>Filters</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_ifilterable_.ifilterable.html#removefilters" class="tsd-kind-icon">remove<wbr>Filters</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_ifilterable_.ifilterable.html#setfilters" class="tsd-kind-icon">set<wbr>Filters</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_src_ifilterable_.ifilterable.html#updatefilters" class="tsd-kind-icon">update<wbr>Filters</a></li>
 							</ul>
 						</section>
 					</div>
@@ -122,13 +123,13 @@
 					<a name="getfilters" class="tsd-anchor"></a>
 					<h3>get<wbr>Filters</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Filters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Filters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_node_modules_powerbi_models_dist_models_d_.ifilter.html" class="tsd-signature-type">IFilter</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/PowerBI-JavaScript/blob/abe32982/src/ifilterable.ts#L17">src/ifilterable.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/PowerBI-JavaScript/blob/29eab666/src/ifilterable.ts#L17">src/ifilterable.ts:17</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -136,7 +137,7 @@
 									<p>Gets the filters currently applied to the object.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_node_modules_powerbi_models_dist_models_d_.ifilter.html" class="tsd-signature-type">IFilter</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -144,13 +145,13 @@
 					<a name="removefilters" class="tsd-anchor"></a>
 					<h3>remove<wbr>Filters</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Filters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Filters<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IHttpPostMessageResponse</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/PowerBI-JavaScript/blob/abe32982/src/ifilterable.ts#L30">src/ifilterable.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/PowerBI-JavaScript/blob/29eab666/src/ifilterable.ts#L31">src/ifilterable.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -158,7 +159,7 @@
 									<p>Removes all filters from the current object.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IHttpPostMessageResponse</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -166,13 +167,13 @@
 					<a name="setfilters" class="tsd-anchor"></a>
 					<h3>set<wbr>Filters</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Filters<span class="tsd-signature-symbol">(</span>filters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Filters<span class="tsd-signature-symbol">(</span>filters<span class="tsd-signature-symbol">: </span><a href="_node_modules_powerbi_models_dist_models_d_.ifilter.html" class="tsd-signature-type">IFilter</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IHttpPostMessageResponse</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/PowerBI-JavaScript/blob/abe32982/src/ifilterable.ts#L24">src/ifilterable.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/PowerBI-JavaScript/blob/29eab666/src/ifilterable.ts#L38">src/ifilterable.ts:38</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -183,10 +184,41 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>filters: <span class="tsd-signature-type">models.IFilter</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>filters: <a href="_node_modules_powerbi_models_dist_models_d_.ifilter.html" class="tsd-signature-type">IFilter</a><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IHttpPostMessageResponse</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="updatefilters" class="tsd-anchor"></a>
+					<h3>update<wbr>Filters</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Filters<span class="tsd-signature-symbol">(</span>operation<span class="tsd-signature-symbol">: </span><a href="../enums/_node_modules_powerbi_models_dist_models_d_.filtersoperations.html" class="tsd-signature-type">FiltersOperations</a>, filters<span class="tsd-signature-symbol">?: </span><a href="_node_modules_powerbi_models_dist_models_d_.ifilter.html" class="tsd-signature-type">IFilter</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IHttpPostMessageResponse</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/PowerBI-JavaScript/blob/29eab666/src/ifilterable.ts#L25">src/ifilterable.ts:25</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Update the filters for the current instance according to the operation: Add, replace all, replace by target or remove.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>operation: <a href="../enums/_node_modules_powerbi_models_dist_models_d_.filtersoperations.html" class="tsd-signature-type">FiltersOperations</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> filters: <a href="_node_modules_powerbi_models_dist_models_d_.ifilter.html" class="tsd-signature-type">IFilter</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IHttpPostMessageResponse</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -218,6 +250,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_src_ifilterable_.ifilterable.html#setfilters" class="tsd-kind-icon">set<wbr>Filters</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_src_ifilterable_.ifilterable.html#updatefilters" class="tsd-kind-icon">update<wbr>Filters</a>
 							</li>
 						</ul>
 					</li>

@@ -1,3 +1,8 @@
+<div id="playground-banner" onclick="openBannerLink();">
+    <p id="playground-banner-text">The new Power BI embedded analytics playground is now live.&nbsp;</p><p id="playground-banner-text-underlined">Check it out now!</p>
+    <img id="playground-banner-close" src="images\close.png" onclick="closeBanner();"/>
+</div>
+
 <div id="steps-nav-bar">
     <div id="steps-ul-dev">
         <ul id="steps-ul" class="steps-ul">
@@ -29,3 +34,18 @@
 
 <div id="mainContent">
 </div>
+
+<script>
+    var showBanner = true;
+    function closeBanner() {
+        showBanner = false;
+        $("#playground-banner").hide();
+    }
+
+    function openBannerLink() {
+        if (!showBanner)
+            return;
+        
+        window.open("https://aka.ms/OldPGBanner", "_self");
+    }
+</script>
