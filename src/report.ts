@@ -14,6 +14,7 @@ import {
   LayoutType,
   SectionVisibility,
   validateReportLoad,
+  validatePaginatedReportLoad,
   ViewMode,
   IEmbedConfiguration,
   IEmbedConfigurationBase,
@@ -437,6 +438,9 @@ export class Report extends Embed implements IReportNode, IFilterable {
    * @hidden
    */
   validate(config: IEmbedConfigurationBase): IError[] {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return validatePaginatedReportLoad(config);
+    }
     return validateReportLoad(config);
   }
 
