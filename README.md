@@ -1,5 +1,5 @@
 # powerbi-client
-JavaScript library for embedding Power BI into your apps.
+A client side library for embedding Power BI using JavaScript or TypeScript into your apps.
 
 [![Build Status](https://img.shields.io/travis/Microsoft/PowerBI-JavaScript/master.svg)](https://travis-ci.org/Microsoft/PowerBI-JavaScript)
 [![NPM Version](https://img.shields.io/npm/v/powerbi-client.svg)](https://www.npmjs.com/package/powerbi-client)
@@ -9,14 +9,14 @@ JavaScript library for embedding Power BI into your apps.
 [![GitHub tag](https://img.shields.io/github/tag/microsoft/powerbi-javascript.svg)](https://github.com/Microsoft/PowerBI-JavaScript/tags)
 [![Gitter](https://img.shields.io/gitter/room/Microsoft/PowerBI-JavaScript.svg)](https://gitter.im/Microsoft/PowerBI-JavaScript)
 
-## Wiki
-See the [wiki](https://github.com/Microsoft/PowerBI-JavaScript/wiki) for more details about embedding, service configuration, setting a default page, page navigation, dynamically applying filters, and more.
+## Documentation
+See the [Power BI embedded analytics Client APIs documentation](https://docs.microsoft.com/javascript/api/overview/powerbi/) to learn how to embed a Power BI report in your application and how to use the client APIs.
 
-## Code Docs
-See the [code docs](https://microsoft.github.io/PowerBI-JavaScript) for detailed information about classes, interfaces, types, etc.
+## Reference
+See the [library reference](https://docs.microsoft.com/en-us/javascript/api/powerbi/powerbi-client/) for detailed information about classes, interfaces, types, etc.
 
-## Demo
-New [live demo](https://microsoft.github.io/PowerBI-JavaScript/demo) for a sample application using the `powerbi-client` library in scenarios such as page navigation, applying filters, updating settings, and more.
+## Playground
+The [playground](https://aka.ms/pbieplayground) is the home for Power BI embedded analytics, where you can get hands-on coding experience, embed your own reports, and interact with our client APIs to see instant results. In addition, you’ll find there our interactive showcases to get inspiration regarding how you can apply these features in your applications. Lastly, we’ve created a new learning center to help you find all the relevant samples, tutorials, and documentation you’ll need for a successful integration.
 
 ## Installation
 
