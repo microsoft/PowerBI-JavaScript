@@ -83,3 +83,14 @@
 
 </body>
 </html>
+
+<script>
+    $(document).ready(function() {
+        let shouldOpenCodeStep = GetParameterByName("embedUrl") || GetParameterByName("embedId") || GetParameterByName("accessToken") || GetParameterByName("entityType");
+        
+        // Redirecting to the new playground unless the noRedirect param is true or playground should open code step 
+        if (!GetParameterByName("noRedirect") && !shouldOpenCodeStep) {
+            window.open("https://aka.ms/PlaygroundAutoRedirect", '_self');
+        }
+    });
+</script>
