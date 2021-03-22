@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 export const spyHpm = {
   get: jasmine.createSpy("get").and.returnValue(Promise.resolve(null)),
   post: jasmine.createSpy("post").and.returnValue(Promise.resolve(null)),

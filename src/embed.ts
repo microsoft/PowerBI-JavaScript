@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 import * as models from 'powerbi-models';
 import { addParamToUrl, assign, autoAuthInEmbedUrl, createRandomString, getTimeDiffInMilliseconds, remove } from './util';
 import { Service, IEventHandler, IEvent, ICustomEvent } from './service';

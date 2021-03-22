@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 import { IHttpPostMessageResponse } from 'http-post-message';
 import { IError, IQnaInterpretInputData, validateLoadQnaConfiguration } from 'powerbi-models';
 import { Embed, IEmbedConfigurationBase } from './embed';
