@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 import { IReportCreateConfiguration, IError, validateCreateReport } from 'powerbi-models';
 import { Service } from './service';
 import { Embed, IEmbedConfigurationBase, IEmbedConfiguration } from './embed';

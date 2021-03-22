@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 import { IError, validateTileLoad } from 'powerbi-models';
 import { Service } from './service';
 import { Embed, IEmbedConfigurationBase, ITileEmbedConfiguration } from './embed';

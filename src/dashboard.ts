@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 import { IError, validateDashboardLoad, PageView } from 'powerbi-models';
 import { Service, IService } from './service';
 import { Embed, IDashboardEmbedConfiguration, IEmbedConfigurationBase } from './embed';
