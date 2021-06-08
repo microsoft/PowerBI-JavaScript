@@ -13,11 +13,13 @@ import {
   ISortByVisualRequest,
   IUpdateFiltersRequest,
   IVisualLayout,
+  VisualContainerDisplayMode,
   VisualLevelFilters
 } from 'powerbi-models';
 import { IHttpPostMessageResponse } from 'http-post-message';
 import { IFilterable } from './ifilterable';
 import { IPageNode } from './page';
+import { Report } from './report';
 
 /**
  * A Visual node within a report hierarchy
@@ -257,5 +259,64 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
     } catch (response) {
       throw response.body;
     }
+  }
+
+  /**
+   * Updates the position of a visual.
+   *
+   * ```javascript
+   * visual.moveVisual(x, y, z)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async moveVisual(x: number, y: number, z?: number): Promise<IHttpPostMessageResponse<void>> {
+    const pageName = this.page.name;
+    const visualName = this.name;
+    const report = this.page.report as Report;
+    return report.moveVisual(pageName, visualName, x, y, z);
+  }
+
+  /**
+   * Updates the display state of a visual.
+   *
+   * ```javascript
+   * visual.setVisualDisplayState(displayState)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {VisualContainerDisplayMode} displayState
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async setVisualDisplayState(displayState: VisualContainerDisplayMode): Promise<IHttpPostMessageResponse<void>> {
+    const pageName = this.page.name;
+    const visualName = this.name;
+    const report = this.page.report as Report;
+
+    return report.setVisualDisplayState(pageName, visualName, displayState);
+  }
+
+  /**
+   * Resize a visual.
+   *
+   * ```javascript
+   * visual.resizeVisual(width, height)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {number} width
+   * @param {number} height
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async resizeVisual(width: number, height: number): Promise<IHttpPostMessageResponse<void>> {
+    const pageName = this.page.name;
+    const visualName = this.name;
+    const report = this.page.report as Report;
+
+    return report.resizeVisual(pageName, visualName, width, height);
   }
 }

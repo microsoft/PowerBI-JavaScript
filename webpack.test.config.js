@@ -1,8 +1,9 @@
 const webpack = require('webpack'); // To access built-in plugins
+const glob = require("glob");
 
 module.exports = {
   mode: 'development',
-  entry: './test/test.spec.ts',
+  entry: glob.sync('./test/*.spec.ts'),
   output: {
     path: __dirname + "/tmp",
     filename: 'test.spec.js'

@@ -3,6 +3,7 @@
 
 import { IHttpPostMessageResponse } from 'http-post-message';
 import {
+  CommonErrorCodes,
   DisplayOption,
   FiltersOperations,
   ICustomPageSize,
@@ -12,10 +13,12 @@ import {
   IVisual,
   LayoutType,
   PageLevelFilters,
-  SectionVisibility
+  PageSizeType,
+  SectionVisibility,
+  VisualContainerDisplayMode
 } from 'powerbi-models';
 import { IFilterable } from './ifilterable';
-import { IReportNode } from './report';
+import { IReportNode, Report } from './report';
 import { VisualDescriptor } from './visualDescriptor';
 import { isRDLEmbed } from './util';
 import { APINotSupportedForRDLError } from './errors';
@@ -268,6 +271,142 @@ export class Page implements IPageNode, IFilterable {
       const response = await this.report.service.hpm.get<IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
       return response.body
         .map((visual) => new VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout));
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
+   * Gets a visual by name on the page.
+   *
+   * ```javascript
+   * page.getVisualByName(visualName: string)
+   *  .then(visual => {
+   *      ...
+   *  });
+   * ```
+   *
+   * @param {string} visualName
+   * @returns {Promise<VisualDescriptor>}
+   */
+  async getVisualByName(visualName: string): Promise<VisualDescriptor> {
+    if (isRDLEmbed(this.report.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    try {
+      const response = await this.report.service.hpm.get<IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+      const visual = response.body.find((v: IVisual) => v.name === visualName);
+      if (!visual) {
+        return Promise.reject(CommonErrorCodes.NotFound);
+      }
+
+      return new VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout);
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
+   * Updates the display state of a visual in a page.
+   *
+   * ```javascript
+   * page.setVisualDisplayState(visualName, displayState)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {string} visualName
+   * @param {VisualContainerDisplayMode} displayState
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async setVisualDisplayState(visualName: string, displayState: VisualContainerDisplayMode): Promise<IHttpPostMessageResponse<void>> {
+    const pageName = this.name;
+    const report = this.report as Report;
+    return report.setVisualDisplayState(pageName, visualName, displayState);
+  }
+
+  /**
+   * Updates the position of a visual in a page.
+   *
+   * ```javascript
+   * page.moveVisual(visualName, x, y, z)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {string} visualName
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async moveVisual(visualName: string, x: number, y: number, z?: number): Promise<IHttpPostMessageResponse<void>> {
+    const pageName = this.name;
+    const report = this.report as Report;
+    return report.moveVisual(pageName, visualName, x, y, z);
+  }
+
+  /**
+   * Resize a visual in a page.
+   *
+   * ```javascript
+   * page.resizeVisual(visualName, width, height)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {string} visualName
+   * @param {number} width
+   * @param {number} height
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async resizeVisual(visualName: string, width: number, height: number): Promise<IHttpPostMessageResponse<void>> {
+    const pageName = this.name;
+    const report = this.report as Report;
+    return report.resizeVisual(pageName, visualName, width, height);
+  }
+
+  /**
+   * Updates the size of active page.
+   *
+   * ```javascript
+   * page.resizePage(pageSizeType, width, height)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {PageSizeType} pageSizeType
+   * @param {number} width
+   * @param {number} height
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async resizePage(pageSizeType: PageSizeType, width?: number, height?: number): Promise<IHttpPostMessageResponse<void>> {
+    if (!this.isActive) {
+      return Promise.reject('Cannot resize the page. Only the active page can be resized');
+    }
+    const report = this.report as Report;
+    return report.resizePage(pageSizeType, width, height);
+  }
+
+  /**
+   * Gets the list of slicer visuals on the page.
+   *
+   * ```javascript
+   * page.getSlicers()
+   *  .then(slicers => {
+   *      ...
+   *  });
+   * ```
+   *
+   * @returns {Promise<IVisual[]>}
+   */
+  async getSlicers(): Promise<IVisual[]> {
+    if (isRDLEmbed(this.report.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    try {
+      const response = await this.report.service.hpm.get<IVisual[]>(`/report/pages/${this.name}/visuals`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+      return response.body
+        .filter((visual: IVisual) => visual.type === 'slicer')
+        .map((visual: IVisual) => new VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout));
     } catch (response) {
       throw response.body;
     }
