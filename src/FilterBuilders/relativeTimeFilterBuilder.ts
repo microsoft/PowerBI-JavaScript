@@ -24,23 +24,6 @@ export class RelativeTimeFilterBuilder implements IFilterBuilder {
   private timeUnitType: RelativeDateFilterTimeUnit;
 
   /**
-   * Sets target property for Relative Time filter
-   *
-   * ```javascript
-   *
-   * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().withTarget(tableName, columnName);
-   * ```
-   *
-   * @param {string} table - Defines the table on which filter will be applied
-   * @param {string} column - Defines the column on which filter will be applied
-   * @returns {RelativeTimeFilterBuilder}
-   */
-  withTarget(table: string, column: string): RelativeTimeFilterBuilder {
-    this.target = { table: table, column: column };
-    return this;
-  }
-
-  /**
    * Sets target property for Relative Time filter with target object
    *
    * ```javascript
@@ -103,7 +86,7 @@ export class RelativeTimeFilterBuilder implements IFilterBuilder {
    *
    * ```javascript
    *
-   * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().orderBy(timeUnitsCount, timeUnitType);
+   * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inNext(timeUnitsCount, timeUnitType);
    * ```
    *
    * @param {number} timeUnitsCount - The amount of time units

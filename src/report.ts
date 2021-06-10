@@ -918,7 +918,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
    * Updates the size of active page in report.
    *
    * ```javascript
-   * report.resizePage(pageSizeType, width, height)
+   * report.resizeActivePage(pageSizeType, width, height)
    *   .catch(error => { ... });
    * ```
    *
@@ -927,7 +927,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
    * @param {number} height
    * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  async resizePage(pageSizeType: PageSizeType, width?: number, height?: number): Promise<IHttpPostMessageResponse<void>> {
+  async resizeActivePage(pageSizeType: PageSizeType, width?: number, height?: number): Promise<IHttpPostMessageResponse<void>> {
     const pageSize: ICustomPageSize = {
       type: pageSizeType,
       width: width,

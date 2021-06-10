@@ -6148,20 +6148,6 @@ var AdvancedFilterBuilder = /** @class */ (function () {
         this.conditions = [];
     }
     /**
-     * Sets target property for Advanced filter
-     *
-     * ```javascript
-     *
-     * const advancedFilterBuilder = new AdvancedFilterBuilder().withTarget(tableName, columnName);
-     * ```
-     *
-     * @returns {AdvancedFilterBuilder}
-     */
-    AdvancedFilterBuilder.prototype.withTarget = function (table, column) {
-        this.target = { table: table, column: column };
-        return this;
-    };
-    /**
      * Sets target property for Advanced filter with target object
      *
      * ```javascript
@@ -6270,20 +6256,6 @@ var BasicFilterBuilder = /** @class */ (function () {
     function BasicFilterBuilder() {
         this.isRequireSingleSelection = false;
     }
-    /**
-     * Sets target property for Basic filter
-     *
-     * ```javascript
-     *
-     * const basicFilterBuilder = new BasicFilterBuilder().withTarget(tableName, columnName);
-     * ```
-     *
-     * @returns {BasicFilterBuilder}
-     */
-    BasicFilterBuilder.prototype.withTarget = function (table, column) {
-        this.target = { table: table, column: column };
-        return this;
-    };
     /**
      * Sets target property for Basic filter with target object
      *
@@ -6433,22 +6405,6 @@ var RelativeDateFilterBuilder = /** @class */ (function () {
         this.isTodayIncluded = true;
     }
     /**
-     * Sets target property for Relative Date filter
-     *
-     * ```javascript
-     *
-     * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().withTarget(tableName, columnName);
-     * ```
-     *
-     * @param {string} table - Defines the table on which filter will be applied
-     * @param {string} column - Defines the column on which filter will be applied
-     * @returns {RelativeDateFilterBuilder}
-     */
-    RelativeDateFilterBuilder.prototype.withTarget = function (table, column) {
-        this.target = { table: table, column: column };
-        return this;
-    };
-    /**
      * Sets target property for Relative Date filter with target object
      *
      * ```javascript
@@ -6508,7 +6464,7 @@ var RelativeDateFilterBuilder = /** @class */ (function () {
      *
      * ```javascript
      *
-     * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().orderBy(timeUnitsCount, timeUnitType);
+     * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inNext(timeUnitsCount, timeUnitType);
      * ```
      *
      * @param {number} timeUnitsCount - The amount of time units
@@ -6580,22 +6536,6 @@ var RelativeTimeFilterBuilder = /** @class */ (function () {
     function RelativeTimeFilterBuilder() {
     }
     /**
-     * Sets target property for Relative Time filter
-     *
-     * ```javascript
-     *
-     * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().withTarget(tableName, columnName);
-     * ```
-     *
-     * @param {string} table - Defines the table on which filter will be applied
-     * @param {string} column - Defines the column on which filter will be applied
-     * @returns {RelativeTimeFilterBuilder}
-     */
-    RelativeTimeFilterBuilder.prototype.withTarget = function (table, column) {
-        this.target = { table: table, column: column };
-        return this;
-    };
-    /**
      * Sets target property for Relative Time filter with target object
      *
      * ```javascript
@@ -6655,7 +6595,7 @@ var RelativeTimeFilterBuilder = /** @class */ (function () {
      *
      * ```javascript
      *
-     * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().orderBy(timeUnitsCount, timeUnitType);
+     * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inNext(timeUnitsCount, timeUnitType);
      * ```
      *
      * @param {number} timeUnitsCount - The amount of time units
@@ -6712,20 +6652,6 @@ var TopNFilterBuilder = /** @class */ (function () {
     function TopNFilterBuilder() {
     }
     /**
-     * Sets target property for Top N filter
-     *
-     * ```javascript
-     *
-     * const topNFilterBuilder = new TopNFilterBuilder().withTarget(tableName, columnName);
-     * ```
-     *
-     * @returns {TopNFilterBuilder}
-     */
-    TopNFilterBuilder.prototype.withTarget = function (table, column) {
-        this.target = { table: table, column: column };
-        return this;
-    };
-    /**
      * Sets target property for Top N filter with target object
      *
      * ```javascript
@@ -6778,13 +6704,13 @@ var TopNFilterBuilder = /** @class */ (function () {
      *
      * ```javascript
      *
-     * const topNFilterBuilder = new TopNFilterBuilder().orderBy(table, measure);
+     * const topNFilterBuilder = new TopNFilterBuilder().orderByTarget(target);
      * ```
      *
      * @returns {TopNFilterBuilder}
      */
-    TopNFilterBuilder.prototype.orderBy = function (table, measure) {
-        this.orderByTarget = { table: table, measure: measure };
+    TopNFilterBuilder.prototype.orderByTarget = function (target) {
+        this.orderByTargetValue = target;
         return this;
     };
     /**
@@ -6798,7 +6724,7 @@ var TopNFilterBuilder = /** @class */ (function () {
      * @returns {TopNFilter}
      */
     TopNFilterBuilder.prototype.build = function () {
-        var topNFilter = new powerbi_models_1.TopNFilter(this.target, this.operator, this.itemCount, this.orderByTarget);
+        var topNFilter = new powerbi_models_1.TopNFilter(this.target, this.operator, this.itemCount, this.orderByTargetValue);
         return topNFilter;
     };
     return TopNFilterBuilder;
@@ -8621,7 +8547,7 @@ var Page = /** @class */ (function () {
                     return [2 /*return*/, Promise.reject('Cannot resize the page. Only the active page can be resized')];
                 }
                 report = this.report;
-                return [2 /*return*/, report.resizePage(pageSizeType, width, height)];
+                return [2 /*return*/, report.resizeActivePage(pageSizeType, width, height)];
             });
         });
     };
@@ -10056,7 +9982,7 @@ var Report = /** @class */ (function (_super) {
      * Updates the size of active page in report.
      *
      * ```javascript
-     * report.resizePage(pageSizeType, width, height)
+     * report.resizeActivePage(pageSizeType, width, height)
      *   .catch(error => { ... });
      * ```
      *
@@ -10065,7 +9991,7 @@ var Report = /** @class */ (function (_super) {
      * @param {number} height
      * @returns {Promise<IHttpPostMessageResponse<void>>}
      */
-    Report.prototype.resizePage = function (pageSizeType, width, height) {
+    Report.prototype.resizeActivePage = function (pageSizeType, width, height) {
         return __awaiter(this, void 0, void 0, function () {
             var pageSize, newSettings;
             return __generator(this, function (_a) {

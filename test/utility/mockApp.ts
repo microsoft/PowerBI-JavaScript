@@ -19,7 +19,7 @@ export interface IApp {
   removeOptionsMenuCommand(commandName: string): Promise<void>;
   setVisualDisplayState(pageName: string, visualName: string, displayState: models.VisualContainerDisplayMode): Promise<void>;
   resizeVisual(pageName: string, visualName: string, width: number, height: number): Promise<void>;
-  resizePage(pageSizeType: models.PageSizeType, width: number, height: number): Promise<void>;
+  resizeActivePage(pageSizeType: models.PageSizeType, width: number, height: number): Promise<void>;
   moveVisual(pageName: string, visualName: string, x: number, y: number, z?: number): Promise<void>;
   // Pages
   getPages(): Promise<models.IPage>;
@@ -63,7 +63,7 @@ export const mockAppSpyObj = {
   removeOptionsMenuCommand: jasmine.createSpy("removeOptionsMenuCommand").and.returnValue(Promise.resolve(null)),
   setVisualDisplayState: jasmine.createSpy("setVisualDisplayState").and.returnValue(Promise.resolve(null)),
   resizeVisual: jasmine.createSpy("resizeVisual").and.returnValue(Promise.resolve(null)),
-  resizePage: jasmine.createSpy("resizePage").and.returnValue(Promise.resolve(null)),
+  resizeActivePage: jasmine.createSpy("resizeActivePage").and.returnValue(Promise.resolve(null)),
   moveVisual: jasmine.createSpy("moveVisual").and.returnValue(Promise.resolve(null)),
   // Pages
   getPages: jasmine.createSpy("getPages").and.returnValue(Promise.resolve(null)),
@@ -100,7 +100,7 @@ export const mockAppSpyObj = {
     mockAppSpyObj.validateSettings.calls.reset();
     mockAppSpyObj.setVisualDisplayState.calls.reset();
     mockAppSpyObj.resizeVisual.calls.reset();
-    mockAppSpyObj.resizePage.calls.reset();
+    mockAppSpyObj.resizeActivePage.calls.reset();
     mockAppSpyObj.moveVisual.calls.reset();
     mockAppSpyObj.getPages.calls.reset();
     mockAppSpyObj.getPageByName.calls.reset();

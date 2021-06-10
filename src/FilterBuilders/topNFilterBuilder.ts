@@ -21,22 +21,7 @@ export class TopNFilterBuilder implements IFilterBuilder {
   private target: IFilterTarget;
   private itemCount: number;
   private operator: TopNFilterOperators;
-  private orderByTarget: ITarget;
-
-  /**
-   * Sets target property for Top N filter
-   *
-   * ```javascript
-   *
-   * const topNFilterBuilder = new TopNFilterBuilder().withTarget(tableName, columnName);
-   * ```
-   *
-   * @returns {TopNFilterBuilder}
-   */
-  withTarget(table: string, column: string): TopNFilterBuilder {
-    this.target = { table: table, column: column };
-    return this;
-  }
+  private orderByTargetValue: ITarget;
 
   /**
    * Sets target property for Top N filter with target object
@@ -94,13 +79,13 @@ export class TopNFilterBuilder implements IFilterBuilder {
    *
    * ```javascript
    *
-   * const topNFilterBuilder = new TopNFilterBuilder().orderBy(table, measure);
+   * const topNFilterBuilder = new TopNFilterBuilder().orderByTarget(target);
    * ```
    *
    * @returns {TopNFilterBuilder}
    */
-  orderBy(table: string, measure: string): TopNFilterBuilder {
-    this.orderByTarget = { table: table, measure: measure };
+  orderByTarget(target: ITarget): TopNFilterBuilder {
+    this.orderByTargetValue = target;
     return this;
   }
 
@@ -116,7 +101,7 @@ export class TopNFilterBuilder implements IFilterBuilder {
    * @returns {TopNFilter}
    */
   build(): TopNFilter {
-    const topNFilter = new TopNFilter(this.target, this.operator, this.itemCount, this.orderByTarget);
+    const topNFilter = new TopNFilter(this.target, this.operator, this.itemCount, this.orderByTargetValue);
     return topNFilter;
   }
 }

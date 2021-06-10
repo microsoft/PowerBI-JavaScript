@@ -382,7 +382,7 @@ export class Page implements IPageNode, IFilterable {
       return Promise.reject('Cannot resize the page. Only the active page can be resized');
     }
     const report = this.report as Report;
-    return report.resizePage(pageSizeType, width, height);
+    return report.resizeActivePage(pageSizeType, width, height);
   }
 
   /**

@@ -4245,7 +4245,7 @@ describe('SDK-to-HPM', function () {
           });
       });
 
-      it('report.resizePage returns promise that rejects with validation error if page size type is invalid', function (done) {
+      it('report.resizeActivePage returns promise that rejects with validation error if page size type is invalid', function (done) {
         // Arrange
         const pageSizeType = 5;
         const width = 200;
@@ -4271,7 +4271,7 @@ describe('SDK-to-HPM', function () {
         spyHpm.patch.and.returnValue(Promise.reject(testData.expectedError));
 
         // Act
-        report.resizePage(pageSizeType, width, height)
+        report.resizeActivePage(pageSizeType, width, height)
           .catch(error => {
             // Assert
             expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
@@ -4280,19 +4280,19 @@ describe('SDK-to-HPM', function () {
           });
       });
 
-      it('report.resizePage returns promise that resolves with null if request is valid and accepted', function (done) {
+      it('report.resizeActivePage returns promise that resolves with null if request is valid and accepted', function (done) {
         // Arrange
         const pageSizeType = models.PageSizeType.Custom;
         const width = 200;
         const height = 100;
 
-        spyApp.resizePage.and.returnValue(Promise.resolve(null));
+        spyApp.resizeActivePage.and.returnValue(Promise.resolve(null));
 
         // Act
-        spyApp.resizePage(pageSizeType, width, height)
+        spyApp.resizeActivePage(pageSizeType, width, height)
           .then(response => {
             // Assert
-            expect(spyApp.resizePage).toHaveBeenCalled();
+            expect(spyApp.resizeActivePage).toHaveBeenCalled();
             expect(response).toEqual(null);
             done();
           });
@@ -4834,13 +4834,13 @@ describe('SDK-to-HPM', function () {
         const width = 200;
         const height = 100;
 
-        spyApp.resizePage.and.returnValue(Promise.resolve(null));
+        spyApp.resizeActivePage.and.returnValue(Promise.resolve(null));
 
         // Act
-        spyApp.resizePage(pageSizeType, width, height)
+        spyApp.resizeActivePage(pageSizeType, width, height)
           .then(response => {
             // Assert
-            expect(spyApp.resizePage).toHaveBeenCalled();
+            expect(spyApp.resizeActivePage).toHaveBeenCalled();
             expect(response).toEqual(null);
             done();
           });

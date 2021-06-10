@@ -23,21 +23,6 @@ export class BasicFilterBuilder implements IFilterBuilder {
   private isRequireSingleSelection = false;
 
   /**
-   * Sets target property for Basic filter
-   *
-   * ```javascript
-   *
-   * const basicFilterBuilder = new BasicFilterBuilder().withTarget(tableName, columnName);
-   * ```
-   *
-   * @returns {BasicFilterBuilder}
-   */
-  withTarget(table: string, column: string): BasicFilterBuilder {
-    this.target = { table: table, column: column };
-    return this;
-  }
-
-  /**
    * Sets target property for Basic filter with target object
    *
    * ```javascript

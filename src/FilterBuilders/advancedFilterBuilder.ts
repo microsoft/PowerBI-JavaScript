@@ -24,21 +24,6 @@ export class AdvancedFilterBuilder implements IFilterBuilder {
   private conditions: IAdvancedFilterCondition[] = [];
 
   /**
-   * Sets target property for Advanced filter
-   *
-   * ```javascript
-   *
-   * const advancedFilterBuilder = new AdvancedFilterBuilder().withTarget(tableName, columnName);
-   * ```
-   *
-   * @returns {AdvancedFilterBuilder}
-   */
-  withTarget(table: string, column: string): AdvancedFilterBuilder {
-    this.target = { table: table, column: column };
-    return this;
-  }
-
-  /**
    * Sets target property for Advanced filter with target object
    *
    * ```javascript

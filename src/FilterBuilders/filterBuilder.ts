@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { Filter } from "powerbi-models";
+import { Filter, IFilterTarget } from "powerbi-models";
 
 /**
  * Generic filter builder for BasicFilter, AdvancedFilter, RelativeDate, RelativeTime and TopN
@@ -9,6 +9,6 @@ import { Filter } from "powerbi-models";
  * @interface IFilterBuilder
  */
 export interface IFilterBuilder {
-  withTarget(table: string, column: string): IFilterBuilder;
+  withTargetObject(target: IFilterTarget): IFilterBuilder;
   build(): Filter;
 }

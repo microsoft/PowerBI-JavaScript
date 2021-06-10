@@ -25,23 +25,6 @@ export class RelativeDateFilterBuilder implements IFilterBuilder {
   private isTodayIncluded = true;
 
   /**
-   * Sets target property for Relative Date filter
-   *
-   * ```javascript
-   *
-   * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().withTarget(tableName, columnName);
-   * ```
-   *
-   * @param {string} table - Defines the table on which filter will be applied
-   * @param {string} column - Defines the column on which filter will be applied
-   * @returns {RelativeDateFilterBuilder}
-   */
-  withTarget(table: string, column: string): RelativeDateFilterBuilder {
-    this.target = { table: table, column: column };
-    return this;
-  }
-
-  /**
    * Sets target property for Relative Date filter with target object
    *
    * ```javascript
@@ -104,7 +87,7 @@ export class RelativeDateFilterBuilder implements IFilterBuilder {
    *
    * ```javascript
    *
-   * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().orderBy(timeUnitsCount, timeUnitType);
+   * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inNext(timeUnitsCount, timeUnitType);
    * ```
    *
    * @param {number} timeUnitsCount - The amount of time units

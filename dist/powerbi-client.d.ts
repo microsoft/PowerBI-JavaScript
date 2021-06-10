@@ -1493,7 +1493,7 @@ declare module "report" {
          * Updates the size of active page in report.
          *
          * ```javascript
-         * report.resizePage(pageSizeType, width, height)
+         * report.resizeActivePage(pageSizeType, width, height)
          *   .catch(error => { ... });
          * ```
          *
@@ -1502,7 +1502,7 @@ declare module "report" {
          * @param {number} height
          * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
-        resizePage(pageSizeType: PageSizeType, width?: number, height?: number): Promise<IHttpPostMessageResponse<void>>;
+        resizeActivePage(pageSizeType: PageSizeType, width?: number, height?: number): Promise<IHttpPostMessageResponse<void>>;
         /**
          * Updates the position of a visual in a page.
          *
@@ -2290,14 +2290,14 @@ declare module "factories" {
     export const routerFactory: IRouterFactory;
 }
 declare module "FilterBuilders/filterBuilder" {
-    import { Filter } from "powerbi-models";
+    import { Filter, IFilterTarget } from "powerbi-models";
     /**
      * Generic filter builder for BasicFilter, AdvancedFilter, RelativeDate, RelativeTime and TopN
      *
      * @interface IFilterBuilder
      */
     export interface IFilterBuilder {
-        withTarget(table: string, column: string): IFilterBuilder;
+        withTargetObject(target: IFilterTarget): IFilterBuilder;
         build(): Filter;
     }
 }
@@ -2316,17 +2316,6 @@ declare module "FilterBuilders/basicFilterBuilder" {
         private values;
         private operator;
         private isRequireSingleSelection;
-        /**
-         * Sets target property for Basic filter
-         *
-         * ```javascript
-         *
-         * const basicFilterBuilder = new BasicFilterBuilder().withTarget(tableName, columnName);
-         * ```
-         *
-         * @returns {BasicFilterBuilder}
-         */
-        withTarget(table: string, column: string): BasicFilterBuilder;
         /**
          * Sets target property for Basic filter with target object
          *
@@ -2414,17 +2403,6 @@ declare module "FilterBuilders/advancedFilterBuilder" {
         private logicalOperator;
         private conditions;
         /**
-         * Sets target property for Advanced filter
-         *
-         * ```javascript
-         *
-         * const advancedFilterBuilder = new AdvancedFilterBuilder().withTarget(tableName, columnName);
-         * ```
-         *
-         * @returns {AdvancedFilterBuilder}
-         */
-        withTarget(table: string, column: string): AdvancedFilterBuilder;
-        /**
          * Sets target property for Advanced filter with target object
          *
          * ```javascript
@@ -2487,7 +2465,7 @@ declare module "FilterBuilders/advancedFilterBuilder" {
     }
 }
 declare module "FilterBuilders/topNFilterBuilder" {
-    import { IFilterTarget, TopNFilter } from "powerbi-models";
+    import { IFilterTarget, ITarget, TopNFilter } from "powerbi-models";
     import { IFilterBuilder } from "FilterBuilders/filterBuilder";
     /**
      * Power BI Top N filter builder component
@@ -2500,18 +2478,7 @@ declare module "FilterBuilders/topNFilterBuilder" {
         private target;
         private itemCount;
         private operator;
-        private orderByTarget;
-        /**
-         * Sets target property for Top N filter
-         *
-         * ```javascript
-         *
-         * const topNFilterBuilder = new TopNFilterBuilder().withTarget(tableName, columnName);
-         * ```
-         *
-         * @returns {TopNFilterBuilder}
-         */
-        withTarget(table: string, column: string): TopNFilterBuilder;
+        private orderByTargetValue;
         /**
          * Sets target property for Top N filter with target object
          *
@@ -2554,12 +2521,12 @@ declare module "FilterBuilders/topNFilterBuilder" {
          *
          * ```javascript
          *
-         * const topNFilterBuilder = new TopNFilterBuilder().orderBy(table, measure);
+         * const topNFilterBuilder = new TopNFilterBuilder().orderByTarget(target);
          * ```
          *
          * @returns {TopNFilterBuilder}
          */
-        orderBy(table: string, measure: string): TopNFilterBuilder;
+        orderByTarget(target: ITarget): TopNFilterBuilder;
         /**
          * Creates Top N filter
          *
@@ -2589,19 +2556,6 @@ declare module "FilterBuilders/relativeDateFilterBuilder" {
         private timeUnitsCount;
         private timeUnitType;
         private isTodayIncluded;
-        /**
-         * Sets target property for Relative Date filter
-         *
-         * ```javascript
-         *
-         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().withTarget(tableName, columnName);
-         * ```
-         *
-         * @param {string} table - Defines the table on which filter will be applied
-         * @param {string} column - Defines the column on which filter will be applied
-         * @returns {RelativeDateFilterBuilder}
-         */
-        withTarget(table: string, column: string): RelativeDateFilterBuilder;
         /**
          * Sets target property for Relative Date filter with target object
          *
@@ -2649,7 +2603,7 @@ declare module "FilterBuilders/relativeDateFilterBuilder" {
          *
          * ```javascript
          *
-         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().orderBy(timeUnitsCount, timeUnitType);
+         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inNext(timeUnitsCount, timeUnitType);
          * ```
          *
          * @param {number} timeUnitsCount - The amount of time units
@@ -2698,19 +2652,6 @@ declare module "FilterBuilders/relativeTimeFilterBuilder" {
         private timeUnitsCount;
         private timeUnitType;
         /**
-         * Sets target property for Relative Time filter
-         *
-         * ```javascript
-         *
-         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().withTarget(tableName, columnName);
-         * ```
-         *
-         * @param {string} table - Defines the table on which filter will be applied
-         * @param {string} column - Defines the column on which filter will be applied
-         * @returns {RelativeTimeFilterBuilder}
-         */
-        withTarget(table: string, column: string): RelativeTimeFilterBuilder;
-        /**
          * Sets target property for Relative Time filter with target object
          *
          * ```javascript
@@ -2757,7 +2698,7 @@ declare module "FilterBuilders/relativeTimeFilterBuilder" {
          *
          * ```javascript
          *
-         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().orderBy(timeUnitsCount, timeUnitType);
+         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inNext(timeUnitsCount, timeUnitType);
          * ```
          *
          * @param {number} timeUnitsCount - The amount of time units
