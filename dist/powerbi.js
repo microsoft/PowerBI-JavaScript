@@ -6133,38 +6133,39 @@ return /******/ (function(modules) { // webpackBootstrap
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdvancedFilterBuilder = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
 /**
  * Power BI Advanced filter builder component
  *
  * @export
  * @class AdvancedFilterBuilder
- * @implements {IFilterBuilder}
+ * @extends {FilterBuilder}
  */
-var AdvancedFilterBuilder = /** @class */ (function () {
+var AdvancedFilterBuilder = /** @class */ (function (_super) {
+    __extends(AdvancedFilterBuilder, _super);
     function AdvancedFilterBuilder() {
-        this.conditions = [];
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.conditions = [];
+        return _this;
     }
-    /**
-     * Sets target property for Advanced filter with target object
-     *
-     * ```javascript
-     * const target = {
-     *  table: 'table1',
-     *  column: 'column1'
-     * };
-     *
-     * const advancedFilterBuilder = new AdvancedFilterBuilder().withTargetObject(target);
-     * ```
-     *
-     * @returns {AdvancedFilterBuilder}
-     */
-    AdvancedFilterBuilder.prototype.withTargetObject = function (target) {
-        this.target = target;
-        return this;
-    };
     /**
      * Sets And as logical operator for Advanced filter
      *
@@ -6227,7 +6228,7 @@ var AdvancedFilterBuilder = /** @class */ (function () {
         return advancedFilter;
     };
     return AdvancedFilterBuilder;
-}());
+}(filterBuilder_1.FilterBuilder));
 exports.AdvancedFilterBuilder = AdvancedFilterBuilder;
 
 
@@ -6242,38 +6243,39 @@ exports.AdvancedFilterBuilder = AdvancedFilterBuilder;
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BasicFilterBuilder = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
 /**
  * Power BI Basic filter builder component
  *
  * @export
  * @class BasicFilterBuilder
- * @implements {IFilterBuilder}
+ * @extends {FilterBuilder}
  */
-var BasicFilterBuilder = /** @class */ (function () {
+var BasicFilterBuilder = /** @class */ (function (_super) {
+    __extends(BasicFilterBuilder, _super);
     function BasicFilterBuilder() {
-        this.isRequireSingleSelection = false;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.isRequireSingleSelection = false;
+        return _this;
     }
-    /**
-     * Sets target property for Basic filter with target object
-     *
-     * ```javascript
-     * const target = {
-     *  table: 'table1',
-     *  column: 'column1'
-     * };
-     *
-     * const basicFilterBuilder = new BasicFilterBuilder().withTargetObject(target);
-     * ```
-     *
-     * @returns {BasicFilterBuilder}
-     */
-    BasicFilterBuilder.prototype.withTargetObject = function (target) {
-        this.target = target;
-        return this;
-    };
     /**
      * Sets In as operator for Basic filter
      *
@@ -6350,8 +6352,117 @@ var BasicFilterBuilder = /** @class */ (function () {
         return basicFilter;
     };
     return BasicFilterBuilder;
-}());
+}(filterBuilder_1.FilterBuilder));
 exports.BasicFilterBuilder = BasicFilterBuilder;
+
+
+/***/ }),
+
+/***/ "./src/FilterBuilders/filterBuilder.ts":
+/*!*********************************************!*\
+  !*** ./src/FilterBuilders/filterBuilder.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FilterBuilder = void 0;
+/**
+ * Generic filter builder for BasicFilter, AdvancedFilter, RelativeDate, RelativeTime and TopN
+ *
+ * @class
+ */
+var FilterBuilder = /** @class */ (function () {
+    function FilterBuilder() {
+    }
+    /**
+     * Sets target property for filter with target object
+     *
+     * ```javascript
+     * const target = {
+     *  table: 'table1',
+     *  column: 'column1'
+     * };
+     *
+     * const filterBuilder = new FilterBuilder().withTargetObject(target);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withTargetObject = function (target) {
+        this.target = target;
+        return this;
+    };
+    /**
+     * Sets target property for filter with column target object
+     *
+     * ```
+     * const filterBuilder = new FilterBuilder().withColumnTarget(tableName, columnName);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withColumnTarget = function (tableName, columnName) {
+        this.target = { table: tableName, column: columnName };
+        return this;
+    };
+    /**
+     * Sets target property for filter with measure target object
+     *
+     * ```
+     * const filterBuilder = new FilterBuilder().withMeasureTarget(tableName, measure);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withMeasureTarget = function (tableName, measure) {
+        this.target = { table: tableName, measure: measure };
+        return this;
+    };
+    /**
+     * Sets target property for filter with hierarchy level target object
+     *
+     * ```
+     * const filterBuilder = new FilterBuilder().withHierarchyLevelTarget(tableName, hierarchy, hierarchyLevel);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withHierarchyLevelTarget = function (tableName, hierarchy, hierarchyLevel) {
+        this.target = { table: tableName, hierarchy: hierarchy, hierarchyLevel: hierarchyLevel };
+        return this;
+    };
+    /**
+     * Sets target property for filter with column aggregation target object
+     *
+     * ```
+     * const filterBuilder = new FilterBuilder().withColumnAggregation(tableName, columnName, aggregationFunction);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withColumnAggregation = function (tableName, columnName, aggregationFunction) {
+        this.target = { table: tableName, column: columnName, aggregationFunction: aggregationFunction };
+        return this;
+    };
+    /**
+     * Sets target property for filter with hierarchy level aggregation target object
+     *
+     * ```
+     * const filterBuilder = new FilterBuilder().withHierarchyLevelAggregationTarget(tableName, hierarchy, hierarchyLevel, aggregationFunction);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withHierarchyLevelAggregationTarget = function (tableName, hierarchy, hierarchyLevel, aggregationFunction) {
+        this.target = { table: tableName, hierarchy: hierarchy, hierarchyLevel: hierarchyLevel, aggregationFunction: aggregationFunction };
+        return this;
+    };
+    return FilterBuilder;
+}());
+exports.FilterBuilder = FilterBuilder;
 
 
 /***/ }),
@@ -6390,39 +6501,39 @@ Object.defineProperty(exports, "RelativeTimeFilterBuilder", { enumerable: true, 
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RelativeDateFilterBuilder = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
 /**
  * Power BI Relative Date filter builder component
  *
  * @export
  * @class RelativeDateFilterBuilder
- * @implements {IFilterBuilder}
+ * @extends {FilterBuilder}
  */
-var RelativeDateFilterBuilder = /** @class */ (function () {
+var RelativeDateFilterBuilder = /** @class */ (function (_super) {
+    __extends(RelativeDateFilterBuilder, _super);
     function RelativeDateFilterBuilder() {
-        this.isTodayIncluded = true;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.isTodayIncluded = true;
+        return _this;
     }
-    /**
-     * Sets target property for Relative Date filter with target object
-     *
-     * ```javascript
-     * const target = {
-     *  table: 'table1',
-     *  column: 'column1'
-     * };
-     *
-     * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().withTargetObject(target);
-     * ```
-     *
-     * @param {IFilterTarget} target - Defines the target property
-     * @returns {RelativeDateFilterBuilder}
-     */
-    RelativeDateFilterBuilder.prototype.withTargetObject = function (target) {
-        this.target = target;
-        return this;
-    };
     /**
      * Sets inLast as operator for Relative Date filter
      *
@@ -6507,7 +6618,7 @@ var RelativeDateFilterBuilder = /** @class */ (function () {
         return relativeDateFilter;
     };
     return RelativeDateFilterBuilder;
-}());
+}(filterBuilder_1.FilterBuilder));
 exports.RelativeDateFilterBuilder = RelativeDateFilterBuilder;
 
 
@@ -6522,38 +6633,37 @@ exports.RelativeDateFilterBuilder = RelativeDateFilterBuilder;
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RelativeTimeFilterBuilder = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
 /**
  * Power BI Relative Time filter builder component
  *
  * @export
  * @class RelativeTimeFilterBuilder
- * @implements {IFilterBuilder}
+ * @extends {FilterBuilder}
  */
-var RelativeTimeFilterBuilder = /** @class */ (function () {
+var RelativeTimeFilterBuilder = /** @class */ (function (_super) {
+    __extends(RelativeTimeFilterBuilder, _super);
     function RelativeTimeFilterBuilder() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    /**
-     * Sets target property for Relative Time filter with target object
-     *
-     * ```javascript
-     * const target = {
-     *  table: 'table1',
-     *  column: 'column1'
-     * };
-     *
-     * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().withTargetObject(target);
-     * ```
-     *
-     * @param {IFilterTarget} target - Defines the target property
-     * @returns {RelativeTimeFilterBuilder}
-     */
-    RelativeTimeFilterBuilder.prototype.withTargetObject = function (target) {
-        this.target = target;
-        return this;
-    };
     /**
      * Sets inLast as operator for Relative Time filter
      *
@@ -6623,7 +6733,7 @@ var RelativeTimeFilterBuilder = /** @class */ (function () {
         return relativeTimeFilter;
     };
     return RelativeTimeFilterBuilder;
-}());
+}(filterBuilder_1.FilterBuilder));
 exports.RelativeTimeFilterBuilder = RelativeTimeFilterBuilder;
 
 
@@ -6638,37 +6748,37 @@ exports.RelativeTimeFilterBuilder = RelativeTimeFilterBuilder;
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TopNFilterBuilder = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
 /**
  * Power BI Top N filter builder component
  *
  * @export
  * @class TopNFilterBuilder
- * @implements {IFilterBuilder}
+ * @extends {FilterBuilder}
  */
-var TopNFilterBuilder = /** @class */ (function () {
+var TopNFilterBuilder = /** @class */ (function (_super) {
+    __extends(TopNFilterBuilder, _super);
     function TopNFilterBuilder() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    /**
-     * Sets target property for Top N filter with target object
-     *
-     * ```javascript
-     * const target = {
-     *  table: 'table1',
-     *  column: 'column1'
-     * };
-     *
-     * const topNFilterBuilder = new TopNFilterBuilder().withTargetObject(target);
-     * ```
-     *
-     * @returns {TopNFilterBuilder}
-     */
-    TopNFilterBuilder.prototype.withTargetObject = function (target) {
-        this.target = target;
-        return this;
-    };
     /**
      * Sets Top as operator for Top N filter
      *
@@ -6728,7 +6838,7 @@ var TopNFilterBuilder = /** @class */ (function () {
         return topNFilter;
     };
     return TopNFilterBuilder;
-}());
+}(filterBuilder_1.FilterBuilder));
 exports.TopNFilterBuilder = TopNFilterBuilder;
 
 

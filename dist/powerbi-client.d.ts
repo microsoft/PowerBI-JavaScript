@@ -2290,34 +2290,16 @@ declare module "factories" {
     export const routerFactory: IRouterFactory;
 }
 declare module "FilterBuilders/filterBuilder" {
-    import { Filter, IFilterTarget } from "powerbi-models";
+    import { IFilterTarget } from "powerbi-models";
     /**
      * Generic filter builder for BasicFilter, AdvancedFilter, RelativeDate, RelativeTime and TopN
      *
-     * @interface IFilterBuilder
+     * @class
      */
-    export interface IFilterBuilder {
-        withTargetObject(target: IFilterTarget): IFilterBuilder;
-        build(): Filter;
-    }
-}
-declare module "FilterBuilders/basicFilterBuilder" {
-    import { BasicFilter, IFilterTarget } from "powerbi-models";
-    import { IFilterBuilder } from "FilterBuilders/filterBuilder";
-    /**
-     * Power BI Basic filter builder component
-     *
-     * @export
-     * @class BasicFilterBuilder
-     * @implements {IFilterBuilder}
-     */
-    export class BasicFilterBuilder implements IFilterBuilder {
-        private target;
-        private values;
-        private operator;
-        private isRequireSingleSelection;
+    export class FilterBuilder {
+        target: IFilterTarget;
         /**
-         * Sets target property for Basic filter with target object
+         * Sets target property for filter with target object
          *
          * ```javascript
          * const target = {
@@ -2325,12 +2307,78 @@ declare module "FilterBuilders/basicFilterBuilder" {
          *  column: 'column1'
          * };
          *
-         * const basicFilterBuilder = new BasicFilterBuilder().withTargetObject(target);
+         * const filterBuilder = new FilterBuilder().withTargetObject(target);
          * ```
          *
-         * @returns {BasicFilterBuilder}
+         * @returns {FilterBuilder}
          */
-        withTargetObject(target: IFilterTarget): BasicFilterBuilder;
+        withTargetObject(target: IFilterTarget): this;
+        /**
+         * Sets target property for filter with column target object
+         *
+         * ```
+         * const filterBuilder = new FilterBuilder().withColumnTarget(tableName, columnName);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withColumnTarget(tableName: string, columnName: string): this;
+        /**
+         * Sets target property for filter with measure target object
+         *
+         * ```
+         * const filterBuilder = new FilterBuilder().withMeasureTarget(tableName, measure);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withMeasureTarget(tableName: string, measure: string): this;
+        /**
+         * Sets target property for filter with hierarchy level target object
+         *
+         * ```
+         * const filterBuilder = new FilterBuilder().withHierarchyLevelTarget(tableName, hierarchy, hierarchyLevel);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withHierarchyLevelTarget(tableName: string, hierarchy: string, hierarchyLevel: string): this;
+        /**
+         * Sets target property for filter with column aggregation target object
+         *
+         * ```
+         * const filterBuilder = new FilterBuilder().withColumnAggregation(tableName, columnName, aggregationFunction);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withColumnAggregation(tableName: string, columnName: string, aggregationFunction: string): this;
+        /**
+         * Sets target property for filter with hierarchy level aggregation target object
+         *
+         * ```
+         * const filterBuilder = new FilterBuilder().withHierarchyLevelAggregationTarget(tableName, hierarchy, hierarchyLevel, aggregationFunction);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withHierarchyLevelAggregationTarget(tableName: string, hierarchy: string, hierarchyLevel: string, aggregationFunction: string): this;
+    }
+}
+declare module "FilterBuilders/basicFilterBuilder" {
+    import { BasicFilter } from "powerbi-models";
+    import { FilterBuilder } from "FilterBuilders/filterBuilder";
+    /**
+     * Power BI Basic filter builder component
+     *
+     * @export
+     * @class BasicFilterBuilder
+     * @extends {FilterBuilder}
+     */
+    export class BasicFilterBuilder extends FilterBuilder {
+        private values;
+        private operator;
+        private isRequireSingleSelection;
         /**
          * Sets In as operator for Basic filter
          *
@@ -2389,34 +2437,18 @@ declare module "FilterBuilders/basicFilterBuilder" {
     }
 }
 declare module "FilterBuilders/advancedFilterBuilder" {
-    import { AdvancedFilter, IFilterTarget, AdvancedFilterConditionOperators } from "powerbi-models";
-    import { IFilterBuilder } from "FilterBuilders/filterBuilder";
+    import { AdvancedFilter, AdvancedFilterConditionOperators } from "powerbi-models";
+    import { FilterBuilder } from "FilterBuilders/filterBuilder";
     /**
      * Power BI Advanced filter builder component
      *
      * @export
      * @class AdvancedFilterBuilder
-     * @implements {IFilterBuilder}
+     * @extends {FilterBuilder}
      */
-    export class AdvancedFilterBuilder implements IFilterBuilder {
-        private target;
+    export class AdvancedFilterBuilder extends FilterBuilder {
         private logicalOperator;
         private conditions;
-        /**
-         * Sets target property for Advanced filter with target object
-         *
-         * ```javascript
-         * const target = {
-         *  table: 'table1',
-         *  column: 'column1'
-         * };
-         *
-         * const advancedFilterBuilder = new AdvancedFilterBuilder().withTargetObject(target);
-         * ```
-         *
-         * @returns {AdvancedFilterBuilder}
-         */
-        withTargetObject(target: IFilterTarget): AdvancedFilterBuilder;
         /**
          * Sets And as logical operator for Advanced filter
          *
@@ -2465,35 +2497,19 @@ declare module "FilterBuilders/advancedFilterBuilder" {
     }
 }
 declare module "FilterBuilders/topNFilterBuilder" {
-    import { IFilterTarget, ITarget, TopNFilter } from "powerbi-models";
-    import { IFilterBuilder } from "FilterBuilders/filterBuilder";
+    import { ITarget, TopNFilter } from "powerbi-models";
+    import { FilterBuilder } from "FilterBuilders/filterBuilder";
     /**
      * Power BI Top N filter builder component
      *
      * @export
      * @class TopNFilterBuilder
-     * @implements {IFilterBuilder}
+     * @extends {FilterBuilder}
      */
-    export class TopNFilterBuilder implements IFilterBuilder {
-        private target;
+    export class TopNFilterBuilder extends FilterBuilder {
         private itemCount;
         private operator;
         private orderByTargetValue;
-        /**
-         * Sets target property for Top N filter with target object
-         *
-         * ```javascript
-         * const target = {
-         *  table: 'table1',
-         *  column: 'column1'
-         * };
-         *
-         * const topNFilterBuilder = new TopNFilterBuilder().withTargetObject(target);
-         * ```
-         *
-         * @returns {TopNFilterBuilder}
-         */
-        withTargetObject(target: IFilterTarget): TopNFilterBuilder;
         /**
          * Sets Top as operator for Top N filter
          *
@@ -2541,37 +2557,20 @@ declare module "FilterBuilders/topNFilterBuilder" {
     }
 }
 declare module "FilterBuilders/relativeDateFilterBuilder" {
-    import { IFilterTarget, RelativeDateFilter, RelativeDateFilterTimeUnit } from "powerbi-models";
-    import { IFilterBuilder } from "FilterBuilders/filterBuilder";
+    import { RelativeDateFilter, RelativeDateFilterTimeUnit } from "powerbi-models";
+    import { FilterBuilder } from "FilterBuilders/filterBuilder";
     /**
      * Power BI Relative Date filter builder component
      *
      * @export
      * @class RelativeDateFilterBuilder
-     * @implements {IFilterBuilder}
+     * @extends {FilterBuilder}
      */
-    export class RelativeDateFilterBuilder implements IFilterBuilder {
-        private target;
+    export class RelativeDateFilterBuilder extends FilterBuilder {
         private operator;
         private timeUnitsCount;
         private timeUnitType;
         private isTodayIncluded;
-        /**
-         * Sets target property for Relative Date filter with target object
-         *
-         * ```javascript
-         * const target = {
-         *  table: 'table1',
-         *  column: 'column1'
-         * };
-         *
-         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().withTargetObject(target);
-         * ```
-         *
-         * @param {IFilterTarget} target - Defines the target property
-         * @returns {RelativeDateFilterBuilder}
-         */
-        withTargetObject(target: IFilterTarget): RelativeDateFilterBuilder;
         /**
          * Sets inLast as operator for Relative Date filter
          *
@@ -2637,36 +2636,19 @@ declare module "FilterBuilders/relativeDateFilterBuilder" {
     }
 }
 declare module "FilterBuilders/relativeTimeFilterBuilder" {
-    import { IFilterTarget, RelativeTimeFilter, RelativeDateFilterTimeUnit } from "powerbi-models";
-    import { IFilterBuilder } from "FilterBuilders/filterBuilder";
+    import { RelativeTimeFilter, RelativeDateFilterTimeUnit } from "powerbi-models";
+    import { FilterBuilder } from "FilterBuilders/filterBuilder";
     /**
      * Power BI Relative Time filter builder component
      *
      * @export
      * @class RelativeTimeFilterBuilder
-     * @implements {IFilterBuilder}
+     * @extends {FilterBuilder}
      */
-    export class RelativeTimeFilterBuilder implements IFilterBuilder {
-        private target;
+    export class RelativeTimeFilterBuilder extends FilterBuilder {
         private operator;
         private timeUnitsCount;
         private timeUnitType;
-        /**
-         * Sets target property for Relative Time filter with target object
-         *
-         * ```javascript
-         * const target = {
-         *  table: 'table1',
-         *  column: 'column1'
-         * };
-         *
-         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().withTargetObject(target);
-         * ```
-         *
-         * @param {IFilterTarget} target - Defines the target property
-         * @returns {RelativeTimeFilterBuilder}
-         */
-        withTargetObject(target: IFilterTarget): RelativeTimeFilterBuilder;
         /**
          * Sets inLast as operator for Relative Time filter
          *

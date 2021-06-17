@@ -3,43 +3,23 @@
 
 import {
   BasicFilter,
-  BasicFilterOperators,
-  IFilterTarget
+  BasicFilterOperators
 } from "powerbi-models";
 
-import { IFilterBuilder } from './filterBuilder';
+import { FilterBuilder } from './filterBuilder';
 
 /**
  * Power BI Basic filter builder component
  *
  * @export
  * @class BasicFilterBuilder
- * @implements {IFilterBuilder}
+ * @extends {FilterBuilder}
  */
-export class BasicFilterBuilder implements IFilterBuilder {
-  private target: IFilterTarget;
+export class BasicFilterBuilder extends FilterBuilder {
+
   private values: Array<(string | number | boolean)>;
   private operator: BasicFilterOperators;
   private isRequireSingleSelection = false;
-
-  /**
-   * Sets target property for Basic filter with target object
-   *
-   * ```javascript
-   * const target = {
-   *  table: 'table1',
-   *  column: 'column1'
-   * };
-   *
-   * const basicFilterBuilder = new BasicFilterBuilder().withTargetObject(target);
-   * ```
-   *
-   * @returns {BasicFilterBuilder}
-   */
-  withTargetObject(target: IFilterTarget): BasicFilterBuilder {
-    this.target = target;
-    return this;
-  }
 
   /**
    * Sets In as operator for Basic filter

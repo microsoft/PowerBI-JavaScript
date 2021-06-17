@@ -2,45 +2,25 @@
 // Licensed under the MIT License.
 
 import {
-  IFilterTarget,
   ITarget,
   TopNFilter,
   TopNFilterOperators
 } from "powerbi-models";
 
-import { IFilterBuilder } from './filterBuilder';
+import { FilterBuilder } from './filterBuilder';
 
 /**
  * Power BI Top N filter builder component
  *
  * @export
  * @class TopNFilterBuilder
- * @implements {IFilterBuilder}
+ * @extends {FilterBuilder}
  */
-export class TopNFilterBuilder implements IFilterBuilder {
-  private target: IFilterTarget;
+export class TopNFilterBuilder extends FilterBuilder {
+
   private itemCount: number;
   private operator: TopNFilterOperators;
   private orderByTargetValue: ITarget;
-
-  /**
-   * Sets target property for Top N filter with target object
-   *
-   * ```javascript
-   * const target = {
-   *  table: 'table1',
-   *  column: 'column1'
-   * };
-   *
-   * const topNFilterBuilder = new TopNFilterBuilder().withTargetObject(target);
-   * ```
-   *
-   * @returns {TopNFilterBuilder}
-   */
-  withTargetObject(target: IFilterTarget): TopNFilterBuilder {
-    this.target = target;
-    return this;
-  }
 
   /**
    * Sets Top as operator for Top N filter
@@ -88,7 +68,6 @@ export class TopNFilterBuilder implements IFilterBuilder {
     this.orderByTargetValue = target;
     return this;
   }
-
 
   /**
    * Creates Top N filter

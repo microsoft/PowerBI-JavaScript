@@ -3,44 +3,24 @@
 
 import {
   AdvancedFilter,
-  IFilterTarget,
   AdvancedFilterLogicalOperators,
   IAdvancedFilterCondition,
   AdvancedFilterConditionOperators
 } from "powerbi-models";
 
-import { IFilterBuilder } from './filterBuilder';
+import { FilterBuilder } from './filterBuilder';
 
 /**
  * Power BI Advanced filter builder component
  *
  * @export
  * @class AdvancedFilterBuilder
- * @implements {IFilterBuilder}
+ * @extends {FilterBuilder}
  */
-export class AdvancedFilterBuilder implements IFilterBuilder {
-  private target: IFilterTarget;
+export class AdvancedFilterBuilder extends FilterBuilder {
+
   private logicalOperator: AdvancedFilterLogicalOperators;
   private conditions: IAdvancedFilterCondition[] = [];
-
-  /**
-   * Sets target property for Advanced filter with target object
-   *
-   * ```javascript
-   * const target = {
-   *  table: 'table1',
-   *  column: 'column1'
-   * };
-   *
-   * const advancedFilterBuilder = new AdvancedFilterBuilder().withTargetObject(target);
-   * ```
-   *
-   * @returns {AdvancedFilterBuilder}
-   */
-  withTargetObject(target: IFilterTarget): AdvancedFilterBuilder {
-    this.target = target;
-    return this;
-  }
 
   /**
    * Sets And as logical operator for Advanced filter

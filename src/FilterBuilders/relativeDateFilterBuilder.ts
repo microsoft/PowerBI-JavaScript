@@ -2,47 +2,26 @@
 // Licensed under the MIT License.
 
 import {
-  IFilterTarget,
   RelativeDateFilter,
   RelativeDateOperators,
   RelativeDateFilterTimeUnit
 } from "powerbi-models";
 
-import { IFilterBuilder } from './filterBuilder';
+import { FilterBuilder } from './filterBuilder';
 
 /**
  * Power BI Relative Date filter builder component
  *
  * @export
  * @class RelativeDateFilterBuilder
- * @implements {IFilterBuilder}
+ * @extends {FilterBuilder}
  */
-export class RelativeDateFilterBuilder implements IFilterBuilder {
-  private target: IFilterTarget;
+export class RelativeDateFilterBuilder extends FilterBuilder {
+
   private operator: RelativeDateOperators;
   private timeUnitsCount: number;
   private timeUnitType: RelativeDateFilterTimeUnit;
   private isTodayIncluded = true;
-
-  /**
-   * Sets target property for Relative Date filter with target object
-   *
-   * ```javascript
-   * const target = {
-   *  table: 'table1',
-   *  column: 'column1'
-   * };
-   *
-   * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().withTargetObject(target);
-   * ```
-   *
-   * @param {IFilterTarget} target - Defines the target property
-   * @returns {RelativeDateFilterBuilder}
-   */
-  withTargetObject(target: IFilterTarget): RelativeDateFilterBuilder {
-    this.target = target;
-    return this;
-  }
 
   /**
    * Sets inLast as operator for Relative Date filter
