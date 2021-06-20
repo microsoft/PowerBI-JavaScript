@@ -91,6 +91,10 @@ $(document).ready(function() {
         {
             OpenCodeStep(mode, entityType, GetParameterByName("tokenType") || 0);
         }
+        else if (GetParameterByName("redirectFromNewPlayground"))
+        {
+            OpenCodeStep("view" /* mode */, "Report" /* entity type */, "0" /* token type*/);
+        }
         else
         {
             // Open Select Step after this page loads.
