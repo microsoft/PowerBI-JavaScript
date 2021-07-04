@@ -1,33 +1,32 @@
-var gulp = require('gulp');
-var ghPages = require('gulp-gh-pages'),
-  header = require('gulp-header'),
-  help = require('gulp-help-four'),
-  rename = require('gulp-rename'),
-  concat = require('gulp-concat'),
-  uglify = require('gulp-uglify'),
-  replace = require('gulp-replace'),
-  sourcemaps = require('gulp-sourcemaps'),
-  tslint = require("gulp-tslint"),
-  ts = require('gulp-typescript'),
-  flatten = require('gulp-flatten'),
-  fs = require('fs'),
-  del = require('del'),
-  moment = require('moment'),
-  karma = require('karma'),
-  typedoc = require('gulp-typedoc'),
-  webpack = require('webpack'),
-  webpackStream = require('webpack-stream'),
-  webpackConfig = require('./webpack.config'),
-  webpackTestConfig = require('./webpack.test.config'),
-  runSequence = require('gulp4-run-sequence'),
-  argv = require('yargs').argv;
-;
+const fs = require('fs');
+const gulp = require('gulp');
+const ghPages = require('gulp-gh-pages');
+const header = require('gulp-header');
+const help = require('gulp-help-four');
+const rename = require('gulp-rename');
+const replace = require('gulp-replace');
+const eslint = require("gulp-eslint");
+const ts = require('gulp-typescript');
+const flatten = require('gulp-flatten');
+const del = require('del');
+const moment = require('moment');
+const karma = require('karma');
+const typedoc = require('gulp-typedoc');
+const watch = require('gulp-watch');
+const webpack = require('webpack');
+const webpackStream = require('webpack-stream');
+const runSequence = require('gulp4-run-sequence');
+const webpackConfig = require('./webpack.config');
+const webpackTestConfig = require('./webpack.test.config');
+const argv = require('yargs').argv;
 
 help(gulp, undefined);
 
-var package = require('./package.json');
-var webpackBanner = package.name + " v" + package.version + " | (c) 2016 Microsoft Corporation " + package.license;
-var gulpBanner = "/*! " + webpackBanner + " */\n";
+const package = require('./package.json');
+const webpackBanner = "// " + package.name + " v" + package.version + "\n"
+  + "// Copyright (c) Microsoft Corporation.\n"
+  + "// Licensed under the MIT License.";
+const banner = webpackBanner + "\n";
 
 gulp.task('ghpages', 'Deploy documentation to gh-pages', ['nojekyll'], function () {
   return gulp.src(['./docs/**/*'], {
@@ -42,7 +41,7 @@ gulp.task('ghpages', 'Deploy documentation to gh-pages', ['nojekyll'], function 
 gulp.task("docs", 'Compile documentation from src code', function () {
   return gulp
     .src([
-      "typings/globals/es6-promise/index.d.ts",
+      "node_modules/es6-promise/es6-promise.d.ts",
       "node_modules/powerbi-models/dist/models.d.ts",
       "src/**/*.ts"
     ])
@@ -50,21 +49,19 @@ gulp.task("docs", 'Compile documentation from src code', function () {
       mode: 'modules',
       includeDeclarations: true,
 
-      // Output options (see typedoc docs) 
+      // Output options (see typedoc docs)
       out: "./docs",
       json: "./docs/json/" + package.name + ".json",
 
-      // TypeDoc options (see typedoc docs) 
+      // TypeDoc options (see typedoc docs)
       ignoreCompilerErrors: true,
       version: true
-    }))
-    ;
+    }));
 });
 
 gulp.task('copydemotodocs', 'Copy the demo to the docs', function () {
   return gulp.src(["demo/**/*"])
-    .pipe(gulp.dest("docs/demo"))
-    ;
+    .pipe(gulp.dest("docs/demo"));
 });
 
 gulp.task('nojekyll', 'Add .nojekyll file to docs directory', function (done) {
@@ -129,7 +126,7 @@ gulp.task('config', 'Update config version with package version', function () {
 
 gulp.task('header', 'Add header to distributed files', function () {
   return gulp.src(['./dist/*.d.ts'])
-    .pipe(header(gulpBanner))
+    .pipe(header(banner))
     .pipe(gulp.dest('./dist'));
 });
 
@@ -148,27 +145,43 @@ gulp.task('clean:docs', 'Clean docs directory', function () {
 
 gulp.task('lint:ts', 'Lints all TypeScript', function () {
   return gulp.src(['./src/**/*.ts', './test/**/*.ts'])
-    .pipe(tslint({
+    .pipe(eslint({
       formatter: "verbose"
     }))
-    .pipe(tslint.report());
+    .pipe(eslint.format());
 });
 
 gulp.task('min:js', 'Creates minified JavaScript file', function () {
-  return gulp.src(['!./dist/*.min.js', './dist/*.js'])
-    .pipe(uglify({
-      preserveComments: 'license'
+  webpackConfig.plugins = [
+    new webpack.BannerPlugin({
+      banner: webpackBanner,
+      raw: true
+    })
+  ];
+
+  // Create minified bundle without source map
+  webpackConfig.mode = 'production';
+  webpackConfig.devtool = 'none';
+
+  return gulp.src(['./src/powerbi-client.ts'])
+    .pipe(webpackStream({
+      config: webpackConfig
     }))
+    .pipe(header(banner))
     .pipe(rename({
       suffix: '.min'
     }))
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('compile:ts', 'Compile typescript for powerbi-client library', function () {
   webpackConfig.plugins = [
-    new webpack.BannerPlugin(webpackBanner)
+    new webpack.BannerPlugin({
+      banner: webpackBanner,
+      raw: true
+    })
   ];
+  webpackConfig.mode = "development";
 
   return gulp.src(['./src/powerbi-client.ts'])
     .pipe(webpackStream(webpackConfig))
@@ -176,17 +189,19 @@ gulp.task('compile:ts', 'Compile typescript for powerbi-client library', functio
 });
 
 gulp.task('compile:dts', 'Generate one dts file from modules', function () {
-  var tsProject = ts.createProject('tsconfig.json', {
+  const tsProject = ts.createProject('tsconfig.json', {
     declaration: true,
     sourceMap: false
   });
 
-  var settings = {
+  const settings = {
     out: "powerbi-client.js",
-    declaration: true
+    declaration: true,
+    module: "system",
+    moduleResolution: "node"
   };
 
-  var tsResult = tsProject.src()
+  const tsResult = tsProject.src()
     .pipe(ts(settings));
 
   return tsResult.dts
@@ -205,5 +220,23 @@ gulp.task('test:js', 'Run js tests', function (done) {
     configFile: __dirname + '/karma.conf.js',
     singleRun: argv.watch ? false : true,
     captureTimeout: argv.timeout || 60000
-  }, done).start();
+  }, function () {
+    done();
+  })
+    .on('browser_register', (browser) => {
+      if (argv.chrome) {
+        browser.socket.on('disconnect', function (reason) {
+          if (reason === "transport close" || reason === "transport error") {
+            done(0);
+            process.exit(0);
+          }
+        });
+      }
+    })
+    .start();
+  if (argv.chrome) {
+    return watch(["src/**/*.ts", "test/**/*.ts"], function () {
+      runSequence('compile:spec');
+    });
+  }
 });

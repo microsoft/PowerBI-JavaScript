@@ -1,8 +1,32 @@
-import * as service from './service';
-import * as embed from './embed';
-import * as models from 'powerbi-models';
-import { Report } from './report'
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+import {
+  DisplayOption,
+  FiltersLevel,
+  FiltersOperations,
+  ICustomPageSize,
+  IEmbedConfigurationBase,
+  IError,
+  IFilter,
+  IReportEmbedConfiguration,
+  IReportLoadConfiguration,
+  IUpdateFiltersRequest,
+  IVisual,
+  IVisualEmbedConfiguration,
+  LayoutType,
+  PageLevelFilters,
+  PageSizeType,
+  PagesLayout,
+  ReportLevelFilters,
+  VisualContainerDisplayMode,
+  VisualLevelFilters
+} from 'powerbi-models';
+import { IHttpPostMessageResponse } from 'http-post-message';
+import { Service } from './service';
+import { Report } from './report';
 import { Page } from './page';
+import { VisualDescriptor } from './visualDescriptor';
 
 /**
  * The Power BI Visual embed component
@@ -18,21 +42,26 @@ export class Visual extends Report {
   static GetPagesNotSupportedError = "Get pages is not supported while embedding a visual.";
   /** @hidden */
   static SetPageNotSupportedError = "Set page is not supported while embedding a visual.";
+  /** @hidden */
+  static RenderNotSupportedError = "render is not supported while embedding a visual.";
 
   /**
    * Creates an instance of a Power BI Single Visual.
    *
-   * @param {service.Service} service
+   * @param {Service} service
    * @param {HTMLElement} element
-   * @param {embed.IEmbedConfiguration} config
+   * @param {IEmbedConfiguration} config
    * @hidden
    */
-  constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement) {
+  constructor(service: Service, element: HTMLElement, baseConfig: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement) {
     super(service, element, baseConfig, phasedRender, isBootstrap, iframe);
   }
 
-  load(baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean): Promise<void> {
-    var config = <embed.IVisualEmbedConfiguration>baseConfig;
+  /**
+   * @hidden
+   */
+  load(phasedRender?: boolean): Promise<void> {
+    const config = this.config as IVisualEmbedConfiguration;
 
     if (!config.accessToken) {
       // bootstrap flow.
@@ -48,20 +77,20 @@ export class Visual extends Report {
     }
 
     // calculate custom layout settings and override config.
-    let width = config.width ? config.width : this.iframe.offsetWidth;
-    let height = config.height ? config.height : this.iframe.offsetHeight;
+    const width = config.width ? config.width : this.iframe.offsetWidth;
+    const height = config.height ? config.height : this.iframe.offsetHeight;
 
-    const pageSize: models.ICustomPageSize = {
-      type: models.PageSizeType.Custom,
+    const pageSize: ICustomPageSize = {
+      type: PageSizeType.Custom,
       width: width,
       height: height,
     };
 
-    let pagesLayout: models.PagesLayout = {};
+    const pagesLayout: PagesLayout = {};
     pagesLayout[config.pageName] = {
       defaultLayout: {
         displayState: {
-          mode: models.VisualContainerDisplayMode.Hidden
+          mode: VisualContainerDisplayMode.Hidden
         }
       },
       visualsLayout: {}
@@ -69,30 +98,31 @@ export class Visual extends Report {
 
     pagesLayout[config.pageName].visualsLayout[config.visualName] = {
       displayState: {
-        mode: models.VisualContainerDisplayMode.Visible
+        mode: VisualContainerDisplayMode.Visible
       },
       x: 1,
       y: 1,
       z: 1,
       width: pageSize.width,
       height: pageSize.height
-    }
+    };
 
     config.settings = config.settings || {};
     config.settings.filterPaneEnabled = false;
     config.settings.navContentPaneEnabled = false;
-    config.settings.layoutType = models.LayoutType.Custom;
+    config.settings.layoutType = LayoutType.Custom;
     config.settings.customLayout = {
-      displayOption: models.DisplayOption.FitToPage,
+      displayOption: DisplayOption.FitToPage,
       pageSize: pageSize,
       pagesLayout: pagesLayout
     };
 
-    return super.load(config, phasedRender);
+    this.config = config;
+    return super.load(phasedRender);
   }
 
   /**
-   * Gets the list of pages within the report - not supported in visual embed.
+   * Gets the list of pages within the report - not supported in visual
    *
    * @returns {Promise<Page[]>}
    */
@@ -101,13 +131,59 @@ export class Visual extends Report {
   }
 
   /**
-   * Sets the active page of the report - not supported in visual embed.
+   * Sets the active page of the report - not supported in visual
    *
    * @param {string} pageName
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  setPage(_pageName: string): Promise<IHttpPostMessageResponse<void>> {
+    throw Visual.SetPageNotSupportedError;
+  }
+
+  /**
+   * Render a preloaded report, using phased embedding API
+   *
+   * @hidden
    * @returns {Promise<void>}
    */
-  setPage(pageName: string): Promise<void> {
-    throw Visual.SetPageNotSupportedError;
+  async render(_config?: IReportLoadConfiguration | IReportEmbedConfiguration): Promise<void> {
+    throw Visual.RenderNotSupportedError;
+  }
+
+  /**
+   * Gets the embedded visual descriptor object that contains the visual name, type, etc.
+   *
+   * ```javascript
+   * visual.getVisualDescriptor()
+   *   .then(visualDetails => { ... });
+   * ```
+   *
+   * @returns {Promise<VisualDescriptor>}
+   */
+  async getVisualDescriptor(): Promise<VisualDescriptor> {
+    const config = this.config as IVisualEmbedConfiguration;
+
+    try {
+      const response = await this.service.hpm.get<IVisual[]>(`/report/pages/${config.pageName}/visuals`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      // Find the embedded visual from visuals of this page
+      // TODO: Use the Array.find method when ES6 is available
+      const embeddedVisuals = response.body.filter((pageVisual) => pageVisual.name === config.visualName);
+
+      if (embeddedVisuals.length === 0) {
+        const visualNotFoundError: IError = {
+          message: "visualNotFound",
+          detailedMessage: "Visual not found"
+        };
+
+        throw visualNotFoundError;
+      }
+
+      const embeddedVisual = embeddedVisuals[0];
+      const currentPage = this.page(config.pageName);
+      return new VisualDescriptor(currentPage, embeddedVisual.name, embeddedVisual.title, embeddedVisual.type, embeddedVisual.layout);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -121,15 +197,48 @@ export class Visual extends Report {
    *   });
    * ```
    *
-   * @returns {Promise<models.IFilter[]>}
+   * @returns {Promise<IFilter[]>}
    */
-  getFilters(filtersLevel?: models.FiltersLevel): Promise<models.IFilter[]> {
+  async getFilters(filtersLevel?: FiltersLevel): Promise<IFilter[]> {
     const url: string = this.getFiltersLevelUrl(filtersLevel);
-    return this.service.hpm.get<models.IFilter[]>(url, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .then(response => response.body,
-      response => {
-        throw response.body;
-      });
+    try {
+      const response = await this.service.hpm.get<IFilter[]>(url, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
+   * Updates filters at the filter level.
+   * Default filter level is visual level.
+   *
+   * ```javascript
+   * const filters: [
+   *    ...
+   * ];
+   *
+   * visual.updateFilters(FiltersOperations.Add, filters, filtersLevel)
+   *  .catch(errors => {
+   *    ...
+   *  });
+   * ```
+   *
+   * @param {(IFilter[])} filters
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async updateFilters(operation: FiltersOperations, filters: IFilter[], filtersLevel?: FiltersLevel): Promise<IHttpPostMessageResponse<void>> {
+    const updateFiltersRequest: IUpdateFiltersRequest = {
+      filtersOperation: operation,
+      filters: filters as VisualLevelFilters[] | PageLevelFilters[] | ReportLevelFilters[]
+    };
+
+    const url: string = this.getFiltersLevelUrl(filtersLevel);
+    try {
+      return await this.service.hpm.post<void>(url, updateFiltersRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -147,15 +256,16 @@ export class Visual extends Report {
    *  });
    * ```
    *
-   * @param {(models.IFilter[])} filters
-   * @returns {Promise<void>}
+   * @param {(IFilter[])} filters
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  setFilters(filters: models.IFilter[], filtersLevel?: models.FiltersLevel): Promise<void> {
+  async setFilters(filters: IFilter[], filtersLevel?: FiltersLevel): Promise<IHttpPostMessageResponse<void>> {
     const url: string = this.getFiltersLevelUrl(filtersLevel);
-    return this.service.hpm.put<models.IError[]>(url, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow)
-      .catch(response => {
-        throw response.body;
-      });
+    try {
+      return await this.service.hpm.put<void>(url, filters, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
@@ -166,21 +276,21 @@ export class Visual extends Report {
    * visual.removeFilters(filtersLevel);
    * ```
    *
-   * @returns {Promise<void>}
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
    */
-  removeFilters(filtersLevel?: models.FiltersLevel): Promise<void> {
-    return this.setFilters([], filtersLevel);
+  async removeFilters(filtersLevel?: FiltersLevel): Promise<IHttpPostMessageResponse<void>> {
+    return await this.updateFilters(FiltersOperations.RemoveAll, undefined, filtersLevel);
   }
 
   /**
    * @hidden
    */
-  private getFiltersLevelUrl(filtersLevel: models.FiltersLevel): string {
-    const config = <embed.IVisualEmbedConfiguration>this.config;
+  private getFiltersLevelUrl(filtersLevel: FiltersLevel): string {
+    const config = this.config as IVisualEmbedConfiguration;
     switch (filtersLevel) {
-      case models.FiltersLevel.Report:
+      case FiltersLevel.Report:
         return `/report/filters`;
-      case models.FiltersLevel.Page:
+      case FiltersLevel.Page:
         return `/report/pages/${config.pageName}/filters`;
       default:
         return `/report/pages/${config.pageName}/visuals/${config.visualName}/filters`;

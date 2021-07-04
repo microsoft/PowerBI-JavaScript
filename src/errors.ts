@@ -1,4 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
-export let APINotSupportedForRDLError: string = "This API is currently not supported for RDL reports";
-export let EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please use Power BI REST APIs to get the valid URL";
+export const APINotSupportedForRDLError = "This API is currently not supported for RDL reports";
+export const EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please use Power BI REST APIs to get the valid URL";
 

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 import * as models from 'powerbi-models';
 
 export interface IApp {
@@ -18,6 +21,7 @@ export interface IApp {
   validateVisual(page: models.IPage, visual: models.IVisual): Promise<models.IError[]>;
   // Filters
   getFilters(): Promise<models.IFilter[]>;
+  updateFilters(operation: models.FiltersOperations, filters: models.IFilter[]): Promise<models.IFilter[]>;
   setFilters(filters: models.IFilter[]): Promise<void>;
   validateFilter(filter: models.IFilter): Promise<models.IError[]>;
   // Other
@@ -49,6 +53,7 @@ export const mockAppSpyObj = {
   validateVisual: jasmine.createSpy("validateVisual").and.returnValue(Promise.resolve(null)),
   // Filters
   getFilters: jasmine.createSpy("getFilters").and.returnValue(Promise.resolve(null)),
+  updateFilters: jasmine.createSpy("updateFilters").and.returnValue(Promise.resolve(null)),
   setFilters: jasmine.createSpy("setFilters").and.returnValue(Promise.resolve(null)),
   validateFilter: jasmine.createSpy("validateFilter").and.callFake(models.validateFilter),
   // Other
@@ -65,6 +70,7 @@ export const mockAppSpyObj = {
     mockAppSpyObj.dashboardLoad.calls.reset();
     mockAppSpyObj.validateDashboardLoad.calls.reset();
     mockAppSpyObj.reportLoad.calls.reset();
+    mockAppSpyObj.render.calls.reset();
     mockAppSpyObj.validateReportLoad.calls.reset();
     mockAppSpyObj.updateSettings.calls.reset();
     mockAppSpyObj.validateSettings.calls.reset();
@@ -73,6 +79,7 @@ export const mockAppSpyObj = {
     mockAppSpyObj.validatePage.calls.reset();
     mockAppSpyObj.validateVisual.calls.reset();
     mockAppSpyObj.getFilters.calls.reset();
+    mockAppSpyObj.updateFilters.calls.reset();
     mockAppSpyObj.setFilters.calls.reset();
     mockAppSpyObj.validateFilter.calls.reset();
     mockAppSpyObj.print.calls.reset();

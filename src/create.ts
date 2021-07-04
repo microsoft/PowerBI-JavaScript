@@ -1,21 +1,23 @@
-import * as service from './service';
-import * as models from 'powerbi-models';
-import * as embed from './embed';
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+import { IReportCreateConfiguration, IError, validateCreateReport } from 'powerbi-models';
+import { Service } from './service';
+import { Embed, IEmbedConfigurationBase, IEmbedConfiguration } from './embed';
 import * as utils from './util';
-import { Defaults } from './defaults';
 
 /**
  * A Power BI Report creator component
  *
  * @export
  * @class Create
- * @extends {embed.Embed}
+ * @extends {Embed}
  */
-export class Create extends embed.Embed {
+export class Create extends Embed {
   /*
    * @hidden
    */
-  constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean, isBootstrap?: boolean) {
+  constructor(service: Service, element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration, phasedRender?: boolean, isBootstrap?: boolean) {
     super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
   }
 
@@ -37,13 +39,13 @@ export class Create extends embed.Embed {
   /**
    * Validate create report configuration.
    */
-  validate(config: embed.IEmbedConfigurationBase): models.IError[] {
-    return models.validateCreateReport(config);
+  validate(config: IEmbedConfigurationBase): IError[] {
+    return validateCreateReport(config);
   }
 
   /**
    * Handle config changes.
-   * 
+   *
    * @hidden
    * @returns {void}
    */
@@ -52,16 +54,16 @@ export class Create extends embed.Embed {
       return;
     }
 
-    const config = <embed.IEmbedConfiguration>this.config;
+    const config = this.config as IEmbedConfiguration | IReportCreateConfiguration;
 
     this.createConfig = {
-        accessToken: config.accessToken,
-        datasetId: config.datasetId || this.getId(),
-        groupId:  config.groupId,
-        settings: config.settings,
-        tokenType: config.tokenType,
-        theme: config.theme
-    }
+      accessToken: config.accessToken,
+      datasetId: config.datasetId || this.getId(),
+      groupId: config.groupId,
+      settings: config.settings,
+      tokenType: config.tokenType,
+      theme: config.theme
+    };
   }
 
   /**
@@ -81,8 +83,8 @@ export class Create extends embed.Embed {
    *
    * @returns {Promise<boolean>}
    */
-  isSaved(): Promise<boolean> {
-    return utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
+  async isSaved(): Promise<boolean> {
+    return await utils.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow);
   }
 
   /**
@@ -97,10 +99,10 @@ export class Create extends embed.Embed {
    * @hidden
    */
   static findIdFromEmbedUrl(url: string): string {
-    const datasetIdRegEx = /datasetId="?([^&]+)"?/
+    const datasetIdRegEx = /datasetId="?([^&]+)"?/;
     const datasetIdMatch = url.match(datasetIdRegEx);
 
-    let datasetId;
+    let datasetId: string;
     if (datasetIdMatch) {
       datasetId = datasetIdMatch[1];
     }
