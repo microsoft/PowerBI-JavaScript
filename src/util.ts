@@ -174,7 +174,7 @@ export async function isSavedInternal(hpm: HttpPostMessage, uid: string, content
  * @returns {boolean}
  */
 export function isRDLEmbed(embedUrl: string): boolean {
-  return embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
+  return embedUrl && embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
 }
 
 /**
