@@ -87,6 +87,13 @@ export class Page implements IPageNode, IFilterable {
   defaultSize: ICustomPageSize;
 
   /**
+   * Mobile view page size (if defined) as saved in the report.
+   *
+   * @type {ICustomPageSize}
+   */
+   mobileSize: ICustomPageSize;
+
+  /**
    * Page display options as saved in the report.
    *
    * @type {ICustomPageSize}
@@ -103,13 +110,14 @@ export class Page implements IPageNode, IFilterable {
    * @param {SectionVisibility} [visibility]
    * @hidden
    */
-  constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption) {
+  constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption, mobileSize?: ICustomPageSize) {
     this.report = report;
     this.name = name;
     this.displayName = displayName;
     this.isActive = isActivePage;
     this.visibility = visibility;
     this.defaultSize = defaultSize;
+    this.mobileSize = mobileSize;
     this.defaultDisplayOption = defaultDisplayOption;
   }
 

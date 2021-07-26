@@ -1,4 +1,4 @@
-// powerbi-client v2.18.2
+// powerbi-client v2.18.3
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -290,7 +290,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// powerbi-models v1.9.1
+// powerbi-models v1.9.2
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -423,6 +423,7 @@ var PageSizeType;
     PageSizeType[PageSizeType["Cortana"] = 2] = "Cortana";
     PageSizeType[PageSizeType["Letter"] = 3] = "Letter";
     PageSizeType[PageSizeType["Custom"] = 4] = "Custom";
+    PageSizeType[PageSizeType["Mobile"] = 5] = "Mobile";
 })(PageSizeType = exports.PageSizeType || (exports.PageSizeType = {}));
 var DisplayOption;
 (function (DisplayOption) {
@@ -7127,7 +7128,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.18.2',
+    version: '2.18.3',
     type: 'js'
 };
 exports.default = config;
@@ -8296,13 +8297,14 @@ var Page = /** @class */ (function () {
      * @param {SectionVisibility} [visibility]
      * @hidden
      */
-    function Page(report, name, displayName, isActivePage, visibility, defaultSize, defaultDisplayOption) {
+    function Page(report, name, displayName, isActivePage, visibility, defaultSize, defaultDisplayOption, mobileSize) {
         this.report = report;
         this.name = name;
         this.displayName = displayName;
         this.isActive = isActivePage;
         this.visibility = visibility;
         this.defaultSize = defaultSize;
+        this.mobileSize = mobileSize;
         this.defaultDisplayOption = defaultDisplayOption;
     }
     /**
@@ -9391,7 +9393,7 @@ var Report = /** @class */ (function (_super) {
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body
-                                .map(function (page) { return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption); })];
+                                .map(function (page) { return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize); })];
                     case 3:
                         response_8 = _a.sent();
                         throw response_8.body;
@@ -9432,7 +9434,7 @@ var Report = /** @class */ (function (_super) {
                         if (!page) {
                             return [2 /*return*/, Promise.reject(powerbi_models_1.CommonErrorCodes.NotFound)];
                         }
-                        return [2 /*return*/, new page_1.Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption)];
+                        return [2 /*return*/, new page_1.Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize)];
                     case 3:
                         response_9 = _a.sent();
                         throw response_9.body;
@@ -9469,7 +9471,7 @@ var Report = /** @class */ (function (_super) {
                     case 2:
                         response = _a.sent();
                         activePage = response.body.find(function (page) { return page.isActive; });
-                        return [2 /*return*/, new page_1.Page(this, activePage.name, activePage.displayName, activePage.isActive, activePage.visibility, activePage.defaultSize, activePage.defaultDisplayOption)];
+                        return [2 /*return*/, new page_1.Page(this, activePage.name, activePage.displayName, activePage.isActive, activePage.visibility, activePage.defaultSize, activePage.defaultDisplayOption, activePage.mobileSize)];
                     case 3:
                         response_10 = _a.sent();
                         throw response_10.body;

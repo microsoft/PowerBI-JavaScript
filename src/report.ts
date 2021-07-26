@@ -343,7 +343,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
     try {
       const response = await this.service.hpm.get<IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow);
       return response.body
-        .map((page) => new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption));
+        .map((page) => new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize));
     } catch (response) {
       throw response.body;
     }
@@ -382,7 +382,8 @@ export class Report extends Embed implements IReportNode, IFilterable {
         page.isActive,
         page.visibility,
         page.defaultSize,
-        page.defaultDisplayOption
+        page.defaultDisplayOption,
+        page.mobileSize
       );
     } catch (response) {
       throw response.body;
@@ -416,7 +417,8 @@ export class Report extends Embed implements IReportNode, IFilterable {
         activePage.isActive,
         activePage.visibility,
         activePage.defaultSize,
-        activePage.defaultDisplayOption
+        activePage.defaultDisplayOption,
+        activePage.mobileSize
       );
     } catch (response) {
       throw response.body;

@@ -1,4 +1,4 @@
-// powerbi-client v2.18.2
+// powerbi-client v2.18.3
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
@@ -842,6 +842,12 @@ declare module "page" {
          */
         defaultSize: ICustomPageSize;
         /**
+         * Mobile view page size (if defined) as saved in the report.
+         *
+         * @type {ICustomPageSize}
+         */
+        mobileSize: ICustomPageSize;
+        /**
          * Page display options as saved in the report.
          *
          * @type {ICustomPageSize}
@@ -857,7 +863,7 @@ declare module "page" {
          * @param {SectionVisibility} [visibility]
          * @hidden
          */
-        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption);
+        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption, mobileSize?: ICustomPageSize);
         /**
          * Gets all page level filters within the report.
          *
