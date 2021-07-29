@@ -227,12 +227,15 @@ export abstract class Embed {
     this.commands = [];
     this.groups = [];
 
+    const registerQueryCallback = !!(<IEmbedConfiguration>config).eventHooks?.applicationContextProvider;
+    delete (<IEmbedConfiguration>config).eventHooks;
+
     this.populateConfig(config, isBootstrap);
 
     if (this.embedtype === 'create') {
-      this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
+      this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap, registerQueryCallback);
     } else {
-      this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
+      this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap, registerQueryCallback);
     }
   }
 
@@ -702,10 +705,14 @@ export abstract class Embed {
    *
    * @hidden
    */
-  private setIframe(isLoad: boolean, phasedRender?: boolean, isBootstrap?: boolean): void {
+  private setIframe(isLoad: boolean, phasedRender?: boolean, isBootstrap?: boolean, registerQueryCallback?: boolean): void {
     if (!this.iframe) {
       const iframeContent = document.createElement("iframe");
-      const embedUrl = this.config.uniqueId ? addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
+      let embedUrl = this.config.uniqueId ? addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
+
+      if (!isBootstrap && registerQueryCallback)
+        embedUrl = addParamToUrl(embedUrl, "registerQueryCallback", "true");
+
       iframeContent.style.width = '100%';
       iframeContent.style.height = '100%';
       iframeContent.setAttribute("src", embedUrl);

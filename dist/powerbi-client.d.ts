@@ -1,4 +1,4 @@
-// powerbi-client v2.18.3
+// powerbi-client v2.18.4
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
@@ -2127,6 +2127,10 @@ declare module "service" {
          * @hidden
          */
         private embedExisting;
+        /**
+         * @hidden
+         */
+        private registerApplicationContextHook;
         /**
          * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
          * and automatically attempts to embed a powerbi component based on information from other powerbi-* attributes.

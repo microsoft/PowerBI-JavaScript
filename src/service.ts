@@ -300,6 +300,7 @@ export class Service implements IService {
    * @returns {Embed}
    */
   embed(element: HTMLElement, config: IComponentEmbedConfiguration | IEmbedConfigurationBase = {}): Embed {
+    this.registerApplicationContextHook(config as IEmbedConfiguration);
     return this.embedInternal(element, config);
   }
 
@@ -314,6 +315,7 @@ export class Service implements IService {
    * @returns {Embed}
    */
   load(element: HTMLElement, config: IComponentEmbedConfiguration | IEmbedConfigurationBase = {}): Embed {
+    this.registerApplicationContextHook(config as IEmbedConfiguration);
     return this.embedInternal(element, config, /* phasedRender */ true, /* isBootstrap */ false);
   }
 
@@ -438,6 +440,30 @@ export class Service implements IService {
     component.load(phasedRender);
 
     return component;
+  }
+
+  /**
+   * @hidden
+   */
+  private registerApplicationContextHook(config: IEmbedConfiguration): void {
+    const applicationContextProvider = config?.eventHooks?.applicationContextProvider;
+    if (!applicationContextProvider) {
+      return;
+    }
+
+    if (typeof applicationContextProvider !== 'function') {
+      throw new Error("applicationContextProvider must be a function");
+    }
+
+    this.router.post(`preQuery`, async (req, _res) => {
+      try {
+        let result = await applicationContextProvider(req.body);
+        _res.send(200, result);
+      } catch (error) {
+        _res.send(400, null);
+        console.error(error);
+      }
+    });
   }
 
   /**
