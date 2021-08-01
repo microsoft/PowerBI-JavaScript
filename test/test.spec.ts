@@ -21,7 +21,7 @@ import { spyWpmp } from './utility/mockWpmp';
 import { spyHpm } from './utility/mockHpm';
 import { spyRouter } from './utility/mockRouter';
 import * as util from '../src/util';
-import { EmbedUrlNotSupported } from '../src/errors'
+import { APINotSupportedForRDLError, EmbedUrlNotSupported } from '../src/errors'
 
 // Avoid adding new tests to this file, create another spec file instead.
 
@@ -3270,6 +3270,145 @@ describe('SDK-to-HPM', function () {
           });
       });
 
+      it('report.getPageByName() returns promise that rejects if report page with given page name not found', function (done) {
+        // Arrange
+        const pageName = 'page1';
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'page not found'
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        report.getPageByName(pageName)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('report.getPageByName(pageName) returns promise that resolves with page if request is successful', function (done) {
+        // Arrange
+        const pageName = "page1";
+        const testData = {
+          expectedResponse:
+          {
+            report: report,
+            name: "page1",
+            displayName: "Page 1",
+            isActive: true
+          }
+        };
+
+        spyApp.getPageByName.and.returnValue(Promise.resolve(testData.expectedResponse));
+
+        // Act
+        spyApp.getPageByName(pageName)
+          .then(page => {
+            // Assert
+            expect(spyApp.getPageByName).toHaveBeenCalled();
+            expect(page.name).toEqual(testData.expectedResponse.name);
+            expect(page.isActive).toEqual(testData.expectedResponse.isActive);
+            done();
+          });
+      });
+
+      it('report.getActivePage() sends GET /report/pages', function () {
+        // Arrange
+        const testData = {
+          response: {
+            body: [
+              {
+                name: 'page1'
+              }
+            ]
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.resolve(testData.response));
+
+        // Act
+        report.getActivePage();
+
+        // Assert
+        expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+      });
+
+      it('report.getActivePage() return promise that rejects with server error if there was error getting active page', function (done) {
+        // Arrange
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'internal server error'
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        report.getActivePage()
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('report.getActivePage() return promise that rejects if embedded report is an RDL report', function (done) {
+        // Arrange
+        const testData = {
+          expectedError: {
+            body: {
+              message: APINotSupportedForRDLError
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        report.getActivePage()
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('report.getActivePage() returns promise that resolves with a page if request is successful', function (done) {
+        // Arrange
+        const testData = {
+          expectedResponse:
+          {
+            report: report,
+            name: "page1",
+            displayName: "Page 1",
+            isActive: true
+          }
+        };
+
+        spyApp.getActivePage.and.returnValue(Promise.resolve(testData.expectedResponse));
+
+        // Act
+        spyApp.getActivePage()
+          .then(page => {
+            // Assert
+            expect(spyApp.getActivePage).toHaveBeenCalled();
+            expect(page.name).toEqual(testData.expectedResponse.name);
+            expect(page.isActive).toEqual(testData.expectedResponse.isActive);
+            done();
+          });
+      });
+
       it('report.addPage() sends POST /report/addPage with displayName', function () {
         // Arrange
         const displayName = "testName";
@@ -3539,6 +3678,54 @@ describe('SDK-to-HPM', function () {
       });
     });
 
+    describe('switchLayout', function () {
+      it('report.switchLayout(layout) returns promise that rejects with errors if there was error if initial layout and current layout type do not match', function (done) {
+        // Arrange
+        // Set initial layout to desktop layout
+        report.config.settings.layoutType = models.LayoutType.Master;
+
+        const layoutType = models.LayoutType.MobileLandscape;
+        const testData = {
+          expectedError: {
+            message: 'Switching between mobile and desktop layouts is not supported. Please reset the embed container and re-embed with required layout.'
+          },
+          settings: {
+            layoutType: layoutType
+          }
+        };
+
+        spyHpm.patch.and.returnValues(Promise.reject(testData.expectedError));
+
+        // Act
+        report.switchLayout(layoutType)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.patch).not.toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.message);
+            done();
+          });
+      });
+
+      it('report.switchLayout(layout) returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        // Set initial layout to mobile layout
+        report.config.settings.layoutType = models.LayoutType.MobilePortrait;
+
+        const layoutType = models.LayoutType.MobileLandscape;
+
+        spyApp.switchLayout.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.switchLayout(layoutType)
+          .then(response => {
+            // Assert
+            expect(spyApp.switchLayout).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+    });
+
     describe('saveAs', function () {
       let saveAsParameters: models.ISaveAsParameters = { name: "reportName" };
 
@@ -3751,6 +3938,408 @@ describe('SDK-to-HPM', function () {
             expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
             expect(response).toEqual(null);
             done()
+          });
+      });
+
+      it('report.addContextMenuCommand(commandName, commandTitle, contextMenuTitle) returns promise that rejects with validation errors if extensions property is invalid', function (done) {
+        // Arrange
+        const commandName = "name1";
+        const commandTitle = "title1";
+        const contextMenuTitle = "menu1";
+        const testData = {
+          expectedError: {
+            body: [
+              {
+                message: 'extensions property is invalid'
+              }
+            ]
+          },
+          settings: {
+            extensions: {
+              commands: [{
+                name: "name1",
+                title: "title1",
+                extend: {
+                  visualContextMenu: {
+                    title: contextMenuTitle,
+                    menuLocation: 0
+                  }
+                }
+              }],
+              groups: []
+            }
+          }
+        };
+
+        spyHpm.patch.and.returnValues(Promise.reject(testData.expectedError));
+
+        // Act
+        report.addContextMenuCommand(commandName, commandTitle, contextMenuTitle, 0, "", "", "")
+          .catch(error => {
+            // Assert
+            expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(jasmine.objectContaining(testData.expectedError.body));
+            done();
+          });
+      });
+
+      it('report.addContextMenuCommand(commandName, commandTitle, contextMenuTitle) returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        const commandName = "name2";
+        const commandTitle = "title2";
+        const contextMenuTitle = "menu2";
+
+        spyApp.addContextMenuCommand.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.addContextMenuCommand(commandName, commandTitle, contextMenuTitle)
+          .then(response => {
+            // Assert
+            expect(spyApp.addContextMenuCommand).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('report.addOptionsMenuCommand(commandName, commandTitle, optionsMenuTitle) returns promise that rejects with validation errors if extensions property is invalid', function (done) {
+        // Arrange
+        const commandName = "name1";
+        const commandTitle = "title1";
+        const optionsMenuTitle = "menu1";
+        const testData = {
+          expectedError: {
+            body: [
+              {
+                message: 'extensions property is invalid'
+              }
+            ]
+          },
+          settings: {
+            extensions: {
+              commands: [{
+                name: "name1",
+                title: "title1",
+                extend: {
+                  visualOptionsMenu: {
+                    title: "menu1",
+                    menuLocation: 0,
+                  }
+                },
+                icon: undefined
+              }],
+              groups: []
+            }
+          }
+        };
+
+        spyHpm.patch.and.returnValues(Promise.reject(testData.expectedError));
+
+        // Act
+        report.addOptionsMenuCommand(commandName, commandTitle, optionsMenuTitle)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(jasmine.objectContaining(testData.expectedError.body));
+            done();
+          });
+      });
+
+      it('report.addOptionsMenuCommand(commandName, commandTitle, optionsMenuTitle) returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        const commandName = "name2";
+        const commandTitle = "title2";
+        const optionsMenuTitle = "menu2";
+
+        spyApp.addOptionsMenuCommand.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.addOptionsMenuCommand(commandName, commandTitle, optionsMenuTitle)
+          .then(response => {
+            // Assert
+            expect(spyApp.addOptionsMenuCommand).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('report.removeContextMenuCommand(commandName) returns promise that rejects with validation errors if command name is invalid', function (done) {
+        // Arrange
+        const commandName = "name1";
+        const testData = {
+          expectedError: {
+            message: 'PowerBIEntityNotFound'
+          },
+          settings: {
+            extensions: {
+              commands: [{
+                name: "name1",
+                title: "title1",
+                extend: {
+                }
+              }]
+            }
+          }
+        };
+
+        spyApp.removeContextMenuCommand.and.returnValues(Promise.reject(testData.expectedError));
+
+        // Act
+        spyApp.removeContextMenuCommand(commandName)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.patch).not.toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
+            done();
+          });
+      });
+
+      it('report.removeContextMenuCommand(commandName) returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        const commandName = "name2";
+
+        spyApp.removeContextMenuCommand.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.removeContextMenuCommand(commandName)
+          .then(response => {
+            // Assert
+            expect(spyApp.removeContextMenuCommand).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('report.removeOptionsMenuCommand(commandName) returns promise that rejects with validation errors if command name is invalid', function (done) {
+        // Arrange
+        const commandName = "name1";
+        const testData = {
+          expectedError: {
+            message: 'PowerBIEntityNotFound'
+          },
+          settings: {
+            extensions: {
+              commands: [{
+                name: "name1",
+                title: "title1",
+                icon: "",
+                extend: {
+                }
+              }]
+            }
+          }
+        };
+
+        spyApp.removeOptionsMenuCommand.and.returnValues(Promise.reject(testData.expectedError));
+
+        // Act
+        spyApp.removeOptionsMenuCommand(commandName)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.patch).not.toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(jasmine.objectContaining(testData.expectedError));
+            done();
+          });
+      });
+
+      it('report.removeOptionsMenuCommand(commandName) returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        const commandName = "name2";
+
+        spyApp.removeOptionsMenuCommand.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.removeOptionsMenuCommand(commandName)
+          .then(response => {
+            // Assert
+            expect(spyApp.removeOptionsMenuCommand).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('report.setVisualDisplayState(pageName, visualName, displayState) returns promise that rejects with validation error if display state is invalid', function (done) {
+        // Arrange
+        const pageName = 'page1';
+        const visualName = 'visual';
+        const displayState = 2;
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'display state is invalid'
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        report.setVisualDisplayState(pageName, visualName, displayState)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('report.setVisualDisplayState(pageName, visualName, displayState) returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        const pageName = 'page1';
+        const visualName = 'visual';
+        const displayState = models.VisualContainerDisplayMode.Visible;
+
+        spyApp.setVisualDisplayState.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.setVisualDisplayState(pageName, visualName, displayState)
+          .then(response => {
+            // Assert
+            expect(spyApp.setVisualDisplayState).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('report.resizeVisual returns promise that rejects with validation error if page name is invalid', function (done) {
+        // Arrange
+        const pageName = 'invalid page';
+        const visualName = 'visual';
+        const width = 200;
+        const height = 100;
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'page name is invalid'
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        report.resizeVisual(pageName, visualName, width, height)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('report.resizeVisual returns promise that resolves with null if request is valid and accepted', function (done) {
+        // Arrange
+        const pageName = 'page1';
+        const visualName = 'visual';
+        const width = 200;
+        const height = 100;
+
+        spyApp.resizeVisual.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.resizeVisual(pageName, visualName, width, height)
+          .then(response => {
+            // Assert
+            expect(spyApp.resizeVisual).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('report.resizeActivePage returns promise that rejects with validation error if page size type is invalid', function (done) {
+        // Arrange
+        const pageSizeType = 5;
+        const width = 200;
+        const height = 100;
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'page size type is invalid'
+            }
+          },
+          settings: {
+            layoutType: models.LayoutType.Custom,
+            customLayout: {
+              pageSize: {
+                type: pageSizeType,
+                width: width,
+                height: height
+              }
+            }
+          }
+        };
+
+        spyHpm.patch.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        report.resizeActivePage(pageSizeType, width, height)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('report.resizeActivePage returns promise that resolves with null if request is valid and accepted', function (done) {
+        // Arrange
+        const pageSizeType = models.PageSizeType.Custom;
+        const width = 200;
+        const height = 100;
+
+        spyApp.resizeActivePage.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.resizeActivePage(pageSizeType, width, height)
+          .then(response => {
+            // Assert
+            expect(spyApp.resizeActivePage).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('moveVisual returns promise that rejects with validation error if visual name is invalid', function (done) {
+        // Arrange
+        const pageName = 'page1';
+        const visualName = 'invalid visual';
+        const x = 0;
+        const y = 0;
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'visual name is invalid'
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        report.moveVisual(pageName, visualName, x, y)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('moveVisual returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        const pageName = 'page1';
+        const visualName = 'visual';
+        const x = 0;
+        const y = 0;
+
+        spyApp.moveVisual.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.moveVisual(pageName, visualName, x, y)
+          .then(response => {
+            // Assert
+            expect(spyApp.moveVisual).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
           });
       });
     });
@@ -4090,6 +4679,173 @@ describe('SDK-to-HPM', function () {
           });
       });
     });
+    describe('custom layout', function () {
+      it('page.setVisualDisplayState returns promise that rejects with validation error if display state is invalid', function (done) {
+        // Arrange
+        const visualName = 'visual';
+        const displayState = 2;
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'display state is invalid'
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        page1.setVisualDisplayState(visualName, displayState)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('page.setVisualDisplayState returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        const visualName = 'visual';
+        const displayState = models.VisualContainerDisplayMode.Visible;
+
+        spyApp.setVisualDisplayState.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.setVisualDisplayState(visualName, displayState)
+          .then(response => {
+            // Assert
+            expect(spyApp.setVisualDisplayState).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('page.moveVisual returns promise that rejects with validation error if visual name is invalid', function (done) {
+        // Arrange
+        const visualName = 'invalid visual';
+        const x = 0;
+        const y = 0;
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'visual name is invalid'
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        page1.moveVisual(visualName, x, y)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('page.moveVisual returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        const visualName = 'visual';
+        const x = 0;
+        const y = 0;
+
+        spyApp.moveVisual.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.moveVisual(visualName, x, y)
+          .then(response => {
+            // Assert
+            expect(spyApp.moveVisual).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('page.resizePage returns promise that rejects with validation error if page is not active page', function (done) {
+        // Arrange
+        const pageSizeType = 1;
+        const width = 200;
+        const height = 100;
+        const testData = {
+          expectedError: {
+            message: 'Cannot resize the page. Only the active page can be resized'
+          },
+          settings: {
+            layoutType: models.LayoutType.Custom,
+            customLayout: {
+              pageSize: {
+                type: pageSizeType,
+                width: width,
+                height: height
+              }
+            }
+          }
+        };
+
+        spyHpm.patch.and.returnValue(Promise.reject(testData.expectedError.message));
+
+        // Act
+        page1.resizePage(pageSizeType, width, height)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.patch).not.toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.message);
+            done();
+          });
+      });
+
+      it('page.resizePage returns promise that resolves with null if page is active page', function (done) {
+        // Arrange
+        const pageSizeType = 1;
+        const width = 200;
+        const height = 100;
+        const testData = {
+          settings: {
+            layoutType: models.LayoutType.Custom,
+            customLayout: {
+              pageSize: {
+                type: pageSizeType,
+                width: width,
+                height: height
+              }
+            }
+          }
+        };
+
+        page1.isActive = true;
+        spyHpm.patch.and.returnValue(Promise.resolve(null));
+
+        // Act
+        page1.resizePage(pageSizeType, width, height)
+          .then(response => {
+            // Assert
+            expect(spyHpm.patch).toHaveBeenCalledWith('/report/settings', testData.settings, { uid: uniqueId }, iframe.contentWindow);
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('page.resizePage returns promise that resolves with null if request is valid and accepted', function (done) {
+        // Arrange
+        const pageSizeType = models.PageSizeType.Custom;
+        const width = 200;
+        const height = 100;
+
+        spyApp.resizeActivePage.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.resizeActivePage(pageSizeType, width, height)
+          .then(response => {
+            // Assert
+            expect(spyApp.resizeActivePage).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+    });
   });
 
   describe('setDisplayName', function () {
@@ -4110,6 +4866,59 @@ describe('SDK-to-HPM', function () {
 
       // Assert
       expect(spyHpm.put).toHaveBeenCalledWith(`/report/pages/${page1.name}/name`, testData.page, { uid: uniqueId }, iframe.contentWindow);
+    });
+  });
+
+  describe('getVisualByName', function () {
+    it('page.getVisualByName(visualName) returns promise that rejects if visual with given name not found', function (done) {
+      // Arrange
+      const pageName = page1.name;
+      const visualName = "visual1";
+      const testData = {
+        expectedError: {
+          body: {
+            message: 'visual not found'
+          }
+        }
+      };
+
+      spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+      // Act
+      page1.getVisualByName(visualName)
+        .catch(error => {
+          // Assert
+          expect(spyHpm.get).toHaveBeenCalledWith(`/report/pages/${pageName}/visuals`, { uid: uniqueId }, iframe.contentWindow);
+          expect(error).toEqual(testData.expectedError.body);
+          done();
+        });
+    });
+
+    it('page.getVisualByName(visualName) returns promise that resolves with visual if request is successful', function (done) {
+      // Arrange
+      const pageName = page1.name;
+      const visualName = "visual1";
+      const testData = {
+        expectedResponse:
+        {
+          name: "visual1",
+          title: "Visual 1",
+          type: "type1",
+          layout: {},
+          page: {}
+        }
+      };
+
+      spyApp.getVisualByName.and.returnValue(Promise.resolve(testData.expectedResponse));
+
+      // Act
+      spyApp.getVisualByName(visualName)
+        .then(visual => {
+          // Assert
+          expect(spyApp.getVisualByName).toHaveBeenCalled();
+          expect(visual.name).toEqual(testData.expectedResponse.name);
+          expect(visual.title).toEqual(testData.expectedResponse.title);
+          done();
+        });
     });
   });
 
@@ -4260,6 +5069,128 @@ describe('SDK-to-HPM', function () {
           .then(response => {
             // Assert
             expect(spyHpm.post).toHaveBeenCalledWith(`/report/pages/${page1.name}/visuals/${visual1.name}/filters`, { filtersOperation: models.FiltersOperations.RemoveAll, filters: undefined }, { uid: uniqueId }, iframe.contentWindow);
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+    });
+
+    describe('custom layout', function () {
+      it('visual.moveVisual() returns promise that rejects with server error if error in updating setting', function (done) {
+        // Arrange
+        const x = 0;
+        const y = 0;
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'internal server error'
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        visual1.moveVisual(x, y)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('visual.moveVisual() returns promise that resolves with null if request is valid and accepted', function (done) {
+        // Arrange
+        const x = 0;
+        const y = 0;
+
+        spyApp.moveVisual.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.moveVisual(x, y)
+          .then(response => {
+            // Assert
+            expect(spyApp.moveVisual).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('visual.setVisualDisplayState(displayState) returns promise that rejects with validation error if display state is invalid', function (done) {
+        // Arrange
+        const displayState = 2;
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'mode property is invalid'
+            }
+          },
+        };
+
+        spyApp.setVisualDisplayState.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        spyApp.setVisualDisplayState(displayState)
+          .catch(error => {
+            // Assert
+            expect(error).toEqual(testData.expectedError);
+            done();
+          });
+      });
+
+      it('visual.setVisualDisplayState(displayState) returns promise that resolves with null if requst is valid and accepted', function (done) {
+        // Arrange
+        const displayState = models.VisualContainerDisplayMode.Visible;
+
+        spyApp.setVisualDisplayState.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.setVisualDisplayState(displayState)
+          .then(response => {
+            // Assert
+            expect(spyApp.setVisualDisplayState).toHaveBeenCalled();
+            expect(response).toEqual(null);
+            done();
+          });
+      });
+
+      it('visual.resizeVisual returns promise that rejects with server error if error in updating setting', function (done) {
+        // Arrange
+        const width = 200;
+        const height = 100;
+        const testData = {
+          expectedError: {
+            body: {
+              message: 'internal server error'
+            }
+          }
+        };
+
+        spyHpm.get.and.returnValue(Promise.reject(testData.expectedError));
+
+        // Act
+        visual1.resizeVisual(width, height)
+          .catch(error => {
+            // Assert
+            expect(spyHpm.get).toHaveBeenCalledWith('/report/pages', { uid: uniqueId }, iframe.contentWindow);
+            expect(error).toEqual(testData.expectedError.body);
+            done();
+          });
+      });
+
+      it('visual.resizeVisual returns promise that resolves with null if request is valid and accepted', function (done) {
+        // Arrange
+        const width = 200;
+        const height = 100;
+
+        spyApp.resizeVisual.and.returnValue(Promise.resolve(null));
+
+        // Act
+        spyApp.resizeVisual(width, height)
+          .then(response => {
+            // Assert
+            expect(spyApp.resizeVisual).toHaveBeenCalled();
             expect(response).toEqual(null);
             done();
           });

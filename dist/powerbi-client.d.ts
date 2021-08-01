@@ -1,6 +1,18 @@
-// powerbi-client v2.18.1
+// powerbi-client v2.18.4
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+declare module "config" {
+    /** @ignore */ /** */
+    const config: {
+        version: string;
+        type: string;
+    };
+    export default config;
+}
+declare module "errors" {
+    export const APINotSupportedForRDLError = "This API is currently not supported for RDL reports";
+    export const EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please use Power BI REST APIs to get the valid URL";
+}
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
     /**
@@ -105,21 +117,9 @@ declare module "util" {
      */
     export function getTimeDiffInMilliseconds(start: Date, end: Date): number;
 }
-declare module "config" {
-    /** @ignore */ /** */
-    const config: {
-        version: string;
-        type: string;
-    };
-    export default config;
-}
-declare module "errors" {
-    export const APINotSupportedForRDLError = "This API is currently not supported for RDL reports";
-    export const EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please use Power BI REST APIs to get the valid URL";
-}
 declare module "embed" {
     import * as models from 'powerbi-models';
-    import { Service, IEventHandler, IEvent, ICustomEvent } from "service";
+    import { ICustomEvent, IEvent, IEventHandler, Service } from "service";
     global {
         interface Document {
             mozCancelFullScreen: any;
@@ -177,6 +177,12 @@ declare module "embed" {
         static maxFrontLoadTimes: number;
         /** @hidden */
         allowedEvents: string[];
+        /** @hidden */
+        protected commands: models.ICommandExtension[];
+        /** @hidden */
+        protected initialLayoutType: models.LayoutType;
+        /** @hidden */
+        groups: models.IMenuGroupExtension[];
         /**
          * Gets or sets the event handler registered for this embed component.
          *
@@ -573,7 +579,7 @@ declare module "ifilterable" {
     }
 }
 declare module "visualDescriptor" {
-    import { ExportDataType, FiltersOperations, ICloneVisualRequest, ICloneVisualResponse, IExportDataResult, IFilter, ISlicerState, ISortByVisualRequest, IVisualLayout } from 'powerbi-models';
+    import { ExportDataType, FiltersOperations, ICloneVisualRequest, ICloneVisualResponse, IExportDataResult, IFilter, ISlicerState, ISortByVisualRequest, IVisualLayout, VisualContainerDisplayMode } from 'powerbi-models';
     import { IHttpPostMessageResponse } from 'http-post-message';
     import { IFilterable } from "ifilterable";
     import { IPageNode } from "page";
@@ -731,11 +737,50 @@ declare module "visualDescriptor" {
          * ```
          */
         sortBy(request: ISortByVisualRequest): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Updates the position of a visual.
+         *
+         * ```javascript
+         * visual.moveVisual(x, y, z)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {number} x
+         * @param {number} y
+         * @param {number} z
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        moveVisual(x: number, y: number, z?: number): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Updates the display state of a visual.
+         *
+         * ```javascript
+         * visual.setVisualDisplayState(displayState)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {VisualContainerDisplayMode} displayState
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        setVisualDisplayState(displayState: VisualContainerDisplayMode): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Resize a visual.
+         *
+         * ```javascript
+         * visual.resizeVisual(width, height)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {number} width
+         * @param {number} height
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        resizeVisual(width: number, height: number): Promise<IHttpPostMessageResponse<void>>;
     }
 }
 declare module "page" {
     import { IHttpPostMessageResponse } from 'http-post-message';
-    import { DisplayOption, FiltersOperations, ICustomPageSize, IFilter, LayoutType, SectionVisibility } from 'powerbi-models';
+    import { DisplayOption, FiltersOperations, ICustomPageSize, IFilter, IVisual, LayoutType, PageSizeType, SectionVisibility, VisualContainerDisplayMode } from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { IReportNode } from "report";
     import { VisualDescriptor } from "visualDescriptor";
@@ -797,6 +842,12 @@ declare module "page" {
          */
         defaultSize: ICustomPageSize;
         /**
+         * Mobile view page size (if defined) as saved in the report.
+         *
+         * @type {ICustomPageSize}
+         */
+        mobileSize: ICustomPageSize;
+        /**
          * Page display options as saved in the report.
          *
          * @type {ICustomPageSize}
@@ -812,7 +863,7 @@ declare module "page" {
          * @param {SectionVisibility} [visibility]
          * @hidden
          */
-        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption);
+        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption, mobileSize?: ICustomPageSize);
         /**
          * Gets all page level filters within the report.
          *
@@ -901,6 +952,89 @@ declare module "page" {
          */
         getVisuals(): Promise<VisualDescriptor[]>;
         /**
+         * Gets a visual by name on the page.
+         *
+         * ```javascript
+         * page.getVisualByName(visualName: string)
+         *  .then(visual => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @param {string} visualName
+         * @returns {Promise<VisualDescriptor>}
+         */
+        getVisualByName(visualName: string): Promise<VisualDescriptor>;
+        /**
+         * Updates the display state of a visual in a page.
+         *
+         * ```javascript
+         * page.setVisualDisplayState(visualName, displayState)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {string} visualName
+         * @param {VisualContainerDisplayMode} displayState
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        setVisualDisplayState(visualName: string, displayState: VisualContainerDisplayMode): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Updates the position of a visual in a page.
+         *
+         * ```javascript
+         * page.moveVisual(visualName, x, y, z)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {string} visualName
+         * @param {number} x
+         * @param {number} y
+         * @param {number} z
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        moveVisual(visualName: string, x: number, y: number, z?: number): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Resize a visual in a page.
+         *
+         * ```javascript
+         * page.resizeVisual(visualName, width, height)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {string} visualName
+         * @param {number} width
+         * @param {number} height
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        resizeVisual(visualName: string, width: number, height: number): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Updates the size of active page.
+         *
+         * ```javascript
+         * page.resizePage(pageSizeType, width, height)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {PageSizeType} pageSizeType
+         * @param {number} width
+         * @param {number} height
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        resizePage(pageSizeType: PageSizeType, width?: number, height?: number): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Gets the list of slicer visuals on the page.
+         *
+         * ```javascript
+         * page.getSlicers()
+         *  .then(slicers => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @returns {Promise<IVisual[]>}
+         */
+        getSlicers(): Promise<IVisual[]>;
+        /**
          * Checks if page has layout.
          *
          * ```javascript
@@ -914,7 +1048,7 @@ declare module "page" {
     }
 }
 declare module "report" {
-    import { IReportLoadConfiguration, IReportEmbedConfiguration, FiltersOperations, IError, IFilter, IReportTheme, ISettings, SectionVisibility, ViewMode, IEmbedConfiguration, IEmbedConfigurationBase } from 'powerbi-models';
+    import { IReportLoadConfiguration, IReportEmbedConfiguration, FiltersOperations, IError, IFilter, IReportTheme, ISettings, LayoutType, SectionVisibility, ViewMode, IEmbedConfiguration, IEmbedConfigurationBase, MenuLocation, PageSizeType, VisualContainerDisplayMode } from 'powerbi-models';
     import { IHttpPostMessageResponse } from 'http-post-message';
     import { IService, Service } from "service";
     import { Embed } from "embed";
@@ -1099,6 +1233,33 @@ declare module "report" {
          */
         getPages(): Promise<Page[]>;
         /**
+         * Gets a report page by its name.
+         *
+         * ```javascript
+         * report.getPageByName(pageName)
+         *  .then(page => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @param {string} pageName
+         * @returns {Promise<Page>}
+         */
+        getPageByName(pageName: string): Promise<Page>;
+        /**
+         * Gets the active report page.
+         *
+         * ```javascript
+         * report.getActivePage()
+         *  .then(activePage => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @returns {Promise<Page>}
+         */
+        getActivePage(): Promise<Page>;
+        /**
          * Creates an instance of a Page.
          *
          * Normally you would get Page objects by calling `report.getPages()`, but in the case
@@ -1234,6 +1395,163 @@ declare module "report" {
          * @returns {Promise<boolean>}
          */
         arePersistentFiltersApplied(): Promise<boolean>;
+        /**
+         * Remove context menu extension command.
+         *
+         * ```javascript
+         * report.removeContextMenuCommand(commandName, contextMenuTitle)
+         *  .catch(error => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @param {string} commandName
+         * @param {string} contextMenuTitle
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        removeContextMenuCommand(commandName: string, contextMenuTitle: string): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Add context menu extension command.
+         *
+         * ```javascript
+         * report.addContextMenuCommand(commandName, commandTitle, contextMenuTitle, menuLocation, visualName, visualType, groupName)
+         *  .catch(error => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @param {string} commandName
+         * @param {string} commandTitle
+         * @param {string} contextMenuTitle
+         * @param {MenuLocation} menuLocation
+         * @param {string} visualName
+         * @param {string} visualType
+         * @param {string} groupName
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        addContextMenuCommand(commandName: string, commandTitle: string, contextMenuTitle: string, menuLocation: MenuLocation, visualName: string, visualType: string, groupName?: string): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Remove options menu extension command.
+         *
+         * ```javascript
+         * report.removeOptionsMenuCommand(commandName, optionsMenuTitle)
+         *  .then({
+         *      ...
+         *  });
+         * ```
+         *
+         * @param {string} commandName
+         * @param {string} optionsMenuTitle
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        removeOptionsMenuCommand(commandName: string, optionsMenuTitle: string): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Add options menu extension command.
+         *
+         * ```javascript
+         * report.addOptionsMenuCommand(commandName, commandTitle, optionsMenuTitle, menuLocation, visualName, visualType, groupName, commandIcon)
+         *  .catch(error => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @param {string} commandName
+         * @param {string} commandTitle
+         * @param {string} optionMenuTitle
+         * @param {MenuLocation} menuLocation
+         * @param {string} visualName
+         * @param {string} visualType
+         * @param {string} groupName
+         * @param {string} commandIcon
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        addOptionsMenuCommand(commandName: string, commandTitle: string, optionsMenuTitle?: string, menuLocation?: MenuLocation, visualName?: string, visualType?: string, groupName?: string, commandIcon?: string): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Updates the display state of a visual in a page.
+         *
+         * ```javascript
+         * report.setVisualDisplayState(pageName, visualName, displayState)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {string} pageName
+         * @param {string} visualName
+         * @param {VisualContainerDisplayMode} displayState
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        setVisualDisplayState(pageName: string, visualName: string, displayState: VisualContainerDisplayMode): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Resize a visual in a page.
+         *
+         * ```javascript
+         * report.resizeVisual(pageName, visualName, width, height)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {string} pageName
+         * @param {string} visualName
+         * @param {number} width
+         * @param {number} height
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        resizeVisual(pageName: string, visualName: string, width: number, height: number): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Updates the size of active page in report.
+         *
+         * ```javascript
+         * report.resizeActivePage(pageSizeType, width, height)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {PageSizeType} pageSizeType
+         * @param {number} width
+         * @param {number} height
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        resizeActivePage(pageSizeType: PageSizeType, width?: number, height?: number): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Updates the position of a visual in a page.
+         *
+         * ```javascript
+         * report.moveVisual(pageName, visualName, x, y, z)
+         *   .catch(error => { ... });
+         * ```
+         *
+         * @param {string} pageName
+         * @param {string} visualName
+         * @param {number} x
+         * @param {number} y
+         * @param {number} z
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        moveVisual(pageName: string, visualName: string, x: number, y: number, z?: number): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Updates the report layout
+         *
+         * ```javascript
+         * report.switchLayout(layoutType);
+         * ```
+         *
+         * @param {LayoutType} layoutType
+         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         */
+        switchLayout(layoutType: LayoutType): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * @hidden
+         */
+        private createMenuCommand;
+        /**
+         * @hidden
+         */
+        private findCommandMenuIndex;
+        /**
+         * @hidden
+         */
+        private buildLayoutSettingsObject;
+        /**
+         * @hidden
+         */
+        private validateVisual;
         /**
          * @hidden
          */
@@ -1810,6 +2128,10 @@ declare module "service" {
          */
         private embedExisting;
         /**
+         * @hidden
+         */
+        private registerApplicationContextHook;
+        /**
          * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
          * and automatically attempts to embed a powerbi component based on information from other powerbi-* attributes.
          *
@@ -1977,6 +2299,425 @@ declare module "factories" {
     export const wpmpFactory: IWpmpFactory;
     export const routerFactory: IRouterFactory;
 }
+declare module "FilterBuilders/filterBuilder" {
+    import { IFilterTarget } from "powerbi-models";
+    /**
+     * Generic filter builder for BasicFilter, AdvancedFilter, RelativeDate, RelativeTime and TopN
+     *
+     * @class
+     */
+    export class FilterBuilder {
+        target: IFilterTarget;
+        /**
+         * Sets target property for filter with target object
+         *
+         * ```javascript
+         * const target = {
+         *  table: 'table1',
+         *  column: 'column1'
+         * };
+         *
+         * const filterBuilder = new FilterBuilder().withTargetObject(target);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withTargetObject(target: IFilterTarget): this;
+        /**
+         * Sets target property for filter with column target object
+         *
+         * ```
+         * const filterBuilder = new FilterBuilder().withColumnTarget(tableName, columnName);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withColumnTarget(tableName: string, columnName: string): this;
+        /**
+         * Sets target property for filter with measure target object
+         *
+         * ```
+         * const filterBuilder = new FilterBuilder().withMeasureTarget(tableName, measure);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withMeasureTarget(tableName: string, measure: string): this;
+        /**
+         * Sets target property for filter with hierarchy level target object
+         *
+         * ```
+         * const filterBuilder = new FilterBuilder().withHierarchyLevelTarget(tableName, hierarchy, hierarchyLevel);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withHierarchyLevelTarget(tableName: string, hierarchy: string, hierarchyLevel: string): this;
+        /**
+         * Sets target property for filter with column aggregation target object
+         *
+         * ```
+         * const filterBuilder = new FilterBuilder().withColumnAggregation(tableName, columnName, aggregationFunction);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withColumnAggregation(tableName: string, columnName: string, aggregationFunction: string): this;
+        /**
+         * Sets target property for filter with hierarchy level aggregation target object
+         *
+         * ```
+         * const filterBuilder = new FilterBuilder().withHierarchyLevelAggregationTarget(tableName, hierarchy, hierarchyLevel, aggregationFunction);
+         * ```
+         *
+         * @returns {FilterBuilder}
+         */
+        withHierarchyLevelAggregationTarget(tableName: string, hierarchy: string, hierarchyLevel: string, aggregationFunction: string): this;
+    }
+}
+declare module "FilterBuilders/basicFilterBuilder" {
+    import { BasicFilter } from "powerbi-models";
+    import { FilterBuilder } from "FilterBuilders/filterBuilder";
+    /**
+     * Power BI Basic filter builder component
+     *
+     * @export
+     * @class BasicFilterBuilder
+     * @extends {FilterBuilder}
+     */
+    export class BasicFilterBuilder extends FilterBuilder {
+        private values;
+        private operator;
+        private isRequireSingleSelection;
+        /**
+         * Sets In as operator for Basic filter
+         *
+         * ```javascript
+         *
+         * const basicFilterBuilder = new BasicFilterBuilder().in([values]);
+         * ```
+         *
+         * @returns {BasicFilterBuilder}
+         */
+        in(values: Array<(string | number | boolean)>): BasicFilterBuilder;
+        /**
+         * Sets NotIn as operator for Basic filter
+         *
+         * ```javascript
+         *
+         * const basicFilterBuilder = new BasicFilterBuilder().notIn([values]);
+         * ```
+         *
+         * @returns {BasicFilterBuilder}
+         */
+        notIn(values: Array<(string | number | boolean)>): BasicFilterBuilder;
+        /**
+         * Sets All as operator for Basic filter
+         *
+         * ```javascript
+         *
+         * const basicFilterBuilder = new BasicFilterBuilder().all();
+         * ```
+         *
+         * @returns {BasicFilterBuilder}
+         */
+        all(): BasicFilterBuilder;
+        /**
+         * Sets required single selection property for Basic filter
+         *
+         * ```javascript
+         *
+         * const basicFilterBuilder = new BasicFilterBuilder().requireSingleSelection(isRequireSingleSelection);
+         * ```
+         *
+         * @returns {BasicFilterBuilder}
+         */
+        requireSingleSelection(isRequireSingleSelection?: boolean): BasicFilterBuilder;
+        /**
+         * Creates Basic filter
+         *
+         * ```javascript
+         *
+         * const basicFilterBuilder = new BasicFilterBuilder().build();
+         * ```
+         *
+         * @returns {BasicFilter}
+         */
+        build(): BasicFilter;
+    }
+}
+declare module "FilterBuilders/advancedFilterBuilder" {
+    import { AdvancedFilter, AdvancedFilterConditionOperators } from "powerbi-models";
+    import { FilterBuilder } from "FilterBuilders/filterBuilder";
+    /**
+     * Power BI Advanced filter builder component
+     *
+     * @export
+     * @class AdvancedFilterBuilder
+     * @extends {FilterBuilder}
+     */
+    export class AdvancedFilterBuilder extends FilterBuilder {
+        private logicalOperator;
+        private conditions;
+        /**
+         * Sets And as logical operator for Advanced filter
+         *
+         * ```javascript
+         *
+         * const advancedFilterBuilder = new AdvancedFilterBuilder().and();
+         * ```
+         *
+         * @returns {AdvancedFilterBuilder}
+         */
+        and(): AdvancedFilterBuilder;
+        /**
+         * Sets Or as logical operator for Advanced filter
+         *
+         * ```javascript
+         *
+         * const advancedFilterBuilder = new AdvancedFilterBuilder().or();
+         * ```
+         *
+         * @returns {AdvancedFilterBuilder}
+         */
+        or(): AdvancedFilterBuilder;
+        /**
+         * Adds a condition in Advanced filter
+         *
+         * ```javascript
+         *
+         * // Add two conditions
+         * const advancedFilterBuilder = new AdvancedFilterBuilder().addCondition("Contains", "Wash").addCondition("Contains", "Park");
+         * ```
+         *
+         * @returns {AdvancedFilterBuilder}
+         */
+        addCondition(operator: AdvancedFilterConditionOperators, value?: (string | number | boolean | Date)): AdvancedFilterBuilder;
+        /**
+         * Creates Advanced filter
+         *
+         * ```javascript
+         *
+         * const advancedFilterBuilder = new AdvancedFilterBuilder().build();
+         * ```
+         *
+         * @returns {AdvancedFilter}
+         */
+        build(): AdvancedFilter;
+    }
+}
+declare module "FilterBuilders/topNFilterBuilder" {
+    import { ITarget, TopNFilter } from "powerbi-models";
+    import { FilterBuilder } from "FilterBuilders/filterBuilder";
+    /**
+     * Power BI Top N filter builder component
+     *
+     * @export
+     * @class TopNFilterBuilder
+     * @extends {FilterBuilder}
+     */
+    export class TopNFilterBuilder extends FilterBuilder {
+        private itemCount;
+        private operator;
+        private orderByTargetValue;
+        /**
+         * Sets Top as operator for Top N filter
+         *
+         * ```javascript
+         *
+         * const topNFilterBuilder = new TopNFilterBuilder().top(itemCount);
+         * ```
+         *
+         * @returns {TopNFilterBuilder}
+         */
+        top(itemCount: number): TopNFilterBuilder;
+        /**
+         * Sets Bottom as operator for Top N filter
+         *
+         * ```javascript
+         *
+         * const topNFilterBuilder = new TopNFilterBuilder().bottom(itemCount);
+         * ```
+         *
+         * @returns {TopNFilterBuilder}
+         */
+        bottom(itemCount: number): TopNFilterBuilder;
+        /**
+         * Sets order by for Top N filter
+         *
+         * ```javascript
+         *
+         * const topNFilterBuilder = new TopNFilterBuilder().orderByTarget(target);
+         * ```
+         *
+         * @returns {TopNFilterBuilder}
+         */
+        orderByTarget(target: ITarget): TopNFilterBuilder;
+        /**
+         * Creates Top N filter
+         *
+         * ```javascript
+         *
+         * const topNFilterBuilder = new TopNFilterBuilder().build();
+         * ```
+         *
+         * @returns {TopNFilter}
+         */
+        build(): TopNFilter;
+    }
+}
+declare module "FilterBuilders/relativeDateFilterBuilder" {
+    import { RelativeDateFilter, RelativeDateFilterTimeUnit } from "powerbi-models";
+    import { FilterBuilder } from "FilterBuilders/filterBuilder";
+    /**
+     * Power BI Relative Date filter builder component
+     *
+     * @export
+     * @class RelativeDateFilterBuilder
+     * @extends {FilterBuilder}
+     */
+    export class RelativeDateFilterBuilder extends FilterBuilder {
+        private operator;
+        private timeUnitsCount;
+        private timeUnitType;
+        private isTodayIncluded;
+        /**
+         * Sets inLast as operator for Relative Date filter
+         *
+         * ```javascript
+         *
+         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inLast(timeUnitsCount, timeUnitType);
+         * ```
+         *
+         * @param {number} timeUnitsCount - The amount of time units
+         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+         * @returns {RelativeDateFilterBuilder}
+         */
+        inLast(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeDateFilterBuilder;
+        /**
+         * Sets inThis as operator for Relative Date filter
+         *
+         * ```javascript
+         *
+         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inThis(timeUnitsCount, timeUnitType);
+         * ```
+         *
+         * @param {number} timeUnitsCount - The amount of time units
+         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+         * @returns {RelativeDateFilterBuilder}
+         */
+        inThis(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeDateFilterBuilder;
+        /**
+         * Sets inNext as operator for Relative Date filter
+         *
+         * ```javascript
+         *
+         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inNext(timeUnitsCount, timeUnitType);
+         * ```
+         *
+         * @param {number} timeUnitsCount - The amount of time units
+         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+         * @returns {RelativeDateFilterBuilder}
+         */
+        inNext(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeDateFilterBuilder;
+        /**
+         * Sets includeToday for Relative Date filter
+         *
+         * ```javascript
+         *
+         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().includeToday(includeToday);
+         * ```
+         *
+         * @param {boolean} includeToday - Denotes if today is included or not
+         * @returns {RelativeDateFilterBuilder}
+         */
+        includeToday(includeToday: boolean): RelativeDateFilterBuilder;
+        /**
+         * Creates Relative Date filter
+         *
+         * ```javascript
+         *
+         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().build();
+         * ```
+         *
+         * @returns {RelativeDateFilter}
+         */
+        build(): RelativeDateFilter;
+    }
+}
+declare module "FilterBuilders/relativeTimeFilterBuilder" {
+    import { RelativeTimeFilter, RelativeDateFilterTimeUnit } from "powerbi-models";
+    import { FilterBuilder } from "FilterBuilders/filterBuilder";
+    /**
+     * Power BI Relative Time filter builder component
+     *
+     * @export
+     * @class RelativeTimeFilterBuilder
+     * @extends {FilterBuilder}
+     */
+    export class RelativeTimeFilterBuilder extends FilterBuilder {
+        private operator;
+        private timeUnitsCount;
+        private timeUnitType;
+        /**
+         * Sets inLast as operator for Relative Time filter
+         *
+         * ```javascript
+         *
+         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inLast(timeUnitsCount, timeUnitType);
+         * ```
+         *
+         * @param {number} timeUnitsCount - The amount of time units
+         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+         * @returns {RelativeTimeFilterBuilder}
+         */
+        inLast(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeTimeFilterBuilder;
+        /**
+         * Sets inThis as operator for Relative Time filter
+         *
+         * ```javascript
+         *
+         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inThis(timeUnitsCount, timeUnitType);
+         * ```
+         *
+         * @param {number} timeUnitsCount - The amount of time units
+         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+         * @returns {RelativeTimeFilterBuilder}
+         */
+        inThis(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeTimeFilterBuilder;
+        /**
+         * Sets inNext as operator for Relative Time filter
+         *
+         * ```javascript
+         *
+         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inNext(timeUnitsCount, timeUnitType);
+         * ```
+         *
+         * @param {number} timeUnitsCount - The amount of time units
+         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+         * @returns {RelativeTimeFilterBuilder}
+         */
+        inNext(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeTimeFilterBuilder;
+        /**
+         * Creates Relative Time filter
+         *
+         * ```javascript
+         *
+         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().build();
+         * ```
+         *
+         * @returns {RelativeTimeFilter}
+         */
+        build(): RelativeTimeFilter;
+    }
+}
+declare module "FilterBuilders/index" {
+    export { BasicFilterBuilder } from "FilterBuilders/basicFilterBuilder";
+    export { AdvancedFilterBuilder } from "FilterBuilders/advancedFilterBuilder";
+    export { TopNFilterBuilder } from "FilterBuilders/topNFilterBuilder";
+    export { RelativeDateFilterBuilder } from "FilterBuilders/relativeDateFilterBuilder";
+    export { RelativeTimeFilterBuilder } from "FilterBuilders/relativeTimeFilterBuilder";
+}
 declare module "powerbi-client" {
     /**
      * @hidden
@@ -1994,6 +2735,7 @@ declare module "powerbi-client" {
     export { Qna } from "qna";
     export { Visual } from "visual";
     export { VisualDescriptor } from "visualDescriptor";
+    export { BasicFilterBuilder, AdvancedFilterBuilder, TopNFilterBuilder, RelativeDateFilterBuilder, RelativeTimeFilterBuilder } from "FilterBuilders/index";
     global {
         interface Window {
             powerbi: service.Service;

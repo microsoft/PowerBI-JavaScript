@@ -1,4 +1,4 @@
-// powerbi-client v2.18.1
+// powerbi-client v2.18.4
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -290,7 +290,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// powerbi-models v1.9.0
+// powerbi-models v1.9.3
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -404,7 +404,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateUpdateFiltersRequest = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateCreateReport = exports.validatePaginatedReportLoad = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.isReportFiltersArray = exports.isOnLoadFilters = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.AdvancedFilter = exports.TupleFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
+exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateUpdateFiltersRequest = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateCreateReport = exports.validatePaginatedReportLoad = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.isReportFiltersArray = exports.isOnLoadFilters = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.AdvancedFilter = exports.TupleFilter = exports.IdentityFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
 var validator_1 = __webpack_require__(1);
 var TraceType;
 (function (TraceType) {
@@ -423,6 +423,7 @@ var PageSizeType;
     PageSizeType[PageSizeType["Cortana"] = 2] = "Cortana";
     PageSizeType[PageSizeType["Letter"] = 3] = "Letter";
     PageSizeType[PageSizeType["Custom"] = 4] = "Custom";
+    PageSizeType[PageSizeType["Mobile"] = 5] = "Mobile";
 })(PageSizeType = exports.PageSizeType || (exports.PageSizeType = {}));
 var DisplayOption;
 (function (DisplayOption) {
@@ -512,6 +513,7 @@ var FilterType;
     FilterType[FilterType["TopN"] = 5] = "TopN";
     FilterType[FilterType["Tuple"] = 6] = "Tuple";
     FilterType[FilterType["RelativeTime"] = 7] = "RelativeTime";
+    FilterType[FilterType["Identity"] = 8] = "Identity";
 })(FilterType = exports.FilterType || (exports.FilterType = {}));
 var RelativeDateFilterTimeUnit;
 (function (RelativeDateFilterTimeUnit) {
@@ -723,6 +725,24 @@ var BasicFilterWithKeys = /** @class */ (function (_super) {
     return BasicFilterWithKeys;
 }(BasicFilter));
 exports.BasicFilterWithKeys = BasicFilterWithKeys;
+var IdentityFilter = /** @class */ (function (_super) {
+    __extends(IdentityFilter, _super);
+    function IdentityFilter(target, operator) {
+        var _this = _super.call(this, target, FilterType.Identity) || this;
+        _this.operator = operator;
+        _this.schemaUrl = IdentityFilter.schemaUrl;
+        return _this;
+    }
+    IdentityFilter.prototype.toJSON = function () {
+        var filter = _super.prototype.toJSON.call(this);
+        filter.operator = this.operator;
+        filter.target = this.target;
+        return filter;
+    };
+    IdentityFilter.schemaUrl = "http://powerbi.com/product/schema#identity";
+    return IdentityFilter;
+}(Filter));
+exports.IdentityFilter = IdentityFilter;
 var TupleFilter = /** @class */ (function (_super) {
     __extends(TupleFilter, _super);
     function TupleFilter(target, operator, values) {
@@ -6124,6 +6144,726 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 
+/***/ "./src/FilterBuilders/advancedFilterBuilder.ts":
+/*!*****************************************************!*\
+  !*** ./src/FilterBuilders/advancedFilterBuilder.ts ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AdvancedFilterBuilder = void 0;
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
+/**
+ * Power BI Advanced filter builder component
+ *
+ * @export
+ * @class AdvancedFilterBuilder
+ * @extends {FilterBuilder}
+ */
+var AdvancedFilterBuilder = /** @class */ (function (_super) {
+    __extends(AdvancedFilterBuilder, _super);
+    function AdvancedFilterBuilder() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.conditions = [];
+        return _this;
+    }
+    /**
+     * Sets And as logical operator for Advanced filter
+     *
+     * ```javascript
+     *
+     * const advancedFilterBuilder = new AdvancedFilterBuilder().and();
+     * ```
+     *
+     * @returns {AdvancedFilterBuilder}
+     */
+    AdvancedFilterBuilder.prototype.and = function () {
+        this.logicalOperator = "And";
+        return this;
+    };
+    /**
+     * Sets Or as logical operator for Advanced filter
+     *
+     * ```javascript
+     *
+     * const advancedFilterBuilder = new AdvancedFilterBuilder().or();
+     * ```
+     *
+     * @returns {AdvancedFilterBuilder}
+     */
+    AdvancedFilterBuilder.prototype.or = function () {
+        this.logicalOperator = "Or";
+        return this;
+    };
+    /**
+     * Adds a condition in Advanced filter
+     *
+     * ```javascript
+     *
+     * // Add two conditions
+     * const advancedFilterBuilder = new AdvancedFilterBuilder().addCondition("Contains", "Wash").addCondition("Contains", "Park");
+     * ```
+     *
+     * @returns {AdvancedFilterBuilder}
+     */
+    AdvancedFilterBuilder.prototype.addCondition = function (operator, value) {
+        var condition = {
+            operator: operator,
+            value: value
+        };
+        this.conditions.push(condition);
+        return this;
+    };
+    /**
+     * Creates Advanced filter
+     *
+     * ```javascript
+     *
+     * const advancedFilterBuilder = new AdvancedFilterBuilder().build();
+     * ```
+     *
+     * @returns {AdvancedFilter}
+     */
+    AdvancedFilterBuilder.prototype.build = function () {
+        var advancedFilter = new powerbi_models_1.AdvancedFilter(this.target, this.logicalOperator, this.conditions);
+        return advancedFilter;
+    };
+    return AdvancedFilterBuilder;
+}(filterBuilder_1.FilterBuilder));
+exports.AdvancedFilterBuilder = AdvancedFilterBuilder;
+
+
+/***/ }),
+
+/***/ "./src/FilterBuilders/basicFilterBuilder.ts":
+/*!**************************************************!*\
+  !*** ./src/FilterBuilders/basicFilterBuilder.ts ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BasicFilterBuilder = void 0;
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
+/**
+ * Power BI Basic filter builder component
+ *
+ * @export
+ * @class BasicFilterBuilder
+ * @extends {FilterBuilder}
+ */
+var BasicFilterBuilder = /** @class */ (function (_super) {
+    __extends(BasicFilterBuilder, _super);
+    function BasicFilterBuilder() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.isRequireSingleSelection = false;
+        return _this;
+    }
+    /**
+     * Sets In as operator for Basic filter
+     *
+     * ```javascript
+     *
+     * const basicFilterBuilder = new BasicFilterBuilder().in([values]);
+     * ```
+     *
+     * @returns {BasicFilterBuilder}
+     */
+    BasicFilterBuilder.prototype.in = function (values) {
+        this.operator = "In";
+        this.values = values;
+        return this;
+    };
+    /**
+     * Sets NotIn as operator for Basic filter
+     *
+     * ```javascript
+     *
+     * const basicFilterBuilder = new BasicFilterBuilder().notIn([values]);
+     * ```
+     *
+     * @returns {BasicFilterBuilder}
+     */
+    BasicFilterBuilder.prototype.notIn = function (values) {
+        this.operator = "NotIn";
+        this.values = values;
+        return this;
+    };
+    /**
+     * Sets All as operator for Basic filter
+     *
+     * ```javascript
+     *
+     * const basicFilterBuilder = new BasicFilterBuilder().all();
+     * ```
+     *
+     * @returns {BasicFilterBuilder}
+     */
+    BasicFilterBuilder.prototype.all = function () {
+        this.operator = "All";
+        this.values = [];
+        return this;
+    };
+    /**
+     * Sets required single selection property for Basic filter
+     *
+     * ```javascript
+     *
+     * const basicFilterBuilder = new BasicFilterBuilder().requireSingleSelection(isRequireSingleSelection);
+     * ```
+     *
+     * @returns {BasicFilterBuilder}
+     */
+    BasicFilterBuilder.prototype.requireSingleSelection = function (isRequireSingleSelection) {
+        if (isRequireSingleSelection === void 0) { isRequireSingleSelection = false; }
+        this.isRequireSingleSelection = isRequireSingleSelection;
+        return this;
+    };
+    /**
+     * Creates Basic filter
+     *
+     * ```javascript
+     *
+     * const basicFilterBuilder = new BasicFilterBuilder().build();
+     * ```
+     *
+     * @returns {BasicFilter}
+     */
+    BasicFilterBuilder.prototype.build = function () {
+        var basicFilter = new powerbi_models_1.BasicFilter(this.target, this.operator, this.values);
+        basicFilter.requireSingleSelection = this.isRequireSingleSelection;
+        return basicFilter;
+    };
+    return BasicFilterBuilder;
+}(filterBuilder_1.FilterBuilder));
+exports.BasicFilterBuilder = BasicFilterBuilder;
+
+
+/***/ }),
+
+/***/ "./src/FilterBuilders/filterBuilder.ts":
+/*!*********************************************!*\
+  !*** ./src/FilterBuilders/filterBuilder.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FilterBuilder = void 0;
+/**
+ * Generic filter builder for BasicFilter, AdvancedFilter, RelativeDate, RelativeTime and TopN
+ *
+ * @class
+ */
+var FilterBuilder = /** @class */ (function () {
+    function FilterBuilder() {
+    }
+    /**
+     * Sets target property for filter with target object
+     *
+     * ```javascript
+     * const target = {
+     *  table: 'table1',
+     *  column: 'column1'
+     * };
+     *
+     * const filterBuilder = new FilterBuilder().withTargetObject(target);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withTargetObject = function (target) {
+        this.target = target;
+        return this;
+    };
+    /**
+     * Sets target property for filter with column target object
+     *
+     * ```
+     * const filterBuilder = new FilterBuilder().withColumnTarget(tableName, columnName);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withColumnTarget = function (tableName, columnName) {
+        this.target = { table: tableName, column: columnName };
+        return this;
+    };
+    /**
+     * Sets target property for filter with measure target object
+     *
+     * ```
+     * const filterBuilder = new FilterBuilder().withMeasureTarget(tableName, measure);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withMeasureTarget = function (tableName, measure) {
+        this.target = { table: tableName, measure: measure };
+        return this;
+    };
+    /**
+     * Sets target property for filter with hierarchy level target object
+     *
+     * ```
+     * const filterBuilder = new FilterBuilder().withHierarchyLevelTarget(tableName, hierarchy, hierarchyLevel);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withHierarchyLevelTarget = function (tableName, hierarchy, hierarchyLevel) {
+        this.target = { table: tableName, hierarchy: hierarchy, hierarchyLevel: hierarchyLevel };
+        return this;
+    };
+    /**
+     * Sets target property for filter with column aggregation target object
+     *
+     * ```
+     * const filterBuilder = new FilterBuilder().withColumnAggregation(tableName, columnName, aggregationFunction);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withColumnAggregation = function (tableName, columnName, aggregationFunction) {
+        this.target = { table: tableName, column: columnName, aggregationFunction: aggregationFunction };
+        return this;
+    };
+    /**
+     * Sets target property for filter with hierarchy level aggregation target object
+     *
+     * ```
+     * const filterBuilder = new FilterBuilder().withHierarchyLevelAggregationTarget(tableName, hierarchy, hierarchyLevel, aggregationFunction);
+     * ```
+     *
+     * @returns {FilterBuilder}
+     */
+    FilterBuilder.prototype.withHierarchyLevelAggregationTarget = function (tableName, hierarchy, hierarchyLevel, aggregationFunction) {
+        this.target = { table: tableName, hierarchy: hierarchy, hierarchyLevel: hierarchyLevel, aggregationFunction: aggregationFunction };
+        return this;
+    };
+    return FilterBuilder;
+}());
+exports.FilterBuilder = FilterBuilder;
+
+
+/***/ }),
+
+/***/ "./src/FilterBuilders/index.ts":
+/*!*************************************!*\
+  !*** ./src/FilterBuilders/index.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RelativeTimeFilterBuilder = exports.RelativeDateFilterBuilder = exports.TopNFilterBuilder = exports.AdvancedFilterBuilder = exports.BasicFilterBuilder = void 0;
+var basicFilterBuilder_1 = __webpack_require__(/*! ./basicFilterBuilder */ "./src/FilterBuilders/basicFilterBuilder.ts");
+Object.defineProperty(exports, "BasicFilterBuilder", { enumerable: true, get: function () { return basicFilterBuilder_1.BasicFilterBuilder; } });
+var advancedFilterBuilder_1 = __webpack_require__(/*! ./advancedFilterBuilder */ "./src/FilterBuilders/advancedFilterBuilder.ts");
+Object.defineProperty(exports, "AdvancedFilterBuilder", { enumerable: true, get: function () { return advancedFilterBuilder_1.AdvancedFilterBuilder; } });
+var topNFilterBuilder_1 = __webpack_require__(/*! ./topNFilterBuilder */ "./src/FilterBuilders/topNFilterBuilder.ts");
+Object.defineProperty(exports, "TopNFilterBuilder", { enumerable: true, get: function () { return topNFilterBuilder_1.TopNFilterBuilder; } });
+var relativeDateFilterBuilder_1 = __webpack_require__(/*! ./relativeDateFilterBuilder */ "./src/FilterBuilders/relativeDateFilterBuilder.ts");
+Object.defineProperty(exports, "RelativeDateFilterBuilder", { enumerable: true, get: function () { return relativeDateFilterBuilder_1.RelativeDateFilterBuilder; } });
+var relativeTimeFilterBuilder_1 = __webpack_require__(/*! ./relativeTimeFilterBuilder */ "./src/FilterBuilders/relativeTimeFilterBuilder.ts");
+Object.defineProperty(exports, "RelativeTimeFilterBuilder", { enumerable: true, get: function () { return relativeTimeFilterBuilder_1.RelativeTimeFilterBuilder; } });
+
+
+/***/ }),
+
+/***/ "./src/FilterBuilders/relativeDateFilterBuilder.ts":
+/*!*********************************************************!*\
+  !*** ./src/FilterBuilders/relativeDateFilterBuilder.ts ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RelativeDateFilterBuilder = void 0;
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
+/**
+ * Power BI Relative Date filter builder component
+ *
+ * @export
+ * @class RelativeDateFilterBuilder
+ * @extends {FilterBuilder}
+ */
+var RelativeDateFilterBuilder = /** @class */ (function (_super) {
+    __extends(RelativeDateFilterBuilder, _super);
+    function RelativeDateFilterBuilder() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.isTodayIncluded = true;
+        return _this;
+    }
+    /**
+     * Sets inLast as operator for Relative Date filter
+     *
+     * ```javascript
+     *
+     * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inLast(timeUnitsCount, timeUnitType);
+     * ```
+     *
+     * @param {number} timeUnitsCount - The amount of time units
+     * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+     * @returns {RelativeDateFilterBuilder}
+     */
+    RelativeDateFilterBuilder.prototype.inLast = function (timeUnitsCount, timeUnitType) {
+        this.operator = powerbi_models_1.RelativeDateOperators.InLast;
+        this.timeUnitsCount = timeUnitsCount;
+        this.timeUnitType = timeUnitType;
+        return this;
+    };
+    /**
+     * Sets inThis as operator for Relative Date filter
+     *
+     * ```javascript
+     *
+     * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inThis(timeUnitsCount, timeUnitType);
+     * ```
+     *
+     * @param {number} timeUnitsCount - The amount of time units
+     * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+     * @returns {RelativeDateFilterBuilder}
+     */
+    RelativeDateFilterBuilder.prototype.inThis = function (timeUnitsCount, timeUnitType) {
+        this.operator = powerbi_models_1.RelativeDateOperators.InThis;
+        this.timeUnitsCount = timeUnitsCount;
+        this.timeUnitType = timeUnitType;
+        return this;
+    };
+    /**
+     * Sets inNext as operator for Relative Date filter
+     *
+     * ```javascript
+     *
+     * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inNext(timeUnitsCount, timeUnitType);
+     * ```
+     *
+     * @param {number} timeUnitsCount - The amount of time units
+     * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+     * @returns {RelativeDateFilterBuilder}
+     */
+    RelativeDateFilterBuilder.prototype.inNext = function (timeUnitsCount, timeUnitType) {
+        this.operator = powerbi_models_1.RelativeDateOperators.InNext;
+        this.timeUnitsCount = timeUnitsCount;
+        this.timeUnitType = timeUnitType;
+        return this;
+    };
+    /**
+     * Sets includeToday for Relative Date filter
+     *
+     * ```javascript
+     *
+     * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().includeToday(includeToday);
+     * ```
+     *
+     * @param {boolean} includeToday - Denotes if today is included or not
+     * @returns {RelativeDateFilterBuilder}
+     */
+    RelativeDateFilterBuilder.prototype.includeToday = function (includeToday) {
+        this.isTodayIncluded = includeToday;
+        return this;
+    };
+    /**
+     * Creates Relative Date filter
+     *
+     * ```javascript
+     *
+     * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().build();
+     * ```
+     *
+     * @returns {RelativeDateFilter}
+     */
+    RelativeDateFilterBuilder.prototype.build = function () {
+        var relativeDateFilter = new powerbi_models_1.RelativeDateFilter(this.target, this.operator, this.timeUnitsCount, this.timeUnitType, this.isTodayIncluded);
+        return relativeDateFilter;
+    };
+    return RelativeDateFilterBuilder;
+}(filterBuilder_1.FilterBuilder));
+exports.RelativeDateFilterBuilder = RelativeDateFilterBuilder;
+
+
+/***/ }),
+
+/***/ "./src/FilterBuilders/relativeTimeFilterBuilder.ts":
+/*!*********************************************************!*\
+  !*** ./src/FilterBuilders/relativeTimeFilterBuilder.ts ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RelativeTimeFilterBuilder = void 0;
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
+/**
+ * Power BI Relative Time filter builder component
+ *
+ * @export
+ * @class RelativeTimeFilterBuilder
+ * @extends {FilterBuilder}
+ */
+var RelativeTimeFilterBuilder = /** @class */ (function (_super) {
+    __extends(RelativeTimeFilterBuilder, _super);
+    function RelativeTimeFilterBuilder() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    /**
+     * Sets inLast as operator for Relative Time filter
+     *
+     * ```javascript
+     *
+     * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inLast(timeUnitsCount, timeUnitType);
+     * ```
+     *
+     * @param {number} timeUnitsCount - The amount of time units
+     * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+     * @returns {RelativeTimeFilterBuilder}
+     */
+    RelativeTimeFilterBuilder.prototype.inLast = function (timeUnitsCount, timeUnitType) {
+        this.operator = powerbi_models_1.RelativeDateOperators.InLast;
+        this.timeUnitsCount = timeUnitsCount;
+        this.timeUnitType = timeUnitType;
+        return this;
+    };
+    /**
+     * Sets inThis as operator for Relative Time filter
+     *
+     * ```javascript
+     *
+     * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inThis(timeUnitsCount, timeUnitType);
+     * ```
+     *
+     * @param {number} timeUnitsCount - The amount of time units
+     * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+     * @returns {RelativeTimeFilterBuilder}
+     */
+    RelativeTimeFilterBuilder.prototype.inThis = function (timeUnitsCount, timeUnitType) {
+        this.operator = powerbi_models_1.RelativeDateOperators.InThis;
+        this.timeUnitsCount = timeUnitsCount;
+        this.timeUnitType = timeUnitType;
+        return this;
+    };
+    /**
+     * Sets inNext as operator for Relative Time filter
+     *
+     * ```javascript
+     *
+     * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inNext(timeUnitsCount, timeUnitType);
+     * ```
+     *
+     * @param {number} timeUnitsCount - The amount of time units
+     * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
+     * @returns {RelativeTimeFilterBuilder}
+     */
+    RelativeTimeFilterBuilder.prototype.inNext = function (timeUnitsCount, timeUnitType) {
+        this.operator = powerbi_models_1.RelativeDateOperators.InNext;
+        this.timeUnitsCount = timeUnitsCount;
+        this.timeUnitType = timeUnitType;
+        return this;
+    };
+    /**
+     * Creates Relative Time filter
+     *
+     * ```javascript
+     *
+     * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().build();
+     * ```
+     *
+     * @returns {RelativeTimeFilter}
+     */
+    RelativeTimeFilterBuilder.prototype.build = function () {
+        var relativeTimeFilter = new powerbi_models_1.RelativeTimeFilter(this.target, this.operator, this.timeUnitsCount, this.timeUnitType);
+        return relativeTimeFilter;
+    };
+    return RelativeTimeFilterBuilder;
+}(filterBuilder_1.FilterBuilder));
+exports.RelativeTimeFilterBuilder = RelativeTimeFilterBuilder;
+
+
+/***/ }),
+
+/***/ "./src/FilterBuilders/topNFilterBuilder.ts":
+/*!*************************************************!*\
+  !*** ./src/FilterBuilders/topNFilterBuilder.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TopNFilterBuilder = void 0;
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
+/**
+ * Power BI Top N filter builder component
+ *
+ * @export
+ * @class TopNFilterBuilder
+ * @extends {FilterBuilder}
+ */
+var TopNFilterBuilder = /** @class */ (function (_super) {
+    __extends(TopNFilterBuilder, _super);
+    function TopNFilterBuilder() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    /**
+     * Sets Top as operator for Top N filter
+     *
+     * ```javascript
+     *
+     * const topNFilterBuilder = new TopNFilterBuilder().top(itemCount);
+     * ```
+     *
+     * @returns {TopNFilterBuilder}
+     */
+    TopNFilterBuilder.prototype.top = function (itemCount) {
+        this.operator = "Top";
+        this.itemCount = itemCount;
+        return this;
+    };
+    /**
+     * Sets Bottom as operator for Top N filter
+     *
+     * ```javascript
+     *
+     * const topNFilterBuilder = new TopNFilterBuilder().bottom(itemCount);
+     * ```
+     *
+     * @returns {TopNFilterBuilder}
+     */
+    TopNFilterBuilder.prototype.bottom = function (itemCount) {
+        this.operator = "Bottom";
+        this.itemCount = itemCount;
+        return this;
+    };
+    /**
+     * Sets order by for Top N filter
+     *
+     * ```javascript
+     *
+     * const topNFilterBuilder = new TopNFilterBuilder().orderByTarget(target);
+     * ```
+     *
+     * @returns {TopNFilterBuilder}
+     */
+    TopNFilterBuilder.prototype.orderByTarget = function (target) {
+        this.orderByTargetValue = target;
+        return this;
+    };
+    /**
+     * Creates Top N filter
+     *
+     * ```javascript
+     *
+     * const topNFilterBuilder = new TopNFilterBuilder().build();
+     * ```
+     *
+     * @returns {TopNFilter}
+     */
+    TopNFilterBuilder.prototype.build = function () {
+        var topNFilter = new powerbi_models_1.TopNFilter(this.target, this.operator, this.itemCount, this.orderByTargetValue);
+        return topNFilter;
+    };
+    return TopNFilterBuilder;
+}(filterBuilder_1.FilterBuilder));
+exports.TopNFilterBuilder = TopNFilterBuilder;
+
+
+/***/ }),
+
 /***/ "./src/bookmarksManager.ts":
 /*!*********************************!*\
   !*** ./src/bookmarksManager.ts ***!
@@ -6388,7 +7128,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.18.1',
+    version: '2.18.4',
     type: 'js'
 };
 exports.default = config;
@@ -6755,9 +7495,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Embed = void 0;
 var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
-var util_1 = __webpack_require__(/*! ./util */ "./src/util.ts");
 var sdkConfig = __webpack_require__(/*! ./config */ "./src/config.ts");
 var errors_1 = __webpack_require__(/*! ./errors */ "./src/errors.ts");
+var util_1 = __webpack_require__(/*! ./util */ "./src/util.ts");
 /**
  * Base class for all Power BI embed components
  *
@@ -6779,6 +7519,7 @@ var Embed = /** @class */ (function () {
      * @hidden
      */
     function Embed(service, element, config, iframe, phasedRender, isBootstrap) {
+        var _a;
         /** @hidden */
         this.allowedEvents = [];
         if (util_1.autoAuthInEmbedUrl(config.embedUrl)) {
@@ -6791,12 +7532,16 @@ var Embed = /** @class */ (function () {
         this.iframe = iframe;
         this.iframeLoaded = false;
         this.embedtype = config.type.toLowerCase();
+        this.commands = [];
+        this.groups = [];
+        var registerQueryCallback = !!((_a = config.eventHooks) === null || _a === void 0 ? void 0 : _a.applicationContextProvider);
+        delete config.eventHooks;
         this.populateConfig(config, isBootstrap);
         if (this.embedtype === 'create') {
-            this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
+            this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap, registerQueryCallback);
         }
         else {
-            this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
+            this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap, registerQueryCallback);
         }
     }
     /**
@@ -7121,6 +7866,8 @@ var Embed = /** @class */ (function () {
      * @returns {void}
      */
     Embed.prototype.populateConfig = function (config, isBootstrap) {
+        var _this = this;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         if (this.bootstrapConfig) {
             this.config = util_1.assign({}, this.bootstrapConfig, config);
             // reset bootstrapConfig because we do not want to merge it in re-embed scenario.
@@ -7135,6 +7882,18 @@ var Embed = /** @class */ (function () {
         this.config.groupId = this.getGroupId();
         this.addLocaleToEmbedUrl(config);
         this.config.uniqueId = this.getUniqueId();
+        var extensions = (_b = (_a = this.config) === null || _a === void 0 ? void 0 : _a.settings) === null || _b === void 0 ? void 0 : _b.extensions;
+        this.commands = (_c = extensions === null || extensions === void 0 ? void 0 : extensions.commands) !== null && _c !== void 0 ? _c : [];
+        this.groups = (_d = extensions === null || extensions === void 0 ? void 0 : extensions.groups) !== null && _d !== void 0 ? _d : [];
+        this.initialLayoutType = (_g = (_f = (_e = this.config) === null || _e === void 0 ? void 0 : _e.settings) === null || _f === void 0 ? void 0 : _f.layoutType) !== null && _g !== void 0 ? _g : models.LayoutType.Master;
+        // Adding commands in extensions array to this.commands
+        var extensionsArray = (_j = (_h = this.config) === null || _h === void 0 ? void 0 : _h.settings) === null || _j === void 0 ? void 0 : _j.extensions;
+        if (Array.isArray(extensionsArray)) {
+            this.commands = [];
+            extensionsArray.map(function (extension) { if (extension === null || extension === void 0 ? void 0 : extension.command) {
+                _this.commands.push(extension.command);
+            } });
+        }
         if (isBootstrap) {
             // save current config in bootstrapConfig to be able to merge it on next call to powerbi.embed
             this.bootstrapConfig = this.config;
@@ -7256,11 +8015,13 @@ var Embed = /** @class */ (function () {
      *
      * @hidden
      */
-    Embed.prototype.setIframe = function (isLoad, phasedRender, isBootstrap) {
+    Embed.prototype.setIframe = function (isLoad, phasedRender, isBootstrap, registerQueryCallback) {
         var _this = this;
         if (!this.iframe) {
             var iframeContent = document.createElement("iframe");
             var embedUrl = this.config.uniqueId ? util_1.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
+            if (!isBootstrap && registerQueryCallback)
+                embedUrl = util_1.addParamToUrl(embedUrl, "registerQueryCallback", "true");
             iframeContent.style.width = '100%';
             iframeContent.style.height = '100%';
             iframeContent.setAttribute("src", embedUrl);
@@ -7541,13 +8302,14 @@ var Page = /** @class */ (function () {
      * @param {SectionVisibility} [visibility]
      * @hidden
      */
-    function Page(report, name, displayName, isActivePage, visibility, defaultSize, defaultDisplayOption) {
+    function Page(report, name, displayName, isActivePage, visibility, defaultSize, defaultDisplayOption, mobileSize) {
         this.report = report;
         this.name = name;
         this.displayName = displayName;
         this.isActive = isActivePage;
         this.visibility = visibility;
         this.defaultSize = defaultSize;
+        this.mobileSize = mobileSize;
         this.defaultDisplayOption = defaultDisplayOption;
     }
     /**
@@ -7791,6 +8553,180 @@ var Page = /** @class */ (function () {
         });
     };
     /**
+     * Gets a visual by name on the page.
+     *
+     * ```javascript
+     * page.getVisualByName(visualName: string)
+     *  .then(visual => {
+     *      ...
+     *  });
+     * ```
+     *
+     * @param {string} visualName
+     * @returns {Promise<VisualDescriptor>}
+     */
+    Page.prototype.getVisualByName = function (visualName) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, visual, response_8;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (util_1.isRDLEmbed(this.report.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                    case 2:
+                        response = _a.sent();
+                        visual = response.body.find(function (v) { return v.name === visualName; });
+                        if (!visual) {
+                            return [2 /*return*/, Promise.reject(powerbi_models_1.CommonErrorCodes.NotFound)];
+                        }
+                        return [2 /*return*/, new visualDescriptor_1.VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout)];
+                    case 3:
+                        response_8 = _a.sent();
+                        throw response_8.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Updates the display state of a visual in a page.
+     *
+     * ```javascript
+     * page.setVisualDisplayState(visualName, displayState)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {string} visualName
+     * @param {VisualContainerDisplayMode} displayState
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Page.prototype.setVisualDisplayState = function (visualName, displayState) {
+        return __awaiter(this, void 0, void 0, function () {
+            var pageName, report;
+            return __generator(this, function (_a) {
+                pageName = this.name;
+                report = this.report;
+                return [2 /*return*/, report.setVisualDisplayState(pageName, visualName, displayState)];
+            });
+        });
+    };
+    /**
+     * Updates the position of a visual in a page.
+     *
+     * ```javascript
+     * page.moveVisual(visualName, x, y, z)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {string} visualName
+     * @param {number} x
+     * @param {number} y
+     * @param {number} z
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Page.prototype.moveVisual = function (visualName, x, y, z) {
+        return __awaiter(this, void 0, void 0, function () {
+            var pageName, report;
+            return __generator(this, function (_a) {
+                pageName = this.name;
+                report = this.report;
+                return [2 /*return*/, report.moveVisual(pageName, visualName, x, y, z)];
+            });
+        });
+    };
+    /**
+     * Resize a visual in a page.
+     *
+     * ```javascript
+     * page.resizeVisual(visualName, width, height)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {string} visualName
+     * @param {number} width
+     * @param {number} height
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Page.prototype.resizeVisual = function (visualName, width, height) {
+        return __awaiter(this, void 0, void 0, function () {
+            var pageName, report;
+            return __generator(this, function (_a) {
+                pageName = this.name;
+                report = this.report;
+                return [2 /*return*/, report.resizeVisual(pageName, visualName, width, height)];
+            });
+        });
+    };
+    /**
+     * Updates the size of active page.
+     *
+     * ```javascript
+     * page.resizePage(pageSizeType, width, height)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {PageSizeType} pageSizeType
+     * @param {number} width
+     * @param {number} height
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Page.prototype.resizePage = function (pageSizeType, width, height) {
+        return __awaiter(this, void 0, void 0, function () {
+            var report;
+            return __generator(this, function (_a) {
+                if (!this.isActive) {
+                    return [2 /*return*/, Promise.reject('Cannot resize the page. Only the active page can be resized')];
+                }
+                report = this.report;
+                return [2 /*return*/, report.resizeActivePage(pageSizeType, width, height)];
+            });
+        });
+    };
+    /**
+     * Gets the list of slicer visuals on the page.
+     *
+     * ```javascript
+     * page.getSlicers()
+     *  .then(slicers => {
+     *      ...
+     *  });
+     * ```
+     *
+     * @returns {Promise<IVisual[]>}
+     */
+    Page.prototype.getSlicers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, response_9;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (util_1.isRDLEmbed(this.report.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                    case 2:
+                        response = _a.sent();
+                        return [2 /*return*/, response.body
+                                .filter(function (visual) { return visual.type === 'slicer'; })
+                                .map(function (visual) { return new visualDescriptor_1.VisualDescriptor(_this, visual.name, visual.title, visual.type, visual.layout); })];
+                    case 3:
+                        response_9 = _a.sent();
+                        throw response_9.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
      * Checks if page has layout.
      *
      * ```javascript
@@ -7802,7 +8738,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.hasLayout = function (layoutType) {
         return __awaiter(this, void 0, void 0, function () {
-            var layoutTypeEnum, response, response_8;
+            var layoutTypeEnum, response, response_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -7818,8 +8754,8 @@ var Page = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_8 = _a.sent();
-                        throw response_8.body;
+                        response_10 = _a.sent();
+                        throw response_10.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -7842,7 +8778,7 @@ exports.Page = Page;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VisualDescriptor = exports.Visual = exports.Qna = exports.Page = exports.Embed = exports.Tile = exports.Dashboard = exports.Report = exports.models = exports.factories = exports.service = void 0;
+exports.RelativeTimeFilterBuilder = exports.RelativeDateFilterBuilder = exports.TopNFilterBuilder = exports.AdvancedFilterBuilder = exports.BasicFilterBuilder = exports.VisualDescriptor = exports.Visual = exports.Qna = exports.Page = exports.Embed = exports.Tile = exports.Dashboard = exports.Report = exports.models = exports.factories = exports.service = void 0;
 /**
  * @hidden
  */
@@ -7868,6 +8804,12 @@ var visual_1 = __webpack_require__(/*! ./visual */ "./src/visual.ts");
 Object.defineProperty(exports, "Visual", { enumerable: true, get: function () { return visual_1.Visual; } });
 var visualDescriptor_1 = __webpack_require__(/*! ./visualDescriptor */ "./src/visualDescriptor.ts");
 Object.defineProperty(exports, "VisualDescriptor", { enumerable: true, get: function () { return visualDescriptor_1.VisualDescriptor; } });
+var FilterBuilders_1 = __webpack_require__(/*! ./FilterBuilders */ "./src/FilterBuilders/index.ts");
+Object.defineProperty(exports, "BasicFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.BasicFilterBuilder; } });
+Object.defineProperty(exports, "AdvancedFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.AdvancedFilterBuilder; } });
+Object.defineProperty(exports, "TopNFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.TopNFilterBuilder; } });
+Object.defineProperty(exports, "RelativeDateFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.RelativeDateFilterBuilder; } });
+Object.defineProperty(exports, "RelativeTimeFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.RelativeTimeFilterBuilder; } });
 /**
  * Makes Power BI available to the global object for use in applications that don't have module loading support.
  *
@@ -8089,6 +9031,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Report = void 0;
@@ -8451,10 +9398,88 @@ var Report = /** @class */ (function (_super) {
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body
-                                .map(function (page) { return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption); })];
+                                .map(function (page) { return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize); })];
                     case 3:
                         response_8 = _a.sent();
                         throw response_8.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Gets a report page by its name.
+     *
+     * ```javascript
+     * report.getPageByName(pageName)
+     *  .then(page => {
+     *      ...
+     *  });
+     * ```
+     *
+     * @param {string} pageName
+     * @returns {Promise<Page>}
+     */
+    Report.prototype.getPageByName = function (pageName) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, page, response_9;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.service.hpm.get("/report/pages", { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                    case 2:
+                        response = _a.sent();
+                        page = response.body.find(function (p) { return p.name === pageName; });
+                        if (!page) {
+                            return [2 /*return*/, Promise.reject(powerbi_models_1.CommonErrorCodes.NotFound)];
+                        }
+                        return [2 /*return*/, new page_1.Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize)];
+                    case 3:
+                        response_9 = _a.sent();
+                        throw response_9.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Gets the active report page.
+     *
+     * ```javascript
+     * report.getActivePage()
+     *  .then(activePage => {
+     *      ...
+     *  });
+     * ```
+     *
+     * @returns {Promise<Page>}
+     */
+    Report.prototype.getActivePage = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, activePage, response_10;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.service.hpm.get('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                    case 2:
+                        response = _a.sent();
+                        activePage = response.body.find(function (page) { return page.isActive; });
+                        return [2 /*return*/, new page_1.Page(this, activePage.name, activePage.displayName, activePage.isActive, activePage.visibility, activePage.defaultSize, activePage.defaultDisplayOption, activePage.mobileSize)];
+                    case 3:
+                        response_10 = _a.sent();
+                        throw response_10.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -8483,7 +9508,7 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.print = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_9;
+            var response, response_11;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8498,8 +9523,8 @@ var Report = /** @class */ (function (_super) {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_9 = _a.sent();
-                        throw response_9.body;
+                        response_11 = _a.sent();
+                        throw response_11.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -8518,7 +9543,7 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.setPage = function (pageName) {
         return __awaiter(this, void 0, void 0, function () {
-            var page, response_10;
+            var page, response_12;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8536,8 +9561,8 @@ var Report = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.service.hpm.put('/report/pages/active', page, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
-                        response_10 = _a.sent();
-                        throw response_10.body;
+                        response_12 = _a.sent();
+                        throw response_12.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -8563,22 +9588,36 @@ var Report = /** @class */ (function (_super) {
      * @returns {Promise<IHttpPostMessageResponse<void>>}
      */
     Report.prototype.updateSettings = function (settings) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var response_11;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var response, extension, extensionsArray, response_13;
+            var _this = this;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         if (util_1.isRDLEmbed(this.config.embedUrl) && settings.customLayout != null) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
-                        _a.label = 1;
+                        _c.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
+                        _c.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.service.hpm.patch('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
-                    case 2: return [2 /*return*/, _a.sent()];
+                    case 2:
+                        response = _c.sent();
+                        extension = settings === null || settings === void 0 ? void 0 : settings.extensions;
+                        this.commands = (_a = extension === null || extension === void 0 ? void 0 : extension.commands) !== null && _a !== void 0 ? _a : this.commands;
+                        this.groups = (_b = extension === null || extension === void 0 ? void 0 : extension.groups) !== null && _b !== void 0 ? _b : this.groups;
+                        extensionsArray = settings === null || settings === void 0 ? void 0 : settings.extensions;
+                        if (Array.isArray(extensionsArray)) {
+                            this.commands = [];
+                            extensionsArray.map(function (extensionElement) { if (extensionElement === null || extensionElement === void 0 ? void 0 : extensionElement.command) {
+                                _this.commands.push(extensionElement.command);
+                            } });
+                        }
+                        return [2 /*return*/, response];
                     case 3:
-                        response_11 = _a.sent();
-                        throw response_11.body;
+                        response_13 = _c.sent();
+                        throw response_13.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -8633,7 +9672,7 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.switchMode = function (viewMode) {
         return __awaiter(this, void 0, void 0, function () {
-            var newMode, url, response, response_12;
+            var newMode, url, response, response_14;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8652,8 +9691,8 @@ var Report = /** @class */ (function (_super) {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_12 = _a.sent();
-                        throw response_12.body;
+                        response_14 = _a.sent();
+                        throw response_14.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -8668,7 +9707,7 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.refresh = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_13;
+            var response, response_15;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8678,8 +9717,8 @@ var Report = /** @class */ (function (_super) {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_13 = _a.sent();
-                        throw response_13.body;
+                        response_15 = _a.sent();
+                        throw response_15.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -8759,7 +9798,7 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.resetPersistentFilters = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response_14;
+            var response_16;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8767,8 +9806,8 @@ var Report = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.service.hpm.delete("/report/userState", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
-                        response_14 = _a.sent();
-                        throw response_14.body;
+                        response_16 = _a.sent();
+                        throw response_16.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -8783,7 +9822,7 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.savePersistentFilters = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response_15;
+            var response_17;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8791,8 +9830,8 @@ var Report = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.service.hpm.post("/report/userState", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
-                        response_15 = _a.sent();
-                        throw response_15.body;
+                        response_17 = _a.sent();
+                        throw response_17.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -8810,7 +9849,7 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.arePersistentFiltersApplied = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_16;
+            var response, response_18;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8820,9 +9859,440 @@ var Report = /** @class */ (function (_super) {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_16 = _a.sent();
-                        throw response_16.body;
+                        response_18 = _a.sent();
+                        throw response_18.body;
                     case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Remove context menu extension command.
+     *
+     * ```javascript
+     * report.removeContextMenuCommand(commandName, contextMenuTitle)
+     *  .catch(error => {
+     *      ...
+     *  });
+     * ```
+     *
+     * @param {string} commandName
+     * @param {string} contextMenuTitle
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.removeContextMenuCommand = function (commandName, contextMenuTitle) {
+        return __awaiter(this, void 0, void 0, function () {
+            var commandCopy, indexOfCommand, newSetting;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        commandCopy = JSON.parse(JSON.stringify(this.commands));
+                        indexOfCommand = this.findCommandMenuIndex("visualContextMenu", commandCopy, commandName, contextMenuTitle);
+                        if (indexOfCommand === -1) {
+                            throw powerbi_models_1.CommonErrorCodes.NotFound;
+                        }
+                        // Delete the context menu and not the entire command, since command can have option menu as well.
+                        delete commandCopy[indexOfCommand].extend.visualContextMenu;
+                        newSetting = {
+                            extensions: {
+                                commands: commandCopy,
+                                groups: this.groups
+                            }
+                        };
+                        return [4 /*yield*/, this.updateSettings(newSetting)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * Add context menu extension command.
+     *
+     * ```javascript
+     * report.addContextMenuCommand(commandName, commandTitle, contextMenuTitle, menuLocation, visualName, visualType, groupName)
+     *  .catch(error => {
+     *      ...
+     *  });
+     * ```
+     *
+     * @param {string} commandName
+     * @param {string} commandTitle
+     * @param {string} contextMenuTitle
+     * @param {MenuLocation} menuLocation
+     * @param {string} visualName
+     * @param {string} visualType
+     * @param {string} groupName
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.addContextMenuCommand = function (commandName, commandTitle, contextMenuTitle, menuLocation, visualName, visualType, groupName) {
+        if (contextMenuTitle === void 0) { contextMenuTitle = commandTitle; }
+        if (menuLocation === void 0) { menuLocation = powerbi_models_1.MenuLocation.Bottom; }
+        if (visualName === void 0) { visualName = undefined; }
+        if (groupName === void 0) { groupName = undefined; }
+        return __awaiter(this, void 0, void 0, function () {
+            var newCommands, newSetting;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        newCommands = this.createMenuCommand("visualContextMenu", commandName, commandTitle, contextMenuTitle, menuLocation, visualName, visualType, groupName);
+                        newSetting = {
+                            extensions: {
+                                commands: newCommands,
+                                groups: this.groups
+                            }
+                        };
+                        return [4 /*yield*/, this.updateSettings(newSetting)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * Remove options menu extension command.
+     *
+     * ```javascript
+     * report.removeOptionsMenuCommand(commandName, optionsMenuTitle)
+     *  .then({
+     *      ...
+     *  });
+     * ```
+     *
+     * @param {string} commandName
+     * @param {string} optionsMenuTitle
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.removeOptionsMenuCommand = function (commandName, optionsMenuTitle) {
+        return __awaiter(this, void 0, void 0, function () {
+            var commandCopy, indexOfCommand, newSetting;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        commandCopy = JSON.parse(JSON.stringify(this.commands));
+                        indexOfCommand = this.findCommandMenuIndex("visualOptionsMenu", commandCopy, commandName, optionsMenuTitle);
+                        if (indexOfCommand === -1) {
+                            throw powerbi_models_1.CommonErrorCodes.NotFound;
+                        }
+                        // Delete the context options and not the entire command, since command can have context menu as well.
+                        delete commandCopy[indexOfCommand].extend.visualOptionsMenu;
+                        delete commandCopy[indexOfCommand].icon;
+                        newSetting = {
+                            extensions: {
+                                commands: commandCopy,
+                                groups: this.groups
+                            }
+                        };
+                        return [4 /*yield*/, this.updateSettings(newSetting)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * Add options menu extension command.
+     *
+     * ```javascript
+     * report.addOptionsMenuCommand(commandName, commandTitle, optionsMenuTitle, menuLocation, visualName, visualType, groupName, commandIcon)
+     *  .catch(error => {
+     *      ...
+     *  });
+     * ```
+     *
+     * @param {string} commandName
+     * @param {string} commandTitle
+     * @param {string} optionMenuTitle
+     * @param {MenuLocation} menuLocation
+     * @param {string} visualName
+     * @param {string} visualType
+     * @param {string} groupName
+     * @param {string} commandIcon
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.addOptionsMenuCommand = function (commandName, commandTitle, optionsMenuTitle, menuLocation, visualName, visualType, groupName, commandIcon) {
+        if (optionsMenuTitle === void 0) { optionsMenuTitle = commandTitle; }
+        if (menuLocation === void 0) { menuLocation = powerbi_models_1.MenuLocation.Bottom; }
+        if (visualName === void 0) { visualName = undefined; }
+        if (visualType === void 0) { visualType = undefined; }
+        if (groupName === void 0) { groupName = undefined; }
+        if (commandIcon === void 0) { commandIcon = undefined; }
+        return __awaiter(this, void 0, void 0, function () {
+            var newCommands, newSetting;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        newCommands = this.createMenuCommand("visualOptionsMenu", commandName, commandTitle, optionsMenuTitle, menuLocation, visualName, visualType, groupName, commandIcon);
+                        newSetting = {
+                            extensions: {
+                                commands: newCommands,
+                                groups: this.groups
+                            }
+                        };
+                        return [4 /*yield*/, this.updateSettings(newSetting)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * Updates the display state of a visual in a page.
+     *
+     * ```javascript
+     * report.setVisualDisplayState(pageName, visualName, displayState)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {string} pageName
+     * @param {string} visualName
+     * @param {VisualContainerDisplayMode} displayState
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.setVisualDisplayState = function (pageName, visualName, displayState) {
+        return __awaiter(this, void 0, void 0, function () {
+            var visualLayout, newSettings;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: 
+                    // Check if page name and visual name are valid
+                    return [4 /*yield*/, this.validateVisual(pageName, visualName)];
+                    case 1:
+                        // Check if page name and visual name are valid
+                        _a.sent();
+                        visualLayout = {
+                            displayState: {
+                                mode: displayState
+                            }
+                        };
+                        newSettings = this.buildLayoutSettingsObject(pageName, visualName, visualLayout);
+                        return [2 /*return*/, this.updateSettings(newSettings)];
+                }
+            });
+        });
+    };
+    /**
+     * Resize a visual in a page.
+     *
+     * ```javascript
+     * report.resizeVisual(pageName, visualName, width, height)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {string} pageName
+     * @param {string} visualName
+     * @param {number} width
+     * @param {number} height
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.resizeVisual = function (pageName, visualName, width, height) {
+        return __awaiter(this, void 0, void 0, function () {
+            var visualLayout, newSettings;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: 
+                    // Check if page name and visual name are valid
+                    return [4 /*yield*/, this.validateVisual(pageName, visualName)];
+                    case 1:
+                        // Check if page name and visual name are valid
+                        _a.sent();
+                        visualLayout = {
+                            width: width,
+                            height: height,
+                        };
+                        newSettings = this.buildLayoutSettingsObject(pageName, visualName, visualLayout);
+                        return [2 /*return*/, this.updateSettings(newSettings)];
+                }
+            });
+        });
+    };
+    /**
+     * Updates the size of active page in report.
+     *
+     * ```javascript
+     * report.resizeActivePage(pageSizeType, width, height)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {PageSizeType} pageSizeType
+     * @param {number} width
+     * @param {number} height
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.resizeActivePage = function (pageSizeType, width, height) {
+        return __awaiter(this, void 0, void 0, function () {
+            var pageSize, newSettings;
+            return __generator(this, function (_a) {
+                pageSize = {
+                    type: pageSizeType,
+                    width: width,
+                    height: height
+                };
+                newSettings = {
+                    layoutType: powerbi_models_1.LayoutType.Custom,
+                    customLayout: {
+                        pageSize: pageSize
+                    }
+                };
+                return [2 /*return*/, this.updateSettings(newSettings)];
+            });
+        });
+    };
+    /**
+     * Updates the position of a visual in a page.
+     *
+     * ```javascript
+     * report.moveVisual(pageName, visualName, x, y, z)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {string} pageName
+     * @param {string} visualName
+     * @param {number} x
+     * @param {number} y
+     * @param {number} z
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.moveVisual = function (pageName, visualName, x, y, z) {
+        return __awaiter(this, void 0, void 0, function () {
+            var visualLayout, newSettings;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: 
+                    // Check if page name and visual name are valid
+                    return [4 /*yield*/, this.validateVisual(pageName, visualName)];
+                    case 1:
+                        // Check if page name and visual name are valid
+                        _a.sent();
+                        visualLayout = {
+                            x: x,
+                            y: y,
+                            z: z
+                        };
+                        newSettings = this.buildLayoutSettingsObject(pageName, visualName, visualLayout);
+                        return [2 /*return*/, this.updateSettings(newSettings)];
+                }
+            });
+        });
+    };
+    /**
+     * Updates the report layout
+     *
+     * ```javascript
+     * report.switchLayout(layoutType);
+     * ```
+     *
+     * @param {LayoutType} layoutType
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    Report.prototype.switchLayout = function (layoutType) {
+        return __awaiter(this, void 0, void 0, function () {
+            var isInitialMobileSettings, isPassedMobileSettings, newSetting, response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        isInitialMobileSettings = this.isMobileSettings({ layoutType: this.initialLayoutType });
+                        isPassedMobileSettings = this.isMobileSettings({ layoutType: layoutType });
+                        // Check if both passed layout and initial layout are of same type.
+                        if (isInitialMobileSettings !== isPassedMobileSettings) {
+                            throw "Switching between mobile and desktop layouts is not supported. Please reset the embed container and re-embed with required layout.";
+                        }
+                        newSetting = {
+                            layoutType: layoutType
+                        };
+                        return [4 /*yield*/, this.updateSettings(newSetting)];
+                    case 1:
+                        response = _a.sent();
+                        this.initialLayoutType = layoutType;
+                        return [2 /*return*/, response];
+                }
+            });
+        });
+    };
+    /**
+     * @hidden
+     */
+    Report.prototype.createMenuCommand = function (type, commandName, commandTitle, menuTitle, menuLocation, visualName, visualType, groupName, icon) {
+        var newCommandObj = {
+            name: commandName,
+            title: commandTitle,
+            extend: {}
+        };
+        newCommandObj.extend[type] = {
+            title: menuTitle,
+            menuLocation: menuLocation,
+        };
+        if (type === "visualOptionsMenu") {
+            newCommandObj.icon = icon;
+        }
+        if (groupName) {
+            var extend = newCommandObj.extend[type];
+            delete extend.menuLocation;
+            var groupExtend = newCommandObj.extend[type];
+            groupExtend.groupName = groupName;
+        }
+        if (visualName) {
+            newCommandObj.selector = {
+                $schema: "http://powerbi.com/product/schema#visualSelector",
+                visualName: visualName
+            };
+        }
+        if (visualType) {
+            newCommandObj.selector = {
+                $schema: "http://powerbi.com/product/schema#visualTypeSelector",
+                visualType: visualType
+            };
+        }
+        return __spreadArray(__spreadArray([], this.commands), [newCommandObj]);
+    };
+    /**
+     * @hidden
+     */
+    Report.prototype.findCommandMenuIndex = function (type, commands, commandName, menuTitle) {
+        var indexOfCommand = -1;
+        commands.some(function (activeMenuCommand, index) {
+            return (activeMenuCommand.name === commandName && activeMenuCommand.extend[type] && activeMenuCommand.extend[type].title === menuTitle) ? (indexOfCommand = index, true) : false;
+        });
+        return indexOfCommand;
+    };
+    /**
+     * @hidden
+     */
+    Report.prototype.buildLayoutSettingsObject = function (pageName, visualName, visualLayout) {
+        // Create new settings object with custom layout type
+        var newSettings = {
+            layoutType: powerbi_models_1.LayoutType.Custom,
+            customLayout: {
+                pagesLayout: {}
+            }
+        };
+        newSettings.customLayout.pagesLayout[pageName] = {
+            visualsLayout: {}
+        };
+        newSettings.customLayout.pagesLayout[pageName].visualsLayout[visualName] = visualLayout;
+        return newSettings;
+    };
+    /**
+     * @hidden
+     */
+    Report.prototype.validateVisual = function (pageName, visualName) {
+        return __awaiter(this, void 0, void 0, function () {
+            var page;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getPageByName(pageName)];
+                    case 1:
+                        page = _a.sent();
+                        return [4 /*yield*/, page.getVisualByName(visualName)];
+                    case 2: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -8832,7 +10302,7 @@ var Report = /** @class */ (function (_super) {
      */
     Report.prototype.applyThemeInternal = function (theme) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_17;
+            var response, response_19;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8842,8 +10312,8 @@ var Report = /** @class */ (function (_super) {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_17 = _a.sent();
-                        throw response_17.body;
+                        response_19 = _a.sent();
+                        throw response_19.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -8871,7 +10341,7 @@ var Report = /** @class */ (function (_super) {
         return settings && (settings.layoutType === powerbi_models_1.LayoutType.MobileLandscape || settings.layoutType === powerbi_models_1.LayoutType.MobilePortrait);
     };
     /** @hidden */
-    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged"];
+    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged", "renderingStarted"];
     /** @hidden */
     Report.reportIdAttribute = 'powerbi-report-id';
     /** @hidden */
@@ -8898,6 +10368,42 @@ exports.Report = Report;
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Service = void 0;
 var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
@@ -9053,6 +10559,7 @@ var Service = /** @class */ (function () {
      */
     Service.prototype.embed = function (element, config) {
         if (config === void 0) { config = {}; }
+        this.registerApplicationContextHook(config);
         return this.embedInternal(element, config);
     };
     /**
@@ -9067,6 +10574,7 @@ var Service = /** @class */ (function () {
      */
     Service.prototype.load = function (element, config) {
         if (config === void 0) { config = {}; }
+        this.registerApplicationContextHook(config);
         return this.embedInternal(element, config, /* phasedRender */ true, /* isBootstrap */ false);
     };
     /**
@@ -9170,6 +10678,40 @@ var Service = /** @class */ (function () {
         component.populateConfig(config, /* isBootstrap */ false);
         component.load(phasedRender);
         return component;
+    };
+    /**
+     * @hidden
+     */
+    Service.prototype.registerApplicationContextHook = function (config) {
+        var _this = this;
+        var _a;
+        var applicationContextProvider = (_a = config === null || config === void 0 ? void 0 : config.eventHooks) === null || _a === void 0 ? void 0 : _a.applicationContextProvider;
+        if (!applicationContextProvider) {
+            return;
+        }
+        if (typeof applicationContextProvider !== 'function') {
+            throw new Error("applicationContextProvider must be a function");
+        }
+        this.router.post("preQuery", function (req, _res) { return __awaiter(_this, void 0, void 0, function () {
+            var result, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, applicationContextProvider(req.body)];
+                    case 1:
+                        result = _a.sent();
+                        _res.send(200, result);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_1 = _a.sent();
+                        _res.send(400, null);
+                        console.error(error_1);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); });
     };
     /**
      * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
@@ -9691,7 +11233,7 @@ exports.isSavedInternal = isSavedInternal;
  * @returns {boolean}
  */
 function isRDLEmbed(embedUrl) {
-    return embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
+    return embedUrl && embedUrl.toLowerCase().indexOf("/rdlembed?") >= 0;
 }
 exports.isRDLEmbed = isRDLEmbed;
 /**
@@ -10426,6 +11968,75 @@ var VisualDescriptor = /** @class */ (function () {
                         throw response_8.body;
                     case 3: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    /**
+     * Updates the position of a visual.
+     *
+     * ```javascript
+     * visual.moveVisual(x, y, z)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {number} x
+     * @param {number} y
+     * @param {number} z
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    VisualDescriptor.prototype.moveVisual = function (x, y, z) {
+        return __awaiter(this, void 0, void 0, function () {
+            var pageName, visualName, report;
+            return __generator(this, function (_a) {
+                pageName = this.page.name;
+                visualName = this.name;
+                report = this.page.report;
+                return [2 /*return*/, report.moveVisual(pageName, visualName, x, y, z)];
+            });
+        });
+    };
+    /**
+     * Updates the display state of a visual.
+     *
+     * ```javascript
+     * visual.setVisualDisplayState(displayState)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {VisualContainerDisplayMode} displayState
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    VisualDescriptor.prototype.setVisualDisplayState = function (displayState) {
+        return __awaiter(this, void 0, void 0, function () {
+            var pageName, visualName, report;
+            return __generator(this, function (_a) {
+                pageName = this.page.name;
+                visualName = this.name;
+                report = this.page.report;
+                return [2 /*return*/, report.setVisualDisplayState(pageName, visualName, displayState)];
+            });
+        });
+    };
+    /**
+     * Resize a visual.
+     *
+     * ```javascript
+     * visual.resizeVisual(width, height)
+     *   .catch(error => { ... });
+     * ```
+     *
+     * @param {number} width
+     * @param {number} height
+     * @returns {Promise<IHttpPostMessageResponse<void>>}
+     */
+    VisualDescriptor.prototype.resizeVisual = function (width, height) {
+        return __awaiter(this, void 0, void 0, function () {
+            var pageName, visualName, report;
+            return __generator(this, function (_a) {
+                pageName = this.page.name;
+                visualName = this.name;
+                report = this.page.report;
+                return [2 /*return*/, report.resizeVisual(pageName, visualName, width, height)];
             });
         });
     };

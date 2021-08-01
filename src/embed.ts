@@ -2,10 +2,10 @@
 // Licensed under the MIT License.
 
 import * as models from 'powerbi-models';
-import { addParamToUrl, assign, autoAuthInEmbedUrl, createRandomString, getTimeDiffInMilliseconds, remove } from './util';
-import { Service, IEventHandler, IEvent, ICustomEvent } from './service';
 import * as sdkConfig from './config';
 import { EmbedUrlNotSupported } from './errors';
+import { ICustomEvent, IEvent, IEventHandler, Service } from './service';
+import { addParamToUrl, assign, autoAuthInEmbedUrl, createRandomString, getTimeDiffInMilliseconds, remove } from './util';
 
 declare global {
   interface Document {
@@ -90,6 +90,15 @@ export abstract class Embed {
 
   /** @hidden */
   allowedEvents: string[] = [];
+
+  /** @hidden */
+  protected commands: models.ICommandExtension[];
+
+  /** @hidden */
+  protected initialLayoutType: models.LayoutType;
+
+  /** @hidden */
+  groups: models.IMenuGroupExtension[];
 
   /**
    * Gets or sets the event handler registered for this embed component.
@@ -215,13 +224,18 @@ export abstract class Embed {
     this.iframe = iframe;
     this.iframeLoaded = false;
     this.embedtype = config.type.toLowerCase();
+    this.commands = [];
+    this.groups = [];
+
+    const registerQueryCallback = !!(<IEmbedConfiguration>config).eventHooks?.applicationContextProvider;
+    delete (<IEmbedConfiguration>config).eventHooks;
 
     this.populateConfig(config, isBootstrap);
 
     if (this.embedtype === 'create') {
-      this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
+      this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap, registerQueryCallback);
     } else {
-      this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
+      this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap, registerQueryCallback);
     }
   }
 
@@ -505,6 +519,17 @@ export abstract class Embed {
     this.config.groupId = this.getGroupId();
     this.addLocaleToEmbedUrl(config);
     this.config.uniqueId = this.getUniqueId();
+    const extensions = this.config?.settings?.extensions as models.IExtensions;
+    this.commands = extensions?.commands ?? [];
+    this.groups = extensions?.groups ?? [];
+    this.initialLayoutType = this.config?.settings?.layoutType ?? models.LayoutType.Master;
+
+    // Adding commands in extensions array to this.commands
+    const extensionsArray = this.config?.settings?.extensions as models.IExtension[];
+    if (Array.isArray(extensionsArray)) {
+      this.commands = [];
+      extensionsArray.map((extension: models.IExtension) => { if (extension?.command) { this.commands.push(extension.command) } });
+    }
 
     if (isBootstrap) {
       // save current config in bootstrapConfig to be able to merge it on next call to powerbi.embed
@@ -680,10 +705,14 @@ export abstract class Embed {
    *
    * @hidden
    */
-  private setIframe(isLoad: boolean, phasedRender?: boolean, isBootstrap?: boolean): void {
+  private setIframe(isLoad: boolean, phasedRender?: boolean, isBootstrap?: boolean, registerQueryCallback?: boolean): void {
     if (!this.iframe) {
       const iframeContent = document.createElement("iframe");
-      const embedUrl = this.config.uniqueId ? addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
+      let embedUrl = this.config.uniqueId ? addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
+
+      if (!isBootstrap && registerQueryCallback)
+        embedUrl = addParamToUrl(embedUrl, "registerQueryCallback", "true");
+
       iframeContent.style.width = '100%';
       iframeContent.style.height = '100%';
       iframeContent.setAttribute("src", embedUrl);

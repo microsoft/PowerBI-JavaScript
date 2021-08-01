@@ -18,7 +18,18 @@ import {
   ViewMode,
   IEmbedConfiguration,
   IEmbedConfigurationBase,
-  ReportLevelFilters
+  CommonErrorCodes,
+  ReportLevelFilters,
+  MenuLocation,
+  ICommandExtension,
+  IExtensions,
+  IFlatMenuExtension,
+  IGroupedMenuExtension,
+  IExtension,
+  IVisualLayout,
+  ICustomPageSize,
+  PageSizeType,
+  VisualContainerDisplayMode
 } from 'powerbi-models';
 import { IHttpPostMessageResponse } from 'http-post-message';
 import { IService, Service } from './service';
@@ -28,6 +39,7 @@ import { APINotSupportedForRDLError } from './errors';
 import { IFilterable } from './ifilterable';
 import { Page } from './page';
 import { BookmarksManager } from './bookmarksManager';
+import { VisualDescriptor } from './visualDescriptor';
 
 /**
  * A Report node within a report hierarchy
@@ -52,7 +64,7 @@ export interface IReportNode {
  */
 export class Report extends Embed implements IReportNode, IFilterable {
   /** @hidden */
-  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged"];
+  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged", "renderingStarted"];
   /** @hidden */
   static reportIdAttribute = 'powerbi-report-id';
   /** @hidden */
@@ -331,7 +343,83 @@ export class Report extends Embed implements IReportNode, IFilterable {
     try {
       const response = await this.service.hpm.get<IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow);
       return response.body
-        .map((page) => new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption));
+        .map((page) => new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize));
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
+   * Gets a report page by its name.
+   *
+   * ```javascript
+   * report.getPageByName(pageName)
+   *  .then(page => {
+   *      ...
+   *  });
+   * ```
+   *
+   * @param {string} pageName
+   * @returns {Promise<Page>}
+   */
+  async getPageByName(pageName: string): Promise<Page> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    try {
+      const response = await this.service.hpm.get<IPage[]>(`/report/pages`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      const page = response.body.find((p: IPage) => p.name === pageName);
+
+      if (!page) {
+        return Promise.reject(CommonErrorCodes.NotFound);
+      }
+
+      return new Page(
+        this,
+        page.name,
+        page.displayName,
+        page.isActive,
+        page.visibility,
+        page.defaultSize,
+        page.defaultDisplayOption,
+        page.mobileSize
+      );
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
+   * Gets the active report page.
+   *
+   * ```javascript
+   * report.getActivePage()
+   *  .then(activePage => {
+   *      ...
+   *  });
+   * ```
+   *
+   * @returns {Promise<Page>}
+   */
+  async getActivePage(): Promise<Page> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+    try {
+      const response = await this.service.hpm.get<IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      const activePage = response.body.find((page: IPage) => page.isActive);
+
+      return new Page(
+        this,
+        activePage.name,
+        activePage.displayName,
+        activePage.isActive,
+        activePage.visibility,
+        activePage.defaultSize,
+        activePage.defaultDisplayOption,
+        activePage.mobileSize
+      );
     } catch (response) {
       throw response.body;
     }
@@ -426,7 +514,21 @@ export class Report extends Embed implements IReportNode, IFilterable {
     }
 
     try {
-      return await this.service.hpm.patch<void>('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      const response = await this.service.hpm.patch<void>('/report/settings', settings, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+
+      // Update commands if provided
+      const extension = settings?.extensions as IExtensions;
+      this.commands = extension?.commands ?? this.commands;
+      this.groups = extension?.groups ?? this.groups;
+
+      // Adding commands in extensions array to this.commands
+      const extensionsArray = settings?.extensions as IExtension[];
+      if (Array.isArray(extensionsArray)) {
+        this.commands = [];
+        extensionsArray.map((extensionElement: IExtension) => { if (extensionElement?.command) { this.commands.push(extensionElement.command); } });
+      }
+
+      return response;
     } catch (response) {
       throw response.body;
     }
@@ -615,6 +717,364 @@ export class Report extends Embed implements IReportNode, IFilterable {
     } catch (response) {
       throw response.body;
     }
+  }
+
+  /**
+   * Remove context menu extension command.
+   *
+   * ```javascript
+   * report.removeContextMenuCommand(commandName, contextMenuTitle)
+   *  .catch(error => {
+   *      ...
+   *  });
+   * ```
+   *
+   * @param {string} commandName
+   * @param {string} contextMenuTitle
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async removeContextMenuCommand(commandName: string, contextMenuTitle: string): Promise<IHttpPostMessageResponse<void>> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    const commandCopy: ICommandExtension[] = JSON.parse(JSON.stringify(this.commands));
+    const indexOfCommand: number = this.findCommandMenuIndex("visualContextMenu", commandCopy, commandName, contextMenuTitle);
+    if (indexOfCommand === -1) {
+      throw CommonErrorCodes.NotFound;
+    }
+
+    // Delete the context menu and not the entire command, since command can have option menu as well.
+    delete commandCopy[indexOfCommand].extend.visualContextMenu;
+    const newSetting: ISettings = {
+      extensions: {
+        commands: commandCopy,
+        groups: this.groups
+      }
+    };
+    return await this.updateSettings(newSetting);
+  }
+
+  /**
+   * Add context menu extension command.
+   *
+   * ```javascript
+   * report.addContextMenuCommand(commandName, commandTitle, contextMenuTitle, menuLocation, visualName, visualType, groupName)
+   *  .catch(error => {
+   *      ...
+   *  });
+   * ```
+   *
+   * @param {string} commandName
+   * @param {string} commandTitle
+   * @param {string} contextMenuTitle
+   * @param {MenuLocation} menuLocation
+   * @param {string} visualName
+   * @param {string} visualType
+   * @param {string} groupName
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async addContextMenuCommand(commandName: string, commandTitle: string, contextMenuTitle: string = commandTitle, menuLocation: MenuLocation = MenuLocation.Bottom, visualName: string = undefined, visualType: string, groupName: string = undefined): Promise<IHttpPostMessageResponse<void>> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    const newCommands: ICommandExtension[] = this.createMenuCommand("visualContextMenu", commandName, commandTitle, contextMenuTitle, menuLocation, visualName, visualType, groupName);
+    const newSetting: ISettings = {
+      extensions: {
+        commands: newCommands,
+        groups: this.groups
+      }
+    };
+    return await this.updateSettings(newSetting);
+  }
+
+  /**
+   * Remove options menu extension command.
+   *
+   * ```javascript
+   * report.removeOptionsMenuCommand(commandName, optionsMenuTitle)
+   *  .then({
+   *      ...
+   *  });
+   * ```
+   *
+   * @param {string} commandName
+   * @param {string} optionsMenuTitle
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async removeOptionsMenuCommand(commandName: string, optionsMenuTitle: string): Promise<IHttpPostMessageResponse<void>> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    const commandCopy: ICommandExtension[] = JSON.parse(JSON.stringify(this.commands));
+    const indexOfCommand: number = this.findCommandMenuIndex("visualOptionsMenu", commandCopy, commandName, optionsMenuTitle);
+
+    if (indexOfCommand === -1) {
+      throw CommonErrorCodes.NotFound;
+    }
+
+    // Delete the context options and not the entire command, since command can have context menu as well.
+    delete commandCopy[indexOfCommand].extend.visualOptionsMenu;
+    delete commandCopy[indexOfCommand].icon;
+    const newSetting: ISettings = {
+      extensions: {
+        commands: commandCopy,
+        groups: this.groups
+      }
+    };
+    return await this.updateSettings(newSetting);
+  }
+
+  /**
+   * Add options menu extension command.
+   *
+   * ```javascript
+   * report.addOptionsMenuCommand(commandName, commandTitle, optionsMenuTitle, menuLocation, visualName, visualType, groupName, commandIcon)
+   *  .catch(error => {
+   *      ...
+   *  });
+   * ```
+   *
+   * @param {string} commandName
+   * @param {string} commandTitle
+   * @param {string} optionMenuTitle
+   * @param {MenuLocation} menuLocation
+   * @param {string} visualName
+   * @param {string} visualType
+   * @param {string} groupName
+   * @param {string} commandIcon
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async addOptionsMenuCommand(commandName: string, commandTitle: string, optionsMenuTitle: string = commandTitle, menuLocation: MenuLocation = MenuLocation.Bottom, visualName: string = undefined, visualType: string = undefined, groupName: string = undefined, commandIcon: string = undefined): Promise<IHttpPostMessageResponse<void>> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    const newCommands: ICommandExtension[] = this.createMenuCommand("visualOptionsMenu", commandName, commandTitle, optionsMenuTitle, menuLocation, visualName, visualType, groupName, commandIcon);
+    const newSetting: ISettings = {
+      extensions: {
+        commands: newCommands,
+        groups: this.groups
+      }
+    };
+    return await this.updateSettings(newSetting);
+  }
+
+  /**
+   * Updates the display state of a visual in a page.
+   *
+   * ```javascript
+   * report.setVisualDisplayState(pageName, visualName, displayState)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {string} pageName
+   * @param {string} visualName
+   * @param {VisualContainerDisplayMode} displayState
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async setVisualDisplayState(pageName: string, visualName: string, displayState: VisualContainerDisplayMode): Promise<IHttpPostMessageResponse<void>> {
+    // Check if page name and visual name are valid
+    await this.validateVisual(pageName, visualName);
+    const visualLayout: IVisualLayout = {
+      displayState: {
+        mode: displayState
+      }
+    };
+
+    // Get new Settings object with updated visual layout
+    const newSettings = this.buildLayoutSettingsObject(pageName, visualName, visualLayout);
+    return this.updateSettings(newSettings);
+  }
+
+  /**
+   * Resize a visual in a page.
+   *
+   * ```javascript
+   * report.resizeVisual(pageName, visualName, width, height)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {string} pageName
+   * @param {string} visualName
+   * @param {number} width
+   * @param {number} height
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async resizeVisual(pageName: string, visualName: string, width: number, height: number): Promise<IHttpPostMessageResponse<void>> {
+    // Check if page name and visual name are valid
+    await this.validateVisual(pageName, visualName);
+    const visualLayout: IVisualLayout = {
+      width: width,
+      height: height,
+    };
+
+    // Get new Settings object with updated visual layout
+    const newSettings = this.buildLayoutSettingsObject(pageName, visualName, visualLayout);
+    return this.updateSettings(newSettings);
+  }
+
+  /**
+   * Updates the size of active page in report.
+   *
+   * ```javascript
+   * report.resizeActivePage(pageSizeType, width, height)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {PageSizeType} pageSizeType
+   * @param {number} width
+   * @param {number} height
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async resizeActivePage(pageSizeType: PageSizeType, width?: number, height?: number): Promise<IHttpPostMessageResponse<void>> {
+    const pageSize: ICustomPageSize = {
+      type: pageSizeType,
+      width: width,
+      height: height
+    };
+
+    // Create new settings object with custom layout type
+    const newSettings: ISettings = {
+      layoutType: LayoutType.Custom,
+      customLayout: {
+        pageSize: pageSize
+      }
+    };
+    return this.updateSettings(newSettings);
+  }
+
+  /**
+   * Updates the position of a visual in a page.
+   *
+   * ```javascript
+   * report.moveVisual(pageName, visualName, x, y, z)
+   *   .catch(error => { ... });
+   * ```
+   *
+   * @param {string} pageName
+   * @param {string} visualName
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async moveVisual(pageName: string, visualName: string, x: number, y: number, z?: number): Promise<IHttpPostMessageResponse<void>> {
+    // Check if page name and visual name are valid
+    await this.validateVisual(pageName, visualName);
+    const visualLayout: IVisualLayout = {
+      x: x,
+      y: y,
+      z: z
+    };
+
+    // Get new Settings object with updated visual layout
+    const newSettings = this.buildLayoutSettingsObject(pageName, visualName, visualLayout);
+    return this.updateSettings(newSettings);
+  }
+
+  /**
+   * Updates the report layout
+   *
+   * ```javascript
+   * report.switchLayout(layoutType);
+   * ```
+   *
+   * @param {LayoutType} layoutType
+   * @returns {Promise<IHttpPostMessageResponse<void>>}
+   */
+  async switchLayout(layoutType: LayoutType): Promise<IHttpPostMessageResponse<void>> {
+    const isInitialMobileSettings = this.isMobileSettings({ layoutType: this.initialLayoutType });
+    const isPassedMobileSettings = this.isMobileSettings({ layoutType: layoutType });
+
+    // Check if both passed layout and initial layout are of same type.
+    if (isInitialMobileSettings !== isPassedMobileSettings) {
+      throw "Switching between mobile and desktop layouts is not supported. Please reset the embed container and re-embed with required layout.";
+    }
+
+    const newSetting: ISettings = {
+      layoutType: layoutType
+    };
+    const response = await this.updateSettings(newSetting);
+    this.initialLayoutType = layoutType;
+    return response;
+  }
+
+  /**
+   * @hidden
+   */
+  private createMenuCommand(type: string, commandName: string, commandTitle: string, menuTitle: string, menuLocation: MenuLocation, visualName: string, visualType: string, groupName: string, icon?: string): ICommandExtension[] {
+    const newCommandObj: ICommandExtension = {
+      name: commandName,
+      title: commandTitle,
+      extend: {
+      }
+    };
+
+    newCommandObj.extend[type] = {
+      title: menuTitle,
+      menuLocation: menuLocation,
+    };
+    if (type === "visualOptionsMenu") {
+      newCommandObj.icon = icon;
+    }
+    if (groupName) {
+      const extend = newCommandObj.extend[type] as IFlatMenuExtension;
+      delete extend.menuLocation;
+      const groupExtend = newCommandObj.extend[type] as IGroupedMenuExtension;
+      groupExtend.groupName = groupName;
+    }
+    if (visualName) {
+      newCommandObj.selector = {
+        $schema: "http://powerbi.com/product/schema#visualSelector",
+        visualName: visualName
+      };
+    }
+    if (visualType) {
+      newCommandObj.selector = {
+        $schema: "http://powerbi.com/product/schema#visualTypeSelector",
+        visualType: visualType
+      };
+    }
+    return [...this.commands, newCommandObj];
+  }
+
+  /**
+   * @hidden
+   */
+  private findCommandMenuIndex(type: string, commands: ICommandExtension[], commandName: string, menuTitle: string): number {
+    let indexOfCommand = -1;
+    commands.some((activeMenuCommand, index) =>
+      (activeMenuCommand.name === commandName && activeMenuCommand.extend[type] && activeMenuCommand.extend[type].title === menuTitle) ? (indexOfCommand = index, true) : false);
+    return indexOfCommand;
+  }
+
+  /**
+   * @hidden
+   */
+  private buildLayoutSettingsObject(pageName: string, visualName: string, visualLayout: IVisualLayout): ISettings {
+    // Create new settings object with custom layout type
+    const newSettings: ISettings = {
+      layoutType: LayoutType.Custom,
+      customLayout: {
+        pagesLayout: {}
+      }
+    };
+    newSettings.customLayout.pagesLayout[pageName] = {
+      visualsLayout: {}
+    };
+    newSettings.customLayout.pagesLayout[pageName].visualsLayout[visualName] = visualLayout;
+    return newSettings;
+  }
+
+  /**
+   * @hidden
+   */
+  private async validateVisual(pageName: string, visualName: string): Promise<VisualDescriptor> {
+    const page = await this.getPageByName(pageName);
+    return await page.getVisualByName(visualName);
   }
 
   /**
