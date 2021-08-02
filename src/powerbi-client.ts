@@ -48,6 +48,13 @@ export {
 export {
   VisualDescriptor
 } from './visualDescriptor';
+export {
+  BasicFilterBuilder,
+  AdvancedFilterBuilder,
+  TopNFilterBuilder,
+  RelativeDateFilterBuilder,
+  RelativeTimeFilterBuilder
+} from './FilterBuilders';
 
 declare var powerbi: service.Service;
 declare global {
