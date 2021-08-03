@@ -1,4 +1,4 @@
-// powerbi-client v2.18.4
+// powerbi-client v2.18.5
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -7128,7 +7128,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.18.4',
+    version: '2.18.5',
     type: 'js'
 };
 exports.default = config;
@@ -7519,7 +7519,6 @@ var Embed = /** @class */ (function () {
      * @hidden
      */
     function Embed(service, element, config, iframe, phasedRender, isBootstrap) {
-        var _a;
         /** @hidden */
         this.allowedEvents = [];
         if (util_1.autoAuthInEmbedUrl(config.embedUrl)) {
@@ -7534,14 +7533,12 @@ var Embed = /** @class */ (function () {
         this.embedtype = config.type.toLowerCase();
         this.commands = [];
         this.groups = [];
-        var registerQueryCallback = !!((_a = config.eventHooks) === null || _a === void 0 ? void 0 : _a.applicationContextProvider);
-        delete config.eventHooks;
         this.populateConfig(config, isBootstrap);
         if (this.embedtype === 'create') {
-            this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap, registerQueryCallback);
+            this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
         }
         else {
-            this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap, registerQueryCallback);
+            this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
         }
     }
     /**
@@ -7867,7 +7864,7 @@ var Embed = /** @class */ (function () {
      */
     Embed.prototype.populateConfig = function (config, isBootstrap) {
         var _this = this;
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         if (this.bootstrapConfig) {
             this.config = util_1.assign({}, this.bootstrapConfig, config);
             // reset bootstrapConfig because we do not want to merge it in re-embed scenario.
@@ -7902,6 +7899,10 @@ var Embed = /** @class */ (function () {
         else {
             this.config.accessToken = this.getAccessToken(this.service.accessToken);
         }
+        var registerQueryCallback = !!((_k = this.config.eventHooks) === null || _k === void 0 ? void 0 : _k.applicationContextProvider);
+        delete this.config.eventHooks;
+        if (registerQueryCallback && this.embedtype === "report")
+            this.config.embedUrl = util_1.addParamToUrl(this.config.embedUrl, "registerQueryCallback", "true");
         this.configChanged(isBootstrap);
     };
     /**
@@ -8020,8 +8021,6 @@ var Embed = /** @class */ (function () {
         if (!this.iframe) {
             var iframeContent = document.createElement("iframe");
             var embedUrl = this.config.uniqueId ? util_1.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
-            if (!isBootstrap && registerQueryCallback)
-                embedUrl = util_1.addParamToUrl(embedUrl, "registerQueryCallback", "true");
             iframeContent.style.width = '100%';
             iframeContent.style.height = '100%';
             iframeContent.setAttribute("src", embedUrl);
@@ -10584,6 +10583,7 @@ var Service = /** @class */ (function () {
      * @param {IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
      */
     Service.prototype.bootstrap = function (element, config) {
+        this.registerApplicationContextHook(config);
         return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
     };
     /** @hidden */
@@ -10688,6 +10688,9 @@ var Service = /** @class */ (function () {
         var applicationContextProvider = (_a = config === null || config === void 0 ? void 0 : config.eventHooks) === null || _a === void 0 ? void 0 : _a.applicationContextProvider;
         if (!applicationContextProvider) {
             return;
+        }
+        if ((config === null || config === void 0 ? void 0 : config.type.toLowerCase()) !== "report") {
+            throw new Error("applicationContextProvider is only supported in report embed");
         }
         if (typeof applicationContextProvider !== 'function') {
             throw new Error("applicationContextProvider must be a function");
