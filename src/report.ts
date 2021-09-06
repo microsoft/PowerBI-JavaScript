@@ -1112,4 +1112,25 @@ export class Report extends Embed implements IReportNode, IFilterable {
   private isMobileSettings(settings: IEmbedSettings): boolean {
     return settings && (settings.layoutType === LayoutType.MobileLandscape || settings.layoutType === LayoutType.MobilePortrait);
   }
+
+  /**
+   * Return the current zoom level of the report.
+   * @returns {Promise<number>}
+   */
+  async getZoom(): Promise<number> {
+    try {
+      const response = await this.service.hpm.get<number>(`/report/zoom`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
+   * Sets the report's zoom level.
+   * @param zoomLevel zoom level to set
+   */
+  async setZoom(zoomLevel: number): Promise<void> {
+    await this.updateSettings({ zoomLevel: zoomLevel });
+  }
 }
