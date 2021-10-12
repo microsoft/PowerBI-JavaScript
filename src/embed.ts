@@ -227,15 +227,12 @@ export abstract class Embed {
     this.commands = [];
     this.groups = [];
 
-    const registerQueryCallback = !!(<IEmbedConfiguration>config).eventHooks?.applicationContextProvider;
-    delete (<IEmbedConfiguration>config).eventHooks;
-
     this.populateConfig(config, isBootstrap);
 
     if (this.embedtype === 'create') {
-      this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap, registerQueryCallback);
+      this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
     } else {
-      this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap, registerQueryCallback);
+      this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
     }
   }
 
@@ -540,6 +537,11 @@ export abstract class Embed {
       this.config.accessToken = this.getAccessToken(this.service.accessToken);
     }
 
+    const registerQueryCallback = !!(<IEmbedConfiguration>this.config).eventHooks?.applicationContextProvider;
+    delete (<IEmbedConfiguration>this.config).eventHooks;
+    if (registerQueryCallback && this.embedtype === "report")
+      this.config.embedUrl = addParamToUrl(this.config.embedUrl, "registerQueryCallback", "true");
+
     this.configChanged(isBootstrap);
   }
 
@@ -709,9 +711,6 @@ export abstract class Embed {
     if (!this.iframe) {
       const iframeContent = document.createElement("iframe");
       let embedUrl = this.config.uniqueId ? addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
-
-      if (!isBootstrap && registerQueryCallback)
-        embedUrl = addParamToUrl(embedUrl, "registerQueryCallback", "true");
 
       iframeContent.style.width = '100%';
       iframeContent.style.height = '100%';

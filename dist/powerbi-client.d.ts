@@ -1,4 +1,4 @@
-// powerbi-client v2.18.4
+// powerbi-client v2.18.6
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
@@ -1564,6 +1564,16 @@ declare module "report" {
          * @hidden
          */
         private isMobileSettings;
+        /**
+         * Return the current zoom level of the report.
+         * @returns {Promise<number>}
+         */
+        getZoom(): Promise<number>;
+        /**
+         * Sets the report's zoom level.
+         * @param zoomLevel zoom level to set
+         */
+        setZoom(zoomLevel: number): Promise<void>;
     }
 }
 declare module "create" {
