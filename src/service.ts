@@ -326,6 +326,7 @@ export class Service implements IService {
    * @param {IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
    */
   bootstrap(element: HTMLElement, config: IComponentEmbedConfiguration | IBootstrapEmbedConfiguration): Embed {
+    this.registerApplicationContextHook(config as IEmbedConfiguration);
     return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
   }
 
@@ -449,6 +450,10 @@ export class Service implements IService {
     const applicationContextProvider = config?.eventHooks?.applicationContextProvider;
     if (!applicationContextProvider) {
       return;
+    }
+
+    if (config?.type.toLowerCase() !== "report") {
+      throw new Error("applicationContextProvider is only supported in report embed");
     }
 
     if (typeof applicationContextProvider !== 'function') {
