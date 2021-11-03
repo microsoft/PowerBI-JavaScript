@@ -119,7 +119,6 @@ export class Report extends Embed implements IReportNode, IFilterable {
     return reportId;
   }
 
-
   /**
    * Render a preloaded report, using phased embedding API
    *
@@ -567,7 +566,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
     };
 
     // Set the settings back into the config.
-    this.config.settings = assign({}, elementAttrSettings, config.settings);
+    this.config.settings = assign({}, elementAttrSettings, config.settings) as ISettings;
 
     if (isBootstrap) {
       return;
@@ -738,7 +737,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
       return Promise.reject(APINotSupportedForRDLError);
     }
 
-    const commandCopy: ICommandExtension[] = JSON.parse(JSON.stringify(this.commands));
+    const commandCopy = JSON.parse(JSON.stringify(this.commands)) as ICommandExtension[];
     const indexOfCommand: number = this.findCommandMenuIndex("visualContextMenu", commandCopy, commandName, contextMenuTitle);
     if (indexOfCommand === -1) {
       throw CommonErrorCodes.NotFound;
@@ -808,7 +807,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
       return Promise.reject(APINotSupportedForRDLError);
     }
 
-    const commandCopy: ICommandExtension[] = JSON.parse(JSON.stringify(this.commands));
+    const commandCopy = JSON.parse(JSON.stringify(this.commands)) as ICommandExtension[];
     const indexOfCommand: number = this.findCommandMenuIndex("visualOptionsMenu", commandCopy, commandName, optionsMenuTitle);
 
     if (indexOfCommand === -1) {
@@ -1115,6 +1114,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
 
   /**
    * Return the current zoom level of the report.
+   *
    * @returns {Promise<number>}
    */
   async getZoom(): Promise<number> {
@@ -1128,6 +1128,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
 
   /**
    * Sets the report's zoom level.
+   *
    * @param zoomLevel zoom level to set
    */
   async setZoom(zoomLevel: number): Promise<void> {

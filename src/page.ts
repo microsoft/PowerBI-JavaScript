@@ -91,7 +91,7 @@ export class Page implements IPageNode, IFilterable {
    *
    * @type {ICustomPageSize}
    */
-   mobileSize: ICustomPageSize;
+  mobileSize: ICustomPageSize;
 
   /**
    * Page display options as saved in the report.

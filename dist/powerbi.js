@@ -8058,7 +8058,7 @@ var Embed = /** @class */ (function () {
      *
      * @hidden
      */
-    Embed.prototype.setIframe = function (isLoad, phasedRender, isBootstrap, registerQueryCallback) {
+    Embed.prototype.setIframe = function (isLoad, phasedRender, isBootstrap) {
         var _this = this;
         if (!this.iframe) {
             var iframeContent = document.createElement("iframe");
@@ -10387,6 +10387,7 @@ var Report = /** @class */ (function (_super) {
     };
     /**
      * Return the current zoom level of the report.
+     *
      * @returns {Promise<number>}
      */
     Report.prototype.getZoom = function () {
@@ -10410,6 +10411,7 @@ var Report = /** @class */ (function (_super) {
     };
     /**
      * Sets the report's zoom level.
+     *
      * @param zoomLevel zoom level to set
      */
     Report.prototype.setZoom = function (zoomLevel) {
@@ -11260,7 +11262,7 @@ function generateUUID() {
     if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
         d += performance.now();
     }
-    return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (_c) {
         // Generate a random number, scaled from 0 to 15.
         var r = (getRandomValue() % 16);
         // Shift 4 times to divide by 16

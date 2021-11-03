@@ -5,7 +5,7 @@ import { IFilterTarget } from "powerbi-models";
 
 /**
  * Generic filter builder for BasicFilter, AdvancedFilter, RelativeDate, RelativeTime and TopN
- * 
+ *
  * @class
  */
 export class FilterBuilder {
@@ -26,21 +26,21 @@ export class FilterBuilder {
    *
    * @returns {FilterBuilder}
    */
-  withTargetObject(target: IFilterTarget) {
+  withTargetObject(target: IFilterTarget): this {
     this.target = target;
     return this;
   }
 
   /**
    * Sets target property for filter with column target object
-   * 
+   *
    * ```
    * const filterBuilder = new FilterBuilder().withColumnTarget(tableName, columnName);
    * ```
    *
    * @returns {FilterBuilder}
    */
-  withColumnTarget(tableName: string, columnName: string) {
+  withColumnTarget(tableName: string, columnName: string): this {
     this.target = { table: tableName, column: columnName };
     return this;
   }
@@ -54,7 +54,7 @@ export class FilterBuilder {
    *
    * @returns {FilterBuilder}
    */
-  withMeasureTarget(tableName: string, measure: string) {
+  withMeasureTarget(tableName: string, measure: string): this {
     this.target = { table: tableName, measure: measure };
     return this;
   }
@@ -68,7 +68,7 @@ export class FilterBuilder {
    *
    * @returns {FilterBuilder}
    */
-  withHierarchyLevelTarget(tableName: string, hierarchy: string, hierarchyLevel: string) {
+  withHierarchyLevelTarget(tableName: string, hierarchy: string, hierarchyLevel: string): this {
     this.target = { table: tableName, hierarchy: hierarchy, hierarchyLevel: hierarchyLevel };
     return this;
   }
@@ -82,7 +82,7 @@ export class FilterBuilder {
    *
    * @returns {FilterBuilder}
    */
-  withColumnAggregation(tableName: string, columnName: string, aggregationFunction: string) {
+  withColumnAggregation(tableName: string, columnName: string, aggregationFunction: string): this {
     this.target = { table: tableName, column: columnName, aggregationFunction: aggregationFunction };
     return this;
   }
@@ -96,7 +96,7 @@ export class FilterBuilder {
    *
    * @returns {FilterBuilder}
    */
-  withHierarchyLevelAggregationTarget(tableName: string, hierarchy: string, hierarchyLevel: string, aggregationFunction: string) {
+  withHierarchyLevelAggregationTarget(tableName: string, hierarchy: string, hierarchyLevel: string, aggregationFunction: string): this {
     this.target = { table: tableName, hierarchy: hierarchy, hierarchyLevel: hierarchyLevel, aggregationFunction: aggregationFunction };
     return this;
   }
