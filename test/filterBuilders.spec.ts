@@ -439,7 +439,6 @@ describe('filter builders', function () {
       const includeToday = true;
       const relativeDateFilter: models.RelativeDateFilter = new models.RelativeDateFilter(target, operator, timeUnitsCount, timeUnitType, includeToday);
 
-
       // Act
       const relativeDateFilterWithBuilder: models.RelativeDateFilter = new RelativeDateFilterBuilder()
         .withTargetObject(target)
@@ -459,7 +458,6 @@ describe('filter builders', function () {
       const timeUnitType = models.RelativeDateFilterTimeUnit.Days;
       const includeToday = true;
       const relativeDateFilter: models.RelativeDateFilter = new models.RelativeDateFilter(columnTarget, operator, timeUnitsCount, timeUnitType, includeToday);
-
 
       // Act
       const relativeDateFilterWithBuilder: models.RelativeDateFilter = new RelativeDateFilterBuilder()
@@ -481,7 +479,6 @@ describe('filter builders', function () {
       const includeToday = true;
       const relativeDateFilter: models.RelativeDateFilter = new models.RelativeDateFilter(measureTarget, operator, timeUnitsCount, timeUnitType, includeToday);
 
-
       // Act
       const relativeDateFilterWithBuilder: models.RelativeDateFilter = new RelativeDateFilterBuilder()
         .withMeasureTarget('table', 'measure')
@@ -501,7 +498,6 @@ describe('filter builders', function () {
       const timeUnitType = models.RelativeDateFilterTimeUnit.Days;
       const includeToday = true;
       const relativeDateFilter: models.RelativeDateFilter = new models.RelativeDateFilter(hierarchyLevelTarget, operator, timeUnitsCount, timeUnitType, includeToday);
-
 
       // Act
       const relativeDateFilterWithBuilder: models.RelativeDateFilter = new RelativeDateFilterBuilder()
@@ -523,7 +519,6 @@ describe('filter builders', function () {
       const includeToday = true;
       const relativeDateFilter: models.RelativeDateFilter = new models.RelativeDateFilter(columnAggregationTarget, operator, timeUnitsCount, timeUnitType, includeToday);
 
-
       // Act
       const relativeDateFilterWithBuilder: models.RelativeDateFilter = new RelativeDateFilterBuilder()
         .withColumnAggregation('table', 'column', 'Avg')
@@ -543,7 +538,6 @@ describe('filter builders', function () {
       const timeUnitType = models.RelativeDateFilterTimeUnit.Days;
       const includeToday = true;
       const relativeDateFilter: models.RelativeDateFilter = new models.RelativeDateFilter(hierarchyLevelAggregationTarget, operator, timeUnitsCount, timeUnitType, includeToday);
-
 
       // Act
       const relativeDateFilterWithBuilder: models.RelativeDateFilter = new RelativeDateFilterBuilder()
@@ -567,7 +561,6 @@ describe('filter builders', function () {
       const timeUnitType = models.RelativeDateFilterTimeUnit.Hours;
       const relativeTimeFilter: models.RelativeTimeFilter = new models.RelativeTimeFilter(target, operator, timeUnitsCount, timeUnitType);
 
-
       // Act
       const relativeTimeFilterWithBuilder: models.RelativeTimeFilter = new RelativeTimeFilterBuilder()
         .withTargetObject(target)
@@ -585,7 +578,6 @@ describe('filter builders', function () {
       const timeUnitsCount = 10;
       const timeUnitType = models.RelativeDateFilterTimeUnit.Hours;
       const relativeTimeFilter: models.RelativeTimeFilter = new models.RelativeTimeFilter(columnTarget, operator, timeUnitsCount, timeUnitType);
-
 
       // Act
       const relativeTimeFilterWithBuilder: models.RelativeTimeFilter = new RelativeTimeFilterBuilder()
@@ -605,7 +597,6 @@ describe('filter builders', function () {
       const timeUnitType = models.RelativeDateFilterTimeUnit.Hours;
       const relativeTimeFilter: models.RelativeTimeFilter = new models.RelativeTimeFilter(measureTarget, operator, timeUnitsCount, timeUnitType);
 
-
       // Act
       const relativeTimeFilterWithBuilder: models.RelativeTimeFilter = new RelativeTimeFilterBuilder()
         .withMeasureTarget('table', 'measure')
@@ -623,7 +614,6 @@ describe('filter builders', function () {
       const timeUnitsCount = 10;
       const timeUnitType = models.RelativeDateFilterTimeUnit.Hours;
       const relativeTimeFilter: models.RelativeTimeFilter = new models.RelativeTimeFilter(hierarchyLevelTarget, operator, timeUnitsCount, timeUnitType);
-
 
       // Act
       const relativeTimeFilterWithBuilder: models.RelativeTimeFilter = new RelativeTimeFilterBuilder()
@@ -643,7 +633,6 @@ describe('filter builders', function () {
       const timeUnitType = models.RelativeDateFilterTimeUnit.Hours;
       const relativeTimeFilter: models.RelativeTimeFilter = new models.RelativeTimeFilter(columnAggregationTarget, operator, timeUnitsCount, timeUnitType);
 
-
       // Act
       const relativeTimeFilterWithBuilder: models.RelativeTimeFilter = new RelativeTimeFilterBuilder()
         .withColumnAggregation('table', 'column', 'Avg')
@@ -661,7 +650,6 @@ describe('filter builders', function () {
       const timeUnitsCount = 10;
       const timeUnitType = models.RelativeDateFilterTimeUnit.Hours;
       const relativeTimeFilter: models.RelativeTimeFilter = new models.RelativeTimeFilter(hierarchyLevelAggregationTarget, operator, timeUnitsCount, timeUnitType);
-
 
       // Act
       const relativeTimeFilterWithBuilder: models.RelativeTimeFilter = new RelativeTimeFilterBuilder()
