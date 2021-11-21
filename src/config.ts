@@ -3,7 +3,7 @@
 
 /** @ignore *//** */
 const config = {
-  version: '2.18.6',
+  version: '2.18.7',
   type: 'js'
 };
 

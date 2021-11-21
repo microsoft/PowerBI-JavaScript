@@ -1,4 +1,4 @@
-// powerbi-client v2.18.6
+// powerbi-client v2.18.7
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -290,7 +290,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// powerbi-models v1.9.5
+// powerbi-models v1.9.7
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -796,9 +796,6 @@ var AdvancedFilter = /** @class */ (function (_super) {
         }
         else {
             extractedConditions = conditions;
-        }
-        if (extractedConditions.length === 0) {
-            throw new Error("conditions must be a non-empty array. You passed: " + conditions);
         }
         if (extractedConditions.length > 2) {
             throw new Error("AdvancedFilters may not have more than two conditions. You passed: " + conditions.length);
@@ -2915,7 +2912,7 @@ var AdvancedFilterValidator = /** @class */ (function (_super) {
             },
             {
                 field: "conditions",
-                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.filterConditionsValidator]
+                validators: [validator_1.Validators.filterConditionsValidator]
             },
             {
                 field: "filterType",
@@ -7170,7 +7167,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.18.6',
+    version: '2.18.7',
     type: 'js'
 };
 exports.default = config;
@@ -8343,7 +8340,7 @@ var Page = /** @class */ (function () {
      * @param {SectionVisibility} [visibility]
      * @hidden
      */
-    function Page(report, name, displayName, isActivePage, visibility, defaultSize, defaultDisplayOption, mobileSize) {
+    function Page(report, name, displayName, isActivePage, visibility, defaultSize, defaultDisplayOption, mobileSize, background, wallpaper) {
         this.report = report;
         this.name = name;
         this.displayName = displayName;
@@ -8352,6 +8349,8 @@ var Page = /** @class */ (function () {
         this.defaultSize = defaultSize;
         this.mobileSize = mobileSize;
         this.defaultDisplayOption = defaultDisplayOption;
+        this.background = background;
+        this.wallpaper = wallpaper;
     }
     /**
      * Gets all page level filters within the report.
@@ -9439,7 +9438,7 @@ var Report = /** @class */ (function (_super) {
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body
-                                .map(function (page) { return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize); })];
+                                .map(function (page) { return new page_1.Page(_this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize, page.background, page.wallpaper); })];
                     case 3:
                         response_8 = _a.sent();
                         throw response_8.body;
@@ -9480,7 +9479,7 @@ var Report = /** @class */ (function (_super) {
                         if (!page) {
                             return [2 /*return*/, Promise.reject(powerbi_models_1.CommonErrorCodes.NotFound)];
                         }
-                        return [2 /*return*/, new page_1.Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize)];
+                        return [2 /*return*/, new page_1.Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize, page.background, page.wallpaper)];
                     case 3:
                         response_9 = _a.sent();
                         throw response_9.body;
@@ -9517,7 +9516,7 @@ var Report = /** @class */ (function (_super) {
                     case 2:
                         response = _a.sent();
                         activePage = response.body.find(function (page) { return page.isActive; });
-                        return [2 /*return*/, new page_1.Page(this, activePage.name, activePage.displayName, activePage.isActive, activePage.visibility, activePage.defaultSize, activePage.defaultDisplayOption, activePage.mobileSize)];
+                        return [2 /*return*/, new page_1.Page(this, activePage.name, activePage.displayName, activePage.isActive, activePage.visibility, activePage.defaultSize, activePage.defaultDisplayOption, activePage.mobileSize, activePage.background, activePage.wallpaper)];
                     case 3:
                         response_10 = _a.sent();
                         throw response_10.body;

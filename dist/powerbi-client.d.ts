@@ -1,4 +1,4 @@
-// powerbi-client v2.18.6
+// powerbi-client v2.18.7
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
@@ -780,7 +780,7 @@ declare module "visualDescriptor" {
 }
 declare module "page" {
     import { IHttpPostMessageResponse } from 'http-post-message';
-    import { DisplayOption, FiltersOperations, ICustomPageSize, IFilter, IVisual, LayoutType, PageSizeType, SectionVisibility, VisualContainerDisplayMode } from 'powerbi-models';
+    import { DisplayOption, FiltersOperations, ICustomPageSize, IFilter, IVisual, LayoutType, PageSizeType, SectionVisibility, VisualContainerDisplayMode, IPageBackground, IPageWallpaper } from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { IReportNode } from "report";
     import { VisualDescriptor } from "visualDescriptor";
@@ -854,6 +854,18 @@ declare module "page" {
          */
         defaultDisplayOption: DisplayOption;
         /**
+         * Page background color.
+         *
+         * @type {IPageBackground}
+         */
+        background: IPageBackground;
+        /**
+         * Page wallpaper color.
+         *
+         * @type {IPageWallpaper}
+         */
+        wallpaper: IPageWallpaper;
+        /**
          * Creates an instance of a Power BI report page.
          *
          * @param {IReportNode} report
@@ -863,7 +875,7 @@ declare module "page" {
          * @param {SectionVisibility} [visibility]
          * @hidden
          */
-        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption, mobileSize?: ICustomPageSize);
+        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption, mobileSize?: ICustomPageSize, background?: IPageBackground, wallpaper?: IPageWallpaper);
         /**
          * Gets all page level filters within the report.
          *
