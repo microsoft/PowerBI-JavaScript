@@ -1369,6 +1369,14 @@ declare module "report" {
          */
         resetTheme(): Promise<void>;
         /**
+         * get the theme of the report
+         *
+         * ```javascript
+         * report.getTheme();
+         * ```
+         */
+        getTheme(): Promise<IReportTheme>;
+        /**
          * Reset user's filters, slicers, and other data view changes to the default state of the report
          *
          * ```javascript

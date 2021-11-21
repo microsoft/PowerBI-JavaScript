@@ -670,6 +670,26 @@ export class Report extends Embed implements IReportNode, IFilterable {
   }
 
   /**
+   * get the theme of the report
+   *
+   * ```javascript
+   * report.getTheme();
+   * ```
+   */
+  async getTheme(): Promise<IReportTheme> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    try {
+      const response = await this.service.hpm.get<IReportTheme>(`/report/theme`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
    * Reset user's filters, slicers, and other data view changes to the default state of the report
    *
    * ```javascript

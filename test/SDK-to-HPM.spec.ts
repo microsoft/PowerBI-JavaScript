@@ -2053,6 +2053,32 @@ describe('SDK-to-HPM', function () {
     });
 
     describe('theme', function () {
+      it('report.getTheme() sends GET /report/theme', async function () {
+        // Arrange
+        const testData = {
+          response: {
+            body: [
+              {
+                themeJson: {name: "Theme ABC 123"}
+              }
+            ]
+          }
+        };
+
+        const expectedHeaders = {
+          uid: uniqueId,
+        };
+
+        spyHpm.get.and.returnValue(Promise.resolve(testData.response));
+        try {
+          await report.getTheme();
+          expect(spyHpm.put).toHaveBeenCalledWith('/report/theme', expectedHeaders, jasmine.any(Object));
+        } catch (error) {
+          console.log("getTheme failed with", error);
+          fail("getTheme failed");
+        }
+      });
+
       it('report.applyTheme(theme) sends PUT /report/theme with theme in body', async function () {
         // Arrange
         const testData = {
