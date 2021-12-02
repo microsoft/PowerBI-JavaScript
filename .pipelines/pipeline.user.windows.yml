@@ -119,7 +119,6 @@ test:
       command: '.pipelines\cdpx_run_ps.cmd'
       testresults:
         - title: 'powerbi-javascript test results'
-          type: 'jasmine'
-          from: 'reports'
+          type: 'junit'
           include:
-            - "**coverage/**/index.html"
+            - ".\\tmp\\testresults.xml"
