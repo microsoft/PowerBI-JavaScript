@@ -1,39 +1,39 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import * as Wpmp from 'window-post-message-proxy';
-import * as Hpm from 'http-post-message';
-import * as Router from 'powerbi-router';
-import * as models from 'powerbi-models';
+import { WindowPostMessageProxy } from 'window-post-message-proxy';
+import { HttpPostMessage } from 'http-post-message';
+import { Router } from 'powerbi-router';
 import { mockAppSpyObj, mockApp } from './mockApp';
+import * as models from 'powerbi-models';
 
 export const spyApp = mockAppSpyObj;
 
-export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean, name: string = 'MockAppWindowPostMessageProxy'): Hpm.HttpPostMessage {
+export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean, name: string = 'MockAppWindowPostMessageProxy'): HttpPostMessage {
   const parent = parentWindow || iframeContentWindow.parent;
-  const wpmp = new Wpmp.WindowPostMessageProxy({
+  const wpmp = new WindowPostMessageProxy({
     processTrackingProperties: {
-      addTrackingProperties: Hpm.HttpPostMessage.addTrackingProperties,
-      getTrackingProperties: Hpm.HttpPostMessage.getTrackingProperties,
+      addTrackingProperties: HttpPostMessage.addTrackingProperties,
+      getTrackingProperties: HttpPostMessage.getTrackingProperties,
     },
-    isErrorMessage: Hpm.HttpPostMessage.isErrorMessage,
+    isErrorMessage: HttpPostMessage.isErrorMessage,
     receiveWindow: iframeContentWindow,
     name,
     logMessages
   });
-  const hpm = new Hpm.HttpPostMessage(wpmp, {
+  const hpm = new HttpPostMessage(wpmp, {
     'origin': 'reportEmbedMock',
     'x-version': '1.0.0'
   }, parent);
-  const router = new Router.Router(wpmp);
+  const router = new Router(wpmp);
   const app = mockApp;
 
   /**
    * Setup not found handlers.
    */
-  function notFoundHandler(req, res) {
+  function notFoundHandler(req, res): void {
     res.send(404, `Not Found. Url: ${req.params.notfound} was not found.`);
-  };
+  }
   router.get('*notfound', notFoundHandler);
   router.post('*notfound', notFoundHandler);
   router.patch('*notfound', notFoundHandler);
@@ -41,253 +41,231 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
   router.delete('*notfound', notFoundHandler);
 
   /**
-   * Phase 1
-   */
-
-  /**
    * Dashboard Embed
    */
-  router.post('/dashboard/load', (req, res) => {
+  router.post('/dashboard/load', async (req, res) => {
     const uniqueId = req.headers['uid'];
     const loadConfig = req.body;
-    return app.validateDashboardLoad(loadConfig)
-      .then(() => {
-        app.dashboardLoad(loadConfig)
-          .then(() => {
-            const initiator = "sdk";
-            hpm.post(`/dashboards/${uniqueId}/events/loaded`, {
-              initiator
-            });
-          }, error => {
-            hpm.post(`/dashboards/${uniqueId}/events/error`, error);
-          });
-
-        res.send(202);
-      }, error => {
-        res.send(400, error);
-      });
+    try {
+      await app.validateDashboardLoad(loadConfig);
+      try {
+        await app.dashboardLoad(loadConfig);
+        hpm.post(`/dashboards/${uniqueId}/events/loaded`, {
+          initiator: "sdk"
+        });
+      } catch (error) {
+        hpm.post(`/dashboards/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
   /**
    * Create Report
    */
-  router.post('/report/create', (req, res) => {
+  router.post('/report/create', async (req, res) => {
     const uniqueId = req.headers['uid'];
     const createConfig = req.body;
-    return app.validateCreateReport(createConfig)
-      .then(() => {
-        app.reportLoad(createConfig)
-          .then(() => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/events/loaded`, {
-              initiator
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
-
-        res.send(202);
-      }, error => {
-        res.send(400, error);
-      });
+    try {
+      await app.validateCreateReport(createConfig);
+      try {
+        await app.reportLoad(createConfig);
+        hpm.post(`/reports/${uniqueId}/events/loaded`, {
+          initiator: "sdk"
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
   /**
    * Report Embed
    */
-  router.post('/report/load', (req, res) => {
+  router.post('/report/load', async (req, res) => {
     const uniqueId = req.headers['uid'];
     const loadConfig = req.body;
-    return app.validateReportLoad(loadConfig)
-      .then(() => {
-        app.reportLoad(loadConfig)
-          .then(() => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/events/loaded`, {
-              initiator
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
+    try {
+      await app.validateReportLoad(loadConfig);
+      try {
+        await app.reportLoad(loadConfig);
+        hpm.post(`/reports/${uniqueId}/events/loaded`, {
+          initiator: "sdk"
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
 
-        res.send(202);
-      }, error => {
-        res.send(400, error);
-      });
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
   /**
    * Report Embed
    */
-  router.post('/report/prepare', (req, res) => {
+  router.post('/report/prepare', async (req, res) => {
     const uniqueId = req.headers['uid'];
     const loadConfig = req.body;
-    return app.validateReportLoad(loadConfig)
-      .then(() => {
-        app.reportLoad(loadConfig)
-          .then(() => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/events/loaded`, {
-              initiator
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
+    try {
+      await app.validateReportLoad(loadConfig);
+      try {
+        await app.reportLoad(loadConfig);
+        hpm.post(`/reports/${uniqueId}/events/loaded`, {
+          initiator: "sdk"
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
 
-        res.send(202);
-      }, error => {
-        res.send(400, error);
-      });
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
   router.post('/report/render', (req, res) => {
     app.render();
-    res.send(202);
+    res.send(202, {});
   });
 
-  router.get('/report/pages', (req, res) => {
-    return app.getPages()
-      .then(pages => {
-        res.send(200, pages);
-      }, error => {
-        res.send(500, error);
-      });
+  router.get('/report/pages', async (req, res) => {
+    try {
+      const pages = await app.getPages();
+      res.send(200, pages);
+
+    } catch (error) {
+      res.send(500, error);
+    }
   });
 
-  router.put('/report/pages/active', (req, res) => {
+  router.put('/report/pages/active', async (req, res) => {
     const uniqueId = req.headers['uid'];
     const page = req.body;
-    return app.validatePage(page)
-      .then(() => {
-        app.setPage(page)
-          .then(() => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/events/pageChanged`, {
-              initiator,
-              newPage: page
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
-
-        res.send(202);
-      }, errors => {
-        res.send(400, errors);
-      });
+    try {
+      await app.validatePage(page);
+      try {
+        await app.setPage(page);
+        hpm.post(`/reports/${uniqueId}/events/pageChanged`, {
+          initiator: "sdk",
+          newPage: page
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202);
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
-  /**
-   * Phase 2
-   */
-  router.get('/report/filters', (req, res) => {
-    return app.getFilters()
-      .then(filters => {
-        res.send(200, filters);
-      }, error => {
-        res.send(500, error);
-      });
+  router.get('/report/filters', async (req, res) => {
+    try {
+      const filters = await app.getFilters();
+      res.send(200, filters);
+    } catch (error) {
+      res.send(500, error);
+    }
   });
 
-  router.put('/report/filters', (req, res) => {
+  router.put('/report/filters', async (req, res) => {
     const uniqueId = req.headers['uid'];
     const filters = req.body;
 
-    return Promise.all(filters.map(filter => app.validateFilter(filter)))
-      .then(() => {
-        app.setFilters(filters)
-          .then(filter => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/events/filtersApplied`, {
-              initiator,
-              filter
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
-
-        res.send(202);
-      }, error => {
-        res.send(400, error);
-      });
+    try {
+      await Promise.all(filters.map(filter => app.validateFilter(filter)));
+      try {
+        const filter = await app.setFilters(filters);
+        hpm.post(`/reports/${uniqueId}/events/filtersApplied`, {
+          initiator: "sdk",
+          filter
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
-  router.post('/report/filters', (req, res) => {
+  router.post('/report/filters', async (req, res) => {
     const uniqueId = req.headers['uid'];
-    const operation = req.body.filtersOperation
+    const operation = req.body.filtersOperation;
     const filters = req.body.filters;
 
-    return Promise.all(filters ? filters.map(filter => app.validateFilter(filter)) : [Promise.resolve(null)])
-      .then(() => {
-        app.updateFilters(operation, filters)
-          .then(filter => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/events/filtersApplied`, {
-              initiator,
-              filter
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
-
-        res.send(202);
-      }, error => {
-        res.send(400, error);
-      });
+    try {
+      Promise.all(filters ? filters.map(filter => app.validateFilter(filter)) : [Promise.resolve(null)]);
+      try {
+        const filter = await app.updateFilters(operation, filters);
+        hpm.post(`/reports/${uniqueId}/events/filtersApplied`, {
+          initiator: "sdk",
+          filter
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
-  /**
-   * Phase 3
-   */
-  router.get('/report/pages/:pageName/filters', (req, res) => {
+  router.get('/report/pages/:pageName/filters', async (req, res) => {
     const page = {
       name: req.params.pageName,
       displayName: null
     };
-
-    return app.validatePage(page)
-      .then(() => {
-        return app.getFilters()
-          .then(filters => {
-            res.send(200, filters);
-          }, error => {
-            res.send(500, error);
-          });
-      }, errors => {
-        res.send(400, errors);
-      });
+    try {
+      await app.validatePage(page);
+      try {
+        const filters = await app.getFilters();
+        res.send(200, filters);
+      } catch (error) {
+        res.send(500, error);
+      }
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
-  router.post('/report/pages/:pageName/filters', (req, res) => {
+  router.post('/report/pages/:pageName/filters', async (req, res) => {
     const pageName = req.params.pageName;
     const uniqueId = req.headers['uid'];
-    const operation = req.body.filtersOperation
+    const operation = req.body.filtersOperation;
     const filters = req.body.filters;
     const page: models.IPage = {
       name: pageName,
       displayName: null
     };
 
-    return app.validatePage(page)
-      .then(() => Promise.all(filters ? filters.map(filter => app.validateFilter(filter)) : [Promise.resolve(null)]))
-      .then(() => {
-        app.updateFilters(operation, filters)
-          .then(filter => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filtersApplied`, {
-              initiator,
-              filter
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
+    try {
+      await app.validatePage(page);
+      await Promise.all(filters ? filters.map(filter => app.validateFilter(filter)) : [Promise.resolve(null)]);
+      try {
+        const filter = await app.updateFilters(operation, filters);
+        hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filtersApplied`, {
+          initiator: "sdk",
+          filter
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
 
-        res.send(202);
-      }, errors => {
-        res.send(400, errors);
-      });
+    } catch (error) {
+      res.send(400, error);
+
+    }
   });
 
-  router.put('/report/pages/:pageName/filters', (req, res) => {
+  router.put('/report/pages/:pageName/filters', async (req, res) => {
     const pageName = req.params.pageName;
     const uniqueId = req.headers['uid'];
     const filters = req.body;
@@ -295,28 +273,25 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
       name: pageName,
       displayName: null
     };
-
-    return app.validatePage(page)
-      .then(() => Promise.all(filters.map(filter => app.validateFilter(filter))))
-      .then(() => {
-        app.setFilters(filters)
-          .then(filter => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filtersApplied`, {
-              initiator,
-              filter
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
-
-        res.send(202);
-      }, errors => {
-        res.send(400, errors);
-      });
+    try {
+      await app.validatePage(page);
+      await Promise.all(filters.map(filter => app.validateFilter(filter)));
+      try {
+        const filter = await app.setFilters(filters);
+        hpm.post(`/reports/${uniqueId}/pages/${pageName}/events/filtersApplied`, {
+          initiator: "sdk",
+          filter
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
-  router.get('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
+  router.get('/report/pages/:pageName/visuals/:visualName/filters', async (req, res) => {
     const page = {
       name: req.params.pageName,
       displayName: null
@@ -328,24 +303,24 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
       layout: {},
     };
 
-    return app.validateVisual(page, visual)
-      .then(() => {
-        return app.getFilters()
-          .then(filters => {
-            res.send(200, filters);
-          }, error => {
-            res.send(500, error);
-          });
-      }, errors => {
-        res.send(400, errors);
-      });
+    try {
+      await app.validateVisual(page, visual);
+      try {
+        const filters = await app.getFilters();
+        res.send(200, filters);
+      } catch (error) {
+        res.send(500, error);
+      }
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
-  router.post('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
+  router.post('/report/pages/:pageName/visuals/:visualName/filters', async (req, res) => {
     const pageName = req.params.pageName;
     const visualName = req.params.visualName;
     const uniqueId = req.headers['uid'];
-    const operation = req.body.filtersOperation
+    const operation = req.body.filtersOperation;
     const filters = req.body.filters; const page: models.IPage = {
       name: pageName,
       displayName: null
@@ -357,27 +332,25 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
       layout: {},
     };
 
-    return app.validateVisual(page, visual)
-      .then(() => Promise.all(filters ? filters.map(filter => app.validateFilter(filter)) : [Promise.resolve(null)]))
-      .then(() => {
-        app.updateFilters(operation, filters)
-          .then(filter => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/pages/${pageName}/visuals/${visualName}/events/filtersApplied`, {
-              initiator,
-              filter
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
-
-        res.send(202);
-      }, errors => {
-        res.send(400, errors);
-      });
+    try {
+      await app.validateVisual(page, visual);
+      await Promise.all(filters ? filters.map(filter => app.validateFilter(filter)) : [Promise.resolve(null)]);
+      try {
+        const filter = await app.updateFilters(operation, filters);
+        hpm.post(`/reports/${uniqueId}/pages/${pageName}/visuals/${visualName}/events/filtersApplied`, {
+          initiator: "sdk",
+          filter
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
-  router.put('/report/pages/:pageName/visuals/:visualName/filters', (req, res) => {
+  router.put('/report/pages/:pageName/visuals/:visualName/filters', async (req, res) => {
     const pageName = req.params.pageName;
     const visualName = req.params.visualName;
     const uniqueId = req.headers['uid'];
@@ -392,58 +365,48 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
       type: 'type',
       layout: {},
     };
-
-    return app.validateVisual(page, visual)
-      .then(() => Promise.all(filters.map(filter => app.validateFilter(filter))))
-      .then(() => {
-        app.setFilters(filters)
-          .then(filter => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/pages/${pageName}/visuals/${visualName}/events/filtersApplied`, {
-              initiator,
-              filter
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
-
-        res.send(202);
-      }, errors => {
-        res.send(400, errors);
-      });
+    try {
+      await app.validateVisual(page, visual);
+      await Promise.all(filters.map(filter => app.validateFilter(filter)));
+      try {
+        const filter = await app.setFilters(filters);
+        hpm.post(`/reports/${uniqueId}/pages/${pageName}/visuals/${visualName}/events/filtersApplied`, {
+          initiator: "sdk",
+          filter
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
+    } catch (error) {
+      res.send(400, error);
+    }
   });
 
-  router.patch('/report/settings', (req, res) => {
+  router.patch('/report/settings', async (req, res) => {
     const uniqueId = req.headers['uid'];
     const settings = req.body;
-
-    return app.validateSettings(settings)
-      .then(() => {
-        app.updateSettings(settings)
-          .then(updatedSettings => {
-            const initiator = "sdk";
-            hpm.post(`/reports/${uniqueId}/events/settingsUpdated`, {
-              initiator,
-              settings: updatedSettings
-            });
-          }, error => {
-            hpm.post(`/reports/${uniqueId}/events/error`, error);
-          });
-
-        res.send(202);
-      }, errors => {
-        res.send(400, errors);
-      });
+    try {
+      await app.validateSettings(settings);
+      try {
+        const updatedSettings = await app.updateSettings(settings);
+        hpm.post(`/reports/${uniqueId}/events/settingsUpdated`, {
+          initiator: "sdk",
+          settings: updatedSettings
+        });
+      } catch (error) {
+        hpm.post(`/reports/${uniqueId}/events/error`, error);
+      }
+      res.send(202, {});
+    }
+    catch (error) {
+      res.send(400, error);
+    }
   });
 
-  /**
-   * Phase 4
-   */
-  router.get('/report/data', (req, res) => {
-    return app.exportData()
-      .then(data => {
-        res.send(200, data);
-      });
+  router.get('/report/data', async (req, res) => {
+    const data = await app.exportData();
+    res.send(200, data);
   });
 
   router.post('/report/refresh', (req, res) => {
@@ -477,6 +440,5 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
     app.setAccessToken(settings);
     res.send(202);
   });
-
   return hpm;
 }

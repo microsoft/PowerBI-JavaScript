@@ -119,7 +119,6 @@ export class Report extends Embed implements IReportNode, IFilterable {
     return reportId;
   }
 
-
   /**
    * Render a preloaded report, using phased embedding API
    *
@@ -343,7 +342,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
     try {
       const response = await this.service.hpm.get<IPage[]>('/report/pages', { uid: this.config.uniqueId }, this.iframe.contentWindow);
       return response.body
-        .map((page) => new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize));
+        .map((page) => new Page(this, page.name, page.displayName, page.isActive, page.visibility, page.defaultSize, page.defaultDisplayOption, page.mobileSize, page.background, page.wallpaper));
     } catch (response) {
       throw response.body;
     }
@@ -383,7 +382,9 @@ export class Report extends Embed implements IReportNode, IFilterable {
         page.visibility,
         page.defaultSize,
         page.defaultDisplayOption,
-        page.mobileSize
+        page.mobileSize,
+        page.background,
+        page.wallpaper,
       );
     } catch (response) {
       throw response.body;
@@ -418,7 +419,9 @@ export class Report extends Embed implements IReportNode, IFilterable {
         activePage.visibility,
         activePage.defaultSize,
         activePage.defaultDisplayOption,
-        activePage.mobileSize
+        activePage.mobileSize,
+        activePage.background,
+        activePage.wallpaper,
       );
     } catch (response) {
       throw response.body;
@@ -567,7 +570,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
     };
 
     // Set the settings back into the config.
-    this.config.settings = assign({}, elementAttrSettings, config.settings);
+    this.config.settings = assign({}, elementAttrSettings, config.settings) as ISettings;
 
     if (isBootstrap) {
       return;
@@ -671,6 +674,26 @@ export class Report extends Embed implements IReportNode, IFilterable {
   }
 
   /**
+   * get the theme of the report
+   *
+   * ```javascript
+   * report.getTheme();
+   * ```
+   */
+  async getTheme(): Promise<IReportTheme> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    try {
+      const response = await this.service.hpm.get<IReportTheme>(`/report/theme`, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
+  }
+
+  /**
    * Reset user's filters, slicers, and other data view changes to the default state of the report
    *
    * ```javascript
@@ -738,7 +761,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
       return Promise.reject(APINotSupportedForRDLError);
     }
 
-    const commandCopy: ICommandExtension[] = JSON.parse(JSON.stringify(this.commands));
+    const commandCopy = JSON.parse(JSON.stringify(this.commands)) as ICommandExtension[];
     const indexOfCommand: number = this.findCommandMenuIndex("visualContextMenu", commandCopy, commandName, contextMenuTitle);
     if (indexOfCommand === -1) {
       throw CommonErrorCodes.NotFound;
@@ -808,7 +831,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
       return Promise.reject(APINotSupportedForRDLError);
     }
 
-    const commandCopy: ICommandExtension[] = JSON.parse(JSON.stringify(this.commands));
+    const commandCopy = JSON.parse(JSON.stringify(this.commands)) as ICommandExtension[];
     const indexOfCommand: number = this.findCommandMenuIndex("visualOptionsMenu", commandCopy, commandName, optionsMenuTitle);
 
     if (indexOfCommand === -1) {
@@ -1115,6 +1138,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
 
   /**
    * Return the current zoom level of the report.
+   *
    * @returns {Promise<number>}
    */
   async getZoom(): Promise<number> {
@@ -1128,6 +1152,7 @@ export class Report extends Embed implements IReportNode, IFilterable {
 
   /**
    * Sets the report's zoom level.
+   *
    * @param zoomLevel zoom level to set
    */
   async setZoom(zoomLevel: number): Promise<void> {

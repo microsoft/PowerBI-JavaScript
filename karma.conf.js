@@ -26,6 +26,7 @@ module.exports = function (config) {
     reporters: argv.debug ? ['spec', 'kjhtml'] : ['spec', 'coverage', 'kjhtml'],
     autoWatch: true,
     browsers: [browserName],
+    browserNoActivityTimeout: 300000,
     plugins: [
       'karma-firefox-launcher',
       'karma-chrome-launcher',
@@ -37,7 +38,7 @@ module.exports = function (config) {
     ],
     customLaunchers: {
       'Chrome_headless': {
-        base: 'Chrome',
+        base: argv.debug ? 'Chrome' : 'ChromeHeadless',
         flags: flags.concat("--no-sandbox", "--window-size=800,800"),
       },
     },

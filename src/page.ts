@@ -15,7 +15,9 @@ import {
   PageLevelFilters,
   PageSizeType,
   SectionVisibility,
-  VisualContainerDisplayMode
+  VisualContainerDisplayMode,
+  IPageBackground,
+  IPageWallpaper,
 } from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 import { IReportNode, Report } from './report';
@@ -91,7 +93,7 @@ export class Page implements IPageNode, IFilterable {
    *
    * @type {ICustomPageSize}
    */
-   mobileSize: ICustomPageSize;
+  mobileSize: ICustomPageSize;
 
   /**
    * Page display options as saved in the report.
@@ -99,6 +101,20 @@ export class Page implements IPageNode, IFilterable {
    * @type {ICustomPageSize}
    */
   defaultDisplayOption: DisplayOption;
+
+  /**
+   * Page background color.
+   *
+   * @type {IPageBackground}
+   */
+  background: IPageBackground;
+
+  /**
+   * Page wallpaper color.
+   *
+   * @type {IPageWallpaper}
+   */
+  wallpaper: IPageWallpaper;
 
   /**
    * Creates an instance of a Power BI report page.
@@ -110,7 +126,7 @@ export class Page implements IPageNode, IFilterable {
    * @param {SectionVisibility} [visibility]
    * @hidden
    */
-  constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption, mobileSize?: ICustomPageSize) {
+  constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption, mobileSize?: ICustomPageSize, background?: IPageBackground, wallpaper?: IPageWallpaper) {
     this.report = report;
     this.name = name;
     this.displayName = displayName;
@@ -119,6 +135,8 @@ export class Page implements IPageNode, IFilterable {
     this.defaultSize = defaultSize;
     this.mobileSize = mobileSize;
     this.defaultDisplayOption = defaultDisplayOption;
+    this.background = background;
+    this.wallpaper = wallpaper;
   }
 
   /**

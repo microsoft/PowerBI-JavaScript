@@ -21,14 +21,9 @@ module.exports = {
   ],
   "rules": {
     "@typescript-eslint/adjacent-overload-signatures": "warn",
-    "@typescript-eslint/array-type": [
-      "warn",
-      {
-        "default": "array-simple"
-      }
-    ],
+    "@typescript-eslint/array-type": "off",
     "@typescript-eslint/await-thenable": "warn",
-    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/ban-types": [
       "warn",
       {
@@ -36,9 +31,8 @@ module.exports = {
           "Object": {
             "message": "Avoid using the `Object` type. Did you mean `object`?"
           },
-          "Function": {
-            "message": "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
-          },
+          "Function": false,
+          "object": false,
           "Boolean": {
             "message": "Avoid using the `Boolean` type. Did you mean `boolean`?"
           },
@@ -54,16 +48,18 @@ module.exports = {
         }
       }
     ],
-    "@typescript-eslint/consistent-type-assertions": "warn",
     "@typescript-eslint/consistent-type-definitions": "warn",
-    "@typescript-eslint/dot-notation": "warn",
+    "@typescript-eslint/dot-notation": "off",
     "@typescript-eslint/explicit-member-accessibility": [
       "off",
       {
         "accessibility": "explicit"
       }
     ],
-    "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "warn",
+      { "allowArgumentsExplicitlyTypedAsAny": true }
+    ],
     "@typescript-eslint/indent": [
       "warn",
       2,
@@ -90,6 +86,13 @@ module.exports = {
         }
       }
     ],
+    "@typescript-eslint/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true,
+        "allowDirectConstAssertionInArrowFunctions": true
+      }
+    ],
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/no-array-constructor": "warn",
@@ -98,29 +101,33 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-extra-non-null-assertion": "warn",
     "@typescript-eslint/no-extra-semi": "warn",
-    "@typescript-eslint/no-floating-promises": "warn",
+    "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-for-in-array": "warn",
     "@typescript-eslint/no-implied-eval": "warn",
-    "@typescript-eslint/no-inferrable-types": "warn",
+    "@typescript-eslint/no-inferrable-types": "off",
     "@typescript-eslint/no-misused-new": "warn",
-    "@typescript-eslint/no-misused-promises": "warn",
+    "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/no-namespace": "warn",
     "@typescript-eslint/no-non-null-asserted-optional-chain": "warn",
     "@typescript-eslint/no-non-null-assertion": "warn",
     "@typescript-eslint/no-parameter-properties": "off",
     "@typescript-eslint/no-this-alias": "warn",
     "@typescript-eslint/no-unnecessary-type-assertion": "warn",
-    "@typescript-eslint/no-unsafe-assignment": "warn",
-    "@typescript-eslint/no-unsafe-call": "warn",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
-    "@typescript-eslint/no-unsafe-return": "warn",
+    "@typescript-eslint/no-unsafe-return": "off",
     "@typescript-eslint/no-unused-expressions": "warn",
-    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "args": "after-used", "argsIgnorePattern": "^_"
+      }
+    ],
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-var-requires": "warn",
     "@typescript-eslint/prefer-as-const": "warn",
     "@typescript-eslint/prefer-for-of": "warn",
-    "@typescript-eslint/prefer-function-type": "warn",
     "@typescript-eslint/prefer-namespace-keyword": "warn",
     "@typescript-eslint/prefer-regexp-exec": "off",
     "@typescript-eslint/quotes": [
@@ -131,10 +138,9 @@ module.exports = {
     ],
     "@typescript-eslint/require-await": "warn",
     "@typescript-eslint/restrict-plus-operands": "warn",
-    "@typescript-eslint/restrict-template-expressions": "warn",
+    "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/semi": [
-      "warn",
-      "always"
+      "error",
     ],
     "@typescript-eslint/triple-slash-reference": [
       "warn",
@@ -145,13 +151,9 @@ module.exports = {
       }
     ],
     "@typescript-eslint/type-annotation-spacing": "warn",
-    "@typescript-eslint/unbound-method": "warn",
+    "@typescript-eslint/unbound-method": "off",
     "@typescript-eslint/unified-signatures": "warn",
-    "arrow-body-style": "warn",
-    "arrow-parens": [
-      "warn",
-      "always"
-    ],
+    "arrow-parens": "off",
     "brace-style": [
       "off",
       "1tbs"
@@ -159,7 +161,6 @@ module.exports = {
     "comma-dangle": "off",
     "complexity": "off",
     "constructor-super": "warn",
-    "curly": "warn",
     "eol-last": "warn",
     "eqeqeq": [
       "warn",
@@ -178,7 +179,7 @@ module.exports = {
       "Undefined",
     ],
     "id-match": "warn",
-    "import/order": "warn",
+    "import/order": "off",
     "jsdoc/check-alignment": "warn",
     "jsdoc/check-indentation": "warn",
     "jsdoc/newline-after-description": "warn",
@@ -189,7 +190,6 @@ module.exports = {
     "max-len": "off",
     "new-parens": "warn",
     "no-array-constructor": "off",
-    "no-bitwise": "warn",
     "no-caller": "warn",
     "no-cond-assign": "warn",
     "no-console": "off",
@@ -201,29 +201,18 @@ module.exports = {
     "no-fallthrough": "off",
     "no-implied-eval": "off",
     "no-invalid-this": "off",
-    "no-multiple-empty-lines": "warn",
+    "no-multiple-empty-lines": ["error", { "max": 1 }],
     "no-new-wrappers": "warn",
-    "no-shadow": [
-      "warn",
-      {
-        "hoist": "all"
-      }
-    ],
-    "no-throw-literal": "warn",
+    "no-shadow": "off",
     "no-trailing-spaces": "warn",
     "no-undef-init": "warn",
-    "no-underscore-dangle": "warn",
+    "no-underscore-dangle": "off",
     "no-unsafe-finally": "warn",
     "no-unused-labels": "warn",
-    "no-unused-vars": "off",
     "no-var": "warn",
-    "object-shorthand": ["warn", "never"],
-    "one-var": [
-      "warn",
-      "never"
-    ],
-    "prefer-arrow/prefer-arrow-functions": "off",
-    "prefer-const": "warn",
+    "object-shorthand": "off",
+    "one-var": "off",
+    "prefer-const": "off",
     "prefer-rest-params": "warn",
     "quote-props": [
       "warn",
@@ -231,14 +220,7 @@ module.exports = {
     ],
     "radix": "warn",
     "require-await": "off",
-    "space-before-function-paren": [
-      "warn",
-      {
-        "anonymous": "never",
-        "asyncArrow": "always",
-        "named": "never"
-      }
-    ],
+    "space-before-function-paren": "off",
     "spaced-comment": [
       "warn",
       "always",

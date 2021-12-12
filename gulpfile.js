@@ -210,7 +210,7 @@ gulp.task('compile:dts', 'Generate one dts file from modules', function () {
 });
 
 gulp.task('compile:spec', 'Compile spec tests', function () {
-  return gulp.src(['./test/test.spec.ts'])
+  return gulp.src(['./test/**/*.ts'])
     .pipe(webpackStream(webpackTestConfig))
     .pipe(gulp.dest('./tmp'));
 });

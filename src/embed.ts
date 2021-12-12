@@ -525,7 +525,7 @@ export abstract class Embed {
     const extensionsArray = this.config?.settings?.extensions as models.IExtension[];
     if (Array.isArray(extensionsArray)) {
       this.commands = [];
-      extensionsArray.map((extension: models.IExtension) => { if (extension?.command) { this.commands.push(extension.command) } });
+      extensionsArray.map((extension: models.IExtension) => { if (extension?.command) { this.commands.push(extension.command); } });
     }
 
     if (isBootstrap) {
@@ -707,10 +707,10 @@ export abstract class Embed {
    *
    * @hidden
    */
-  private setIframe(isLoad: boolean, phasedRender?: boolean, isBootstrap?: boolean, registerQueryCallback?: boolean): void {
+  private setIframe(isLoad: boolean, phasedRender?: boolean, isBootstrap?: boolean): void {
     if (!this.iframe) {
       const iframeContent = document.createElement("iframe");
-      let embedUrl = this.config.uniqueId ? addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
+      const embedUrl = this.config.uniqueId ? addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
 
       iframeContent.style.width = '100%';
       iframeContent.style.height = '100%';

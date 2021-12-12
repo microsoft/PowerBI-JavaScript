@@ -3,7 +3,7 @@ const glob = require("glob");
 
 module.exports = {
   mode: 'development',
-  entry: glob.sync('./test/*.spec.ts'),
+  entry: glob.sync('./test/**/*.spec.ts'),
   output: {
     path: __dirname + "/tmp",
     filename: 'test.spec.js'

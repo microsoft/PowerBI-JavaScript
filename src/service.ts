@@ -462,7 +462,7 @@ export class Service implements IService {
 
     this.router.post(`preQuery`, async (req, _res) => {
       try {
-        let result = await applicationContextProvider(req.body);
+        const result = await applicationContextProvider(req.body);
         _res.send(200, result);
       } catch (error) {
         _res.send(400, null);
@@ -589,7 +589,7 @@ export class Service implements IService {
    * @hidden
    */
   private handleEvent(event: IEvent<any>): void {
-    let embed = utils.find(embed => {
+    const embed = utils.find(embed => {
       return (embed.config.uniqueId === event.id);
     }, this.embeds);
 

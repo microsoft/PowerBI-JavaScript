@@ -90,42 +90,77 @@ export const mockAppSpyObj = {
   setAccessToken: jasmine.createSpy("setAccessToken").and.returnValue(Promise.resolve(null)),
   switchLayout: jasmine.createSpy("switchLayout").and.returnValue(Promise.resolve(null)),
 
-  reset() {
+  reset(): void {
     mockAppSpyObj.dashboardLoad.calls.reset();
+    mockAppSpyObj.dashboardLoad.and.callThrough();
     mockAppSpyObj.validateDashboardLoad.calls.reset();
+    mockAppSpyObj.validateDashboardLoad.and.callThrough();
     mockAppSpyObj.reportLoad.calls.reset();
+    mockAppSpyObj.reportLoad.and.callThrough();
     mockAppSpyObj.render.calls.reset();
+    mockAppSpyObj.render.and.callThrough();
     mockAppSpyObj.validateReportLoad.calls.reset();
+    mockAppSpyObj.validateReportLoad.and.callThrough();
     mockAppSpyObj.updateSettings.calls.reset();
+    mockAppSpyObj.updateSettings.and.callThrough();
     mockAppSpyObj.validateSettings.calls.reset();
+    mockAppSpyObj.validateSettings.and.callThrough();
     mockAppSpyObj.setVisualDisplayState.calls.reset();
+    mockAppSpyObj.setVisualDisplayState.and.callThrough();
     mockAppSpyObj.resizeVisual.calls.reset();
+    mockAppSpyObj.resizeVisual.and.callThrough();
     mockAppSpyObj.resizeActivePage.calls.reset();
+    mockAppSpyObj.resizeActivePage.and.callThrough();
     mockAppSpyObj.moveVisual.calls.reset();
+    mockAppSpyObj.moveVisual.and.callThrough();
     mockAppSpyObj.getPages.calls.reset();
+    mockAppSpyObj.getPages.and.callThrough();
     mockAppSpyObj.getPageByName.calls.reset();
+    mockAppSpyObj.getPageByName.and.callThrough();
     mockAppSpyObj.getActivePage.calls.reset();
+    mockAppSpyObj.getActivePage.and.callThrough();
     mockAppSpyObj.setPage.calls.reset();
+    mockAppSpyObj.setPage.and.callThrough();
     mockAppSpyObj.validatePage.calls.reset();
+    mockAppSpyObj.validatePage.and.callThrough();
     mockAppSpyObj.validateVisual.calls.reset();
+    mockAppSpyObj.validateVisual.and.callThrough();
     mockAppSpyObj.getVisualByName.calls.reset();
+    mockAppSpyObj.getVisualByName.and.callThrough();
     mockAppSpyObj.getFilters.calls.reset();
+    mockAppSpyObj.getFilters.and.callThrough();
     mockAppSpyObj.updateFilters.calls.reset();
+    mockAppSpyObj.updateFilters.and.callThrough();
     mockAppSpyObj.setFilters.calls.reset();
+    mockAppSpyObj.setFilters.and.callThrough();
     mockAppSpyObj.validateFilter.calls.reset();
+    mockAppSpyObj.validateFilter.and.callThrough();
     mockAppSpyObj.addContextMenuCommand.calls.reset();
+    mockAppSpyObj.addContextMenuCommand.and.callThrough();
     mockAppSpyObj.addOptionsMenuCommand.calls.reset();
+    mockAppSpyObj.addOptionsMenuCommand.and.callThrough();
     mockAppSpyObj.removeContextMenuCommand.calls.reset();
+    mockAppSpyObj.removeContextMenuCommand.and.callThrough();
     mockAppSpyObj.removeOptionsMenuCommand.calls.reset();
+    mockAppSpyObj.removeOptionsMenuCommand.and.callThrough();
     mockAppSpyObj.print.calls.reset();
+    mockAppSpyObj.print.and.callThrough();
     mockAppSpyObj.refreshData.calls.reset();
+    mockAppSpyObj.refreshData.and.callThrough();
     mockAppSpyObj.exportData.calls.reset();
+    mockAppSpyObj.exportData.and.callThrough();
     mockAppSpyObj.validateCreateReport.calls.reset();
+    mockAppSpyObj.validateCreateReport.and.callThrough();
     mockAppSpyObj.switchMode.calls.reset();
+    mockAppSpyObj.switchMode.and.callThrough();
     mockAppSpyObj.save.calls.reset();
+    mockAppSpyObj.save.and.callThrough();
     mockAppSpyObj.saveAs.calls.reset();
+    mockAppSpyObj.saveAs.and.callThrough();
     mockAppSpyObj.setAccessToken.calls.reset();
+    mockAppSpyObj.setAccessToken.and.callThrough();
     mockAppSpyObj.switchLayout.calls.reset();
+    mockAppSpyObj.switchLayout.and.callThrough();
   }
 };
 

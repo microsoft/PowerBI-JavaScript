@@ -80,7 +80,7 @@ export function remove<T>(predicate: (x: T) => boolean, xs: T[]): void {
  * @param {any} args
  * @returns
  */
-export function assign(...args) {
+export function assign(...args): any {
   var target = args[0];
 
   'use strict';
@@ -123,7 +123,7 @@ export function generateUUID(): string {
   if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
     d += performance.now();
   }
-  return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  return 'xxxxxxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (_c) {
     // Generate a random number, scaled from 0 to 15.
     const r = (getRandomValue() % 16);
 
