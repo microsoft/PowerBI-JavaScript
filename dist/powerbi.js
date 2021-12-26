@@ -6987,7 +6987,7 @@ var BookmarksManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
@@ -7021,7 +7021,7 @@ var BookmarksManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         request = {
@@ -7057,7 +7057,7 @@ var BookmarksManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         playBookmarkRequest = {
@@ -7092,7 +7092,7 @@ var BookmarksManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         request = {
@@ -7129,7 +7129,7 @@ var BookmarksManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         request = {
@@ -7271,7 +7271,7 @@ var Create = /** @class */ (function (_super) {
      * Validate create report configuration.
      */
     Create.prototype.validate = function (config) {
-        return powerbi_models_1.validateCreateReport(config);
+        return (0, powerbi_models_1.validateCreateReport)(config);
     };
     /**
      * Handle config changes.
@@ -7427,7 +7427,7 @@ var Dashboard = /** @class */ (function (_super) {
         var config = this.config;
         var dashboardId = config.id || this.element.getAttribute(Dashboard.dashboardIdAttribute) || Dashboard.findIdFromEmbedUrl(config.embedUrl);
         if (typeof dashboardId !== 'string' || dashboardId.length === 0) {
-            throw new Error("Dashboard id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '" + Dashboard.dashboardIdAttribute + "'.");
+            throw new Error("Dashboard id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '".concat(Dashboard.dashboardIdAttribute, "'."));
         }
         return dashboardId;
     };
@@ -7438,7 +7438,7 @@ var Dashboard = /** @class */ (function (_super) {
      */
     Dashboard.prototype.validate = function (baseConfig) {
         var config = baseConfig;
-        var error = powerbi_models_1.validateDashboardLoad(config);
+        var error = (0, powerbi_models_1.validateDashboardLoad)(config);
         return error ? error : this.validatePageView(config.pageView);
     };
     /**
@@ -7560,7 +7560,7 @@ var Embed = /** @class */ (function () {
     function Embed(service, element, config, iframe, phasedRender, isBootstrap) {
         /** @hidden */
         this.allowedEvents = [];
-        if (util_1.autoAuthInEmbedUrl(config.embedUrl)) {
+        if ((0, util_1.autoAuthInEmbedUrl)(config.embedUrl)) {
             throw new Error(errors_1.EmbedUrlNotSupported);
         }
         Array.prototype.push.apply(this.allowedEvents, Embed.allowedEvents);
@@ -7746,7 +7746,7 @@ var Embed = /** @class */ (function () {
                             sdkVersion: sdkConfig.default.version
                         };
                         timeNow = new Date();
-                        if (this.lastLoadRequest && util_1.getTimeDiffInMilliseconds(this.lastLoadRequest, timeNow) < 100) {
+                        if (this.lastLoadRequest && (0, util_1.getTimeDiffInMilliseconds)(this.lastLoadRequest, timeNow) < 100) {
                             console.debug("Power BI SDK sent more than two /report/load requests in the last 100ms interval.");
                             return [2 /*return*/];
                         }
@@ -7791,7 +7791,7 @@ var Embed = /** @class */ (function () {
         var _this = this;
         var fakeEvent = { name: eventName, type: null, id: null, value: null };
         if (handler) {
-            util_1.remove(function (eventHandler) { return eventHandler.test(fakeEvent) && (eventHandler.handle === handler); }, this.eventHandlers);
+            (0, util_1.remove)(function (eventHandler) { return eventHandler.test(fakeEvent) && (eventHandler.handle === handler); }, this.eventHandlers);
             this.element.removeEventListener(eventName, handler);
         }
         else {
@@ -7799,7 +7799,7 @@ var Embed = /** @class */ (function () {
                 .filter(function (eventHandler) { return eventHandler.test(fakeEvent); });
             eventHandlersToRemove
                 .forEach(function (eventHandlerToRemove) {
-                util_1.remove(function (eventHandler) { return eventHandler === eventHandlerToRemove; }, _this.eventHandlers);
+                (0, util_1.remove)(function (eventHandler) { return eventHandler === eventHandlerToRemove; }, _this.eventHandlers);
                 _this.element.removeEventListener(eventName, eventHandlerToRemove.handle);
             });
         }
@@ -7819,7 +7819,7 @@ var Embed = /** @class */ (function () {
      */
     Embed.prototype.on = function (eventName, handler) {
         if (this.allowedEvents.indexOf(eventName) === -1) {
-            throw new Error("eventName must be one of " + this.allowedEvents + ". You passed: " + eventName);
+            throw new Error("eventName must be one of ".concat(this.allowedEvents, ". You passed: ").concat(eventName));
         }
         this.eventHandlers.push({
             test: function (event) { return event.name === eventName; },
@@ -7890,7 +7890,7 @@ var Embed = /** @class */ (function () {
     Embed.prototype.getAccessToken = function (globalAccessToken) {
         var accessToken = this.config.accessToken || this.element.getAttribute(Embed.accessTokenAttribute) || globalAccessToken;
         if (!accessToken) {
-            throw new Error("No access token was found for element. You must specify an access token directly on the element using attribute '" + Embed.accessTokenAttribute + "' or specify a global token at: powerbi.accessToken.");
+            throw new Error("No access token was found for element. You must specify an access token directly on the element using attribute '".concat(Embed.accessTokenAttribute, "' or specify a global token at: powerbi.accessToken."));
         }
         return accessToken;
     };
@@ -7905,14 +7905,14 @@ var Embed = /** @class */ (function () {
         var _this = this;
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         if (this.bootstrapConfig) {
-            this.config = util_1.assign({}, this.bootstrapConfig, config);
+            this.config = (0, util_1.assign)({}, this.bootstrapConfig, config);
             // reset bootstrapConfig because we do not want to merge it in re-embed scenario.
             this.bootstrapConfig = null;
         }
         else {
             // Copy config - important for multiple iframe scenario.
             // Otherwise, if a user uses the same config twice, same unique Id which will be used in different iframes.
-            this.config = util_1.assign({}, config);
+            this.config = (0, util_1.assign)({}, config);
         }
         this.config.embedUrl = this.getEmbedUrl(isBootstrap);
         this.config.groupId = this.getGroupId();
@@ -7941,7 +7941,7 @@ var Embed = /** @class */ (function () {
         var registerQueryCallback = !!((_k = this.config.eventHooks) === null || _k === void 0 ? void 0 : _k.applicationContextProvider);
         delete this.config.eventHooks;
         if (registerQueryCallback && this.embedtype === "report")
-            this.config.embedUrl = util_1.addParamToUrl(this.config.embedUrl, "registerQueryCallback", "true");
+            this.config.embedUrl = (0, util_1.addParamToUrl)(this.config.embedUrl, "registerQueryCallback", "true");
         this.configChanged(isBootstrap);
     };
     /**
@@ -7957,10 +7957,10 @@ var Embed = /** @class */ (function () {
         }
         var localeSettings = config.settings.localeSettings;
         if (localeSettings && localeSettings.language) {
-            this.config.embedUrl = util_1.addParamToUrl(this.config.embedUrl, 'language', localeSettings.language);
+            this.config.embedUrl = (0, util_1.addParamToUrl)(this.config.embedUrl, 'language', localeSettings.language);
         }
         if (localeSettings && localeSettings.formatLocale) {
-            this.config.embedUrl = util_1.addParamToUrl(this.config.embedUrl, 'formatLocale', localeSettings.formatLocale);
+            this.config.embedUrl = (0, util_1.addParamToUrl)(this.config.embedUrl, 'formatLocale', localeSettings.formatLocale);
         }
     };
     /**
@@ -7977,7 +7977,7 @@ var Embed = /** @class */ (function () {
             embedUrl = this.getDefaultEmbedUrl(this.config.hostname);
         }
         if (typeof embedUrl !== 'string' || embedUrl.length === 0) {
-            throw new Error("Embed Url is required, but it was not found. You must provide an embed url either as part of embed configuration or as attribute '" + Embed.embedUrlAttribute + "'.");
+            throw new Error("Embed Url is required, but it was not found. You must provide an embed url either as part of embed configuration or as attribute '".concat(Embed.embedUrlAttribute, "'."));
         }
         return embedUrl;
     };
@@ -7995,9 +7995,9 @@ var Embed = /** @class */ (function () {
             throw new Error("HTTP is not allowed. HTTPS is required");
         }
         if (hostname.indexOf("https://") === 0) {
-            return hostname + "/" + endpoint;
+            return "".concat(hostname, "/").concat(endpoint);
         }
-        return "https://" + hostname + "/" + endpoint;
+        return "https://".concat(hostname, "/").concat(endpoint);
     };
     /**
      * Gets a unique ID from the first available location: options, attribute.
@@ -8008,7 +8008,7 @@ var Embed = /** @class */ (function () {
      * @hidden
      */
     Embed.prototype.getUniqueId = function () {
-        return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || util_1.createRandomString();
+        return this.config.uniqueId || this.element.getAttribute(Embed.nameAttribute) || (0, util_1.createRandomString)();
     };
     /**
      * Gets the group ID from the first available location: options, embeddedUrl.
@@ -8059,7 +8059,7 @@ var Embed = /** @class */ (function () {
         var _this = this;
         if (!this.iframe) {
             var iframeContent = document.createElement("iframe");
-            var embedUrl = this.config.uniqueId ? util_1.addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
+            var embedUrl = this.config.uniqueId ? (0, util_1.addParamToUrl)(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
             iframeContent.style.width = '100%';
             iframeContent.style.height = '100%';
             iframeContent.setAttribute("src", embedUrl);
@@ -8369,7 +8369,7 @@ var Page = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/filters", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/filters"), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -8405,7 +8405,7 @@ var Page = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.post("/report/pages/" + this.name + "/filters", updateFiltersRequest, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.post("/report/pages/".concat(this.name, "/filters"), updateFiltersRequest, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         response_2 = _a.sent();
@@ -8452,7 +8452,7 @@ var Page = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.report.service.hpm.put("/report/pages/" + this.name + "/filters", filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.put("/report/pages/".concat(this.name, "/filters"), filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         response_3 = _a.sent();
@@ -8479,7 +8479,7 @@ var Page = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.report.service.hpm.delete("/report/pages/" + this.name, {}, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.delete("/report/pages/".concat(this.name), {}, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -8546,7 +8546,7 @@ var Page = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.put("/report/pages/" + this.name + "/name", page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.put("/report/pages/".concat(this.name, "/name"), page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         response_6 = _a.sent();
@@ -8573,13 +8573,13 @@ var Page = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.report.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.report.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/visuals"), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body
@@ -8611,13 +8611,13 @@ var Page = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.report.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.report.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/visuals"), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         visual = response.body.find(function (v) { return v.name === visualName; });
@@ -8746,13 +8746,13 @@ var Page = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.report.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.report.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/visuals"), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body
@@ -8782,14 +8782,14 @@ var Page = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.report.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.report.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         layoutTypeEnum = powerbi_models_1.LayoutType[layoutType];
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/layoutTypes/" + layoutTypeEnum, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/layoutTypes/").concat(layoutTypeEnum), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -8856,7 +8856,14 @@ Object.defineProperty(exports, "RelativeTimeFilterBuilder", { enumerable: true, 
  * Note: create an instance of the class with the default configuration for normal usage, or save the class so that you can create an instance of the service.
  */
 var powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
-window.powerbi = powerbi;
+// powerBI SDK may use Power BI object under different key, in order to avoid name collisions
+if (window.powerbi && window.powerBISDKGlobalServiceInstanceName) {
+    window[window.powerBISDKGlobalServiceInstanceName] = powerbi;
+}
+else {
+    // Default to Power BI.
+    window.powerbi = powerbi;
+}
 
 
 /***/ }),
@@ -8999,7 +9006,7 @@ var Qna = /** @class */ (function (_super) {
      * Validate load configuration.
      */
     Qna.prototype.validate = function (config) {
-        return powerbi_models_1.validateLoadQnaConfiguration(config);
+        return (0, powerbi_models_1.validateLoadQnaConfiguration)(config);
     };
     /** @hidden */
     Qna.type = "Qna";
@@ -9072,10 +9079,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Report = void 0;
@@ -9220,7 +9231,7 @@ var Report = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.service.hpm.delete("/report/pages/" + pageName, {}, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                        return [4 /*yield*/, this.service.hpm.delete("/report/pages/".concat(pageName), {}, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -9255,7 +9266,7 @@ var Report = /** @class */ (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.service.hpm.put("/report/pages/" + pageName + "/name", page, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                        return [4 /*yield*/, this.service.hpm.put("/report/pages/".concat(pageName, "/name"), page, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -9286,7 +9297,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
@@ -9350,7 +9361,7 @@ var Report = /** @class */ (function (_super) {
     Report.prototype.removeFilters = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                     return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                 }
                 return [2 /*return*/, this.updateFilters(powerbi_models_1.FiltersOperations.RemoveAll)];
@@ -9380,7 +9391,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
@@ -9405,7 +9416,7 @@ var Report = /** @class */ (function (_super) {
         var config = this.config;
         var reportId = config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(config.embedUrl);
         if (typeof reportId !== 'string' || reportId.length === 0) {
-            throw new Error("Report id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '" + Report.reportIdAttribute + "'.");
+            throw new Error("Report id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '".concat(Report.reportIdAttribute, "'."));
         }
         return reportId;
     };
@@ -9428,7 +9439,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
@@ -9466,7 +9477,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
@@ -9506,7 +9517,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
@@ -9552,7 +9563,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
@@ -9587,7 +9598,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         page = {
@@ -9635,7 +9646,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl) && settings.customLayout != null) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl) && settings.customLayout != null) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _c.label = 1;
@@ -9669,10 +9680,10 @@ var Report = /** @class */ (function (_super) {
      * @hidden
      */
     Report.prototype.validate = function (config) {
-        if (util_1.isRDLEmbed(this.config.embedUrl)) {
-            return powerbi_models_1.validatePaginatedReportLoad(config);
+        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
+            return (0, powerbi_models_1.validatePaginatedReportLoad)(config);
         }
-        return powerbi_models_1.validateReportLoad(config);
+        return (0, powerbi_models_1.validateReportLoad)(config);
     };
     /**
      * Handle config changes.
@@ -9682,7 +9693,7 @@ var Report = /** @class */ (function (_super) {
     Report.prototype.configChanged = function (isBootstrap) {
         var config = this.config;
         if (this.isMobileSettings(config.settings)) {
-            config.embedUrl = util_1.addParamToUrl(config.embedUrl, "isMobile", "true");
+            config.embedUrl = (0, util_1.addParamToUrl)(config.embedUrl, "isMobile", "true");
         }
         // Calculate settings from HTML element attributes if available.
         var filterPaneEnabledAttribute = this.element.getAttribute(Report.filterPaneEnabledAttribute);
@@ -9692,7 +9703,7 @@ var Report = /** @class */ (function (_super) {
             navContentPaneEnabled: (navContentPaneEnabledAttribute == null) ? undefined : (navContentPaneEnabledAttribute !== "false")
         };
         // Set the settings back into the config.
-        this.config.settings = util_1.assign({}, elementAttrSettings, config.settings);
+        this.config.settings = (0, util_1.assign)({}, elementAttrSettings, config.settings);
         if (isBootstrap) {
             return;
         }
@@ -9778,10 +9789,10 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
-                        return [4 /*yield*/, util_1.isSavedInternal(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow)];
+                        return [4 /*yield*/, (0, util_1.isSavedInternal)(this.service.hpm, this.config.uniqueId, this.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -9799,7 +9810,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         return [4 /*yield*/, this.applyThemeInternal(theme)];
@@ -9820,7 +9831,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         return [4 /*yield*/, this.applyThemeInternal({})];
@@ -9842,7 +9853,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         _a.label = 1;
@@ -9957,7 +9968,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         commandCopy = JSON.parse(JSON.stringify(this.commands));
@@ -10008,7 +10019,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         newCommands = this.createMenuCommand("visualContextMenu", commandName, commandTitle, contextMenuTitle, menuLocation, visualName, visualType, groupName);
@@ -10044,7 +10055,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         commandCopy = JSON.parse(JSON.stringify(this.commands));
@@ -10099,7 +10110,7 @@ var Report = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (util_1.isRDLEmbed(this.config.embedUrl)) {
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
                             return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
                         }
                         newCommands = this.createMenuCommand("visualOptionsMenu", commandName, commandTitle, optionsMenuTitle, menuLocation, visualName, visualType, groupName, commandIcon);
@@ -10322,7 +10333,7 @@ var Report = /** @class */ (function (_super) {
                 visualType: visualType
             };
         }
-        return __spreadArray(__spreadArray([], this.commands), [newCommandObj]);
+        return __spreadArray(__spreadArray([], this.commands, true), [newCommandObj], false);
     };
     /**
      * @hidden
@@ -10657,7 +10668,7 @@ var Service = /** @class */ (function () {
         var _this = this;
         if (config === void 0) { config = undefined; }
         container = (container && container instanceof HTMLElement) ? container : document.body;
-        var elements = Array.prototype.slice.call(container.querySelectorAll("[" + embed_1.Embed.embedUrlAttribute + "]"));
+        var elements = Array.prototype.slice.call(container.querySelectorAll("[".concat(embed_1.Embed.embedUrlAttribute, "]")));
         return elements.map(function (element) { return _this.embed(element, config); });
     };
     /**
@@ -10706,7 +10717,7 @@ var Service = /** @class */ (function () {
         var powerBiElement = element;
         if (powerBiElement.powerBiEmbed) {
             if (isBootstrap) {
-                throw new Error("Attempted to bootstrap element " + element.outerHTML + ", but the element is already a powerbi element.");
+                throw new Error("Attempted to bootstrap element ".concat(element.outerHTML, ", but the element is already a powerbi element."));
             }
             component = this.embedExisting(powerBiElement, config, phasedRender);
         }
@@ -10738,13 +10749,13 @@ var Service = /** @class */ (function () {
     Service.prototype.embedNew = function (element, config, phasedRender, isBootstrap) {
         var componentType = config.type || element.getAttribute(embed_1.Embed.typeAttribute);
         if (!componentType) {
-            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed_1.Embed.typeAttribute + "=\"" + report_1.Report.type.toLowerCase() + "\"'.");
+            throw new Error("Attempted to embed using config ".concat(JSON.stringify(config), " on element ").concat(element.outerHTML, ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '").concat(embed_1.Embed.typeAttribute, "=\"").concat(report_1.Report.type.toLowerCase(), "\"'."));
         }
         // Saves the type as part of the configuration so that it can be referenced later at a known location.
         config.type = componentType;
         var Component = utils.find(function (embedComponent) { return componentType === embedComponent.type.toLowerCase(); }, Service.components);
         if (!Component) {
-            throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
+            throw new Error("Attempted to embed component of type: ".concat(componentType, " but did not find any matching component.  Please verify the type you specified is intended."));
         }
         var component = new Component(this, element, config, phasedRender, isBootstrap);
         element.powerBiEmbed = component;
@@ -10763,7 +10774,7 @@ var Service = /** @class */ (function () {
     Service.prototype.embedExisting = function (element, config, phasedRender) {
         var component = utils.find(function (x) { return x.element === element; }, this.embeds);
         if (!component) {
-            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
+            throw new Error("Attempted to embed using config ".concat(JSON.stringify(config), " on element ").concat(element.outerHTML, " which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element."));
         }
         // TODO: Multiple embedding to the same iframe is not supported in QnA
         if (config.type && config.type.toLowerCase() === "qna") {
@@ -10786,7 +10797,7 @@ var Service = /** @class */ (function () {
                 this.addOrOverwriteEmbed(component, element);
                 return report;
             }
-            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but the existing element contains an embed of type: " + this.config.type + " which does not match the new type: " + config.type);
+            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ".concat(JSON.stringify(config), " on element ").concat(element.outerHTML, ", but the existing element contains an embed of type: ").concat(this.config.type, " which does not match the new type: ").concat(config.type));
         }
         component.populateConfig(config, /* isBootstrap */ false);
         component.load(phasedRender);
@@ -10851,7 +10862,7 @@ var Service = /** @class */ (function () {
     Service.prototype.get = function (element) {
         var powerBiElement = element;
         if (!powerBiElement.powerBiEmbed) {
-            throw new Error("You attempted to get an instance of powerbi component associated with element: " + element.outerHTML + " but there was no associated instance.");
+            throw new Error("You attempted to get an instance of powerbi component associated with element: ".concat(element.outerHTML, " but there was no associated instance."));
         }
         return powerBiElement.powerBiEmbed;
     };
@@ -10944,7 +10955,7 @@ var Service = /** @class */ (function () {
                 var pageKey = 'newPage';
                 var page = value[pageKey];
                 if (!page) {
-                    throw new Error("Page model not found at 'event.value." + pageKey + "'.");
+                    throw new Error("Page model not found at 'event.value.".concat(pageKey, "'."));
                 }
                 value[pageKey] = new page_1.Page(embed, page.name, page.displayName, true /* isActive */);
             }
@@ -11071,7 +11082,7 @@ var Tile = /** @class */ (function (_super) {
      */
     Tile.prototype.validate = function (config) {
         var embedConfig = config;
-        return powerbi_models_1.validateTileLoad(embedConfig);
+        return (0, powerbi_models_1.validateTileLoad)(embedConfig);
     };
     /**
      * Handle config changes.
@@ -11203,7 +11214,7 @@ exports.raiseCustomEvent = raiseCustomEvent;
  */
 function findIndex(predicate, xs) {
     if (!Array.isArray(xs)) {
-        throw new Error("You attempted to call find with second parameter that was not an array. You passed: " + xs);
+        throw new Error("You attempted to call find with second parameter that was not an array. You passed: ".concat(xs));
     }
     var index;
     xs.some(function (x, i) {
@@ -11578,7 +11589,7 @@ var Visual = /** @class */ (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.service.hpm.get("/report/pages/" + config.pageName + "/visuals", { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                        return [4 /*yield*/, this.service.hpm.get("/report/pages/".concat(config.pageName, "/visuals"), { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         embeddedVisuals = response.body.filter(function (pageVisual) { return pageVisual.name === config.visualName; });
@@ -11744,9 +11755,9 @@ var Visual = /** @class */ (function (_super) {
             case powerbi_models_1.FiltersLevel.Report:
                 return "/report/filters";
             case powerbi_models_1.FiltersLevel.Page:
-                return "/report/pages/" + config.pageName + "/filters";
+                return "/report/pages/".concat(config.pageName, "/filters");
             default:
-                return "/report/pages/" + config.pageName + "/visuals/" + config.visualName + "/filters";
+                return "/report/pages/".concat(config.pageName, "/visuals/").concat(config.visualName, "/filters");
         }
     };
     /** @hidden */
@@ -11847,7 +11858,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.get("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/filters"), { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -11883,7 +11894,7 @@ var VisualDescriptor = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", updateFiltersRequest, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/filters"), updateFiltersRequest, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         response_2 = _a.sent();
@@ -11930,7 +11941,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/filters"), filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         response_3 = _a.sent();
@@ -11966,7 +11977,7 @@ var VisualDescriptor = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/exportData", exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/exportData"), exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -11995,7 +12006,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/slicer", state, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/slicer"), state, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         response_5 = _a.sent();
@@ -12023,7 +12034,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/slicer", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.get("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/slicer"), { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -12048,7 +12059,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/clone", request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/clone"), request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -12077,7 +12088,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/sortBy", request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/sortBy"), request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         response_8 = _a.sent();

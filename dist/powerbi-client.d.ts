@@ -2771,6 +2771,7 @@ declare module "powerbi-client" {
     global {
         interface Window {
             powerbi: service.Service;
+            powerBISDKGlobalServiceInstanceName?: string;
         }
     }
 }
