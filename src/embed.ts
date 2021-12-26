@@ -109,6 +109,14 @@ export abstract class Embed {
   eventHandlers: IInternalEventHandler<any>[];
 
   /**
+  * Gets or sets the eventHooks.
+  *
+  * @type {models.EventHooks}
+  * @hidden
+  */
+  eventHooks: models.EventHooks;
+
+  /**
    * Gets or sets the Power BI embed service.
    *
    * @type {service.Service}
@@ -537,12 +545,39 @@ export abstract class Embed {
       this.config.accessToken = this.getAccessToken(this.service.accessToken);
     }
 
-    const registerQueryCallback = !!(<IEmbedConfiguration>this.config).eventHooks?.applicationContextProvider;
+    this.eventHooks = (<IEmbedConfiguration>this.config).eventHooks;
+    this.validateEventHooks(this.eventHooks);
     delete (<IEmbedConfiguration>this.config).eventHooks;
-    if (registerQueryCallback && this.embedtype === "report")
-      this.config.embedUrl = addParamToUrl(this.config.embedUrl, "registerQueryCallback", "true");
 
     this.configChanged(isBootstrap);
+  }
+
+  /**
+ * Validate EventHooks
+ *
+ * @private
+ * @param {models.EventHooks} eventHooks
+ * @hidden
+ */
+  private validateEventHooks(eventHooks: models.EventHooks): void {
+    if (!eventHooks) {
+      return;
+    }
+
+    for (var key in eventHooks) {
+      if (eventHooks.hasOwnProperty(key) && typeof eventHooks[key] !== 'function') {
+        throw new Error(key + " must be a function");
+      }
+    }
+
+    const applicationContextProvider = eventHooks.applicationContextProvider;
+    if (!!applicationContextProvider) {
+      if (this.embedtype.toLowerCase() !== "report") {
+        throw new Error("applicationContextProvider is only supported in report embed");
+      }
+
+      this.config.embedUrl = addParamToUrl(this.config.embedUrl, "registerQueryCallback", "true");
+    }
   }
 
   /**

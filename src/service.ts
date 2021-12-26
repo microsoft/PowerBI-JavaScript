@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { WindowPostMessageProxy } from 'window-post-message-proxy';
 import { HttpPostMessage } from 'http-post-message';
-import { Router } from 'powerbi-router';
+import { Router, IExtendedRequest, Response as IExtendedResponse } from 'powerbi-router';
 import { IPage, IReportCreateConfiguration } from 'powerbi-models';
 import {
   Embed,
@@ -162,6 +162,26 @@ export class Service implements IService {
     this.router = routerFactory(this.wpmp);
     this.uniqueSessionId = utils.generateUUID();
 
+    this.router.post('/reports/:uniqueId/eventHooks/:eventName', async (req, _res) => {
+      let embed = utils.find(embed => {
+        return (embed.config.uniqueId === req.params.uniqueId);
+      }, this.embeds);
+
+      if (!embed) {
+        return;
+      }
+
+      switch (req.params.eventName) {
+        case "preQuery":
+          req.body = req.body || {};
+          req.body.report = embed;
+          await this.invokeSDKHook(embed.eventHooks.applicationContextProvider, req, _res);
+          break;
+        default:
+          break;
+      }
+    });
+
     /**
      * Adds handler for report events.
      */
@@ -300,7 +320,6 @@ export class Service implements IService {
    * @returns {Embed}
    */
   embed(element: HTMLElement, config: IComponentEmbedConfiguration | IEmbedConfigurationBase = {}): Embed {
-    this.registerApplicationContextHook(config as IEmbedConfiguration);
     return this.embedInternal(element, config);
   }
 
@@ -315,7 +334,6 @@ export class Service implements IService {
    * @returns {Embed}
    */
   load(element: HTMLElement, config: IComponentEmbedConfiguration | IEmbedConfigurationBase = {}): Embed {
-    this.registerApplicationContextHook(config as IEmbedConfiguration);
     return this.embedInternal(element, config, /* phasedRender */ true, /* isBootstrap */ false);
   }
 
@@ -326,7 +344,6 @@ export class Service implements IService {
    * @param {IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
    */
   bootstrap(element: HTMLElement, config: IComponentEmbedConfiguration | IBootstrapEmbedConfiguration): Embed {
-    this.registerApplicationContextHook(config as IEmbedConfiguration);
     return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
   }
 
@@ -444,34 +461,6 @@ export class Service implements IService {
   }
 
   /**
-   * @hidden
-   */
-  private registerApplicationContextHook(config: IEmbedConfiguration): void {
-    const applicationContextProvider = config?.eventHooks?.applicationContextProvider;
-    if (!applicationContextProvider) {
-      return;
-    }
-
-    if (config?.type.toLowerCase() !== "report") {
-      throw new Error("applicationContextProvider is only supported in report embed");
-    }
-
-    if (typeof applicationContextProvider !== 'function') {
-      throw new Error("applicationContextProvider must be a function");
-    }
-
-    this.router.post(`preQuery`, async (req, _res) => {
-      try {
-        const result = await applicationContextProvider(req.body);
-        _res.send(200, result);
-      } catch (error) {
-        _res.send(400, null);
-        console.error(error);
-      }
-    });
-  }
-
-  /**
    * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
    * and automatically attempts to embed a powerbi component based on information from other powerbi-* attributes.
    *
@@ -578,6 +567,16 @@ export class Service implements IService {
   handleTileEvents(event: IEvent<any>): void {
     if (event.type === 'tile') {
       this.handleEvent(event);
+    }
+  }
+
+  private async invokeSDKHook(hook: Function, req: IExtendedRequest, res: IExtendedResponse): Promise<void> {
+    try {
+      let result = await hook(req.body);
+      res.send(200, result);
+    } catch (error) {
+      res.send(400, null);
+      console.error(error);
     }
   }
 

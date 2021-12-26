@@ -7427,7 +7427,7 @@ var Dashboard = /** @class */ (function (_super) {
         var config = this.config;
         var dashboardId = config.id || this.element.getAttribute(Dashboard.dashboardIdAttribute) || Dashboard.findIdFromEmbedUrl(config.embedUrl);
         if (typeof dashboardId !== 'string' || dashboardId.length === 0) {
-            throw new Error("Dashboard id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '".concat(Dashboard.dashboardIdAttribute, "'."));
+            throw new Error("Dashboard id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '" + Dashboard.dashboardIdAttribute + "'.");
         }
         return dashboardId;
     };
@@ -7819,7 +7819,7 @@ var Embed = /** @class */ (function () {
      */
     Embed.prototype.on = function (eventName, handler) {
         if (this.allowedEvents.indexOf(eventName) === -1) {
-            throw new Error("eventName must be one of ".concat(this.allowedEvents, ". You passed: ").concat(eventName));
+            throw new Error("eventName must be one of " + this.allowedEvents + ". You passed: " + eventName);
         }
         this.eventHandlers.push({
             test: function (event) { return event.name === eventName; },
@@ -7890,7 +7890,7 @@ var Embed = /** @class */ (function () {
     Embed.prototype.getAccessToken = function (globalAccessToken) {
         var accessToken = this.config.accessToken || this.element.getAttribute(Embed.accessTokenAttribute) || globalAccessToken;
         if (!accessToken) {
-            throw new Error("No access token was found for element. You must specify an access token directly on the element using attribute '".concat(Embed.accessTokenAttribute, "' or specify a global token at: powerbi.accessToken."));
+            throw new Error("No access token was found for element. You must specify an access token directly on the element using attribute '" + Embed.accessTokenAttribute + "' or specify a global token at: powerbi.accessToken.");
         }
         return accessToken;
     };
@@ -7903,7 +7903,7 @@ var Embed = /** @class */ (function () {
      */
     Embed.prototype.populateConfig = function (config, isBootstrap) {
         var _this = this;
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         if (this.bootstrapConfig) {
             this.config = (0, util_1.assign)({}, this.bootstrapConfig, config);
             // reset bootstrapConfig because we do not want to merge it in re-embed scenario.
@@ -7938,11 +7938,34 @@ var Embed = /** @class */ (function () {
         else {
             this.config.accessToken = this.getAccessToken(this.service.accessToken);
         }
-        var registerQueryCallback = !!((_k = this.config.eventHooks) === null || _k === void 0 ? void 0 : _k.applicationContextProvider);
+        this.eventHooks = this.config.eventHooks;
+        this.validateEventHooks(this.eventHooks);
         delete this.config.eventHooks;
-        if (registerQueryCallback && this.embedtype === "report")
-            this.config.embedUrl = (0, util_1.addParamToUrl)(this.config.embedUrl, "registerQueryCallback", "true");
         this.configChanged(isBootstrap);
+    };
+    /**
+   * Validate EventHooks
+   *
+   * @private
+   * @param {models.EventHooks} eventHooks
+   * @hidden
+   */
+    Embed.prototype.validateEventHooks = function (eventHooks) {
+        if (!eventHooks) {
+            return;
+        }
+        for (var key in eventHooks) {
+            if (eventHooks.hasOwnProperty(key) && typeof eventHooks[key] !== 'function') {
+                throw new Error(key + " must be a function");
+            }
+        }
+        var applicationContextProvider = eventHooks.applicationContextProvider;
+        if (!!applicationContextProvider) {
+            if (this.embedtype.toLowerCase() !== "report") {
+                throw new Error("applicationContextProvider is only supported in report embed");
+            }
+            this.config.embedUrl = (0, util_1.addParamToUrl)(this.config.embedUrl, "registerQueryCallback", "true");
+        }
     };
     /**
      * Adds locale parameters to embedUrl
@@ -7977,7 +8000,7 @@ var Embed = /** @class */ (function () {
             embedUrl = this.getDefaultEmbedUrl(this.config.hostname);
         }
         if (typeof embedUrl !== 'string' || embedUrl.length === 0) {
-            throw new Error("Embed Url is required, but it was not found. You must provide an embed url either as part of embed configuration or as attribute '".concat(Embed.embedUrlAttribute, "'."));
+            throw new Error("Embed Url is required, but it was not found. You must provide an embed url either as part of embed configuration or as attribute '" + Embed.embedUrlAttribute + "'.");
         }
         return embedUrl;
     };
@@ -7995,9 +8018,9 @@ var Embed = /** @class */ (function () {
             throw new Error("HTTP is not allowed. HTTPS is required");
         }
         if (hostname.indexOf("https://") === 0) {
-            return "".concat(hostname, "/").concat(endpoint);
+            return hostname + "/" + endpoint;
         }
-        return "https://".concat(hostname, "/").concat(endpoint);
+        return "https://" + hostname + "/" + endpoint;
     };
     /**
      * Gets a unique ID from the first available location: options, attribute.
@@ -8369,7 +8392,7 @@ var Page = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/filters"), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/filters", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -8405,7 +8428,7 @@ var Page = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.post("/report/pages/".concat(this.name, "/filters"), updateFiltersRequest, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.post("/report/pages/" + this.name + "/filters", updateFiltersRequest, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         response_2 = _a.sent();
@@ -8452,7 +8475,7 @@ var Page = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.report.service.hpm.put("/report/pages/".concat(this.name, "/filters"), filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.put("/report/pages/" + this.name + "/filters", filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         response_3 = _a.sent();
@@ -8479,7 +8502,7 @@ var Page = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.report.service.hpm.delete("/report/pages/".concat(this.name), {}, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.delete("/report/pages/" + this.name, {}, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -8546,7 +8569,7 @@ var Page = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.put("/report/pages/".concat(this.name, "/name"), page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.put("/report/pages/" + this.name + "/name", page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         response_6 = _a.sent();
@@ -8579,7 +8602,7 @@ var Page = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/visuals"), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body
@@ -8617,7 +8640,7 @@ var Page = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/visuals"), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         visual = response.body.find(function (v) { return v.name === visualName; });
@@ -8752,7 +8775,7 @@ var Page = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/visuals"), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/visuals", { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body
@@ -8789,7 +8812,7 @@ var Page = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/layoutTypes/").concat(layoutTypeEnum), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/" + this.name + "/layoutTypes/" + layoutTypeEnum, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -9231,7 +9254,7 @@ var Report = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.service.hpm.delete("/report/pages/".concat(pageName), {}, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                        return [4 /*yield*/, this.service.hpm.delete("/report/pages/" + pageName, {}, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -9266,7 +9289,7 @@ var Report = /** @class */ (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.service.hpm.put("/report/pages/".concat(pageName, "/name"), page, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                        return [4 /*yield*/, this.service.hpm.put("/report/pages/" + pageName + "/name", page, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -9416,7 +9439,7 @@ var Report = /** @class */ (function (_super) {
         var config = this.config;
         var reportId = config.id || this.element.getAttribute(Report.reportIdAttribute) || Report.findIdFromEmbedUrl(config.embedUrl);
         if (typeof reportId !== 'string' || reportId.length === 0) {
-            throw new Error("Report id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '".concat(Report.reportIdAttribute, "'."));
+            throw new Error("Report id is required, but it was not found. You must provide an id either as part of embed configuration or as attribute '" + Report.reportIdAttribute + "'.");
         }
         return reportId;
     };
@@ -10562,6 +10585,34 @@ var Service = /** @class */ (function () {
         this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
         this.router = routerFactory(this.wpmp);
         this.uniqueSessionId = utils.generateUUID();
+        this.router.post('/reports/:uniqueId/eventHooks/:eventName', function (req, _res) { return __awaiter(_this, void 0, void 0, function () {
+            var embed, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        embed = utils.find(function (embed) {
+                            return (embed.config.uniqueId === req.params.uniqueId);
+                        }, this.embeds);
+                        if (!embed) {
+                            return [2 /*return*/];
+                        }
+                        _a = req.params.eventName;
+                        switch (_a) {
+                            case "preQuery": return [3 /*break*/, 1];
+                        }
+                        return [3 /*break*/, 3];
+                    case 1:
+                        req.body = req.body || {};
+                        req.body.report = embed;
+                        return [4 /*yield*/, this.invokeSDKHook(embed.eventHooks.applicationContextProvider, req, _res)];
+                    case 2:
+                        _b.sent();
+                        return [3 /*break*/, 4];
+                    case 3: return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        }); });
         /**
          * Adds handler for report events.
          */
@@ -10668,7 +10719,7 @@ var Service = /** @class */ (function () {
         var _this = this;
         if (config === void 0) { config = undefined; }
         container = (container && container instanceof HTMLElement) ? container : document.body;
-        var elements = Array.prototype.slice.call(container.querySelectorAll("[".concat(embed_1.Embed.embedUrlAttribute, "]")));
+        var elements = Array.prototype.slice.call(container.querySelectorAll("[" + embed_1.Embed.embedUrlAttribute + "]"));
         return elements.map(function (element) { return _this.embed(element, config); });
     };
     /**
@@ -10682,7 +10733,6 @@ var Service = /** @class */ (function () {
      */
     Service.prototype.embed = function (element, config) {
         if (config === void 0) { config = {}; }
-        this.registerApplicationContextHook(config);
         return this.embedInternal(element, config);
     };
     /**
@@ -10697,7 +10747,6 @@ var Service = /** @class */ (function () {
      */
     Service.prototype.load = function (element, config) {
         if (config === void 0) { config = {}; }
-        this.registerApplicationContextHook(config);
         return this.embedInternal(element, config, /* phasedRender */ true, /* isBootstrap */ false);
     };
     /**
@@ -10707,7 +10756,6 @@ var Service = /** @class */ (function () {
      * @param {IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
      */
     Service.prototype.bootstrap = function (element, config) {
-        this.registerApplicationContextHook(config);
         return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
     };
     /** @hidden */
@@ -10717,7 +10765,7 @@ var Service = /** @class */ (function () {
         var powerBiElement = element;
         if (powerBiElement.powerBiEmbed) {
             if (isBootstrap) {
-                throw new Error("Attempted to bootstrap element ".concat(element.outerHTML, ", but the element is already a powerbi element."));
+                throw new Error("Attempted to bootstrap element " + element.outerHTML + ", but the element is already a powerbi element.");
             }
             component = this.embedExisting(powerBiElement, config, phasedRender);
         }
@@ -10749,13 +10797,13 @@ var Service = /** @class */ (function () {
     Service.prototype.embedNew = function (element, config, phasedRender, isBootstrap) {
         var componentType = config.type || element.getAttribute(embed_1.Embed.typeAttribute);
         if (!componentType) {
-            throw new Error("Attempted to embed using config ".concat(JSON.stringify(config), " on element ").concat(element.outerHTML, ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '").concat(embed_1.Embed.typeAttribute, "=\"").concat(report_1.Report.type.toLowerCase(), "\"'."));
+            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '" + embed_1.Embed.typeAttribute + "=\"" + report_1.Report.type.toLowerCase() + "\"'.");
         }
         // Saves the type as part of the configuration so that it can be referenced later at a known location.
         config.type = componentType;
         var Component = utils.find(function (embedComponent) { return componentType === embedComponent.type.toLowerCase(); }, Service.components);
         if (!Component) {
-            throw new Error("Attempted to embed component of type: ".concat(componentType, " but did not find any matching component.  Please verify the type you specified is intended."));
+            throw new Error("Attempted to embed component of type: " + componentType + " but did not find any matching component.  Please verify the type you specified is intended.");
         }
         var component = new Component(this, element, config, phasedRender, isBootstrap);
         element.powerBiEmbed = component;
@@ -10774,7 +10822,7 @@ var Service = /** @class */ (function () {
     Service.prototype.embedExisting = function (element, config, phasedRender) {
         var component = utils.find(function (x) { return x.element === element; }, this.embeds);
         if (!component) {
-            throw new Error("Attempted to embed using config ".concat(JSON.stringify(config), " on element ").concat(element.outerHTML, " which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element."));
+            throw new Error("Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + " which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.");
         }
         // TODO: Multiple embedding to the same iframe is not supported in QnA
         if (config.type && config.type.toLowerCase() === "qna") {
@@ -10797,48 +10845,11 @@ var Service = /** @class */ (function () {
                 this.addOrOverwriteEmbed(component, element);
                 return report;
             }
-            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ".concat(JSON.stringify(config), " on element ").concat(element.outerHTML, ", but the existing element contains an embed of type: ").concat(this.config.type, " which does not match the new type: ").concat(config.type));
+            throw new Error("Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config " + JSON.stringify(config) + " on element " + element.outerHTML + ", but the existing element contains an embed of type: " + this.config.type + " which does not match the new type: " + config.type);
         }
         component.populateConfig(config, /* isBootstrap */ false);
         component.load(phasedRender);
         return component;
-    };
-    /**
-     * @hidden
-     */
-    Service.prototype.registerApplicationContextHook = function (config) {
-        var _this = this;
-        var _a;
-        var applicationContextProvider = (_a = config === null || config === void 0 ? void 0 : config.eventHooks) === null || _a === void 0 ? void 0 : _a.applicationContextProvider;
-        if (!applicationContextProvider) {
-            return;
-        }
-        if ((config === null || config === void 0 ? void 0 : config.type.toLowerCase()) !== "report") {
-            throw new Error("applicationContextProvider is only supported in report embed");
-        }
-        if (typeof applicationContextProvider !== 'function') {
-            throw new Error("applicationContextProvider must be a function");
-        }
-        this.router.post("preQuery", function (req, _res) { return __awaiter(_this, void 0, void 0, function () {
-            var result, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, applicationContextProvider(req.body)];
-                    case 1:
-                        result = _a.sent();
-                        _res.send(200, result);
-                        return [3 /*break*/, 3];
-                    case 2:
-                        error_1 = _a.sent();
-                        _res.send(400, null);
-                        console.error(error_1);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); });
     };
     /**
      * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
@@ -10862,7 +10873,7 @@ var Service = /** @class */ (function () {
     Service.prototype.get = function (element) {
         var powerBiElement = element;
         if (!powerBiElement.powerBiEmbed) {
-            throw new Error("You attempted to get an instance of powerbi component associated with element: ".concat(element.outerHTML, " but there was no associated instance."));
+            throw new Error("You attempted to get an instance of powerbi component associated with element: " + element.outerHTML + " but there was no associated instance.");
         }
         return powerBiElement.powerBiEmbed;
     };
@@ -10938,6 +10949,28 @@ var Service = /** @class */ (function () {
             this.handleEvent(event);
         }
     };
+    Service.prototype.invokeSDKHook = function (hook, req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, hook(req.body)];
+                    case 1:
+                        result = _a.sent();
+                        res.send(200, result);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_1 = _a.sent();
+                        res.send(400, null);
+                        console.error(error_1);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     /**
      * Given an event object, finds the embed component with the matching type and ID, and invokes its handleEvent method with the event object.
      *
@@ -10955,7 +10988,7 @@ var Service = /** @class */ (function () {
                 var pageKey = 'newPage';
                 var page = value[pageKey];
                 if (!page) {
-                    throw new Error("Page model not found at 'event.value.".concat(pageKey, "'."));
+                    throw new Error("Page model not found at 'event.value." + pageKey + "'.");
                 }
                 value[pageKey] = new page_1.Page(embed, page.name, page.displayName, true /* isActive */);
             }
@@ -11214,7 +11247,7 @@ exports.raiseCustomEvent = raiseCustomEvent;
  */
 function findIndex(predicate, xs) {
     if (!Array.isArray(xs)) {
-        throw new Error("You attempted to call find with second parameter that was not an array. You passed: ".concat(xs));
+        throw new Error("You attempted to call find with second parameter that was not an array. You passed: " + xs);
     }
     var index;
     xs.some(function (x, i) {
@@ -11589,7 +11622,7 @@ var Visual = /** @class */ (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.service.hpm.get("/report/pages/".concat(config.pageName, "/visuals"), { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                        return [4 /*yield*/, this.service.hpm.get("/report/pages/" + config.pageName + "/visuals", { uid: this.config.uniqueId }, this.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         embeddedVisuals = response.body.filter(function (pageVisual) { return pageVisual.name === config.visualName; });
@@ -11755,9 +11788,9 @@ var Visual = /** @class */ (function (_super) {
             case powerbi_models_1.FiltersLevel.Report:
                 return "/report/filters";
             case powerbi_models_1.FiltersLevel.Page:
-                return "/report/pages/".concat(config.pageName, "/filters");
+                return "/report/pages/" + config.pageName + "/filters";
             default:
-                return "/report/pages/".concat(config.pageName, "/visuals/").concat(config.visualName, "/filters");
+                return "/report/pages/" + config.pageName + "/visuals/" + config.visualName + "/filters";
         }
     };
     /** @hidden */
@@ -11858,7 +11891,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.get("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/filters"), { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -11894,7 +11927,7 @@ var VisualDescriptor = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/filters"), updateFiltersRequest, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", updateFiltersRequest, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         response_2 = _a.sent();
@@ -11941,7 +11974,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/filters"), filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/filters", filters, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         response_3 = _a.sent();
@@ -11977,7 +12010,7 @@ var VisualDescriptor = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/exportData"), exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/exportData", exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 2:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -12006,7 +12039,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/slicer"), state, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/slicer", state, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         response_5 = _a.sent();
@@ -12034,7 +12067,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.get("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/slicer"), { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.get("/report/pages/" + this.page.name + "/visuals/" + this.name + "/slicer", { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -12059,7 +12092,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/clone"), request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/clone", request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1:
                         response = _a.sent();
                         return [2 /*return*/, response.body];
@@ -12088,7 +12121,7 @@ var VisualDescriptor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/sortBy"), request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                        return [4 /*yield*/, this.page.report.service.hpm.put("/report/pages/" + this.page.name + "/visuals/" + this.name + "/sortBy", request, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
                         response_8 = _a.sent();
