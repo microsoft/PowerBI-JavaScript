@@ -23,7 +23,7 @@ module.exports = function (config) {
       { pattern: './test/**/*.html', served: true, included: false }
     ],
     exclude: [],
-    reporters: argv.chrome ? ['coverage', 'kjhtml'] : ['spec', 'coverage', 'junit'],
+    reporters: argv.chrome ? ['kjhtml'] : ['spec', 'junit'],
     autoWatch: true,
     browsers: [browserName],
     browserNoActivityTimeout: 300000,
@@ -33,7 +33,6 @@ module.exports = function (config) {
       'karma-jasmine',
       'karma-spec-reporter',
       'karma-phantomjs-launcher',
-      'karma-coverage',
       'karma-jasmine-html-reporter',
       'karma-junit-reporter'
     ],
@@ -42,13 +41,6 @@ module.exports = function (config) {
         base: 'Chrome',
         flags: flags.concat("--no-sandbox", "--window-size=800,800"),
       },
-    },
-    preprocessors: { './tmp/**/*.js': ['coverage'] },
-    coverageReporter: {
-      reporters: [
-        { type: 'html' },
-        { type: 'text-summary' }
-      ]
     },
     junitReporter: {
       outputDir: 'tmp',
