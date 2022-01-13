@@ -564,7 +564,7 @@ export abstract class Embed {
       return;
     }
 
-    for (var key in eventHooks) {
+    for (let key in eventHooks) {
       if (eventHooks.hasOwnProperty(key) && typeof eventHooks[key] !== 'function') {
         throw new Error(key + " must be a function");
       }
@@ -577,6 +577,13 @@ export abstract class Embed {
       }
 
       this.config.embedUrl = addParamToUrl(this.config.embedUrl, "registerQueryCallback", "true");
+    }
+
+    const accessTokenProvider = eventHooks.accessTokenProvider;
+    if (!!accessTokenProvider) {
+      if (this.embedtype.toLowerCase() !== "report" || this.config.tokenType !== models.TokenType.Aad) {
+        throw new Error("accessTokenProvider is only supported in report SaaS embed");
+      }
     }
   }
 

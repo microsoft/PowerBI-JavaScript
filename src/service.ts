@@ -175,8 +175,15 @@ export class Service implements IService {
         case "preQuery":
           req.body = req.body || {};
           req.body.report = embed;
-          await this.invokeSDKHook(embed.eventHooks.applicationContextProvider, req, _res);
+          await this.invokeSDKHook(embed.eventHooks?.applicationContextProvider, req, _res);
           break;
+
+        case "newAccessToken":
+          req.body = req.body || {};
+          req.body.report = embed;
+          await this.invokeSDKHook(embed.eventHooks?.accessTokenProvider, req, _res);
+          break;
+
         default:
           break;
       }
@@ -571,6 +578,11 @@ export class Service implements IService {
   }
 
   private async invokeSDKHook(hook: Function, req: IExtendedRequest, res: IExtendedResponse): Promise<void> {
+    if (!hook) {
+      res.send(404, null);
+      return;
+    }
+
     try {
       let result = await hook(req.body);
       res.send(200, result);

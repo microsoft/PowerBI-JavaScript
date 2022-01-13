@@ -1,4 +1,4 @@
-// powerbi-client v2.18.7
+// powerbi-client v2.19.0
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -290,7 +290,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// powerbi-models v1.9.7
+// powerbi-models v1.9.8
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -7167,7 +7167,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.18.7',
+    version: '2.19.0',
     type: 'js'
 };
 exports.default = config;
@@ -7965,6 +7965,12 @@ var Embed = /** @class */ (function () {
                 throw new Error("applicationContextProvider is only supported in report embed");
             }
             this.config.embedUrl = (0, util_1.addParamToUrl)(this.config.embedUrl, "registerQueryCallback", "true");
+        }
+        var accessTokenProvider = eventHooks.accessTokenProvider;
+        if (!!accessTokenProvider) {
+            if (this.embedtype.toLowerCase() !== "report" || this.config.tokenType !== models.TokenType.Aad) {
+                throw new Error("accessTokenProvider is only supported in report SaaS embed");
+            }
         }
     };
     /**
@@ -10587,8 +10593,9 @@ var Service = /** @class */ (function () {
         this.uniqueSessionId = utils.generateUUID();
         this.router.post('/reports/:uniqueId/eventHooks/:eventName', function (req, _res) { return __awaiter(_this, void 0, void 0, function () {
             var embed, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var _b, _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
                         embed = utils.find(function (embed) {
                             return (embed.config.uniqueId === req.params.uniqueId);
@@ -10599,17 +10606,25 @@ var Service = /** @class */ (function () {
                         _a = req.params.eventName;
                         switch (_a) {
                             case "preQuery": return [3 /*break*/, 1];
+                            case "newAccessToken": return [3 /*break*/, 3];
                         }
-                        return [3 /*break*/, 3];
+                        return [3 /*break*/, 5];
                     case 1:
                         req.body = req.body || {};
                         req.body.report = embed;
-                        return [4 /*yield*/, this.invokeSDKHook(embed.eventHooks.applicationContextProvider, req, _res)];
+                        return [4 /*yield*/, this.invokeSDKHook((_b = embed.eventHooks) === null || _b === void 0 ? void 0 : _b.applicationContextProvider, req, _res)];
                     case 2:
-                        _b.sent();
-                        return [3 /*break*/, 4];
-                    case 3: return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        _d.sent();
+                        return [3 /*break*/, 6];
+                    case 3:
+                        req.body = req.body || {};
+                        req.body.report = embed;
+                        return [4 /*yield*/, this.invokeSDKHook((_c = embed.eventHooks) === null || _c === void 0 ? void 0 : _c.accessTokenProvider, req, _res)];
+                    case 4:
+                        _d.sent();
+                        return [3 /*break*/, 6];
+                    case 5: return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         }); });
@@ -10955,18 +10970,24 @@ var Service = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, hook(req.body)];
+                        if (!hook) {
+                            res.send(404, null);
+                            return [2 /*return*/];
+                        }
+                        _a.label = 1;
                     case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, hook(req.body)];
+                    case 2:
                         result = _a.sent();
                         res.send(200, result);
-                        return [3 /*break*/, 3];
-                    case 2:
+                        return [3 /*break*/, 4];
+                    case 3:
                         error_1 = _a.sent();
                         res.send(400, null);
                         console.error(error_1);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
