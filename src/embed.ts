@@ -109,11 +109,11 @@ export abstract class Embed {
   eventHandlers: IInternalEventHandler<any>[];
 
   /**
-  * Gets or sets the eventHooks.
-  *
-  * @type {models.EventHooks}
-  * @hidden
-  */
+   * Gets or sets the eventHooks.
+   *
+   * @type {models.EventHooks}
+   * @hidden
+   */
   eventHooks: models.EventHooks;
 
   /**

@@ -399,7 +399,8 @@ export class Service implements IService {
   private embedNew(element: IPowerBiElement, config: IComponentEmbedConfiguration | IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): Embed {
     const componentType = config.type || element.getAttribute(Embed.typeAttribute);
     if (!componentType) {
-      throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
+      const scrubbedConfig = { ...config, accessToken: "" };
+      throw new Error(`Attempted to embed using config ${JSON.stringify(scrubbedConfig)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
     }
 
     // Saves the type as part of the configuration so that it can be referenced later at a known location.
@@ -429,7 +430,8 @@ export class Service implements IService {
   private embedExisting(element: IPowerBiElement, config: IComponentEmbedConfiguration | IEmbedConfigurationBase, phasedRender?: boolean): Embed {
     const component = utils.find((x) => x.element === element, this.embeds);
     if (!component) {
-      throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
+      const scrubbedConfig = { ...config, accessToken: "" };
+      throw new Error(`Attempted to embed using config ${JSON.stringify(scrubbedConfig)} on element ${element.outerHTML} which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
     }
 
     // TODO: Multiple embedding to the same iframe is not supported in QnA
@@ -457,8 +459,8 @@ export class Service implements IService {
 
         return report;
       }
-
-      throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
+      const scrubbedConfig = { ...config, accessToken: "" };
+      throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(scrubbedConfig)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
     }
 
     component.populateConfig(config, /* isBootstrap */ false);

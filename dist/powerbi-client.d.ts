@@ -1,4 +1,4 @@
-// powerbi-client v2.19.0
+// powerbi-client v2.19.1
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
@@ -191,11 +191,11 @@ declare module "embed" {
          */
         eventHandlers: IInternalEventHandler<any>[];
         /**
-        * Gets or sets the eventHooks.
-        *
-        * @type {models.EventHooks}
-        * @hidden
-        */
+         * Gets or sets the eventHooks.
+         *
+         * @type {models.EventHooks}
+         * @hidden
+         */
         eventHooks: models.EventHooks;
         /**
          * Gets or sets the Power BI embed service.
