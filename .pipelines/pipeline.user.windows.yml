@@ -1,12 +1,10 @@
 environment:
   host:
-    os: 'windows'
-    flavor: 'server'
-    version: '2016'
+    os: "windows"
   runtime:
-    provider: 'appcontainer'
-    image: 'cdpxwinrs5.azurecr.io/global/vse2019/16.3.7:latest'
-    source_mode: 'map'
+    provider: "appcontainer"
+    image: "cdpxwinrs5.azurecr.io/global/vse2019:latest"
+    source_mode: "map"
 
 artifact_publish_options:
   publish_to_legacy_artifacts: false
