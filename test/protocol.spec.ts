@@ -4,7 +4,7 @@ import { WindowPostMessageProxy } from 'window-post-message-proxy';
 import { HttpPostMessage } from 'http-post-message';
 import { spyApp, setupEmbedMockApp } from './utility/mockEmbed';
 import { hpmFactory, routerFactory, wpmpFactory } from '../src/factories';
-import { iframeSrc, logMessages } from './constsants';
+import { iframeSrc } from './constsants';
 import * as models from 'powerbi-models';
 
 describe('Protocol', function () {
@@ -27,10 +27,10 @@ describe('Protocol', function () {
     await new Promise(resolve => iframe.addEventListener('load', () => resolve(null)));
 
     // Register Iframe side
-    iframeHpm = setupEmbedMockApp(iframe.contentWindow, window, logMessages, 'ProtocolMockAppWpmp');
+    iframeHpm = setupEmbedMockApp(iframe.contentWindow, window, 'ProtocolMockAppWpmp');
 
     // Register SDK side WPMP
-    wpmp = wpmpFactory('HostProxyDefaultNoHandlers', logMessages, iframe.contentWindow);
+    wpmp = wpmpFactory('HostProxyDefaultNoHandlers',false, iframe.contentWindow);
     hpm = hpmFactory(wpmp, iframe.contentWindow, 'testVersion');
 
     const router = routerFactory(wpmp);

@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { WindowPostMessageProxy } from 'window-post-message-proxy';
 import { HttpPostMessage } from 'http-post-message';
-import { Router } from 'powerbi-router';
+import { Router, IExtendedRequest, Response as IExtendedResponse } from 'powerbi-router';
 import { IPage, IReportCreateConfiguration } from 'powerbi-models';
 import {
   Embed,
@@ -162,6 +162,33 @@ export class Service implements IService {
     this.router = routerFactory(this.wpmp);
     this.uniqueSessionId = utils.generateUUID();
 
+    this.router.post('/reports/:uniqueId/eventHooks/:eventName', async (req, _res) => {
+      let embed = utils.find(embed => {
+        return (embed.config.uniqueId === req.params.uniqueId);
+      }, this.embeds);
+
+      if (!embed) {
+        return;
+      }
+
+      switch (req.params.eventName) {
+        case "preQuery":
+          req.body = req.body || {};
+          req.body.report = embed;
+          await this.invokeSDKHook(embed.eventHooks?.applicationContextProvider, req, _res);
+          break;
+
+        case "newAccessToken":
+          req.body = req.body || {};
+          req.body.report = embed;
+          await this.invokeSDKHook(embed.eventHooks?.accessTokenProvider, req, _res);
+          break;
+
+        default:
+          break;
+      }
+    });
+
     /**
      * Adds handler for report events.
      */
@@ -300,7 +327,6 @@ export class Service implements IService {
    * @returns {Embed}
    */
   embed(element: HTMLElement, config: IComponentEmbedConfiguration | IEmbedConfigurationBase = {}): Embed {
-    this.registerApplicationContextHook(config as IEmbedConfiguration);
     return this.embedInternal(element, config);
   }
 
@@ -315,7 +341,6 @@ export class Service implements IService {
    * @returns {Embed}
    */
   load(element: HTMLElement, config: IComponentEmbedConfiguration | IEmbedConfigurationBase = {}): Embed {
-    this.registerApplicationContextHook(config as IEmbedConfiguration);
     return this.embedInternal(element, config, /* phasedRender */ true, /* isBootstrap */ false);
   }
 
@@ -326,7 +351,6 @@ export class Service implements IService {
    * @param {IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
    */
   bootstrap(element: HTMLElement, config: IComponentEmbedConfiguration | IBootstrapEmbedConfiguration): Embed {
-    this.registerApplicationContextHook(config as IEmbedConfiguration);
     return this.embedInternal(element, config, /* phasedRender */ false, /* isBootstrap */ true);
   }
 
@@ -375,7 +399,8 @@ export class Service implements IService {
   private embedNew(element: IPowerBiElement, config: IComponentEmbedConfiguration | IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): Embed {
     const componentType = config.type || element.getAttribute(Embed.typeAttribute);
     if (!componentType) {
-      throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
+      const scrubbedConfig = { ...config, accessToken: "" };
+      throw new Error(`Attempted to embed using config ${JSON.stringify(scrubbedConfig)} on element ${element.outerHTML}, but could not determine what type of component to embed. You must specify a type in the configuration or as an attribute such as '${Embed.typeAttribute}="${Report.type.toLowerCase()}"'.`);
     }
 
     // Saves the type as part of the configuration so that it can be referenced later at a known location.
@@ -405,7 +430,8 @@ export class Service implements IService {
   private embedExisting(element: IPowerBiElement, config: IComponentEmbedConfiguration | IEmbedConfigurationBase, phasedRender?: boolean): Embed {
     const component = utils.find((x) => x.element === element, this.embeds);
     if (!component) {
-      throw new Error(`Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML} which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
+      const scrubbedConfig = { ...config, accessToken: "" };
+      throw new Error(`Attempted to embed using config ${JSON.stringify(scrubbedConfig)} on element ${element.outerHTML} which already has embedded component associated, but could not find the existing component in the list of active components. This could indicate the embeds list is out of sync with the DOM, or the component is referencing the incorrect HTML element.`);
     }
 
     // TODO: Multiple embedding to the same iframe is not supported in QnA
@@ -433,42 +459,14 @@ export class Service implements IService {
 
         return report;
       }
-
-      throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(config)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
+      const scrubbedConfig = { ...config, accessToken: "" };
+      throw new Error(`Embedding on an existing element with a different type than the previous embed object is not supported.  Attempted to embed using config ${JSON.stringify(scrubbedConfig)} on element ${element.outerHTML}, but the existing element contains an embed of type: ${this.config.type} which does not match the new type: ${config.type}`);
     }
 
     component.populateConfig(config, /* isBootstrap */ false);
     component.load(phasedRender);
 
     return component;
-  }
-
-  /**
-   * @hidden
-   */
-  private registerApplicationContextHook(config: IEmbedConfiguration): void {
-    const applicationContextProvider = config?.eventHooks?.applicationContextProvider;
-    if (!applicationContextProvider) {
-      return;
-    }
-
-    if (config?.type.toLowerCase() !== "report") {
-      throw new Error("applicationContextProvider is only supported in report embed");
-    }
-
-    if (typeof applicationContextProvider !== 'function') {
-      throw new Error("applicationContextProvider must be a function");
-    }
-
-    this.router.post(`preQuery`, async (req, _res) => {
-      try {
-        const result = await applicationContextProvider(req.body);
-        _res.send(200, result);
-      } catch (error) {
-        _res.send(400, null);
-        console.error(error);
-      }
-    });
   }
 
   /**
@@ -578,6 +576,21 @@ export class Service implements IService {
   handleTileEvents(event: IEvent<any>): void {
     if (event.type === 'tile') {
       this.handleEvent(event);
+    }
+  }
+
+  private async invokeSDKHook(hook: Function, req: IExtendedRequest, res: IExtendedResponse): Promise<void> {
+    if (!hook) {
+      res.send(404, null);
+      return;
+    }
+
+    try {
+      let result = await hook(req.body);
+      res.send(200, result);
+    } catch (error) {
+      res.send(400, null);
+      console.error(error);
     }
   }
 

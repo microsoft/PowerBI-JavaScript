@@ -60,6 +60,7 @@ declare var powerbi: service.Service;
 declare global {
   interface Window {
     powerbi: service.Service;
+    powerBISDKGlobalServiceInstanceName?: string;
   }
 }
 
@@ -69,4 +70,10 @@ declare global {
  * Note: create an instance of the class with the default configuration for normal usage, or save the class so that you can create an instance of the service.
  */
 var powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
-window.powerbi = powerbi;
+// powerBI SDK may use Power BI object under different key, in order to avoid name collisions
+if (window.powerbi && window.powerBISDKGlobalServiceInstanceName) {
+  window[window.powerBISDKGlobalServiceInstanceName] = powerbi;
+} else {
+  // Default to Power BI.
+  window.powerbi = powerbi;
+}

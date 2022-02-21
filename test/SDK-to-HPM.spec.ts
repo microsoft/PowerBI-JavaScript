@@ -2072,7 +2072,7 @@ describe('SDK-to-HPM', function () {
         spyHpm.get.and.returnValue(Promise.resolve(testData.response));
         try {
           await report.getTheme();
-          expect(spyHpm.put).toHaveBeenCalledWith('/report/theme', expectedHeaders, jasmine.any(Object));
+          expect(spyHpm.get).toHaveBeenCalledWith('/report/theme', expectedHeaders, jasmine.any(Object));
         } catch (error) {
           console.log("getTheme failed with", error);
           fail("getTheme failed");

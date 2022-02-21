@@ -70,7 +70,7 @@ export interface IInternalEventHandler<T> {
  */
 export abstract class Embed {
   /** @hidden */
-  static allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected", "buttonClicked"];
+  static allowedEvents = ["loaded", "saved", "rendered", "saveAsTriggered", "error", "dataSelected", "buttonClicked", "info"];
   /** @hidden */
   static accessTokenAttribute = 'powerbi-access-token';
   /** @hidden */
@@ -107,6 +107,14 @@ export abstract class Embed {
    * @hidden
    */
   eventHandlers: IInternalEventHandler<any>[];
+
+  /**
+   * Gets or sets the eventHooks.
+   *
+   * @type {models.EventHooks}
+   * @hidden
+   */
+  eventHooks: models.EventHooks;
 
   /**
    * Gets or sets the Power BI embed service.
@@ -537,12 +545,46 @@ export abstract class Embed {
       this.config.accessToken = this.getAccessToken(this.service.accessToken);
     }
 
-    const registerQueryCallback = !!(<IEmbedConfiguration>this.config).eventHooks?.applicationContextProvider;
+    this.eventHooks = (<IEmbedConfiguration>this.config).eventHooks;
+    this.validateEventHooks(this.eventHooks);
     delete (<IEmbedConfiguration>this.config).eventHooks;
-    if (registerQueryCallback && this.embedtype === "report")
-      this.config.embedUrl = addParamToUrl(this.config.embedUrl, "registerQueryCallback", "true");
 
     this.configChanged(isBootstrap);
+  }
+
+  /**
+ * Validate EventHooks
+ *
+ * @private
+ * @param {models.EventHooks} eventHooks
+ * @hidden
+ */
+  private validateEventHooks(eventHooks: models.EventHooks): void {
+    if (!eventHooks) {
+      return;
+    }
+
+    for (let key in eventHooks) {
+      if (eventHooks.hasOwnProperty(key) && typeof eventHooks[key] !== 'function') {
+        throw new Error(key + " must be a function");
+      }
+    }
+
+    const applicationContextProvider = eventHooks.applicationContextProvider;
+    if (!!applicationContextProvider) {
+      if (this.embedtype.toLowerCase() !== "report") {
+        throw new Error("applicationContextProvider is only supported in report embed");
+      }
+
+      this.config.embedUrl = addParamToUrl(this.config.embedUrl, "registerQueryCallback", "true");
+    }
+
+    const accessTokenProvider = eventHooks.accessTokenProvider;
+    if (!!accessTokenProvider) {
+      if (this.embedtype.toLowerCase() !== "report" || this.config.tokenType !== models.TokenType.Aad) {
+        throw new Error("accessTokenProvider is only supported in report SaaS embed");
+      }
+    }
   }
 
   /**
