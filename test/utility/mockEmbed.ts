@@ -9,7 +9,7 @@ import * as models from 'powerbi-models';
 
 export const spyApp = mockAppSpyObj;
 
-export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Window, logMessages: boolean, name: string = 'MockAppWindowPostMessageProxy'): HttpPostMessage {
+export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Window, name: string = 'MockAppWindowPostMessageProxy'): HttpPostMessage {
   const parent = parentWindow || iframeContentWindow.parent;
   const wpmp = new WindowPostMessageProxy({
     processTrackingProperties: {
@@ -19,7 +19,6 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
     isErrorMessage: HttpPostMessage.isErrorMessage,
     receiveWindow: iframeContentWindow,
     name,
-    logMessages
   });
   const hpm = new HttpPostMessage(wpmp, {
     'origin': 'reportEmbedMock',

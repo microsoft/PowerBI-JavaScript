@@ -1,4 +1,4 @@
-// powerbi-client v2.18.7
+// powerbi-client v2.19.1
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
@@ -190,6 +190,13 @@ declare module "embed" {
          * @hidden
          */
         eventHandlers: IInternalEventHandler<any>[];
+        /**
+         * Gets or sets the eventHooks.
+         *
+         * @type {models.EventHooks}
+         * @hidden
+         */
+        eventHooks: models.EventHooks;
         /**
          * Gets or sets the Power BI embed service.
          *
@@ -418,6 +425,14 @@ declare module "embed" {
          * @returns {void}
          */
         populateConfig(config: IBootstrapEmbedConfiguration, isBootstrap: boolean): void;
+        /**
+       * Validate EventHooks
+       *
+       * @private
+       * @param {models.EventHooks} eventHooks
+       * @hidden
+       */
+        private validateEventHooks;
         /**
          * Adds locale parameters to embedUrl
          *
@@ -2160,10 +2175,6 @@ declare module "service" {
          */
         private embedExisting;
         /**
-         * @hidden
-         */
-        private registerApplicationContextHook;
-        /**
          * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
          * and automatically attempts to embed a powerbi component based on information from other powerbi-* attributes.
          *
@@ -2211,6 +2222,7 @@ declare module "service" {
          * @hidden
          */
         handleTileEvents(event: IEvent<any>): void;
+        private invokeSDKHook;
         /**
          * Given an event object, finds the embed component with the matching type and ID, and invokes its handleEvent method with the event object.
          *
@@ -2771,6 +2783,7 @@ declare module "powerbi-client" {
     global {
         interface Window {
             powerbi: service.Service;
+            powerBISDKGlobalServiceInstanceName?: string;
         }
     }
 }

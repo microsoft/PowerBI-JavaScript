@@ -11,7 +11,7 @@ import * as models from 'powerbi-models';
 import * as factories from '../src/factories';
 import * as util from '../src/util';
 import { spyApp, setupEmbedMockApp } from './utility/mockEmbed';
-import { logMessages, iframeSrc } from './constsants';
+import { iframeSrc } from './constsants';
 
 describe('SDK-to-MockApp', function () {
   let element: HTMLDivElement;
@@ -29,8 +29,7 @@ describe('SDK-to-MockApp', function () {
 
   beforeEach(async function () {
     powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory, {
-      wpmpName: 'SDK-to-MockApp HostWpmp',
-      logMessages
+      wpmpName: 'SDK-to-MockApp HostWpmp'
     });
     element = document.createElement('div');
     element.id = "reportContainer1";
@@ -49,7 +48,7 @@ describe('SDK-to-MockApp', function () {
     (<any>powerbi.wpmp).eventSourceOverrideWindow = iframe.contentWindow;
     // Register Iframe side
     let hpmPostSpy = spyOn(powerbi.hpm, "post").and.returnValue(Promise.resolve(<any>{}));
-    iframeHpm = setupEmbedMockApp(iframe.contentWindow, window, logMessages, 'SDK-to-MockApp IframeWpmp');
+    iframeHpm = setupEmbedMockApp(iframe.contentWindow, window, 'SDK-to-MockApp IframeWpmp');
 
     await new Promise<void>((resolve, _reject) => {
       iframe.addEventListener('load', () => {
@@ -542,7 +541,7 @@ describe('SDK-to-MockApp', function () {
         document.body.appendChild(element2);
         const report2 = <report.Report>powerbi.embed(element2, embedConfiguration);
         const iframe2 = element2.getElementsByTagName('iframe')[0];
-        setupEmbedMockApp(iframe2.contentWindow, window, logMessages, 'SDK-to-MockApp IframeWpmp2');
+        setupEmbedMockApp(iframe2.contentWindow, window, 'SDK-to-MockApp IframeWpmp2');
         await new Promise<void>((resolve, _reject) => {
           iframe2.addEventListener('load', () => {
             resolve(null);

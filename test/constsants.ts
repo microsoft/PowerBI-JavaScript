@@ -7,8 +7,6 @@ declare global {
   }
 }
 
-export const logMessages = (window.__karma__.config.args[0] === 'logMessages');
-
 export const iframeSrc = "base/test/utility/noop.html";
 window.onbeforeunload = null;
 
