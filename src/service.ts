@@ -27,6 +27,7 @@ import { Page } from './page';
 import { Qna } from './qna';
 import { Visual } from './visual';
 import * as utils from './util';
+import * as sdkConfig from './config';
 
 export interface IEvent<T> {
   type: string;
@@ -385,6 +386,15 @@ export class Service implements IService {
   /** @hidden */
   getSdkSessionId(): string {
     return this.uniqueSessionId;
+  }
+
+  /**
+   * Returns the Power BI Client SDK version
+   *
+   * @hidden
+   */
+  getSDKVersion(): string {
+    return sdkConfig.default.version;
   }
 
   /**

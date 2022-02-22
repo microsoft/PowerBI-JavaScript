@@ -2155,6 +2155,12 @@ declare module "service" {
         /** @hidden */
         getSdkSessionId(): string;
         /**
+         * Returns the Power BI Client SDK version
+         *
+         * @hidden
+         */
+        getSDKVersion(): string;
+        /**
          * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
          *
          * @private
