@@ -1,0 +1,18 @@
+; This file supports the Ownership Enforcer (OE) system for Azure Fundamentals compliance.
+; For more information see https://onebranch.visualstudio.com/Ownership%20Enforcer/_wiki/wikis/Ownership-Enforcer.wiki
+
+; When a PR is created for a target branch protected by OE, each source directory touched by the PR is evaluated for ownership information
+; by finding the closest owners.txt file in or above that directory.  The union of all such owners.txt files for the PR dictates the set of
+; required reviewers for OE purposes.  To configure ownership information for a given directory and below, add a new owners.txt file there.
+; When doing this, consider starting with a copy of this owners.txt file to include the additional contextual information and guidance above.
+
+; Syntax guide:
+;  - Comments start with semicolons (;)
+;  - Enumerate each owner on a separate line with an alias (not an email address)
+;  - To use an Azure AD group, contact biessuport to ensure that AAD group is configured for use in OE
+;  - An alias may be prefixed with an asterisk (*) to give it approval privileges without making it an automatic reviewer (no notifications)
+;  - An alias may be prefixed with an at sign (@) to include it in notifications without giving it approval privileges
+
+; The default code reviewer for the PBI Client codebase is pbicr: Power BI Code Reviews
+; The default code reviewer outisde  PBI Client codebase is pbiclientes
+corembed
