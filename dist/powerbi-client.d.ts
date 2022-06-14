@@ -1,4 +1,4 @@
-// powerbi-client v2.19.1
+// powerbi-client v2.20.0
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
@@ -149,6 +149,14 @@ declare module "embed" {
     export interface IInternalEventHandler<T> {
         test(event: IEvent<T>): boolean;
         handle(event: ICustomEvent<T>): void;
+    }
+    /** @hidden */
+    export interface ISessionHeaders {
+        uid: string;
+        sdkSessionId: string;
+        tokenProviderSupplied?: boolean;
+        bootstrapped?: boolean;
+        sdkVersion?: string;
     }
     /**
      * Base class for all Power BI embed components
@@ -426,12 +434,12 @@ declare module "embed" {
          */
         populateConfig(config: IBootstrapEmbedConfiguration, isBootstrap: boolean): void;
         /**
-       * Validate EventHooks
-       *
-       * @private
-       * @param {models.EventHooks} eventHooks
-       * @hidden
-       */
+         * Validate EventHooks
+         *
+         * @private
+         * @param {models.EventHooks} eventHooks
+         * @hidden
+         */
         private validateEventHooks;
         /**
          * Adds locale parameters to embedUrl
@@ -1998,7 +2006,7 @@ declare module "visual" {
 declare module "service" {
     import { WindowPostMessageProxy } from 'window-post-message-proxy';
     import { HttpPostMessage } from 'http-post-message';
-    import { Router } from 'powerbi-router';
+    import { Router, IExtendedRequest, Response as IExtendedResponse } from 'powerbi-router';
     import { IReportCreateConfiguration } from 'powerbi-models';
     import { Embed, IBootstrapEmbedConfiguration, IDashboardEmbedConfiguration, IEmbedConfiguration, IEmbedConfigurationBase, IQnaEmbedConfiguration, IReportEmbedConfiguration, ITileEmbedConfiguration, IVisualEmbedConfiguration } from "embed";
     export interface IEvent<T> {
@@ -2091,7 +2099,7 @@ declare module "service" {
          * @hidden
          */
         wpmp: WindowPostMessageProxy;
-        private router;
+        router: Router;
         private uniqueSessionId;
         /**
          * Creates an instance of a Power BI Service.
@@ -2228,7 +2236,7 @@ declare module "service" {
          * @hidden
          */
         handleTileEvents(event: IEvent<any>): void;
-        private invokeSDKHook;
+        invokeSDKHook(hook: Function, req: IExtendedRequest, res: IExtendedResponse): Promise<void>;
         /**
          * Given an event object, finds the embed component with the matching type and ID, and invokes its handleEvent method with the event object.
          *

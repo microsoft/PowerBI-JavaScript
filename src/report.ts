@@ -40,6 +40,7 @@ import { IFilterable } from './ifilterable';
 import { Page } from './page';
 import { BookmarksManager } from './bookmarksManager';
 import { VisualDescriptor } from './visualDescriptor';
+import * as assert from 'assert';
 
 /**
  * A Report node within a report hierarchy
@@ -94,6 +95,26 @@ export class Report extends Embed implements IReportNode, IFilterable {
     Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
 
     this.bookmarksManager = new BookmarksManager(service, config, this.iframe);
+
+    service.router.post(`/reports/${this.config.uniqueId}/eventHooks/:eventName`, async (req, _res) => {
+      switch (req.params.eventName) {
+        case "preQuery":
+          req.body = req.body || {};
+          req.body.report = this;
+          await service.invokeSDKHook(this.eventHooks?.applicationContextProvider, req, _res);
+          break;
+
+        case "newAccessToken":
+          req.body = req.body || {};
+          req.body.report = this;
+          await service.invokeSDKHook(this.eventHooks?.accessTokenProvider, req, _res);
+          break;
+
+        default:
+          assert(false, `${req.params.eventName} eventHook is not supported`);
+          break;
+      }
+    });
   }
 
   /**

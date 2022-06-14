@@ -145,7 +145,7 @@ export class Service implements IService {
    * @hidden
    */
   wpmp: WindowPostMessageProxy;
-  private router: Router;
+  router: Router;
   private uniqueSessionId: string;
 
   /**
@@ -162,33 +162,6 @@ export class Service implements IService {
     this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
     this.router = routerFactory(this.wpmp);
     this.uniqueSessionId = utils.generateUUID();
-
-    this.router.post('/reports/:uniqueId/eventHooks/:eventName', async (req, _res) => {
-      let embed = utils.find(embed => {
-        return (embed.config.uniqueId === req.params.uniqueId);
-      }, this.embeds);
-
-      if (!embed) {
-        return;
-      }
-
-      switch (req.params.eventName) {
-        case "preQuery":
-          req.body = req.body || {};
-          req.body.report = embed;
-          await this.invokeSDKHook(embed.eventHooks?.applicationContextProvider, req, _res);
-          break;
-
-        case "newAccessToken":
-          req.body = req.body || {};
-          req.body.report = embed;
-          await this.invokeSDKHook(embed.eventHooks?.accessTokenProvider, req, _res);
-          break;
-
-        default:
-          break;
-      }
-    });
 
     /**
      * Adds handler for report events.
@@ -589,7 +562,7 @@ export class Service implements IService {
     }
   }
 
-  private async invokeSDKHook(hook: Function, req: IExtendedRequest, res: IExtendedResponse): Promise<void> {
+  async invokeSDKHook(hook: Function, req: IExtendedRequest, res: IExtendedResponse): Promise<void> {
     if (!hook) {
       res.send(404, null);
       return;
