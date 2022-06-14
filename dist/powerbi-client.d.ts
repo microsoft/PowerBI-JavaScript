@@ -1,4 +1,4 @@
-// powerbi-client v2.20.0
+// powerbi-client v2.20.1
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
