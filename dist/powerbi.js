@@ -1,4 +1,4 @@
-// powerbi-client v2.21.0
+// powerbi-client v2.21.1
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -8931,7 +8931,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.21.0',
+    version: '2.21.1',
     type: 'js'
 };
 exports.default = config;
@@ -10044,12 +10044,13 @@ var window_post_message_proxy_1 = __webpack_require__(/*! window-post-message-pr
 var http_post_message_1 = __webpack_require__(/*! http-post-message */ "./node_modules/http-post-message/dist/httpPostMessage.js");
 var powerbi_router_1 = __webpack_require__(/*! powerbi-router */ "./node_modules/powerbi-router/dist/router.js");
 var config_1 = __webpack_require__(/*! ./config */ "./src/config.ts");
-var hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
+var hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType, sdkWrapperVersion) {
     if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
     if (sdkType === void 0) { sdkType = config_1.default.type; }
     return new http_post_message_1.HttpPostMessage(wpmp, {
         'x-sdk-type': sdkType,
-        'x-sdk-version': sdkVersion
+        'x-sdk-version': sdkVersion,
+        'x-sdk-wrapper-version': sdkWrapperVersion,
     }, defaultTargetWindow);
 };
 exports.hpmFactory = hpmFactory;
@@ -12410,7 +12411,7 @@ var Service = /** @class */ (function () {
         if (config === void 0) { config = {}; }
         var _this = this;
         this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
-        this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
+        this.hpm = hpmFactory(this.wpmp, null, config.version, config.type, config.sdkWrapperVersion);
         this.router = routerFactory(this.wpmp);
         this.uniqueSessionId = utils.generateUUID();
         /**
@@ -12835,6 +12836,17 @@ var Service = /** @class */ (function () {
             utils.raiseCustomEvent(iframeContent, "preloaded", {});
         };
         return iframeContent;
+    };
+    /**
+     * Use this API to set SDK info
+     *
+     * @hidden
+     * @param {string} type
+     * @returns {void}
+     */
+    Service.prototype.setSdkInfo = function (type, version) {
+        this.hpm.defaultHeaders['x-sdk-type'] = type;
+        this.hpm.defaultHeaders['x-sdk-wrapper-version'] = version;
     };
     /**
      * A list of components that this service can embed

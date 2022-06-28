@@ -85,6 +85,7 @@ export interface IServiceConfiguration extends IDebugOptions {
   onError?: (error: any) => any;
   version?: string;
   type?: string;
+  sdkWrapperVersion?: string;
 }
 
 export interface IService {
@@ -159,7 +160,7 @@ export class Service implements IService {
    */
   constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config: IServiceConfiguration = {}) {
     this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
-    this.hpm = hpmFactory(this.wpmp, null, config.version, config.type);
+    this.hpm = hpmFactory(this.wpmp, null, config.version, config.type, config.sdkWrapperVersion);
     this.router = routerFactory(this.wpmp);
     this.uniqueSessionId = utils.generateUUID();
 
@@ -632,4 +633,16 @@ export class Service implements IService {
 
     return iframeContent;
   }
+
+  /**
+   * Use this API to set SDK info
+   *
+   * @hidden
+   * @param {string} type
+   * @returns {void}
+   */
+     setSdkInfo(type: string, version: string): void {
+      this.hpm.defaultHeaders['x-sdk-type'] = type;
+      this.hpm.defaultHeaders['x-sdk-wrapper-version'] = version;
+    }
 }

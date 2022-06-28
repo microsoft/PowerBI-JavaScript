@@ -1,4 +1,4 @@
-// powerbi-client v2.21.0
+// powerbi-client v2.21.1
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
@@ -2057,6 +2057,7 @@ declare module "service" {
         onError?: (error: any) => any;
         version?: string;
         type?: string;
+        sdkWrapperVersion?: string;
     }
     export interface IService {
         hpm: HttpPostMessage;
@@ -2254,6 +2255,14 @@ declare module "service" {
          * @param {HTMLElement} [element=undefined]
          */
         preload(config: IComponentEmbedConfiguration | IEmbedConfigurationBase, element?: HTMLElement): HTMLIFrameElement;
+        /**
+         * Use this API to set SDK info
+         *
+         * @hidden
+         * @param {string} type
+         * @returns {void}
+         */
+        setSdkInfo(type: string, version: string): void;
     }
 }
 declare module "bookmarksManager" {
