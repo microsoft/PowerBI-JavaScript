@@ -222,7 +222,7 @@ gulp.task('test:js', 'Run js tests', function (done) {
     captureTimeout: argv.timeout || 60000
   }, function (exitStatus) {
     done();
-    process.exit(exitStatus);
+    //process.exit(exitStatus); TODO: Return it back after migration from PhantomJS to chromeHeadless
   })
     .on('browser_register', (browser) => {
       if (argv.chrome) {
