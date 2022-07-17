@@ -82,7 +82,9 @@ describe('SDK-to-HPM', function () {
         type: "report",
         id: "fakeReportId",
         accessToken: 'fakeToken',
-        embedUrl: iframeSrc
+        tokenType: models.TokenType.Aad,
+        embedUrl: iframeSrc,
+        eventHooks: { accessTokenProvider: function () { return null; } }
       };
 
       spyHpm.post.and.callFake(() => Promise.resolve({}));
@@ -129,7 +131,8 @@ describe('SDK-to-HPM', function () {
           bootstrapped: undefined,
           sdkVersion: sdkConfig.default.version,
           uid: uniqueId,
-          sdkSessionId: sdkSessionId
+          sdkSessionId: sdkSessionId,
+          tokenProviderSupplied: true
         };
 
         expect(spyHpm.post).toHaveBeenCalledWith('/report/load', expectedConfiguration, expectedHeaders, jasmine.any(Object));
@@ -157,7 +160,8 @@ describe('SDK-to-HPM', function () {
             bootstrapped: undefined,
             sdkVersion: sdkConfig.default.version,
             uid: uniqueId,
-            sdkSessionId: sdkSessionId
+            sdkSessionId: sdkSessionId,
+            tokenProviderSupplied: true
           };
           expect(spyHpm.post).toHaveBeenCalledWith('/report/load', report.config, expectedHeaders, jasmine.any(Object));
           expect(error).toEqual(testData.errorResponse.body);
@@ -180,7 +184,8 @@ describe('SDK-to-HPM', function () {
             bootstrapped: undefined,
             sdkVersion: sdkConfig.default.version,
             uid: uniqueId,
-            sdkSessionId: sdkSessionId
+            sdkSessionId: sdkSessionId,
+            tokenProviderSupplied: true
           };
 
           expect(spyHpm.post).toHaveBeenCalledWith('/report/load', report.config, expectedHeaders, jasmine.any(Object));
@@ -973,7 +978,8 @@ describe('SDK-to-HPM', function () {
             bootstrapped: undefined,
             sdkVersion: sdkConfig.default.version,
             uid: uniqueId,
-            sdkSessionId: sdkSessionId
+            sdkSessionId: sdkSessionId,
+            tokenProviderSupplied: true
           };
 
           // Assert
@@ -2141,7 +2147,9 @@ describe('SDK-to-HPM', function () {
       const embedCreateConfiguration = {
         datasetId: "fakeReportId",
         accessToken: 'fakeToken',
-        embedUrl: iframeSrc
+        tokenType: models.TokenType.Aad,
+        embedUrl: iframeSrc,
+        eventHooks: { accessTokenProvider: function () { return null; } }
       };
       spyHpm.post.and.returnValue(Promise.resolve({}));
       create = <create.Create>powerbi.createReport(createElement, embedCreateConfiguration);
@@ -2174,7 +2182,7 @@ describe('SDK-to-HPM', function () {
       await create.createReport(testData.createConfiguration);
 
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId }, jasmine.any(Object));
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId, tokenProviderSupplied: true }, jasmine.any(Object));
     });
 
     it('create.createReport() returns promise that rejects with validation error if the create configuration is invalid', async function () {
@@ -2182,7 +2190,9 @@ describe('SDK-to-HPM', function () {
       const testData = {
         createConfiguration: {
           datasetId: 'fakeId',
-          accessToken: 'fakeToken'
+          accessToken: 'fakeToken',
+          tokenType: models.TokenType.Aad,
+          eventHooks: { accessTokenProvider: function () { return null; } }
         },
         errorResponse: {
           body: {
@@ -2198,7 +2208,7 @@ describe('SDK-to-HPM', function () {
 
       } catch (error) {
         // Assert
-        expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId }, jasmine.any(Object));
+        expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId , tokenProviderSupplied: true}, jasmine.any(Object));
         expect(error).toEqual(testData.errorResponse.body);
       }
     });
@@ -2208,7 +2218,9 @@ describe('SDK-to-HPM', function () {
       const testData = {
         createConfiguration: {
           datasetId: 'fakeId',
-          accessToken: 'fakeToken'
+          accessToken: 'fakeToken',
+          tokenType: models.TokenType.Aad,
+          eventHooks: { accessTokenProvider: function () { return null; } }
         },
         response: {
           body: null
@@ -2220,7 +2232,7 @@ describe('SDK-to-HPM', function () {
       // Act
       const response = await create.createReport(testData.createConfiguration);
       // Assert
-      expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId }, jasmine.any(Object));
+      expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId, tokenProviderSupplied: true }, jasmine.any(Object));
       expect(response).toEqual(null);
     });
   });

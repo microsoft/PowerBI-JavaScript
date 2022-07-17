@@ -16,10 +16,11 @@ export {
   IRouterFactory
 };
 
-export const hpmFactory: IHpmFactory = (wpmp, defaultTargetWindow, sdkVersion = config.version, sdkType = config.type) => {
+export const hpmFactory: IHpmFactory = (wpmp, defaultTargetWindow, sdkVersion = config.version, sdkType = config.type, sdkWrapperVersion?: string) => {
   return new HttpPostMessage(wpmp, {
     'x-sdk-type': sdkType,
-    'x-sdk-version': sdkVersion
+    'x-sdk-version': sdkVersion,
+    'x-sdk-wrapper-version': sdkWrapperVersion,
   }, defaultTargetWindow);
 };
 

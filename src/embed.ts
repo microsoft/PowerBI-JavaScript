@@ -60,6 +60,15 @@ export interface IInternalEventHandler<T> {
   handle(event: ICustomEvent<T>): void;
 }
 
+/** @hidden */
+export interface ISessionHeaders {
+  uid: string;
+  sdkSessionId: string;
+  tokenProviderSupplied?: boolean;
+  bootstrapped?: boolean;
+  sdkVersion?: string;
+}
+
 /**
  * Base class for all Power BI embed components
  *
@@ -264,7 +273,16 @@ export abstract class Embed {
     }
 
     try {
-      const response = await this.service.hpm.post<void>("/report/create", config, { uid: this.config.uniqueId, sdkSessionId: this.service.getSdkSessionId() }, this.iframe.contentWindow);
+      const headers: ISessionHeaders = {
+        uid: this.config.uniqueId,
+        sdkSessionId: this.service.getSdkSessionId()
+      };
+
+      if (!!this.eventHooks?.accessTokenProvider) {
+        headers.tokenProviderSupplied = true;
+      }
+
+      const response = await this.service.hpm.post<void>("/report/create", config, headers, this.iframe.contentWindow);
       return response.body;
     } catch (response) {
       throw response.body;
@@ -359,12 +377,16 @@ export abstract class Embed {
     }
 
     const path = phasedRender && this.config.type === 'report' ? this.phasedLoadPath : this.loadPath;
-    const headers = {
+    const headers: ISessionHeaders = {
       uid: this.config.uniqueId,
       sdkSessionId: this.service.getSdkSessionId(),
       bootstrapped: this.config.bootstrapped,
       sdkVersion: sdkConfig.default.version
     };
+
+    if (!!this.eventHooks?.accessTokenProvider) {
+      headers.tokenProviderSupplied = true;
+    }
 
     const timeNow: Date = new Date();
     if (this.lastLoadRequest && getTimeDiffInMilliseconds(this.lastLoadRequest, timeNow) < 100) {
@@ -553,12 +575,12 @@ export abstract class Embed {
   }
 
   /**
- * Validate EventHooks
- *
- * @private
- * @param {models.EventHooks} eventHooks
- * @hidden
- */
+   * Validate EventHooks
+   *
+   * @private
+   * @param {models.EventHooks} eventHooks
+   * @hidden
+   */
   private validateEventHooks(eventHooks: models.EventHooks): void {
     if (!eventHooks) {
       return;
@@ -581,7 +603,7 @@ export abstract class Embed {
 
     const accessTokenProvider = eventHooks.accessTokenProvider;
     if (!!accessTokenProvider) {
-      if (this.embedtype.toLowerCase() !== "report" || this.config.tokenType !== models.TokenType.Aad) {
+      if ((['create', 'quickcreate', 'report'].indexOf(this.embedtype.toLowerCase()) ===  -1) || this.config.tokenType !== models.TokenType.Aad) {
         throw new Error("accessTokenProvider is only supported in report SaaS embed");
       }
     }
