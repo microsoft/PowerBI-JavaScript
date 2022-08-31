@@ -3,7 +3,7 @@
 
 import { IReportCreateConfiguration, IError, validateCreateReport } from 'powerbi-models';
 import { Service } from './service';
-import { Embed, IEmbedConfigurationBase, IEmbedConfiguration } from './embed';
+import { Embed, IEmbedConfigurationBase, IEmbedConfiguration, ISessionHeaders } from './embed';
 import * as utils from './util';
 
 /**
@@ -14,6 +14,14 @@ import * as utils from './util';
  * @extends {Embed}
  */
 export class Create extends Embed {
+  /**
+   * Gets or sets the configuration settings for creating report.
+   *
+   * @type {IReportCreateConfiguration}
+   * @hidden
+   */
+  createConfig: IReportCreateConfiguration;
+
   /*
    * @hidden
    */
@@ -108,5 +116,40 @@ export class Create extends Embed {
     }
 
     return datasetId;
+  }
+
+  /**
+   * Sends create configuration data.
+   *
+   * ```javascript
+   * create ({
+   *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
+   *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+   * ```
+   *
+   * @hidden
+   * @returns {Promise<void>}
+   */
+  async create(): Promise<void> {
+    const errors = validateCreateReport(this.createConfig);
+    if (errors) {
+      throw errors;
+    }
+
+    try {
+      const headers: ISessionHeaders = {
+        uid: this.config.uniqueId,
+        sdkSessionId: this.service.getSdkSessionId()
+      };
+
+      if (!!this.eventHooks?.accessTokenProvider) {
+        headers.tokenProviderSupplied = true;
+      }
+
+      const response = await this.service.hpm.post<void>("/report/create", this.createConfig, headers, this.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 }

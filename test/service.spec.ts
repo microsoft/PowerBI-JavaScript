@@ -643,7 +643,7 @@ describe('service', function () {
           .appendTo('#powerbi-fixture');
 
         // Act
-        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken, datasetId: testDatasetId });
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken, datasetId: testDatasetId }) as create.Create;
 
         // Assert
         expect(report.createConfig.datasetId).toEqual(testDatasetId);
@@ -658,7 +658,7 @@ describe('service', function () {
           .appendTo('#powerbi-fixture');
 
         // Act
-        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken });
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken }) as create.Create;
 
         // Assert
         expect(report.createConfig.datasetId).toEqual(testDatasetId);
@@ -675,7 +675,7 @@ describe('service', function () {
           .appendTo('#powerbi-fixture');
 
         // Act
-        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken, theme: theme });
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken, theme: theme }) as create.Create;
 
         // Assert
         expect(report.createConfig.theme).toEqual(theme);
@@ -691,7 +691,7 @@ describe('service', function () {
           .appendTo('#powerbi-fixture');
 
         // Act
-        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken });
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken }) as create.Create;
 
         // Assert
         expect(report.createConfig.theme).toBeUndefined();
@@ -1039,6 +1039,78 @@ describe('service', function () {
       // Assert
       const report2 = powerbi.find(testEmbedConfig.uniqueId);
       expect(report2).toBeUndefined();
+    });
+  });
+
+  describe('quickCreate', function () {
+    const embedUrl = `https://app.powerbi.com/quickcreate`;
+    const accessToken = 'ABC123';
+
+    it('happy path', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const attemptCreate = (): void => {
+        powerbi.quickCreate(component[0], {
+          embedUrl: embedUrl,
+          accessToken: accessToken,
+          datasetCreateConfig: {
+            locale: "fakeLocale",
+            mashupDocument: "fakeMashup",
+          }});
+      };
+
+      // Assert
+      expect(attemptCreate).not.toThrowError();
+    });
+
+    it('if attempting to quickCreate without specifying an embed url, throw error', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const attemptCreate = (): void => {
+        powerbi.quickCreate(component[0], {
+          embedUrl: null, 
+          accessToken: accessToken,
+          datasetCreateConfig: {
+            locale: "fakeLocale",
+            mashupDocument: "fakeMashup",
+          }
+        });
+      };
+
+      // Assert
+      expect(attemptCreate).toThrowError(Error);
+    });
+
+    it('if attempting to quickCreate without specifying an access token, throw error', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      const originalToken = powerbi.accessToken;
+      powerbi.accessToken = undefined;
+
+      // Act
+      const attemptCreate = (): void => {
+        powerbi.quickCreate(component[0], {
+          embedUrl: embedUrl,
+          accessToken: null,
+          datasetCreateConfig: {
+            locale: "fakeLocale",
+            mashupDocument: "fakeMashup",
+          }});
+      };
+
+      // Assert
+      expect(attemptCreate).toThrowError(Error);
+
+      // Cleanup
+      powerbi.accessToken = originalToken;
     });
   });
 });

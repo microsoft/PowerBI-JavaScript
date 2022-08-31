@@ -7,7 +7,7 @@
 import { WindowPostMessageProxy } from 'window-post-message-proxy';
 import { HttpPostMessage } from 'http-post-message';
 import { Router, IExtendedRequest, Response as IExtendedResponse } from 'powerbi-router';
-import { IPage, IReportCreateConfiguration } from 'powerbi-models';
+import { IPage, IQuickCreateConfiguration, IReportCreateConfiguration } from 'powerbi-models';
 import {
   Embed,
   IBootstrapEmbedConfiguration,
@@ -27,6 +27,7 @@ import { Page } from './page';
 import { Qna } from './qna';
 import { Visual } from './visual';
 import * as utils from './util';
+import { QuickCreate } from './quickCreate';
 import * as sdkConfig from './config';
 
 export interface IEvent<T> {
@@ -278,6 +279,23 @@ export class Service implements IService {
   }
 
   /**
+   * Creates new dataset
+   *
+   * @param {HTMLElement} element
+   * @param {IEmbedConfiguration} [config={}]
+   * @returns {Embed}
+   */
+  quickCreate(element: HTMLElement, config: IQuickCreateConfiguration): Embed {
+    config.type = 'quickCreate';
+    const powerBiElement = element as IPowerBiElement;
+    const component = new QuickCreate(this, powerBiElement, config);
+    powerBiElement.powerBiEmbed = component;
+    this.addOrOverwriteEmbed(component, element);
+
+    return component;
+  }
+
+  /**
    * TODO: Add a description here
    *
    * @param {HTMLElement} [container]
@@ -433,7 +451,7 @@ export class Service implements IService {
       /**
        * When loading report after create we want to use existing Iframe to optimize load period
        */
-      if (config.type === "report" && component.config.type === "create") {
+      if (config.type === "report" && utils.isCreate(component.config.type)) {
         const report = new Report(this, element, config, /* phasedRender */ false, /* isBootstrap */ false, element.powerBiEmbed.iframe);
         component.populateConfig(config, /* isBootstrap */ false);
         report.load();
@@ -503,7 +521,7 @@ export class Service implements IService {
    */
   addOrOverwriteEmbed(component: Embed, element: HTMLElement): void {
     // remove embeds over the same div element.
-    this.embeds = this.embeds.filter(function (embed) {
+    this.embeds = this.embeds.filter(function(embed) {
       return embed.element !== element;
     });
 
@@ -641,8 +659,8 @@ export class Service implements IService {
    * @param {string} type
    * @returns {void}
    */
-     setSdkInfo(type: string, version: string): void {
-      this.hpm.defaultHeaders['x-sdk-type'] = type;
-      this.hpm.defaultHeaders['x-sdk-wrapper-version'] = version;
-    }
+  setSdkInfo(type: string, version: string): void {
+    this.hpm.defaultHeaders['x-sdk-type'] = type;
+    this.hpm.defaultHeaders['x-sdk-wrapper-version'] = version;
+  }
 }

@@ -911,7 +911,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// powerbi-models v1.11.0
+// powerbi-models v1.12.0
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -942,8 +942,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.isPercentOfGrandTotal = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.HierarchyFilter = exports.AdvancedFilter = exports.TupleFilter = exports.IdentityFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.ReportAlignment = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
-exports.validateZoomLevel = exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateUpdateFiltersRequest = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateCreateReport = exports.validatePaginatedReportLoad = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.isReportFiltersArray = exports.isOnLoadFilters = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = void 0;
+exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.DataCacheMode = exports.ICredentialType = exports.isPercentOfGrandTotal = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.HierarchyFilter = exports.AdvancedFilter = exports.TupleFilter = exports.IdentityFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.ReportAlignment = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
+exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateUpdateFiltersRequest = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateQuickCreate = exports.validateCreateReport = exports.validatePaginatedReportLoad = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.isReportFiltersArray = exports.isOnLoadFilters = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = void 0;
+exports.validateZoomLevel = exports.validateCustomTheme = void 0;
 var validator_1 = __webpack_require__(1);
 var TraceType;
 (function (TraceType) {
@@ -1427,6 +1428,17 @@ function isPercentOfGrandTotal(arg) {
     return !!arg.percentOfGrandTotal;
 }
 exports.isPercentOfGrandTotal = isPercentOfGrandTotal;
+var ICredentialType;
+(function (ICredentialType) {
+    ICredentialType[ICredentialType["NoConnection"] = 0] = "NoConnection";
+    ICredentialType[ICredentialType["OnBehalfOf"] = 1] = "OnBehalfOf";
+    ICredentialType[ICredentialType["Anonymous"] = 2] = "Anonymous";
+})(ICredentialType = exports.ICredentialType || (exports.ICredentialType = {}));
+var DataCacheMode;
+(function (DataCacheMode) {
+    DataCacheMode[DataCacheMode["Import"] = 0] = "Import";
+    DataCacheMode[DataCacheMode["DirectQuery"] = 1] = "DirectQuery";
+})(DataCacheMode = exports.DataCacheMode || (exports.DataCacheMode = {}));
 var PageNavigationPosition;
 (function (PageNavigationPosition) {
     PageNavigationPosition[PageNavigationPosition["Bottom"] = 0] = "Bottom";
@@ -1725,6 +1737,11 @@ function validateCreateReport(input) {
     return errors ? errors.map(normalizeError) : undefined;
 }
 exports.validateCreateReport = validateCreateReport;
+function validateQuickCreate(input) {
+    var errors = validator_1.Validators.quickCreateValidator.validate(input);
+    return errors ? errors.map(normalizeError) : undefined;
+}
+exports.validateQuickCreate = validateQuickCreate;
 function validateDashboardLoad(input) {
     var errors = validator_1.Validators.dashboardLoadValidator.validate(input);
     return errors ? errors.map(normalizeError) : undefined;
@@ -1833,6 +1850,8 @@ var fieldRequiredValidator_1 = __webpack_require__(28);
 var mapValidator_1 = __webpack_require__(29);
 var typeValidator_1 = __webpack_require__(4);
 var parameterPanelValidator_1 = __webpack_require__(30);
+var datasetCreateConfigValidator_1 = __webpack_require__(31);
+var quickCreateValidator_1 = __webpack_require__(32);
 exports.Validators = {
     addBookmarkRequestValidator: new bookmarkValidator_1.AddBookmarkRequestValidator(),
     advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
@@ -1841,6 +1860,7 @@ exports.Validators = {
     anyFilterValidator: new anyOfValidator_1.AnyOfValidator([new filtersValidator_1.BasicFilterValidator(), new filtersValidator_1.AdvancedFilterValidator(), new filtersValidator_1.IncludeExcludeFilterValidator(), new filtersValidator_1.NotSupportedFilterValidator(), new filtersValidator_1.RelativeDateFilterValidator(), new filtersValidator_1.TopNFilterValidator(), new filtersValidator_1.RelativeTimeFilterValidator(), new filtersValidator_1.HierarchyFilterValidator()]),
     anyValueValidator: new anyOfValidator_1.AnyOfValidator([new typeValidator_1.StringValidator(), new typeValidator_1.NumberValidator(), new typeValidator_1.BooleanValidator()]),
     actionBarValidator: new barsValidator_1.ActionBarValidator(),
+    statusBarValidator: new barsValidator_1.StatusBarValidator(),
     applyBookmarkByNameRequestValidator: new bookmarkValidator_1.ApplyBookmarkByNameRequestValidator(),
     applyBookmarkStateRequestValidator: new bookmarkValidator_1.ApplyBookmarkStateRequestValidator(),
     applyBookmarkValidator: new anyOfValidator_1.AnyOfValidator([new bookmarkValidator_1.ApplyBookmarkByNameRequestValidator(), new bookmarkValidator_1.ApplyBookmarkStateRequestValidator()]),
@@ -1852,6 +1872,7 @@ exports.Validators = {
     bookmarksPaneValidator: new panesValidator_1.BookmarksPaneValidator(),
     captureBookmarkOptionsValidator: new bookmarkValidator_1.CaptureBookmarkOptionsValidator(),
     captureBookmarkRequestValidator: new bookmarkValidator_1.CaptureBookmarkRequestValidator(),
+    columnSchemaArrayValidator: new typeValidator_1.ArrayValidator([new datasetCreateConfigValidator_1.ColumnSchemaValidator()]),
     commandDisplayOptionValidator: new typeValidator_1.EnumValidator([0, 1, 2]),
     commandExtensionSelectorValidator: new anyOfValidator_1.AnyOfValidator([new selectorsValidator_1.VisualSelectorValidator(), new selectorsValidator_1.VisualTypeSelectorValidator()]),
     commandExtensionArrayValidator: new typeValidator_1.ArrayValidator([new extensionsValidator_1.CommandExtensionValidator()]),
@@ -1866,6 +1887,8 @@ exports.Validators = {
     customThemeValidator: new customThemeValidator_1.CustomThemeValidator(),
     dashboardLoadValidator: new dashboardLoadValidator_1.DashboardLoadValidator(),
     datasetBindingValidator: new datasetBindingValidator_1.DatasetBindingValidator(),
+    datasetCreateConfigValidator: new datasetCreateConfigValidator_1.DatasetCreateConfigValidator(),
+    datasourceConnectionConfigValidator: new datasetCreateConfigValidator_1.DatasourceConnectionConfigValidator(),
     displayStateModeValidator: new typeValidator_1.EnumValidator([0, 1]),
     displayStateValidator: new layoutValidator_1.DisplayStateValidator(),
     exportDataRequestValidator: new exportDataValidator_1.ExportDataRequestValidator(),
@@ -1922,6 +1945,8 @@ exports.Validators = {
     qnaInterpretInputDataValidator: new qnaValidator_1.QnaInterpretInputDataValidator(),
     qnaPanesValidator: new panesValidator_1.QnaPanesValidator(),
     qnaSettingValidator: new qnaValidator_1.QnaSettingsValidator(),
+    quickCreateValidator: new quickCreateValidator_1.QuickCreateValidator(),
+    rawDataValidator: new typeValidator_1.ArrayValidator([new typeValidator_1.ArrayValidator([new typeValidator_1.StringValidator()])]),
     relativeDateFilterOperatorValidator: new typeValidator_1.EnumValidator([0, 1, 2]),
     relativeDateFilterTimeUnitTypeValidator: new typeValidator_1.EnumValidator([0, 1, 2, 3, 4, 5, 6]),
     relativeDateFilterTypeValidator: new typeValidator_1.EnumValidator([4]),
@@ -1947,6 +1972,8 @@ exports.Validators = {
     stringArrayValidator: new typeValidator_1.StringArrayValidator(),
     stringValidator: new typeValidator_1.StringValidator(),
     syncSlicersPaneValidator: new panesValidator_1.SyncSlicersPaneValidator(),
+    tableDataArrayValidator: new typeValidator_1.ArrayValidator([new datasetCreateConfigValidator_1.TableDataValidator()]),
+    tableSchemaListValidator: new typeValidator_1.ArrayValidator([new datasetCreateConfigValidator_1.TableSchemaValidator()]),
     tileLoadValidator: new tileLoadValidator_1.TileLoadValidator(),
     tokenTypeValidator: new typeValidator_1.EnumValidator([0, 1]),
     topNFilterTypeValidator: new typeValidator_1.EnumValidator([5]),
@@ -1989,7 +2016,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ActionBarValidator = exports.ReportBarsValidator = void 0;
+exports.StatusBarValidator = exports.ActionBarValidator = exports.ReportBarsValidator = void 0;
 var multipleFieldsValidator_1 = __webpack_require__(3);
 var typeValidator_1 = __webpack_require__(4);
 var validator_1 = __webpack_require__(1);
@@ -2010,6 +2037,10 @@ var ReportBarsValidator = /** @class */ (function (_super) {
             {
                 field: "actionBar",
                 validators: [validator_1.Validators.actionBarValidator]
+            },
+            {
+                field: "statusBar",
+                validators: [validator_1.Validators.statusBarValidator]
             }
         ];
         var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
@@ -2043,6 +2074,31 @@ var ActionBarValidator = /** @class */ (function (_super) {
     return ActionBarValidator;
 }(typeValidator_1.ObjectValidator));
 exports.ActionBarValidator = ActionBarValidator;
+var StatusBarValidator = /** @class */ (function (_super) {
+    __extends(StatusBarValidator, _super);
+    function StatusBarValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    StatusBarValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "visible",
+                validators: [validator_1.Validators.booleanValidator]
+            },
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return StatusBarValidator;
+}(typeValidator_1.ObjectValidator));
+exports.StatusBarValidator = StatusBarValidator;
 
 
 /***/ }),
@@ -5787,6 +5843,278 @@ var ParametersPanelValidator = /** @class */ (function (_super) {
 exports.ParametersPanelValidator = ParametersPanelValidator;
 
 
+/***/ }),
+/* 31 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TableDataValidator = exports.TableSchemaValidator = exports.ColumnSchemaValidator = exports.DatasourceConnectionConfigValidator = exports.DatasetCreateConfigValidator = void 0;
+var multipleFieldsValidator_1 = __webpack_require__(3);
+var typeValidator_1 = __webpack_require__(4);
+var validator_1 = __webpack_require__(1);
+var DatasetCreateConfigValidator = /** @class */ (function (_super) {
+    __extends(DatasetCreateConfigValidator, _super);
+    function DatasetCreateConfigValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    DatasetCreateConfigValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "locale",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+            },
+            {
+                field: "mashupDocument",
+                validators: [validator_1.Validators.stringValidator]
+            },
+            {
+                field: "datasourceConnectionConfig",
+                validators: [validator_1.Validators.datasourceConnectionConfigValidator]
+            },
+            {
+                field: "tableSchemaList",
+                validators: [validator_1.Validators.tableSchemaListValidator]
+            },
+            {
+                field: "data",
+                validators: [validator_1.Validators.tableDataArrayValidator]
+            },
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        errors = multipleFieldsValidator.validate(input, path, field);
+        if (errors) {
+            return errors;
+        }
+        if (input["datasourceConnectionConfig"] && input["mashupDocument"] == null) {
+            return [{
+                    message: "mashupDocument cannot be empty when datasourceConnectionConfig is presented"
+                }];
+        }
+        if (input["data"] && input["tableSchemaList"] == null) {
+            return [{
+                    message: "tableSchemaList cannot be empty when data is provided"
+                }];
+        }
+        if (input["data"] == null && input["mashupDocument"] == null) {
+            return [{
+                    message: "At least one of data or mashupDocument must be provided"
+                }];
+        }
+    };
+    return DatasetCreateConfigValidator;
+}(typeValidator_1.ObjectValidator));
+exports.DatasetCreateConfigValidator = DatasetCreateConfigValidator;
+var DatasourceConnectionConfigValidator = /** @class */ (function (_super) {
+    __extends(DatasourceConnectionConfigValidator, _super);
+    function DatasourceConnectionConfigValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    DatasourceConnectionConfigValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "path",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+            },
+            {
+                field: "kind",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+            }
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return DatasourceConnectionConfigValidator;
+}(typeValidator_1.ObjectValidator));
+exports.DatasourceConnectionConfigValidator = DatasourceConnectionConfigValidator;
+var ColumnSchemaValidator = /** @class */ (function (_super) {
+    __extends(ColumnSchemaValidator, _super);
+    function ColumnSchemaValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ColumnSchemaValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "name",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+            },
+            {
+                field: "dataType",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+            }
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return ColumnSchemaValidator;
+}(typeValidator_1.ObjectValidator));
+exports.ColumnSchemaValidator = ColumnSchemaValidator;
+var TableSchemaValidator = /** @class */ (function (_super) {
+    __extends(TableSchemaValidator, _super);
+    function TableSchemaValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TableSchemaValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "name",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+            },
+            {
+                field: "columns",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.columnSchemaArrayValidator]
+            }
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return TableSchemaValidator;
+}(typeValidator_1.ObjectValidator));
+exports.TableSchemaValidator = TableSchemaValidator;
+var TableDataValidator = /** @class */ (function (_super) {
+    __extends(TableDataValidator, _super);
+    function TableDataValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TableDataValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "name",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+            },
+            {
+                field: "rows",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.rawDataValidator]
+            }
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return TableDataValidator;
+}(typeValidator_1.ObjectValidator));
+exports.TableDataValidator = TableDataValidator;
+
+
+/***/ }),
+/* 32 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.QuickCreateValidator = void 0;
+var multipleFieldsValidator_1 = __webpack_require__(3);
+var typeValidator_1 = __webpack_require__(4);
+var validator_1 = __webpack_require__(1);
+var QuickCreateValidator = /** @class */ (function (_super) {
+    __extends(QuickCreateValidator, _super);
+    function QuickCreateValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    QuickCreateValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "accessToken",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+            },
+            {
+                field: "groupId",
+                validators: [validator_1.Validators.stringValidator]
+            },
+            {
+                field: "tokenType",
+                validators: [validator_1.Validators.tokenTypeValidator]
+            },
+            {
+                field: "theme",
+                validators: [validator_1.Validators.customThemeValidator]
+            },
+            {
+                field: "datasetCreateConfig",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.datasetCreateConfigValidator]
+            },
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return QuickCreateValidator;
+}(typeValidator_1.ObjectValidator));
+exports.QuickCreateValidator = QuickCreateValidator;
+
+
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -9103,6 +9431,51 @@ var Create = /** @class */ (function (_super) {
         }
         return datasetId;
     };
+    /**
+     * Sends create configuration data.
+     *
+     * ```javascript
+     * create ({
+     *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
+     *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+     * ```
+     *
+     * @hidden
+     * @returns {Promise<void>}
+     */
+    Create.prototype.create = function () {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var errors, headers, response, response_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        errors = (0, powerbi_models_1.validateCreateReport)(this.createConfig);
+                        if (errors) {
+                            throw errors;
+                        }
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 3, , 4]);
+                        headers = {
+                            uid: this.config.uniqueId,
+                            sdkSessionId: this.service.getSdkSessionId()
+                        };
+                        if (!!((_a = this.eventHooks) === null || _a === void 0 ? void 0 : _a.accessTokenProvider)) {
+                            headers.tokenProviderSupplied = true;
+                        }
+                        return [4 /*yield*/, this.service.hpm.post("/report/create", this.createConfig, headers, this.iframe.contentWindow)];
+                    case 2:
+                        response = _b.sent();
+                        return [2 /*return*/, response.body];
+                    case 3:
+                        response_1 = _b.sent();
+                        throw response_1.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return Create;
 }(embed_1.Embed));
 exports.Create = Create;
@@ -9337,7 +9710,7 @@ var Embed = /** @class */ (function () {
         this.commands = [];
         this.groups = [];
         this.populateConfig(config, isBootstrap);
-        if (this.embedtype === 'create') {
+        if ((0, util_1.isCreate)(this.embedtype)) {
             this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
         }
         else {
@@ -9345,50 +9718,13 @@ var Embed = /** @class */ (function () {
         }
     }
     /**
-     * Sends createReport configuration data.
-     *
-     * ```javascript
-     * createReport({
-     *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
-     *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
-     * ```
+     * Create is not supported by default
      *
      * @hidden
-     * @param {models.IReportCreateConfiguration} config
      * @returns {Promise<void>}
      */
-    Embed.prototype.createReport = function (config) {
-        var _a;
-        return __awaiter(this, void 0, void 0, function () {
-            var errors, headers, response, response_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        errors = models.validateCreateReport(config);
-                        if (errors) {
-                            throw errors;
-                        }
-                        _b.label = 1;
-                    case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        headers = {
-                            uid: this.config.uniqueId,
-                            sdkSessionId: this.service.getSdkSessionId()
-                        };
-                        if (!!((_a = this.eventHooks) === null || _a === void 0 ? void 0 : _a.accessTokenProvider)) {
-                            headers.tokenProviderSupplied = true;
-                        }
-                        return [4 /*yield*/, this.service.hpm.post("/report/create", config, headers, this.iframe.contentWindow)];
-                    case 2:
-                        response = _b.sent();
-                        return [2 /*return*/, response.body];
-                    case 3:
-                        response_1 = _b.sent();
-                        throw response_1.body;
-                    case 4: return [2 /*return*/];
-                }
-            });
-        });
+    Embed.prototype.create = function () {
+        throw new Error("no create support");
     };
     /**
      * Saves Report.
@@ -9397,7 +9733,7 @@ var Embed = /** @class */ (function () {
      */
     Embed.prototype.save = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_2;
+            var response, response_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9407,8 +9743,8 @@ var Embed = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_2 = _a.sent();
-                        throw response_2.body;
+                        response_1 = _a.sent();
+                        throw response_1.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -9421,7 +9757,7 @@ var Embed = /** @class */ (function () {
      */
     Embed.prototype.saveAs = function (saveAsParameters) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_3;
+            var response, response_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9431,8 +9767,8 @@ var Embed = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_3 = _a.sent();
-                        throw response_3.body;
+                        response_2 = _a.sent();
+                        throw response_2.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -9453,7 +9789,7 @@ var Embed = /** @class */ (function () {
      */
     Embed.prototype.getCorrelationId = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_4;
+            var response, response_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9463,8 +9799,8 @@ var Embed = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_4 = _a.sent();
-                        throw response_4.body;
+                        response_3 = _a.sent();
+                        throw response_3.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -9499,7 +9835,7 @@ var Embed = /** @class */ (function () {
     Embed.prototype.load = function (phasedRender) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var path, headers, timeNow, response, response_5;
+            var path, headers, timeNow, response, response_4;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -9535,8 +9871,8 @@ var Embed = /** @class */ (function () {
                         response = _b.sent();
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_5 = _b.sent();
-                        throw response_5.body;
+                        response_4 = _b.sent();
+                        throw response_4.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9628,7 +9964,7 @@ var Embed = /** @class */ (function () {
      */
     Embed.prototype.setAccessToken = function (accessToken) {
         return __awaiter(this, void 0, void 0, function () {
-            var embedType, response, response_6;
+            var embedType, response, response_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9636,7 +9972,7 @@ var Embed = /** @class */ (function () {
                             throw new Error("Access token cannot be empty");
                         }
                         embedType = this.config.type;
-                        embedType = (embedType === 'create' || embedType === 'visual' || embedType === 'qna') ? 'report' : embedType;
+                        embedType = (embedType === 'create' || embedType === 'visual' || embedType === 'qna' || embedType === 'quickCreate') ? 'report' : embedType;
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -9648,8 +9984,8 @@ var Embed = /** @class */ (function () {
                         this.service.accessToken = accessToken;
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_6 = _a.sent();
-                        throw response_6.body;
+                        response_5 = _a.sent();
+                        throw response_5.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9898,7 +10234,7 @@ var Embed = /** @class */ (function () {
             }
         }
         else {
-            this.iframe.addEventListener('load', function () { return _this.createReport(_this.createConfig); }, false);
+            this.iframe.addEventListener('load', function () { return _this.create(); }, false);
         }
     };
     /**
@@ -9958,7 +10294,7 @@ var Embed = /** @class */ (function () {
      */
     Embed.prototype.frontLoadSendConfig = function (config) {
         return __awaiter(this, void 0, void 0, function () {
-            var errors, response, response_7;
+            var errors, response, response_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9981,8 +10317,8 @@ var Embed = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_7 = _a.sent();
-                        throw response_7.body;
+                        response_6 = _a.sent();
+                        throw response_6.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -10821,6 +11157,199 @@ var Qna = /** @class */ (function (_super) {
     return Qna;
 }(embed_1.Embed));
 exports.Qna = Qna;
+
+
+/***/ }),
+
+/***/ "./src/quickCreate.ts":
+/*!****************************!*\
+  !*** ./src/quickCreate.ts ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.QuickCreate = void 0;
+var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
+var assert = __webpack_require__(/*! assert */ "./node_modules/assert/assert.js");
+/**
+ * A Power BI Quick Create component
+ *
+ * @export
+ * @class QuickCreate
+ * @extends {Embed}
+ */
+var QuickCreate = /** @class */ (function (_super) {
+    __extends(QuickCreate, _super);
+    /*
+     * @hidden
+     */
+    function QuickCreate(service, element, config, phasedRender, isBootstrap) {
+        var _this = _super.call(this, service, element, config, /* iframe */ undefined, phasedRender, isBootstrap) || this;
+        service.router.post("/reports/".concat(_this.config.uniqueId, "/eventHooks/:eventName"), function (req, _res) { return __awaiter(_this, void 0, void 0, function () {
+            var _a;
+            var _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _a = req.params.eventName;
+                        switch (_a) {
+                            case "newAccessToken": return [3 /*break*/, 1];
+                        }
+                        return [3 /*break*/, 3];
+                    case 1:
+                        req.body = req.body || {};
+                        req.body.report = this;
+                        return [4 /*yield*/, service.invokeSDKHook((_b = this.eventHooks) === null || _b === void 0 ? void 0 : _b.accessTokenProvider, req, _res)];
+                    case 2:
+                        _c.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        assert(false, "".concat(req.params.eventName, " eventHook is not supported"));
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        }); });
+        return _this;
+    }
+    /**
+     * Override the getId abstract function
+     * QuickCreate does not need any ID
+     *
+     * @returns {string}
+     */
+    QuickCreate.prototype.getId = function () {
+        return null;
+    };
+    /**
+     * Validate create report configuration.
+     */
+    QuickCreate.prototype.validate = function (config) {
+        return (0, powerbi_models_1.validateQuickCreate)(config);
+    };
+    /**
+     * Handle config changes.
+     *
+     * @hidden
+     * @returns {void}
+     */
+    QuickCreate.prototype.configChanged = function (isBootstrap) {
+        if (isBootstrap) {
+            return;
+        }
+        this.createConfig = this.config;
+    };
+    /**
+     * @hidden
+     * @returns {string}
+     */
+    QuickCreate.prototype.getDefaultEmbedUrlEndpoint = function () {
+        return "quickCreate";
+    };
+    /**
+     * Sends quickCreate configuration data.
+     *
+     * ```javascript
+     * quickCreate({
+     *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+     *   datasetCreateConfig: {}})
+     * ```
+     *
+     * @hidden
+     * @param {IQuickCreateConfiguration} createConfig
+     * @returns {Promise<void>}
+     */
+    QuickCreate.prototype.create = function () {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var errors, headers, response, response_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        errors = (0, powerbi_models_1.validateQuickCreate)(this.createConfig);
+                        if (errors) {
+                            throw errors;
+                        }
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 3, , 4]);
+                        headers = {
+                            uid: this.config.uniqueId,
+                            sdkSessionId: this.service.getSdkSessionId()
+                        };
+                        if (!!((_a = this.eventHooks) === null || _a === void 0 ? void 0 : _a.accessTokenProvider)) {
+                            headers.tokenProviderSupplied = true;
+                        }
+                        return [4 /*yield*/, this.service.hpm.post("/quickcreate", this.createConfig, headers, this.iframe.contentWindow)];
+                    case 2:
+                        response = _b.sent();
+                        return [2 /*return*/, response.body];
+                    case 3:
+                        response_1 = _b.sent();
+                        throw response_1.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return QuickCreate;
+}(embed_1.Embed));
+exports.QuickCreate = QuickCreate;
 
 
 /***/ }),
@@ -12389,6 +12918,7 @@ var page_1 = __webpack_require__(/*! ./page */ "./src/page.ts");
 var qna_1 = __webpack_require__(/*! ./qna */ "./src/qna.ts");
 var visual_1 = __webpack_require__(/*! ./visual */ "./src/visual.ts");
 var utils = __webpack_require__(/*! ./util */ "./src/util.ts");
+var quickCreate_1 = __webpack_require__(/*! ./quickCreate */ "./src/quickCreate.ts");
 var sdkConfig = __webpack_require__(/*! ./config */ "./src/config.ts");
 /**
  * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
@@ -12504,6 +13034,21 @@ var Service = /** @class */ (function () {
         config.type = 'create';
         var powerBiElement = element;
         var component = new create_1.Create(this, powerBiElement, config);
+        powerBiElement.powerBiEmbed = component;
+        this.addOrOverwriteEmbed(component, element);
+        return component;
+    };
+    /**
+     * Creates new dataset
+     *
+     * @param {HTMLElement} element
+     * @param {IEmbedConfiguration} [config={}]
+     * @returns {Embed}
+     */
+    Service.prototype.quickCreate = function (element, config) {
+        config.type = 'quickCreate';
+        var powerBiElement = element;
+        var component = new quickCreate_1.QuickCreate(this, powerBiElement, config);
         powerBiElement.powerBiEmbed = component;
         this.addOrOverwriteEmbed(component, element);
         return component;
@@ -12648,7 +13193,7 @@ var Service = /** @class */ (function () {
             /**
              * When loading report after create we want to use existing Iframe to optimize load period
              */
-            if (config.type === "report" && component.config.type === "create") {
+            if (config.type === "report" && utils.isCreate(component.config.type)) {
                 var report = new report_1.Report(this, element, config, /* phasedRender */ false, /* isBootstrap */ false, element.powerBiEmbed.iframe);
                 component.populateConfig(config, /* isBootstrap */ false);
                 report.load();
@@ -13040,7 +13585,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTimeDiffInMilliseconds = exports.getRandomValue = exports.autoAuthInEmbedUrl = exports.isRDLEmbed = exports.isSavedInternal = exports.addParamToUrl = exports.generateUUID = exports.createRandomString = exports.assign = exports.remove = exports.find = exports.findIndex = exports.raiseCustomEvent = void 0;
+exports.isCreate = exports.getTimeDiffInMilliseconds = exports.getRandomValue = exports.autoAuthInEmbedUrl = exports.isRDLEmbed = exports.isSavedInternal = exports.addParamToUrl = exports.generateUUID = exports.createRandomString = exports.assign = exports.remove = exports.find = exports.findIndex = exports.raiseCustomEvent = void 0;
 /**
  * Raises a custom event with event data on the specified HTML element.
  *
@@ -13259,6 +13804,17 @@ function getTimeDiffInMilliseconds(start, end) {
     return Math.abs(start.getTime() - end.getTime());
 }
 exports.getTimeDiffInMilliseconds = getTimeDiffInMilliseconds;
+/**
+ * Checks if the embed type is for create
+ *
+ * @export
+ * @param {string} embedType
+ * @returns {boolean}
+ */
+function isCreate(embedType) {
+    return embedType === 'create' || embedType === 'quickcreate';
+}
+exports.isCreate = isCreate;
 
 
 /***/ }),
