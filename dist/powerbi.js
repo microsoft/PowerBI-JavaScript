@@ -1,4 +1,4 @@
-// powerbi-client v2.21.1
+// powerbi-client v2.22.0
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -911,7 +911,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// powerbi-models v1.12.0
+// powerbi-models v1.12.1
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -942,7 +942,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.DataCacheMode = exports.ICredentialType = exports.isPercentOfGrandTotal = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.HierarchyFilter = exports.AdvancedFilter = exports.TupleFilter = exports.IdentityFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.ReportAlignment = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
+exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.DataCacheMode = exports.CredentialType = exports.isPercentOfGrandTotal = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.HierarchyFilter = exports.AdvancedFilter = exports.TupleFilter = exports.IdentityFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.ReportAlignment = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
 exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateUpdateFiltersRequest = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateQuickCreate = exports.validateCreateReport = exports.validatePaginatedReportLoad = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.isReportFiltersArray = exports.isOnLoadFilters = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = void 0;
 exports.validateZoomLevel = exports.validateCustomTheme = void 0;
 var validator_1 = __webpack_require__(1);
@@ -1428,12 +1428,12 @@ function isPercentOfGrandTotal(arg) {
     return !!arg.percentOfGrandTotal;
 }
 exports.isPercentOfGrandTotal = isPercentOfGrandTotal;
-var ICredentialType;
-(function (ICredentialType) {
-    ICredentialType[ICredentialType["NoConnection"] = 0] = "NoConnection";
-    ICredentialType[ICredentialType["OnBehalfOf"] = 1] = "OnBehalfOf";
-    ICredentialType[ICredentialType["Anonymous"] = 2] = "Anonymous";
-})(ICredentialType = exports.ICredentialType || (exports.ICredentialType = {}));
+var CredentialType;
+(function (CredentialType) {
+    CredentialType[CredentialType["NoConnection"] = 0] = "NoConnection";
+    CredentialType[CredentialType["OnBehalfOf"] = 1] = "OnBehalfOf";
+    CredentialType[CredentialType["Anonymous"] = 2] = "Anonymous";
+})(CredentialType = exports.CredentialType || (exports.CredentialType = {}));
 var DataCacheMode;
 (function (DataCacheMode) {
     DataCacheMode[DataCacheMode["Import"] = 0] = "Import";
@@ -1881,11 +1881,15 @@ exports.Validators = {
     commandsSettingsValidator: new commandsSettingsValidator_1.CommandsSettingsValidator(),
     conditionItemValidator: new filtersValidator_1.ConditionItemValidator(),
     contrastModeValidator: new typeValidator_1.EnumValidator([0, 1, 2, 3, 4]),
+    credentialDetailsValidator: new mapValidator_1.MapValidator([new typeValidator_1.StringValidator()], [new typeValidator_1.StringValidator()]),
+    credentialsValidator: new datasetCreateConfigValidator_1.CredentialsValidator(),
+    credentialTypeValidator: new typeValidator_1.EnumValidator([0, 1, 2]),
     customLayoutDisplayOptionValidator: new typeValidator_1.EnumValidator([0, 1, 2]),
     customLayoutValidator: new layoutValidator_1.CustomLayoutValidator(),
     customPageSizeValidator: new pageValidator_1.CustomPageSizeValidator(),
     customThemeValidator: new customThemeValidator_1.CustomThemeValidator(),
     dashboardLoadValidator: new dashboardLoadValidator_1.DashboardLoadValidator(),
+    dataCacheModeValidator: new typeValidator_1.EnumValidator([0, 1]),
     datasetBindingValidator: new datasetBindingValidator_1.DatasetBindingValidator(),
     datasetCreateConfigValidator: new datasetCreateConfigValidator_1.DatasetCreateConfigValidator(),
     datasourceConnectionConfigValidator: new datasetCreateConfigValidator_1.DatasourceConnectionConfigValidator(),
@@ -5865,7 +5869,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TableDataValidator = exports.TableSchemaValidator = exports.ColumnSchemaValidator = exports.DatasourceConnectionConfigValidator = exports.DatasetCreateConfigValidator = void 0;
+exports.TableDataValidator = exports.TableSchemaValidator = exports.ColumnSchemaValidator = exports.CredentialsValidator = exports.DatasourceConnectionConfigValidator = exports.DatasetCreateConfigValidator = void 0;
 var multipleFieldsValidator_1 = __webpack_require__(3);
 var typeValidator_1 = __webpack_require__(4);
 var validator_1 = __webpack_require__(1);
@@ -5943,12 +5947,12 @@ var DatasourceConnectionConfigValidator = /** @class */ (function (_super) {
         }
         var fields = [
             {
-                field: "path",
-                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+                field: "dataCacheMode",
+                validators: [validator_1.Validators.dataCacheModeValidator]
             },
             {
-                field: "kind",
-                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+                field: "credentials",
+                validators: [validator_1.Validators.credentialsValidator]
             }
         ];
         var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
@@ -5957,6 +5961,35 @@ var DatasourceConnectionConfigValidator = /** @class */ (function (_super) {
     return DatasourceConnectionConfigValidator;
 }(typeValidator_1.ObjectValidator));
 exports.DatasourceConnectionConfigValidator = DatasourceConnectionConfigValidator;
+var CredentialsValidator = /** @class */ (function (_super) {
+    __extends(CredentialsValidator, _super);
+    function CredentialsValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    CredentialsValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "credentialType",
+                validators: [validator_1.Validators.credentialTypeValidator]
+            },
+            {
+                field: "credentialDetails",
+                validators: [validator_1.Validators.credentialDetailsValidator]
+            }
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return CredentialsValidator;
+}(typeValidator_1.ObjectValidator));
+exports.CredentialsValidator = CredentialsValidator;
 var ColumnSchemaValidator = /** @class */ (function (_super) {
     __extends(ColumnSchemaValidator, _super);
     function ColumnSchemaValidator() {
@@ -9259,7 +9292,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", { value: true });
 /** @ignore */ /** */
 var config = {
-    version: '2.21.1',
+    version: '2.22.0',
     type: 'js'
 };
 exports.default = config;
