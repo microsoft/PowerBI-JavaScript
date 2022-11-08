@@ -111,15 +111,3 @@ package:
         - to: 'Release'
           include:
             - "**/Microsoft.PowerBI.JavaScript.*.nupkg"
-
-test:
-  commands:
-    - !!testcommand
-      name: 'Test powerbi-javascript'
-      arguments: 'test.ps1'
-      command: '.pipelines\cdpx_run_ps.cmd'
-      testresults:
-        - title: 'powerbi-javascript test results'
-          type: 'junit'
-          include:
-            - ".\\tmp\\testresults.xml"
