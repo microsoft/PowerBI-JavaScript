@@ -9,5 +9,4 @@ maxReviewers: 2
 #  - ^/private/Product/PowerBI/NuGetPackages/
 # Do not make recommendations for reviewers that are included in the following list
 excludedReviewers:
-  - shyosef@microsoft.com
   - neryac@microsoft.com
