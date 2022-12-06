@@ -150,6 +150,7 @@ declare module "embed" {
     export type IDashboardEmbedConfiguration = models.IDashboardEmbedConfiguration;
     export type ITileEmbedConfiguration = models.ITileEmbedConfiguration;
     export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
+    export type IQuickCreateConfiguration = models.IQuickCreateConfiguration;
     export type ILocaleSettings = models.ILocaleSettings;
     export type IQnaSettings = models.IQnaSettings;
     export type IEmbedSettings = models.ISettings;
@@ -2878,11 +2879,12 @@ declare module "powerbi-client" {
     export { Report } from "report";
     export { Dashboard } from "dashboard";
     export { Tile } from "tile";
-    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, IReportEmbedConfiguration, IDashboardEmbedConfiguration, ITileEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings, } from "embed";
+    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, IReportEmbedConfiguration, IDashboardEmbedConfiguration, ITileEmbedConfiguration, IQuickCreateConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings, } from "embed";
     export { Page } from "page";
     export { Qna } from "qna";
     export { Visual } from "visual";
     export { VisualDescriptor } from "visualDescriptor";
+    export { QuickCreate } from "quickCreate";
     export { BasicFilterBuilder, AdvancedFilterBuilder, TopNFilterBuilder, RelativeDateFilterBuilder, RelativeTimeFilterBuilder } from "FilterBuilders/index";
     global {
         interface Window {

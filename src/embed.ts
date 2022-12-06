@@ -48,6 +48,8 @@ export type ITileEmbedConfiguration = models.ITileEmbedConfiguration;
 
 export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
 
+export type IQuickCreateConfiguration = models.IQuickCreateConfiguration;
+
 export type ILocaleSettings = models.ILocaleSettings;
 
 export type IQnaSettings = models.IQnaSettings;

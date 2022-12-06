@@ -10993,7 +10993,7 @@ exports.Page = Page;
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RelativeTimeFilterBuilder = exports.RelativeDateFilterBuilder = exports.TopNFilterBuilder = exports.AdvancedFilterBuilder = exports.BasicFilterBuilder = exports.VisualDescriptor = exports.Visual = exports.Qna = exports.Page = exports.Embed = exports.Tile = exports.Dashboard = exports.Report = exports.models = exports.factories = exports.service = void 0;
+exports.RelativeTimeFilterBuilder = exports.RelativeDateFilterBuilder = exports.TopNFilterBuilder = exports.AdvancedFilterBuilder = exports.BasicFilterBuilder = exports.QuickCreate = exports.VisualDescriptor = exports.Visual = exports.Qna = exports.Page = exports.Embed = exports.Tile = exports.Dashboard = exports.Report = exports.models = exports.factories = exports.service = void 0;
 /**
  * @hidden
  */
@@ -11019,6 +11019,8 @@ var visual_1 = __webpack_require__(/*! ./visual */ "./src/visual.ts");
 Object.defineProperty(exports, "Visual", { enumerable: true, get: function () { return visual_1.Visual; } });
 var visualDescriptor_1 = __webpack_require__(/*! ./visualDescriptor */ "./src/visualDescriptor.ts");
 Object.defineProperty(exports, "VisualDescriptor", { enumerable: true, get: function () { return visualDescriptor_1.VisualDescriptor; } });
+var quickCreate_1 = __webpack_require__(/*! ./quickCreate */ "./src/quickCreate.ts");
+Object.defineProperty(exports, "QuickCreate", { enumerable: true, get: function () { return quickCreate_1.QuickCreate; } });
 var FilterBuilders_1 = __webpack_require__(/*! ./FilterBuilders */ "./src/FilterBuilders/index.ts");
 Object.defineProperty(exports, "BasicFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.BasicFilterBuilder; } });
 Object.defineProperty(exports, "AdvancedFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.AdvancedFilterBuilder; } });
