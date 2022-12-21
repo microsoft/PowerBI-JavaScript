@@ -5,8 +5,7 @@ try {
 
   Write-Host "Build Number is" $buildNumber
 
-  [Environment]::SetEnvironmentVariable("CustomBuildNumber", $buildNumber, "User")  # This will allow you to use it from env var in later steps of the same phase
-  Write-Host "##vso[build.updatebuildnumber]${buildNumber}"                         # This will update build number on your build
+  Write-Host "##vso[task.setvariable variable=CustomBuildNumber]${buildNumber}"  # This will allow you to use it from env var in later steps of the same phase
 }
 catch {
   Write-Error $_.Exception
