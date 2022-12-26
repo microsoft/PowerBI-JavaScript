@@ -1,5 +1,5 @@
 #################################################################################
-#   Onebranch Pipelines - Buddy MSBuild (CDPXMigrated)                          #
+#   Onebranch Pipelines - Official MSBuild (CDPXMigrated)                       #
 # This pipeline was created by EasyStart from a sample located at:              #
 #   https://aka.ms/obpipelines/easystart/samples                                #
 # Documentation:  https://aka.ms/obpipelines                                    #
@@ -23,7 +23,10 @@ variables:
   REPOROOT: $(Build.SourcesDirectory)
   OUTPUTROOT: $(REPOROOT)\out
   NUGET_XMLDOC_MODE: skip
-
+  ${{ if eq(variables['Build.DefinitionName'], 'powerbi-javascript-Official') }}:
+    obpTemplate: v2/OneBranch.Official.CrossPlat.yml@templates # https://aka.ms/obpipelines/templates
+  ${{ else }}:
+    obpTemplate: v2/OneBranch.NonOfficial.CrossPlat.yml@templates # https://aka.ms/obpipelines/templates
   WindowsContainerImage: 'onebranch.azurecr.io/windows/ltsc2019/vse2022:latest' # Docker image which is used to build the project https://aka.ms/obpipelines/containers
 
 resources:
@@ -34,11 +37,11 @@ resources:
       ref: refs/heads/main
 
 extends:
-  template: v2/OneBranch.NonOfficial.CrossPlat.yml@templates # https://aka.ms/obpipelines/templates
+  template: ${{ variables.obpTemplate }}
   parameters:
     globalSdl: # https://aka.ms/obpipelines/sdl
       tsa:
-        enabled: false # onebranch publish all sdl results to TSA. If TSA is disabled all SDL tools will forced into 'break' build mode.
+        enabled: false
       cg:
         failOnAlert: false
 
@@ -49,7 +52,7 @@ extends:
         pool:
           type: windows  # read more about custom job pool types at https://aka.ms/obpipelines/yaml/jobs
 
-        variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
+        variables:
           ob_outputDirectory: '$(OUTPUTROOT)' # this directory is uploaded to pipeline artifacts, reddog and cloudvault. More info at https://aka.ms/obpipelines/artifacts
           ob_sdl_binskim_break: true # https://aka.ms/obpipelines/sdl
           ob_artifactBaseName: 'drop'
@@ -143,18 +146,18 @@ extends:
               SourceFolder: $(Build.SourcesDirectory)
               Contents: |
                 **\*
-                !**\.pipelines\**\*
-                !**\.vscode\**\*
-                !**\test\**\*.*
-                !**\demo\**\*
-                !**\dist\**\*
+                !.pipelines\**\*
+                !.vscode\**\*
+                !demo\**\*
+                !dist\**\*
+                !node_modules\**\*
                 !**\out\**\*
+                !**\test\**\*.*
                 !**\*.tgz
                 !**\**.nupkg
-                !**\node_modules\**\*
               TargetFolder: '$(OUTPUTROOT)\outputs\build\source'
 
-          # Copying tgz package to the Output folder
+          # Copying tgz package to the Output folder.
           - task: CopyFiles@2
             displayName: 'Copy tgz-package to Output folder'
             inputs:
