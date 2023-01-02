@@ -96,6 +96,11 @@ export interface IService {
 export type IComponentEmbedConfiguration = IReportEmbedConfiguration | IDashboardEmbedConfiguration | ITileEmbedConfiguration | IVisualEmbedConfiguration | IQnaEmbedConfiguration;
 
 /**
+ * @hidden
+ */
+export type EmbedComponentFactory = (service: Service, element: HTMLElement, config: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) => Embed;
+
+/**
  * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
  *
  * @export
@@ -134,7 +139,7 @@ export class Service implements IService {
   /** The Configuration object for the service*/
   private config: IServiceConfiguration;
 
-  /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
+  /** A list of Power BI components that have been embedded using this service instance. */
   private embeds: Embed[];
 
   /** TODO: Look for way to make hpm private without sacrificing ease of maintenance. This should be private but in embed needs to call methods.
@@ -149,6 +154,11 @@ export class Service implements IService {
   wpmp: WindowPostMessageProxy;
   router: Router;
   private uniqueSessionId: string;
+
+  /**
+   * @hidden
+   */
+  private registeredComponents: { [componentType: string]: EmbedComponentFactory } = {};
 
   /**
    * Creates an instance of a Power BI Service.
@@ -395,6 +405,8 @@ export class Service implements IService {
    * @private
    * @param {IPowerBiElement} element
    * @param {IEmbedConfigurationBase} config
+   * @param {boolean} phasedRender
+   * @param {boolean} isBootstrap
    * @returns {Embed}
    * @hidden
    */
@@ -408,16 +420,38 @@ export class Service implements IService {
     // Saves the type as part of the configuration so that it can be referenced later at a known location.
     config.type = componentType;
 
-    const Component = utils.find((embedComponent) => componentType === embedComponent.type.toLowerCase(), Service.components);
-    if (!Component) {
-      throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
-    }
-
-    const component = new Component(this, element, config, phasedRender, isBootstrap);
+    const component = this.createEmbedComponent(componentType, element, config, phasedRender, isBootstrap);
     element.powerBiEmbed = component;
 
     this.addOrOverwriteEmbed(component, element);
     return component;
+  }
+
+  /**
+   * Given component type, creates embed component instance 
+   *
+   * @private
+   * @param {string} componentType
+   * @param {HTMLElement} element
+   * @param {IEmbedConfigurationBase} config
+   * @param {boolean} phasedRender
+   * @param {boolean} isBootstrap
+   * @returns {Embed}
+   * @hidden
+   */
+  private createEmbedComponent(componentType: string, element: HTMLElement, config: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): Embed {
+    const Component = utils.find((embedComponent) => componentType === embedComponent.type.toLowerCase(), Service.components);
+    if (Component) {
+      return new Component(this, element, config, phasedRender, isBootstrap);
+    }
+
+    // If component type is not legacy, search in registered components
+    const registeredComponent = utils.find((registeredComponentType) => componentType.toLowerCase() === registeredComponentType.toLowerCase(), Object.keys(this.registeredComponents));
+    if (!registeredComponent) {
+      throw new Error(`Attempted to embed component of type: ${componentType} but did not find any matching component.  Please verify the type you specified is intended.`);
+    }
+
+    return this.registeredComponents[registeredComponent](this, element, config, phasedRender, isBootstrap);
   }
 
   /**
@@ -521,7 +555,7 @@ export class Service implements IService {
    */
   addOrOverwriteEmbed(component: Embed, element: HTMLElement): void {
     // remove embeds over the same div element.
-    this.embeds = this.embeds.filter(function(embed) {
+    this.embeds = this.embeds.filter(function (embed) {
       return embed.element !== element;
     });
 
@@ -662,5 +696,42 @@ export class Service implements IService {
   setSdkInfo(type: string, version: string): void {
     this.hpm.defaultHeaders['x-sdk-type'] = type;
     this.hpm.defaultHeaders['x-sdk-wrapper-version'] = version;
+  }
+
+  /**
+   * API for registering external components
+   *
+   * @hidden
+   * @param {string} componentType
+   * @param {EmbedComponentFactory} embedComponentFactory
+   * @param {string[]} routerEventUrls
+   */
+  register(componentType: string, embedComponentFactory: EmbedComponentFactory, routerEventUrls: string[]): void {
+    if (utils.find((embedComponent) => componentType.toLowerCase() === embedComponent.type.toLowerCase(), Service.components)) {
+      throw new Error('The component name is reserved. Cannot register a component with this name.');
+    }
+
+    if (utils.find((registeredComponentType) => componentType.toLowerCase() === registeredComponentType.toLowerCase(), Object.keys(this.registeredComponents))) {
+      throw new Error('A component with this type is already registered.');
+    }
+
+    this.registeredComponents[componentType] = embedComponentFactory;
+
+    routerEventUrls.forEach(url => {
+      if (!url.includes(':uniqueId') || !url.includes(':eventName')) {
+        throw new Error('Invalid router event URL');
+      }
+
+      this.router.post(url, (req, _res) => {
+        const event: IEvent<any> = {
+          type: componentType,
+          id: req.params.uniqueId as string,
+          name: req.params.eventName as string,
+          value: req.body
+        };
+
+        this.handleEvent(event);
+      });
+    });
   }
 }

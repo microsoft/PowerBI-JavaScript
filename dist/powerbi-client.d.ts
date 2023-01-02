@@ -2138,6 +2138,10 @@ declare module "service" {
     }
     export type IComponentEmbedConfiguration = IReportEmbedConfiguration | IDashboardEmbedConfiguration | ITileEmbedConfiguration | IVisualEmbedConfiguration | IQnaEmbedConfiguration;
     /**
+     * @hidden
+     */
+    export type EmbedComponentFactory = (service: Service, element: HTMLElement, config: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) => Embed;
+    /**
      * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
      *
      * @export
@@ -2162,7 +2166,7 @@ declare module "service" {
         accessToken: string;
         /** The Configuration object for the service*/
         private config;
-        /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
+        /** A list of Power BI components that have been embedded using this service instance. */
         private embeds;
         /** TODO: Look for way to make hpm private without sacrificing ease of maintenance. This should be private but in embed needs to call methods.
          *
@@ -2176,6 +2180,10 @@ declare module "service" {
         wpmp: WindowPostMessageProxy;
         router: Router;
         private uniqueSessionId;
+        /**
+         * @hidden
+         */
+        private registeredComponents;
         /**
          * Creates an instance of a Power BI Service.
          *
@@ -2257,10 +2265,25 @@ declare module "service" {
          * @private
          * @param {IPowerBiElement} element
          * @param {IEmbedConfigurationBase} config
+         * @param {boolean} phasedRender
+         * @param {boolean} isBootstrap
          * @returns {Embed}
          * @hidden
          */
         private embedNew;
+        /**
+         * Given component type, creates embed component instance
+         *
+         * @private
+         * @param {string} componentType
+         * @param {HTMLElement} element
+         * @param {IEmbedConfigurationBase} config
+         * @param {boolean} phasedRender
+         * @param {boolean} isBootstrap
+         * @returns {Embed}
+         * @hidden
+         */
+        private createEmbedComponent;
         /**
          * Given an element that already contains an embed component, load with a new configuration.
          *
@@ -2345,6 +2368,15 @@ declare module "service" {
          * @returns {void}
          */
         setSdkInfo(type: string, version: string): void;
+        /**
+         * API for registering external components
+         *
+         * @hidden
+         * @param {string} componentType
+         * @param {EmbedComponentFactory} embedComponentFactory
+         * @param {string[]} routerEventUrls
+         */
+        register(componentType: string, embedComponentFactory: EmbedComponentFactory, routerEventUrls: string[]): void;
     }
 }
 declare module "bookmarksManager" {

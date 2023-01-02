@@ -911,7 +911,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// powerbi-models v1.12.1
+// powerbi-models v1.12.3
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -6009,6 +6009,10 @@ var ColumnSchemaValidator = /** @class */ (function (_super) {
                 validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
             },
             {
+                field: "displayName",
+                validators: [validator_1.Validators.stringValidator]
+            },
+            {
                 field: "dataType",
                 validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
             }
@@ -6187,6 +6191,346 @@ exports.QuickCreateValidator = QuickCreateValidator;
 ;
 });
 //# sourceMappingURL=models.js.map
+// SIG // Begin signature block
+// SIG // MIIrVgYJKoZIhvcNAQcCoIIrRzCCK0MCAQExDzANBglg
+// SIG // hkgBZQMEAgEFADB3BgorBgEEAYI3AgEEoGkwZzAyBgor
+// SIG // BgEEAYI3AgEeMCQCAQEEEBDgyQbOONQRoqMAEEvTUJAC
+// SIG // AQACAQACAQACAQACAQAwMTANBglghkgBZQMEAgEFAAQg
+// SIG // /i51IdNsxTS0JqJprFGAbZKQWzw3aaJrQs6hvB+vKCig
+// SIG // ghF5MIIIiTCCB3GgAwIBAgITNgAAAanWkDBmQ9sfggAC
+// SIG // AAABqTANBgkqhkiG9w0BAQsFADBBMRMwEQYKCZImiZPy
+// SIG // LGQBGRYDR0JMMRMwEQYKCZImiZPyLGQBGRYDQU1FMRUw
+// SIG // EwYDVQQDEwxBTUUgQ1MgQ0EgMDEwHhcNMjIwNjEwMTgy
+// SIG // NzA0WhcNMjMwNjEwMTgyNzA0WjAkMSIwIAYDVQQDExlN
+// SIG // aWNyb3NvZnQgQXp1cmUgQ29kZSBTaWduMIIBIjANBgkq
+// SIG // hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuLvS3Hq6XM6N
+// SIG // 5ZVPdqZQQbTo4WFo9Ar6TqyLpZIqQpNoW9ZG58deayDX
+// SIG // VV7wKgn0IAjewM3VfPGtiX8jjOz4VtelbCYnbV9zrqqU
+// SIG // rtTlqTbFB1L+UWQO2DLhxB8QybLxi38KaiY1DC6DL5xK
+// SIG // uAnIGWnVNS168FihSxIPneGKfG3nJH1CgSA/rJ7w7tnY
+// SIG // 8hHlpPpMia6oKVAZSvos9/fDpBmX+cru3sXfEv19s+4O
+// SIG // JKLoPlJiNR0PhsqW5hChTn+tjVOBu8Td7tcb+jf9QQs1
+// SIG // 2HPBtx3nMNhNlYZQrqXJMUy65RH2zAYAd9N9tdo6VRU/
+// SIG // 8vRYzYOrWHSulDVtMn2cjwIDAQABo4IFlTCCBZEwKQYJ
+// SIG // KwYBBAGCNxUKBBwwGjAMBgorBgEEAYI3WwEBMAoGCCsG
+// SIG // AQUFBwMDMD0GCSsGAQQBgjcVBwQwMC4GJisGAQQBgjcV
+// SIG // CIaQ4w2E1bR4hPGLPoWb3RbOnRKBYIPdzWaGlIwyAgFk
+// SIG // AgEMMIICdgYIKwYBBQUHAQEEggJoMIICZDBiBggrBgEF
+// SIG // BQcwAoZWaHR0cDovL2NybC5taWNyb3NvZnQuY29tL3Br
+// SIG // aWluZnJhL0NlcnRzL0JZMlBLSUNTQ0EwMS5BTUUuR0JM
+// SIG // X0FNRSUyMENTJTIwQ0ElMjAwMSgyKS5jcnQwUgYIKwYB
+// SIG // BQUHMAKGRmh0dHA6Ly9jcmwxLmFtZS5nYmwvYWlhL0JZ
+// SIG // MlBLSUNTQ0EwMS5BTUUuR0JMX0FNRSUyMENTJTIwQ0El
+// SIG // MjAwMSgyKS5jcnQwUgYIKwYBBQUHMAKGRmh0dHA6Ly9j
+// SIG // cmwyLmFtZS5nYmwvYWlhL0JZMlBLSUNTQ0EwMS5BTUUu
+// SIG // R0JMX0FNRSUyMENTJTIwQ0ElMjAwMSgyKS5jcnQwUgYI
+// SIG // KwYBBQUHMAKGRmh0dHA6Ly9jcmwzLmFtZS5nYmwvYWlh
+// SIG // L0JZMlBLSUNTQ0EwMS5BTUUuR0JMX0FNRSUyMENTJTIw
+// SIG // Q0ElMjAwMSgyKS5jcnQwUgYIKwYBBQUHMAKGRmh0dHA6
+// SIG // Ly9jcmw0LmFtZS5nYmwvYWlhL0JZMlBLSUNTQ0EwMS5B
+// SIG // TUUuR0JMX0FNRSUyMENTJTIwQ0ElMjAwMSgyKS5jcnQw
+// SIG // ga0GCCsGAQUFBzAChoGgbGRhcDovLy9DTj1BTUUlMjBD
+// SIG // UyUyMENBJTIwMDEsQ049QUlBLENOPVB1YmxpYyUyMEtl
+// SIG // eSUyMFNlcnZpY2VzLENOPVNlcnZpY2VzLENOPUNvbmZp
+// SIG // Z3VyYXRpb24sREM9QU1FLERDPUdCTD9jQUNlcnRpZmlj
+// SIG // YXRlP2Jhc2U/b2JqZWN0Q2xhc3M9Y2VydGlmaWNhdGlv
+// SIG // bkF1dGhvcml0eTAdBgNVHQ4EFgQUj5gJWFiDzm06yLnX
+// SIG // Wf2V9PM6+1cwDgYDVR0PAQH/BAQDAgeAMFAGA1UdEQRJ
+// SIG // MEekRTBDMSkwJwYDVQQLEyBNaWNyb3NvZnQgT3BlcmF0
+// SIG // aW9ucyBQdWVydG8gUmljbzEWMBQGA1UEBRMNMjM2MTY3
+// SIG // KzQ3MDg2MTCCAeYGA1UdHwSCAd0wggHZMIIB1aCCAdGg
+// SIG // ggHNhj9odHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vcGtp
+// SIG // aW5mcmEvQ1JML0FNRSUyMENTJTIwQ0ElMjAwMSgyKS5j
+// SIG // cmyGMWh0dHA6Ly9jcmwxLmFtZS5nYmwvY3JsL0FNRSUy
+// SIG // MENTJTIwQ0ElMjAwMSgyKS5jcmyGMWh0dHA6Ly9jcmwy
+// SIG // LmFtZS5nYmwvY3JsL0FNRSUyMENTJTIwQ0ElMjAwMSgy
+// SIG // KS5jcmyGMWh0dHA6Ly9jcmwzLmFtZS5nYmwvY3JsL0FN
+// SIG // RSUyMENTJTIwQ0ElMjAwMSgyKS5jcmyGMWh0dHA6Ly9j
+// SIG // cmw0LmFtZS5nYmwvY3JsL0FNRSUyMENTJTIwQ0ElMjAw
+// SIG // MSgyKS5jcmyGgb1sZGFwOi8vL0NOPUFNRSUyMENTJTIw
+// SIG // Q0ElMjAwMSgyKSxDTj1CWTJQS0lDU0NBMDEsQ049Q0RQ
+// SIG // LENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNl
+// SIG // cnZpY2VzLENOPUNvbmZpZ3VyYXRpb24sREM9QU1FLERD
+// SIG // PUdCTD9jZXJ0aWZpY2F0ZVJldm9jYXRpb25MaXN0P2Jh
+// SIG // c2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9p
+// SIG // bnQwHwYDVR0jBBgwFoAUllGE4Gtve/7YBqvD8oXmKa5q
+// SIG // +dQwHwYDVR0lBBgwFgYKKwYBBAGCN1sBAQYIKwYBBQUH
+// SIG // AwMwDQYJKoZIhvcNAQELBQADggEBAHD1OJbFZ/tIa5Zp
+// SIG // DzeU+mqWHOdF2htAZKicRfNYhaajjyYRvCTUKn/5SZGU
+// SIG // KKdVmsxiFtCOp2lJ2+C3b7IJukkqC9SmpIkQLhBuz7uK
+// SIG // 4NsXB6Xn3Iv32YuKeH4sqdRqJMCezhsale/Sh6fecsVW
+// SIG // pJnsvfXxdXBCyoVbAZCZCQN3dOXUz4DtEfV2fxhRzTfS
+// SIG // UhKsr1VSY9HC/myediSqvqd3zfgK9j6IR0DcL3WkKiV0
+// SIG // B/dnYwntnntrhFxGYQuPPXBA7xX10SB/8CVA8V1NovOk
+// SIG // tGO5cgvmVMe5pA2m9M7sOBgFkjXgPD7i4PoL5X0mK+6b
+// SIG // nchiEZj1C5l1X6LzJH4wggjoMIIG0KADAgECAhMfAAAA
+// SIG // UeqP9pxzDKg7AAAAAABRMA0GCSqGSIb3DQEBCwUAMDwx
+// SIG // EzARBgoJkiaJk/IsZAEZFgNHQkwxEzARBgoJkiaJk/Is
+// SIG // ZAEZFgNBTUUxEDAOBgNVBAMTB2FtZXJvb3QwHhcNMjEw
+// SIG // NTIxMTg0NDE0WhcNMjYwNTIxMTg1NDE0WjBBMRMwEQYK
+// SIG // CZImiZPyLGQBGRYDR0JMMRMwEQYKCZImiZPyLGQBGRYD
+// SIG // QU1FMRUwEwYDVQQDEwxBTUUgQ1MgQ0EgMDEwggEiMA0G
+// SIG // CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDJmlIJfQGe
+// SIG // jVbXKpcyFPoFSUllalrinfEV6JMc7i+bZDoL9rNHnHDG
+// SIG // fJgeuRIYO1LY/1f4oMTrhXbSaYRCS5vGc8145WcTZG90
+// SIG // 8bGDCWr4GFLc411WxA+Pv2rteAcz0eHMH36qTQ8L0o3X
+// SIG // Ob2n+x7KJFLokXV1s6pF/WlSXsUBXGaCIIWBXyEchv+s
+// SIG // M9eKDsUOLdLTITHYJQNWkiryMSEbxqdQUTVZjEz6eLRL
+// SIG // kofDAo8pXirIYOgM770CYOiZrcKHK7lYOVblx22pdNaw
+// SIG // Y8Te6a2dfoCaWV1QUuazg5VHiC4p/6fksgEILptOKhx9
+// SIG // c+iapiNhMrHsAYx9pUtppeaFAgMBAAGjggTcMIIE2DAS
+// SIG // BgkrBgEEAYI3FQEEBQIDAgACMCMGCSsGAQQBgjcVAgQW
+// SIG // BBQSaCRCIUfL1Gu+Mc8gpMALI38/RzAdBgNVHQ4EFgQU
+// SIG // llGE4Gtve/7YBqvD8oXmKa5q+dQwggEEBgNVHSUEgfww
+// SIG // gfkGBysGAQUCAwUGCCsGAQUFBwMBBggrBgEFBQcDAgYK
+// SIG // KwYBBAGCNxQCAQYJKwYBBAGCNxUGBgorBgEEAYI3CgMM
+// SIG // BgkrBgEEAYI3FQYGCCsGAQUFBwMJBggrBgEFBQgCAgYK
+// SIG // KwYBBAGCN0ABAQYLKwYBBAGCNwoDBAEGCisGAQQBgjcK
+// SIG // AwQGCSsGAQQBgjcVBQYKKwYBBAGCNxQCAgYKKwYBBAGC
+// SIG // NxQCAwYIKwYBBQUHAwMGCisGAQQBgjdbAQEGCisGAQQB
+// SIG // gjdbAgEGCisGAQQBgjdbAwEGCisGAQQBgjdbBQEGCisG
+// SIG // AQQBgjdbBAEGCisGAQQBgjdbBAIwGQYJKwYBBAGCNxQC
+// SIG // BAweCgBTAHUAYgBDAEEwCwYDVR0PBAQDAgGGMBIGA1Ud
+// SIG // EwEB/wQIMAYBAf8CAQAwHwYDVR0jBBgwFoAUKV5RXmSu
+// SIG // NLnrrJwNp4x1AdEJCygwggFoBgNVHR8EggFfMIIBWzCC
+// SIG // AVegggFToIIBT4YxaHR0cDovL2NybC5taWNyb3NvZnQu
+// SIG // Y29tL3BraWluZnJhL2NybC9hbWVyb290LmNybIYjaHR0
+// SIG // cDovL2NybDIuYW1lLmdibC9jcmwvYW1lcm9vdC5jcmyG
+// SIG // I2h0dHA6Ly9jcmwzLmFtZS5nYmwvY3JsL2FtZXJvb3Qu
+// SIG // Y3JshiNodHRwOi8vY3JsMS5hbWUuZ2JsL2NybC9hbWVy
+// SIG // b290LmNybIaBqmxkYXA6Ly8vQ049YW1lcm9vdCxDTj1B
+// SIG // TUVSb290LENOPUNEUCxDTj1QdWJsaWMlMjBLZXklMjBT
+// SIG // ZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1Db25maWd1cmF0
+// SIG // aW9uLERDPUFNRSxEQz1HQkw/Y2VydGlmaWNhdGVSZXZv
+// SIG // Y2F0aW9uTGlzdD9iYXNlP29iamVjdENsYXNzPWNSTERp
+// SIG // c3RyaWJ1dGlvblBvaW50MIIBqwYIKwYBBQUHAQEEggGd
+// SIG // MIIBmTBHBggrBgEFBQcwAoY7aHR0cDovL2NybC5taWNy
+// SIG // b3NvZnQuY29tL3BraWluZnJhL2NlcnRzL0FNRVJvb3Rf
+// SIG // YW1lcm9vdC5jcnQwNwYIKwYBBQUHMAKGK2h0dHA6Ly9j
+// SIG // cmwyLmFtZS5nYmwvYWlhL0FNRVJvb3RfYW1lcm9vdC5j
+// SIG // cnQwNwYIKwYBBQUHMAKGK2h0dHA6Ly9jcmwzLmFtZS5n
+// SIG // YmwvYWlhL0FNRVJvb3RfYW1lcm9vdC5jcnQwNwYIKwYB
+// SIG // BQUHMAKGK2h0dHA6Ly9jcmwxLmFtZS5nYmwvYWlhL0FN
+// SIG // RVJvb3RfYW1lcm9vdC5jcnQwgaIGCCsGAQUFBzAChoGV
+// SIG // bGRhcDovLy9DTj1hbWVyb290LENOPUFJQSxDTj1QdWJs
+// SIG // aWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxD
+// SIG // Tj1Db25maWd1cmF0aW9uLERDPUFNRSxEQz1HQkw/Y0FD
+// SIG // ZXJ0aWZpY2F0ZT9iYXNlP29iamVjdENsYXNzPWNlcnRp
+// SIG // ZmljYXRpb25BdXRob3JpdHkwDQYJKoZIhvcNAQELBQAD
+// SIG // ggIBAFAQI7dPD+jfXtGt3vJp2pyzA/HUu8hjKaRpM3op
+// SIG // ya5G3ocprRd7vdTHb8BDfRN+AD0YEmeDB5HKQoG6xHPI
+// SIG // 5TXuIi5sm/LeADbV3C2q0HQOygS/VT+m1W7a/752hMIn
+// SIG // +L4ZuyxVeSBpfwf7oQ4YSZPh6+ngZvBHgfBaVz4O9/wc
+// SIG // fw91QDZnTgK9zAh9yRKKls2bziPEnxeOZMVNaxyV0v15
+// SIG // 2PY2xjqIafIkUjK6vY9LtVFjJXenVUAmn3WCPWNFC1YT
+// SIG // IIHw/mD2cTfPy7QA1pT+GPARAKt0bKtq9aCd/Ym0b5tP
+// SIG // bpgCiRtzyb7fbNS1dE740re0COE67YV2wbeo2sXixzvL
+// SIG // ftH8L7s9xv9wV+G22qyKt6lmKLjFK1yMw4Ni5fMabcgm
+// SIG // zRvSjAcbqgp3tk4a8emaaH0rz8MuuIP+yrxtREPXSqL/
+// SIG // C5bzMzsikuDW9xH10graZzSmPjilzpRfRdu20/9UQmC7
+// SIG // eVPZ4j1WNa1oqPHfzET3ChIzJ6Q9G3NPCB+7KwX0OQmK
+// SIG // yv7IDimj8U/GlsHD1z+EF/fYMf8YXG15LamaOAohsw/y
+// SIG // wO6SYSreVW+5Y0mzJutnBC9Cm9ozj1+/4kqksrlhZgR/
+// SIG // CSxhFH3BTweH8gP2FEISRtShDZbuYymynY1un+RyfiK9
+// SIG // +iVTLdD1h/SxyxDpZMtimb4CgJQlMYIZNTCCGTECAQEw
+// SIG // WDBBMRMwEQYKCZImiZPyLGQBGRYDR0JMMRMwEQYKCZIm
+// SIG // iZPyLGQBGRYDQU1FMRUwEwYDVQQDEwxBTUUgQ1MgQ0Eg
+// SIG // MDECEzYAAAGp1pAwZkPbH4IAAgAAAakwDQYJYIZIAWUD
+// SIG // BAIBBQCgga4wGQYJKoZIhvcNAQkDMQwGCisGAQQBgjcC
+// SIG // AQQwHAYKKwYBBAGCNwIBCzEOMAwGCisGAQQBgjcCARUw
+// SIG // LwYJKoZIhvcNAQkEMSIEIEgzLPlSRdtRALewHjk0YF65
+// SIG // k1BN+zhlWpF7dpatkUNNMEIGCisGAQQBgjcCAQwxNDAy
+// SIG // oBSAEgBNAGkAYwByAG8AcwBvAGYAdKEagBhodHRwOi8v
+// SIG // d3d3Lm1pY3Jvc29mdC5jb20wDQYJKoZIhvcNAQEBBQAE
+// SIG // ggEAo7s9H4+5ZCFpGU+mzKmSZNKGszg3RSKhV5NPmrAP
+// SIG // MIUNLJvqKkNJ/782HHPkUqa5fxJpeKTY4oRyv2Jr8Edf
+// SIG // eB/84/cwhtKbj+TLdHX4mro+OKoQmOC6MvxT3Jg/lWsT
+// SIG // qiYJoRQ1hajAdRsZ8ukon3JoSdQRTcQOjchiX5p+VarN
+// SIG // LQlesuKl8srWej8Col6ASZNierCPh7Zep+8YnDQGxwXt
+// SIG // 9PvGetnUTF/4kw42UQNn8kABdhJYfpuveqXIfAarCLgG
+// SIG // Ev3PTG0dA/c2oqHlqwZw/BBOL4LbVEbGFGfY4L3j8Pgc
+// SIG // axN+CvwzXA6YQWIRcrp+KnTSQoenP051gteIhaGCFv0w
+// SIG // ghb5BgorBgEEAYI3AwMBMYIW6TCCFuUGCSqGSIb3DQEH
+// SIG // AqCCFtYwghbSAgEDMQ8wDQYJYIZIAWUDBAIBBQAwggFR
+// SIG // BgsqhkiG9w0BCRABBKCCAUAEggE8MIIBOAIBAQYKKwYB
+// SIG // BAGEWQoDATAxMA0GCWCGSAFlAwQCAQUABCC3cDSDpi62
+// SIG // ZHR/9yf8bEyPbB6XeS1AF23Ph/1CEGjCVAIGY2z2CHbT
+// SIG // GBMyMDIyMTEyMDA3NDQ0NC4xMzVaMASAAgH0oIHQpIHN
+// SIG // MIHKMQswCQYDVQQGEwJVUzETMBEGA1UECBMKV2FzaGlu
+// SIG // Z3RvbjEQMA4GA1UEBxMHUmVkbW9uZDEeMBwGA1UEChMV
+// SIG // TWljcm9zb2Z0IENvcnBvcmF0aW9uMSUwIwYDVQQLExxN
+// SIG // aWNyb3NvZnQgQW1lcmljYSBPcGVyYXRpb25zMSYwJAYD
+// SIG // VQQLEx1UaGFsZXMgVFNTIEVTTjpENkJELUUzRTctMTY4
+// SIG // NTElMCMGA1UEAxMcTWljcm9zb2Z0IFRpbWUtU3RhbXAg
+// SIG // U2VydmljZaCCEVQwggcMMIIE9KADAgECAhMzAAABx/sA
+// SIG // oEpb8ifcAAEAAAHHMA0GCSqGSIb3DQEBCwUAMHwxCzAJ
+// SIG // BgNVBAYTAlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9uMRAw
+// SIG // DgYDVQQHEwdSZWRtb25kMR4wHAYDVQQKExVNaWNyb3Nv
+// SIG // ZnQgQ29ycG9yYXRpb24xJjAkBgNVBAMTHU1pY3Jvc29m
+// SIG // dCBUaW1lLVN0YW1wIFBDQSAyMDEwMB4XDTIyMTEwNDE5
+// SIG // MDEzNVoXDTI0MDIwMjE5MDEzNVowgcoxCzAJBgNVBAYT
+// SIG // AlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9uMRAwDgYDVQQH
+// SIG // EwdSZWRtb25kMR4wHAYDVQQKExVNaWNyb3NvZnQgQ29y
+// SIG // cG9yYXRpb24xJTAjBgNVBAsTHE1pY3Jvc29mdCBBbWVy
+// SIG // aWNhIE9wZXJhdGlvbnMxJjAkBgNVBAsTHVRoYWxlcyBU
+// SIG // U1MgRVNOOkQ2QkQtRTNFNy0xNjg1MSUwIwYDVQQDExxN
+// SIG // aWNyb3NvZnQgVGltZS1TdGFtcCBTZXJ2aWNlMIICIjAN
+// SIG // BgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAr0LcVtna
+// SIG // tNFMBrQTtG9P8ISAPyyGmxNfhEzaOVlt088pBUFAIasm
+// SIG // N/eOijE6Ucaf3c2bVnN/02ih0smSqYkm5P3ZwU7ZW202
+// SIG // b6cPDJjXcrjJj0qfnuccBtE3WU0vZ8CiQD7qrKxeF8YB
+// SIG // NcS+PVtvsqhd5YW6AwhWqhjw1mYuLetF5b6aPif/3Rzl
+// SIG // yqG3SV7QPiSJends7gG435Rsy1HJ4XnqztOJR41I0j3E
+// SIG // Q05JMF5QNRi7kT6vXTT+MHVj27FVQ7bef/U+2EAbFj2X
+// SIG // 2AOWbvglYaYnM3m/I/OWDHUgGw8KIdsDh3W1eusnF2D7
+// SIG // oenGgtahs+S1G5Uolf5ESg/9Z+38rhQwLgokY5k6p8k5
+// SIG // arYWtszdJK6JiIRl843H74k7+QqlT2LbAQPq8ivQv0gd
+// SIG // clW2aJun1KrW+v52R3vAHCOtbUmxvD1eNGHqGqLagtlq
+// SIG // 9UFXKXuXnqXJqruCYmfwdFMD0UP6ii1lFdeKL87PdjdA
+// SIG // wyCiVcCEoLnvDzyvjNjxtkTdz6R4yF1N/X4PSQH4Flgs
+// SIG // lyBIXggaSlPtvPuxAtuac/ITj4k0IRShGiYLBM2Dw6oe
+// SIG // sLOoxe07OUPO+qXXOcJMVHhE0MlhhnxfN2B1JWFPWwQ6
+// SIG // ooWiqAOQDqzcDx+79shxA1Cx0K70eOBplMog27gYoLpB
+// SIG // v7nRz4tHqoTyvA0CAwEAAaOCATYwggEyMB0GA1UdDgQW
+// SIG // BBQFUNLdHD7BAF/VU/X/eEHLiUSSIDAfBgNVHSMEGDAW
+// SIG // gBSfpxVdAF5iXYP05dJlpxtTNRnpcjBfBgNVHR8EWDBW
+// SIG // MFSgUqBQhk5odHRwOi8vd3d3Lm1pY3Jvc29mdC5jb20v
+// SIG // cGtpb3BzL2NybC9NaWNyb3NvZnQlMjBUaW1lLVN0YW1w
+// SIG // JTIwUENBJTIwMjAxMCgxKS5jcmwwbAYIKwYBBQUHAQEE
+// SIG // YDBeMFwGCCsGAQUFBzAChlBodHRwOi8vd3d3Lm1pY3Jv
+// SIG // c29mdC5jb20vcGtpb3BzL2NlcnRzL01pY3Jvc29mdCUy
+// SIG // MFRpbWUtU3RhbXAlMjBQQ0ElMjAyMDEwKDEpLmNydDAM
+// SIG // BgNVHRMBAf8EAjAAMBMGA1UdJQQMMAoGCCsGAQUFBwMI
+// SIG // MA0GCSqGSIb3DQEBCwUAA4ICAQDQy5c8ogP0y8xAsLVc
+// SIG // a07wWy1mT+nqYgAFnz2972kNO+KJ7AE4f+SVbvOnkeeu
+// SIG // OPq3xc+6TS8g3FuKKYEwYqvnRHxX58tjlscZsZeKnu7f
+// SIG // GNUlpNT9bOQFHWALURuoXp8TLHhxj3PEq9jzFYBP2YNM
+// SIG // Lol70ojY1qpze3nMMJfpdurdBBpaOLlJmRNTLhxd+RJG
+// SIG // JQbY1XAcx6p/FigwqBasSDUxp+0yFPEBB9uBE3KILAtq
+// SIG // 6fczGp4EMeon6YmkyCGAtXMKDFQQgdP/ITe7VghAVbPT
+// SIG // VlP3hY1dFgc+t8YK2obFSFVKslkASATDHulCMht+WrIs
+// SIG // ukclEUP9DaMmpq7S0RLODMicI6PtqqGOhdnaRltA0d+W
+// SIG // f+0tPt9SUVtrPJyO7WMPKbykCRXzmHK06zr0kn1YiUYN
+// SIG // XCsOgaHF5ImO2ZwQ54UE1I55jjUdldyjy/UPJgxRm9Ny
+// SIG // XeO7adYr8K8f6Q2nPF0vWqFG7ewwaAl5ClKerzshfhB8
+// SIG // zujVR0d1Ra7Z01lnXYhWuPqVZayFl7JHr6i6huhpU6BQ
+// SIG // 6/VgY0cBiksX4mNM+ISY81T1RYt7fWATNu/zkjINczip
+// SIG // zbfg5S+3fCAo8gVB6+6A5L0vBg39dsFITv6MWJuQ8ZZy
+// SIG // 7fwlFBZE4d5IFbRudakNwKGdyLGM2otaNq7wm3ku7x41
+// SIG // UGAmkDCCB3EwggVZoAMCAQICEzMAAAAVxedrngKbSZkA
+// SIG // AAAAABUwDQYJKoZIhvcNAQELBQAwgYgxCzAJBgNVBAYT
+// SIG // AlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9uMRAwDgYDVQQH
+// SIG // EwdSZWRtb25kMR4wHAYDVQQKExVNaWNyb3NvZnQgQ29y
+// SIG // cG9yYXRpb24xMjAwBgNVBAMTKU1pY3Jvc29mdCBSb290
+// SIG // IENlcnRpZmljYXRlIEF1dGhvcml0eSAyMDEwMB4XDTIx
+// SIG // MDkzMDE4MjIyNVoXDTMwMDkzMDE4MzIyNVowfDELMAkG
+// SIG // A1UEBhMCVVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAO
+// SIG // BgNVBAcTB1JlZG1vbmQxHjAcBgNVBAoTFU1pY3Jvc29m
+// SIG // dCBDb3Jwb3JhdGlvbjEmMCQGA1UEAxMdTWljcm9zb2Z0
+// SIG // IFRpbWUtU3RhbXAgUENBIDIwMTAwggIiMA0GCSqGSIb3
+// SIG // DQEBAQUAA4ICDwAwggIKAoICAQDk4aZM57RyIQt5osvX
+// SIG // JHm9DtWC0/3unAcH0qlsTnXIyjVX9gF/bErg4r25Phdg
+// SIG // M/9cT8dm95VTcVrifkpa/rg2Z4VGIwy1jRPPdzLAEBjo
+// SIG // YH1qUoNEt6aORmsHFPPFdvWGUNzBRMhxXFExN6AKOG6N
+// SIG // 7dcP2CZTfDlhAnrEqv1yaa8dq6z2Nr41JmTamDu6Gnsz
+// SIG // rYBbfowQHJ1S/rboYiXcag/PXfT+jlPP1uyFVk3v3byN
+// SIG // pOORj7I5LFGc6XBpDco2LXCOMcg1KL3jtIckw+DJj361
+// SIG // VI/c+gVVmG1oO5pGve2krnopN6zL64NF50ZuyjLVwIYw
+// SIG // XE8s4mKyzbnijYjklqwBSru+cakXW2dg3viSkR4dPf0g
+// SIG // z3N9QZpGdc3EXzTdEonW/aUgfX782Z5F37ZyL9t9X4C6
+// SIG // 26p+Nuw2TPYrbqgSUei/BQOj0XOmTTd0lBw0gg/wEPK3
+// SIG // Rxjtp+iZfD9M269ewvPV2HM9Q07BMzlMjgK8QmguEOqE
+// SIG // UUbi0b1qGFphAXPKZ6Je1yh2AuIzGHLXpyDwwvoSCtdj
+// SIG // bwzJNmSLW6CmgyFdXzB0kZSU2LlQ+QuJYfM2BjUYhEfb
+// SIG // 3BvR/bLUHMVr9lxSUV0S2yW6r1AFemzFER1y7435UsSF
+// SIG // F5PAPBXbGjfHCBUYP3irRbb1Hode2o+eFnJpxq57t7c+
+// SIG // auIurQIDAQABo4IB3TCCAdkwEgYJKwYBBAGCNxUBBAUC
+// SIG // AwEAATAjBgkrBgEEAYI3FQIEFgQUKqdS/mTEmr6CkTxG
+// SIG // NSnPEP8vBO4wHQYDVR0OBBYEFJ+nFV0AXmJdg/Tl0mWn
+// SIG // G1M1GelyMFwGA1UdIARVMFMwUQYMKwYBBAGCN0yDfQEB
+// SIG // MEEwPwYIKwYBBQUHAgEWM2h0dHA6Ly93d3cubWljcm9z
+// SIG // b2Z0LmNvbS9wa2lvcHMvRG9jcy9SZXBvc2l0b3J5Lmh0
+// SIG // bTATBgNVHSUEDDAKBggrBgEFBQcDCDAZBgkrBgEEAYI3
+// SIG // FAIEDB4KAFMAdQBiAEMAQTALBgNVHQ8EBAMCAYYwDwYD
+// SIG // VR0TAQH/BAUwAwEB/zAfBgNVHSMEGDAWgBTV9lbLj+ii
+// SIG // XGJo0T2UkFvXzpoYxDBWBgNVHR8ETzBNMEugSaBHhkVo
+// SIG // dHRwOi8vY3JsLm1pY3Jvc29mdC5jb20vcGtpL2NybC9w
+// SIG // cm9kdWN0cy9NaWNSb29DZXJBdXRfMjAxMC0wNi0yMy5j
+// SIG // cmwwWgYIKwYBBQUHAQEETjBMMEoGCCsGAQUFBzAChj5o
+// SIG // dHRwOi8vd3d3Lm1pY3Jvc29mdC5jb20vcGtpL2NlcnRz
+// SIG // L01pY1Jvb0NlckF1dF8yMDEwLTA2LTIzLmNydDANBgkq
+// SIG // hkiG9w0BAQsFAAOCAgEAnVV9/Cqt4SwfZwExJFvhnnJL
+// SIG // /Klv6lwUtj5OR2R4sQaTlz0xM7U518JxNj/aZGx80HU5
+// SIG // bbsPMeTCj/ts0aGUGCLu6WZnOlNN3Zi6th542DYunKmC
+// SIG // VgADsAW+iehp4LoJ7nvfam++Kctu2D9IdQHZGN5tggz1
+// SIG // bSNU5HhTdSRXud2f8449xvNo32X2pFaq95W2KFUn0CS9
+// SIG // QKC/GbYSEhFdPSfgQJY4rPf5KYnDvBewVIVCs/wMnosZ
+// SIG // iefwC2qBwoEZQhlSdYo2wh3DYXMuLGt7bj8sCXgU6ZGy
+// SIG // qVvfSaN0DLzskYDSPeZKPmY7T7uG+jIa2Zb0j/aRAfbO
+// SIG // xnT99kxybxCrdTDFNLB62FD+CljdQDzHVG2dY3RILLFO
+// SIG // Ry3BFARxv2T5JL5zbcqOCb2zAVdJVGTZc9d/HltEAY5a
+// SIG // GZFrDZ+kKNxnGSgkujhLmm77IVRrakURR6nxt67I6Ile
+// SIG // T53S0Ex2tVdUCbFpAUR+fKFhbHP+CrvsQWY9af3LwUFJ
+// SIG // fn6Tvsv4O+S3Fb+0zj6lMVGEvL8CwYKiexcdFYmNcP7n
+// SIG // tdAoGokLjzbaukz5m/8K6TT4JDVnK+ANuOaMmdbhIurw
+// SIG // J0I9JZTmdHRbatGePu1+oDEzfbzL6Xu/OHBE0ZDxyKs6
+// SIG // ijoIYn/ZcGNTTY3ugm2lBRDBcQZqELQdVTNYs6FwZvKh
+// SIG // ggLLMIICNAIBATCB+KGB0KSBzTCByjELMAkGA1UEBhMC
+// SIG // VVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcT
+// SIG // B1JlZG1vbmQxHjAcBgNVBAoTFU1pY3Jvc29mdCBDb3Jw
+// SIG // b3JhdGlvbjElMCMGA1UECxMcTWljcm9zb2Z0IEFtZXJp
+// SIG // Y2EgT3BlcmF0aW9uczEmMCQGA1UECxMdVGhhbGVzIFRT
+// SIG // UyBFU046RDZCRC1FM0U3LTE2ODUxJTAjBgNVBAMTHE1p
+// SIG // Y3Jvc29mdCBUaW1lLVN0YW1wIFNlcnZpY2WiIwoBATAH
+// SIG // BgUrDgMCGgMVAOIASP0JSbv5R23wxciQivHyckYooIGD
+// SIG // MIGApH4wfDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCldh
+// SIG // c2hpbmd0b24xEDAOBgNVBAcTB1JlZG1vbmQxHjAcBgNV
+// SIG // BAoTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEmMCQGA1UE
+// SIG // AxMdTWljcm9zb2Z0IFRpbWUtU3RhbXAgUENBIDIwMTAw
+// SIG // DQYJKoZIhvcNAQEFBQACBQDnI/oLMCIYDzIwMjIxMTIw
+// SIG // MDg1NzQ3WhgPMjAyMjExMjEwODU3NDdaMHQwOgYKKwYB
+// SIG // BAGEWQoEATEsMCowCgIFAOcj+gsCAQAwBwIBAAICHBww
+// SIG // BwIBAAICEiowCgIFAOclS4sCAQAwNgYKKwYBBAGEWQoE
+// SIG // AjEoMCYwDAYKKwYBBAGEWQoDAqAKMAgCAQACAwehIKEK
+// SIG // MAgCAQACAwGGoDANBgkqhkiG9w0BAQUFAAOBgQBT0J06
+// SIG // x6PZG4//134XJhg5O4xmWeRezqg2dN507dbDtSo+CLxX
+// SIG // H9ES2gCO7yF0PiYpmHD3wCISVhYOqZUQS8fyttZ0c0y3
+// SIG // SxBg3p+areajBqCwlAsA1Jj0P9xFZcIjdKHDmQdLmFV+
+// SIG // PSh+rV/X12A3iS9ApYPkJS3yIjXP4HfR+zGCBA0wggQJ
+// SIG // AgEBMIGTMHwxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpX
+// SIG // YXNoaW5ndG9uMRAwDgYDVQQHEwdSZWRtb25kMR4wHAYD
+// SIG // VQQKExVNaWNyb3NvZnQgQ29ycG9yYXRpb24xJjAkBgNV
+// SIG // BAMTHU1pY3Jvc29mdCBUaW1lLVN0YW1wIFBDQSAyMDEw
+// SIG // AhMzAAABx/sAoEpb8ifcAAEAAAHHMA0GCWCGSAFlAwQC
+// SIG // AQUAoIIBSjAaBgkqhkiG9w0BCQMxDQYLKoZIhvcNAQkQ
+// SIG // AQQwLwYJKoZIhvcNAQkEMSIEIDPjs8coVkVPbRmBuFRv
+// SIG // rxI3sUvngRnt3OBZCvmJPX/xMIH6BgsqhkiG9w0BCRAC
+// SIG // LzGB6jCB5zCB5DCBvQQgR+fl2+JSskULOeVYLbeMgk7H
+// SIG // dIbREmAsjwtcy6MJkskwgZgwgYCkfjB8MQswCQYDVQQG
+// SIG // EwJVUzETMBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UE
+// SIG // BxMHUmVkbW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENv
+// SIG // cnBvcmF0aW9uMSYwJAYDVQQDEx1NaWNyb3NvZnQgVGlt
+// SIG // ZS1TdGFtcCBQQ0EgMjAxMAITMwAAAcf7AKBKW/In3AAB
+// SIG // AAABxzAiBCAc2zxBUP4w0UoaCVlGQTdUxjMV2MuJl3TI
+// SIG // Mgs34gPuaDANBgkqhkiG9w0BAQsFAASCAgBlUsc9c0V+
+// SIG // HDcIQQj9Y4Ub2P93+r/Fy4A32eL7fUnyD19zSC5bvD/r
+// SIG // 3HIwoFg+19MJhmHovw3hFs5k5pyehwoSjA3yUX71kjbq
+// SIG // QiqUTL1A6XomxjRp74fT+Q0b/CztpyB5OLRH3b3dd/Bi
+// SIG // CofsDPzhsJdNxhWrLZQjD4/cbetxXMvN6kbXepug/nqD
+// SIG // iloPxzy9hAjHLRo9ontyG5qkM365aNOc3gULdNuvCEiw
+// SIG // /qJ3XF/3OcLVaPtL4FLsLBZKWZK0DE92rj66HhjSTiP7
+// SIG // JeC5dJKvU3PwafqiaAuK+UTxWKFo/Pc38d5LONVO3F/S
+// SIG // XNlywNSaqTc46cd3a6V/QISNhQvM9G1gPGoK1pW1czlK
+// SIG // +upSR4bdf18EQZNr81B9zkN1RK8Qo3kyAxT42Pq+GktX
+// SIG // pz2jRRCOnWBcL+JFE2Jwf3vsg9zLPGDrfSsPGdcz3WiE
+// SIG // ZchATs23Qv+789h1PFBWXCS6HA2sOgFMyW92i/xj0xPW
+// SIG // OpGuXoV3Sz2CpdhB5rVLNvdFiKluwcI3svDTvS5G8vrs
+// SIG // te0ZnWIz8BtYigYGWaDIlSo8Dm+kbxM5Y7rYLho3ZHB0
+// SIG // DMnWzJoJko1oX+6n7/L5oyCmE9WVialEn2JNL6Dn852n
+// SIG // o497Zeqt9f8oj2UtHJvzxAhHvq1/fNNqdlY1Ws7WlDr2
+// SIG // 9tddA7XPj/kzLA==
+// SIG // End signature block
+
 
 /***/ }),
 
@@ -12975,6 +13319,10 @@ var Service = /** @class */ (function () {
     function Service(hpmFactory, wpmpFactory, routerFactory, config) {
         if (config === void 0) { config = {}; }
         var _this = this;
+        /**
+         * @hidden
+         */
+        this.registeredComponents = {};
         this.wpmp = wpmpFactory(config.wpmpName, config.logMessages);
         this.hpm = hpmFactory(this.wpmp, null, config.version, config.type, config.sdkWrapperVersion);
         this.router = routerFactory(this.wpmp);
@@ -13180,6 +13528,8 @@ var Service = /** @class */ (function () {
      * @private
      * @param {IPowerBiElement} element
      * @param {IEmbedConfigurationBase} config
+     * @param {boolean} phasedRender
+     * @param {boolean} isBootstrap
      * @returns {Embed}
      * @hidden
      */
@@ -13191,14 +13541,34 @@ var Service = /** @class */ (function () {
         }
         // Saves the type as part of the configuration so that it can be referenced later at a known location.
         config.type = componentType;
-        var Component = utils.find(function (embedComponent) { return componentType === embedComponent.type.toLowerCase(); }, Service.components);
-        if (!Component) {
-            throw new Error("Attempted to embed component of type: ".concat(componentType, " but did not find any matching component.  Please verify the type you specified is intended."));
-        }
-        var component = new Component(this, element, config, phasedRender, isBootstrap);
+        var component = this.createEmbedComponent(componentType, element, config, phasedRender, isBootstrap);
         element.powerBiEmbed = component;
         this.addOrOverwriteEmbed(component, element);
         return component;
+    };
+    /**
+     * Given component type, creates embed component instance
+     *
+     * @private
+     * @param {string} componentType
+     * @param {HTMLElement} element
+     * @param {IEmbedConfigurationBase} config
+     * @param {boolean} phasedRender
+     * @param {boolean} isBootstrap
+     * @returns {Embed}
+     * @hidden
+     */
+    Service.prototype.createEmbedComponent = function (componentType, element, config, phasedRender, isBootstrap) {
+        var Component = utils.find(function (embedComponent) { return componentType === embedComponent.type.toLowerCase(); }, Service.components);
+        if (Component) {
+            return new Component(this, element, config, phasedRender, isBootstrap);
+        }
+        // If component type is not legacy, search in registered components
+        var registeredComponent = utils.find(function (registeredComponentType) { return componentType.toLowerCase() === registeredComponentType.toLowerCase(); }, Object.keys(this.registeredComponents));
+        if (!registeredComponent) {
+            throw new Error("Attempted to embed component of type: ".concat(componentType, " but did not find any matching component.  Please verify the type you specified is intended."));
+        }
+        return this.registeredComponents[registeredComponent](this, element, config, phasedRender, isBootstrap);
     };
     /**
      * Given an element that already contains an embed component, load with a new configuration.
@@ -13427,6 +13797,38 @@ var Service = /** @class */ (function () {
     Service.prototype.setSdkInfo = function (type, version) {
         this.hpm.defaultHeaders['x-sdk-type'] = type;
         this.hpm.defaultHeaders['x-sdk-wrapper-version'] = version;
+    };
+    /**
+     * API for registering external components
+     *
+     * @hidden
+     * @param {string} componentType
+     * @param {EmbedComponentFactory} embedComponentFactory
+     * @param {string[]} routerEventUrls
+     */
+    Service.prototype.register = function (componentType, embedComponentFactory, routerEventUrls) {
+        var _this = this;
+        if (utils.find(function (embedComponent) { return componentType.toLowerCase() === embedComponent.type.toLowerCase(); }, Service.components)) {
+            throw new Error('The component name is reserved. Cannot register a component with this name.');
+        }
+        if (utils.find(function (registeredComponentType) { return componentType.toLowerCase() === registeredComponentType.toLowerCase(); }, Object.keys(this.registeredComponents))) {
+            throw new Error('A component with this type is already registered.');
+        }
+        this.registeredComponents[componentType] = embedComponentFactory;
+        routerEventUrls.forEach(function (url) {
+            if (!url.includes(':uniqueId') || !url.includes(':eventName')) {
+                throw new Error('Invalid router event URL');
+            }
+            _this.router.post(url, function (req, _res) {
+                var event = {
+                    type: componentType,
+                    id: req.params.uniqueId,
+                    name: req.params.eventName,
+                    value: req.body
+                };
+                _this.handleEvent(event);
+            });
+        });
     };
     /**
      * A list of components that this service can embed
