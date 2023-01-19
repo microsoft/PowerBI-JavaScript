@@ -10,620 +10,15 @@
 		exports["powerbi-client"] = factory();
 	else
 		root["powerbi-client"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/powerbi-client.ts");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./node_modules/assert/assert.js":
-/*!***************************************!*\
-  !*** ./node_modules/assert/assert.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var objectAssign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
-
-// compare and isBuffer taken from https://github.com/feross/buffer/blob/680e9e5e488f22aac27599a57dc844a6315928dd/index.js
-// original notice:
-
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * @license  MIT
- */
-function compare(a, b) {
-  if (a === b) {
-    return 0;
-  }
-
-  var x = a.length;
-  var y = b.length;
-
-  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-    if (a[i] !== b[i]) {
-      x = a[i];
-      y = b[i];
-      break;
-    }
-  }
-
-  if (x < y) {
-    return -1;
-  }
-  if (y < x) {
-    return 1;
-  }
-  return 0;
-}
-function isBuffer(b) {
-  if (global.Buffer && typeof global.Buffer.isBuffer === 'function') {
-    return global.Buffer.isBuffer(b);
-  }
-  return !!(b != null && b._isBuffer);
-}
-
-// based on node assert, original notice:
-// NB: The URL to the CommonJS spec is kept just for tradition.
-//     node-assert has evolved a lot since then, both in API and behavior.
-
-// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
-//
-// THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
-//
-// Originally from narwhal.js (http://narwhaljs.org)
-// Copyright (c) 2009 Thomas Robinson <280north.com>
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the 'Software'), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-var util = __webpack_require__(/*! util/ */ "./node_modules/util/util.js");
-var hasOwn = Object.prototype.hasOwnProperty;
-var pSlice = Array.prototype.slice;
-var functionsHaveNames = (function () {
-  return function foo() {}.name === 'foo';
-}());
-function pToString (obj) {
-  return Object.prototype.toString.call(obj);
-}
-function isView(arrbuf) {
-  if (isBuffer(arrbuf)) {
-    return false;
-  }
-  if (typeof global.ArrayBuffer !== 'function') {
-    return false;
-  }
-  if (typeof ArrayBuffer.isView === 'function') {
-    return ArrayBuffer.isView(arrbuf);
-  }
-  if (!arrbuf) {
-    return false;
-  }
-  if (arrbuf instanceof DataView) {
-    return true;
-  }
-  if (arrbuf.buffer && arrbuf.buffer instanceof ArrayBuffer) {
-    return true;
-  }
-  return false;
-}
-// 1. The assert module provides functions that throw
-// AssertionError's when particular conditions are not met. The
-// assert module must conform to the following interface.
-
-var assert = module.exports = ok;
-
-// 2. The AssertionError is defined in assert.
-// new assert.AssertionError({ message: message,
-//                             actual: actual,
-//                             expected: expected })
-
-var regex = /\s*function\s+([^\(\s]*)\s*/;
-// based on https://github.com/ljharb/function.prototype.name/blob/adeeeec8bfcc6068b187d7d9fb3d5bb1d3a30899/implementation.js
-function getName(func) {
-  if (!util.isFunction(func)) {
-    return;
-  }
-  if (functionsHaveNames) {
-    return func.name;
-  }
-  var str = func.toString();
-  var match = str.match(regex);
-  return match && match[1];
-}
-assert.AssertionError = function AssertionError(options) {
-  this.name = 'AssertionError';
-  this.actual = options.actual;
-  this.expected = options.expected;
-  this.operator = options.operator;
-  if (options.message) {
-    this.message = options.message;
-    this.generatedMessage = false;
-  } else {
-    this.message = getMessage(this);
-    this.generatedMessage = true;
-  }
-  var stackStartFunction = options.stackStartFunction || fail;
-  if (Error.captureStackTrace) {
-    Error.captureStackTrace(this, stackStartFunction);
-  } else {
-    // non v8 browsers so we can have a stacktrace
-    var err = new Error();
-    if (err.stack) {
-      var out = err.stack;
-
-      // try to strip useless frames
-      var fn_name = getName(stackStartFunction);
-      var idx = out.indexOf('\n' + fn_name);
-      if (idx >= 0) {
-        // once we have located the function frame
-        // we need to strip out everything before it (and its line)
-        var next_line = out.indexOf('\n', idx + 1);
-        out = out.substring(next_line + 1);
-      }
-
-      this.stack = out;
-    }
-  }
-};
-
-// assert.AssertionError instanceof Error
-util.inherits(assert.AssertionError, Error);
-
-function truncate(s, n) {
-  if (typeof s === 'string') {
-    return s.length < n ? s : s.slice(0, n);
-  } else {
-    return s;
-  }
-}
-function inspect(something) {
-  if (functionsHaveNames || !util.isFunction(something)) {
-    return util.inspect(something);
-  }
-  var rawname = getName(something);
-  var name = rawname ? ': ' + rawname : '';
-  return '[Function' +  name + ']';
-}
-function getMessage(self) {
-  return truncate(inspect(self.actual), 128) + ' ' +
-         self.operator + ' ' +
-         truncate(inspect(self.expected), 128);
-}
-
-// At present only the three keys mentioned above are used and
-// understood by the spec. Implementations or sub modules can pass
-// other keys to the AssertionError's constructor - they will be
-// ignored.
-
-// 3. All of the following functions must throw an AssertionError
-// when a corresponding condition is not met, with a message that
-// may be undefined if not provided.  All assertion methods provide
-// both the actual and expected values to the assertion error for
-// display purposes.
-
-function fail(actual, expected, message, operator, stackStartFunction) {
-  throw new assert.AssertionError({
-    message: message,
-    actual: actual,
-    expected: expected,
-    operator: operator,
-    stackStartFunction: stackStartFunction
-  });
-}
-
-// EXTENSION! allows for well behaved errors defined elsewhere.
-assert.fail = fail;
-
-// 4. Pure assertion tests whether a value is truthy, as determined
-// by !!guard.
-// assert.ok(guard, message_opt);
-// This statement is equivalent to assert.equal(true, !!guard,
-// message_opt);. To test strictly for the value true, use
-// assert.strictEqual(true, guard, message_opt);.
-
-function ok(value, message) {
-  if (!value) fail(value, true, message, '==', assert.ok);
-}
-assert.ok = ok;
-
-// 5. The equality assertion tests shallow, coercive equality with
-// ==.
-// assert.equal(actual, expected, message_opt);
-
-assert.equal = function equal(actual, expected, message) {
-  if (actual != expected) fail(actual, expected, message, '==', assert.equal);
-};
-
-// 6. The non-equality assertion tests for whether two objects are not equal
-// with != assert.notEqual(actual, expected, message_opt);
-
-assert.notEqual = function notEqual(actual, expected, message) {
-  if (actual == expected) {
-    fail(actual, expected, message, '!=', assert.notEqual);
-  }
-};
-
-// 7. The equivalence assertion tests a deep equality relation.
-// assert.deepEqual(actual, expected, message_opt);
-
-assert.deepEqual = function deepEqual(actual, expected, message) {
-  if (!_deepEqual(actual, expected, false)) {
-    fail(actual, expected, message, 'deepEqual', assert.deepEqual);
-  }
-};
-
-assert.deepStrictEqual = function deepStrictEqual(actual, expected, message) {
-  if (!_deepEqual(actual, expected, true)) {
-    fail(actual, expected, message, 'deepStrictEqual', assert.deepStrictEqual);
-  }
-};
-
-function _deepEqual(actual, expected, strict, memos) {
-  // 7.1. All identical values are equivalent, as determined by ===.
-  if (actual === expected) {
-    return true;
-  } else if (isBuffer(actual) && isBuffer(expected)) {
-    return compare(actual, expected) === 0;
-
-  // 7.2. If the expected value is a Date object, the actual value is
-  // equivalent if it is also a Date object that refers to the same time.
-  } else if (util.isDate(actual) && util.isDate(expected)) {
-    return actual.getTime() === expected.getTime();
-
-  // 7.3 If the expected value is a RegExp object, the actual value is
-  // equivalent if it is also a RegExp object with the same source and
-  // properties (`global`, `multiline`, `lastIndex`, `ignoreCase`).
-  } else if (util.isRegExp(actual) && util.isRegExp(expected)) {
-    return actual.source === expected.source &&
-           actual.global === expected.global &&
-           actual.multiline === expected.multiline &&
-           actual.lastIndex === expected.lastIndex &&
-           actual.ignoreCase === expected.ignoreCase;
-
-  // 7.4. Other pairs that do not both pass typeof value == 'object',
-  // equivalence is determined by ==.
-  } else if ((actual === null || typeof actual !== 'object') &&
-             (expected === null || typeof expected !== 'object')) {
-    return strict ? actual === expected : actual == expected;
-
-  // If both values are instances of typed arrays, wrap their underlying
-  // ArrayBuffers in a Buffer each to increase performance
-  // This optimization requires the arrays to have the same type as checked by
-  // Object.prototype.toString (aka pToString). Never perform binary
-  // comparisons for Float*Arrays, though, since e.g. +0 === -0 but their
-  // bit patterns are not identical.
-  } else if (isView(actual) && isView(expected) &&
-             pToString(actual) === pToString(expected) &&
-             !(actual instanceof Float32Array ||
-               actual instanceof Float64Array)) {
-    return compare(new Uint8Array(actual.buffer),
-                   new Uint8Array(expected.buffer)) === 0;
-
-  // 7.5 For all other Object pairs, including Array objects, equivalence is
-  // determined by having the same number of owned properties (as verified
-  // with Object.prototype.hasOwnProperty.call), the same set of keys
-  // (although not necessarily the same order), equivalent values for every
-  // corresponding key, and an identical 'prototype' property. Note: this
-  // accounts for both named and indexed properties on Arrays.
-  } else if (isBuffer(actual) !== isBuffer(expected)) {
-    return false;
-  } else {
-    memos = memos || {actual: [], expected: []};
-
-    var actualIndex = memos.actual.indexOf(actual);
-    if (actualIndex !== -1) {
-      if (actualIndex === memos.expected.indexOf(expected)) {
-        return true;
-      }
-    }
-
-    memos.actual.push(actual);
-    memos.expected.push(expected);
-
-    return objEquiv(actual, expected, strict, memos);
-  }
-}
-
-function isArguments(object) {
-  return Object.prototype.toString.call(object) == '[object Arguments]';
-}
-
-function objEquiv(a, b, strict, actualVisitedObjects) {
-  if (a === null || a === undefined || b === null || b === undefined)
-    return false;
-  // if one is a primitive, the other must be same
-  if (util.isPrimitive(a) || util.isPrimitive(b))
-    return a === b;
-  if (strict && Object.getPrototypeOf(a) !== Object.getPrototypeOf(b))
-    return false;
-  var aIsArgs = isArguments(a);
-  var bIsArgs = isArguments(b);
-  if ((aIsArgs && !bIsArgs) || (!aIsArgs && bIsArgs))
-    return false;
-  if (aIsArgs) {
-    a = pSlice.call(a);
-    b = pSlice.call(b);
-    return _deepEqual(a, b, strict);
-  }
-  var ka = objectKeys(a);
-  var kb = objectKeys(b);
-  var key, i;
-  // having the same number of owned properties (keys incorporates
-  // hasOwnProperty)
-  if (ka.length !== kb.length)
-    return false;
-  //the same set of keys (although not necessarily the same order),
-  ka.sort();
-  kb.sort();
-  //~~~cheap key test
-  for (i = ka.length - 1; i >= 0; i--) {
-    if (ka[i] !== kb[i])
-      return false;
-  }
-  //equivalent values for every corresponding key, and
-  //~~~possibly expensive deep test
-  for (i = ka.length - 1; i >= 0; i--) {
-    key = ka[i];
-    if (!_deepEqual(a[key], b[key], strict, actualVisitedObjects))
-      return false;
-  }
-  return true;
-}
-
-// 8. The non-equivalence assertion tests for any deep inequality.
-// assert.notDeepEqual(actual, expected, message_opt);
-
-assert.notDeepEqual = function notDeepEqual(actual, expected, message) {
-  if (_deepEqual(actual, expected, false)) {
-    fail(actual, expected, message, 'notDeepEqual', assert.notDeepEqual);
-  }
-};
-
-assert.notDeepStrictEqual = notDeepStrictEqual;
-function notDeepStrictEqual(actual, expected, message) {
-  if (_deepEqual(actual, expected, true)) {
-    fail(actual, expected, message, 'notDeepStrictEqual', notDeepStrictEqual);
-  }
-}
-
-
-// 9. The strict equality assertion tests strict equality, as determined by ===.
-// assert.strictEqual(actual, expected, message_opt);
-
-assert.strictEqual = function strictEqual(actual, expected, message) {
-  if (actual !== expected) {
-    fail(actual, expected, message, '===', assert.strictEqual);
-  }
-};
-
-// 10. The strict non-equality assertion tests for strict inequality, as
-// determined by !==.  assert.notStrictEqual(actual, expected, message_opt);
-
-assert.notStrictEqual = function notStrictEqual(actual, expected, message) {
-  if (actual === expected) {
-    fail(actual, expected, message, '!==', assert.notStrictEqual);
-  }
-};
-
-function expectedException(actual, expected) {
-  if (!actual || !expected) {
-    return false;
-  }
-
-  if (Object.prototype.toString.call(expected) == '[object RegExp]') {
-    return expected.test(actual);
-  }
-
-  try {
-    if (actual instanceof expected) {
-      return true;
-    }
-  } catch (e) {
-    // Ignore.  The instanceof check doesn't work for arrow functions.
-  }
-
-  if (Error.isPrototypeOf(expected)) {
-    return false;
-  }
-
-  return expected.call({}, actual) === true;
-}
-
-function _tryBlock(block) {
-  var error;
-  try {
-    block();
-  } catch (e) {
-    error = e;
-  }
-  return error;
-}
-
-function _throws(shouldThrow, block, expected, message) {
-  var actual;
-
-  if (typeof block !== 'function') {
-    throw new TypeError('"block" argument must be a function');
-  }
-
-  if (typeof expected === 'string') {
-    message = expected;
-    expected = null;
-  }
-
-  actual = _tryBlock(block);
-
-  message = (expected && expected.name ? ' (' + expected.name + ').' : '.') +
-            (message ? ' ' + message : '.');
-
-  if (shouldThrow && !actual) {
-    fail(actual, expected, 'Missing expected exception' + message);
-  }
-
-  var userProvidedMessage = typeof message === 'string';
-  var isUnwantedException = !shouldThrow && util.isError(actual);
-  var isUnexpectedException = !shouldThrow && actual && !expected;
-
-  if ((isUnwantedException &&
-      userProvidedMessage &&
-      expectedException(actual, expected)) ||
-      isUnexpectedException) {
-    fail(actual, expected, 'Got unwanted exception' + message);
-  }
-
-  if ((shouldThrow && actual && expected &&
-      !expectedException(actual, expected)) || (!shouldThrow && actual)) {
-    throw actual;
-  }
-}
-
-// 11. Expected to throw an error:
-// assert.throws(block, Error_opt, message_opt);
-
-assert.throws = function(block, /*optional*/error, /*optional*/message) {
-  _throws(true, block, error, message);
-};
-
-// EXTENSION! This is annoying to write outside this module.
-assert.doesNotThrow = function(block, /*optional*/error, /*optional*/message) {
-  _throws(false, block, error, message);
-};
-
-assert.ifError = function(err) { if (err) throw err; };
-
-// Expose a strict only variant of assert
-function strict(value, message) {
-  if (!value) fail(value, true, message, '==', strict);
-}
-assert.strict = objectAssign(strict, assert, {
-  equal: assert.strictEqual,
-  deepEqual: assert.deepStrictEqual,
-  notEqual: assert.notStrictEqual,
-  notDeepEqual: assert.notDeepStrictEqual
-});
-assert.strict.strict = assert.strict;
-
-var objectKeys = Object.keys || function (obj) {
-  var keys = [];
-  for (var key in obj) {
-    if (hasOwn.call(obj, key)) keys.push(key);
-  }
-  return keys;
-};
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
-
-/***/ }),
+})(this, () => {
+return /******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
 
 /***/ "./node_modules/http-post-message/dist/httpPostMessage.js":
 /*!****************************************************************!*\
   !*** ./node_modules/http-post-message/dist/httpPostMessage.js ***!
   \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
 /*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -636,7 +31,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
+/******/ 	function __nested_webpack_require_626__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
@@ -650,7 +45,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_626__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -661,16 +56,16 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
+/******/ 	__nested_webpack_require_626__.m = modules;
 /******/
 /******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
+/******/ 	__nested_webpack_require_626__.c = installedModules;
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__nested_webpack_require_626__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	return __nested_webpack_require_626__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -802,114 +197,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 
-/***/ "./node_modules/object-assign/index.js":
-/*!*********************************************!*\
-  !*** ./node_modules/object-assign/index.js ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*
-object-assign
-(c) Sindre Sorhus
-@license MIT
-*/
-
-
-/* eslint-disable no-unused-vars */
-var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-function toObject(val) {
-	if (val === null || val === undefined) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-function shouldUseNative() {
-	try {
-		if (!Object.assign) {
-			return false;
-		}
-
-		// Detect buggy property enumeration order in older V8 versions.
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
-		test1[5] = 'de';
-		if (Object.getOwnPropertyNames(test1)[0] === '5') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test2 = {};
-		for (var i = 0; i < 10; i++) {
-			test2['_' + String.fromCharCode(i)] = i;
-		}
-		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-			return test2[n];
-		});
-		if (order2.join('') !== '0123456789') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test3 = {};
-		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-			test3[letter] = letter;
-		});
-		if (Object.keys(Object.assign({}, test3)).join('') !==
-				'abcdefghijklmnopqrst') {
-			return false;
-		}
-
-		return true;
-	} catch (err) {
-		// We don't expect any of the above to throw, but better to be safe.
-		return false;
-	}
-}
-
-module.exports = shouldUseNative() ? Object.assign : function (target, source) {
-	var from;
-	var to = toObject(target);
-	var symbols;
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = Object(arguments[s]);
-
-		for (var key in from) {
-			if (hasOwnProperty.call(from, key)) {
-				to[key] = from[key];
-			}
-		}
-
-		if (getOwnPropertySymbols) {
-			symbols = getOwnPropertySymbols(from);
-			for (var i = 0; i < symbols.length; i++) {
-				if (propIsEnumerable.call(from, symbols[i])) {
-					to[symbols[i]] = from[symbols[i]];
-				}
-			}
-		}
-	}
-
-	return to;
-};
-
-
-/***/ }),
-
 /***/ "./node_modules/powerbi-models/dist/models.js":
 /*!****************************************************!*\
   !*** ./node_modules/powerbi-models/dist/models.js ***!
   \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
 // powerbi-models v1.12.3
 // Copyright (c) Microsoft Corporation.
@@ -922,7 +214,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_612__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -945,7 +237,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.DataCacheMode = exports.CredentialType = exports.isPercentOfGrandTotal = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.HierarchyFilter = exports.AdvancedFilter = exports.TupleFilter = exports.IdentityFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.ReportAlignment = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
 exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateUpdateFiltersRequest = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateQuickCreate = exports.validateCreateReport = exports.validatePaginatedReportLoad = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.isReportFiltersArray = exports.isOnLoadFilters = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = void 0;
 exports.validateZoomLevel = exports.validateCustomTheme = void 0;
-var validator_1 = __webpack_require__(1);
+var validator_1 = __nested_webpack_require_612__(1);
 var TraceType;
 (function (TraceType) {
     TraceType[TraceType["Information"] = 0] = "Information";
@@ -1816,42 +1108,42 @@ exports.validateZoomLevel = validateZoomLevel;
 
 /***/ }),
 /* 1 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nested_webpack_require_44757__) => {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Validators = void 0;
-var barsValidator_1 = __webpack_require__(2);
-var bookmarkValidator_1 = __webpack_require__(5);
-var commandsSettingsValidator_1 = __webpack_require__(6);
-var customThemeValidator_1 = __webpack_require__(7);
-var dashboardLoadValidator_1 = __webpack_require__(8);
-var datasetBindingValidator_1 = __webpack_require__(9);
-var exportDataValidator_1 = __webpack_require__(10);
-var extensionsValidator_1 = __webpack_require__(11);
-var filtersValidator_1 = __webpack_require__(12);
-var layoutValidator_1 = __webpack_require__(13);
-var pageValidator_1 = __webpack_require__(14);
-var panesValidator_1 = __webpack_require__(15);
-var qnaValidator_1 = __webpack_require__(16);
-var reportCreateValidator_1 = __webpack_require__(17);
-var reportLoadValidator_1 = __webpack_require__(18);
-var paginatedReportLoadValidator_1 = __webpack_require__(19);
-var saveAsParametersValidator_1 = __webpack_require__(20);
-var selectorsValidator_1 = __webpack_require__(21);
-var settingsValidator_1 = __webpack_require__(22);
-var slicersValidator_1 = __webpack_require__(23);
-var tileLoadValidator_1 = __webpack_require__(24);
-var visualSettingsValidator_1 = __webpack_require__(25);
-var anyOfValidator_1 = __webpack_require__(26);
-var fieldForbiddenValidator_1 = __webpack_require__(27);
-var fieldRequiredValidator_1 = __webpack_require__(28);
-var mapValidator_1 = __webpack_require__(29);
-var typeValidator_1 = __webpack_require__(4);
-var parameterPanelValidator_1 = __webpack_require__(30);
-var datasetCreateConfigValidator_1 = __webpack_require__(31);
-var quickCreateValidator_1 = __webpack_require__(32);
+var barsValidator_1 = __nested_webpack_require_44757__(2);
+var bookmarkValidator_1 = __nested_webpack_require_44757__(5);
+var commandsSettingsValidator_1 = __nested_webpack_require_44757__(6);
+var customThemeValidator_1 = __nested_webpack_require_44757__(7);
+var dashboardLoadValidator_1 = __nested_webpack_require_44757__(8);
+var datasetBindingValidator_1 = __nested_webpack_require_44757__(9);
+var exportDataValidator_1 = __nested_webpack_require_44757__(10);
+var extensionsValidator_1 = __nested_webpack_require_44757__(11);
+var filtersValidator_1 = __nested_webpack_require_44757__(12);
+var layoutValidator_1 = __nested_webpack_require_44757__(13);
+var pageValidator_1 = __nested_webpack_require_44757__(14);
+var panesValidator_1 = __nested_webpack_require_44757__(15);
+var qnaValidator_1 = __nested_webpack_require_44757__(16);
+var reportCreateValidator_1 = __nested_webpack_require_44757__(17);
+var reportLoadValidator_1 = __nested_webpack_require_44757__(18);
+var paginatedReportLoadValidator_1 = __nested_webpack_require_44757__(19);
+var saveAsParametersValidator_1 = __nested_webpack_require_44757__(20);
+var selectorsValidator_1 = __nested_webpack_require_44757__(21);
+var settingsValidator_1 = __nested_webpack_require_44757__(22);
+var slicersValidator_1 = __nested_webpack_require_44757__(23);
+var tileLoadValidator_1 = __nested_webpack_require_44757__(24);
+var visualSettingsValidator_1 = __nested_webpack_require_44757__(25);
+var anyOfValidator_1 = __nested_webpack_require_44757__(26);
+var fieldForbiddenValidator_1 = __nested_webpack_require_44757__(27);
+var fieldRequiredValidator_1 = __nested_webpack_require_44757__(28);
+var mapValidator_1 = __nested_webpack_require_44757__(29);
+var typeValidator_1 = __nested_webpack_require_44757__(4);
+var parameterPanelValidator_1 = __nested_webpack_require_44757__(30);
+var datasetCreateConfigValidator_1 = __nested_webpack_require_44757__(31);
+var quickCreateValidator_1 = __nested_webpack_require_44757__(32);
 exports.Validators = {
     addBookmarkRequestValidator: new bookmarkValidator_1.AddBookmarkRequestValidator(),
     advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
@@ -2000,7 +1292,7 @@ exports.Validators = {
 
 /***/ }),
 /* 2 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_61501__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2021,9 +1313,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatusBarValidator = exports.ActionBarValidator = exports.ReportBarsValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_61501__(3);
+var typeValidator_1 = __nested_webpack_require_61501__(4);
+var validator_1 = __nested_webpack_require_61501__(1);
 var ReportBarsValidator = /** @class */ (function (_super) {
     __extends(ReportBarsValidator, _super);
     function ReportBarsValidator() {
@@ -2403,7 +1695,7 @@ exports.RangeValidator = RangeValidator;
 
 /***/ }),
 /* 5 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_77380__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2424,9 +1716,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CaptureBookmarkRequestValidator = exports.CaptureBookmarkOptionsValidator = exports.ApplyBookmarkStateRequestValidator = exports.ApplyBookmarkByNameRequestValidator = exports.AddBookmarkRequestValidator = exports.PlayBookmarkRequestValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_77380__(3);
+var typeValidator_1 = __nested_webpack_require_77380__(4);
+var validator_1 = __nested_webpack_require_77380__(1);
 var PlayBookmarkRequestValidator = /** @class */ (function (_super) {
     __extends(PlayBookmarkRequestValidator, _super);
     function PlayBookmarkRequestValidator() {
@@ -2593,7 +1885,7 @@ exports.CaptureBookmarkRequestValidator = CaptureBookmarkRequestValidator;
 
 /***/ }),
 /* 6 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_85856__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2614,9 +1906,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaginatedReportCommandsValidator = exports.SingleCommandSettingsValidator = exports.CommandsSettingsValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_85856__(3);
+var typeValidator_1 = __nested_webpack_require_85856__(4);
+var validator_1 = __nested_webpack_require_85856__(1);
 var CommandsSettingsValidator = /** @class */ (function (_super) {
     __extends(CommandsSettingsValidator, _super);
     function CommandsSettingsValidator() {
@@ -2760,7 +2052,7 @@ exports.PaginatedReportCommandsValidator = PaginatedReportCommandsValidator;
 
 /***/ }),
 /* 7 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_92889__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2781,8 +2073,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CustomThemeValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
+var multipleFieldsValidator_1 = __nested_webpack_require_92889__(3);
+var typeValidator_1 = __nested_webpack_require_92889__(4);
 var CustomThemeValidator = /** @class */ (function (_super) {
     __extends(CustomThemeValidator, _super);
     function CustomThemeValidator() {
@@ -2812,7 +2104,7 @@ exports.CustomThemeValidator = CustomThemeValidator;
 
 /***/ }),
 /* 8 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_95043__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2833,9 +2125,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DashboardLoadValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_95043__(3);
+var typeValidator_1 = __nested_webpack_require_95043__(4);
+var validator_1 = __nested_webpack_require_95043__(1);
 var DashboardLoadValidator = /** @class */ (function (_super) {
     __extends(DashboardLoadValidator, _super);
     function DashboardLoadValidator() {
@@ -2885,7 +2177,7 @@ exports.DashboardLoadValidator = DashboardLoadValidator;
 
 /***/ }),
 /* 9 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_98042__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2906,9 +2198,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DatasetBindingValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_98042__(3);
+var typeValidator_1 = __nested_webpack_require_98042__(4);
+var validator_1 = __nested_webpack_require_98042__(1);
 var DatasetBindingValidator = /** @class */ (function (_super) {
     __extends(DatasetBindingValidator, _super);
     function DatasetBindingValidator() {
@@ -2938,7 +2230,7 @@ exports.DatasetBindingValidator = DatasetBindingValidator;
 
 /***/ }),
 /* 10 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_100312__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2959,8 +2251,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExportDataRequestValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
+var multipleFieldsValidator_1 = __nested_webpack_require_100312__(3);
+var typeValidator_1 = __nested_webpack_require_100312__(4);
 var ExportDataRequestValidator = /** @class */ (function (_super) {
     __extends(ExportDataRequestValidator, _super);
     function ExportDataRequestValidator() {
@@ -2994,7 +2286,7 @@ exports.ExportDataRequestValidator = ExportDataRequestValidator;
 
 /***/ }),
 /* 11 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_102656__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -3015,9 +2307,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExtensionsValidator = exports.MenuGroupExtensionValidator = exports.ExtensionValidator = exports.CommandExtensionValidator = exports.ExtensionItemValidator = exports.ExtensionPointsValidator = exports.GroupedMenuExtensionValidator = exports.FlatMenuExtensionValidator = exports.MenuExtensionBaseValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_102656__(3);
+var typeValidator_1 = __nested_webpack_require_102656__(4);
+var validator_1 = __nested_webpack_require_102656__(1);
 var MenuExtensionBaseValidator = /** @class */ (function (_super) {
     __extends(MenuExtensionBaseValidator, _super);
     function MenuExtensionBaseValidator() {
@@ -3287,7 +2579,7 @@ exports.ExtensionsValidator = ExtensionsValidator;
 
 /***/ }),
 /* 12 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_115147__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -3308,9 +2600,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OnLoadFiltersValidator = exports.OnLoadFiltersBaseRemoveOperationValidator = exports.OnLoadFiltersBaseValidator = exports.ConditionItemValidator = exports.RemoveFiltersRequestValidator = exports.UpdateFiltersRequestValidator = exports.FilterValidator = exports.HierarchyFilterNodeValidator = exports.HierarchyFilterValidator = exports.IncludeExcludeFilterValidator = exports.NotSupportedFilterValidator = exports.TopNFilterValidator = exports.RelativeTimeFilterValidator = exports.RelativeDateFilterValidator = exports.RelativeDateTimeFilterValidator = exports.AdvancedFilterValidator = exports.BasicFilterValidator = exports.FilterValidatorBase = exports.FilterDisplaySettingsValidator = exports.FilterMeasureTargetValidator = exports.FilterKeyHierarchyTargetValidator = exports.FilterHierarchyTargetValidator = exports.FilterKeyColumnsTargetValidator = exports.FilterColumnTargetValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_115147__(3);
+var typeValidator_1 = __nested_webpack_require_115147__(4);
+var validator_1 = __nested_webpack_require_115147__(1);
 var FilterColumnTargetValidator = /** @class */ (function (_super) {
     __extends(FilterColumnTargetValidator, _super);
     function FilterColumnTargetValidator() {
@@ -4056,7 +3348,7 @@ exports.OnLoadFiltersValidator = OnLoadFiltersValidator;
 
 /***/ }),
 /* 13 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_149119__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4077,9 +3369,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageLayoutValidator = exports.DisplayStateValidator = exports.VisualLayoutValidator = exports.CustomLayoutValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_149119__(3);
+var typeValidator_1 = __nested_webpack_require_149119__(4);
+var validator_1 = __nested_webpack_require_149119__(1);
 var CustomLayoutValidator = /** @class */ (function (_super) {
     __extends(CustomLayoutValidator, _super);
     function CustomLayoutValidator() {
@@ -4216,7 +3508,7 @@ exports.PageLayoutValidator = PageLayoutValidator;
 
 /***/ }),
 /* 14 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_155598__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4237,9 +3529,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageViewFieldValidator = exports.PageValidator = exports.CustomPageSizeValidator = exports.PageSizeValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_155598__(3);
+var typeValidator_1 = __nested_webpack_require_155598__(4);
+var validator_1 = __nested_webpack_require_155598__(1);
 var PageSizeValidator = /** @class */ (function (_super) {
     __extends(PageSizeValidator, _super);
     function PageSizeValidator() {
@@ -4347,7 +3639,7 @@ exports.PageViewFieldValidator = PageViewFieldValidator;
 
 /***/ }),
 /* 15 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_161038__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4368,9 +3660,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VisualizationsPaneValidator = exports.SyncSlicersPaneValidator = exports.SelectionPaneValidator = exports.PageNavigationPaneValidator = exports.FiltersPaneValidator = exports.FieldsPaneValidator = exports.BookmarksPaneValidator = exports.QnaPanesValidator = exports.ReportPanesValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_161038__(3);
+var typeValidator_1 = __nested_webpack_require_161038__(4);
+var validator_1 = __nested_webpack_require_161038__(1);
 var ReportPanesValidator = /** @class */ (function (_super) {
     __extends(ReportPanesValidator, _super);
     function ReportPanesValidator() {
@@ -4632,7 +3924,7 @@ exports.VisualizationsPaneValidator = VisualizationsPaneValidator;
 
 /***/ }),
 /* 16 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_172784__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4653,9 +3945,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QnaInterpretInputDataValidator = exports.QnaSettingsValidator = exports.LoadQnaValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_172784__(3);
+var typeValidator_1 = __nested_webpack_require_172784__(4);
+var validator_1 = __nested_webpack_require_172784__(1);
 var LoadQnaValidator = /** @class */ (function (_super) {
     __extends(LoadQnaValidator, _super);
     function LoadQnaValidator() {
@@ -4771,7 +4063,7 @@ exports.QnaInterpretInputDataValidator = QnaInterpretInputDataValidator;
 
 /***/ }),
 /* 17 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_178495__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4792,9 +4084,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReportCreateValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_178495__(3);
+var typeValidator_1 = __nested_webpack_require_178495__(4);
+var validator_1 = __nested_webpack_require_178495__(1);
 var ReportCreateValidator = /** @class */ (function (_super) {
     __extends(ReportCreateValidator, _super);
     function ReportCreateValidator() {
@@ -4840,7 +4132,7 @@ exports.ReportCreateValidator = ReportCreateValidator;
 
 /***/ }),
 /* 18 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_181353__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4861,9 +4153,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReportLoadValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_181353__(3);
+var typeValidator_1 = __nested_webpack_require_181353__(4);
+var validator_1 = __nested_webpack_require_181353__(1);
 var ReportLoadValidator = /** @class */ (function (_super) {
     __extends(ReportLoadValidator, _super);
     function ReportLoadValidator() {
@@ -4945,7 +4237,7 @@ exports.ReportLoadValidator = ReportLoadValidator;
 
 /***/ }),
 /* 19 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_185474__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4966,9 +4258,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReportParameterFieldsValidator = exports.PaginatedReportLoadValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_185474__(3);
+var typeValidator_1 = __nested_webpack_require_185474__(4);
+var validator_1 = __nested_webpack_require_185474__(1);
 var PaginatedReportLoadValidator = /** @class */ (function (_super) {
     __extends(PaginatedReportLoadValidator, _super);
     function PaginatedReportLoadValidator() {
@@ -5049,7 +4341,7 @@ exports.ReportParameterFieldsValidator = ReportParameterFieldsValidator;
 
 /***/ }),
 /* 20 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_189798__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5070,9 +4362,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SaveAsParametersValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_189798__(3);
+var typeValidator_1 = __nested_webpack_require_189798__(4);
+var validator_1 = __nested_webpack_require_189798__(1);
 var SaveAsParametersValidator = /** @class */ (function (_super) {
     __extends(SaveAsParametersValidator, _super);
     function SaveAsParametersValidator() {
@@ -5102,7 +4394,7 @@ exports.SaveAsParametersValidator = SaveAsParametersValidator;
 
 /***/ }),
 /* 21 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_192079__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5123,10 +4415,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SlicerTargetSelectorValidator = exports.VisualTypeSelectorValidator = exports.VisualSelectorValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var typeValidator_2 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_192079__(3);
+var typeValidator_1 = __nested_webpack_require_192079__(4);
+var typeValidator_2 = __nested_webpack_require_192079__(4);
+var validator_1 = __nested_webpack_require_192079__(1);
 var VisualSelectorValidator = /** @class */ (function (_super) {
     __extends(VisualSelectorValidator, _super);
     function VisualSelectorValidator() {
@@ -5219,7 +4511,7 @@ exports.SlicerTargetSelectorValidator = SlicerTargetSelectorValidator;
 
 /***/ }),
 /* 22 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_197537__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5240,9 +4532,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaginatedReportSettingsValidator = exports.SettingsValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_197537__(3);
+var typeValidator_1 = __nested_webpack_require_197537__(4);
+var validator_1 = __nested_webpack_require_197537__(1);
 var SettingsValidator = /** @class */ (function (_super) {
     __extends(SettingsValidator, _super);
     function SettingsValidator() {
@@ -5365,7 +4657,7 @@ exports.PaginatedReportSettingsValidator = PaginatedReportSettingsValidator;
 
 /***/ }),
 /* 23 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_203384__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5386,9 +4678,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SlicerStateValidator = exports.SlicerValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_203384__(3);
+var typeValidator_1 = __nested_webpack_require_203384__(4);
+var validator_1 = __nested_webpack_require_203384__(1);
 var SlicerValidator = /** @class */ (function (_super) {
     __extends(SlicerValidator, _super);
     function SlicerValidator() {
@@ -5447,7 +4739,7 @@ exports.SlicerStateValidator = SlicerStateValidator;
 
 /***/ }),
 /* 24 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_206814__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5468,9 +4760,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TileLoadValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_206814__(3);
+var typeValidator_1 = __nested_webpack_require_206814__(4);
+var validator_1 = __nested_webpack_require_206814__(1);
 var TileLoadValidator = /** @class */ (function (_super) {
     __extends(TileLoadValidator, _super);
     function TileLoadValidator() {
@@ -5528,7 +4820,7 @@ exports.TileLoadValidator = TileLoadValidator;
 
 /***/ }),
 /* 25 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_210086__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5549,9 +4841,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VisualHeaderValidator = exports.VisualHeaderSettingsValidator = exports.VisualSettingsValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_210086__(3);
+var typeValidator_1 = __nested_webpack_require_210086__(4);
+var validator_1 = __nested_webpack_require_210086__(1);
 var VisualSettingsValidator = /** @class */ (function (_super) {
     __extends(VisualSettingsValidator, _super);
     function VisualSettingsValidator() {
@@ -5726,7 +5018,7 @@ exports.FieldRequiredValidator = FieldRequiredValidator;
 
 /***/ }),
 /* 29 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_217495__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5747,7 +5039,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MapValidator = void 0;
-var typeValidator_1 = __webpack_require__(4);
+var typeValidator_1 = __nested_webpack_require_217495__(4);
 var MapValidator = /** @class */ (function (_super) {
     __extends(MapValidator, _super);
     function MapValidator(keyValidators, valueValidators) {
@@ -5792,7 +5084,7 @@ exports.MapValidator = MapValidator;
 
 /***/ }),
 /* 30 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_220179__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5813,9 +5105,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ParametersPanelValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_220179__(3);
+var typeValidator_1 = __nested_webpack_require_220179__(4);
+var validator_1 = __nested_webpack_require_220179__(1);
 var ParametersPanelValidator = /** @class */ (function (_super) {
     __extends(ParametersPanelValidator, _super);
     function ParametersPanelValidator() {
@@ -5849,7 +5141,7 @@ exports.ParametersPanelValidator = ParametersPanelValidator;
 
 /***/ }),
 /* 31 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_222547__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5870,9 +5162,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TableDataValidator = exports.TableSchemaValidator = exports.ColumnSchemaValidator = exports.CredentialsValidator = exports.DatasourceConnectionConfigValidator = exports.DatasetCreateConfigValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_222547__(3);
+var typeValidator_1 = __nested_webpack_require_222547__(4);
+var validator_1 = __nested_webpack_require_222547__(1);
 var DatasetCreateConfigValidator = /** @class */ (function (_super) {
     __extends(DatasetCreateConfigValidator, _super);
     function DatasetCreateConfigValidator() {
@@ -6085,7 +5377,7 @@ exports.TableDataValidator = TableDataValidator;
 
 /***/ }),
 /* 32 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_232602__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -6106,9 +5398,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QuickCreateValidator = void 0;
-var multipleFieldsValidator_1 = __webpack_require__(3);
-var typeValidator_1 = __webpack_require__(4);
-var validator_1 = __webpack_require__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_232602__(3);
+var typeValidator_1 = __nested_webpack_require_232602__(4);
+var validator_1 = __nested_webpack_require_232602__(1);
 var QuickCreateValidator = /** @class */ (function (_super) {
     __extends(QuickCreateValidator, _super);
     function QuickCreateValidator() {
@@ -6159,7 +5451,7 @@ exports.QuickCreateValidator = QuickCreateValidator;
 /******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
+/******/ 	function __nested_webpack_require_235634__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
@@ -6173,7 +5465,7 @@ exports.QuickCreateValidator = QuickCreateValidator;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_235634__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -6184,7 +5476,7 @@ exports.QuickCreateValidator = QuickCreateValidator;
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	var __webpack_exports__ = __nested_webpack_require_235634__(0);
 /******/ 	
 /******/ 	return __webpack_exports__;
 /******/ })()
@@ -6538,8 +5830,7 @@ exports.QuickCreateValidator = QuickCreateValidator;
 /*!****************************************************!*\
   !*** ./node_modules/powerbi-router/dist/router.js ***!
   \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module) {
 
 /*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -6552,7 +5843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
+/******/ 	function __nested_webpack_require_617__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
@@ -6566,7 +5857,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_617__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -6577,24 +5868,24 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
+/******/ 	__nested_webpack_require_617__.m = modules;
 /******/
 /******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
+/******/ 	__nested_webpack_require_617__.c = installedModules;
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__nested_webpack_require_617__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	return __nested_webpack_require_617__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __nested_webpack_require_1897__) {
 
 	"use strict";
-	var RouteRecognizer = __webpack_require__(1);
+	var RouteRecognizer = __nested_webpack_require_1897__(1);
 	var Router = (function () {
 	    function Router(handlers) {
 	        this.handlers = handlers;
@@ -6690,7 +5981,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __nested_webpack_require_6218__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {(function() {
 	    "use strict";
@@ -7314,8 +6605,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var $$route$recognizer$$default = $$route$recognizer$$RouteRecognizer;
 	
 	    /* global define:true module:true window: true */
-	    if ( true && __webpack_require__(3)['amd']) {
-	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return $$route$recognizer$$default; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    if ( true && __nested_webpack_require_6218__(3)['amd']) {
+	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return $$route$recognizer$$default; }.call(exports, __nested_webpack_require_6218__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof module !== 'undefined' && module['exports']) {
 	      module['exports'] = $$route$recognizer$$default;
 	    } else if (typeof this !== 'undefined') {
@@ -7324,7 +6615,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}).call(this);
 	
 	//# sourceMappingURL=route-recognizer.js.map
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __nested_webpack_require_6218__(2)(module)))
 
 /***/ },
 /* 2 */
@@ -7357,1307 +6648,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 
-/***/ "./node_modules/process/browser.js":
-/*!*****************************************!*\
-  !*** ./node_modules/process/browser.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-
-/***/ "./node_modules/util/node_modules/inherits/inherits_browser.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/util/node_modules/inherits/inherits_browser.js ***!
-  \*********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/util/support/isBufferBrowser.js":
-/*!******************************************************!*\
-  !*** ./node_modules/util/support/isBufferBrowser.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function isBuffer(arg) {
-  return arg && typeof arg === 'object'
-    && typeof arg.copy === 'function'
-    && typeof arg.fill === 'function'
-    && typeof arg.readUInt8 === 'function';
-}
-
-/***/ }),
-
-/***/ "./node_modules/util/util.js":
-/*!***********************************!*\
-  !*** ./node_modules/util/util.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-var getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors ||
-  function getOwnPropertyDescriptors(obj) {
-    var keys = Object.keys(obj);
-    var descriptors = {};
-    for (var i = 0; i < keys.length; i++) {
-      descriptors[keys[i]] = Object.getOwnPropertyDescriptor(obj, keys[i]);
-    }
-    return descriptors;
-  };
-
-var formatRegExp = /%[sdj%]/g;
-exports.format = function(f) {
-  if (!isString(f)) {
-    var objects = [];
-    for (var i = 0; i < arguments.length; i++) {
-      objects.push(inspect(arguments[i]));
-    }
-    return objects.join(' ');
-  }
-
-  var i = 1;
-  var args = arguments;
-  var len = args.length;
-  var str = String(f).replace(formatRegExp, function(x) {
-    if (x === '%%') return '%';
-    if (i >= len) return x;
-    switch (x) {
-      case '%s': return String(args[i++]);
-      case '%d': return Number(args[i++]);
-      case '%j':
-        try {
-          return JSON.stringify(args[i++]);
-        } catch (_) {
-          return '[Circular]';
-        }
-      default:
-        return x;
-    }
-  });
-  for (var x = args[i]; i < len; x = args[++i]) {
-    if (isNull(x) || !isObject(x)) {
-      str += ' ' + x;
-    } else {
-      str += ' ' + inspect(x);
-    }
-  }
-  return str;
-};
-
-
-// Mark that a method should not be used.
-// Returns a modified function which warns once by default.
-// If --no-deprecation is set, then it is a no-op.
-exports.deprecate = function(fn, msg) {
-  if (typeof process !== 'undefined' && process.noDeprecation === true) {
-    return fn;
-  }
-
-  // Allow for deprecating things in the process of starting up.
-  if (typeof process === 'undefined') {
-    return function() {
-      return exports.deprecate(fn, msg).apply(this, arguments);
-    };
-  }
-
-  var warned = false;
-  function deprecated() {
-    if (!warned) {
-      if (process.throwDeprecation) {
-        throw new Error(msg);
-      } else if (process.traceDeprecation) {
-        console.trace(msg);
-      } else {
-        console.error(msg);
-      }
-      warned = true;
-    }
-    return fn.apply(this, arguments);
-  }
-
-  return deprecated;
-};
-
-
-var debugs = {};
-var debugEnviron;
-exports.debuglog = function(set) {
-  if (isUndefined(debugEnviron))
-    debugEnviron = process.env.NODE_DEBUG || '';
-  set = set.toUpperCase();
-  if (!debugs[set]) {
-    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
-      var pid = process.pid;
-      debugs[set] = function() {
-        var msg = exports.format.apply(exports, arguments);
-        console.error('%s %d: %s', set, pid, msg);
-      };
-    } else {
-      debugs[set] = function() {};
-    }
-  }
-  return debugs[set];
-};
-
-
-/**
- * Echos the value of a value. Trys to print the value out
- * in the best way possible given the different types.
- *
- * @param {Object} obj The object to print out.
- * @param {Object} opts Optional options object that alters the output.
- */
-/* legacy: obj, showHidden, depth, colors*/
-function inspect(obj, opts) {
-  // default options
-  var ctx = {
-    seen: [],
-    stylize: stylizeNoColor
-  };
-  // legacy...
-  if (arguments.length >= 3) ctx.depth = arguments[2];
-  if (arguments.length >= 4) ctx.colors = arguments[3];
-  if (isBoolean(opts)) {
-    // legacy...
-    ctx.showHidden = opts;
-  } else if (opts) {
-    // got an "options" object
-    exports._extend(ctx, opts);
-  }
-  // set default options
-  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
-  if (isUndefined(ctx.depth)) ctx.depth = 2;
-  if (isUndefined(ctx.colors)) ctx.colors = false;
-  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
-  if (ctx.colors) ctx.stylize = stylizeWithColor;
-  return formatValue(ctx, obj, ctx.depth);
-}
-exports.inspect = inspect;
-
-
-// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
-inspect.colors = {
-  'bold' : [1, 22],
-  'italic' : [3, 23],
-  'underline' : [4, 24],
-  'inverse' : [7, 27],
-  'white' : [37, 39],
-  'grey' : [90, 39],
-  'black' : [30, 39],
-  'blue' : [34, 39],
-  'cyan' : [36, 39],
-  'green' : [32, 39],
-  'magenta' : [35, 39],
-  'red' : [31, 39],
-  'yellow' : [33, 39]
-};
-
-// Don't use 'blue' not visible on cmd.exe
-inspect.styles = {
-  'special': 'cyan',
-  'number': 'yellow',
-  'boolean': 'yellow',
-  'undefined': 'grey',
-  'null': 'bold',
-  'string': 'green',
-  'date': 'magenta',
-  // "name": intentionally not styling
-  'regexp': 'red'
-};
-
-
-function stylizeWithColor(str, styleType) {
-  var style = inspect.styles[styleType];
-
-  if (style) {
-    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
-           '\u001b[' + inspect.colors[style][1] + 'm';
-  } else {
-    return str;
-  }
-}
-
-
-function stylizeNoColor(str, styleType) {
-  return str;
-}
-
-
-function arrayToHash(array) {
-  var hash = {};
-
-  array.forEach(function(val, idx) {
-    hash[val] = true;
-  });
-
-  return hash;
-}
-
-
-function formatValue(ctx, value, recurseTimes) {
-  // Provide a hook for user-specified inspect functions.
-  // Check that value is an object with an inspect function on it
-  if (ctx.customInspect &&
-      value &&
-      isFunction(value.inspect) &&
-      // Filter out the util module, it's inspect function is special
-      value.inspect !== exports.inspect &&
-      // Also filter out any prototype objects using the circular check.
-      !(value.constructor && value.constructor.prototype === value)) {
-    var ret = value.inspect(recurseTimes, ctx);
-    if (!isString(ret)) {
-      ret = formatValue(ctx, ret, recurseTimes);
-    }
-    return ret;
-  }
-
-  // Primitive types cannot have properties
-  var primitive = formatPrimitive(ctx, value);
-  if (primitive) {
-    return primitive;
-  }
-
-  // Look up the keys of the object.
-  var keys = Object.keys(value);
-  var visibleKeys = arrayToHash(keys);
-
-  if (ctx.showHidden) {
-    keys = Object.getOwnPropertyNames(value);
-  }
-
-  // IE doesn't make error fields non-enumerable
-  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
-  if (isError(value)
-      && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
-    return formatError(value);
-  }
-
-  // Some type of object without properties can be shortcutted.
-  if (keys.length === 0) {
-    if (isFunction(value)) {
-      var name = value.name ? ': ' + value.name : '';
-      return ctx.stylize('[Function' + name + ']', 'special');
-    }
-    if (isRegExp(value)) {
-      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-    }
-    if (isDate(value)) {
-      return ctx.stylize(Date.prototype.toString.call(value), 'date');
-    }
-    if (isError(value)) {
-      return formatError(value);
-    }
-  }
-
-  var base = '', array = false, braces = ['{', '}'];
-
-  // Make Array say that they are Array
-  if (isArray(value)) {
-    array = true;
-    braces = ['[', ']'];
-  }
-
-  // Make functions say that they are functions
-  if (isFunction(value)) {
-    var n = value.name ? ': ' + value.name : '';
-    base = ' [Function' + n + ']';
-  }
-
-  // Make RegExps say that they are RegExps
-  if (isRegExp(value)) {
-    base = ' ' + RegExp.prototype.toString.call(value);
-  }
-
-  // Make dates with properties first say the date
-  if (isDate(value)) {
-    base = ' ' + Date.prototype.toUTCString.call(value);
-  }
-
-  // Make error with message first say the error
-  if (isError(value)) {
-    base = ' ' + formatError(value);
-  }
-
-  if (keys.length === 0 && (!array || value.length == 0)) {
-    return braces[0] + base + braces[1];
-  }
-
-  if (recurseTimes < 0) {
-    if (isRegExp(value)) {
-      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-    } else {
-      return ctx.stylize('[Object]', 'special');
-    }
-  }
-
-  ctx.seen.push(value);
-
-  var output;
-  if (array) {
-    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
-  } else {
-    output = keys.map(function(key) {
-      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
-    });
-  }
-
-  ctx.seen.pop();
-
-  return reduceToSingleString(output, base, braces);
-}
-
-
-function formatPrimitive(ctx, value) {
-  if (isUndefined(value))
-    return ctx.stylize('undefined', 'undefined');
-  if (isString(value)) {
-    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
-                                             .replace(/'/g, "\\'")
-                                             .replace(/\\"/g, '"') + '\'';
-    return ctx.stylize(simple, 'string');
-  }
-  if (isNumber(value))
-    return ctx.stylize('' + value, 'number');
-  if (isBoolean(value))
-    return ctx.stylize('' + value, 'boolean');
-  // For some reason typeof null is "object", so special case here.
-  if (isNull(value))
-    return ctx.stylize('null', 'null');
-}
-
-
-function formatError(value) {
-  return '[' + Error.prototype.toString.call(value) + ']';
-}
-
-
-function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
-  var output = [];
-  for (var i = 0, l = value.length; i < l; ++i) {
-    if (hasOwnProperty(value, String(i))) {
-      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-          String(i), true));
-    } else {
-      output.push('');
-    }
-  }
-  keys.forEach(function(key) {
-    if (!key.match(/^\d+$/)) {
-      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-          key, true));
-    }
-  });
-  return output;
-}
-
-
-function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
-  var name, str, desc;
-  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
-  if (desc.get) {
-    if (desc.set) {
-      str = ctx.stylize('[Getter/Setter]', 'special');
-    } else {
-      str = ctx.stylize('[Getter]', 'special');
-    }
-  } else {
-    if (desc.set) {
-      str = ctx.stylize('[Setter]', 'special');
-    }
-  }
-  if (!hasOwnProperty(visibleKeys, key)) {
-    name = '[' + key + ']';
-  }
-  if (!str) {
-    if (ctx.seen.indexOf(desc.value) < 0) {
-      if (isNull(recurseTimes)) {
-        str = formatValue(ctx, desc.value, null);
-      } else {
-        str = formatValue(ctx, desc.value, recurseTimes - 1);
-      }
-      if (str.indexOf('\n') > -1) {
-        if (array) {
-          str = str.split('\n').map(function(line) {
-            return '  ' + line;
-          }).join('\n').substr(2);
-        } else {
-          str = '\n' + str.split('\n').map(function(line) {
-            return '   ' + line;
-          }).join('\n');
-        }
-      }
-    } else {
-      str = ctx.stylize('[Circular]', 'special');
-    }
-  }
-  if (isUndefined(name)) {
-    if (array && key.match(/^\d+$/)) {
-      return str;
-    }
-    name = JSON.stringify('' + key);
-    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
-      name = name.substr(1, name.length - 2);
-      name = ctx.stylize(name, 'name');
-    } else {
-      name = name.replace(/'/g, "\\'")
-                 .replace(/\\"/g, '"')
-                 .replace(/(^"|"$)/g, "'");
-      name = ctx.stylize(name, 'string');
-    }
-  }
-
-  return name + ': ' + str;
-}
-
-
-function reduceToSingleString(output, base, braces) {
-  var numLinesEst = 0;
-  var length = output.reduce(function(prev, cur) {
-    numLinesEst++;
-    if (cur.indexOf('\n') >= 0) numLinesEst++;
-    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
-  }, 0);
-
-  if (length > 60) {
-    return braces[0] +
-           (base === '' ? '' : base + '\n ') +
-           ' ' +
-           output.join(',\n  ') +
-           ' ' +
-           braces[1];
-  }
-
-  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
-}
-
-
-// NOTE: These type checking functions intentionally don't use `instanceof`
-// because it is fragile and can be easily faked with `Object.create()`.
-function isArray(ar) {
-  return Array.isArray(ar);
-}
-exports.isArray = isArray;
-
-function isBoolean(arg) {
-  return typeof arg === 'boolean';
-}
-exports.isBoolean = isBoolean;
-
-function isNull(arg) {
-  return arg === null;
-}
-exports.isNull = isNull;
-
-function isNullOrUndefined(arg) {
-  return arg == null;
-}
-exports.isNullOrUndefined = isNullOrUndefined;
-
-function isNumber(arg) {
-  return typeof arg === 'number';
-}
-exports.isNumber = isNumber;
-
-function isString(arg) {
-  return typeof arg === 'string';
-}
-exports.isString = isString;
-
-function isSymbol(arg) {
-  return typeof arg === 'symbol';
-}
-exports.isSymbol = isSymbol;
-
-function isUndefined(arg) {
-  return arg === void 0;
-}
-exports.isUndefined = isUndefined;
-
-function isRegExp(re) {
-  return isObject(re) && objectToString(re) === '[object RegExp]';
-}
-exports.isRegExp = isRegExp;
-
-function isObject(arg) {
-  return typeof arg === 'object' && arg !== null;
-}
-exports.isObject = isObject;
-
-function isDate(d) {
-  return isObject(d) && objectToString(d) === '[object Date]';
-}
-exports.isDate = isDate;
-
-function isError(e) {
-  return isObject(e) &&
-      (objectToString(e) === '[object Error]' || e instanceof Error);
-}
-exports.isError = isError;
-
-function isFunction(arg) {
-  return typeof arg === 'function';
-}
-exports.isFunction = isFunction;
-
-function isPrimitive(arg) {
-  return arg === null ||
-         typeof arg === 'boolean' ||
-         typeof arg === 'number' ||
-         typeof arg === 'string' ||
-         typeof arg === 'symbol' ||  // ES6 symbol
-         typeof arg === 'undefined';
-}
-exports.isPrimitive = isPrimitive;
-
-exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ "./node_modules/util/support/isBufferBrowser.js");
-
-function objectToString(o) {
-  return Object.prototype.toString.call(o);
-}
-
-
-function pad(n) {
-  return n < 10 ? '0' + n.toString(10) : n.toString(10);
-}
-
-
-var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-              'Oct', 'Nov', 'Dec'];
-
-// 26 Feb 16:19:34
-function timestamp() {
-  var d = new Date();
-  var time = [pad(d.getHours()),
-              pad(d.getMinutes()),
-              pad(d.getSeconds())].join(':');
-  return [d.getDate(), months[d.getMonth()], time].join(' ');
-}
-
-
-// log is just a thin wrapper to console.log that prepends a timestamp
-exports.log = function() {
-  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
-};
-
-
-/**
- * Inherit the prototype methods from one constructor into another.
- *
- * The Function.prototype.inherits from lang.js rewritten as a standalone
- * function (not on Function.prototype). NOTE: If this file is to be loaded
- * during bootstrapping this function needs to be rewritten using some native
- * functions as prototype setup using normal JavaScript does not work as
- * expected during bootstrapping (see mirror.js in r114903).
- *
- * @param {function} ctor Constructor function which needs to inherit the
- *     prototype.
- * @param {function} superCtor Constructor function to inherit prototype from.
- */
-exports.inherits = __webpack_require__(/*! inherits */ "./node_modules/util/node_modules/inherits/inherits_browser.js");
-
-exports._extend = function(origin, add) {
-  // Don't do anything if add isn't an object
-  if (!add || !isObject(add)) return origin;
-
-  var keys = Object.keys(add);
-  var i = keys.length;
-  while (i--) {
-    origin[keys[i]] = add[keys[i]];
-  }
-  return origin;
-};
-
-function hasOwnProperty(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-}
-
-var kCustomPromisifiedSymbol = typeof Symbol !== 'undefined' ? Symbol('util.promisify.custom') : undefined;
-
-exports.promisify = function promisify(original) {
-  if (typeof original !== 'function')
-    throw new TypeError('The "original" argument must be of type Function');
-
-  if (kCustomPromisifiedSymbol && original[kCustomPromisifiedSymbol]) {
-    var fn = original[kCustomPromisifiedSymbol];
-    if (typeof fn !== 'function') {
-      throw new TypeError('The "util.promisify.custom" argument must be of type Function');
-    }
-    Object.defineProperty(fn, kCustomPromisifiedSymbol, {
-      value: fn, enumerable: false, writable: false, configurable: true
-    });
-    return fn;
-  }
-
-  function fn() {
-    var promiseResolve, promiseReject;
-    var promise = new Promise(function (resolve, reject) {
-      promiseResolve = resolve;
-      promiseReject = reject;
-    });
-
-    var args = [];
-    for (var i = 0; i < arguments.length; i++) {
-      args.push(arguments[i]);
-    }
-    args.push(function (err, value) {
-      if (err) {
-        promiseReject(err);
-      } else {
-        promiseResolve(value);
-      }
-    });
-
-    try {
-      original.apply(this, args);
-    } catch (err) {
-      promiseReject(err);
-    }
-
-    return promise;
-  }
-
-  Object.setPrototypeOf(fn, Object.getPrototypeOf(original));
-
-  if (kCustomPromisifiedSymbol) Object.defineProperty(fn, kCustomPromisifiedSymbol, {
-    value: fn, enumerable: false, writable: false, configurable: true
-  });
-  return Object.defineProperties(
-    fn,
-    getOwnPropertyDescriptors(original)
-  );
-}
-
-exports.promisify.custom = kCustomPromisifiedSymbol
-
-function callbackifyOnRejected(reason, cb) {
-  // `!reason` guard inspired by bluebird (Ref: https://goo.gl/t5IS6M).
-  // Because `null` is a special error value in callbacks which means "no error
-  // occurred", we error-wrap so the callback consumer can distinguish between
-  // "the promise rejected with null" or "the promise fulfilled with undefined".
-  if (!reason) {
-    var newReason = new Error('Promise was rejected with a falsy value');
-    newReason.reason = reason;
-    reason = newReason;
-  }
-  return cb(reason);
-}
-
-function callbackify(original) {
-  if (typeof original !== 'function') {
-    throw new TypeError('The "original" argument must be of type Function');
-  }
-
-  // We DO NOT return the promise as it gives the user a false sense that
-  // the promise is actually somehow related to the callback's execution
-  // and that the callback throwing will reject the promise.
-  function callbackified() {
-    var args = [];
-    for (var i = 0; i < arguments.length; i++) {
-      args.push(arguments[i]);
-    }
-
-    var maybeCb = args.pop();
-    if (typeof maybeCb !== 'function') {
-      throw new TypeError('The last argument must be of type Function');
-    }
-    var self = this;
-    var cb = function() {
-      return maybeCb.apply(self, arguments);
-    };
-    // In true node style we process the callback on `nextTick` with all the
-    // implications (stack, `uncaughtException`, `async_hooks`)
-    original.apply(this, args)
-      .then(function(ret) { process.nextTick(cb, null, ret) },
-            function(rej) { process.nextTick(callbackifyOnRejected, rej, cb) });
-  }
-
-  Object.setPrototypeOf(callbackified, Object.getPrototypeOf(original));
-  Object.defineProperties(callbackified,
-                          getOwnPropertyDescriptors(original));
-  return callbackified;
-}
-exports.callbackify = callbackify;
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
-
-/***/ }),
-
-/***/ "./node_modules/webpack/buildin/global.js":
-/*!***********************************!*\
-  !*** (webpack)/buildin/global.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ "./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js ***!
-  \*******************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*! window-post-message-proxy v0.2.6 | (c) 2016 Microsoft Corporation MIT */
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(true)
-		module.exports = factory();
-	else {}
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports) {
-
-	"use strict";
-	var WindowPostMessageProxy = (function () {
-	    function WindowPostMessageProxy(options) {
-	        var _this = this;
-	        if (options === void 0) { options = {
-	            processTrackingProperties: {
-	                addTrackingProperties: WindowPostMessageProxy.defaultAddTrackingProperties,
-	                getTrackingProperties: WindowPostMessageProxy.defaultGetTrackingProperties
-	            },
-	            isErrorMessage: WindowPostMessageProxy.defaultIsErrorMessage,
-	            receiveWindow: window,
-	            name: WindowPostMessageProxy.createRandomString()
-	        }; }
-	        this.pendingRequestPromises = {};
-	        // save options with defaults
-	        this.addTrackingProperties = (options.processTrackingProperties && options.processTrackingProperties.addTrackingProperties) || WindowPostMessageProxy.defaultAddTrackingProperties;
-	        this.getTrackingProperties = (options.processTrackingProperties && options.processTrackingProperties.getTrackingProperties) || WindowPostMessageProxy.defaultGetTrackingProperties;
-	        this.isErrorMessage = options.isErrorMessage || WindowPostMessageProxy.defaultIsErrorMessage;
-	        this.receiveWindow = options.receiveWindow || window;
-	        this.name = options.name || WindowPostMessageProxy.createRandomString();
-	        this.logMessages = options.logMessages || false;
-	        this.eventSourceOverrideWindow = options.eventSourceOverrideWindow;
-	        this.suppressWarnings = options.suppressWarnings || false;
-	        if (this.logMessages) {
-	            console.log("new WindowPostMessageProxy created with name: " + this.name + " receiving on window: " + this.receiveWindow.document.title);
-	        }
-	        // Initialize
-	        this.handlers = [];
-	        this.windowMessageHandler = function (event) { return _this.onMessageReceived(event); };
-	        this.start();
-	    }
-	    // Static
-	    WindowPostMessageProxy.defaultAddTrackingProperties = function (message, trackingProperties) {
-	        message[WindowPostMessageProxy.messagePropertyName] = trackingProperties;
-	        return message;
-	    };
-	    WindowPostMessageProxy.defaultGetTrackingProperties = function (message) {
-	        return message[WindowPostMessageProxy.messagePropertyName];
-	    };
-	    WindowPostMessageProxy.defaultIsErrorMessage = function (message) {
-	        return !!message.error;
-	    };
-	    /**
-	     * Utility to create a deferred object.
-	     */
-	    // TODO: Look to use RSVP library instead of doing this manually.
-	    // From what I searched RSVP would work better because it has .finally and .deferred; however, it doesn't have Typings information. 
-	    WindowPostMessageProxy.createDeferred = function () {
-	        var deferred = {
-	            resolve: null,
-	            reject: null,
-	            promise: null
-	        };
-	        var promise = new Promise(function (resolve, reject) {
-	            deferred.resolve = resolve;
-	            deferred.reject = reject;
-	        });
-	        deferred.promise = promise;
-	        return deferred;
-	    };
-	    /**
-	     * Utility to generate random sequence of characters used as tracking id for promises.
-	     */
-	    WindowPostMessageProxy.createRandomString = function () {
-	        // window.msCrypto for IE
-	        var cryptoObj = window.crypto || window.msCrypto;
-	        var randomValueArray = new Uint32Array(1);
-	        cryptoObj.getRandomValues(randomValueArray);
-	        return randomValueArray[0].toString(36).substring(1);
-	    };
-	    /**
-	     * Adds handler.
-	     * If the first handler whose test method returns true will handle the message and provide a response.
-	     */
-	    WindowPostMessageProxy.prototype.addHandler = function (handler) {
-	        this.handlers.push(handler);
-	    };
-	    /**
-	     * Removes handler.
-	     * The reference must match the original object that was provided when adding the handler.
-	     */
-	    WindowPostMessageProxy.prototype.removeHandler = function (handler) {
-	        var handlerIndex = this.handlers.indexOf(handler);
-	        if (handlerIndex === -1) {
-	            throw new Error("You attempted to remove a handler but no matching handler was found.");
-	        }
-	        this.handlers.splice(handlerIndex, 1);
-	    };
-	    /**
-	     * Start listening to message events.
-	     */
-	    WindowPostMessageProxy.prototype.start = function () {
-	        this.receiveWindow.addEventListener('message', this.windowMessageHandler);
-	    };
-	    /**
-	     * Stops listening to message events.
-	     */
-	    WindowPostMessageProxy.prototype.stop = function () {
-	        this.receiveWindow.removeEventListener('message', this.windowMessageHandler);
-	    };
-	    /**
-	     * Post message to target window with tracking properties added and save deferred object referenced by tracking id.
-	     */
-	    WindowPostMessageProxy.prototype.postMessage = function (targetWindow, message) {
-	        // Add tracking properties to indicate message came from this proxy
-	        var trackingProperties = { id: WindowPostMessageProxy.createRandomString() };
-	        this.addTrackingProperties(message, trackingProperties);
-	        if (this.logMessages) {
-	            console.log(this.name + " Posting message:");
-	            console.log(JSON.stringify(message, null, '  '));
-	        }
-	        targetWindow.postMessage(message, "*");
-	        var deferred = WindowPostMessageProxy.createDeferred();
-	        this.pendingRequestPromises[trackingProperties.id] = deferred;
-	        return deferred.promise;
-	    };
-	    /**
-	     * Send response message to target window.
-	     * Response messages re-use tracking properties from a previous request message.
-	     */
-	    WindowPostMessageProxy.prototype.sendResponse = function (targetWindow, message, trackingProperties) {
-	        this.addTrackingProperties(message, trackingProperties);
-	        if (this.logMessages) {
-	            console.log(this.name + " Sending response:");
-	            console.log(JSON.stringify(message, null, '  '));
-	        }
-	        targetWindow.postMessage(message, "*");
-	    };
-	    /**
-	     * Message handler.
-	     */
-	    WindowPostMessageProxy.prototype.onMessageReceived = function (event) {
-	        var _this = this;
-	        if (this.logMessages) {
-	            console.log(this.name + " Received message:");
-	            console.log("type: " + event.type);
-	            console.log(JSON.stringify(event.data, null, '  '));
-	        }
-	        var sendingWindow = this.eventSourceOverrideWindow || event.source;
-	        var message = event.data;
-	        if (typeof message !== "object") {
-	            if (!this.suppressWarnings) {
-	                console.warn("Proxy(" + this.name + "): Received message that was not an object. Discarding message");
-	            }
-	            return;
-	        }
-	        var trackingProperties;
-	        try {
-	            trackingProperties = this.getTrackingProperties(message);
-	        }
-	        catch (e) {
-	            if (!this.suppressWarnings) {
-	                console.warn("Proxy(" + this.name + "): Error occurred when attempting to get tracking properties from incoming message:", JSON.stringify(message, null, '  '), "Error: ", e);
-	            }
-	        }
-	        var deferred;
-	        if (trackingProperties) {
-	            deferred = this.pendingRequestPromises[trackingProperties.id];
-	        }
-	        // If message does not have a known ID, treat it as a request
-	        // Otherwise, treat message as response
-	        if (!deferred) {
-	            var handled = this.handlers.some(function (handler) {
-	                var canMessageBeHandled = false;
-	                try {
-	                    canMessageBeHandled = handler.test(message);
-	                }
-	                catch (e) {
-	                    if (!_this.suppressWarnings) {
-	                        console.warn("Proxy(" + _this.name + "): Error occurred when handler was testing incoming message:", JSON.stringify(message, null, '  '), "Error: ", e);
-	                    }
-	                }
-	                if (canMessageBeHandled) {
-	                    var responseMessagePromise = void 0;
-	                    try {
-	                        responseMessagePromise = Promise.resolve(handler.handle(message));
-	                    }
-	                    catch (e) {
-	                        if (!_this.suppressWarnings) {
-	                            console.warn("Proxy(" + _this.name + "): Error occurred when handler was processing incoming message:", JSON.stringify(message, null, '  '), "Error: ", e);
-	                        }
-	                        responseMessagePromise = Promise.resolve();
-	                    }
-	                    responseMessagePromise
-	                        .then(function (responseMessage) {
-	                        if (!responseMessage) {
-	                            var warningMessage = "Handler for message: " + JSON.stringify(message, null, '  ') + " did not return a response message. The default response message will be returned instead.";
-	                            if (!_this.suppressWarnings) {
-	                                console.warn("Proxy(" + _this.name + "): " + warningMessage);
-	                            }
-	                            responseMessage = {
-	                                warning: warningMessage
-	                            };
-	                        }
-	                        _this.sendResponse(sendingWindow, responseMessage, trackingProperties);
-	                    });
-	                    return true;
-	                }
-	            });
-	            /**
-	             * TODO: Consider returning an error message if nothing handled the message.
-	             * In the case of the Report receiving messages all of them should be handled,
-	             * however, in the case of the SDK receiving messages it's likely it won't register handlers
-	             * for all events. Perhaps make this an option at construction time.
-	             */
-	            if (!handled && !this.suppressWarnings) {
-	                console.warn("Proxy(" + this.name + ") did not handle message. Handlers: " + this.handlers.length + "  Message: " + JSON.stringify(message, null, '') + ".");
-	            }
-	        }
-	        else {
-	            /**
-	             * If error message reject promise,
-	             * Otherwise, resolve promise
-	             */
-	            var isErrorMessage = true;
-	            try {
-	                isErrorMessage = this.isErrorMessage(message);
-	            }
-	            catch (e) {
-	                console.warn("Proxy(" + this.name + ") Error occurred when trying to determine if message is consider an error response. Message: ", JSON.stringify(message, null, ''), 'Error: ', e);
-	            }
-	            if (isErrorMessage) {
-	                deferred.reject(message);
-	            }
-	            else {
-	                deferred.resolve(message);
-	            }
-	            // TODO: Move to .finally clause up where promise is created for better maitenance like original proxy code.
-	            delete this.pendingRequestPromises[trackingProperties.id];
-	        }
-	    };
-	    WindowPostMessageProxy.messagePropertyName = "windowPostMessageProxy";
-	    return WindowPostMessageProxy;
-	}());
-	exports.WindowPostMessageProxy = WindowPostMessageProxy;
-
-
-/***/ })
-/******/ ])
-});
-;
-//# sourceMappingURL=windowPostMessageProxy.js.map
-
-/***/ }),
-
 /***/ "./src/FilterBuilders/advancedFilterBuilder.ts":
 /*!*****************************************************!*\
   !*** ./src/FilterBuilders/advancedFilterBuilder.ts ***!
   \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -8676,7 +6671,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AdvancedFilterBuilder = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
@@ -8766,8 +6761,7 @@ exports.AdvancedFilterBuilder = AdvancedFilterBuilder;
 /*!**************************************************!*\
   !*** ./src/FilterBuilders/basicFilterBuilder.ts ***!
   \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -8786,7 +6780,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BasicFilterBuilder = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
@@ -8890,12 +6884,11 @@ exports.BasicFilterBuilder = BasicFilterBuilder;
 /*!*********************************************!*\
   !*** ./src/FilterBuilders/filterBuilder.ts ***!
   \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ ((__unused_webpack_module, exports) => {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FilterBuilder = void 0;
 /**
  * Generic filter builder for BasicFilter, AdvancedFilter, RelativeDate, RelativeTime and TopN
@@ -8999,23 +6992,22 @@ exports.FilterBuilder = FilterBuilder;
 /*!*************************************!*\
   !*** ./src/FilterBuilders/index.ts ***!
   \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RelativeTimeFilterBuilder = exports.RelativeDateFilterBuilder = exports.TopNFilterBuilder = exports.AdvancedFilterBuilder = exports.BasicFilterBuilder = void 0;
 var basicFilterBuilder_1 = __webpack_require__(/*! ./basicFilterBuilder */ "./src/FilterBuilders/basicFilterBuilder.ts");
-Object.defineProperty(exports, "BasicFilterBuilder", { enumerable: true, get: function () { return basicFilterBuilder_1.BasicFilterBuilder; } });
+Object.defineProperty(exports, "BasicFilterBuilder", ({ enumerable: true, get: function () { return basicFilterBuilder_1.BasicFilterBuilder; } }));
 var advancedFilterBuilder_1 = __webpack_require__(/*! ./advancedFilterBuilder */ "./src/FilterBuilders/advancedFilterBuilder.ts");
-Object.defineProperty(exports, "AdvancedFilterBuilder", { enumerable: true, get: function () { return advancedFilterBuilder_1.AdvancedFilterBuilder; } });
+Object.defineProperty(exports, "AdvancedFilterBuilder", ({ enumerable: true, get: function () { return advancedFilterBuilder_1.AdvancedFilterBuilder; } }));
 var topNFilterBuilder_1 = __webpack_require__(/*! ./topNFilterBuilder */ "./src/FilterBuilders/topNFilterBuilder.ts");
-Object.defineProperty(exports, "TopNFilterBuilder", { enumerable: true, get: function () { return topNFilterBuilder_1.TopNFilterBuilder; } });
+Object.defineProperty(exports, "TopNFilterBuilder", ({ enumerable: true, get: function () { return topNFilterBuilder_1.TopNFilterBuilder; } }));
 var relativeDateFilterBuilder_1 = __webpack_require__(/*! ./relativeDateFilterBuilder */ "./src/FilterBuilders/relativeDateFilterBuilder.ts");
-Object.defineProperty(exports, "RelativeDateFilterBuilder", { enumerable: true, get: function () { return relativeDateFilterBuilder_1.RelativeDateFilterBuilder; } });
+Object.defineProperty(exports, "RelativeDateFilterBuilder", ({ enumerable: true, get: function () { return relativeDateFilterBuilder_1.RelativeDateFilterBuilder; } }));
 var relativeTimeFilterBuilder_1 = __webpack_require__(/*! ./relativeTimeFilterBuilder */ "./src/FilterBuilders/relativeTimeFilterBuilder.ts");
-Object.defineProperty(exports, "RelativeTimeFilterBuilder", { enumerable: true, get: function () { return relativeTimeFilterBuilder_1.RelativeTimeFilterBuilder; } });
+Object.defineProperty(exports, "RelativeTimeFilterBuilder", ({ enumerable: true, get: function () { return relativeTimeFilterBuilder_1.RelativeTimeFilterBuilder; } }));
 
 
 /***/ }),
@@ -9024,8 +7016,7 @@ Object.defineProperty(exports, "RelativeTimeFilterBuilder", { enumerable: true, 
 /*!*********************************************************!*\
   !*** ./src/FilterBuilders/relativeDateFilterBuilder.ts ***!
   \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -9044,7 +7035,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RelativeDateFilterBuilder = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
@@ -9156,8 +7147,7 @@ exports.RelativeDateFilterBuilder = RelativeDateFilterBuilder;
 /*!*********************************************************!*\
   !*** ./src/FilterBuilders/relativeTimeFilterBuilder.ts ***!
   \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -9176,7 +7166,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RelativeTimeFilterBuilder = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
@@ -9271,8 +7261,7 @@ exports.RelativeTimeFilterBuilder = RelativeTimeFilterBuilder;
 /*!*************************************************!*\
   !*** ./src/FilterBuilders/topNFilterBuilder.ts ***!
   \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -9291,7 +7280,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TopNFilterBuilder = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var filterBuilder_1 = __webpack_require__(/*! ./filterBuilder */ "./src/FilterBuilders/filterBuilder.ts");
@@ -9376,8 +7365,7 @@ exports.TopNFilterBuilder = TopNFilterBuilder;
 /*!*********************************!*\
   !*** ./src/bookmarksManager.ts ***!
   \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -9417,7 +7405,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BookmarksManager = void 0;
 var util_1 = __webpack_require__(/*! ./util */ "./src/util.ts");
 var errors_1 = __webpack_require__(/*! ./errors */ "./src/errors.ts");
@@ -9628,18 +7616,17 @@ exports.BookmarksManager = BookmarksManager;
 /*!***********************!*\
   !*** ./src/config.ts ***!
   \***********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ ((__unused_webpack_module, exports) => {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 /** @ignore */ /** */
 var config = {
     version: '2.22.1',
     type: 'js'
 };
-exports.default = config;
+exports["default"] = config;
 
 
 /***/ }),
@@ -9648,8 +7635,7 @@ exports.default = config;
 /*!***********************!*\
   !*** ./src/create.ts ***!
   \***********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -9704,7 +7690,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Create = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
@@ -9864,8 +7850,7 @@ exports.Create = Create;
 /*!**************************!*\
   !*** ./src/dashboard.ts ***!
   \**************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -9884,7 +7869,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Dashboard = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
@@ -10004,8 +7989,7 @@ exports.Dashboard = Dashboard;
 /*!**********************!*\
   !*** ./src/embed.ts ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -10045,7 +8029,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Embed = void 0;
 var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var sdkConfig = __webpack_require__(/*! ./config */ "./src/config.ts");
@@ -10726,12 +8710,11 @@ exports.Embed = Embed;
 /*!***********************!*\
   !*** ./src/errors.ts ***!
   \***********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ ((__unused_webpack_module, exports) => {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EmbedUrlNotSupported = exports.APINotSupportedForRDLError = void 0;
 exports.APINotSupportedForRDLError = "This API is currently not supported for RDL reports";
 exports.EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please use Power BI REST APIs to get the valid URL";
@@ -10743,12 +8726,11 @@ exports.EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please u
 /*!**************************!*\
   !*** ./src/factories.ts ***!
   \**************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.routerFactory = exports.wpmpFactory = exports.hpmFactory = void 0;
 /**
  * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
@@ -10793,8 +8775,7 @@ exports.routerFactory = routerFactory;
 /*!*********************!*\
   !*** ./src/page.ts ***!
   \*********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -10834,7 +8815,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Page = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var visualDescriptor_1 = __webpack_require__(/*! ./visualDescriptor */ "./src/visualDescriptor.ts");
@@ -11327,74 +9308,11 @@ exports.Page = Page;
 
 /***/ }),
 
-/***/ "./src/powerbi-client.ts":
-/*!*******************************!*\
-  !*** ./src/powerbi-client.ts ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RelativeTimeFilterBuilder = exports.RelativeDateFilterBuilder = exports.TopNFilterBuilder = exports.AdvancedFilterBuilder = exports.BasicFilterBuilder = exports.QuickCreate = exports.VisualDescriptor = exports.Visual = exports.Qna = exports.Page = exports.Embed = exports.Tile = exports.Dashboard = exports.Report = exports.models = exports.factories = exports.service = void 0;
-/**
- * @hidden
- */
-var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
-exports.models = models;
-var service = __webpack_require__(/*! ./service */ "./src/service.ts");
-exports.service = service;
-var factories = __webpack_require__(/*! ./factories */ "./src/factories.ts");
-exports.factories = factories;
-var report_1 = __webpack_require__(/*! ./report */ "./src/report.ts");
-Object.defineProperty(exports, "Report", { enumerable: true, get: function () { return report_1.Report; } });
-var dashboard_1 = __webpack_require__(/*! ./dashboard */ "./src/dashboard.ts");
-Object.defineProperty(exports, "Dashboard", { enumerable: true, get: function () { return dashboard_1.Dashboard; } });
-var tile_1 = __webpack_require__(/*! ./tile */ "./src/tile.ts");
-Object.defineProperty(exports, "Tile", { enumerable: true, get: function () { return tile_1.Tile; } });
-var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
-Object.defineProperty(exports, "Embed", { enumerable: true, get: function () { return embed_1.Embed; } });
-var page_1 = __webpack_require__(/*! ./page */ "./src/page.ts");
-Object.defineProperty(exports, "Page", { enumerable: true, get: function () { return page_1.Page; } });
-var qna_1 = __webpack_require__(/*! ./qna */ "./src/qna.ts");
-Object.defineProperty(exports, "Qna", { enumerable: true, get: function () { return qna_1.Qna; } });
-var visual_1 = __webpack_require__(/*! ./visual */ "./src/visual.ts");
-Object.defineProperty(exports, "Visual", { enumerable: true, get: function () { return visual_1.Visual; } });
-var visualDescriptor_1 = __webpack_require__(/*! ./visualDescriptor */ "./src/visualDescriptor.ts");
-Object.defineProperty(exports, "VisualDescriptor", { enumerable: true, get: function () { return visualDescriptor_1.VisualDescriptor; } });
-var quickCreate_1 = __webpack_require__(/*! ./quickCreate */ "./src/quickCreate.ts");
-Object.defineProperty(exports, "QuickCreate", { enumerable: true, get: function () { return quickCreate_1.QuickCreate; } });
-var FilterBuilders_1 = __webpack_require__(/*! ./FilterBuilders */ "./src/FilterBuilders/index.ts");
-Object.defineProperty(exports, "BasicFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.BasicFilterBuilder; } });
-Object.defineProperty(exports, "AdvancedFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.AdvancedFilterBuilder; } });
-Object.defineProperty(exports, "TopNFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.TopNFilterBuilder; } });
-Object.defineProperty(exports, "RelativeDateFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.RelativeDateFilterBuilder; } });
-Object.defineProperty(exports, "RelativeTimeFilterBuilder", { enumerable: true, get: function () { return FilterBuilders_1.RelativeTimeFilterBuilder; } });
-/**
- * Makes Power BI available to the global object for use in applications that don't have module loading support.
- *
- * Note: create an instance of the class with the default configuration for normal usage, or save the class so that you can create an instance of the service.
- */
-var powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
-// powerBI SDK may use Power BI object under different key, in order to avoid name collisions
-if (window.powerbi && window.powerBISDKGlobalServiceInstanceName) {
-    window[window.powerBISDKGlobalServiceInstanceName] = powerbi;
-}
-else {
-    // Default to Power BI.
-    window.powerbi = powerbi;
-}
-
-
-/***/ }),
-
 /***/ "./src/qna.ts":
 /*!********************!*\
   !*** ./src/qna.ts ***!
   \********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -11449,7 +9367,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Qna = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
@@ -11544,8 +9462,7 @@ exports.Qna = Qna;
 /*!****************************!*\
   !*** ./src/quickCreate.ts ***!
   \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -11600,11 +9517,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QuickCreate = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
-var assert = __webpack_require__(/*! assert */ "./node_modules/assert/assert.js");
 /**
  * A Power BI Quick Create component
  *
@@ -11637,9 +9553,7 @@ var QuickCreate = /** @class */ (function (_super) {
                     case 2:
                         _c.sent();
                         return [3 /*break*/, 4];
-                    case 3:
-                        assert(false, "".concat(req.params.eventName, " eventHook is not supported"));
-                        return [3 /*break*/, 4];
+                    case 3: return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
@@ -11737,8 +9651,7 @@ exports.QuickCreate = QuickCreate;
 /*!***********************!*\
   !*** ./src/report.ts ***!
   \***********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -11802,7 +9715,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Report = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
@@ -11810,7 +9723,6 @@ var util_1 = __webpack_require__(/*! ./util */ "./src/util.ts");
 var errors_1 = __webpack_require__(/*! ./errors */ "./src/errors.ts");
 var page_1 = __webpack_require__(/*! ./page */ "./src/page.ts");
 var bookmarksManager_1 = __webpack_require__(/*! ./bookmarksManager */ "./src/bookmarksManager.ts");
-var assert = __webpack_require__(/*! assert */ "./node_modules/assert/assert.js");
 /**
  * The Power BI Report embed component
  *
@@ -11864,9 +9776,7 @@ var Report = /** @class */ (function (_super) {
                     case 4:
                         _d.sent();
                         return [3 /*break*/, 6];
-                    case 5:
-                        assert(false, "".concat(req.params.eventName, " eventHook is not supported"));
-                        return [3 /*break*/, 6];
+                    case 5: return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
             });
@@ -13234,8 +11144,7 @@ exports.Report = Report;
 /*!************************!*\
   !*** ./src/service.ts ***!
   \************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -13286,7 +11195,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Service = void 0;
 var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
 var report_1 = __webpack_require__(/*! ./report */ "./src/report.ts");
@@ -13864,8 +11773,7 @@ exports.Service = Service;
 /*!*********************!*\
   !*** ./src/tile.ts ***!
   \*********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -13884,7 +11792,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Tile = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
@@ -13980,8 +11888,7 @@ exports.Tile = Tile;
 /*!*********************!*\
   !*** ./src/util.ts ***!
   \*********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(__unused_webpack_module, exports) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -14021,7 +11928,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.isCreate = exports.getTimeDiffInMilliseconds = exports.getRandomValue = exports.autoAuthInEmbedUrl = exports.isRDLEmbed = exports.isSavedInternal = exports.addParamToUrl = exports.generateUUID = exports.createRandomString = exports.assign = exports.remove = exports.find = exports.findIndex = exports.raiseCustomEvent = void 0;
 /**
  * Raises a custom event with event data on the specified HTML element.
@@ -14260,8 +12167,7 @@ exports.isCreate = isCreate;
 /*!***********************!*\
   !*** ./src/visual.ts ***!
   \***********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -14316,7 +12222,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Visual = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var report_1 = __webpack_require__(/*! ./report */ "./src/report.ts");
@@ -14634,8 +12540,7 @@ exports.Visual = Visual;
 /*!*********************************!*\
   !*** ./src/visualDescriptor.ts ***!
   \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -14675,7 +12580,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VisualDescriptor = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 /**
@@ -15027,8 +12932,401 @@ var VisualDescriptor = /** @class */ (function () {
 exports.VisualDescriptor = VisualDescriptor;
 
 
+/***/ }),
+
+/***/ "./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js ***!
+  \*******************************************************************************/
+/***/ (function(module) {
+
+/*! window-post-message-proxy v0.2.6 | (c) 2016 Microsoft Corporation MIT */
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory();
+	else {}
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __nested_webpack_require_650__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_650__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__nested_webpack_require_650__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__nested_webpack_require_650__.c = installedModules;
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__nested_webpack_require_650__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __nested_webpack_require_650__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	var WindowPostMessageProxy = (function () {
+	    function WindowPostMessageProxy(options) {
+	        var _this = this;
+	        if (options === void 0) { options = {
+	            processTrackingProperties: {
+	                addTrackingProperties: WindowPostMessageProxy.defaultAddTrackingProperties,
+	                getTrackingProperties: WindowPostMessageProxy.defaultGetTrackingProperties
+	            },
+	            isErrorMessage: WindowPostMessageProxy.defaultIsErrorMessage,
+	            receiveWindow: window,
+	            name: WindowPostMessageProxy.createRandomString()
+	        }; }
+	        this.pendingRequestPromises = {};
+	        // save options with defaults
+	        this.addTrackingProperties = (options.processTrackingProperties && options.processTrackingProperties.addTrackingProperties) || WindowPostMessageProxy.defaultAddTrackingProperties;
+	        this.getTrackingProperties = (options.processTrackingProperties && options.processTrackingProperties.getTrackingProperties) || WindowPostMessageProxy.defaultGetTrackingProperties;
+	        this.isErrorMessage = options.isErrorMessage || WindowPostMessageProxy.defaultIsErrorMessage;
+	        this.receiveWindow = options.receiveWindow || window;
+	        this.name = options.name || WindowPostMessageProxy.createRandomString();
+	        this.logMessages = options.logMessages || false;
+	        this.eventSourceOverrideWindow = options.eventSourceOverrideWindow;
+	        this.suppressWarnings = options.suppressWarnings || false;
+	        if (this.logMessages) {
+	            console.log("new WindowPostMessageProxy created with name: " + this.name + " receiving on window: " + this.receiveWindow.document.title);
+	        }
+	        // Initialize
+	        this.handlers = [];
+	        this.windowMessageHandler = function (event) { return _this.onMessageReceived(event); };
+	        this.start();
+	    }
+	    // Static
+	    WindowPostMessageProxy.defaultAddTrackingProperties = function (message, trackingProperties) {
+	        message[WindowPostMessageProxy.messagePropertyName] = trackingProperties;
+	        return message;
+	    };
+	    WindowPostMessageProxy.defaultGetTrackingProperties = function (message) {
+	        return message[WindowPostMessageProxy.messagePropertyName];
+	    };
+	    WindowPostMessageProxy.defaultIsErrorMessage = function (message) {
+	        return !!message.error;
+	    };
+	    /**
+	     * Utility to create a deferred object.
+	     */
+	    // TODO: Look to use RSVP library instead of doing this manually.
+	    // From what I searched RSVP would work better because it has .finally and .deferred; however, it doesn't have Typings information. 
+	    WindowPostMessageProxy.createDeferred = function () {
+	        var deferred = {
+	            resolve: null,
+	            reject: null,
+	            promise: null
+	        };
+	        var promise = new Promise(function (resolve, reject) {
+	            deferred.resolve = resolve;
+	            deferred.reject = reject;
+	        });
+	        deferred.promise = promise;
+	        return deferred;
+	    };
+	    /**
+	     * Utility to generate random sequence of characters used as tracking id for promises.
+	     */
+	    WindowPostMessageProxy.createRandomString = function () {
+	        // window.msCrypto for IE
+	        var cryptoObj = window.crypto || window.msCrypto;
+	        var randomValueArray = new Uint32Array(1);
+	        cryptoObj.getRandomValues(randomValueArray);
+	        return randomValueArray[0].toString(36).substring(1);
+	    };
+	    /**
+	     * Adds handler.
+	     * If the first handler whose test method returns true will handle the message and provide a response.
+	     */
+	    WindowPostMessageProxy.prototype.addHandler = function (handler) {
+	        this.handlers.push(handler);
+	    };
+	    /**
+	     * Removes handler.
+	     * The reference must match the original object that was provided when adding the handler.
+	     */
+	    WindowPostMessageProxy.prototype.removeHandler = function (handler) {
+	        var handlerIndex = this.handlers.indexOf(handler);
+	        if (handlerIndex === -1) {
+	            throw new Error("You attempted to remove a handler but no matching handler was found.");
+	        }
+	        this.handlers.splice(handlerIndex, 1);
+	    };
+	    /**
+	     * Start listening to message events.
+	     */
+	    WindowPostMessageProxy.prototype.start = function () {
+	        this.receiveWindow.addEventListener('message', this.windowMessageHandler);
+	    };
+	    /**
+	     * Stops listening to message events.
+	     */
+	    WindowPostMessageProxy.prototype.stop = function () {
+	        this.receiveWindow.removeEventListener('message', this.windowMessageHandler);
+	    };
+	    /**
+	     * Post message to target window with tracking properties added and save deferred object referenced by tracking id.
+	     */
+	    WindowPostMessageProxy.prototype.postMessage = function (targetWindow, message) {
+	        // Add tracking properties to indicate message came from this proxy
+	        var trackingProperties = { id: WindowPostMessageProxy.createRandomString() };
+	        this.addTrackingProperties(message, trackingProperties);
+	        if (this.logMessages) {
+	            console.log(this.name + " Posting message:");
+	            console.log(JSON.stringify(message, null, '  '));
+	        }
+	        targetWindow.postMessage(message, "*");
+	        var deferred = WindowPostMessageProxy.createDeferred();
+	        this.pendingRequestPromises[trackingProperties.id] = deferred;
+	        return deferred.promise;
+	    };
+	    /**
+	     * Send response message to target window.
+	     * Response messages re-use tracking properties from a previous request message.
+	     */
+	    WindowPostMessageProxy.prototype.sendResponse = function (targetWindow, message, trackingProperties) {
+	        this.addTrackingProperties(message, trackingProperties);
+	        if (this.logMessages) {
+	            console.log(this.name + " Sending response:");
+	            console.log(JSON.stringify(message, null, '  '));
+	        }
+	        targetWindow.postMessage(message, "*");
+	    };
+	    /**
+	     * Message handler.
+	     */
+	    WindowPostMessageProxy.prototype.onMessageReceived = function (event) {
+	        var _this = this;
+	        if (this.logMessages) {
+	            console.log(this.name + " Received message:");
+	            console.log("type: " + event.type);
+	            console.log(JSON.stringify(event.data, null, '  '));
+	        }
+	        var sendingWindow = this.eventSourceOverrideWindow || event.source;
+	        var message = event.data;
+	        if (typeof message !== "object") {
+	            if (!this.suppressWarnings) {
+	                console.warn("Proxy(" + this.name + "): Received message that was not an object. Discarding message");
+	            }
+	            return;
+	        }
+	        var trackingProperties;
+	        try {
+	            trackingProperties = this.getTrackingProperties(message);
+	        }
+	        catch (e) {
+	            if (!this.suppressWarnings) {
+	                console.warn("Proxy(" + this.name + "): Error occurred when attempting to get tracking properties from incoming message:", JSON.stringify(message, null, '  '), "Error: ", e);
+	            }
+	        }
+	        var deferred;
+	        if (trackingProperties) {
+	            deferred = this.pendingRequestPromises[trackingProperties.id];
+	        }
+	        // If message does not have a known ID, treat it as a request
+	        // Otherwise, treat message as response
+	        if (!deferred) {
+	            var handled = this.handlers.some(function (handler) {
+	                var canMessageBeHandled = false;
+	                try {
+	                    canMessageBeHandled = handler.test(message);
+	                }
+	                catch (e) {
+	                    if (!_this.suppressWarnings) {
+	                        console.warn("Proxy(" + _this.name + "): Error occurred when handler was testing incoming message:", JSON.stringify(message, null, '  '), "Error: ", e);
+	                    }
+	                }
+	                if (canMessageBeHandled) {
+	                    var responseMessagePromise = void 0;
+	                    try {
+	                        responseMessagePromise = Promise.resolve(handler.handle(message));
+	                    }
+	                    catch (e) {
+	                        if (!_this.suppressWarnings) {
+	                            console.warn("Proxy(" + _this.name + "): Error occurred when handler was processing incoming message:", JSON.stringify(message, null, '  '), "Error: ", e);
+	                        }
+	                        responseMessagePromise = Promise.resolve();
+	                    }
+	                    responseMessagePromise
+	                        .then(function (responseMessage) {
+	                        if (!responseMessage) {
+	                            var warningMessage = "Handler for message: " + JSON.stringify(message, null, '  ') + " did not return a response message. The default response message will be returned instead.";
+	                            if (!_this.suppressWarnings) {
+	                                console.warn("Proxy(" + _this.name + "): " + warningMessage);
+	                            }
+	                            responseMessage = {
+	                                warning: warningMessage
+	                            };
+	                        }
+	                        _this.sendResponse(sendingWindow, responseMessage, trackingProperties);
+	                    });
+	                    return true;
+	                }
+	            });
+	            /**
+	             * TODO: Consider returning an error message if nothing handled the message.
+	             * In the case of the Report receiving messages all of them should be handled,
+	             * however, in the case of the SDK receiving messages it's likely it won't register handlers
+	             * for all events. Perhaps make this an option at construction time.
+	             */
+	            if (!handled && !this.suppressWarnings) {
+	                console.warn("Proxy(" + this.name + ") did not handle message. Handlers: " + this.handlers.length + "  Message: " + JSON.stringify(message, null, '') + ".");
+	            }
+	        }
+	        else {
+	            /**
+	             * If error message reject promise,
+	             * Otherwise, resolve promise
+	             */
+	            var isErrorMessage = true;
+	            try {
+	                isErrorMessage = this.isErrorMessage(message);
+	            }
+	            catch (e) {
+	                console.warn("Proxy(" + this.name + ") Error occurred when trying to determine if message is consider an error response. Message: ", JSON.stringify(message, null, ''), 'Error: ', e);
+	            }
+	            if (isErrorMessage) {
+	                deferred.reject(message);
+	            }
+	            else {
+	                deferred.resolve(message);
+	            }
+	            // TODO: Move to .finally clause up where promise is created for better maitenance like original proxy code.
+	            delete this.pendingRequestPromises[trackingProperties.id];
+	        }
+	    };
+	    WindowPostMessageProxy.messagePropertyName = "windowPostMessageProxy";
+	    return WindowPostMessageProxy;
+	}());
+	exports.WindowPostMessageProxy = WindowPostMessageProxy;
+
+
+/***/ })
+/******/ ])
+});
+;
+//# sourceMappingURL=windowPostMessageProxy.js.map
+
 /***/ })
 
-/******/ });
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+var exports = __webpack_exports__;
+/*!*******************************!*\
+  !*** ./src/powerbi-client.ts ***!
+  \*******************************/
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RelativeTimeFilterBuilder = exports.RelativeDateFilterBuilder = exports.TopNFilterBuilder = exports.AdvancedFilterBuilder = exports.BasicFilterBuilder = exports.QuickCreate = exports.VisualDescriptor = exports.Visual = exports.Qna = exports.Page = exports.Embed = exports.Tile = exports.Dashboard = exports.Report = exports.models = exports.factories = exports.service = void 0;
+/**
+ * @hidden
+ */
+var models = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
+exports.models = models;
+var service = __webpack_require__(/*! ./service */ "./src/service.ts");
+exports.service = service;
+var factories = __webpack_require__(/*! ./factories */ "./src/factories.ts");
+exports.factories = factories;
+var report_1 = __webpack_require__(/*! ./report */ "./src/report.ts");
+Object.defineProperty(exports, "Report", ({ enumerable: true, get: function () { return report_1.Report; } }));
+var dashboard_1 = __webpack_require__(/*! ./dashboard */ "./src/dashboard.ts");
+Object.defineProperty(exports, "Dashboard", ({ enumerable: true, get: function () { return dashboard_1.Dashboard; } }));
+var tile_1 = __webpack_require__(/*! ./tile */ "./src/tile.ts");
+Object.defineProperty(exports, "Tile", ({ enumerable: true, get: function () { return tile_1.Tile; } }));
+var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
+Object.defineProperty(exports, "Embed", ({ enumerable: true, get: function () { return embed_1.Embed; } }));
+var page_1 = __webpack_require__(/*! ./page */ "./src/page.ts");
+Object.defineProperty(exports, "Page", ({ enumerable: true, get: function () { return page_1.Page; } }));
+var qna_1 = __webpack_require__(/*! ./qna */ "./src/qna.ts");
+Object.defineProperty(exports, "Qna", ({ enumerable: true, get: function () { return qna_1.Qna; } }));
+var visual_1 = __webpack_require__(/*! ./visual */ "./src/visual.ts");
+Object.defineProperty(exports, "Visual", ({ enumerable: true, get: function () { return visual_1.Visual; } }));
+var visualDescriptor_1 = __webpack_require__(/*! ./visualDescriptor */ "./src/visualDescriptor.ts");
+Object.defineProperty(exports, "VisualDescriptor", ({ enumerable: true, get: function () { return visualDescriptor_1.VisualDescriptor; } }));
+var quickCreate_1 = __webpack_require__(/*! ./quickCreate */ "./src/quickCreate.ts");
+Object.defineProperty(exports, "QuickCreate", ({ enumerable: true, get: function () { return quickCreate_1.QuickCreate; } }));
+var FilterBuilders_1 = __webpack_require__(/*! ./FilterBuilders */ "./src/FilterBuilders/index.ts");
+Object.defineProperty(exports, "BasicFilterBuilder", ({ enumerable: true, get: function () { return FilterBuilders_1.BasicFilterBuilder; } }));
+Object.defineProperty(exports, "AdvancedFilterBuilder", ({ enumerable: true, get: function () { return FilterBuilders_1.AdvancedFilterBuilder; } }));
+Object.defineProperty(exports, "TopNFilterBuilder", ({ enumerable: true, get: function () { return FilterBuilders_1.TopNFilterBuilder; } }));
+Object.defineProperty(exports, "RelativeDateFilterBuilder", ({ enumerable: true, get: function () { return FilterBuilders_1.RelativeDateFilterBuilder; } }));
+Object.defineProperty(exports, "RelativeTimeFilterBuilder", ({ enumerable: true, get: function () { return FilterBuilders_1.RelativeTimeFilterBuilder; } }));
+/**
+ * Makes Power BI available to the global object for use in applications that don't have module loading support.
+ *
+ * Note: create an instance of the class with the default configuration for normal usage, or save the class so that you can create an instance of the service.
+ */
+var powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+// powerBI SDK may use Power BI object under different key, in order to avoid name collisions
+if (window.powerbi && window.powerBISDKGlobalServiceInstanceName) {
+    window[window.powerBISDKGlobalServiceInstanceName] = powerbi;
+}
+else {
+    // Default to Power BI.
+    window.powerbi = powerbi;
+}
+
+})();
+
+/******/ 	return __webpack_exports__;
+/******/ })()
+;
 });
 //# sourceMappingURL=powerbi.js.map

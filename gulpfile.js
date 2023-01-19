@@ -161,7 +161,7 @@ gulp.task('min:js', 'Creates minified JavaScript file', function () {
 
   // Create minified bundle without source map
   webpackConfig.mode = 'production';
-  webpackConfig.devtool = 'none';
+  webpackConfig.devtool = false;
 
   return gulp.src(['./src/powerbi-client.ts'])
     .pipe(webpackStream({

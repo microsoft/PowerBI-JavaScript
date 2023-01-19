@@ -47,17 +47,17 @@
     "eslint-plugin-prefer-arrow": "^1.2.2",
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",
-    "gulp-flatten": "^0.2.0",
+    "gulp-flatten": "^0.4.0",
     "gulp-gh-pages": "^0.5.4",
-    "gulp-header": "^1.8.7",
+    "gulp-header": "^2.0.9",
     "gulp-help-four": "^0.2.3",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-typedoc": "^2.0.0",
-    "gulp-typescript": "^4.0.1",
+    "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-watch": "^5.0.1",
     "gulp4-run-sequence": "^1.0.0",
-    "http-server": "^0.12.1",
+    "http-server": "^14.1.1",
     "ignore-loader": "^0.1.1",
     "jasmine-core": "3.10.1",
     "jquery": "^3.3.1",
@@ -71,10 +71,10 @@
     "karma-spec-reporter": "0.0.32",
     "moment": "^2.14.1",
     "ts-loader": "^6.2.2",
-    "typedoc": "^0.15.0",
+    "typedoc": "^0.23.23",
     "typescript": "~4.6.0",
-    "webpack": "^4.44.2",
-    "webpack-stream": "^5.2.1",
+    "webpack": "^5.75.0",
+    "webpack-stream": "^7.0.0",
     "yargs": "^16.1.0"
   },
   "dependencies": {
@@ -85,5 +85,10 @@
   },
   "publishConfig": {
     "tag": "beta"
+  },
+  "overrides": {
+    "glob-parent": "^6.0.2",
+    "lodash.template": "^4.5.0",
+    "micromatch": "^4.0.5"
   }
 }

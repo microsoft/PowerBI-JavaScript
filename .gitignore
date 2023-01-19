@@ -10,3 +10,4 @@ dist/powerbi.js.map
 package-lock.json
 demo/package-lock.json
 .vscode
+dist/powerbi.js.LICENSE.min.txt

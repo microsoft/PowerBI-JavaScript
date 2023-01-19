@@ -4,7 +4,6 @@
 import { IError, IQuickCreateConfiguration, validateQuickCreate } from 'powerbi-models';
 import { Service } from './service';
 import { Embed, IEmbedConfigurationBase, ISessionHeaders } from './embed';
-import * as assert from 'assert';
 
 /**
  * A Power BI Quick Create component
@@ -38,7 +37,6 @@ export class QuickCreate extends Embed {
           break;
 
         default:
-          assert(false, `${req.params.eventName} eventHook is not supported`);
           break;
       }
     });

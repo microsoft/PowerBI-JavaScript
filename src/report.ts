@@ -40,7 +40,6 @@ import { IFilterable } from './ifilterable';
 import { Page } from './page';
 import { BookmarksManager } from './bookmarksManager';
 import { VisualDescriptor } from './visualDescriptor';
-import * as assert from 'assert';
 
 /**
  * A Report node within a report hierarchy
@@ -111,7 +110,6 @@ export class Report extends Embed implements IReportNode, IFilterable {
           break;
 
         default:
-          assert(false, `${req.params.eventName} eventHook is not supported`);
           break;
       }
     });
