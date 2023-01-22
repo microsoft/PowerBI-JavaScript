@@ -1614,6 +1614,35 @@ declare module "report" {
          * @param zoomLevel zoom level to set
          */
         setZoom(zoomLevel: number): Promise<void>;
+        /**
+         * Closes all open context menus and tooltips.
+         *
+         * ```javascript
+         * report.closeAllOverlays()
+         *  .then(() => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        closeAllOverlays(): Promise<void>;
+        /**
+         * Clears selected not popped out visuals, if flag is passed, all visuals selections will be cleared.
+         *
+         * ```javascript
+         * report.clearSelectedVisuals()
+         *  .then(() => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @param {Boolean} [clearPopOutState=false]
+         *    If false / undefined visuals selection will not be cleared if one of visuals
+         *    is in popped out state (in focus, show as table, spotlight...)
+         * @returns {Promise<void>}
+         */
+        clearSelectedVisuals(clearPopOutState?: boolean): Promise<void>;
     }
 }
 declare module "create" {

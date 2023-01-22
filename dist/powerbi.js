@@ -11121,8 +11121,84 @@ var Report = /** @class */ (function (_super) {
             });
         });
     };
+    /**
+     * Closes all open context menus and tooltips.
+     *
+     * ```javascript
+     * report.closeAllOverlays()
+     *  .then(() => {
+     *      ...
+     *  });
+     * ```
+     *
+     * @returns {Promise<void>}
+     */
+    Report.prototype.closeAllOverlays = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.service.hpm.post('/report/closeAllOverlays', null, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                    case 2:
+                        response = _a.sent();
+                        return [2 /*return*/, response.body];
+                    case 3:
+                        error_1 = _a.sent();
+                        return [2 /*return*/, Promise.reject(error_1)];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Clears selected not popped out visuals, if flag is passed, all visuals selections will be cleared.
+     *
+     * ```javascript
+     * report.clearSelectedVisuals()
+     *  .then(() => {
+     *      ...
+     *  });
+     * ```
+     *
+     * @param {Boolean} [clearPopOutState=false]
+     *    If false / undefined visuals selection will not be cleared if one of visuals
+     *    is in popped out state (in focus, show as table, spotlight...)
+     * @returns {Promise<void>}
+     */
+    Report.prototype.clearSelectedVisuals = function (clearPopOutState) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        clearPopOutState = clearPopOutState === true;
+                        if ((0, util_1.isRDLEmbed)(this.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.service.hpm.post("/report/clearSelectedVisuals/".concat(clearPopOutState.toString()), null, { uid: this.config.uniqueId }, this.iframe.contentWindow)];
+                    case 2:
+                        response = _a.sent();
+                        return [2 /*return*/, response.body];
+                    case 3:
+                        error_2 = _a.sent();
+                        return [2 /*return*/, Promise.reject(error_2)];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     /** @hidden */
-    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged", "renderingStarted"];
+    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged", "renderingStarted", "blur"];
     /** @hidden */
     Report.reportIdAttribute = 'powerbi-report-id';
     /** @hidden */
