@@ -7,6 +7,7 @@ import * as embed from '../src/embed';
 import * as report from '../src/report';
 import * as visual from '../src/visual';
 import * as create from '../src/create';
+import * as quickCreate from '../src/quickCreate';
 import * as dashboard from '../src/dashboard';
 import * as page from '../src/page';
 import * as sdkConfig from '../src/config';
@@ -2135,7 +2136,7 @@ describe('SDK-to-HPM', function () {
     });
   });
 
-  describe('createReport', function () {
+  describe('create', function () {
     let createElement: HTMLDivElement;
     let create: create.Create;
 
@@ -2164,7 +2165,7 @@ describe('SDK-to-HPM', function () {
       createElement.remove();
     });
 
-    it('create.createReport() sends POST /report/create with configuration in body', async function () {
+    it('create.create() sends POST /report/create with configuration in body', async function () {
       // Arrange
       const testData = {
         createConfiguration: {
@@ -2177,15 +2178,16 @@ describe('SDK-to-HPM', function () {
       };
 
       spyHpm.post.and.returnValue(Promise.resolve(testData.response));
+      create.createConfig = testData.createConfiguration;
 
       // Act
-      await create.createReport(testData.createConfiguration);
+      await create.create();
 
       // Assert
       expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId, tokenProviderSupplied: true }, jasmine.any(Object));
     });
 
-    it('create.createReport() returns promise that rejects with validation error if the create configuration is invalid', async function () {
+    it('create.create() returns promise that rejects with validation error if the create configuration is invalid', async function () {
       // Arrange
       const testData = {
         createConfiguration: {
@@ -2204,7 +2206,8 @@ describe('SDK-to-HPM', function () {
       spyHpm.post.and.callFake(() => Promise.reject(testData.errorResponse));
       try {
         // Act
-        await create.createReport(testData.createConfiguration);
+        create.createConfig = testData.createConfiguration;
+        await create.create();
 
       } catch (error) {
         // Assert
@@ -2213,7 +2216,7 @@ describe('SDK-to-HPM', function () {
       }
     });
 
-    it('create.createReport() returns promise that resolves with null if create report was successful', async function () {
+    it('create.create() returns promise that resolves with null if create report was successful', async function () {
       // Arrange
       const testData = {
         createConfiguration: {
@@ -2230,7 +2233,8 @@ describe('SDK-to-HPM', function () {
       spyHpm.post.and.returnValue(Promise.resolve(testData.response));
 
       // Act
-      const response = await create.createReport(testData.createConfiguration);
+      create.createConfig = testData.createConfiguration;
+      const response = await create.create();
       // Assert
       expect(spyHpm.post).toHaveBeenCalledWith('/report/create', testData.createConfiguration, { uid: createUniqueId, sdkSessionId: sdkSessionId, tokenProviderSupplied: true }, jasmine.any(Object));
       expect(response).toEqual(null);
@@ -2568,4 +2572,129 @@ describe('SDK-to-HPM', function () {
       });
     });
   });
+
+  describe('quickCreate', function () {
+    let quickCreateElement: HTMLDivElement;
+    let quickCreate: quickCreate.QuickCreate;
+    let quickCreateUniqueId = 'uniqueId';
+
+    // Arrange
+    let testData = {
+      createConfiguration: {
+        type: 'quickCreate',
+        accessToken: 'fakeToken',
+        groupId: undefined,
+        settings: undefined,
+        tokenType: models.TokenType.Aad,
+        theme: undefined,
+        datasetCreateConfig: {
+          locale: "fakeLocale",
+          mashupDocument: "fakeMashup",
+        },
+        reportCreationMode: undefined
+      },
+      response: {
+        body: null
+      }
+    };
+
+    beforeEach(async () => {
+      quickCreateElement = document.createElement('div');
+      quickCreateElement.className = 'powerbi-quickCreate-container';
+      document.body.appendChild(quickCreateElement);
+
+      const quickCreateConfiguration = {
+        accessToken: 'fakeToken',
+        tokenType: models.TokenType.Aad,
+        embedUrl: iframeSrc,
+        datasetCreateConfig: {
+          locale: "fakeLocale",
+          mashupDocument: "fakeMashup",
+        },
+        eventHooks: { accessTokenProvider: function () { return null; } }
+      };
+      spyHpm.post.and.returnValue(Promise.resolve({}));
+      quickCreate = <quickCreate.QuickCreate>powerbi.quickCreate(quickCreateElement, quickCreateConfiguration);
+      createUniqueId = quickCreate.config.uniqueId;
+      const createIframe = quickCreateElement.getElementsByTagName('iframe')[0];
+      await new Promise<void>((resolve, _reject) => createIframe.addEventListener('load', () => resolve(null)));
+      spyHpm.post.and.callThrough();
+    });
+
+    afterEach(() => {
+      powerbi.reset(quickCreateElement);
+      quickCreateElement.remove();
+    });
+
+    describe('quickCreate', function () {
+      it('quickCreate.create() sends POST /quickcreate with configuration in body', async function () {
+        spyHpm.post.and.returnValue(Promise.resolve(testData.response));
+        quickCreate.createConfig = <models.IQuickCreateConfiguration>testData.createConfiguration;
+        quickCreateUniqueId = quickCreate.config.uniqueId;
+
+        // Act
+        await quickCreate.create();
+
+        // Assert
+        let expectedHeaders = {
+          uid: quickCreateUniqueId,
+          sdkSessionId: sdkSessionId,
+          tokenProviderSupplied: true
+        };
+        expect(spyHpm.post).toHaveBeenCalledWith('/quickcreate', testData.createConfiguration, expectedHeaders, jasmine.any(Object));
+      });
+
+      it('quickCreate.create() returns promise that rejects with validation error if the create configuration is invalid', async function () {
+        // Arrange
+        const errorResponse = {
+          body: {
+            message: "invalid configuration object"
+          }
+        };
+
+        spyHpm.post.and.returnValue(Promise.reject(errorResponse));
+        quickCreate.createConfig = <models.IQuickCreateConfiguration>testData.createConfiguration;
+        quickCreateUniqueId = quickCreate.config.uniqueId;
+
+        spyHpm.post.and.callFake(() => Promise.reject(errorResponse));
+        try {
+          // Act
+          await quickCreate.create();
+
+        } catch (error) {
+          // Assert
+          let expectedHeaders = {
+            uid: quickCreateUniqueId,
+            sdkSessionId: sdkSessionId,
+            tokenProviderSupplied: true
+          };
+          expect(spyHpm.post).toHaveBeenCalledWith('/quickcreate', testData.createConfiguration, expectedHeaders, jasmine.any(Object));
+          expect(error).toEqual(errorResponse.body);
+        }
+      });
+
+      it('quickCreate.create() returns promise that resolves with null if quick create was successful', async function () {
+        spyHpm.post.and.returnValue(Promise.resolve(testData.response));
+        quickCreate.createConfig = <models.IQuickCreateConfiguration>testData.createConfiguration;
+        quickCreateUniqueId = quickCreate.config.uniqueId;
+
+        // Act
+        const response = await quickCreate.create();
+        expect(response).toEqual(null);
+
+        // Assert
+        let expectedHeaders = {
+          uid: quickCreateUniqueId,
+          sdkSessionId: sdkSessionId,
+          tokenProviderSupplied: true
+        };
+        expect(spyHpm.post).toHaveBeenCalledWith(
+          '/quickcreate',
+          testData.createConfiguration,
+          expectedHeaders, jasmine.any(Object));
+        expect(response).toEqual(null);
+      });
+    });
+  });
+
 });

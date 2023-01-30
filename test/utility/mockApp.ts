@@ -40,6 +40,7 @@ export interface IApp {
   refreshData(): Promise<void>;
   exportData(): Promise<void>;
   validateCreateReport(config: models.IReportCreateConfiguration): Promise<models.IError[]>;
+  validateQuickCreate(config: models.IQuickCreateConfiguration): Promise<models.IError[]>;
   switchMode(): Promise<void>;
   save(): Promise<void>;
   saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void>;
@@ -84,6 +85,7 @@ export const mockAppSpyObj = {
   refreshData: jasmine.createSpy("refreshData").and.returnValue(Promise.resolve(null)),
   exportData: jasmine.createSpy("exportData").and.returnValue(Promise.resolve(null)),
   validateCreateReport: jasmine.createSpy("validateCreateReport").and.callFake(models.validateCreateReport),
+  validateQuickCreate: jasmine.createSpy("validateQuickCreate").and.callFake(models.validateQuickCreate),
   switchMode: jasmine.createSpy("switchMode").and.returnValue(Promise.resolve(null)),
   save: jasmine.createSpy("save").and.returnValue(Promise.resolve(null)),
   saveAs: jasmine.createSpy("saveAs").and.returnValue(Promise.resolve(null)),
@@ -151,6 +153,8 @@ export const mockAppSpyObj = {
     mockAppSpyObj.exportData.and.callThrough();
     mockAppSpyObj.validateCreateReport.calls.reset();
     mockAppSpyObj.validateCreateReport.and.callThrough();
+    mockAppSpyObj.validateQuickCreate.calls.reset();
+    mockAppSpyObj.validateQuickCreate.and.callThrough();
     mockAppSpyObj.switchMode.calls.reset();
     mockAppSpyObj.switchMode.and.callThrough();
     mockAppSpyObj.save.calls.reset();

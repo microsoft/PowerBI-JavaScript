@@ -31,6 +31,7 @@ export {
   IReportEmbedConfiguration,
   IDashboardEmbedConfiguration,
   ITileEmbedConfiguration,
+  IQuickCreateConfiguration,
   Embed,
   ILocaleSettings,
   IEmbedSettings,
@@ -48,6 +49,9 @@ export {
 export {
   VisualDescriptor
 } from './visualDescriptor';
+export {
+  QuickCreate
+} from './quickCreate';
 export {
   BasicFilterBuilder,
   AdvancedFilterBuilder,

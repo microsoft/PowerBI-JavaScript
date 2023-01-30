@@ -643,7 +643,7 @@ describe('service', function () {
           .appendTo('#powerbi-fixture');
 
         // Act
-        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken, datasetId: testDatasetId });
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken, datasetId: testDatasetId }) as create.Create;
 
         // Assert
         expect(report.createConfig.datasetId).toEqual(testDatasetId);
@@ -658,7 +658,7 @@ describe('service', function () {
           .appendTo('#powerbi-fixture');
 
         // Act
-        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken });
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken }) as create.Create;
 
         // Assert
         expect(report.createConfig.datasetId).toEqual(testDatasetId);
@@ -675,7 +675,7 @@ describe('service', function () {
           .appendTo('#powerbi-fixture');
 
         // Act
-        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken, theme: theme });
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken, theme: theme }) as create.Create;
 
         // Assert
         expect(report.createConfig.theme).toEqual(theme);
@@ -691,7 +691,7 @@ describe('service', function () {
           .appendTo('#powerbi-fixture');
 
         // Act
-        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken });
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken }) as create.Create;
 
         // Assert
         expect(report.createConfig.theme).toBeUndefined();
@@ -1039,6 +1039,129 @@ describe('service', function () {
       // Assert
       const report2 = powerbi.find(testEmbedConfig.uniqueId);
       expect(report2).toBeUndefined();
+    });
+  });
+
+  describe('quickCreate', function () {
+    const embedUrl = `https://app.powerbi.com/quickcreate`;
+    const accessToken = 'ABC123';
+
+    it('happy path', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const attemptCreate = (): void => {
+        powerbi.quickCreate(component[0], {
+          embedUrl: embedUrl,
+          accessToken: accessToken,
+          datasetCreateConfig: {
+            locale: "fakeLocale",
+            mashupDocument: "fakeMashup",
+          }
+        });
+      };
+
+      // Assert
+      expect(attemptCreate).not.toThrowError();
+    });
+
+    it('if attempting to quickCreate without specifying an embed url, throw error', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      // Act
+      const attemptCreate = (): void => {
+        powerbi.quickCreate(component[0], {
+          embedUrl: null,
+          accessToken: accessToken,
+          datasetCreateConfig: {
+            locale: "fakeLocale",
+            mashupDocument: "fakeMashup",
+          }
+        });
+      };
+
+      // Assert
+      expect(attemptCreate).toThrowError(Error);
+    });
+
+    it('if attempting to quickCreate without specifying an access token, throw error', function () {
+      // Arrange
+      const component = $('<div></div>')
+        .appendTo('#powerbi-fixture');
+
+      const originalToken = powerbi.accessToken;
+      powerbi.accessToken = undefined;
+
+      // Act
+      const attemptCreate = (): void => {
+        powerbi.quickCreate(component[0], {
+          embedUrl: embedUrl,
+          accessToken: null,
+          datasetCreateConfig: {
+            locale: "fakeLocale",
+            mashupDocument: "fakeMashup",
+          }
+        });
+      };
+
+      // Assert
+      expect(attemptCreate).toThrowError(Error);
+
+      // Cleanup
+      powerbi.accessToken = originalToken;
+    });
+  });
+
+  describe('register components', function () {
+    const registeredComponentType = 'fakeType';
+    const embedConfig = {
+      type: registeredComponentType,
+      accessToken: "fakeAccessToken",
+      embedUrl: "fakeEmbedUrl",
+      id: "fakeReportId"
+    };
+    const createComponentFunc = (service, element, config): report.Report => new report.Report(service, element, config);
+    const event = {
+      type: registeredComponentType,
+      id: 'fakeId',
+      name: 'fakeName',
+      value: 'fakeValue'
+    };
+    const routerEventUrls = ['/fakeComponent/:uniqueId/events/:eventName'];
+
+    it('happy path: register new component and then successfully embed', function () {
+      powerbi.register(registeredComponentType, createComponentFunc, routerEventUrls);
+      const myComponent = powerbi.embed(element, embedConfig);
+      expect(myComponent).toBeDefined();
+    });
+
+    it('should throw error if registering a component with legacy component type', function () {
+      const attemptEmbed = (): void => {
+        powerbi.register('report', createComponentFunc, routerEventUrls);
+      };
+
+      expect(attemptEmbed).toThrowError(Error, 'The component name is reserved. Cannot register a component with this name.');
+    });
+
+    it('should throw error if registering a component with existing type', function () {
+      powerbi.register(registeredComponentType, createComponentFunc, routerEventUrls);
+      const attemptEmbed = (): void => {
+        powerbi.register(registeredComponentType, createComponentFunc, routerEventUrls);
+      };
+
+      expect(attemptEmbed).toThrowError(Error, 'A component with this type is already registered.');
+    });
+
+    it('should throw error if registering a component with invalid router event url', function () {
+      const attemptEmbed = (): void => {
+        powerbi.register(registeredComponentType, createComponentFunc, ['/fakeComponent/:invalidUniqueId/events/:eventName']);
+      };
+
+      expect(attemptEmbed).toThrowError(Error, 'Invalid router event URL');
     });
   });
 });

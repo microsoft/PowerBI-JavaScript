@@ -5,7 +5,7 @@ import * as models from 'powerbi-models';
 import * as sdkConfig from './config';
 import { EmbedUrlNotSupported } from './errors';
 import { ICustomEvent, IEvent, IEventHandler, Service } from './service';
-import { addParamToUrl, assign, autoAuthInEmbedUrl, createRandomString, getTimeDiffInMilliseconds, remove } from './util';
+import { addParamToUrl, assign, autoAuthInEmbedUrl, createRandomString, getTimeDiffInMilliseconds, remove, isCreate } from './util';
 
 declare global {
   interface Document {
@@ -47,6 +47,8 @@ export type IDashboardEmbedConfiguration = models.IDashboardEmbedConfiguration;
 export type ITileEmbedConfiguration = models.ITileEmbedConfiguration;
 
 export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
+
+export type IQuickCreateConfiguration = models.IQuickCreateConfiguration;
 
 export type ILocaleSettings = models.ILocaleSettings;
 
@@ -176,14 +178,6 @@ export abstract class Embed {
   bootstrapConfig: IBootstrapEmbedConfiguration;
 
   /**
-   * Gets or sets the configuration settings for creating report.
-   *
-   * @type {models.IReportCreateConfiguration}
-   * @hidden
-   */
-  createConfig: models.IReportCreateConfiguration;
-
-  /**
    * Url used in the load request.
    *
    * @hidden
@@ -246,7 +240,7 @@ export abstract class Embed {
 
     this.populateConfig(config, isBootstrap);
 
-    if (this.embedtype === 'create') {
+    if (isCreate(this.embedtype)) {
       this.setIframe(false /* set EventListener to call create() on 'load' event*/, phasedRender, isBootstrap);
     } else {
       this.setIframe(true /* set EventListener to call load() on 'load' event*/, phasedRender, isBootstrap);
@@ -254,39 +248,13 @@ export abstract class Embed {
   }
 
   /**
-   * Sends createReport configuration data.
-   *
-   * ```javascript
-   * createReport({
-   *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
-   *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
-   * ```
+   * Create is not supported by default
    *
    * @hidden
-   * @param {models.IReportCreateConfiguration} config
    * @returns {Promise<void>}
    */
-  async createReport(config: models.IReportCreateConfiguration): Promise<void> {
-    const errors = models.validateCreateReport(config);
-    if (errors) {
-      throw errors;
-    }
-
-    try {
-      const headers: ISessionHeaders = {
-        uid: this.config.uniqueId,
-        sdkSessionId: this.service.getSdkSessionId()
-      };
-
-      if (!!this.eventHooks?.accessTokenProvider) {
-        headers.tokenProviderSupplied = true;
-      }
-
-      const response = await this.service.hpm.post<void>("/report/create", config, headers, this.iframe.contentWindow);
-      return response.body;
-    } catch (response) {
-      throw response.body;
-    }
+  create(): Promise<void> {
+    throw new Error(`no create support`);
   }
 
   /**
@@ -491,7 +459,7 @@ export abstract class Embed {
       throw new Error("Access token cannot be empty");
     }
     let embedType = this.config.type;
-    embedType = (embedType === 'create' || embedType === 'visual' || embedType === 'qna') ? 'report' : embedType;
+    embedType = (embedType === 'create' || embedType === 'visual' || embedType === 'qna' || embedType === 'quickCreate') ? 'report' : embedType;
     try {
       const response = await this.service.hpm.post<void>('/' + embedType + '/token', accessToken, { uid: this.config.uniqueId }, this.iframe.contentWindow);
 
@@ -813,7 +781,7 @@ export abstract class Embed {
         this.element.addEventListener('ready', this.frontLoadHandler, false);
       }
     } else {
-      this.iframe.addEventListener('load', () => this.createReport(this.createConfig), false);
+      this.iframe.addEventListener('load', () => this.create(), false);
     }
   }
 

@@ -212,3 +212,14 @@ export function getRandomValue(): number {
 export function getTimeDiffInMilliseconds(start: Date, end: Date): number {
   return Math.abs(start.getTime() - end.getTime());
 }
+
+/**
+ * Checks if the embed type is for create
+ *
+ * @export
+ * @param {string} embedType
+ * @returns {boolean}
+ */
+export function isCreate(embedType: string): boolean {
+  return embedType === 'create' || embedType === 'quickcreate';
+}
