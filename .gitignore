@@ -11,4 +11,3 @@ package-lock.json
 demo/package-lock.json
 .vscode
 owners.txt
-dist/powerbi.js.LICENSE.min.txt
