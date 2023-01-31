@@ -1191,4 +1191,53 @@ describe('Protocol', function () {
       });
     });
   });
+
+  describe('quickCreate', function () {
+    describe('create', function () {
+      it('POST /quickcreate returns 400 if the request is invalid', async function () {
+        // Arrange
+        const testData = {
+          uniqueId: 'uniqueId',
+          create: {
+            accessToken: "fakeToken",
+          }
+        };
+
+        spyApp.validateQuickCreate.and.callFake(() => Promise.reject(null));
+
+        // Act
+        try {
+          await hpm.post<models.IError>('/quickcreate', testData.create, { uid: testData.uniqueId });
+          fail("POST to /quickcreate should fail");
+        } catch (response) {
+          // Assert
+          expect(spyApp.validateQuickCreate).toHaveBeenCalledWith(testData.create);
+          expect(response.statusCode).toEqual(400);
+        }
+      });
+
+      it('POST /quickCreate returns 202 if the request is valid', async function () {
+        // Arrange
+        const testData = {
+          uniqueId: 'uniqueId',
+          create: {
+            accessToken: "fakeToken",
+          }
+        };
+
+        spyApp.validateQuickCreate.and.returnValue(Promise.resolve(null));
+        // Act
+        try {
+          const response = await hpm.post<void>('/quickcreate', testData.create, { uid: testData.uniqueId });
+          // Assert
+          expect(spyApp.validateQuickCreate).toHaveBeenCalledWith(testData.create);
+          expect(response.statusCode).toEqual(202);
+        } catch (error) {
+          console.log("hpm.post failed with", error);
+          fail("hpm.post");
+        }
+      });
+    });
+  });
+
 });

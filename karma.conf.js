@@ -1,6 +1,6 @@
 var argv = require('yargs').argv;
 
-var browserName = 'PhantomJS';
+var browserName = 'Chrome_headless';
 if (argv.chrome) {
   browserName = 'Chrome_headless'
 }
@@ -32,7 +32,6 @@ module.exports = function (config) {
       'karma-chrome-launcher',
       'karma-jasmine',
       'karma-spec-reporter',
-      'karma-phantomjs-launcher',
       'karma-jasmine-html-reporter',
       'karma-junit-reporter'
     ],

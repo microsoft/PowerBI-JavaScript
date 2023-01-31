@@ -1,4 +1,4 @@
-// powerbi-client v2.21.1
+// powerbi-client v2.22.2
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
@@ -116,6 +116,14 @@ declare module "util" {
      * @returns {number}
      */
     export function getTimeDiffInMilliseconds(start: Date, end: Date): number;
+    /**
+     * Checks if the embed type is for create
+     *
+     * @export
+     * @param {string} embedType
+     * @returns {boolean}
+     */
+    export function isCreate(embedType: string): boolean;
 }
 declare module "embed" {
     import * as models from 'powerbi-models';
@@ -142,6 +150,7 @@ declare module "embed" {
     export type IDashboardEmbedConfiguration = models.IDashboardEmbedConfiguration;
     export type ITileEmbedConfiguration = models.ITileEmbedConfiguration;
     export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
+    export type IQuickCreateConfiguration = models.IQuickCreateConfiguration;
     export type ILocaleSettings = models.ILocaleSettings;
     export type IQnaSettings = models.IQnaSettings;
     export type IEmbedSettings = models.ISettings;
@@ -250,13 +259,6 @@ declare module "embed" {
          */
         bootstrapConfig: IBootstrapEmbedConfiguration;
         /**
-         * Gets or sets the configuration settings for creating report.
-         *
-         * @type {models.IReportCreateConfiguration}
-         * @hidden
-         */
-        createConfig: models.IReportCreateConfiguration;
-        /**
          * Url used in the load request.
          *
          * @hidden
@@ -299,19 +301,12 @@ declare module "embed" {
          */
         constructor(service: Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean, isBootstrap?: boolean);
         /**
-         * Sends createReport configuration data.
-         *
-         * ```javascript
-         * createReport({
-         *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
-         *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
-         * ```
+         * Create is not supported by default
          *
          * @hidden
-         * @param {models.IReportCreateConfiguration} config
          * @returns {Promise<void>}
          */
-        createReport(config: models.IReportCreateConfiguration): Promise<void>;
+        create(): Promise<void>;
         /**
          * Saves Report.
          *
@@ -1619,6 +1614,35 @@ declare module "report" {
          * @param zoomLevel zoom level to set
          */
         setZoom(zoomLevel: number): Promise<void>;
+        /**
+         * Closes all open context menus and tooltips.
+         *
+         * ```javascript
+         * report.closeAllOverlays()
+         *  .then(() => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        closeAllOverlays(): Promise<void>;
+        /**
+         * Clears selected not popped out visuals, if flag is passed, all visuals selections will be cleared.
+         *
+         * ```javascript
+         * report.clearSelectedVisuals()
+         *  .then(() => {
+         *      ...
+         *  });
+         * ```
+         *
+         * @param {Boolean} [clearPopOutState=false]
+         *    If false / undefined visuals selection will not be cleared if one of visuals
+         *    is in popped out state (in focus, show as table, spotlight...)
+         * @returns {Promise<void>}
+         */
+        clearSelectedVisuals(clearPopOutState?: boolean): Promise<void>;
     }
 }
 declare module "create" {
@@ -1633,6 +1657,13 @@ declare module "create" {
      * @extends {Embed}
      */
     export class Create extends Embed {
+        /**
+         * Gets or sets the configuration settings for creating report.
+         *
+         * @type {IReportCreateConfiguration}
+         * @hidden
+         */
+        createConfig: IReportCreateConfiguration;
         constructor(service: Service, element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * Gets the dataset ID from the first available location: createConfig or embed url.
@@ -1678,6 +1709,19 @@ declare module "create" {
          * @hidden
          */
         static findIdFromEmbedUrl(url: string): string;
+        /**
+         * Sends create configuration data.
+         *
+         * ```javascript
+         * create ({
+         *   datasetId: '5dac7a4a-4452-46b3-99f6-a25915e0fe55',
+         *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+         * ```
+         *
+         * @hidden
+         * @returns {Promise<void>}
+         */
+        create(): Promise<void>;
     }
 }
 declare module "dashboard" {
@@ -2003,11 +2047,70 @@ declare module "visual" {
         private getFiltersLevelUrl;
     }
 }
+declare module "quickCreate" {
+    import { IError, IQuickCreateConfiguration } from 'powerbi-models';
+    import { Service } from "service";
+    import { Embed, IEmbedConfigurationBase } from "embed";
+    /**
+     * A Power BI Quick Create component
+     *
+     * @export
+     * @class QuickCreate
+     * @extends {Embed}
+     */
+    export class QuickCreate extends Embed {
+        /**
+         * Gets or sets the configuration settings for creating report.
+         *
+         * @type {IQuickCreateConfiguration}
+         * @hidden
+         */
+        createConfig: IQuickCreateConfiguration;
+        constructor(service: Service, element: HTMLElement, config: IQuickCreateConfiguration, phasedRender?: boolean, isBootstrap?: boolean);
+        /**
+         * Override the getId abstract function
+         * QuickCreate does not need any ID
+         *
+         * @returns {string}
+         */
+        getId(): string;
+        /**
+         * Validate create report configuration.
+         */
+        validate(config: IEmbedConfigurationBase): IError[];
+        /**
+         * Handle config changes.
+         *
+         * @hidden
+         * @returns {void}
+         */
+        configChanged(isBootstrap: boolean): void;
+        /**
+         * @hidden
+         * @returns {string}
+         */
+        getDefaultEmbedUrlEndpoint(): string;
+        /**
+         * Sends quickCreate configuration data.
+         *
+         * ```javascript
+         * quickCreate({
+         *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
+         *   datasetCreateConfig: {}})
+         * ```
+         *
+         * @hidden
+         * @param {IQuickCreateConfiguration} createConfig
+         * @returns {Promise<void>}
+         */
+        create(): Promise<void>;
+    }
+}
 declare module "service" {
     import { WindowPostMessageProxy } from 'window-post-message-proxy';
     import { HttpPostMessage } from 'http-post-message';
     import { Router, IExtendedRequest, Response as IExtendedResponse } from 'powerbi-router';
-    import { IReportCreateConfiguration } from 'powerbi-models';
+    import { IQuickCreateConfiguration, IReportCreateConfiguration } from 'powerbi-models';
     import { Embed, IBootstrapEmbedConfiguration, IDashboardEmbedConfiguration, IEmbedConfiguration, IEmbedConfigurationBase, IQnaEmbedConfiguration, IReportEmbedConfiguration, ITileEmbedConfiguration, IVisualEmbedConfiguration } from "embed";
     export interface IEvent<T> {
         type: string;
@@ -2064,6 +2167,10 @@ declare module "service" {
     }
     export type IComponentEmbedConfiguration = IReportEmbedConfiguration | IDashboardEmbedConfiguration | ITileEmbedConfiguration | IVisualEmbedConfiguration | IQnaEmbedConfiguration;
     /**
+     * @hidden
+     */
+    export type EmbedComponentFactory = (service: Service, element: HTMLElement, config: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean) => Embed;
+    /**
      * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
      *
      * @export
@@ -2088,7 +2195,7 @@ declare module "service" {
         accessToken: string;
         /** The Configuration object for the service*/
         private config;
-        /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
+        /** A list of Power BI components that have been embedded using this service instance. */
         private embeds;
         /** TODO: Look for way to make hpm private without sacrificing ease of maintenance. This should be private but in embed needs to call methods.
          *
@@ -2102,6 +2209,10 @@ declare module "service" {
         wpmp: WindowPostMessageProxy;
         router: Router;
         private uniqueSessionId;
+        /**
+         * @hidden
+         */
+        private registeredComponents;
         /**
          * Creates an instance of a Power BI Service.
          *
@@ -2120,6 +2231,14 @@ declare module "service" {
          * @returns {Embed}
          */
         createReport(element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration): Embed;
+        /**
+         * Creates new dataset
+         *
+         * @param {HTMLElement} element
+         * @param {IEmbedConfiguration} [config={}]
+         * @returns {Embed}
+         */
+        quickCreate(element: HTMLElement, config: IQuickCreateConfiguration): Embed;
         /**
          * TODO: Add a description here
          *
@@ -2175,10 +2294,25 @@ declare module "service" {
          * @private
          * @param {IPowerBiElement} element
          * @param {IEmbedConfigurationBase} config
+         * @param {boolean} phasedRender
+         * @param {boolean} isBootstrap
          * @returns {Embed}
          * @hidden
          */
         private embedNew;
+        /**
+         * Given component type, creates embed component instance
+         *
+         * @private
+         * @param {string} componentType
+         * @param {HTMLElement} element
+         * @param {IEmbedConfigurationBase} config
+         * @param {boolean} phasedRender
+         * @param {boolean} isBootstrap
+         * @returns {Embed}
+         * @hidden
+         */
+        private createEmbedComponent;
         /**
          * Given an element that already contains an embed component, load with a new configuration.
          *
@@ -2263,6 +2397,15 @@ declare module "service" {
          * @returns {void}
          */
         setSdkInfo(type: string, version: string): void;
+        /**
+         * API for registering external components
+         *
+         * @hidden
+         * @param {string} componentType
+         * @param {EmbedComponentFactory} embedComponentFactory
+         * @param {string[]} routerEventUrls
+         */
+        register(componentType: string, embedComponentFactory: EmbedComponentFactory, routerEventUrls: string[]): void;
     }
 }
 declare module "bookmarksManager" {
@@ -2797,11 +2940,12 @@ declare module "powerbi-client" {
     export { Report } from "report";
     export { Dashboard } from "dashboard";
     export { Tile } from "tile";
-    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, IReportEmbedConfiguration, IDashboardEmbedConfiguration, ITileEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings, } from "embed";
+    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, IReportEmbedConfiguration, IDashboardEmbedConfiguration, ITileEmbedConfiguration, IQuickCreateConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings, } from "embed";
     export { Page } from "page";
     export { Qna } from "qna";
     export { Visual } from "visual";
     export { VisualDescriptor } from "visualDescriptor";
+    export { QuickCreate } from "quickCreate";
     export { BasicFilterBuilder, AdvancedFilterBuilder, TopNFilterBuilder, RelativeDateFilterBuilder, RelativeTimeFilterBuilder } from "FilterBuilders/index";
     global {
         interface Window {

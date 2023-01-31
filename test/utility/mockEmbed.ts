@@ -84,6 +84,19 @@ export function setupEmbedMockApp(iframeContentWindow: Window, parentWindow: Win
   });
 
   /**
+   * Quick Create
+   */
+   router.post('/quickcreate', (req, res) => {
+    const createConfig = req.body;
+    return app.validateQuickCreate(createConfig)
+      .then(() => {
+        res.send(202);
+      }, error => {
+        res.send(400, error);
+      });
+  });
+
+  /**
    * Report Embed
    */
   router.post('/report/load', async (req, res) => {

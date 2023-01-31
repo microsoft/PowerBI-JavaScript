@@ -40,7 +40,6 @@ import { IFilterable } from './ifilterable';
 import { Page } from './page';
 import { BookmarksManager } from './bookmarksManager';
 import { VisualDescriptor } from './visualDescriptor';
-import * as assert from 'assert';
 
 /**
  * A Report node within a report hierarchy
@@ -65,7 +64,7 @@ export interface IReportNode {
  */
 export class Report extends Embed implements IReportNode, IFilterable {
   /** @hidden */
-  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged", "renderingStarted"];
+  static allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged", "renderingStarted", "blur"];
   /** @hidden */
   static reportIdAttribute = 'powerbi-report-id';
   /** @hidden */
@@ -111,7 +110,6 @@ export class Report extends Embed implements IReportNode, IFilterable {
           break;
 
         default:
-          assert(false, `${req.params.eventName} eventHook is not supported`);
           break;
       }
     });
@@ -1178,5 +1176,64 @@ export class Report extends Embed implements IReportNode, IFilterable {
    */
   async setZoom(zoomLevel: number): Promise<void> {
     await this.updateSettings({ zoomLevel: zoomLevel });
+  }
+
+  /**
+   * Closes all open context menus and tooltips.
+   *
+   * ```javascript
+   * report.closeAllOverlays()
+   *  .then(() => {
+   *      ...
+   *  });
+   * ```
+   *
+   * @returns {Promise<void>}
+   */
+  async closeAllOverlays(): Promise<void> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    try {
+      const response = await this.service.hpm.post<void>('/report/closeAllOverlays', null, { uid: this.config.uniqueId }, this.iframe.contentWindow);
+      return response.body;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  /**
+   * Clears selected not popped out visuals, if flag is passed, all visuals selections will be cleared.
+   *
+   * ```javascript
+   * report.clearSelectedVisuals()
+   *  .then(() => {
+   *      ...
+   *  });
+   * ```
+   * 
+   * @param {Boolean} [clearPopOutState=false]
+   *    If false / undefined visuals selection will not be cleared if one of visuals 
+   *    is in popped out state (in focus, show as table, spotlight...)
+   * @returns {Promise<void>}
+   */
+  async clearSelectedVisuals(clearPopOutState?: boolean): Promise<void> {
+    clearPopOutState = clearPopOutState === true;
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    try {
+      const response = await this.service.hpm.post<void>(
+        `/report/clearSelectedVisuals/${clearPopOutState.toString()}`,
+        null,
+        { uid: this.config.uniqueId },
+        this.iframe.contentWindow
+      );
+      return response.body;
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 }
