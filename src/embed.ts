@@ -749,6 +749,7 @@ export abstract class Embed {
       iframeContent.setAttribute("src", embedUrl);
       iframeContent.setAttribute("scrolling", "no");
       iframeContent.setAttribute("allowfullscreen", "true");
+      iframeContent.setAttribute("sandbox", "allow-scripts allow-same-origin")
       const node = this.element;
       while (node.firstChild) {
         node.removeChild(node.firstChild);
