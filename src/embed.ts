@@ -50,6 +50,8 @@ export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
 
 export type IQuickCreateConfiguration = models.IQuickCreateConfiguration;
 
+export type IReportCreateConfiguration = models.IReportCreateConfiguration;
+
 export type ILocaleSettings = models.ILocaleSettings;
 
 export type IQnaSettings = models.IQnaSettings;
