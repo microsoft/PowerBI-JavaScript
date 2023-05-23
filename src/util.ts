@@ -194,7 +194,7 @@ export function autoAuthInEmbedUrl(embedUrl: string): boolean {
 export function getRandomValue(): number {
 
   // window.msCrypto for IE
-  const cryptoObj = window.crypto || window.msCrypto;
+  const cryptoObj = window.crypto || (window as any).msCrypto;
   const randomValueArray = new Uint32Array(1);
   cryptoObj.getRandomValues(randomValueArray);
 
