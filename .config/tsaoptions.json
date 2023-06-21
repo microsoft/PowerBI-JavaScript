@@ -1,0 +1,14 @@
+{
+    "codebaseName": "powerbi-javascript",
+    "instanceUrl": "https://powerbi.visualstudio.com",
+    "projectName": "Trident",
+    "areaPath" : "Trident\\ISV and ALM\\Embedded",
+    "iterationPath": "Trident\\Releases",
+    "notificationAliases": [
+        "corembed@microsoft.com"
+    ],
+    "codebaseAdmins": [
+        "redmond\\corembed"
+    ],
+    "ignoreBranchName": true
+}
