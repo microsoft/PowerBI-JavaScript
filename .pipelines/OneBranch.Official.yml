@@ -1,3 +1,9 @@
+schedules: 
+- cron: "0 0 * * SATURDAY"
+  displayName: CodeQL weekly scan 
+  branches:
+    include: 
+    - master
 #################################################################################
 #   Onebranch Pipelines - Official MSBuild (CDPXMigrated)                       #
 # This pipeline was created by EasyStart from a sample located at:              #
