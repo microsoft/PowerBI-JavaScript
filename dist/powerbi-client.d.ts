@@ -598,7 +598,7 @@ declare module "ifilterable" {
     }
 }
 declare module "visualDescriptor" {
-    import { ExportDataType, FiltersOperations, ICloneVisualRequest, ICloneVisualResponse, IExportDataResult, IFilter, ISlicerState, ISortByVisualRequest, IVisualLayout, VisualContainerDisplayMode } from 'powerbi-models';
+    import { ExportDataType, FiltersOperations, ICloneVisualRequest, ICloneVisualResponse, IExportDataResult, IFilter, ISlicerState, ISmartNarratives, ISortByVisualRequest, IVisualLayout, VisualContainerDisplayMode } from 'powerbi-models';
     import { IHttpPostMessageResponse } from 'http-post-message';
     import { IFilterable } from "ifilterable";
     import { IPageNode } from "page";
@@ -795,11 +795,21 @@ declare module "visualDescriptor" {
          * @returns {Promise<IHttpPostMessageResponse<void>>}
          */
         resizeVisual(width: number, height: number): Promise<IHttpPostMessageResponse<void>>;
+        /**
+         * Get insights for single visual
+         *
+         * ```javascript
+         * visual.getSmartNarrativeInsights();
+         * ```
+         *
+         * @returns {Promise<ISmartNarratives>}
+         */
+        getSmartNarrativeInsights(): Promise<ISmartNarratives>;
     }
 }
 declare module "page" {
     import { IHttpPostMessageResponse } from 'http-post-message';
-    import { DisplayOption, FiltersOperations, ICustomPageSize, IFilter, IVisual, LayoutType, PageSizeType, SectionVisibility, VisualContainerDisplayMode, IPageBackground, IPageWallpaper } from 'powerbi-models';
+    import { DisplayOption, FiltersOperations, ICustomPageSize, IFilter, IVisual, LayoutType, PageSizeType, SectionVisibility, VisualContainerDisplayMode, IPageBackground, IPageWallpaper, ISmartNarratives } from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { IReportNode } from "report";
     import { VisualDescriptor } from "visualDescriptor";
@@ -895,6 +905,16 @@ declare module "page" {
          * @hidden
          */
         constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption, mobileSize?: ICustomPageSize, background?: IPageBackground, wallpaper?: IPageWallpaper);
+        /**
+         * Get insights for report page
+         *
+         * ```javascript
+         * page.getSmartNarrativeInsights()
+         * ```
+         *
+         * @returns {Promise<ISmartNarratives>}
+         */
+        getSmartNarrativeInsights(): Promise<ISmartNarratives>;
         /**
          * Gets all page level filters within the report.
          *

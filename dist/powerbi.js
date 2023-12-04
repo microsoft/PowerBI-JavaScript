@@ -203,7 +203,7 @@ return /******/ (function(modules) { // webpackBootstrap
   \****************************************************/
 /***/ (function(module) {
 
-// powerbi-models v1.13.0
+// powerbi-models v1.14.0
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -5637,11 +5637,11 @@ exports.PaginatedReportDatasetBindingValidator = PaginatedReportDatasetBindingVa
 });
 //# sourceMappingURL=models.js.map
 // SIG // Begin signature block
-// SIG // MIIregYJKoZIhvcNAQcCoIIrazCCK2cCAQExDzANBglg
+// SIG // MIIr4gYJKoZIhvcNAQcCoIIr0zCCK88CAQExDzANBglg
 // SIG // hkgBZQMEAgEFADB3BgorBgEEAYI3AgEEoGkwZzAyBgor
 // SIG // BgEEAYI3AgEeMCQCAQEEEBDgyQbOONQRoqMAEEvTUJAC
 // SIG // AQACAQACAQACAQACAQAwMTANBglghkgBZQMEAgEFAAQg
-// SIG // BtUuvhS9bxln+kggFY3bwaUaXQn6Hk2p8APZro/arNag
+// SIG // WNb2+8Nx7D6LpbfhohPb+cdkaBYb+kv1f6wvqYYucZ+g
 // SIG // ghFuMIIIfjCCB2agAwIBAgITNgAAAchkggAwtCOCeAAC
 // SIG // AAAByDANBgkqhkiG9w0BAQsFADBBMRMwEQYKCZImiZPy
 // SIG // LGQBGRYDR0JMMRMwEQYKCZImiZPyLGQBGRYDQU1FMRUw
@@ -5777,204 +5777,207 @@ exports.PaginatedReportDatasetBindingValidator = PaginatedReportDatasetBindingVa
 // SIG // w9c/hBf32DH/GFxteS2pmjgKIbMP8sDukmEq3lVvuWNJ
 // SIG // sybrZwQvQpvaM49fv+JKpLK5YWYEfwksYRR9wU8Hh/ID
 // SIG // 9hRCEkbUoQ2W7mMpsp2Nbp/kcn4ivfolUy3Q9Yf0scsQ
-// SIG // 6WTLYpm+AoCUJTGCGWQwghlgAgEBMFgwQTETMBEGCgmS
+// SIG // 6WTLYpm+AoCUJTGCGcwwghnIAgEBMFgwQTETMBEGCgmS
 // SIG // JomT8ixkARkWA0dCTDETMBEGCgmSJomT8ixkARkWA0FN
 // SIG // RTEVMBMGA1UEAxMMQU1FIENTIENBIDAxAhM2AAAByGSC
 // SIG // ADC0I4J4AAIAAAHIMA0GCWCGSAFlAwQCAQUAoIGuMBkG
 // SIG // CSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQB
 // SIG // gjcCAQsxDjAMBgorBgEEAYI3AgEVMC8GCSqGSIb3DQEJ
-// SIG // BDEiBCAedEweH6z6kL8Zq/Fe+MBnuMy3lOvgNOk+eMOE
-// SIG // ICgYzTBCBgorBgEEAYI3AgEMMTQwMqAUgBIATQBpAGMA
+// SIG // BDEiBCDVsRlmuqGGWLZSefk2CBRUhBuBOD+bHy0Gwl8T
+// SIG // 0JKkqjBCBgorBgEEAYI3AgEMMTQwMqAUgBIATQBpAGMA
 // SIG // cgBvAHMAbwBmAHShGoAYaHR0cDovL3d3dy5taWNyb3Nv
-// SIG // ZnQuY29tMA0GCSqGSIb3DQEBAQUABIIBAGgsmQ7pAW5H
-// SIG // kXP7SCbGPo9UyFOk8cNAoonqgsjPzicKEI2Oi5UoaNuH
-// SIG // hSkMe69STOT1fqoSle+Dumhf9pnBDKI+BKWLT4Kbj+dL
-// SIG // 9gRLoZUFUnE0myHrgegMi0YL4eL9JQ1eK4aDnq9Vt5VM
-// SIG // f2mVyZ3bGpX4RX3St1k7eWUtCg4RNGuHrXHq6aO5PgYl
-// SIG // uDrfq4mpZ4sZev2j/Gritm0Br1XfpmnfajppOl+kKux4
-// SIG // 24LeFqHROVY1yHG5a9ZWyA7AcbTnIm9kBVtGTtgMHOc/
-// SIG // j9KjD8gXro+NGPy9+hH58Qt/sYOHRAxgNb7ygFkRtrGx
-// SIG // xBNL6lqfWsdqIMpZ0zagsqOhghcsMIIXKAYKKwYBBAGC
-// SIG // NwMDATGCFxgwghcUBgkqhkiG9w0BBwKgghcFMIIXAQIB
-// SIG // AzEPMA0GCWCGSAFlAwQCAQUAMIIBWQYLKoZIhvcNAQkQ
-// SIG // AQSgggFIBIIBRDCCAUACAQEGCisGAQQBhFkKAwEwMTAN
-// SIG // BglghkgBZQMEAgEFAAQgy8MDPDeM2a7GDOmUWeRwoeyT
-// SIG // Yfrr+maIGjkximO3Vo0CBmTfhJTAahgTMjAyMzA4MzEy
-// SIG // MjE2NDcuNDM2WjAEgAIB9KCB2KSB1TCB0jELMAkGA1UE
+// SIG // ZnQuY29tMA0GCSqGSIb3DQEBAQUABIIBADFsQE1+4mJA
+// SIG // S6P65AMT7BcL1WNe0RUuA0Bt+CuVtbwa1zq+ZGDtexdb
+// SIG // CWxBr5U4oZF6mHY6AyKf+NTFgvZczY3QqYh19SMKGujp
+// SIG // FgxBvG0aQ/dVQDtKC5Le2cce15l4X6SAsYk+8q0xMjti
+// SIG // QgSfBIEkJZ8FtDwtFaHO5GN/OkEt8M7NEzQOZQcfvSgb
+// SIG // lMV8hY3Lf0dAPg4jyay3bQcPjOLsPs5G4GmTDM4qdPYM
+// SIG // w5+IzUudbU8mNTmPppT3u2A2xGoQ8Ky5/mava+b11bSM
+// SIG // GaJ1QFVCATVph88Fw/958W9et3okjG8TffdVb9J/KW09
+// SIG // +oUXuBUjmljUn2ExNxJUxGyhgheUMIIXkAYKKwYBBAGC
+// SIG // NwMDATGCF4Awghd8BgkqhkiG9w0BBwKgghdtMIIXaQIB
+// SIG // AzEPMA0GCWCGSAFlAwQCAQUAMIIBUgYLKoZIhvcNAQkQ
+// SIG // AQSgggFBBIIBPTCCATkCAQEGCisGAQQBhFkKAwEwMTAN
+// SIG // BglghkgBZQMEAgEFAAQgVH8KNp+SiwyXjVpLA60gPo3S
+// SIG // 9GbqNxZ81BNBirXMZRMCBmVWyBjWNBgTMjAyMzExMjkx
+// SIG // MDA3MTguNDMyWjAEgAIB9KCB0aSBzjCByzELMAkGA1UE
 // SIG // BhMCVVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNV
 // SIG // BAcTB1JlZG1vbmQxHjAcBgNVBAoTFU1pY3Jvc29mdCBD
-// SIG // b3Jwb3JhdGlvbjEtMCsGA1UECxMkTWljcm9zb2Z0IEly
-// SIG // ZWxhbmQgT3BlcmF0aW9ucyBMaW1pdGVkMSYwJAYDVQQL
-// SIG // Ex1UaGFsZXMgVFNTIEVTTjo4NkRGLTRCQkMtOTMzNTEl
-// SIG // MCMGA1UEAxMcTWljcm9zb2Z0IFRpbWUtU3RhbXAgU2Vy
-// SIG // dmljZaCCEXswggcnMIIFD6ADAgECAhMzAAABtyEnGgei
-// SIG // KoZGAAEAAAG3MA0GCSqGSIb3DQEBCwUAMHwxCzAJBgNV
-// SIG // BAYTAlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9uMRAwDgYD
-// SIG // VQQHEwdSZWRtb25kMR4wHAYDVQQKExVNaWNyb3NvZnQg
-// SIG // Q29ycG9yYXRpb24xJjAkBgNVBAMTHU1pY3Jvc29mdCBU
-// SIG // aW1lLVN0YW1wIFBDQSAyMDEwMB4XDTIyMDkyMDIwMjIx
-// SIG // NFoXDTIzMTIxNDIwMjIxNFowgdIxCzAJBgNVBAYTAlVT
-// SIG // MRMwEQYDVQQIEwpXYXNoaW5ndG9uMRAwDgYDVQQHEwdS
-// SIG // ZWRtb25kMR4wHAYDVQQKExVNaWNyb3NvZnQgQ29ycG9y
-// SIG // YXRpb24xLTArBgNVBAsTJE1pY3Jvc29mdCBJcmVsYW5k
-// SIG // IE9wZXJhdGlvbnMgTGltaXRlZDEmMCQGA1UECxMdVGhh
-// SIG // bGVzIFRTUyBFU046ODZERi00QkJDLTkzMzUxJTAjBgNV
-// SIG // BAMTHE1pY3Jvc29mdCBUaW1lLVN0YW1wIFNlcnZpY2Uw
-// SIG // ggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDH
-// SIG // /c9XUDQTZEwatxyXJcqY0HCSJQwIKb7MOLxyXtOp+d9k
-// SIG // ShpHJ9Fe6euTngNcDqDvvDbKKZ4z6VWfPuLP0YXTAjDT
-// SIG // 0CV6FnZFjqf96biBLNX8zwYEya3Zs3clGM6wJaCAmMe9
-// SIG // toJnaWzX9z9MuWdoETuPLFiGMmHjSWHIfmXyc16qr7r6
-// SIG // uxvDZvCDEIvGWsr8fuXUhgTOVWBwcQhI1xfRDekMOwOt
-// SIG // Eml4yo6I0qVJqWjOBZlXnPfOTzXUofITnj9rS+/NUgWp
-// SIG // /dg09fbXzR7/R9BQJhNhxkcIsx5Cf/5gGXUtLOm4v1MD
-// SIG // zJLAImuW6ZyAwTqGmHVpFdJVRuazdPpbUc/c45Wh/boX
-// SIG // RkyflojSjq+5kZ5c2EAOd37UkiQarBKU8wr+3Ou933b5
-// SIG // bcd8uPD3q+r3OlEeXuJEmbB9eNSIcYZkUdkphGm7mCjk
-// SIG // 3Tu0P75bwH0MbhJyfdzS+C2FdSFsPDvsTTuoJY6waQjn
-// SIG // zjk0IFiRfjOvyD8rmK3L+/S7u5XOu0vlPTBLtnaINDLi
-// SIG // SKGAjIrlWl0ufhZjiYsn4gmZtFSbCee9MvZP7REHumkE
-// SIG // fTMQ1tadhdx1nm6JV4/bLu866xJTZRwBL6RYXIKDJ4sp
-// SIG // TU4k2cy8FI+0x/N4J7oMNRQhFVYeVPZcDTDy9SBrs/91
-// SIG // PkU/cGQgSWCKxST3epPFLQIDAQABo4IBSTCCAUUwHQYD
-// SIG // VR0OBBYEFLPyOT4MNCQFYQ3WAdsjyCPJeLTsMB8GA1Ud
-// SIG // IwQYMBaAFJ+nFV0AXmJdg/Tl0mWnG1M1GelyMF8GA1Ud
-// SIG // HwRYMFYwVKBSoFCGTmh0dHA6Ly93d3cubWljcm9zb2Z0
-// SIG // LmNvbS9wa2lvcHMvY3JsL01pY3Jvc29mdCUyMFRpbWUt
-// SIG // U3RhbXAlMjBQQ0ElMjAyMDEwKDEpLmNybDBsBggrBgEF
-// SIG // BQcBAQRgMF4wXAYIKwYBBQUHMAKGUGh0dHA6Ly93d3cu
-// SIG // bWljcm9zb2Z0LmNvbS9wa2lvcHMvY2VydHMvTWljcm9z
-// SIG // b2Z0JTIwVGltZS1TdGFtcCUyMFBDQSUyMDIwMTAoMSku
-// SIG // Y3J0MAwGA1UdEwEB/wQCMAAwFgYDVR0lAQH/BAwwCgYI
-// SIG // KwYBBQUHAwgwDgYDVR0PAQH/BAQDAgeAMA0GCSqGSIb3
-// SIG // DQEBCwUAA4ICAQANnWTMm4VcUl02ycxYLzYjAlefwMp+
-// SIG // VLsyVOPeWA7XHn6JXdHoUfUARgYR5gDLddFmAh89lkFM
-// SIG // jN5kA+CLB3xC9SRMIBvbRqu9bnJ/XZJywRw99Cb20EYS
-// SIG // CnLxUp70QgqVaYpTPBf2GllwvVYm0nn/z1NhlgPtc7Ou
-// SIG // FRcSah3rsvCqq0MnxdtEgp3fM0WZeGGAXI4fRtBo4SR1
-// SIG // DwGBMdK/I0lo8otqNlgBw+gqaQbZMJ2Un+wOvAy+DsMA
-// SIG // aZhQd/r7m44DcGiAkvn5Blb0Zz9mYJpX52gGrPDMe4oC
-// SIG // anIqqtEOgJ/tKx49ZMYrDXSIk8xZbuRsNnoV6S65efZL
-// SIG // 7JjjVQCR4Z3acd5/9K++kx/t1jUvVE/Y28UJBPrdrYYn
-// SIG // +jCuZKxTJ5ASAgkfw1XFdasPbIOrDBKNMFkl5UGF73EF
-// SIG // gOuXlc0pKLMpYSJSGWSy9xh2Q9S0LQI6dgORewtyMODb
-// SIG // ewu2gwn6RcaJt2bpUZxSaJZTx297p4/YQPcb0Yip1jAD
-// SIG // KUuDGQKIleDtvc1imXVM8oKe4A+FoyitdeSgidKLxHH/
-// SIG // dgJ8DAFzJzbNaNCwrM4Prg5okGbOXke483Ss1Xxdc+23
-// SIG // w2DTwCb5uaUkHW8t8CDrDf7LWIzPhJGj7VM6/DsjMKxv
-// SIG // o6RTG7AeHHzerbyHhra7ZJTCRbZxevAnGWeSADCCB3Ew
-// SIG // ggVZoAMCAQICEzMAAAAVxedrngKbSZkAAAAAABUwDQYJ
-// SIG // KoZIhvcNAQELBQAwgYgxCzAJBgNVBAYTAlVTMRMwEQYD
-// SIG // VQQIEwpXYXNoaW5ndG9uMRAwDgYDVQQHEwdSZWRtb25k
-// SIG // MR4wHAYDVQQKExVNaWNyb3NvZnQgQ29ycG9yYXRpb24x
-// SIG // MjAwBgNVBAMTKU1pY3Jvc29mdCBSb290IENlcnRpZmlj
-// SIG // YXRlIEF1dGhvcml0eSAyMDEwMB4XDTIxMDkzMDE4MjIy
-// SIG // NVoXDTMwMDkzMDE4MzIyNVowfDELMAkGA1UEBhMCVVMx
+// SIG // b3Jwb3JhdGlvbjElMCMGA1UECxMcTWljcm9zb2Z0IEFt
+// SIG // ZXJpY2EgT3BlcmF0aW9uczEnMCUGA1UECxMeblNoaWVs
+// SIG // ZCBUU1MgRVNOOkEwMDAtMDVFMC1EOTQ3MSUwIwYDVQQD
+// SIG // ExxNaWNyb3NvZnQgVGltZS1TdGFtcCBTZXJ2aWNloIIR
+// SIG // 6jCCByAwggUIoAMCAQICEzMAAAHQdwiq76MXxt0AAQAA
+// SIG // AdAwDQYJKoZIhvcNAQELBQAwfDELMAkGA1UEBhMCVVMx
 // SIG // EzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1Jl
 // SIG // ZG1vbmQxHjAcBgNVBAoTFU1pY3Jvc29mdCBDb3Jwb3Jh
 // SIG // dGlvbjEmMCQGA1UEAxMdTWljcm9zb2Z0IFRpbWUtU3Rh
-// SIG // bXAgUENBIDIwMTAwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-// SIG // DwAwggIKAoICAQDk4aZM57RyIQt5osvXJHm9DtWC0/3u
-// SIG // nAcH0qlsTnXIyjVX9gF/bErg4r25PhdgM/9cT8dm95VT
-// SIG // cVrifkpa/rg2Z4VGIwy1jRPPdzLAEBjoYH1qUoNEt6aO
-// SIG // RmsHFPPFdvWGUNzBRMhxXFExN6AKOG6N7dcP2CZTfDlh
-// SIG // AnrEqv1yaa8dq6z2Nr41JmTamDu6GnszrYBbfowQHJ1S
-// SIG // /rboYiXcag/PXfT+jlPP1uyFVk3v3byNpOORj7I5LFGc
-// SIG // 6XBpDco2LXCOMcg1KL3jtIckw+DJj361VI/c+gVVmG1o
-// SIG // O5pGve2krnopN6zL64NF50ZuyjLVwIYwXE8s4mKyzbni
-// SIG // jYjklqwBSru+cakXW2dg3viSkR4dPf0gz3N9QZpGdc3E
-// SIG // XzTdEonW/aUgfX782Z5F37ZyL9t9X4C626p+Nuw2TPYr
-// SIG // bqgSUei/BQOj0XOmTTd0lBw0gg/wEPK3Rxjtp+iZfD9M
-// SIG // 269ewvPV2HM9Q07BMzlMjgK8QmguEOqEUUbi0b1qGFph
-// SIG // AXPKZ6Je1yh2AuIzGHLXpyDwwvoSCtdjbwzJNmSLW6Cm
-// SIG // gyFdXzB0kZSU2LlQ+QuJYfM2BjUYhEfb3BvR/bLUHMVr
-// SIG // 9lxSUV0S2yW6r1AFemzFER1y7435UsSFF5PAPBXbGjfH
-// SIG // CBUYP3irRbb1Hode2o+eFnJpxq57t7c+auIurQIDAQAB
-// SIG // o4IB3TCCAdkwEgYJKwYBBAGCNxUBBAUCAwEAATAjBgkr
-// SIG // BgEEAYI3FQIEFgQUKqdS/mTEmr6CkTxGNSnPEP8vBO4w
-// SIG // HQYDVR0OBBYEFJ+nFV0AXmJdg/Tl0mWnG1M1GelyMFwG
-// SIG // A1UdIARVMFMwUQYMKwYBBAGCN0yDfQEBMEEwPwYIKwYB
-// SIG // BQUHAgEWM2h0dHA6Ly93d3cubWljcm9zb2Z0LmNvbS9w
-// SIG // a2lvcHMvRG9jcy9SZXBvc2l0b3J5Lmh0bTATBgNVHSUE
-// SIG // DDAKBggrBgEFBQcDCDAZBgkrBgEEAYI3FAIEDB4KAFMA
-// SIG // dQBiAEMAQTALBgNVHQ8EBAMCAYYwDwYDVR0TAQH/BAUw
-// SIG // AwEB/zAfBgNVHSMEGDAWgBTV9lbLj+iiXGJo0T2UkFvX
-// SIG // zpoYxDBWBgNVHR8ETzBNMEugSaBHhkVodHRwOi8vY3Js
-// SIG // Lm1pY3Jvc29mdC5jb20vcGtpL2NybC9wcm9kdWN0cy9N
-// SIG // aWNSb29DZXJBdXRfMjAxMC0wNi0yMy5jcmwwWgYIKwYB
-// SIG // BQUHAQEETjBMMEoGCCsGAQUFBzAChj5odHRwOi8vd3d3
-// SIG // Lm1pY3Jvc29mdC5jb20vcGtpL2NlcnRzL01pY1Jvb0Nl
-// SIG // ckF1dF8yMDEwLTA2LTIzLmNydDANBgkqhkiG9w0BAQsF
-// SIG // AAOCAgEAnVV9/Cqt4SwfZwExJFvhnnJL/Klv6lwUtj5O
-// SIG // R2R4sQaTlz0xM7U518JxNj/aZGx80HU5bbsPMeTCj/ts
-// SIG // 0aGUGCLu6WZnOlNN3Zi6th542DYunKmCVgADsAW+iehp
-// SIG // 4LoJ7nvfam++Kctu2D9IdQHZGN5tggz1bSNU5HhTdSRX
-// SIG // ud2f8449xvNo32X2pFaq95W2KFUn0CS9QKC/GbYSEhFd
-// SIG // PSfgQJY4rPf5KYnDvBewVIVCs/wMnosZiefwC2qBwoEZ
-// SIG // QhlSdYo2wh3DYXMuLGt7bj8sCXgU6ZGyqVvfSaN0DLzs
-// SIG // kYDSPeZKPmY7T7uG+jIa2Zb0j/aRAfbOxnT99kxybxCr
-// SIG // dTDFNLB62FD+CljdQDzHVG2dY3RILLFORy3BFARxv2T5
-// SIG // JL5zbcqOCb2zAVdJVGTZc9d/HltEAY5aGZFrDZ+kKNxn
-// SIG // GSgkujhLmm77IVRrakURR6nxt67I6IleT53S0Ex2tVdU
-// SIG // CbFpAUR+fKFhbHP+CrvsQWY9af3LwUFJfn6Tvsv4O+S3
-// SIG // Fb+0zj6lMVGEvL8CwYKiexcdFYmNcP7ntdAoGokLjzba
-// SIG // ukz5m/8K6TT4JDVnK+ANuOaMmdbhIurwJ0I9JZTmdHRb
-// SIG // atGePu1+oDEzfbzL6Xu/OHBE0ZDxyKs6ijoIYn/ZcGNT
-// SIG // TY3ugm2lBRDBcQZqELQdVTNYs6FwZvKhggLXMIICQAIB
-// SIG // ATCCAQChgdikgdUwgdIxCzAJBgNVBAYTAlVTMRMwEQYD
-// SIG // VQQIEwpXYXNoaW5ndG9uMRAwDgYDVQQHEwdSZWRtb25k
-// SIG // MR4wHAYDVQQKExVNaWNyb3NvZnQgQ29ycG9yYXRpb24x
-// SIG // LTArBgNVBAsTJE1pY3Jvc29mdCBJcmVsYW5kIE9wZXJh
-// SIG // dGlvbnMgTGltaXRlZDEmMCQGA1UECxMdVGhhbGVzIFRT
-// SIG // UyBFU046ODZERi00QkJDLTkzMzUxJTAjBgNVBAMTHE1p
-// SIG // Y3Jvc29mdCBUaW1lLVN0YW1wIFNlcnZpY2WiIwoBATAH
-// SIG // BgUrDgMCGgMVAMhnQRjDmzg5bBgWZklF9qFoH6nGoIGD
-// SIG // MIGApH4wfDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCldh
-// SIG // c2hpbmd0b24xEDAOBgNVBAcTB1JlZG1vbmQxHjAcBgNV
-// SIG // BAoTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEmMCQGA1UE
-// SIG // AxMdTWljcm9zb2Z0IFRpbWUtU3RhbXAgUENBIDIwMTAw
-// SIG // DQYJKoZIhvcNAQEFBQACBQDomyXhMCIYDzIwMjMwODMx
-// SIG // MjI0NDQ5WhgPMjAyMzA5MDEyMjQ0NDlaMHcwPQYKKwYB
-// SIG // BAGEWQoEATEvMC0wCgIFAOibJeECAQAwCgIBAAICBFsC
-// SIG // Af8wBwIBAAICEVUwCgIFAOicd2ECAQAwNgYKKwYBBAGE
-// SIG // WQoEAjEoMCYwDAYKKwYBBAGEWQoDAqAKMAgCAQACAweh
-// SIG // IKEKMAgCAQACAwGGoDANBgkqhkiG9w0BAQUFAAOBgQAV
-// SIG // Q/VftQWPuz4chBpllpVy/veSG62A4+OsZ7TxJXi7bZxP
-// SIG // KbdwDQj7FwayDITGMBUwwlKZCeEib1xzZirwpgpchHkA
-// SIG // FXQogRNzNTZZ6gjm9yoL451idB/EAnV6A5C71Oz6cllm
-// SIG // Z49cGxtgQbz5rad+kRr41DsZnB3CUZjrUZxPODGCBA0w
-// SIG // ggQJAgEBMIGTMHwxCzAJBgNVBAYTAlVTMRMwEQYDVQQI
-// SIG // EwpXYXNoaW5ndG9uMRAwDgYDVQQHEwdSZWRtb25kMR4w
-// SIG // HAYDVQQKExVNaWNyb3NvZnQgQ29ycG9yYXRpb24xJjAk
-// SIG // BgNVBAMTHU1pY3Jvc29mdCBUaW1lLVN0YW1wIFBDQSAy
-// SIG // MDEwAhMzAAABtyEnGgeiKoZGAAEAAAG3MA0GCWCGSAFl
-// SIG // AwQCAQUAoIIBSjAaBgkqhkiG9w0BCQMxDQYLKoZIhvcN
-// SIG // AQkQAQQwLwYJKoZIhvcNAQkEMSIEILZCgZdI3RZTnUnP
-// SIG // s+tAOSsRtnkJrbw1fmYFv9hamhUyMIH6BgsqhkiG9w0B
-// SIG // CRACLzGB6jCB5zCB5DCBvQQgbCd407Ie2i/ITXomBi+f
-// SIG // /CAZ/M1H6+/0O65DPInNcEEwgZgwgYCkfjB8MQswCQYD
-// SIG // VQQGEwJVUzETMBEGA1UECBMKV2FzaGluZ3RvbjEQMA4G
-// SIG // A1UEBxMHUmVkbW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0
-// SIG // IENvcnBvcmF0aW9uMSYwJAYDVQQDEx1NaWNyb3NvZnQg
-// SIG // VGltZS1TdGFtcCBQQ0EgMjAxMAITMwAAAbchJxoHoiqG
-// SIG // RgABAAABtzAiBCBHM8CJyFUSCxXOJANZro6JUgE/qAQH
-// SIG // aolXifgXofDV6jANBgkqhkiG9w0BAQsFAASCAgC/WmiO
-// SIG // BGpyzHB4U8wBxUUVZhEzXWpPqcctxCTQTNQaz8pKn4zK
-// SIG // zCij69w72Id0y9ZO4aHIuzIJyITrAZdpikOZAKBd++9/
-// SIG // FEKJVoPGkVP6990rL1gpt8KWpzuaqHHTCfYUeb5vfj9X
-// SIG // yE0I4qLgxjgA2h70anBKbeoRdhqyaG6NtefdsENoBRbz
-// SIG // hSShSm90ty87/9NBFD0tAMOxTsUuni7acUCBYXZqx5nL
-// SIG // 9Jg7uKwmkoxh+Y9czyTrFPA5uunGw+pwUaRspH0ztWfJ
-// SIG // o91Q2QycUG/V9WjHzUbkVFAl9VH2WOd7TzsvHHydpkgW
-// SIG // +sNjiypExXKi2zfBnPPFN5cXxdrh4wfsDf16SthELK4g
-// SIG // WWTsJQMd3wCHBF39ECr1qJIR37QZ+AJoizof7Eeu1BQ6
-// SIG // XQANPdOTVbKNio7eFxNMaWmW9hN3gISDG+cha8s+qv1h
-// SIG // cJZpp74uDrIJpobqZpa9NwBfbR300vQ/LxoEM9pbPX0+
-// SIG // KIElLE7b+aQ/ret59k9ZMpCOrcqOh9KgHY5/Zupr/LeU
-// SIG // O/1sK1DJAwg6eMHTnLdkN5XcmWwYy/UjZ3dc7PxHK5Pk
-// SIG // rmv0/CkLOQlVy9bESzMd9RfgTDNwp8kUjRDv+V30Owt4
-// SIG // oeIjpzG5b7+/vWnOvJ4BlabU0PQPzKgzmrmKkUxjA+Ws
-// SIG // zhuTzkJwkymikmsPXg==
+// SIG // bXAgUENBIDIwMTAwHhcNMjMwNTI1MTkxMjE0WhcNMjQw
+// SIG // MjAxMTkxMjE0WjCByzELMAkGA1UEBhMCVVMxEzARBgNV
+// SIG // BAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1JlZG1vbmQx
+// SIG // HjAcBgNVBAoTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEl
+// SIG // MCMGA1UECxMcTWljcm9zb2Z0IEFtZXJpY2EgT3BlcmF0
+// SIG // aW9uczEnMCUGA1UECxMeblNoaWVsZCBUU1MgRVNOOkEw
+// SIG // MDAtMDVFMC1EOTQ3MSUwIwYDVQQDExxNaWNyb3NvZnQg
+// SIG // VGltZS1TdGFtcCBTZXJ2aWNlMIICIjANBgkqhkiG9w0B
+// SIG // AQEFAAOCAg8AMIICCgKCAgEA3zJX59+X7zNFwFEpiOao
+// SIG // htFMT4tuR5EsgYM5N86WDt9dXdThBBc9EKQCtt7NXSRa
+// SIG // 4weYA/kjMOc+hMMQuAq11PSmkOFjR6h64Vn7aYKNzJCX
+// SIG // sfX65jvTJXVH41BuerCFumFRemI1/va09SQ3Qgx26OZ2
+// SIG // YmrDIoBimsBm9h6g+/5I0Ueu0b1Ye0OJ2rQFbuOmX+TC
+// SIG // 74kdMTeXDRttMcAcILbWmBJOV5VC2gR+Tp189nlqCMfk
+// SIG // owzuwbeQbgAVmPEr5kUHwck9nKaRM047f37NMaeAdXAB
+// SIG // 1Q8JRsGbr/UX3N53XcYBaygPDFh2yRdPmllFGCAUfBct
+// SIG // oLhVR6B3js3uyLG8r0a2sf//N4GKqPHOWf9f7u5Iy3E4
+// SIG // IqYsmfFxEbCxBAieaMdQQS2OgI5m4AMw3TZdi3no/qiG
+// SIG // 3Qa/0lLyhAvl8OMYxTDk1FVilnprdpIcJ3VHwTUezc7t
+// SIG // c/S9Fr+0wGP7/r+qTYQHqITzAhSXPmpOrjA/Eyks1hY8
+// SIG // OWgA5Jg/ZhrgvOsr0ipCCODGss6FHbHk9J35PGNHz47X
+// SIG // cNlp3o5esyx7mF8HA2rtjtQzLqInnTVY0xd+1BJmE/qM
+// SIG // QvzhV1BjwxELfbc4G0fYPBy7VHxHljrDhA+cYG+a8Mn7
+// SIG // yLLOx/3HRxXCIiHM80IGJ7C8hBnqaGQ5CoUjEeXggein
+// SIG // L/0CAwEAAaOCAUkwggFFMB0GA1UdDgQWBBQz4QGFktKA
+// SIG // PpTrSE34ybcpdJJ0UTAfBgNVHSMEGDAWgBSfpxVdAF5i
+// SIG // XYP05dJlpxtTNRnpcjBfBgNVHR8EWDBWMFSgUqBQhk5o
+// SIG // dHRwOi8vd3d3Lm1pY3Jvc29mdC5jb20vcGtpb3BzL2Ny
+// SIG // bC9NaWNyb3NvZnQlMjBUaW1lLVN0YW1wJTIwUENBJTIw
+// SIG // MjAxMCgxKS5jcmwwbAYIKwYBBQUHAQEEYDBeMFwGCCsG
+// SIG // AQUFBzAChlBodHRwOi8vd3d3Lm1pY3Jvc29mdC5jb20v
+// SIG // cGtpb3BzL2NlcnRzL01pY3Jvc29mdCUyMFRpbWUtU3Rh
+// SIG // bXAlMjBQQ0ElMjAyMDEwKDEpLmNydDAMBgNVHRMBAf8E
+// SIG // AjAAMBYGA1UdJQEB/wQMMAoGCCsGAQUFBwMIMA4GA1Ud
+// SIG // DwEB/wQEAwIHgDANBgkqhkiG9w0BAQsFAAOCAgEAl4fn
+// SIG // JApGWgNOkjVvqsbUvYB0KeMexvoHYpJ4CiLRK/KLZFyK
+// SIG // 5lj2K2q0VgZWPdZahoopR8iJWd4jQVG2jRJmigBjGeWH
+// SIG // EuyGVCj2qtY1NJrMpfvKINLfQv2duvmrcd77IR6xULko
+// SIG // MEx2Vac7+5PAmJwWKMXYSNbhoah+feZqi77TLMRDf9bK
+// SIG // O1Pm91Oiwq8ubsMHM+fo/Do9BlF92/omYPgLNMUzek9E
+// SIG // GvATXnPy8HMqmDRGjJFtlQCq5ob1h/Dgg03F4DjZ5wAU
+// SIG // BwX1yv3ywGxxRktVzTra+tv4mhwRgJKwhpegYvD38LOn
+// SIG // 7PsPrBPa94V/VYNILETKB0bjGol7KxphrLmJy59wME4L
+// SIG // jGrcPUfFObybVkpbtQhTuT9CxL0EIjGddrEErEAJDQ07
+// SIG // Pa041TY4yFIKGelzzMZXDyA3I8cPG33m+MuMAMTNkUaF
+// SIG // nMaZMfuiCH9i/m+4Cx7QcVwlieWzFu1sFAti5bW7q1MA
+// SIG // b9EoI6Q7WxKsP7g4FgXqwk/mbctzXPeu4hmkI8mEB+h/
+// SIG // 4fV3PLJptp+lY8kkcdrMJ1t4a+kMet1P8WPRy+hTYaxo
+// SIG // hRA+2USq58L717zFUFCBJAexlBHjeoXmPIBy7dIy1d8s
+// SIG // w4kAPEfKeWBoBgFbfTBMIACTWNYh7x//L84SUmRTZB/L
+// SIG // L0c7Tv4t07yq42/GccIwggdxMIIFWaADAgECAhMzAAAA
+// SIG // FcXna54Cm0mZAAAAAAAVMA0GCSqGSIb3DQEBCwUAMIGI
+// SIG // MQswCQYDVQQGEwJVUzETMBEGA1UECBMKV2FzaGluZ3Rv
+// SIG // bjEQMA4GA1UEBxMHUmVkbW9uZDEeMBwGA1UEChMVTWlj
+// SIG // cm9zb2Z0IENvcnBvcmF0aW9uMTIwMAYDVQQDEylNaWNy
+// SIG // b3NvZnQgUm9vdCBDZXJ0aWZpY2F0ZSBBdXRob3JpdHkg
+// SIG // MjAxMDAeFw0yMTA5MzAxODIyMjVaFw0zMDA5MzAxODMy
+// SIG // MjVaMHwxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpXYXNo
+// SIG // aW5ndG9uMRAwDgYDVQQHEwdSZWRtb25kMR4wHAYDVQQK
+// SIG // ExVNaWNyb3NvZnQgQ29ycG9yYXRpb24xJjAkBgNVBAMT
+// SIG // HU1pY3Jvc29mdCBUaW1lLVN0YW1wIFBDQSAyMDEwMIIC
+// SIG // IjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA5OGm
+// SIG // TOe0ciELeaLL1yR5vQ7VgtP97pwHB9KpbE51yMo1V/YB
+// SIG // f2xK4OK9uT4XYDP/XE/HZveVU3Fa4n5KWv64NmeFRiMM
+// SIG // tY0Tz3cywBAY6GB9alKDRLemjkZrBxTzxXb1hlDcwUTI
+// SIG // cVxRMTegCjhuje3XD9gmU3w5YQJ6xKr9cmmvHaus9ja+
+// SIG // NSZk2pg7uhp7M62AW36MEBydUv626GIl3GoPz130/o5T
+// SIG // z9bshVZN7928jaTjkY+yOSxRnOlwaQ3KNi1wjjHINSi9
+// SIG // 47SHJMPgyY9+tVSP3PoFVZhtaDuaRr3tpK56KTesy+uD
+// SIG // RedGbsoy1cCGMFxPLOJiss254o2I5JasAUq7vnGpF1tn
+// SIG // YN74kpEeHT39IM9zfUGaRnXNxF803RKJ1v2lIH1+/Nme
+// SIG // Rd+2ci/bfV+AutuqfjbsNkz2K26oElHovwUDo9Fzpk03
+// SIG // dJQcNIIP8BDyt0cY7afomXw/TNuvXsLz1dhzPUNOwTM5
+// SIG // TI4CvEJoLhDqhFFG4tG9ahhaYQFzymeiXtcodgLiMxhy
+// SIG // 16cg8ML6EgrXY28MyTZki1ugpoMhXV8wdJGUlNi5UPkL
+// SIG // iWHzNgY1GIRH29wb0f2y1BzFa/ZcUlFdEtsluq9QBXps
+// SIG // xREdcu+N+VLEhReTwDwV2xo3xwgVGD94q0W29R6HXtqP
+// SIG // nhZyacaue7e3PmriLq0CAwEAAaOCAd0wggHZMBIGCSsG
+// SIG // AQQBgjcVAQQFAgMBAAEwIwYJKwYBBAGCNxUCBBYEFCqn
+// SIG // Uv5kxJq+gpE8RjUpzxD/LwTuMB0GA1UdDgQWBBSfpxVd
+// SIG // AF5iXYP05dJlpxtTNRnpcjBcBgNVHSAEVTBTMFEGDCsG
+// SIG // AQQBgjdMg30BATBBMD8GCCsGAQUFBwIBFjNodHRwOi8v
+// SIG // d3d3Lm1pY3Jvc29mdC5jb20vcGtpb3BzL0RvY3MvUmVw
+// SIG // b3NpdG9yeS5odG0wEwYDVR0lBAwwCgYIKwYBBQUHAwgw
+// SIG // GQYJKwYBBAGCNxQCBAweCgBTAHUAYgBDAEEwCwYDVR0P
+// SIG // BAQDAgGGMA8GA1UdEwEB/wQFMAMBAf8wHwYDVR0jBBgw
+// SIG // FoAU1fZWy4/oolxiaNE9lJBb186aGMQwVgYDVR0fBE8w
+// SIG // TTBLoEmgR4ZFaHR0cDovL2NybC5taWNyb3NvZnQuY29t
+// SIG // L3BraS9jcmwvcHJvZHVjdHMvTWljUm9vQ2VyQXV0XzIw
+// SIG // MTAtMDYtMjMuY3JsMFoGCCsGAQUFBwEBBE4wTDBKBggr
+// SIG // BgEFBQcwAoY+aHR0cDovL3d3dy5taWNyb3NvZnQuY29t
+// SIG // L3BraS9jZXJ0cy9NaWNSb29DZXJBdXRfMjAxMC0wNi0y
+// SIG // My5jcnQwDQYJKoZIhvcNAQELBQADggIBAJ1VffwqreEs
+// SIG // H2cBMSRb4Z5yS/ypb+pcFLY+TkdkeLEGk5c9MTO1OdfC
+// SIG // cTY/2mRsfNB1OW27DzHkwo/7bNGhlBgi7ulmZzpTTd2Y
+// SIG // urYeeNg2LpypglYAA7AFvonoaeC6Ce5732pvvinLbtg/
+// SIG // SHUB2RjebYIM9W0jVOR4U3UkV7ndn/OOPcbzaN9l9qRW
+// SIG // qveVtihVJ9AkvUCgvxm2EhIRXT0n4ECWOKz3+SmJw7wX
+// SIG // sFSFQrP8DJ6LGYnn8AtqgcKBGUIZUnWKNsIdw2FzLixr
+// SIG // e24/LAl4FOmRsqlb30mjdAy87JGA0j3mSj5mO0+7hvoy
+// SIG // GtmW9I/2kQH2zsZ0/fZMcm8Qq3UwxTSwethQ/gpY3UA8
+// SIG // x1RtnWN0SCyxTkctwRQEcb9k+SS+c23Kjgm9swFXSVRk
+// SIG // 2XPXfx5bRAGOWhmRaw2fpCjcZxkoJLo4S5pu+yFUa2pF
+// SIG // EUep8beuyOiJXk+d0tBMdrVXVAmxaQFEfnyhYWxz/gq7
+// SIG // 7EFmPWn9y8FBSX5+k77L+DvktxW/tM4+pTFRhLy/AsGC
+// SIG // onsXHRWJjXD+57XQKBqJC4822rpM+Zv/Cuk0+CQ1Zyvg
+// SIG // DbjmjJnW4SLq8CdCPSWU5nR0W2rRnj7tfqAxM328y+l7
+// SIG // vzhwRNGQ8cirOoo6CGJ/2XBjU02N7oJtpQUQwXEGahC0
+// SIG // HVUzWLOhcGbyoYIDTTCCAjUCAQEwgfmhgdGkgc4wgcsx
+// SIG // CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9u
+// SIG // MRAwDgYDVQQHEwdSZWRtb25kMR4wHAYDVQQKExVNaWNy
+// SIG // b3NvZnQgQ29ycG9yYXRpb24xJTAjBgNVBAsTHE1pY3Jv
+// SIG // c29mdCBBbWVyaWNhIE9wZXJhdGlvbnMxJzAlBgNVBAsT
+// SIG // Hm5TaGllbGQgVFNTIEVTTjpBMDAwLTA1RTAtRDk0NzEl
+// SIG // MCMGA1UEAxMcTWljcm9zb2Z0IFRpbWUtU3RhbXAgU2Vy
+// SIG // dmljZaIjCgEBMAcGBSsOAwIaAxUAvLfIU/CilF/dZVOR
+// SIG // akT/Qn7vTImggYMwgYCkfjB8MQswCQYDVQQGEwJVUzET
+// SIG // MBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UEBxMHUmVk
+// SIG // bW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENvcnBvcmF0
+// SIG // aW9uMSYwJAYDVQQDEx1NaWNyb3NvZnQgVGltZS1TdGFt
+// SIG // cCBQQ0EgMjAxMDANBgkqhkiG9w0BAQsFAAIFAOkRFtcw
+// SIG // IhgPMjAyMzExMjkwMTQ4MDdaGA8yMDIzMTEzMDAxNDgw
+// SIG // N1owdDA6BgorBgEEAYRZCgQBMSwwKjAKAgUA6REW1wIB
+// SIG // ADAHAgEAAgIVNTAHAgEAAgITvDAKAgUA6RJoVwIBADA2
+// SIG // BgorBgEEAYRZCgQCMSgwJjAMBgorBgEEAYRZCgMCoAow
+// SIG // CAIBAAIDB6EgoQowCAIBAAIDAYagMA0GCSqGSIb3DQEB
+// SIG // CwUAA4IBAQBDRkay9YCY6kJnV49gl7qHdAW9dEHIdQJ7
+// SIG // 8yScGB6ENXSC13GxUFyytoxGBQuLs+Do9DZQSOP/HfOq
+// SIG // w2K4SIOd4ewrz11vl9nl2lgufCXAWW81VM4r0tFNbjA0
+// SIG // yD7gRQRBuEGiAqS/Vfa7ECvQFT3fRsQzK5X4u755LI0e
+// SIG // +XskhL+1sOYwu5DPyUzbMKWilqtTRJBmQr/o7Cy5WqQj
+// SIG // kLyW2jR4B8HEoKwozp/j8/RViWSSjRpwa6JVyglX6eVR
+// SIG // Qwd9K9+7ry7q6q+UEB89aV7eZw+BtGsnJXK8QMpXhOm9
+// SIG // 2ksvWCSb6T56pCKmyOh5qljtvtwH0Vcl3zqxoGLk3YPG
+// SIG // MYIEDTCCBAkCAQEwgZMwfDELMAkGA1UEBhMCVVMxEzAR
+// SIG // BgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1JlZG1v
+// SIG // bmQxHjAcBgNVBAoTFU1pY3Jvc29mdCBDb3Jwb3JhdGlv
+// SIG // bjEmMCQGA1UEAxMdTWljcm9zb2Z0IFRpbWUtU3RhbXAg
+// SIG // UENBIDIwMTACEzMAAAHQdwiq76MXxt0AAQAAAdAwDQYJ
+// SIG // YIZIAWUDBAIBBQCgggFKMBoGCSqGSIb3DQEJAzENBgsq
+// SIG // hkiG9w0BCRABBDAvBgkqhkiG9w0BCQQxIgQgsygGDo1N
+// SIG // QTgwixwnk3X7lr4fEQUSawZLdl+M2Eq4GN4wgfoGCyqG
+// SIG // SIb3DQEJEAIvMYHqMIHnMIHkMIG9BCAIlUAGX7TT/zHd
+// SIG // RNmMPnwV2vcOn45k2eVgHq600j8J1zCBmDCBgKR+MHwx
+// SIG // CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9u
+// SIG // MRAwDgYDVQQHEwdSZWRtb25kMR4wHAYDVQQKExVNaWNy
+// SIG // b3NvZnQgQ29ycG9yYXRpb24xJjAkBgNVBAMTHU1pY3Jv
+// SIG // c29mdCBUaW1lLVN0YW1wIFBDQSAyMDEwAhMzAAAB0HcI
+// SIG // qu+jF8bdAAEAAAHQMCIEIJIeQdfA4XjI5/3kM0OGSarc
+// SIG // drYw3rRohew8uLY7gBZSMA0GCSqGSIb3DQEBCwUABIIC
+// SIG // AEB1eCPx7oSkWVD/gJDRN3f6QS/1B4Cg6YJ3wuB6H3si
+// SIG // 0G6esnx2UWYfPxhqmvqnebeRPY9yHvAuMNhEqOa0z1xP
+// SIG // /ezMKbdyZZ1KSnpf+G30pg7OvBkxoBT+y0w4TuXct76M
+// SIG // R8AhK40oE6Lcom5sbvRvimzKlh3vgQkZWknZ5zqUsidp
+// SIG // O8+TBvf9vQG1StTehatPSf2sH/bAwcw20gRij6ozBD2D
+// SIG // l7oi0W5UhaO5GrsdLe14Y8POi2aqY+fPZlRtM5ocAJ2a
+// SIG // nfyCChsYbzcM1+lgBEJMu2qSsERBeq9lbVFCJ7NMwH/N
+// SIG // a/ztGKzpDIJz81dhqX/GgGmFzEGc1/1jMkLLbWYoKgaa
+// SIG // e6ZIAbgkmW4ezZ6hU2GZhcetbId1rJMmtaZw/yos3goK
+// SIG // Shrmfk/OBTUMs9wh2NqrSVDD8YHPPKO9Uh9igKw8TXXD
+// SIG // Ld2LM20WU7t52keJNmptgb6//7mOc2f4jhX6gpQTYAmb
+// SIG // iBco7ZsIPLnBEXeo3tqZY3x/9eJ3yWiXwOreceKo0xMN
+// SIG // Om+ijo4ghC9Ud0aY8hTLm6NrmmbwR5KjtFBMRs0+jNIP
+// SIG // Asg7HDJ2NpLpA08AG+1XOSKghGxm+UQMbuNFMeLlK+QX
+// SIG // 55chb2/UprBeGk83G+GHOM7Hr4fuUN1JAUM3zwt3GpXo
+// SIG // 0BNZKjbAXaYgx1eeh6dNirnW
 // SIG // End signature block
 
 
@@ -9007,6 +9010,72 @@ var Page = /** @class */ (function () {
         this.wallpaper = wallpaper;
     }
     /**
+     * Get insights for report page
+     *
+     * ```javascript
+     * page.getSmartNarrativeInsights();
+     * ```
+     *
+     * @returns {Promise<ISmartNarratives>}
+     */
+    Page.prototype.getSmartNarrativeInsights = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, response_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if ((0, util_1.isRDLEmbed)(this.report.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/smartNarrativeInsights"), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                    case 2:
+                        response = _a.sent();
+                        return [2 /*return*/, response.body];
+                    case 3:
+                        response_1 = _a.sent();
+                        throw response_1.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Get insights for report page
+     *
+     * ```javascript
+     * page.getSmartNarrativeInsights()
+     * ```
+     *
+     * @returns {Promise<ISmartNarratives>}
+     */
+    Page.prototype.getSmartNarrativeInsights = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, response_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if ((0, util_1.isRDLEmbed)(this.report.config.embedUrl)) {
+                            return [2 /*return*/, Promise.reject(errors_1.APINotSupportedForRDLError)];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.report.service.hpm.get("/report/pages/".concat(this.name, "/smartNarrativeInsights"), { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
+                    case 2:
+                        response = _a.sent();
+                        return [2 /*return*/, response.body];
+                    case 3:
+                        response_1 = _a.sent();
+                        throw response_1.body;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
      * Gets all page level filters within the report.
      *
      * ```javascript
@@ -9018,7 +9087,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.getFilters = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_1;
+            var response, response_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9028,8 +9097,8 @@ var Page = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_1 = _a.sent();
-                        throw response_1.body;
+                        response_2 = _a.sent();
+                        throw response_2.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -9048,7 +9117,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.updateFilters = function (operation, filters) {
         return __awaiter(this, void 0, void 0, function () {
-            var updateFiltersRequest, response_2;
+            var updateFiltersRequest, response_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9062,8 +9131,8 @@ var Page = /** @class */ (function () {
                         return [4 /*yield*/, this.report.service.hpm.post("/report/pages/".concat(this.name, "/filters"), updateFiltersRequest, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
-                        response_2 = _a.sent();
-                        throw response_2.body;
+                        response_3 = _a.sent();
+                        throw response_3.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9101,7 +9170,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.setFilters = function (filters) {
         return __awaiter(this, void 0, void 0, function () {
-            var response_3;
+            var response_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9109,8 +9178,8 @@ var Page = /** @class */ (function () {
                         return [4 /*yield*/, this.report.service.hpm.put("/report/pages/".concat(this.name, "/filters"), filters, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
-                        response_3 = _a.sent();
-                        throw response_3.body;
+                        response_4 = _a.sent();
+                        throw response_4.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -9128,7 +9197,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.delete = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_4;
+            var response, response_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9138,8 +9207,8 @@ var Page = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_4 = _a.sent();
-                        throw response_4.body;
+                        response_5 = _a.sent();
+                        throw response_5.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -9156,7 +9225,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.setActive = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var page, response_5;
+            var page, response_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9171,8 +9240,8 @@ var Page = /** @class */ (function () {
                         return [4 /*yield*/, this.report.service.hpm.put('/report/pages/active', page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
-                        response_5 = _a.sent();
-                        throw response_5.body;
+                        response_6 = _a.sent();
+                        throw response_6.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9189,7 +9258,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.setDisplayName = function (displayName) {
         return __awaiter(this, void 0, void 0, function () {
-            var page, response_6;
+            var page, response_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9203,8 +9272,8 @@ var Page = /** @class */ (function () {
                         return [4 /*yield*/, this.report.service.hpm.put("/report/pages/".concat(this.name, "/name"), page, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)];
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
-                        response_6 = _a.sent();
-                        throw response_6.body;
+                        response_7 = _a.sent();
+                        throw response_7.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9222,7 +9291,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.getVisuals = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_7;
+            var response, response_8;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -9239,8 +9308,8 @@ var Page = /** @class */ (function () {
                         return [2 /*return*/, response.body
                                 .map(function (visual) { return new visualDescriptor_1.VisualDescriptor(_this, visual.name, visual.title, visual.type, visual.layout); })];
                     case 3:
-                        response_7 = _a.sent();
-                        throw response_7.body;
+                        response_8 = _a.sent();
+                        throw response_8.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9261,7 +9330,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.getVisualByName = function (visualName) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, visual, response_8;
+            var response, visual, response_9;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9280,8 +9349,8 @@ var Page = /** @class */ (function () {
                         }
                         return [2 /*return*/, new visualDescriptor_1.VisualDescriptor(this, visual.name, visual.title, visual.type, visual.layout)];
                     case 3:
-                        response_8 = _a.sent();
-                        throw response_8.body;
+                        response_9 = _a.sent();
+                        throw response_9.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9395,7 +9464,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.getSlicers = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var response, response_9;
+            var response, response_10;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -9413,8 +9482,8 @@ var Page = /** @class */ (function () {
                                 .filter(function (visual) { return visual.type === 'slicer'; })
                                 .map(function (visual) { return new visualDescriptor_1.VisualDescriptor(_this, visual.name, visual.title, visual.type, visual.layout); })];
                     case 3:
-                        response_9 = _a.sent();
-                        throw response_9.body;
+                        response_10 = _a.sent();
+                        throw response_10.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9432,7 +9501,7 @@ var Page = /** @class */ (function () {
      */
     Page.prototype.hasLayout = function (layoutType) {
         return __awaiter(this, void 0, void 0, function () {
-            var layoutTypeEnum, response, response_10;
+            var layoutTypeEnum, response, response_11;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -9448,8 +9517,8 @@ var Page = /** @class */ (function () {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 3:
-                        response_10 = _a.sent();
-                        throw response_10.body;
+                        response_11 = _a.sent();
+                        throw response_11.body;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -9984,8 +10053,8 @@ var Report = /** @class */ (function (_super) {
                         response = _a.sent();
                         return [2 /*return*/, response.body];
                     case 2:
-                        response_1 = _a.sent();
-                        throw response_1.body;
+                        response_2 = _a.sent();
+                        throw response_2.body;
                     case 3: return [2 /*return*/];
                 }
             });
@@ -13154,6 +13223,62 @@ var VisualDescriptor = /** @class */ (function () {
                 visualName = this.name;
                 report = this.page.report;
                 return [2 /*return*/, report.resizeVisual(pageName, visualName, width, height)];
+            });
+        });
+    };
+    /**
+     * Get insights for single visual
+     *
+     * ```javascript
+     * visual.getSmartNarrativeInsights();
+     * ```
+     *
+     * @returns {Promise<ISmartNarratives>}
+     */
+    VisualDescriptor.prototype.getSmartNarrativeInsights = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, response_9;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.page.report.service.hpm.get("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/smartNarrativeInsights"), { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response.body];
+                    case 2:
+                        response_9 = _a.sent();
+                        throw response_9.body;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Get insights for single visual
+     *
+     * ```javascript
+     * visual.getSmartNarrativeInsights()
+     * ```
+     *
+     * @returns {Promise<ISmartNarratives>}
+     */
+    VisualDescriptor.prototype.getSmartNarrativeInsights = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, response_9;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.page.report.service.hpm.get("/report/pages/".concat(this.page.name, "/visuals/").concat(this.name, "/smartNarrativeInsights"), { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response.body];
+                    case 2:
+                        response_9 = _a.sent();
+                        throw response_9.body;
+                    case 3: return [2 /*return*/];
+                }
             });
         });
     };
