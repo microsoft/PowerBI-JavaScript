@@ -12,6 +12,7 @@ declare module "config" {
 declare module "errors" {
     export const APINotSupportedForRDLError = "This API is currently not supported for RDL reports";
     export const EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please use Power BI REST APIs to get the valid URL";
+    export const invalidEmbedUrlErrorMessage: string;
 }
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
@@ -124,6 +125,11 @@ declare module "util" {
      * @returns {boolean}
      */
     export function isCreate(embedType: string): boolean;
+    /**
+     * Checks if the embedUrl has an allowed power BI domain
+     * @hidden
+     */
+    export function validateEmbedUrl(embedUrl: string): boolean;
 }
 declare module "embed" {
     import * as models from 'powerbi-models';
@@ -909,7 +915,7 @@ declare module "page" {
          * Get insights for report page
          *
          * ```javascript
-         * page.getSmartNarrativeInsights()
+         * page.getSmartNarrativeInsights();
          * ```
          *
          * @returns {Promise<ISmartNarratives>}
