@@ -1,4 +1,4 @@
-// powerbi-client v2.22.4
+// powerbi-client v2.23.0
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -7609,7 +7609,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 /** @ignore */ /** */
 var config = {
-    version: '2.22.4',
+    version: '2.23.0',
     type: 'js'
 };
 exports["default"] = config;
