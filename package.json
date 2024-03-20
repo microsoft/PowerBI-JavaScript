@@ -78,6 +78,7 @@
     "yargs": "^16.1.0"
   },
   "dependencies": {
+    "crypto": "^1.0.1",
     "http-post-message": "^0.2",
     "powerbi-models": "^1.12.3",
     "powerbi-router": "^0.1",
