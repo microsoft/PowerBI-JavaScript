@@ -3,6 +3,7 @@
 
 import * as service from '../src/service';
 import * as factories from '../src/factories';
+import * as utils from '../src/util';
 
 // Avoid adding new tests to this file, create another spec file instead.
 
@@ -12,6 +13,7 @@ describe('embed', function () {
   let iframe: HTMLIFrameElement;
 
   beforeEach(function () {
+    spyOn(utils, 'validateEmbedUrl').and.callFake(() => { return true; });
     powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
     powerbi.accessToken = 'ABC123';
     container = document.createElement('iframe');

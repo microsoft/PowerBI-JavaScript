@@ -29,6 +29,7 @@ import { Visual } from './visual';
 import * as utils from './util';
 import { QuickCreate } from './quickCreate';
 import * as sdkConfig from './config';
+import { invalidEmbedUrlErrorMessage } from './errors';
 
 export interface IEvent<T> {
   type: string;
@@ -667,6 +668,10 @@ export class Service implements IService {
    * @param {HTMLElement} [element=undefined]
    */
   preload(config: IComponentEmbedConfiguration | IEmbedConfigurationBase, element?: HTMLElement): HTMLIFrameElement {
+    if (!utils.validateEmbedUrl(config.embedUrl)) {
+      throw new Error(invalidEmbedUrlErrorMessage);
+    }
+
     const iframeContent = document.createElement("iframe");
     iframeContent.setAttribute("style", "display:none;");
     iframeContent.setAttribute("src", config.embedUrl);

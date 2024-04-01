@@ -31,6 +31,9 @@ describe('SDK-to-MockApp', function () {
     powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory, {
       wpmpName: 'SDK-to-MockApp HostWpmp'
     });
+
+    spyOn(utils, 'validateEmbedUrl').and.callFake(() => { return true; });
+
     element = document.createElement('div');
     element.id = "reportContainer1";
     element.className = 'powerbi-report-container2';

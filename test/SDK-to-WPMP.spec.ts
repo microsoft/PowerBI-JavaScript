@@ -5,6 +5,7 @@ import * as service from '../src/service';
 import * as report from '../src/report';
 import * as Wpmp from 'window-post-message-proxy';
 import * as factories from '../src/factories';
+import * as utils from '../src/util';
 import { spyWpmp } from './utility/mockWpmp';
 import { spyHpm } from './utility/mockHpm';
 import { spyRouter } from './utility/mockRouter';
@@ -17,6 +18,7 @@ describe('SDK-to-WPMP', function () {
   let uniqueId: string;
 
   beforeEach(function () {
+    spyOn(utils, 'validateEmbedUrl').and.callFake(() => { return true; });
     const spyWpmpFactory: factories.IWpmpFactory = (_name?: string, _logMessages?: boolean) => {
       return <Wpmp.WindowPostMessageProxy>spyWpmp;
     };

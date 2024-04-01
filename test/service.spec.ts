@@ -6,6 +6,7 @@ import * as embed from '../src/embed';
 import * as report from '../src/report';
 import * as create from '../src/create';
 import * as factories from '../src/factories';
+import * as utils from '../src/util';
 import { EmbedUrlNotSupported } from '../src/errors';
 
 // Todo: remove JQuery usage from this tests file.
@@ -42,6 +43,7 @@ describe('service', function () {
   let element: HTMLDivElement;
 
   beforeEach(function () {
+    spyOn(utils, 'validateEmbedUrl').and.callFake(() => { return true; });
     powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
     powerbi.accessToken = 'ABC123';
     element = document.createElement('div');

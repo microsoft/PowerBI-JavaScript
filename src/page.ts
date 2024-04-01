@@ -18,6 +18,7 @@ import {
   VisualContainerDisplayMode,
   IPageBackground,
   IPageWallpaper,
+  ISmartNarratives,
 } from 'powerbi-models';
 import { IFilterable } from './ifilterable';
 import { IReportNode, Report } from './report';
@@ -137,6 +138,28 @@ export class Page implements IPageNode, IFilterable {
     this.defaultDisplayOption = defaultDisplayOption;
     this.background = background;
     this.wallpaper = wallpaper;
+  }
+
+  /**
+   * Get insights for report page
+   *
+   * ```javascript
+   * page.getSmartNarrativeInsights();
+   * ```
+   *
+   * @returns {Promise<ISmartNarratives>}
+   */
+  async getSmartNarrativeInsights(): Promise<ISmartNarratives > {
+    if (isRDLEmbed(this.report.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
+    try {
+      const response = await this.report.service.hpm.get<ISmartNarratives>(`/report/pages/${this.name}/smartNarrativeInsights`, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 
   /**
