@@ -1,4 +1,4 @@
-// powerbi-client v2.23.0
+// powerbi-client v2.23.1
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -14,185 +14,14 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/http-post-message/dist/httpPostMessage.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/http-post-message/dist/httpPostMessage.js ***!
-  \****************************************************************/
-/***/ (function(module) {
+/***/ "../http-post-message/dist/httpPostMessage.js":
+/*!****************************************************!*\
+  !*** ../http-post-message/dist/httpPostMessage.js ***!
+  \****************************************************/
+/***/ ((module) => {
 
-/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(true)
-		module.exports = factory();
-	else {}
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __nested_webpack_require_626__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_626__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__nested_webpack_require_626__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__nested_webpack_require_626__.c = installedModules;
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__nested_webpack_require_626__.p = "";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __nested_webpack_require_626__(0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports) {
-
-	"use strict";
-	var HttpPostMessage = (function () {
-	    function HttpPostMessage(windowPostMessageProxy, defaultHeaders, defaultTargetWindow) {
-	        if (defaultHeaders === void 0) { defaultHeaders = {}; }
-	        this.defaultHeaders = defaultHeaders;
-	        this.defaultTargetWindow = defaultTargetWindow;
-	        this.windowPostMessageProxy = windowPostMessageProxy;
-	    }
-	    // TODO: See if it's possible to share tracking properties interface?
-	    // The responsibility of knowing how to configure windowPostMessageProxy for http should
-	    // live in this http class, but the configuration would need ITrackingProperties
-	    // interface which lives in WindowPostMessageProxy. Use <any> type as workaround
-	    HttpPostMessage.addTrackingProperties = function (message, trackingProperties) {
-	        message.headers = message.headers || {};
-	        if (trackingProperties && trackingProperties.id) {
-	            message.headers.id = trackingProperties.id;
-	        }
-	        return message;
-	    };
-	    HttpPostMessage.getTrackingProperties = function (message) {
-	        return {
-	            id: message.headers && message.headers.id
-	        };
-	    };
-	    HttpPostMessage.isErrorMessage = function (message) {
-	        if (typeof (message && message.statusCode) !== 'number') {
-	            return false;
-	        }
-	        return !(200 <= message.statusCode && message.statusCode < 300);
-	    };
-	    HttpPostMessage.prototype.get = function (url, headers, targetWindow) {
-	        if (headers === void 0) { headers = {}; }
-	        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
-	        return this.send({
-	            method: "GET",
-	            url: url,
-	            headers: headers
-	        }, targetWindow);
-	    };
-	    HttpPostMessage.prototype.post = function (url, body, headers, targetWindow) {
-	        if (headers === void 0) { headers = {}; }
-	        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
-	        return this.send({
-	            method: "POST",
-	            url: url,
-	            headers: headers,
-	            body: body
-	        }, targetWindow);
-	    };
-	    HttpPostMessage.prototype.put = function (url, body, headers, targetWindow) {
-	        if (headers === void 0) { headers = {}; }
-	        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
-	        return this.send({
-	            method: "PUT",
-	            url: url,
-	            headers: headers,
-	            body: body
-	        }, targetWindow);
-	    };
-	    HttpPostMessage.prototype.patch = function (url, body, headers, targetWindow) {
-	        if (headers === void 0) { headers = {}; }
-	        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
-	        return this.send({
-	            method: "PATCH",
-	            url: url,
-	            headers: headers,
-	            body: body
-	        }, targetWindow);
-	    };
-	    HttpPostMessage.prototype.delete = function (url, body, headers, targetWindow) {
-	        if (body === void 0) { body = null; }
-	        if (headers === void 0) { headers = {}; }
-	        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
-	        return this.send({
-	            method: "DELETE",
-	            url: url,
-	            headers: headers,
-	            body: body
-	        }, targetWindow);
-	    };
-	    HttpPostMessage.prototype.send = function (request, targetWindow) {
-	        if (targetWindow === void 0) { targetWindow = this.defaultTargetWindow; }
-	        request.headers = this.assign({}, this.defaultHeaders, request.headers);
-	        if (!targetWindow) {
-	            throw new Error("target window is not provided.  You must either provide the target window explicitly as argument to request, or specify default target window when constructing instance of this class.");
-	        }
-	        return this.windowPostMessageProxy.postMessage(targetWindow, request);
-	    };
-	    /**
-	     * Object.assign() polyfill
-	     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
-	     */
-	    HttpPostMessage.prototype.assign = function (target) {
-	        var sources = [];
-	        for (var _i = 1; _i < arguments.length; _i++) {
-	            sources[_i - 1] = arguments[_i];
-	        }
-	        if (target === undefined || target === null) {
-	            throw new TypeError('Cannot convert undefined or null to object');
-	        }
-	        var output = Object(target);
-	        sources.forEach(function (source) {
-	            if (source !== undefined && source !== null) {
-	                for (var nextKey in source) {
-	                    if (Object.prototype.hasOwnProperty.call(source, nextKey)) {
-	                        output[nextKey] = source[nextKey];
-	                    }
-	                }
-	            }
-	        });
-	        return output;
-	    };
-	    return HttpPostMessage;
-	}());
-	exports.HttpPostMessage = HttpPostMessage;
-
-
-/***/ }
-/******/ ])
-});
-;
+/*! For license information please see httpPostMessage.js.LICENSE.txt */
+!function(e,t){ true?module.exports=t():0}(self,(()=>(()=>{"use strict";var e={};return(()=>{var t=e;Object.defineProperty(t,"__esModule",{value:!0}),t.HttpPostMessage=void 0;var o=function(){function e(e,t,o){void 0===t&&(t={}),this.defaultHeaders=t,this.defaultTargetWindow=o,this.windowPostMessageProxy=e}return e.addTrackingProperties=function(e,t){return e.headers=e.headers||{},t&&t.id&&(e.headers.id=t.id),e},e.getTrackingProperties=function(e){return{id:e.headers&&e.headers.id}},e.isErrorMessage=function(e){return"number"==typeof(e&&e.statusCode)&&!(200<=e.statusCode&&e.statusCode<300)},e.prototype.get=function(e,t,o,r){return void 0===t&&(t={}),void 0===o&&(o=this.defaultTargetWindow),this.send({method:"GET",url:e,headers:t},o,r)},e.prototype.post=function(e,t,o,r,s){return void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"POST",url:e,headers:o,body:t},r,s)},e.prototype.put=function(e,t,o,r,s){return void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"PUT",url:e,headers:o,body:t},r,s)},e.prototype.patch=function(e,t,o,r,s){return void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"PATCH",url:e,headers:o,body:t},r,s)},e.prototype.delete=function(e,t,o,r,s){return void 0===t&&(t=null),void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"DELETE",url:e,headers:o,body:t},r,s)},e.prototype.send=function(e,t,o){if(void 0===t&&(t=this.defaultTargetWindow),e.headers=this.assign({},this.defaultHeaders,e.headers),!t)throw new Error("target window is not provided.  You must either provide the target window explicitly as argument to request, or specify default target window when constructing instance of this class.");return this.windowPostMessageProxy.postMessage(t,e,o)},e.prototype.assign=function(e){for(var t=[],o=1;o<arguments.length;o++)t[o-1]=arguments[o];if(null==e)throw new TypeError("Cannot convert undefined or null to object");var r=Object(e);return t.forEach((function(e){if(null!=e)for(var t in e)Object.prototype.hasOwnProperty.call(e,t)&&(r[t]=e[t])})),r},e}();t.HttpPostMessage=o})(),e})()));
 //# sourceMappingURL=httpPostMessage.js.map
 
 /***/ }),
@@ -7780,7 +7609,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 /** @ignore */ /** */
 var config = {
-    version: '2.23.0',
+    version: '2.23.1',
     type: 'js'
 };
 exports["default"] = config;
@@ -8893,8 +8722,8 @@ exports.routerFactory = exports.wpmpFactory = exports.hpmFactory = void 0;
 /**
  * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
  */
-var window_post_message_proxy_1 = __webpack_require__(/*! window-post-message-proxy */ "./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js");
-var http_post_message_1 = __webpack_require__(/*! http-post-message */ "./node_modules/http-post-message/dist/httpPostMessage.js");
+var window_post_message_proxy_1 = __webpack_require__(/*! window-post-message-proxy */ "../window-post-message-proxy/dist/windowPostMessageProxy.js");
+var http_post_message_1 = __webpack_require__(/*! http-post-message */ "../http-post-message/dist/httpPostMessage.js");
 var powerbi_router_1 = __webpack_require__(/*! powerbi-router */ "./node_modules/powerbi-router/dist/router.js");
 var config_1 = __webpack_require__(/*! ./config */ "./src/config.ts");
 var hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType, sdkWrapperVersion) {
@@ -12209,11 +12038,11 @@ exports.validateEmbedUrl = exports.isCreate = exports.getTimeDiffInMilliseconds 
 /**
  * @hidden
  */
-var allowedPowerBiHostsRegex = new RegExp(/(.+\.powerbi\.com$)|(.+\.fabric\.microsoft\.com$)|(.+\.analysis\.windows-int\.net$)|(.+\.analysis-df\.windows\.net$)/g);
+var allowedPowerBiHostsRegex = new RegExp(/(.+\.powerbi\.com$)|(.+\.fabric\.microsoft\.com$)|(.+\.analysis\.windows-int\.net$)|(.+\.analysis-df\.windows\.net$)/);
 /**
  * @hidden
  */
-var allowedPowerBiHostsSovRegex = new RegExp(/^app\.powerbi\.cn$|^app(\.mil\.|\.high\.|\.)powerbigov\.us$|^app\.powerbi\.eaglex\.ic\.gov$|^app\.powerbi\.microsoft\.scloud$/g);
+var allowedPowerBiHostsSovRegex = new RegExp(/^app\.powerbi\.cn$|^app(\.mil\.|\.high\.|\.)powerbigov\.us$|^app\.powerbi\.eaglex\.ic\.gov$|^app\.powerbi\.microsoft\.scloud$/);
 /**
  * @hidden
  */
@@ -13269,14 +13098,14 @@ exports.VisualDescriptor = VisualDescriptor;
 
 /***/ }),
 
-/***/ "./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js ***!
-  \*******************************************************************************/
+/***/ "../window-post-message-proxy/dist/windowPostMessageProxy.js":
+/*!*******************************************************************!*\
+  !*** ../window-post-message-proxy/dist/windowPostMessageProxy.js ***!
+  \*******************************************************************/
 /***/ ((module) => {
 
 /*! For license information please see windowPostMessageProxy.js.LICENSE.txt */
-!function(e,r){ true?module.exports=r():0}(self,(()=>(()=>{"use strict";var e={};return(()=>{var r=e;Object.defineProperty(r,"__esModule",{value:!0}),r.WindowPostMessageProxy=void 0;var s=function(){function e(r){void 0===r&&(r={processTrackingProperties:{addTrackingProperties:e.defaultAddTrackingProperties,getTrackingProperties:e.defaultGetTrackingProperties},isErrorMessage:e.defaultIsErrorMessage,receiveWindow:window,name:e.createRandomString()});var s=this;this.pendingRequestPromises={},this.addTrackingProperties=r.processTrackingProperties&&r.processTrackingProperties.addTrackingProperties||e.defaultAddTrackingProperties,this.getTrackingProperties=r.processTrackingProperties&&r.processTrackingProperties.getTrackingProperties||e.defaultGetTrackingProperties,this.isErrorMessage=r.isErrorMessage||e.defaultIsErrorMessage,this.receiveWindow=r.receiveWindow||window,this.name=r.name||e.createRandomString(),this.logMessages=r.logMessages||!1,this.eventSourceOverrideWindow=r.eventSourceOverrideWindow,this.suppressWarnings=r.suppressWarnings||!1,this.logMessages&&console.log("new WindowPostMessageProxy created with name: ".concat(this.name," receiving on window: ").concat(this.receiveWindow.document.title)),this.handlers=[],this.windowMessageHandler=function(e){return s.onMessageReceived(e)},this.start()}return e.defaultAddTrackingProperties=function(r,s){return r[e.messagePropertyName]=s,r},e.defaultGetTrackingProperties=function(r){return r[e.messagePropertyName]},e.defaultIsErrorMessage=function(e){return!!e.error},e.createDeferred=function(){var e={resolve:null,reject:null,promise:null},r=new Promise((function(r,s){e.resolve=r,e.reject=s}));return e.promise=r,e},e.createRandomString=function(){var e=window.crypto||window.msCrypto,r=new Uint32Array(1);return e.getRandomValues(r),r[0].toString(36).substring(1)},e.prototype.addHandler=function(e){this.handlers.push(e)},e.prototype.removeHandler=function(e){var r=this.handlers.indexOf(e);if(-1===r)throw new Error("You attempted to remove a handler but no matching handler was found.");this.handlers.splice(r,1)},e.prototype.start=function(){this.receiveWindow.addEventListener("message",this.windowMessageHandler)},e.prototype.stop=function(){this.receiveWindow.removeEventListener("message",this.windowMessageHandler)},e.prototype.postMessage=function(r,s){var n={id:e.createRandomString()};this.addTrackingProperties(s,n),this.logMessages&&(console.log("".concat(this.name," Posting message:")),console.log(JSON.stringify(s,null,"  "))),r.postMessage(s,"*");var o=e.createDeferred();return this.pendingRequestPromises[n.id]=o,o.promise},e.prototype.sendResponse=function(e,r,s){this.addTrackingProperties(r,s),this.logMessages&&(console.log("".concat(this.name," Sending response:")),console.log(JSON.stringify(r,null,"  "))),e.postMessage(r,"*")},e.prototype.onMessageReceived=function(e){var r=this;this.logMessages&&(console.log("".concat(this.name," Received message:")),console.log("type: ".concat(e.type)),console.log(JSON.stringify(e.data,null,"  ")));var s=this.eventSourceOverrideWindow||e.source;if(s){var n=e.data;if("object"==typeof n){var o,t;try{o=this.getTrackingProperties(n)}catch(e){this.suppressWarnings||console.warn("Proxy(".concat(this.name,"): Error occurred when attempting to get tracking properties from incoming message:"),JSON.stringify(n,null,"  "),"Error: ",e)}if(o&&(t=this.pendingRequestPromises[o.id]),t){var i=!0;try{i=this.isErrorMessage(n)}catch(e){console.warn("Proxy(".concat(this.name,") Error occurred when trying to determine if message is consider an error response. Message: "),JSON.stringify(n,null,""),"Error: ",e)}i?t.reject(n):t.resolve(n),delete this.pendingRequestPromises[o.id]}else this.handlers.some((function(e){var t=!1;try{t=e.test(n)}catch(e){r.suppressWarnings||console.warn("Proxy(".concat(r.name,"): Error occurred when handler was testing incoming message:"),JSON.stringify(n,null,"  "),"Error: ",e)}if(t){var i=void 0;try{i=Promise.resolve(e.handle(n))}catch(e){r.suppressWarnings||console.warn("Proxy(".concat(r.name,"): Error occurred when handler was processing incoming message:"),JSON.stringify(n,null,"  "),"Error: ",e),i=Promise.resolve()}return i.then((function(e){if(!e){var t="Handler for message: ".concat(JSON.stringify(n,null,"  ")," did not return a response message. The default response message will be returned instead.");r.suppressWarnings||console.warn("Proxy(".concat(r.name,"): ").concat(t)),e={warning:t}}r.sendResponse(s,e,o)})),!0}}))||this.suppressWarnings||console.warn("Proxy(".concat(this.name,") did not handle message. Handlers: ").concat(this.handlers.length,"  Message: ").concat(JSON.stringify(n,null,""),"."))}else this.suppressWarnings||console.warn("Proxy(".concat(this.name,"): Received message that was not an object. Discarding message"))}},e.messagePropertyName="windowPostMessageProxy",e}();r.WindowPostMessageProxy=s})(),e})()));
+!function(e,r){ true?module.exports=r():0}(self,(()=>(()=>{"use strict";var e={};return(()=>{var r=e;Object.defineProperty(r,"__esModule",{value:!0}),r.WindowPostMessageProxy=void 0;var s=function(){function e(r){void 0===r&&(r={processTrackingProperties:{addTrackingProperties:e.defaultAddTrackingProperties,getTrackingProperties:e.defaultGetTrackingProperties},isErrorMessage:e.defaultIsErrorMessage,receiveWindow:window,name:e.createRandomString()});var s=this;this.pendingRequestPromises={},this.addTrackingProperties=r.processTrackingProperties&&r.processTrackingProperties.addTrackingProperties||e.defaultAddTrackingProperties,this.getTrackingProperties=r.processTrackingProperties&&r.processTrackingProperties.getTrackingProperties||e.defaultGetTrackingProperties,this.isErrorMessage=r.isErrorMessage||e.defaultIsErrorMessage,this.receiveWindow=r.receiveWindow||window,this.name=r.name||e.createRandomString(),this.logMessages=r.logMessages||!1,this.eventSourceOverrideWindow=r.eventSourceOverrideWindow,this.suppressWarnings=r.suppressWarnings||!1,this.logMessages&&console.log("new WindowPostMessageProxy created with name: ".concat(this.name," receiving on window: ").concat(this.receiveWindow.document.title)),this.handlers=[],this.windowMessageHandler=function(e){return s.onMessageReceived(e)},this.start()}return e.defaultAddTrackingProperties=function(r,s){return r[e.messagePropertyName]=s,r},e.defaultGetTrackingProperties=function(r){return r[e.messagePropertyName]},e.defaultIsErrorMessage=function(e){return!!e.error},e.createDeferred=function(){var e={resolve:null,reject:null,promise:null},r=new Promise((function(r,s){e.resolve=r,e.reject=s}));return e.promise=r,e},e.createRandomString=function(){var e=window.crypto||window.msCrypto,r=new Uint32Array(1);return e.getRandomValues(r),r[0].toString(36).substring(1)},e.prototype.addHandler=function(e){this.handlers.push(e)},e.prototype.removeHandler=function(e){var r=this.handlers.indexOf(e);if(-1===r)throw new Error("You attempted to remove a handler but no matching handler was found.");this.handlers.splice(r,1)},e.prototype.start=function(){this.receiveWindow.addEventListener("message",this.windowMessageHandler)},e.prototype.stop=function(){this.receiveWindow.removeEventListener("message",this.windowMessageHandler)},e.prototype.postMessage=function(r,s,n){var o={id:e.createRandomString()};this.addTrackingProperties(s,o),console.log("".concat(this.name," Posting message:")),console.log(JSON.stringify(s,null,"  ")),console.log("target origin: ".concat(n)),r.postMessage(s,null!=n?n:"*");var t=e.createDeferred();return this.pendingRequestPromises[o.id]=t,t.promise},e.prototype.sendResponse=function(e,r,s,n){this.addTrackingProperties(r,s),this.logMessages&&(console.log("".concat(this.name," Sending response:")),console.log(JSON.stringify(r,null,"  "))),e.postMessage(r,null!=n?n:"*")},e.prototype.onMessageReceived=function(e){var r=this;this.logMessages&&(console.log("".concat(this.name," Received message:")),console.log("type: ".concat(e.type)),console.log(JSON.stringify(e.data,null,"  ")));var s=this.eventSourceOverrideWindow||e.source;if(s){var n=e.data;if("object"==typeof n){var o,t;try{o=this.getTrackingProperties(n)}catch(e){this.suppressWarnings||console.warn("Proxy(".concat(this.name,"): Error occurred when attempting to get tracking properties from incoming message:"),JSON.stringify(n,null,"  "),"Error: ",e)}if(o&&(t=this.pendingRequestPromises[o.id]),t){var i=!0;try{i=this.isErrorMessage(n)}catch(e){console.warn("Proxy(".concat(this.name,") Error occurred when trying to determine if message is consider an error response. Message: "),JSON.stringify(n,null,""),"Error: ",e)}i?t.reject(n):t.resolve(n),delete this.pendingRequestPromises[o.id]}else this.handlers.some((function(e){var t=!1;try{t=e.test(n)}catch(e){r.suppressWarnings||console.warn("Proxy(".concat(r.name,"): Error occurred when handler was testing incoming message:"),JSON.stringify(n,null,"  "),"Error: ",e)}if(t){var i=void 0;try{i=Promise.resolve(e.handle(n))}catch(e){r.suppressWarnings||console.warn("Proxy(".concat(r.name,"): Error occurred when handler was processing incoming message:"),JSON.stringify(n,null,"  "),"Error: ",e),i=Promise.resolve()}return i.then((function(e){if(!e){var t="Handler for message: ".concat(JSON.stringify(n,null,"  ")," did not return a response message. The default response message will be returned instead.");r.suppressWarnings||console.warn("Proxy(".concat(r.name,"): ").concat(t)),e={warning:t}}r.sendResponse(s,e,o)})),!0}}))||this.suppressWarnings||console.warn("Proxy(".concat(this.name,") did not handle message. Handlers: ").concat(this.handlers.length,"  Message: ").concat(JSON.stringify(n,null,""),"."))}else this.suppressWarnings||console.warn("Proxy(".concat(this.name,"): Received message that was not an object. Discarding message"))}},e.messagePropertyName="windowPostMessageProxy",e}();r.WindowPostMessageProxy=s})(),e})()));
 //# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ })

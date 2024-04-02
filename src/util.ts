@@ -7,12 +7,12 @@ import { HttpPostMessage } from 'http-post-message';
  * @hidden
  */
 const allowedPowerBiHostsRegex =
-  new RegExp(/(.+\.powerbi\.com$)|(.+\.fabric\.microsoft\.com$)|(.+\.analysis\.windows-int\.net$)|(.+\.analysis-df\.windows\.net$)/g);
+  new RegExp(/(.+\.powerbi\.com$)|(.+\.fabric\.microsoft\.com$)|(.+\.analysis\.windows-int\.net$)|(.+\.analysis-df\.windows\.net$)/);
 
 /**
  * @hidden
  */
-const allowedPowerBiHostsSovRegex = new RegExp(/^app\.powerbi\.cn$|^app(\.mil\.|\.high\.|\.)powerbigov\.us$|^app\.powerbi\.eaglex\.ic\.gov$|^app\.powerbi\.microsoft\.scloud$/g);
+const allowedPowerBiHostsSovRegex = new RegExp(/^app\.powerbi\.cn$|^app(\.mil\.|\.high\.|\.)powerbigov\.us$|^app\.powerbi\.eaglex\.ic\.gov$|^app\.powerbi\.microsoft\.scloud$/);
 
 /**
  * @hidden
