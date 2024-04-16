@@ -32,6 +32,7 @@ export {
   IDashboardEmbedConfiguration,
   ITileEmbedConfiguration,
   IQuickCreateConfiguration,
+  IReportCreateConfiguration,
   Embed,
   ILocaleSettings,
   IEmbedSettings,
@@ -52,6 +53,9 @@ export {
 export {
   QuickCreate
 } from './quickCreate';
+export {
+  Create
+} from './create';
 export {
   BasicFilterBuilder,
   AdvancedFilterBuilder,

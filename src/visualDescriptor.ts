@@ -10,11 +10,12 @@ import {
   IExportDataResult,
   IFilter,
   ISlicerState,
+  ISmartNarratives,
   ISortByVisualRequest,
   IUpdateFiltersRequest,
   IVisualLayout,
   VisualContainerDisplayMode,
-  VisualLevelFilters
+  VisualLevelFilters,
 } from 'powerbi-models';
 import { IHttpPostMessageResponse } from 'http-post-message';
 import { IFilterable } from './ifilterable';
@@ -318,5 +319,23 @@ export class VisualDescriptor implements IVisualNode, IFilterable {
     const report = this.page.report as Report;
 
     return report.resizeVisual(pageName, visualName, width, height);
+  }
+
+  /**
+   * Get insights for single visual
+   *
+   * ```javascript
+   * visual.getSmartNarrativeInsights();
+   * ```
+   *
+   * @returns {Promise<ISmartNarratives>}
+   */
+  async getSmartNarrativeInsights(): Promise<ISmartNarratives> {
+    try {
+      const response = await this.page.report.service.hpm.get<ISmartNarratives>(`/report/pages/${this.page.name}/visuals/${this.name}/smartNarrativeInsights`, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow);
+      return response.body;
+    } catch (response) {
+      throw response.body;
+    }
   }
 }
