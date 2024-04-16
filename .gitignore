@@ -11,3 +11,5 @@ package-lock.json
 demo/package-lock.json
 .vscode
 owners.txt
+test/util.spec.ts
+.config/tsaoptions.json
