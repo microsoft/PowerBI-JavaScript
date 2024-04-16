@@ -4,6 +4,22 @@
 import { HttpPostMessage } from 'http-post-message';
 
 /**
+ * @hidden
+ */
+const allowedPowerBiHostsRegex =
+  new RegExp(/(.+\.powerbi\.com$)|(.+\.fabric\.microsoft\.com$)|(.+\.analysis\.windows-int\.net$)|(.+\.analysis-df\.windows\.net$)/);
+
+/**
+ * @hidden
+ */
+const allowedPowerBiHostsSovRegex = new RegExp(/^app\.powerbi\.cn$|^app(\.mil\.|\.high\.|\.)powerbigov\.us$|^app\.powerbi\.eaglex\.ic\.gov$|^app\.powerbi\.microsoft\.scloud$/);
+
+/**
+ * @hidden
+ */
+const expectedEmbedUrlProtocol: string = "https:";
+
+/**
  * Raises a custom event with event data on the specified HTML element.
  *
  * @export
@@ -194,7 +210,7 @@ export function autoAuthInEmbedUrl(embedUrl: string): boolean {
 export function getRandomValue(): number {
 
   // window.msCrypto for IE
-  const cryptoObj = window.crypto || window.msCrypto;
+  const cryptoObj = window.crypto || (window as any).msCrypto;
   const randomValueArray = new Uint32Array(1);
   cryptoObj.getRandomValues(randomValueArray);
 
@@ -222,4 +238,22 @@ export function getTimeDiffInMilliseconds(start: Date, end: Date): number {
  */
 export function isCreate(embedType: string): boolean {
   return embedType === 'create' || embedType === 'quickcreate';
+}
+
+/**
+ * Checks if the embedUrl has an allowed power BI domain
+ * @hidden
+ */
+export function validateEmbedUrl(embedUrl: string): boolean {
+  if (embedUrl) {
+    let url: URL;
+    try {
+      url = new URL(embedUrl.toLowerCase());
+    } catch(e) {
+      // invalid URL
+      return false;
+    }
+    return url.protocol === expectedEmbedUrlProtocol &&
+      (allowedPowerBiHostsRegex.test(url.hostname) || allowedPowerBiHostsSovRegex.test(url.hostname));
+  }
 }

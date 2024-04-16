@@ -3,9 +3,9 @@
 
 import * as models from 'powerbi-models';
 import * as sdkConfig from './config';
-import { EmbedUrlNotSupported } from './errors';
+import { EmbedUrlNotSupported, invalidEmbedUrlErrorMessage } from './errors';
 import { ICustomEvent, IEvent, IEventHandler, Service } from './service';
-import { addParamToUrl, assign, autoAuthInEmbedUrl, createRandomString, getTimeDiffInMilliseconds, remove, isCreate } from './util';
+import { addParamToUrl, assign, autoAuthInEmbedUrl, createRandomString, getTimeDiffInMilliseconds, remove, isCreate, validateEmbedUrl } from './util';
 
 declare global {
   interface Document {
@@ -49,6 +49,8 @@ export type ITileEmbedConfiguration = models.ITileEmbedConfiguration;
 export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
 
 export type IQuickCreateConfiguration = models.IQuickCreateConfiguration;
+
+export type IReportCreateConfiguration = models.IReportCreateConfiguration;
 
 export type ILocaleSettings = models.ILocaleSettings;
 
@@ -571,7 +573,7 @@ export abstract class Embed {
 
     const accessTokenProvider = eventHooks.accessTokenProvider;
     if (!!accessTokenProvider) {
-      if ((['create', 'quickcreate', 'report'].indexOf(this.embedtype.toLowerCase()) ===  -1) || this.config.tokenType !== models.TokenType.Aad) {
+      if ((['create', 'quickcreate', 'report'].indexOf(this.embedtype.toLowerCase()) === -1) || this.config.tokenType !== models.TokenType.Aad) {
         throw new Error("accessTokenProvider is only supported in report SaaS embed");
       }
     }
@@ -631,10 +633,6 @@ export abstract class Embed {
 
     // Trim spaces to fix user mistakes.
     hostname = hostname.toLowerCase().trim();
-
-    if (hostname.indexOf("http://") === 0) {
-      throw new Error("HTTP is not allowed. HTTPS is required");
-    }
 
     if (hostname.indexOf("https://") === 0) {
       return `${hostname}/${endpoint}`;
@@ -743,6 +741,9 @@ export abstract class Embed {
     if (!this.iframe) {
       const iframeContent = document.createElement("iframe");
       const embedUrl = this.config.uniqueId ? addParamToUrl(this.config.embedUrl, 'uid', this.config.uniqueId) : this.config.embedUrl;
+      if (!validateEmbedUrl(embedUrl)) {
+        throw new Error(invalidEmbedUrlErrorMessage);
+      }
 
       iframeContent.style.width = '100%';
       iframeContent.style.height = '100%';

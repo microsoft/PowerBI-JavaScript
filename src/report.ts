@@ -637,6 +637,10 @@ export class Report extends Embed implements IReportNode, IFilterable {
    * ```
    */
   async refresh(): Promise<void> {
+    if (isRDLEmbed(this.config.embedUrl)) {
+      return Promise.reject(APINotSupportedForRDLError);
+    }
+
     try {
       const response = await this.service.hpm.post<void>('/report/refresh', null, { uid: this.config.uniqueId }, this.iframe.contentWindow);
       return response.body;

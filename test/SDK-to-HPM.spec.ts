@@ -48,9 +48,10 @@ describe('SDK-to-HPM', function () {
     };
 
     spyOn(utils, "getTimeDiffInMilliseconds").and.callFake(() => 700); // Prevent requests from being throttled.
+    spyOn(utils, 'validateEmbedUrl').and.callFake(() => { return true; });
 
     powerbi = new service.Service(spyHpmFactory, noop, spyRouterFactory, { wpmpName: 'SDK-to-HPM report wpmp' });
-
+    
     sdkSessionId = powerbi.getSdkSessionId();
   });
 
