@@ -40,6 +40,13 @@ Ideally you would use a module loader or a compilation step to import using ES6 
 import * as pbi from 'powerbi-client';
 ```
 
+To embed Power BI artifacts, you need an instance of the Service class from the `powerbi-client` package.
+
+```javascript
+import { service, factories } from 'powerbi-client';
+const powerbi = new service.Service(factories.hpmFactory, factories.wpmpFactory, factories.routerFactory);
+```
+
 However, the library is exported as a Universal Module and the powerbi.js script can be included before your app's closing `</body>` tag as:
 
 ```html
