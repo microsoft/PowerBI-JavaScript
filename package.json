@@ -12,8 +12,6 @@
   },
   "scripts": {
     "build": "gulp build",
-    "start": "http-server ./demo",
-    "prestart": "cd demo && npm install",
     "test": "gulp test",
     "gulp": "gulp",
     "tests": "npm test -- --chrome --watch"
@@ -48,8 +46,7 @@
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",
     "gulp-flatten": "^0.4.0",
-    "gulp-gh-pages": "^0.5.4",
-    "gulp-header": "^2.0.9",
+    "gulp-prepend": "^0.3.0",
     "gulp-help-four": "^0.2.3",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
@@ -69,7 +66,6 @@
     "karma-jasmine-html-reporter": "1.7.0",
     "karma-junit-reporter": "^2.0.1",
     "karma-spec-reporter": "0.0.32",
-    "moment": "^2.14.1",
     "ts-loader": "^6.2.2",
     "typedoc": "^0.23.23",
     "typescript": "~4.6.0",
@@ -88,7 +84,8 @@
   },
   "overrides": {
     "glob-parent": "^6.0.2",
-    "lodash.template": "^4.5.0",
-    "micromatch": "^4.0.5"
+    "micromatch": "^4.0.5",
+    "braces": "3.0.3",
+    "ws": "8.17.1"
   }
 }

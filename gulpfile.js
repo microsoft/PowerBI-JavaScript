@@ -1,7 +1,6 @@
 const fs = require('fs');
 const gulp = require('gulp');
-const ghPages = require('gulp-gh-pages');
-const header = require('gulp-header');
+const prepend = require('gulp-prepend');
 const help = require('gulp-help-four');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
@@ -9,7 +8,6 @@ const eslint = require("gulp-eslint");
 const ts = require('gulp-typescript');
 const flatten = require('gulp-flatten');
 const del = require('del');
-const moment = require('moment');
 const karma = require('karma');
 const typedoc = require('gulp-typedoc');
 const watch = require('gulp-watch');
@@ -27,16 +25,6 @@ const webpackBanner = "// " + package.name + " v" + package.version + "\n"
   + "// Copyright (c) Microsoft Corporation.\n"
   + "// Licensed under the MIT License.";
 const banner = webpackBanner + "\n";
-
-gulp.task('ghpages', 'Deploy documentation to gh-pages', ['nojekyll'], function () {
-  return gulp.src(['./docs/**/*'], {
-    dot: true
-  })
-    .pipe(ghPages({
-      force: true,
-      message: 'Update ' + moment().format('LLL')
-    }));
-});
 
 gulp.task("docs", 'Compile documentation from src code', function () {
   return gulp
@@ -59,11 +47,6 @@ gulp.task("docs", 'Compile documentation from src code', function () {
     }));
 });
 
-gulp.task('copydemotodocs', 'Copy the demo to the docs', function () {
-  return gulp.src(["demo/**/*"])
-    .pipe(gulp.dest("docs/demo"));
-});
-
 gulp.task('nojekyll', 'Add .nojekyll file to docs directory', function (done) {
   fs.writeFile('./docs/.nojekyll', '', function (error) {
     if (error) {
@@ -72,11 +55,6 @@ gulp.task('nojekyll', 'Add .nojekyll file to docs directory', function (done) {
 
     done();
   });
-});
-
-gulp.task('watch', 'Watches for changes', ['lint'], function () {
-  gulp.watch(['./src/**/*.ts', './test/**/*.ts'], ['lint:ts']);
-  gulp.watch(['./test/**/*.ts'], ['test']);
 });
 
 gulp.task('lint', 'Lints all files', function (done) {
@@ -103,7 +81,7 @@ gulp.task('build', 'Runs a full build', function (done) {
     'config',
     ['compile:ts', 'compile:dts'],
     'min:js',
-    'header',
+    'prepend',
     done
   );
 });
@@ -113,7 +91,6 @@ gulp.task('build:docs', 'Build docs folder', function (done) {
     'clean:docs',
     'docs',
     'nojekyll',
-    'copydemotodocs',
     done
   );
 });
@@ -124,9 +101,9 @@ gulp.task('config', 'Update config version with package version', function () {
     .pipe(gulp.dest('.'));
 });
 
-gulp.task('header', 'Add header to distributed files', function () {
+gulp.task('prepend', 'Add header to distributed files', function () {
   return gulp.src(['./dist/*.d.ts'])
-    .pipe(header(banner))
+    .pipe(prepend(banner))
     .pipe(gulp.dest('./dist'));
 });
 
@@ -167,7 +144,7 @@ gulp.task('min:js', 'Creates minified JavaScript file', function () {
     .pipe(webpackStream({
       config: webpackConfig
     }))
-    .pipe(header(banner))
+    .pipe(prepend(banner))
     .pipe(rename({
       suffix: '.min'
     }))
