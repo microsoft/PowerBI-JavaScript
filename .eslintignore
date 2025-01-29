@@ -1,5 +1,4 @@
 # Task 512388: Fix eslint warnings and errors in tests
 /node_modules/*
-demo/*
 /**/*.js
 dist/*

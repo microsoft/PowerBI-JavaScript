@@ -112,9 +112,9 @@ export class Visual extends Report {
     config.settings.navContentPaneEnabled = false;
     config.settings.layoutType = LayoutType.Custom;
     config.settings.customLayout = {
-      displayOption: DisplayOption.FitToPage,
-      pageSize: pageSize,
-      pagesLayout: pagesLayout
+      displayOption: config.settings?.customLayout?.displayOption ?? DisplayOption.FitToPage,
+      pageSize: config.settings?.customLayout?.pageSize ?? pageSize,
+      pagesLayout: config.settings?.customLayout?.pagesLayout ?? pagesLayout
     };
 
     this.config = config;
