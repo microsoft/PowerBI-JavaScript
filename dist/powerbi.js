@@ -983,44 +983,44 @@ exports.validatePrintSettings = validatePrintSettings;
 
 /***/ }),
 /* 1 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nested_webpack_require_47328__) => {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Validators = void 0;
-var barsValidator_1 = __webpack_require__(2);
-var bookmarkValidator_1 = __webpack_require__(5);
-var commandsSettingsValidator_1 = __webpack_require__(6);
-var customThemeValidator_1 = __webpack_require__(7);
-var dashboardLoadValidator_1 = __webpack_require__(8);
-var datasetBindingValidator_1 = __webpack_require__(9);
-var exportDataValidator_1 = __webpack_require__(10);
-var extensionsValidator_1 = __webpack_require__(11);
-var filtersValidator_1 = __webpack_require__(12);
-var layoutValidator_1 = __webpack_require__(13);
-var pageValidator_1 = __webpack_require__(14);
-var panesValidator_1 = __webpack_require__(15);
-var qnaValidator_1 = __webpack_require__(16);
-var reportCreateValidator_1 = __webpack_require__(17);
-var reportLoadValidator_1 = __webpack_require__(18);
-var paginatedReportLoadValidator_1 = __webpack_require__(19);
-var saveAsParametersValidator_1 = __webpack_require__(20);
-var selectorsValidator_1 = __webpack_require__(21);
-var settingsValidator_1 = __webpack_require__(22);
-var slicersValidator_1 = __webpack_require__(23);
-var tileLoadValidator_1 = __webpack_require__(24);
-var visualSettingsValidator_1 = __webpack_require__(25);
-var anyOfValidator_1 = __webpack_require__(26);
-var fieldForbiddenValidator_1 = __webpack_require__(27);
-var fieldRequiredValidator_1 = __webpack_require__(28);
-var mapValidator_1 = __webpack_require__(29);
-var typeValidator_1 = __webpack_require__(4);
-var parameterPanelValidator_1 = __webpack_require__(30);
-var datasetCreateConfigValidator_1 = __webpack_require__(31);
-var quickCreateValidator_1 = __webpack_require__(32);
-var printSettingsValidator_1 = __webpack_require__(33);
-var paginatedReportDatasetBindingValidator_1 = __webpack_require__(34);
+var barsValidator_1 = __nested_webpack_require_47328__(2);
+var bookmarkValidator_1 = __nested_webpack_require_47328__(5);
+var commandsSettingsValidator_1 = __nested_webpack_require_47328__(6);
+var customThemeValidator_1 = __nested_webpack_require_47328__(7);
+var dashboardLoadValidator_1 = __nested_webpack_require_47328__(8);
+var datasetBindingValidator_1 = __nested_webpack_require_47328__(9);
+var exportDataValidator_1 = __nested_webpack_require_47328__(10);
+var extensionsValidator_1 = __nested_webpack_require_47328__(11);
+var filtersValidator_1 = __nested_webpack_require_47328__(12);
+var layoutValidator_1 = __nested_webpack_require_47328__(13);
+var pageValidator_1 = __nested_webpack_require_47328__(14);
+var panesValidator_1 = __nested_webpack_require_47328__(15);
+var qnaValidator_1 = __nested_webpack_require_47328__(16);
+var reportCreateValidator_1 = __nested_webpack_require_47328__(17);
+var reportLoadValidator_1 = __nested_webpack_require_47328__(18);
+var paginatedReportLoadValidator_1 = __nested_webpack_require_47328__(19);
+var saveAsParametersValidator_1 = __nested_webpack_require_47328__(20);
+var selectorsValidator_1 = __nested_webpack_require_47328__(21);
+var settingsValidator_1 = __nested_webpack_require_47328__(22);
+var slicersValidator_1 = __nested_webpack_require_47328__(23);
+var tileLoadValidator_1 = __nested_webpack_require_47328__(24);
+var visualSettingsValidator_1 = __nested_webpack_require_47328__(25);
+var anyOfValidator_1 = __nested_webpack_require_47328__(26);
+var fieldForbiddenValidator_1 = __nested_webpack_require_47328__(27);
+var fieldRequiredValidator_1 = __nested_webpack_require_47328__(28);
+var mapValidator_1 = __nested_webpack_require_47328__(29);
+var typeValidator_1 = __nested_webpack_require_47328__(4);
+var parameterPanelValidator_1 = __nested_webpack_require_47328__(30);
+var datasetCreateConfigValidator_1 = __nested_webpack_require_47328__(31);
+var quickCreateValidator_1 = __nested_webpack_require_47328__(32);
+var printSettingsValidator_1 = __nested_webpack_require_47328__(33);
+var paginatedReportDatasetBindingValidator_1 = __nested_webpack_require_47328__(34);
 exports.Validators = {
     addBookmarkRequestValidator: new bookmarkValidator_1.AddBookmarkRequestValidator(),
     advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
@@ -10935,7 +10935,7 @@ var Report = /** @class */ (function (_super) {
         });
     };
     /** @hidden */
-    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged", "renderingStarted", "blur"];
+    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied", "dataHyperlinkClicked", "visualRendered", "visualClicked", "selectionChanged", "renderingStarted", "blur", "exportDataCompleted"];
     /** @hidden */
     Report.reportIdAttribute = 'powerbi-report-id';
     /** @hidden */

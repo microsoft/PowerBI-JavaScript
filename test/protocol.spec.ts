@@ -1054,6 +1054,29 @@ describe('Protocol', function () {
       });
     });
 
+    describe('export visual data', function () {
+      it('POST /reports/:uniqueId/events/exportDataCompleted when user exports visual data', async function () {
+        // Arrange
+        const testData = {
+          uniqueId: 'uniqueId',
+          reportId: 'fakeReportId',
+          event: {
+            status: 0
+          }
+        };
+        const testExpectedRequest = {
+          method: 'POST',
+          url: `/reports/${testData.uniqueId}/events/exportDataCompleted`,
+          body: testData.event
+        };
+        // Act
+        const response = await iframeHpm.post(testExpectedRequest.url, testData.event);
+        // Assert
+        expect(response.statusCode).toBe(202);
+        expect(spyHandler.handle).toHaveBeenCalledWith(jasmine.objectContaining(testExpectedRequest));
+      });
+    });
+
     describe('filters (report level)', function () {
       it('POST /reports/:uniqueId/events/filtersApplied when user changes filter', async function () {
         // Arrange
