@@ -1,4 +1,4 @@
-// powerbi-client v2.23.10
+// powerbi-client v2.24.0
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -32,7 +32,7 @@ return /******/ (() => { // webpackBootstrap
   \****************************************************/
 (module) {
 
-// powerbi-models v2.0.1
+// powerbi-models v2.1.1
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -64,9 +64,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.BrowserPrintAdjustmentsMode = exports.AggregateFunction = exports.DataCacheMode = exports.CredentialType = exports.isVisualCalculation = exports.isPercentOfGrandTotal = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.HierarchyIdentityFilter = exports.HierarchyFilter = exports.AdvancedFilter = exports.TupleFilter = exports.IdentityFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.ReportAlignment = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
-exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateUpdateFiltersRequest = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateQuickCreate = exports.validateCreateReport = exports.validatePaginatedReportLoad = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.isReportFiltersArray = exports.isOnLoadFilters = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = void 0;
-exports.validatePrintSettings = exports.validateZoomLevel = exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = void 0;
+exports.ExportDataResultType = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.BrowserPrintAdjustmentsMode = exports.AggregateFunction = exports.DataCacheMode = exports.CredentialType = exports.isVisualCalculation = exports.isPercentOfGrandTotal = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.HierarchyIdentityFilter = exports.HierarchyFilter = exports.AdvancedFilter = exports.TupleFilter = exports.IdentityFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.ReportAlignment = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
+exports.validateUpdateFiltersRequest = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateQuickCreate = exports.validateCreateReport = exports.validatePaginatedReportLoad = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.isReportFiltersArray = exports.isOnLoadFilters = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataCompletedStatus = exports.ExportDataResultFormat = void 0;
+exports.validatePrintSettings = exports.validateZoomLevel = exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = void 0;
 var validator_1 = __nested_webpack_require_611__(1);
 var TraceType;
 (function (TraceType) {
@@ -616,6 +616,22 @@ var ExportDataType;
     ExportDataType[ExportDataType["Summarized"] = 0] = "Summarized";
     ExportDataType[ExportDataType["Underlying"] = 1] = "Underlying";
 })(ExportDataType = exports.ExportDataType || (exports.ExportDataType = {}));
+var ExportDataResultType;
+(function (ExportDataResultType) {
+    ExportDataResultType[ExportDataResultType["Summarized"] = 0] = "Summarized";
+    ExportDataResultType[ExportDataResultType["Underlying"] = 1] = "Underlying";
+    ExportDataResultType[ExportDataResultType["DataWithCurrentLayout"] = 2] = "DataWithCurrentLayout";
+})(ExportDataResultType = exports.ExportDataResultType || (exports.ExportDataResultType = {}));
+var ExportDataResultFormat;
+(function (ExportDataResultFormat) {
+    ExportDataResultFormat[ExportDataResultFormat["Csv"] = 0] = "Csv";
+    ExportDataResultFormat[ExportDataResultFormat["Xlsx"] = 1] = "Xlsx";
+})(ExportDataResultFormat = exports.ExportDataResultFormat || (exports.ExportDataResultFormat = {}));
+var ExportDataCompletedStatus;
+(function (ExportDataCompletedStatus) {
+    ExportDataCompletedStatus[ExportDataCompletedStatus["Succeeded"] = 0] = "Succeeded";
+    ExportDataCompletedStatus[ExportDataCompletedStatus["Failed"] = 1] = "Failed";
+})(ExportDataCompletedStatus = exports.ExportDataCompletedStatus || (exports.ExportDataCompletedStatus = {}));
 var BookmarksPlayMode;
 (function (BookmarksPlayMode) {
     BookmarksPlayMode[BookmarksPlayMode["Off"] = 0] = "Off";
@@ -983,44 +999,44 @@ exports.validatePrintSettings = validatePrintSettings;
 
 /***/ }),
 /* 1 */
-/***/ ((__unused_webpack_module, exports, __nested_webpack_require_47328__) => {
+/***/ ((__unused_webpack_module, exports, __nested_webpack_require_48531__) => {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Validators = void 0;
-var barsValidator_1 = __nested_webpack_require_47328__(2);
-var bookmarkValidator_1 = __nested_webpack_require_47328__(5);
-var commandsSettingsValidator_1 = __nested_webpack_require_47328__(6);
-var customThemeValidator_1 = __nested_webpack_require_47328__(7);
-var dashboardLoadValidator_1 = __nested_webpack_require_47328__(8);
-var datasetBindingValidator_1 = __nested_webpack_require_47328__(9);
-var exportDataValidator_1 = __nested_webpack_require_47328__(10);
-var extensionsValidator_1 = __nested_webpack_require_47328__(11);
-var filtersValidator_1 = __nested_webpack_require_47328__(12);
-var layoutValidator_1 = __nested_webpack_require_47328__(13);
-var pageValidator_1 = __nested_webpack_require_47328__(14);
-var panesValidator_1 = __nested_webpack_require_47328__(15);
-var qnaValidator_1 = __nested_webpack_require_47328__(16);
-var reportCreateValidator_1 = __nested_webpack_require_47328__(17);
-var reportLoadValidator_1 = __nested_webpack_require_47328__(18);
-var paginatedReportLoadValidator_1 = __nested_webpack_require_47328__(19);
-var saveAsParametersValidator_1 = __nested_webpack_require_47328__(20);
-var selectorsValidator_1 = __nested_webpack_require_47328__(21);
-var settingsValidator_1 = __nested_webpack_require_47328__(22);
-var slicersValidator_1 = __nested_webpack_require_47328__(23);
-var tileLoadValidator_1 = __nested_webpack_require_47328__(24);
-var visualSettingsValidator_1 = __nested_webpack_require_47328__(25);
-var anyOfValidator_1 = __nested_webpack_require_47328__(26);
-var fieldForbiddenValidator_1 = __nested_webpack_require_47328__(27);
-var fieldRequiredValidator_1 = __nested_webpack_require_47328__(28);
-var mapValidator_1 = __nested_webpack_require_47328__(29);
-var typeValidator_1 = __nested_webpack_require_47328__(4);
-var parameterPanelValidator_1 = __nested_webpack_require_47328__(30);
-var datasetCreateConfigValidator_1 = __nested_webpack_require_47328__(31);
-var quickCreateValidator_1 = __nested_webpack_require_47328__(32);
-var printSettingsValidator_1 = __nested_webpack_require_47328__(33);
-var paginatedReportDatasetBindingValidator_1 = __nested_webpack_require_47328__(34);
+var barsValidator_1 = __nested_webpack_require_48531__(2);
+var bookmarkValidator_1 = __nested_webpack_require_48531__(5);
+var commandsSettingsValidator_1 = __nested_webpack_require_48531__(6);
+var customThemeValidator_1 = __nested_webpack_require_48531__(7);
+var dashboardLoadValidator_1 = __nested_webpack_require_48531__(8);
+var datasetBindingValidator_1 = __nested_webpack_require_48531__(9);
+var exportDataValidator_1 = __nested_webpack_require_48531__(10);
+var extensionsValidator_1 = __nested_webpack_require_48531__(11);
+var filtersValidator_1 = __nested_webpack_require_48531__(12);
+var layoutValidator_1 = __nested_webpack_require_48531__(13);
+var pageValidator_1 = __nested_webpack_require_48531__(14);
+var panesValidator_1 = __nested_webpack_require_48531__(15);
+var qnaValidator_1 = __nested_webpack_require_48531__(16);
+var reportCreateValidator_1 = __nested_webpack_require_48531__(17);
+var reportLoadValidator_1 = __nested_webpack_require_48531__(18);
+var paginatedReportLoadValidator_1 = __nested_webpack_require_48531__(19);
+var saveAsParametersValidator_1 = __nested_webpack_require_48531__(20);
+var selectorsValidator_1 = __nested_webpack_require_48531__(21);
+var settingsValidator_1 = __nested_webpack_require_48531__(22);
+var slicersValidator_1 = __nested_webpack_require_48531__(23);
+var tileLoadValidator_1 = __nested_webpack_require_48531__(24);
+var visualSettingsValidator_1 = __nested_webpack_require_48531__(25);
+var anyOfValidator_1 = __nested_webpack_require_48531__(26);
+var fieldForbiddenValidator_1 = __nested_webpack_require_48531__(27);
+var fieldRequiredValidator_1 = __nested_webpack_require_48531__(28);
+var mapValidator_1 = __nested_webpack_require_48531__(29);
+var typeValidator_1 = __nested_webpack_require_48531__(4);
+var parameterPanelValidator_1 = __nested_webpack_require_48531__(30);
+var datasetCreateConfigValidator_1 = __nested_webpack_require_48531__(31);
+var quickCreateValidator_1 = __nested_webpack_require_48531__(32);
+var printSettingsValidator_1 = __nested_webpack_require_48531__(33);
+var paginatedReportDatasetBindingValidator_1 = __nested_webpack_require_48531__(34);
 exports.Validators = {
     addBookmarkRequestValidator: new bookmarkValidator_1.AddBookmarkRequestValidator(),
     advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
@@ -1172,7 +1188,7 @@ exports.Validators = {
 
 /***/ }),
 /* 2 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_65195__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_66398__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -1193,9 +1209,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatusBarValidator = exports.ActionBarValidator = exports.ReportBarsValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_65195__(3);
-var typeValidator_1 = __nested_webpack_require_65195__(4);
-var validator_1 = __nested_webpack_require_65195__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_66398__(3);
+var typeValidator_1 = __nested_webpack_require_66398__(4);
+var validator_1 = __nested_webpack_require_66398__(1);
 var ReportBarsValidator = /** @class */ (function (_super) {
     __extends(ReportBarsValidator, _super);
     function ReportBarsValidator() {
@@ -1575,7 +1591,7 @@ exports.RangeValidator = RangeValidator;
 
 /***/ }),
 /* 5 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_81074__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_82277__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -1596,9 +1612,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CaptureBookmarkRequestValidator = exports.CaptureBookmarkOptionsValidator = exports.ApplyBookmarkStateRequestValidator = exports.ApplyBookmarkByNameRequestValidator = exports.AddBookmarkRequestValidator = exports.PlayBookmarkRequestValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_81074__(3);
-var typeValidator_1 = __nested_webpack_require_81074__(4);
-var validator_1 = __nested_webpack_require_81074__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_82277__(3);
+var typeValidator_1 = __nested_webpack_require_82277__(4);
+var validator_1 = __nested_webpack_require_82277__(1);
 var PlayBookmarkRequestValidator = /** @class */ (function (_super) {
     __extends(PlayBookmarkRequestValidator, _super);
     function PlayBookmarkRequestValidator() {
@@ -1765,7 +1781,7 @@ exports.CaptureBookmarkRequestValidator = CaptureBookmarkRequestValidator;
 
 /***/ }),
 /* 6 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_89550__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_90753__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -1786,9 +1802,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaginatedReportCommandsValidator = exports.SingleCommandSettingsValidator = exports.CommandsSettingsValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_89550__(3);
-var typeValidator_1 = __nested_webpack_require_89550__(4);
-var validator_1 = __nested_webpack_require_89550__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_90753__(3);
+var typeValidator_1 = __nested_webpack_require_90753__(4);
+var validator_1 = __nested_webpack_require_90753__(1);
 var CommandsSettingsValidator = /** @class */ (function (_super) {
     __extends(CommandsSettingsValidator, _super);
     function CommandsSettingsValidator() {
@@ -1932,7 +1948,7 @@ exports.PaginatedReportCommandsValidator = PaginatedReportCommandsValidator;
 
 /***/ }),
 /* 7 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_96583__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_97786__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -1953,8 +1969,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CustomThemeValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_96583__(3);
-var typeValidator_1 = __nested_webpack_require_96583__(4);
+var multipleFieldsValidator_1 = __nested_webpack_require_97786__(3);
+var typeValidator_1 = __nested_webpack_require_97786__(4);
 var CustomThemeValidator = /** @class */ (function (_super) {
     __extends(CustomThemeValidator, _super);
     function CustomThemeValidator() {
@@ -1984,7 +2000,7 @@ exports.CustomThemeValidator = CustomThemeValidator;
 
 /***/ }),
 /* 8 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_98737__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_99940__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2005,9 +2021,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DashboardLoadValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_98737__(3);
-var typeValidator_1 = __nested_webpack_require_98737__(4);
-var validator_1 = __nested_webpack_require_98737__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_99940__(3);
+var typeValidator_1 = __nested_webpack_require_99940__(4);
+var validator_1 = __nested_webpack_require_99940__(1);
 var DashboardLoadValidator = /** @class */ (function (_super) {
     __extends(DashboardLoadValidator, _super);
     function DashboardLoadValidator() {
@@ -2057,7 +2073,7 @@ exports.DashboardLoadValidator = DashboardLoadValidator;
 
 /***/ }),
 /* 9 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_101736__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_102939__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2078,9 +2094,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DatasetBindingValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_101736__(3);
-var typeValidator_1 = __nested_webpack_require_101736__(4);
-var validator_1 = __nested_webpack_require_101736__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_102939__(3);
+var typeValidator_1 = __nested_webpack_require_102939__(4);
+var validator_1 = __nested_webpack_require_102939__(1);
 var DatasetBindingValidator = /** @class */ (function (_super) {
     __extends(DatasetBindingValidator, _super);
     function DatasetBindingValidator() {
@@ -2121,7 +2137,7 @@ exports.DatasetBindingValidator = DatasetBindingValidator;
 
 /***/ }),
 /* 10 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_104432__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_105635__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2142,8 +2158,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExportDataRequestValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_104432__(3);
-var typeValidator_1 = __nested_webpack_require_104432__(4);
+var multipleFieldsValidator_1 = __nested_webpack_require_105635__(3);
+var typeValidator_1 = __nested_webpack_require_105635__(4);
 var ExportDataRequestValidator = /** @class */ (function (_super) {
     __extends(ExportDataRequestValidator, _super);
     function ExportDataRequestValidator() {
@@ -2177,7 +2193,7 @@ exports.ExportDataRequestValidator = ExportDataRequestValidator;
 
 /***/ }),
 /* 11 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_106776__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_107979__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2198,9 +2214,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExtensionsValidator = exports.MenuGroupExtensionValidator = exports.ExtensionValidator = exports.CommandExtensionValidator = exports.ExtensionItemValidator = exports.ExtensionPointsValidator = exports.GroupedMenuExtensionValidator = exports.FlatMenuExtensionValidator = exports.MenuExtensionBaseValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_106776__(3);
-var typeValidator_1 = __nested_webpack_require_106776__(4);
-var validator_1 = __nested_webpack_require_106776__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_107979__(3);
+var typeValidator_1 = __nested_webpack_require_107979__(4);
+var validator_1 = __nested_webpack_require_107979__(1);
 var MenuExtensionBaseValidator = /** @class */ (function (_super) {
     __extends(MenuExtensionBaseValidator, _super);
     function MenuExtensionBaseValidator() {
@@ -2470,7 +2486,7 @@ exports.ExtensionsValidator = ExtensionsValidator;
 
 /***/ }),
 /* 12 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_119267__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_120470__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2491,9 +2507,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OnLoadFiltersValidator = exports.OnLoadFiltersBaseRemoveOperationValidator = exports.OnLoadFiltersBaseValidator = exports.ConditionItemValidator = exports.RemoveFiltersRequestValidator = exports.UpdateFiltersRequestValidator = exports.FilterValidator = exports.IncludeExcludePointValueValidator = exports.HierarchyFilterNodeValidator = exports.HierarchyFilterValidator = exports.IncludeExcludeFilterValidator = exports.NotSupportedFilterValidator = exports.TopNFilterValidator = exports.RelativeTimeFilterValidator = exports.RelativeDateFilterValidator = exports.RelativeDateTimeFilterValidator = exports.AdvancedFilterValidator = exports.BasicFilterValidator = exports.FilterValidatorBase = exports.FilterDisplaySettingsValidator = exports.FilterMeasureTargetValidator = exports.FilterKeyHierarchyTargetValidator = exports.FilterHierarchyTargetValidator = exports.FilterKeyColumnsTargetValidator = exports.FilterColumnTargetValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_119267__(3);
-var typeValidator_1 = __nested_webpack_require_119267__(4);
-var validator_1 = __nested_webpack_require_119267__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_120470__(3);
+var typeValidator_1 = __nested_webpack_require_120470__(4);
+var validator_1 = __nested_webpack_require_120470__(1);
 var FilterColumnTargetValidator = /** @class */ (function (_super) {
     __extends(FilterColumnTargetValidator, _super);
     function FilterColumnTargetValidator() {
@@ -3268,7 +3284,7 @@ exports.OnLoadFiltersValidator = OnLoadFiltersValidator;
 
 /***/ }),
 /* 13 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_154573__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_155776__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -3289,9 +3305,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageLayoutValidator = exports.DisplayStateValidator = exports.VisualLayoutValidator = exports.CustomLayoutValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_154573__(3);
-var typeValidator_1 = __nested_webpack_require_154573__(4);
-var validator_1 = __nested_webpack_require_154573__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_155776__(3);
+var typeValidator_1 = __nested_webpack_require_155776__(4);
+var validator_1 = __nested_webpack_require_155776__(1);
 var CustomLayoutValidator = /** @class */ (function (_super) {
     __extends(CustomLayoutValidator, _super);
     function CustomLayoutValidator() {
@@ -3428,7 +3444,7 @@ exports.PageLayoutValidator = PageLayoutValidator;
 
 /***/ }),
 /* 14 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_161052__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_162255__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -3449,9 +3465,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageViewFieldValidator = exports.PageValidator = exports.CustomPageSizeValidator = exports.PageSizeValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_161052__(3);
-var typeValidator_1 = __nested_webpack_require_161052__(4);
-var validator_1 = __nested_webpack_require_161052__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_162255__(3);
+var typeValidator_1 = __nested_webpack_require_162255__(4);
+var validator_1 = __nested_webpack_require_162255__(1);
 var PageSizeValidator = /** @class */ (function (_super) {
     __extends(PageSizeValidator, _super);
     function PageSizeValidator() {
@@ -3559,7 +3575,7 @@ exports.PageViewFieldValidator = PageViewFieldValidator;
 
 /***/ }),
 /* 15 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_166492__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_167695__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -3580,9 +3596,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VisualizationsPaneValidator = exports.SyncSlicersPaneValidator = exports.SelectionPaneValidator = exports.PageNavigationPaneValidator = exports.FiltersPaneValidator = exports.FieldsPaneValidator = exports.BookmarksPaneValidator = exports.QnaPanesValidator = exports.ReportPanesValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_166492__(3);
-var typeValidator_1 = __nested_webpack_require_166492__(4);
-var validator_1 = __nested_webpack_require_166492__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_167695__(3);
+var typeValidator_1 = __nested_webpack_require_167695__(4);
+var validator_1 = __nested_webpack_require_167695__(1);
 var ReportPanesValidator = /** @class */ (function (_super) {
     __extends(ReportPanesValidator, _super);
     function ReportPanesValidator() {
@@ -3844,7 +3860,7 @@ exports.VisualizationsPaneValidator = VisualizationsPaneValidator;
 
 /***/ }),
 /* 16 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_178238__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_179441__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -3865,9 +3881,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QnaInterpretInputDataValidator = exports.QnaSettingsValidator = exports.LoadQnaValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_178238__(3);
-var typeValidator_1 = __nested_webpack_require_178238__(4);
-var validator_1 = __nested_webpack_require_178238__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_179441__(3);
+var typeValidator_1 = __nested_webpack_require_179441__(4);
+var validator_1 = __nested_webpack_require_179441__(1);
 var LoadQnaValidator = /** @class */ (function (_super) {
     __extends(LoadQnaValidator, _super);
     function LoadQnaValidator() {
@@ -3983,7 +3999,7 @@ exports.QnaInterpretInputDataValidator = QnaInterpretInputDataValidator;
 
 /***/ }),
 /* 17 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_183949__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_185152__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4004,9 +4020,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReportCreateValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_183949__(3);
-var typeValidator_1 = __nested_webpack_require_183949__(4);
-var validator_1 = __nested_webpack_require_183949__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_185152__(3);
+var typeValidator_1 = __nested_webpack_require_185152__(4);
+var validator_1 = __nested_webpack_require_185152__(1);
 var ReportCreateValidator = /** @class */ (function (_super) {
     __extends(ReportCreateValidator, _super);
     function ReportCreateValidator() {
@@ -4052,7 +4068,7 @@ exports.ReportCreateValidator = ReportCreateValidator;
 
 /***/ }),
 /* 18 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_186807__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_188010__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4073,9 +4089,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReportLoadValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_186807__(3);
-var typeValidator_1 = __nested_webpack_require_186807__(4);
-var validator_1 = __nested_webpack_require_186807__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_188010__(3);
+var typeValidator_1 = __nested_webpack_require_188010__(4);
+var validator_1 = __nested_webpack_require_188010__(1);
 var ReportLoadValidator = /** @class */ (function (_super) {
     __extends(ReportLoadValidator, _super);
     function ReportLoadValidator() {
@@ -4157,7 +4173,7 @@ exports.ReportLoadValidator = ReportLoadValidator;
 
 /***/ }),
 /* 19 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_190928__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_192131__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4178,9 +4194,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReportParameterFieldsValidator = exports.PaginatedReportLoadValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_190928__(3);
-var typeValidator_1 = __nested_webpack_require_190928__(4);
-var validator_1 = __nested_webpack_require_190928__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_192131__(3);
+var typeValidator_1 = __nested_webpack_require_192131__(4);
+var validator_1 = __nested_webpack_require_192131__(1);
 var PaginatedReportLoadValidator = /** @class */ (function (_super) {
     __extends(PaginatedReportLoadValidator, _super);
     function PaginatedReportLoadValidator() {
@@ -4265,7 +4281,7 @@ exports.ReportParameterFieldsValidator = ReportParameterFieldsValidator;
 
 /***/ }),
 /* 20 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_195424__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_196627__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4286,9 +4302,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SaveAsParametersValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_195424__(3);
-var typeValidator_1 = __nested_webpack_require_195424__(4);
-var validator_1 = __nested_webpack_require_195424__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_196627__(3);
+var typeValidator_1 = __nested_webpack_require_196627__(4);
+var validator_1 = __nested_webpack_require_196627__(1);
 var SaveAsParametersValidator = /** @class */ (function (_super) {
     __extends(SaveAsParametersValidator, _super);
     function SaveAsParametersValidator() {
@@ -4318,7 +4334,7 @@ exports.SaveAsParametersValidator = SaveAsParametersValidator;
 
 /***/ }),
 /* 21 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_197705__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_198908__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4339,10 +4355,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SlicerTargetSelectorValidator = exports.VisualTypeSelectorValidator = exports.VisualSelectorValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_197705__(3);
-var typeValidator_1 = __nested_webpack_require_197705__(4);
-var typeValidator_2 = __nested_webpack_require_197705__(4);
-var validator_1 = __nested_webpack_require_197705__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_198908__(3);
+var typeValidator_1 = __nested_webpack_require_198908__(4);
+var typeValidator_2 = __nested_webpack_require_198908__(4);
+var validator_1 = __nested_webpack_require_198908__(1);
 var VisualSelectorValidator = /** @class */ (function (_super) {
     __extends(VisualSelectorValidator, _super);
     function VisualSelectorValidator() {
@@ -4435,7 +4451,7 @@ exports.SlicerTargetSelectorValidator = SlicerTargetSelectorValidator;
 
 /***/ }),
 /* 22 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_203163__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_204366__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4456,9 +4472,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaginatedReportSettingsValidator = exports.SettingsValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_203163__(3);
-var typeValidator_1 = __nested_webpack_require_203163__(4);
-var validator_1 = __nested_webpack_require_203163__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_204366__(3);
+var typeValidator_1 = __nested_webpack_require_204366__(4);
+var validator_1 = __nested_webpack_require_204366__(1);
 var SettingsValidator = /** @class */ (function (_super) {
     __extends(SettingsValidator, _super);
     function SettingsValidator() {
@@ -4585,7 +4601,7 @@ exports.PaginatedReportSettingsValidator = PaginatedReportSettingsValidator;
 
 /***/ }),
 /* 23 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_209159__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_210362__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4606,9 +4622,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SlicerStateValidator = exports.SlicerValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_209159__(3);
-var typeValidator_1 = __nested_webpack_require_209159__(4);
-var validator_1 = __nested_webpack_require_209159__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_210362__(3);
+var typeValidator_1 = __nested_webpack_require_210362__(4);
+var validator_1 = __nested_webpack_require_210362__(1);
 var SlicerValidator = /** @class */ (function (_super) {
     __extends(SlicerValidator, _super);
     function SlicerValidator() {
@@ -4667,7 +4683,7 @@ exports.SlicerStateValidator = SlicerStateValidator;
 
 /***/ }),
 /* 24 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_212589__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_213792__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4688,9 +4704,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TileLoadValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_212589__(3);
-var typeValidator_1 = __nested_webpack_require_212589__(4);
-var validator_1 = __nested_webpack_require_212589__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_213792__(3);
+var typeValidator_1 = __nested_webpack_require_213792__(4);
+var validator_1 = __nested_webpack_require_213792__(1);
 var TileLoadValidator = /** @class */ (function (_super) {
     __extends(TileLoadValidator, _super);
     function TileLoadValidator() {
@@ -4748,7 +4764,7 @@ exports.TileLoadValidator = TileLoadValidator;
 
 /***/ }),
 /* 25 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_215861__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_217064__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4769,9 +4785,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VisualHeaderValidator = exports.VisualHeaderSettingsValidator = exports.VisualSettingsValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_215861__(3);
-var typeValidator_1 = __nested_webpack_require_215861__(4);
-var validator_1 = __nested_webpack_require_215861__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_217064__(3);
+var typeValidator_1 = __nested_webpack_require_217064__(4);
+var validator_1 = __nested_webpack_require_217064__(1);
 var VisualSettingsValidator = /** @class */ (function (_super) {
     __extends(VisualSettingsValidator, _super);
     function VisualSettingsValidator() {
@@ -4946,7 +4962,7 @@ exports.FieldRequiredValidator = FieldRequiredValidator;
 
 /***/ }),
 /* 29 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_223270__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_224473__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4967,7 +4983,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MapValidator = void 0;
-var typeValidator_1 = __nested_webpack_require_223270__(4);
+var typeValidator_1 = __nested_webpack_require_224473__(4);
 var MapValidator = /** @class */ (function (_super) {
     __extends(MapValidator, _super);
     function MapValidator(keyValidators, valueValidators) {
@@ -5012,7 +5028,7 @@ exports.MapValidator = MapValidator;
 
 /***/ }),
 /* 30 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_225954__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_227157__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5033,9 +5049,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ParametersPanelValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_225954__(3);
-var typeValidator_1 = __nested_webpack_require_225954__(4);
-var validator_1 = __nested_webpack_require_225954__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_227157__(3);
+var typeValidator_1 = __nested_webpack_require_227157__(4);
+var validator_1 = __nested_webpack_require_227157__(1);
 var ParametersPanelValidator = /** @class */ (function (_super) {
     __extends(ParametersPanelValidator, _super);
     function ParametersPanelValidator() {
@@ -5069,7 +5085,7 @@ exports.ParametersPanelValidator = ParametersPanelValidator;
 
 /***/ }),
 /* 31 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_228322__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_229525__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5090,9 +5106,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TableDataValidator = exports.TableSchemaValidator = exports.ColumnSchemaValidator = exports.CredentialsValidator = exports.DatasourceConnectionConfigValidator = exports.DatasetCreateConfigValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_228322__(3);
-var typeValidator_1 = __nested_webpack_require_228322__(4);
-var validator_1 = __nested_webpack_require_228322__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_229525__(3);
+var typeValidator_1 = __nested_webpack_require_229525__(4);
+var validator_1 = __nested_webpack_require_229525__(1);
 var DatasetCreateConfigValidator = /** @class */ (function (_super) {
     __extends(DatasetCreateConfigValidator, _super);
     function DatasetCreateConfigValidator() {
@@ -5305,7 +5321,7 @@ exports.TableDataValidator = TableDataValidator;
 
 /***/ }),
 /* 32 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_238377__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_239580__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5326,9 +5342,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QuickCreateValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_238377__(3);
-var typeValidator_1 = __nested_webpack_require_238377__(4);
-var validator_1 = __nested_webpack_require_238377__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_239580__(3);
+var typeValidator_1 = __nested_webpack_require_239580__(4);
+var validator_1 = __nested_webpack_require_239580__(1);
 var QuickCreateValidator = /** @class */ (function (_super) {
     __extends(QuickCreateValidator, _super);
     function QuickCreateValidator() {
@@ -5374,7 +5390,7 @@ exports.QuickCreateValidator = QuickCreateValidator;
 
 /***/ }),
 /* 33 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_241250__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_242453__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5395,8 +5411,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PrintSettingsValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_241250__(3);
-var typeValidator_1 = __nested_webpack_require_241250__(4);
+var multipleFieldsValidator_1 = __nested_webpack_require_242453__(3);
+var typeValidator_1 = __nested_webpack_require_242453__(4);
 var PrintSettingsValidator = /** @class */ (function (_super) {
     __extends(PrintSettingsValidator, _super);
     function PrintSettingsValidator() {
@@ -5426,7 +5442,7 @@ exports.PrintSettingsValidator = PrintSettingsValidator;
 
 /***/ }),
 /* 34 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_243443__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_244646__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5447,9 +5463,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaginatedReportDatasetBindingValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_243443__(3);
-var typeValidator_1 = __nested_webpack_require_243443__(4);
-var validator_1 = __nested_webpack_require_243443__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_244646__(3);
+var typeValidator_1 = __nested_webpack_require_244646__(4);
+var validator_1 = __nested_webpack_require_244646__(1);
 var PaginatedReportDatasetBindingValidator = /** @class */ (function (_super) {
     __extends(PaginatedReportDatasetBindingValidator, _super);
     function PaginatedReportDatasetBindingValidator() {
@@ -5488,7 +5504,7 @@ exports.PaginatedReportDatasetBindingValidator = PaginatedReportDatasetBindingVa
 /******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function __nested_webpack_require_246189__(moduleId) {
+/******/ 	function __nested_webpack_require_247392__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
@@ -5502,7 +5518,7 @@ exports.PaginatedReportDatasetBindingValidator = PaginatedReportDatasetBindingVa
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_246189__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_247392__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -5513,7 +5529,7 @@ exports.PaginatedReportDatasetBindingValidator = PaginatedReportDatasetBindingVa
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __nested_webpack_exports__ = __nested_webpack_require_246189__(0);
+/******/ 	var __nested_webpack_exports__ = __nested_webpack_require_247392__(0);
 /******/ 	
 /******/ 	return __nested_webpack_exports__;
 /******/ })()
@@ -7321,7 +7337,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 /** @ignore */ /** */
 var config = {
-    version: '2.23.10',
+    version: '2.24.0',
     type: 'js'
 };
 exports["default"] = config;
@@ -12826,17 +12842,17 @@ exports.VisualDescriptor = VisualDescriptor;
 /******/ 	});
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -12845,7 +12861,7 @@ exports.VisualDescriptor = VisualDescriptor;
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -12856,10 +12872,10 @@ exports.VisualDescriptor = VisualDescriptor;
 /******/ 	}
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
-var exports = __webpack_exports__;
+let exports = __webpack_exports__;
 /*!*******************************!*\
   !*** ./src/powerbi-client.ts ***!
   \*******************************/
