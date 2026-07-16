@@ -11770,7 +11770,7 @@ var allowedPowerBiHostsRegex = new RegExp(/(.+\.powerbi\.com$)|(.+\.fabric\.micr
 /**
  * @hidden
  */
-var allowedPowerBiHostsSovRegex = new RegExp(/^app\.powerbi\.cn$|^app(\.mil\.|\.canaryhigh\.|\.high\.|\.)powerbigov\.us$|^app\.powerbi\.eaglex\.ic\.gov$|^app\.powerbi\.microsoft\.scloud$/);
+var allowedPowerBiHostsSovRegex = new RegExp(/^app\.powerbi\.cn$|^app(\.mil\.|\.canaryhigh\.|\.high\.|\.)powerbigov\.us$|^app\.powerbi\.sovcloud-api\.fr$|^app\.powerbi\.eaglex\.ic\.gov$|^app\.powerbi\.microsoft\.scloud$/);
 /**
  * @hidden
  */

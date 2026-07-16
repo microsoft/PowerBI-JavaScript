@@ -18,6 +18,7 @@ describe('util', function () {
     "https://app.mil.powerbigov.us/embed?unmin=1",
     "https://app.high.powerbigov.us?queryParam",
     "https://app.powerbi.eaglex.ic.gov//",
+    "https://app.powerbi.sovcloud-api.fr/reportEmbed",
     "https://app.powerbi.microsoft.scloud/dashboardEmbed",
     "https://app.fabric.microsoft.com/embed?id=123"
   ];
@@ -38,13 +39,13 @@ describe('util', function () {
   ];
 
   it(`validateEmbedUrl, valid embed hosts, should return true`, () => {
-    for (let i = 0; i++; i < validEmbedHosts.length) {
+    for (let i = 0; i < validEmbedHosts.length; i++) {
       expect(validateEmbedUrl(validEmbedHosts[i])).withContext(`validateEmbedUrl for host ${validEmbedHosts[i]} should return true`).toBeTrue();
     }
   });
 
   it(`validateEmbedUrl, invalid embed hosts, should return false`, () => {
-    for (let i = 0; i++; i < invalidEmbedHosts.length) {
+    for (let i = 0; i < invalidEmbedHosts.length; i++) {
       expect(validateEmbedUrl(invalidEmbedHosts[i])).withContext(`validateEmbedUrl for host ${invalidEmbedHosts[i]} should return false`).toBeFalse();
     }
   });
