@@ -52,6 +52,8 @@ export type IQuickCreateConfiguration = models.IQuickCreateConfiguration;
 
 export type IReportCreateConfiguration = models.IReportCreateConfiguration;
 
+export type IReportCreateFromDefinitionConfiguration = models.IReportCreateFromDefinitionConfiguration;
+
 export type ILocaleSettings = models.ILocaleSettings;
 
 export type IQnaSettings = models.IQnaSettings;

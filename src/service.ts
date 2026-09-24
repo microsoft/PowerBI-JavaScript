@@ -7,7 +7,7 @@
 import { WindowPostMessageProxy } from 'window-post-message-proxy';
 import { HttpPostMessage } from 'http-post-message';
 import { Router, IExtendedRequest, Response as IExtendedResponse } from 'powerbi-router';
-import { IPage, IQuickCreateConfiguration, IReportCreateConfiguration } from 'powerbi-models';
+import { IPage, IQuickCreateConfiguration, IReportCreateConfiguration, IReportCreateFromDefinitionConfiguration } from 'powerbi-models';
 import {
   Embed,
   IBootstrapEmbedConfiguration,
@@ -279,7 +279,10 @@ export class Service implements IService {
    * @param {IEmbedConfiguration} [config={}]
    * @returns {Embed}
    */
-  createReport(element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration): Embed {
+  createReport(
+    element: HTMLElement,
+    config: IEmbedConfiguration | IReportCreateConfiguration | IReportCreateFromDefinitionConfiguration
+  ): Embed {
     config.type = 'create';
     const powerBiElement = element as IPowerBiElement;
     const component = new Create(this, powerBiElement, config);
