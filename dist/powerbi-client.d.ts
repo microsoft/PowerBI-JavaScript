@@ -1,4 +1,4 @@
-// powerbi-client v2.23.10
+// powerbi-client v2.25.0
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 declare module "config" {
@@ -158,6 +158,7 @@ declare module "embed" {
     export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
     export type IQuickCreateConfiguration = models.IQuickCreateConfiguration;
     export type IReportCreateConfiguration = models.IReportCreateConfiguration;
+    export type IReportCreateFromDefinitionConfiguration = models.IReportCreateFromDefinitionConfiguration;
     export type ILocaleSettings = models.ILocaleSettings;
     export type IQnaSettings = models.IQnaSettings;
     export type IEmbedSettings = models.ISettings;
@@ -1673,7 +1674,7 @@ declare module "report" {
     }
 }
 declare module "create" {
-    import { IReportCreateConfiguration, IError } from 'powerbi-models';
+    import { IError, IReportCreateConfiguration, IReportCreateFromDefinitionConfiguration } from 'powerbi-models';
     import { Service } from "service";
     import { Embed, IEmbedConfigurationBase, IEmbedConfiguration } from "embed";
     /**
@@ -1687,11 +1688,11 @@ declare module "create" {
         /**
          * Gets or sets the configuration settings for creating report.
          *
-         * @type {IReportCreateConfiguration}
+         * @type {IReportCreateConfiguration | IReportCreateFromDefinitionConfiguration}
          * @hidden
          */
-        createConfig: IReportCreateConfiguration;
-        constructor(service: Service, element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration, phasedRender?: boolean, isBootstrap?: boolean);
+        createConfig: IReportCreateConfiguration | IReportCreateFromDefinitionConfiguration;
+        constructor(service: Service, element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration | IReportCreateFromDefinitionConfiguration, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * Gets the dataset ID from the first available location: createConfig or embed url.
          *
@@ -2137,7 +2138,7 @@ declare module "service" {
     import { WindowPostMessageProxy } from 'window-post-message-proxy';
     import { HttpPostMessage } from 'http-post-message';
     import { Router, IExtendedRequest, Response as IExtendedResponse } from 'powerbi-router';
-    import { IQuickCreateConfiguration, IReportCreateConfiguration } from 'powerbi-models';
+    import { IQuickCreateConfiguration, IReportCreateConfiguration, IReportCreateFromDefinitionConfiguration } from 'powerbi-models';
     import { Embed, IBootstrapEmbedConfiguration, IDashboardEmbedConfiguration, IEmbedConfiguration, IEmbedConfigurationBase, IQnaEmbedConfiguration, IReportEmbedConfiguration, ITileEmbedConfiguration, IVisualEmbedConfiguration } from "embed";
     export interface IEvent<T> {
         type: string;
@@ -2257,7 +2258,7 @@ declare module "service" {
          * @param {IEmbedConfiguration} [config={}]
          * @returns {Embed}
          */
-        createReport(element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration): Embed;
+        createReport(element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration | IReportCreateFromDefinitionConfiguration): Embed;
         /**
          * Creates new dataset
          *
@@ -2967,7 +2968,7 @@ declare module "powerbi-client" {
     export { Report } from "report";
     export { Dashboard } from "dashboard";
     export { Tile } from "tile";
-    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, IReportEmbedConfiguration, IDashboardEmbedConfiguration, ITileEmbedConfiguration, IQuickCreateConfiguration, IReportCreateConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings, } from "embed";
+    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, IReportEmbedConfiguration, IDashboardEmbedConfiguration, ITileEmbedConfiguration, IQuickCreateConfiguration, IReportCreateConfiguration, IReportCreateFromDefinitionConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings, } from "embed";
     export { Page } from "page";
     export { Qna } from "qna";
     export { Visual } from "visual";

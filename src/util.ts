@@ -12,7 +12,7 @@ const allowedPowerBiHostsRegex =
 /**
  * @hidden
  */
-const allowedPowerBiHostsSovRegex = new RegExp(/^app\.powerbi\.cn$|^app(\.mil\.|\.canaryhigh\.|\.high\.|\.)powerbigov\.us$|^app\.powerbi\.eaglex\.ic\.gov$|^app\.powerbi\.microsoft\.scloud$/);
+const allowedPowerBiHostsSovRegex = new RegExp(/^app\.powerbi\.cn$|^app(\.mil\.|\.canaryhigh\.|\.high\.|\.)powerbigov\.us$|^app\.powerbi\.sovcloud-api\.fr$|^app\.powerbi\.eaglex\.ic\.gov$|^app\.powerbi\.microsoft\.scloud$/);
 
 /**
  * @hidden
