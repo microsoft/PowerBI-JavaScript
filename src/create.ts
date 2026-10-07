@@ -1,10 +1,20 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IReportCreateConfiguration, IError, validateCreateReport } from 'powerbi-models';
+import {
+  IError,
+  IReportCreateConfiguration,
+  IReportCreateFromDefinitionConfiguration,
+  validateCreateReport,
+  validateCreateReportFromDefinition
+} from 'powerbi-models';
 import { Service } from './service';
 import { Embed, IEmbedConfigurationBase, IEmbedConfiguration, ISessionHeaders } from './embed';
 import * as utils from './util';
+
+function isReportCreateFromDefinitionConfiguration(config: IEmbedConfigurationBase): config is IReportCreateFromDefinitionConfiguration {
+  return "reportDefinition" in config;
+}
 
 /**
  * A Power BI Report creator component
@@ -17,15 +27,21 @@ export class Create extends Embed {
   /**
    * Gets or sets the configuration settings for creating report.
    *
-   * @type {IReportCreateConfiguration}
+   * @type {IReportCreateConfiguration | IReportCreateFromDefinitionConfiguration}
    * @hidden
    */
-  createConfig: IReportCreateConfiguration;
+  createConfig: IReportCreateConfiguration | IReportCreateFromDefinitionConfiguration;
 
   /*
    * @hidden
    */
-  constructor(service: Service, element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration, phasedRender?: boolean, isBootstrap?: boolean) {
+  constructor(
+    service: Service,
+    element: HTMLElement,
+    config: IEmbedConfiguration | IReportCreateConfiguration | IReportCreateFromDefinitionConfiguration,
+    phasedRender?: boolean,
+    isBootstrap?: boolean
+  ) {
     super(service, element, config, /* iframe */ undefined, phasedRender, isBootstrap);
   }
 
@@ -48,7 +64,9 @@ export class Create extends Embed {
    * Validate create report configuration.
    */
   validate(config: IEmbedConfigurationBase): IError[] {
-    return validateCreateReport(config);
+    return isReportCreateFromDefinitionConfiguration(config)
+      ? validateCreateReportFromDefinition(config)
+      : validateCreateReport(config);
   }
 
   /**
@@ -64,7 +82,7 @@ export class Create extends Embed {
 
     const config = this.config as IEmbedConfiguration | IReportCreateConfiguration;
 
-    this.createConfig = {
+    const createConfig: IReportCreateConfiguration = {
       accessToken: config.accessToken,
       datasetId: config.datasetId || this.getId(),
       groupId: config.groupId,
@@ -72,6 +90,10 @@ export class Create extends Embed {
       tokenType: config.tokenType,
       theme: config.theme
     };
+
+    this.createConfig = isReportCreateFromDefinitionConfiguration(this.config)
+      ? { ...createConfig, reportDefinition: this.config.reportDefinition }
+      : createConfig;
   }
 
   /**

@@ -33,6 +33,7 @@ export {
   ITileEmbedConfiguration,
   IQuickCreateConfiguration,
   IReportCreateConfiguration,
+  IReportCreateFromDefinitionConfiguration,
   Embed,
   ILocaleSettings,
   IEmbedSettings,

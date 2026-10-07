@@ -1,4 +1,4 @@
-// powerbi-client v2.23.10
+// powerbi-client v2.25.0
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -14,14 +14,14 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "../http-post-message/dist/httpPostMessage.js":
-/*!****************************************************!*\
-  !*** ../http-post-message/dist/httpPostMessage.js ***!
-  \****************************************************/
-/***/ ((module) => {
+/***/ "./node_modules/http-post-message/dist/httpPostMessage.js"
+/*!****************************************************************!*\
+  !*** ./node_modules/http-post-message/dist/httpPostMessage.js ***!
+  \****************************************************************/
+(module) {
 
 /*! For license information please see httpPostMessage.js.LICENSE.txt */
-!function(e,t){ true?module.exports=t():0}(self,(()=>(()=>{"use strict";var e={};return(()=>{var t=e;Object.defineProperty(t,"__esModule",{value:!0}),t.HttpPostMessage=void 0;var o=function(){function e(e,t,o){void 0===t&&(t={}),this.defaultHeaders=t,this.defaultTargetWindow=o,this.windowPostMessageProxy=e}return e.addTrackingProperties=function(e,t){return e.headers=e.headers||{},t&&t.id&&(e.headers.id=t.id),e},e.getTrackingProperties=function(e){return{id:e.headers&&e.headers.id}},e.isErrorMessage=function(e){return"number"==typeof(e&&e.statusCode)&&!(200<=e.statusCode&&e.statusCode<300)},e.prototype.get=function(e,t,o,r){return void 0===t&&(t={}),void 0===o&&(o=this.defaultTargetWindow),this.send({method:"GET",url:e,headers:t},o,r)},e.prototype.post=function(e,t,o,r,s){return void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"POST",url:e,headers:o,body:t},r,s)},e.prototype.put=function(e,t,o,r,s){return void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"PUT",url:e,headers:o,body:t},r,s)},e.prototype.patch=function(e,t,o,r,s){return void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"PATCH",url:e,headers:o,body:t},r,s)},e.prototype.delete=function(e,t,o,r,s){return void 0===t&&(t=null),void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"DELETE",url:e,headers:o,body:t},r,s)},e.prototype.send=function(e,t,o){if(void 0===t&&(t=this.defaultTargetWindow),e.headers=this.assign({},this.defaultHeaders,e.headers),!t)throw new Error("target window is not provided.  You must either provide the target window explicitly as argument to request, or specify default target window when constructing instance of this class.");return this.windowPostMessageProxy.postMessage(t,e,o)},e.prototype.assign=function(e){for(var t=[],o=1;o<arguments.length;o++)t[o-1]=arguments[o];if(null==e)throw new TypeError("Cannot convert undefined or null to object");var r=Object(e);return t.forEach((function(e){if(null!=e)for(var t in e)Object.prototype.hasOwnProperty.call(e,t)&&(r[t]=e[t])})),r},e}();t.HttpPostMessage=o})(),e})()));
+!function(e,t){ true?module.exports=t():0}(self,(()=>(()=>{"use strict";var e={};return(()=>{var t=e;Object.defineProperty(t,"__esModule",{value:!0}),t.HttpPostMessage=void 0;var o=function(){function e(e,t,o,r){void 0===t&&(t={}),this.defaultHeaders=t,this.defaultTargetWindow=o,this.defaultTargetOrigin=r,this.windowPostMessageProxy=e}return e.addTrackingProperties=function(e,t){return e.headers=e.headers||{},t&&t.id&&(e.headers.id=t.id),e},e.getTrackingProperties=function(e){return{id:e.headers&&e.headers.id}},e.isErrorMessage=function(e){return"number"==typeof(e&&e.statusCode)&&!(200<=e.statusCode&&e.statusCode<300)},e.prototype.get=function(e,t,o,r){return void 0===t&&(t={}),void 0===o&&(o=this.defaultTargetWindow),this.send({method:"GET",url:e,headers:t},o,r)},e.prototype.post=function(e,t,o,r,s){return void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"POST",url:e,headers:o,body:t},r,s)},e.prototype.put=function(e,t,o,r,s){return void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"PUT",url:e,headers:o,body:t},r,s)},e.prototype.patch=function(e,t,o,r,s){return void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"PATCH",url:e,headers:o,body:t},r,s)},e.prototype.delete=function(e,t,o,r,s){return void 0===t&&(t=null),void 0===o&&(o={}),void 0===r&&(r=this.defaultTargetWindow),this.send({method:"DELETE",url:e,headers:o,body:t},r,s)},e.prototype.send=function(e,t,o){if(void 0===t&&(t=this.defaultTargetWindow),void 0===o&&(o=this.defaultTargetOrigin),e.headers=this.assign({},this.defaultHeaders,e.headers),!t)throw new Error("target window is not provided.  You must either provide the target window explicitly as argument to request, or specify default target window when constructing instance of this class.");return void 0===o?this.windowPostMessageProxy.postMessage(t,e):this.windowPostMessageProxy.postMessage(t,e,o)},e.prototype.assign=function(e){for(var t=[],o=1;o<arguments.length;o++)t[o-1]=arguments[o];if(null==e)throw new TypeError("Cannot convert undefined or null to object");var r=Object(e);return t.forEach((function(e){if(null!=e)for(var t in e)Object.prototype.hasOwnProperty.call(e,t)&&(r[t]=e[t])})),r},e}();t.HttpPostMessage=o})(),e})()));
 //# sourceMappingURL=httpPostMessage.js.map
 
 /***/ },
@@ -32,7 +32,7 @@ return /******/ (() => { // webpackBootstrap
   \****************************************************/
 (module) {
 
-// powerbi-models v1.14.0
+// powerbi-models v2.2.0
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -64,10 +64,10 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.BrowserPrintAdjustmentsMode = exports.AggregateFunction = exports.DataCacheMode = exports.CredentialType = exports.isPercentOfGrandTotal = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.HierarchyFilter = exports.AdvancedFilter = exports.TupleFilter = exports.IdentityFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.ReportAlignment = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
-exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateUpdateFiltersRequest = exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateQuickCreate = exports.validateCreateReport = exports.validatePaginatedReportLoad = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.isReportFiltersArray = exports.isOnLoadFilters = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = void 0;
-exports.validatePrintSettings = exports.validateZoomLevel = exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = void 0;
-var validator_1 = __nested_webpack_require_612__(1);
+exports.ExportDataResultType = exports.ExportDataType = exports.QnaMode = exports.PageNavigationPosition = exports.BrowserPrintAdjustmentsMode = exports.AggregateFunction = exports.DataCacheMode = exports.CredentialType = exports.isVisualCalculation = exports.isPercentOfGrandTotal = exports.isColumnAggr = exports.isHierarchyLevelAggr = exports.isHierarchyLevel = exports.isColumn = exports.isMeasure = exports.getFilterType = exports.isBasicFilterWithKeys = exports.isFilterKeyColumnsTarget = exports.HierarchyIdentityFilter = exports.HierarchyFilter = exports.AdvancedFilter = exports.TupleFilter = exports.IdentityFilter = exports.BasicFilterWithKeys = exports.BasicFilter = exports.RelativeTimeFilter = exports.RelativeDateFilter = exports.TopNFilter = exports.IncludeExcludeFilter = exports.NotSupportedFilter = exports.Filter = exports.RelativeDateOperators = exports.RelativeDateFilterTimeUnit = exports.FilterType = exports.FiltersLevel = exports.FiltersOperations = exports.MenuLocation = exports.ContrastMode = exports.TokenType = exports.ViewMode = exports.Permissions = exports.SectionVisibility = exports.ReportAlignment = exports.HyperlinkClickBehavior = exports.LayoutType = exports.VisualContainerDisplayMode = exports.BackgroundType = exports.DisplayOption = exports.PageSizeType = exports.TraceType = void 0;
+exports.validateFilter = exports.validatePage = exports.validateTileLoad = exports.validateDashboardLoad = exports.validateQuickCreate = exports.validateCreateReportFromDefinition = exports.validateCreateReport = exports.validatePaginatedReportLoad = exports.validateReportLoad = exports.validateMenuGroupExtension = exports.validateExtension = exports.validateCustomPageSize = exports.validateVisualizationsPane = exports.validateSyncSlicersPane = exports.validateSelectionPane = exports.validatePageNavigationPane = exports.validateFieldsPane = exports.validateFiltersPane = exports.validateBookmarksPane = exports.validatePanes = exports.validateSettings = exports.validateCaptureBookmarkRequest = exports.validateApplyBookmarkStateRequest = exports.validateApplyBookmarkByNameRequest = exports.validateAddBookmarkRequest = exports.validatePlayBookmarkRequest = exports.validateSlicerState = exports.validateSlicer = exports.validateVisualSelector = exports.isIExtensionArray = exports.isIExtensions = exports.isGroupedMenuExtension = exports.isFlatMenuExtension = exports.isReportFiltersArray = exports.isOnLoadFilters = exports.VisualDataRoleKindPreference = exports.VisualDataRoleKind = exports.CommandDisplayOption = exports.SlicerTargetSelector = exports.VisualTypeSelector = exports.VisualSelector = exports.PageSelector = exports.Selector = exports.SortDirection = exports.LegendPosition = exports.TextAlignment = exports.CommonErrorCodes = exports.BookmarksPlayMode = exports.ExportDataCompletedStatus = exports.ExportDataResultFormat = void 0;
+exports.validatePrintSettings = exports.validateZoomLevel = exports.validateCustomTheme = exports.validateCommandsSettings = exports.validateVisualSettings = exports.validateVisualHeader = exports.validateExportDataRequest = exports.validateQnaInterpretInputData = exports.validateLoadQnaConfiguration = exports.validateSaveAsParameters = exports.validateUpdateFiltersRequest = void 0;
+var validator_1 = __nested_webpack_require_611__(1);
 var TraceType;
 (function (TraceType) {
     TraceType[TraceType["Information"] = 0] = "Information";
@@ -616,6 +616,22 @@ var ExportDataType;
     ExportDataType[ExportDataType["Summarized"] = 0] = "Summarized";
     ExportDataType[ExportDataType["Underlying"] = 1] = "Underlying";
 })(ExportDataType = exports.ExportDataType || (exports.ExportDataType = {}));
+var ExportDataResultType;
+(function (ExportDataResultType) {
+    ExportDataResultType[ExportDataResultType["Summarized"] = 0] = "Summarized";
+    ExportDataResultType[ExportDataResultType["Underlying"] = 1] = "Underlying";
+    ExportDataResultType[ExportDataResultType["DataWithCurrentLayout"] = 2] = "DataWithCurrentLayout";
+})(ExportDataResultType = exports.ExportDataResultType || (exports.ExportDataResultType = {}));
+var ExportDataResultFormat;
+(function (ExportDataResultFormat) {
+    ExportDataResultFormat[ExportDataResultFormat["Csv"] = 0] = "Csv";
+    ExportDataResultFormat[ExportDataResultFormat["Xlsx"] = 1] = "Xlsx";
+})(ExportDataResultFormat = exports.ExportDataResultFormat || (exports.ExportDataResultFormat = {}));
+var ExportDataCompletedStatus;
+(function (ExportDataCompletedStatus) {
+    ExportDataCompletedStatus[ExportDataCompletedStatus["Succeeded"] = 0] = "Succeeded";
+    ExportDataCompletedStatus[ExportDataCompletedStatus["Failed"] = 1] = "Failed";
+})(ExportDataCompletedStatus = exports.ExportDataCompletedStatus || (exports.ExportDataCompletedStatus = {}));
 var BookmarksPlayMode;
 (function (BookmarksPlayMode) {
     BookmarksPlayMode[BookmarksPlayMode["Off"] = 0] = "Off";
@@ -899,6 +915,11 @@ function validateCreateReport(input) {
     return errors ? errors.map(normalizeError) : undefined;
 }
 exports.validateCreateReport = validateCreateReport;
+function validateCreateReportFromDefinition(input) {
+    var errors = validator_1.Validators.reportCreateFromDefinitionValidator.validate(input);
+    return errors ? errors.map(normalizeError) : undefined;
+}
+exports.validateCreateReportFromDefinition = validateCreateReportFromDefinition;
 function validateQuickCreate(input) {
     var errors = validator_1.Validators.quickCreateValidator.validate(input);
     return errors ? errors.map(normalizeError) : undefined;
@@ -983,44 +1004,45 @@ exports.validatePrintSettings = validatePrintSettings;
 
 /***/ }),
 /* 1 */
-/***/ ((__unused_webpack_module, exports, __nested_webpack_require_46167__) => {
+/***/ ((__unused_webpack_module, exports, __nested_webpack_require_48870__) => {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Validators = void 0;
-var barsValidator_1 = __nested_webpack_require_46167__(2);
-var bookmarkValidator_1 = __nested_webpack_require_46167__(5);
-var commandsSettingsValidator_1 = __nested_webpack_require_46167__(6);
-var customThemeValidator_1 = __nested_webpack_require_46167__(7);
-var dashboardLoadValidator_1 = __nested_webpack_require_46167__(8);
-var datasetBindingValidator_1 = __nested_webpack_require_46167__(9);
-var exportDataValidator_1 = __nested_webpack_require_46167__(10);
-var extensionsValidator_1 = __nested_webpack_require_46167__(11);
-var filtersValidator_1 = __nested_webpack_require_46167__(12);
-var layoutValidator_1 = __nested_webpack_require_46167__(13);
-var pageValidator_1 = __nested_webpack_require_46167__(14);
-var panesValidator_1 = __nested_webpack_require_46167__(15);
-var qnaValidator_1 = __nested_webpack_require_46167__(16);
-var reportCreateValidator_1 = __nested_webpack_require_46167__(17);
-var reportLoadValidator_1 = __nested_webpack_require_46167__(18);
-var paginatedReportLoadValidator_1 = __nested_webpack_require_46167__(19);
-var saveAsParametersValidator_1 = __nested_webpack_require_46167__(20);
-var selectorsValidator_1 = __nested_webpack_require_46167__(21);
-var settingsValidator_1 = __nested_webpack_require_46167__(22);
-var slicersValidator_1 = __nested_webpack_require_46167__(23);
-var tileLoadValidator_1 = __nested_webpack_require_46167__(24);
-var visualSettingsValidator_1 = __nested_webpack_require_46167__(25);
-var anyOfValidator_1 = __nested_webpack_require_46167__(26);
-var fieldForbiddenValidator_1 = __nested_webpack_require_46167__(27);
-var fieldRequiredValidator_1 = __nested_webpack_require_46167__(28);
-var mapValidator_1 = __nested_webpack_require_46167__(29);
-var typeValidator_1 = __nested_webpack_require_46167__(4);
-var parameterPanelValidator_1 = __nested_webpack_require_46167__(30);
-var datasetCreateConfigValidator_1 = __nested_webpack_require_46167__(31);
-var quickCreateValidator_1 = __nested_webpack_require_46167__(32);
-var printSettingsValidator_1 = __nested_webpack_require_46167__(33);
-var paginatedReportDatasetBindingValidator_1 = __nested_webpack_require_46167__(34);
+var barsValidator_1 = __nested_webpack_require_48870__(2);
+var bookmarkValidator_1 = __nested_webpack_require_48870__(5);
+var commandsSettingsValidator_1 = __nested_webpack_require_48870__(6);
+var customThemeValidator_1 = __nested_webpack_require_48870__(7);
+var dashboardLoadValidator_1 = __nested_webpack_require_48870__(8);
+var datasetBindingValidator_1 = __nested_webpack_require_48870__(9);
+var exportDataValidator_1 = __nested_webpack_require_48870__(10);
+var extensionsValidator_1 = __nested_webpack_require_48870__(11);
+var filtersValidator_1 = __nested_webpack_require_48870__(12);
+var layoutValidator_1 = __nested_webpack_require_48870__(13);
+var pageValidator_1 = __nested_webpack_require_48870__(14);
+var panesValidator_1 = __nested_webpack_require_48870__(15);
+var qnaValidator_1 = __nested_webpack_require_48870__(16);
+var reportCreateValidator_1 = __nested_webpack_require_48870__(17);
+var reportLoadValidator_1 = __nested_webpack_require_48870__(18);
+var reportDefinitionValidator_1 = __nested_webpack_require_48870__(19);
+var paginatedReportLoadValidator_1 = __nested_webpack_require_48870__(20);
+var saveAsParametersValidator_1 = __nested_webpack_require_48870__(21);
+var selectorsValidator_1 = __nested_webpack_require_48870__(22);
+var settingsValidator_1 = __nested_webpack_require_48870__(23);
+var slicersValidator_1 = __nested_webpack_require_48870__(24);
+var tileLoadValidator_1 = __nested_webpack_require_48870__(25);
+var visualSettingsValidator_1 = __nested_webpack_require_48870__(26);
+var anyOfValidator_1 = __nested_webpack_require_48870__(27);
+var fieldForbiddenValidator_1 = __nested_webpack_require_48870__(28);
+var fieldRequiredValidator_1 = __nested_webpack_require_48870__(29);
+var mapValidator_1 = __nested_webpack_require_48870__(30);
+var typeValidator_1 = __nested_webpack_require_48870__(4);
+var parameterPanelValidator_1 = __nested_webpack_require_48870__(31);
+var datasetCreateConfigValidator_1 = __nested_webpack_require_48870__(32);
+var quickCreateValidator_1 = __nested_webpack_require_48870__(33);
+var printSettingsValidator_1 = __nested_webpack_require_48870__(34);
+var paginatedReportDatasetBindingValidator_1 = __nested_webpack_require_48870__(35);
 exports.Validators = {
     addBookmarkRequestValidator: new bookmarkValidator_1.AddBookmarkRequestValidator(),
     advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
@@ -1133,7 +1155,9 @@ exports.Validators = {
     relativeTimeFilterTypeValidator: new typeValidator_1.EnumValidator([7]),
     relativeTimeFilterValidator: new filtersValidator_1.RelativeTimeFilterValidator(),
     reportBarsValidator: new barsValidator_1.ReportBarsValidator(),
+    reportCreateFromDefinitionValidator: new reportCreateValidator_1.ReportCreateFromDefinitionValidator(),
     reportCreateValidator: new reportCreateValidator_1.ReportCreateValidator(),
+    reportDefinitionValidator: new reportDefinitionValidator_1.ReportDefinitionValidator(),
     reportLoadFiltersValidator: new anyOfValidator_1.AnyOfValidator([new typeValidator_1.ArrayValidator([new filtersValidator_1.FilterValidator()]), new filtersValidator_1.OnLoadFiltersValidator()]),
     reportLoadValidator: new reportLoadValidator_1.ReportLoadValidator(),
     reportPanesValidator: new panesValidator_1.ReportPanesValidator(),
@@ -1172,7 +1196,7 @@ exports.Validators = {
 
 /***/ }),
 /* 2 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_63300__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_66999__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -1193,9 +1217,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatusBarValidator = exports.ActionBarValidator = exports.ReportBarsValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_63300__(3);
-var typeValidator_1 = __nested_webpack_require_63300__(4);
-var validator_1 = __nested_webpack_require_63300__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_66999__(3);
+var typeValidator_1 = __nested_webpack_require_66999__(4);
+var validator_1 = __nested_webpack_require_66999__(1);
 var ReportBarsValidator = /** @class */ (function (_super) {
     __extends(ReportBarsValidator, _super);
     function ReportBarsValidator() {
@@ -1575,7 +1599,7 @@ exports.RangeValidator = RangeValidator;
 
 /***/ }),
 /* 5 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_79179__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_82878__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -1596,9 +1620,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CaptureBookmarkRequestValidator = exports.CaptureBookmarkOptionsValidator = exports.ApplyBookmarkStateRequestValidator = exports.ApplyBookmarkByNameRequestValidator = exports.AddBookmarkRequestValidator = exports.PlayBookmarkRequestValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_79179__(3);
-var typeValidator_1 = __nested_webpack_require_79179__(4);
-var validator_1 = __nested_webpack_require_79179__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_82878__(3);
+var typeValidator_1 = __nested_webpack_require_82878__(4);
+var validator_1 = __nested_webpack_require_82878__(1);
 var PlayBookmarkRequestValidator = /** @class */ (function (_super) {
     __extends(PlayBookmarkRequestValidator, _super);
     function PlayBookmarkRequestValidator() {
@@ -1765,7 +1789,7 @@ exports.CaptureBookmarkRequestValidator = CaptureBookmarkRequestValidator;
 
 /***/ }),
 /* 6 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_87655__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_91354__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -1786,9 +1810,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaginatedReportCommandsValidator = exports.SingleCommandSettingsValidator = exports.CommandsSettingsValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_87655__(3);
-var typeValidator_1 = __nested_webpack_require_87655__(4);
-var validator_1 = __nested_webpack_require_87655__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_91354__(3);
+var typeValidator_1 = __nested_webpack_require_91354__(4);
+var validator_1 = __nested_webpack_require_91354__(1);
 var CommandsSettingsValidator = /** @class */ (function (_super) {
     __extends(CommandsSettingsValidator, _super);
     function CommandsSettingsValidator() {
@@ -1932,7 +1956,7 @@ exports.PaginatedReportCommandsValidator = PaginatedReportCommandsValidator;
 
 /***/ }),
 /* 7 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_94688__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_98387__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -1953,8 +1977,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CustomThemeValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_94688__(3);
-var typeValidator_1 = __nested_webpack_require_94688__(4);
+var multipleFieldsValidator_1 = __nested_webpack_require_98387__(3);
+var typeValidator_1 = __nested_webpack_require_98387__(4);
 var CustomThemeValidator = /** @class */ (function (_super) {
     __extends(CustomThemeValidator, _super);
     function CustomThemeValidator() {
@@ -1984,7 +2008,7 @@ exports.CustomThemeValidator = CustomThemeValidator;
 
 /***/ }),
 /* 8 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_96842__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_100541__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2005,9 +2029,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DashboardLoadValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_96842__(3);
-var typeValidator_1 = __nested_webpack_require_96842__(4);
-var validator_1 = __nested_webpack_require_96842__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_100541__(3);
+var typeValidator_1 = __nested_webpack_require_100541__(4);
+var validator_1 = __nested_webpack_require_100541__(1);
 var DashboardLoadValidator = /** @class */ (function (_super) {
     __extends(DashboardLoadValidator, _super);
     function DashboardLoadValidator() {
@@ -2057,7 +2081,7 @@ exports.DashboardLoadValidator = DashboardLoadValidator;
 
 /***/ }),
 /* 9 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_99841__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_103540__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2078,9 +2102,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DatasetBindingValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_99841__(3);
-var typeValidator_1 = __nested_webpack_require_99841__(4);
-var validator_1 = __nested_webpack_require_99841__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_103540__(3);
+var typeValidator_1 = __nested_webpack_require_103540__(4);
+var validator_1 = __nested_webpack_require_103540__(1);
 var DatasetBindingValidator = /** @class */ (function (_super) {
     __extends(DatasetBindingValidator, _super);
     function DatasetBindingValidator() {
@@ -2121,7 +2145,7 @@ exports.DatasetBindingValidator = DatasetBindingValidator;
 
 /***/ }),
 /* 10 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_102537__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_106236__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2142,8 +2166,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExportDataRequestValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_102537__(3);
-var typeValidator_1 = __nested_webpack_require_102537__(4);
+var multipleFieldsValidator_1 = __nested_webpack_require_106236__(3);
+var typeValidator_1 = __nested_webpack_require_106236__(4);
 var ExportDataRequestValidator = /** @class */ (function (_super) {
     __extends(ExportDataRequestValidator, _super);
     function ExportDataRequestValidator() {
@@ -2177,7 +2201,7 @@ exports.ExportDataRequestValidator = ExportDataRequestValidator;
 
 /***/ }),
 /* 11 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_104881__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_108580__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2198,9 +2222,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ExtensionsValidator = exports.MenuGroupExtensionValidator = exports.ExtensionValidator = exports.CommandExtensionValidator = exports.ExtensionItemValidator = exports.ExtensionPointsValidator = exports.GroupedMenuExtensionValidator = exports.FlatMenuExtensionValidator = exports.MenuExtensionBaseValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_104881__(3);
-var typeValidator_1 = __nested_webpack_require_104881__(4);
-var validator_1 = __nested_webpack_require_104881__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_108580__(3);
+var typeValidator_1 = __nested_webpack_require_108580__(4);
+var validator_1 = __nested_webpack_require_108580__(1);
 var MenuExtensionBaseValidator = /** @class */ (function (_super) {
     __extends(MenuExtensionBaseValidator, _super);
     function MenuExtensionBaseValidator() {
@@ -2470,7 +2494,7 @@ exports.ExtensionsValidator = ExtensionsValidator;
 
 /***/ }),
 /* 12 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_117372__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_121071__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -2490,10 +2514,10 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.OnLoadFiltersValidator = exports.OnLoadFiltersBaseRemoveOperationValidator = exports.OnLoadFiltersBaseValidator = exports.ConditionItemValidator = exports.RemoveFiltersRequestValidator = exports.UpdateFiltersRequestValidator = exports.FilterValidator = exports.HierarchyFilterNodeValidator = exports.HierarchyFilterValidator = exports.IncludeExcludeFilterValidator = exports.NotSupportedFilterValidator = exports.TopNFilterValidator = exports.RelativeTimeFilterValidator = exports.RelativeDateFilterValidator = exports.RelativeDateTimeFilterValidator = exports.AdvancedFilterValidator = exports.BasicFilterValidator = exports.FilterValidatorBase = exports.FilterDisplaySettingsValidator = exports.FilterMeasureTargetValidator = exports.FilterKeyHierarchyTargetValidator = exports.FilterHierarchyTargetValidator = exports.FilterKeyColumnsTargetValidator = exports.FilterColumnTargetValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_117372__(3);
-var typeValidator_1 = __nested_webpack_require_117372__(4);
-var validator_1 = __nested_webpack_require_117372__(1);
+exports.OnLoadFiltersValidator = exports.OnLoadFiltersBaseRemoveOperationValidator = exports.OnLoadFiltersBaseValidator = exports.ConditionItemValidator = exports.RemoveFiltersRequestValidator = exports.UpdateFiltersRequestValidator = exports.FilterValidator = exports.IncludeExcludePointValueValidator = exports.HierarchyFilterNodeValidator = exports.HierarchyFilterValidator = exports.IncludeExcludeFilterValidator = exports.NotSupportedFilterValidator = exports.TopNFilterValidator = exports.RelativeTimeFilterValidator = exports.RelativeDateFilterValidator = exports.RelativeDateTimeFilterValidator = exports.AdvancedFilterValidator = exports.BasicFilterValidator = exports.FilterValidatorBase = exports.FilterDisplaySettingsValidator = exports.FilterMeasureTargetValidator = exports.FilterKeyHierarchyTargetValidator = exports.FilterHierarchyTargetValidator = exports.FilterKeyColumnsTargetValidator = exports.FilterColumnTargetValidator = void 0;
+var multipleFieldsValidator_1 = __nested_webpack_require_121071__(3);
+var typeValidator_1 = __nested_webpack_require_121071__(4);
+var validator_1 = __nested_webpack_require_121071__(1);
 var FilterColumnTargetValidator = /** @class */ (function (_super) {
     __extends(FilterColumnTargetValidator, _super);
     function FilterColumnTargetValidator() {
@@ -3268,7 +3292,7 @@ exports.OnLoadFiltersValidator = OnLoadFiltersValidator;
 
 /***/ }),
 /* 13 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_151344__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_156377__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -3289,9 +3313,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageLayoutValidator = exports.DisplayStateValidator = exports.VisualLayoutValidator = exports.CustomLayoutValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_151344__(3);
-var typeValidator_1 = __nested_webpack_require_151344__(4);
-var validator_1 = __nested_webpack_require_151344__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_156377__(3);
+var typeValidator_1 = __nested_webpack_require_156377__(4);
+var validator_1 = __nested_webpack_require_156377__(1);
 var CustomLayoutValidator = /** @class */ (function (_super) {
     __extends(CustomLayoutValidator, _super);
     function CustomLayoutValidator() {
@@ -3428,7 +3452,7 @@ exports.PageLayoutValidator = PageLayoutValidator;
 
 /***/ }),
 /* 14 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_157823__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_162856__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -3449,9 +3473,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageViewFieldValidator = exports.PageValidator = exports.CustomPageSizeValidator = exports.PageSizeValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_157823__(3);
-var typeValidator_1 = __nested_webpack_require_157823__(4);
-var validator_1 = __nested_webpack_require_157823__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_162856__(3);
+var typeValidator_1 = __nested_webpack_require_162856__(4);
+var validator_1 = __nested_webpack_require_162856__(1);
 var PageSizeValidator = /** @class */ (function (_super) {
     __extends(PageSizeValidator, _super);
     function PageSizeValidator() {
@@ -3559,7 +3583,7 @@ exports.PageViewFieldValidator = PageViewFieldValidator;
 
 /***/ }),
 /* 15 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_163263__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_168296__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -3580,9 +3604,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VisualizationsPaneValidator = exports.SyncSlicersPaneValidator = exports.SelectionPaneValidator = exports.PageNavigationPaneValidator = exports.FiltersPaneValidator = exports.FieldsPaneValidator = exports.BookmarksPaneValidator = exports.QnaPanesValidator = exports.ReportPanesValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_163263__(3);
-var typeValidator_1 = __nested_webpack_require_163263__(4);
-var validator_1 = __nested_webpack_require_163263__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_168296__(3);
+var typeValidator_1 = __nested_webpack_require_168296__(4);
+var validator_1 = __nested_webpack_require_168296__(1);
 var ReportPanesValidator = /** @class */ (function (_super) {
     __extends(ReportPanesValidator, _super);
     function ReportPanesValidator() {
@@ -3844,7 +3868,7 @@ exports.VisualizationsPaneValidator = VisualizationsPaneValidator;
 
 /***/ }),
 /* 16 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_175009__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_180042__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -3865,9 +3889,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QnaInterpretInputDataValidator = exports.QnaSettingsValidator = exports.LoadQnaValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_175009__(3);
-var typeValidator_1 = __nested_webpack_require_175009__(4);
-var validator_1 = __nested_webpack_require_175009__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_180042__(3);
+var typeValidator_1 = __nested_webpack_require_180042__(4);
+var validator_1 = __nested_webpack_require_180042__(1);
 var LoadQnaValidator = /** @class */ (function (_super) {
     __extends(LoadQnaValidator, _super);
     function LoadQnaValidator() {
@@ -3983,7 +4007,7 @@ exports.QnaInterpretInputDataValidator = QnaInterpretInputDataValidator;
 
 /***/ }),
 /* 17 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_180720__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_185753__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4002,25 +4026,27 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ReportCreateValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_180720__(3);
-var typeValidator_1 = __nested_webpack_require_180720__(4);
-var validator_1 = __nested_webpack_require_180720__(1);
+exports.ReportCreateFromDefinitionValidator = exports.ReportCreateValidator = void 0;
+var multipleFieldsValidator_1 = __nested_webpack_require_185753__(3);
+var typeValidator_1 = __nested_webpack_require_185753__(4);
+var validator_1 = __nested_webpack_require_185753__(1);
 var ReportCreateValidator = /** @class */ (function (_super) {
     __extends(ReportCreateValidator, _super);
     function ReportCreateValidator() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    ReportCreateValidator.prototype.validate = function (input, path, field) {
-        if (input == null) {
-            return null;
-        }
-        var errors = _super.prototype.validate.call(this, input, path, field);
-        if (errors) {
-            return errors;
-        }
-        var fields = [
+    ReportCreateValidator.prototype.getFields = function () {
+        return [
             {
                 field: "accessToken",
                 validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
@@ -4042,17 +4068,42 @@ var ReportCreateValidator = /** @class */ (function (_super) {
                 validators: [validator_1.Validators.customThemeValidator]
             },
         ];
-        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+    };
+    ReportCreateValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(this.getFields());
         return multipleFieldsValidator.validate(input, path, field);
     };
     return ReportCreateValidator;
 }(typeValidator_1.ObjectValidator));
 exports.ReportCreateValidator = ReportCreateValidator;
+var ReportCreateFromDefinitionValidator = /** @class */ (function (_super) {
+    __extends(ReportCreateFromDefinitionValidator, _super);
+    function ReportCreateFromDefinitionValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ReportCreateFromDefinitionValidator.prototype.getFields = function () {
+        return __spreadArray(__spreadArray([], _super.prototype.getFields.call(this), true), [
+            {
+                field: "reportDefinition",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.reportDefinitionValidator]
+            },
+        ], false);
+    };
+    return ReportCreateFromDefinitionValidator;
+}(ReportCreateValidator));
+exports.ReportCreateFromDefinitionValidator = ReportCreateFromDefinitionValidator;
 
 
 /***/ }),
 /* 18 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_183578__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_189960__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4073,9 +4124,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReportLoadValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_183578__(3);
-var typeValidator_1 = __nested_webpack_require_183578__(4);
-var validator_1 = __nested_webpack_require_183578__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_189960__(3);
+var typeValidator_1 = __nested_webpack_require_189960__(4);
+var validator_1 = __nested_webpack_require_189960__(1);
 var ReportLoadValidator = /** @class */ (function (_super) {
     __extends(ReportLoadValidator, _super);
     function ReportLoadValidator() {
@@ -4157,7 +4208,60 @@ exports.ReportLoadValidator = ReportLoadValidator;
 
 /***/ }),
 /* 19 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_187699__) {
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_194081__) {
+
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ReportDefinitionValidator = void 0;
+var multipleFieldsValidator_1 = __nested_webpack_require_194081__(3);
+var typeValidator_1 = __nested_webpack_require_194081__(4);
+var validator_1 = __nested_webpack_require_194081__(1);
+var ReportDefinitionValidator = /** @class */ (function (_super) {
+    __extends(ReportDefinitionValidator, _super);
+    function ReportDefinitionValidator() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ReportDefinitionValidator.prototype.validate = function (input, path, field) {
+        if (input == null) {
+            return null;
+        }
+        var errors = _super.prototype.validate.call(this, input, path, field);
+        if (errors) {
+            return errors;
+        }
+        var fields = [
+            {
+                field: "definition",
+                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+            }
+        ];
+        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+        return multipleFieldsValidator.validate(input, path, field);
+    };
+    return ReportDefinitionValidator;
+}(typeValidator_1.ObjectValidator));
+exports.ReportDefinitionValidator = ReportDefinitionValidator;
+
+
+/***/ }),
+/* 20 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_196368__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4178,9 +4282,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReportParameterFieldsValidator = exports.PaginatedReportLoadValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_187699__(3);
-var typeValidator_1 = __nested_webpack_require_187699__(4);
-var validator_1 = __nested_webpack_require_187699__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_196368__(3);
+var typeValidator_1 = __nested_webpack_require_196368__(4);
+var validator_1 = __nested_webpack_require_196368__(1);
 var PaginatedReportLoadValidator = /** @class */ (function (_super) {
     __extends(PaginatedReportLoadValidator, _super);
     function PaginatedReportLoadValidator() {
@@ -4264,8 +4368,8 @@ exports.ReportParameterFieldsValidator = ReportParameterFieldsValidator;
 
 
 /***/ }),
-/* 20 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_192195__) {
+/* 21 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_200864__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4286,9 +4390,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SaveAsParametersValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_192195__(3);
-var typeValidator_1 = __nested_webpack_require_192195__(4);
-var validator_1 = __nested_webpack_require_192195__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_200864__(3);
+var typeValidator_1 = __nested_webpack_require_200864__(4);
+var validator_1 = __nested_webpack_require_200864__(1);
 var SaveAsParametersValidator = /** @class */ (function (_super) {
     __extends(SaveAsParametersValidator, _super);
     function SaveAsParametersValidator() {
@@ -4317,8 +4421,8 @@ exports.SaveAsParametersValidator = SaveAsParametersValidator;
 
 
 /***/ }),
-/* 21 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_194476__) {
+/* 22 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_203145__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4339,10 +4443,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SlicerTargetSelectorValidator = exports.VisualTypeSelectorValidator = exports.VisualSelectorValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_194476__(3);
-var typeValidator_1 = __nested_webpack_require_194476__(4);
-var typeValidator_2 = __nested_webpack_require_194476__(4);
-var validator_1 = __nested_webpack_require_194476__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_203145__(3);
+var typeValidator_1 = __nested_webpack_require_203145__(4);
+var typeValidator_2 = __nested_webpack_require_203145__(4);
+var validator_1 = __nested_webpack_require_203145__(1);
 var VisualSelectorValidator = /** @class */ (function (_super) {
     __extends(VisualSelectorValidator, _super);
     function VisualSelectorValidator() {
@@ -4434,8 +4538,8 @@ exports.SlicerTargetSelectorValidator = SlicerTargetSelectorValidator;
 
 
 /***/ }),
-/* 22 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_199934__) {
+/* 23 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_208603__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4456,9 +4560,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaginatedReportSettingsValidator = exports.SettingsValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_199934__(3);
-var typeValidator_1 = __nested_webpack_require_199934__(4);
-var validator_1 = __nested_webpack_require_199934__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_208603__(3);
+var typeValidator_1 = __nested_webpack_require_208603__(4);
+var validator_1 = __nested_webpack_require_208603__(1);
 var SettingsValidator = /** @class */ (function (_super) {
     __extends(SettingsValidator, _super);
     function SettingsValidator() {
@@ -4584,8 +4688,8 @@ exports.PaginatedReportSettingsValidator = PaginatedReportSettingsValidator;
 
 
 /***/ }),
-/* 23 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_205930__) {
+/* 24 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_214599__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4606,9 +4710,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SlicerStateValidator = exports.SlicerValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_205930__(3);
-var typeValidator_1 = __nested_webpack_require_205930__(4);
-var validator_1 = __nested_webpack_require_205930__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_214599__(3);
+var typeValidator_1 = __nested_webpack_require_214599__(4);
+var validator_1 = __nested_webpack_require_214599__(1);
 var SlicerValidator = /** @class */ (function (_super) {
     __extends(SlicerValidator, _super);
     function SlicerValidator() {
@@ -4666,8 +4770,8 @@ exports.SlicerStateValidator = SlicerStateValidator;
 
 
 /***/ }),
-/* 24 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_209360__) {
+/* 25 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_218029__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4688,9 +4792,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TileLoadValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_209360__(3);
-var typeValidator_1 = __nested_webpack_require_209360__(4);
-var validator_1 = __nested_webpack_require_209360__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_218029__(3);
+var typeValidator_1 = __nested_webpack_require_218029__(4);
+var validator_1 = __nested_webpack_require_218029__(1);
 var TileLoadValidator = /** @class */ (function (_super) {
     __extends(TileLoadValidator, _super);
     function TileLoadValidator() {
@@ -4747,8 +4851,8 @@ exports.TileLoadValidator = TileLoadValidator;
 
 
 /***/ }),
-/* 25 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_212632__) {
+/* 26 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_221301__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4769,9 +4873,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.VisualHeaderValidator = exports.VisualHeaderSettingsValidator = exports.VisualSettingsValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_212632__(3);
-var typeValidator_1 = __nested_webpack_require_212632__(4);
-var validator_1 = __nested_webpack_require_212632__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_221301__(3);
+var typeValidator_1 = __nested_webpack_require_221301__(4);
+var validator_1 = __nested_webpack_require_221301__(1);
 var VisualSettingsValidator = /** @class */ (function (_super) {
     __extends(VisualSettingsValidator, _super);
     function VisualSettingsValidator() {
@@ -4854,7 +4958,7 @@ exports.VisualHeaderValidator = VisualHeaderValidator;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ ((__unused_webpack_module, exports) => {
 
 // Copyright (c) Microsoft Corporation.
@@ -4893,7 +4997,7 @@ exports.AnyOfValidator = AnyOfValidator;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ ((__unused_webpack_module, exports) => {
 
 // Copyright (c) Microsoft Corporation.
@@ -4919,7 +5023,7 @@ exports.FieldForbiddenValidator = FieldForbiddenValidator;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ ((__unused_webpack_module, exports) => {
 
 // Copyright (c) Microsoft Corporation.
@@ -4945,8 +5049,8 @@ exports.FieldRequiredValidator = FieldRequiredValidator;
 
 
 /***/ }),
-/* 29 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_220041__) {
+/* 30 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_228710__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -4967,7 +5071,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MapValidator = void 0;
-var typeValidator_1 = __nested_webpack_require_220041__(4);
+var typeValidator_1 = __nested_webpack_require_228710__(4);
 var MapValidator = /** @class */ (function (_super) {
     __extends(MapValidator, _super);
     function MapValidator(keyValidators, valueValidators) {
@@ -5011,8 +5115,8 @@ exports.MapValidator = MapValidator;
 
 
 /***/ }),
-/* 30 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_222725__) {
+/* 31 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_231394__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5033,9 +5137,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ParametersPanelValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_222725__(3);
-var typeValidator_1 = __nested_webpack_require_222725__(4);
-var validator_1 = __nested_webpack_require_222725__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_231394__(3);
+var typeValidator_1 = __nested_webpack_require_231394__(4);
+var validator_1 = __nested_webpack_require_231394__(1);
 var ParametersPanelValidator = /** @class */ (function (_super) {
     __extends(ParametersPanelValidator, _super);
     function ParametersPanelValidator() {
@@ -5068,8 +5172,8 @@ exports.ParametersPanelValidator = ParametersPanelValidator;
 
 
 /***/ }),
-/* 31 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_225093__) {
+/* 32 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_233762__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5090,9 +5194,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TableDataValidator = exports.TableSchemaValidator = exports.ColumnSchemaValidator = exports.CredentialsValidator = exports.DatasourceConnectionConfigValidator = exports.DatasetCreateConfigValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_225093__(3);
-var typeValidator_1 = __nested_webpack_require_225093__(4);
-var validator_1 = __nested_webpack_require_225093__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_233762__(3);
+var typeValidator_1 = __nested_webpack_require_233762__(4);
+var validator_1 = __nested_webpack_require_233762__(1);
 var DatasetCreateConfigValidator = /** @class */ (function (_super) {
     __extends(DatasetCreateConfigValidator, _super);
     function DatasetCreateConfigValidator() {
@@ -5304,8 +5408,8 @@ exports.TableDataValidator = TableDataValidator;
 
 
 /***/ }),
-/* 32 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_235148__) {
+/* 33 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_243817__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5326,9 +5430,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.QuickCreateValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_235148__(3);
-var typeValidator_1 = __nested_webpack_require_235148__(4);
-var validator_1 = __nested_webpack_require_235148__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_243817__(3);
+var typeValidator_1 = __nested_webpack_require_243817__(4);
+var validator_1 = __nested_webpack_require_243817__(1);
 var QuickCreateValidator = /** @class */ (function (_super) {
     __extends(QuickCreateValidator, _super);
     function QuickCreateValidator() {
@@ -5373,8 +5477,8 @@ exports.QuickCreateValidator = QuickCreateValidator;
 
 
 /***/ }),
-/* 33 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_238021__) {
+/* 34 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_246690__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5395,8 +5499,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PrintSettingsValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_238021__(3);
-var typeValidator_1 = __nested_webpack_require_238021__(4);
+var multipleFieldsValidator_1 = __nested_webpack_require_246690__(3);
+var typeValidator_1 = __nested_webpack_require_246690__(4);
 var PrintSettingsValidator = /** @class */ (function (_super) {
     __extends(PrintSettingsValidator, _super);
     function PrintSettingsValidator() {
@@ -5425,8 +5529,8 @@ exports.PrintSettingsValidator = PrintSettingsValidator;
 
 
 /***/ }),
-/* 34 */
-/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_240214__) {
+/* 35 */
+/***/ (function(__unused_webpack_module, exports, __nested_webpack_require_248883__) {
 
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
@@ -5447,9 +5551,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaginatedReportDatasetBindingValidator = void 0;
-var multipleFieldsValidator_1 = __nested_webpack_require_240214__(3);
-var typeValidator_1 = __nested_webpack_require_240214__(4);
-var validator_1 = __nested_webpack_require_240214__(1);
+var multipleFieldsValidator_1 = __nested_webpack_require_248883__(3);
+var typeValidator_1 = __nested_webpack_require_248883__(4);
+var validator_1 = __nested_webpack_require_248883__(1);
 var PaginatedReportDatasetBindingValidator = /** @class */ (function (_super) {
     __extends(PaginatedReportDatasetBindingValidator, _super);
     function PaginatedReportDatasetBindingValidator() {
@@ -5486,9 +5590,9 @@ exports.PaginatedReportDatasetBindingValidator = PaginatedReportDatasetBindingVa
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
-/******/ 	function __nested_webpack_require_242960__(moduleId) {
+/******/ 	function __nested_webpack_require_251629__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
@@ -5500,370 +5604,26 @@ exports.PaginatedReportDatasetBindingValidator = PaginatedReportDatasetBindingVa
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_242960__);
-/******/ 	
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_251629__);
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
-/******/ 	
+/******/
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __nested_webpack_exports__ = __nested_webpack_require_242960__(0);
-/******/ 	
+/******/ 	var __nested_webpack_exports__ = __nested_webpack_require_251629__(0);
+/******/
 /******/ 	return __nested_webpack_exports__;
 /******/ })()
 ;
 });
 //# sourceMappingURL=models.js.map
-// SIG // Begin signature block
-// SIG // MIIr4gYJKoZIhvcNAQcCoIIr0zCCK88CAQExDzANBglg
-// SIG // hkgBZQMEAgEFADB3BgorBgEEAYI3AgEEoGkwZzAyBgor
-// SIG // BgEEAYI3AgEeMCQCAQEEEBDgyQbOONQRoqMAEEvTUJAC
-// SIG // AQACAQACAQACAQACAQAwMTANBglghkgBZQMEAgEFAAQg
-// SIG // WNb2+8Nx7D6LpbfhohPb+cdkaBYb+kv1f6wvqYYucZ+g
-// SIG // ghFuMIIIfjCCB2agAwIBAgITNgAAAchkggAwtCOCeAAC
-// SIG // AAAByDANBgkqhkiG9w0BAQsFADBBMRMwEQYKCZImiZPy
-// SIG // LGQBGRYDR0JMMRMwEQYKCZImiZPyLGQBGRYDQU1FMRUw
-// SIG // EwYDVQQDEwxBTUUgQ1MgQ0EgMDEwHhcNMjMwMzIwMjAw
-// SIG // MDMxWhcNMjQwMzE5MjAwMDMxWjAkMSIwIAYDVQQDExlN
-// SIG // aWNyb3NvZnQgQXp1cmUgQ29kZSBTaWduMIIBIjANBgkq
-// SIG // hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArKhH7cINkFWa
-// SIG // NPbW4CGpQwfhD2vWIwm5iDQIGjc5Siq9Ay9yIB0MPvck
-// SIG // Xnp402u+fVvy8Zb+cPXCyiemnyFG7wYwKgPF4+x2awd4
-// SIG // beHkFvcWtTV+Yz5oEKVVT0oWR5NfsUHuqEGDlIVFAYB/
-// SIG // 7FIlZQWRiC4emeka+jYoFTl50U2mDQ/CvdCquvAd+dBc
-// SIG // hoH0BLXWh00rK3NqRoqQj50vTHl+EB5HCer6+uP7iFKi
-// SIG // a3vFw1uDonKVKmcz4x8GJo4y5p7plcr4VAB5FdwTpZrz
-// SIG // hFObBzJxcxdIT3qMm07RYM6K1EbUn3AKKTEG2O9etQ06
-// SIG // oIKCcGHltvj0NZp37NkEJwIDAQABo4IFijCCBYYwKQYJ
-// SIG // KwYBBAGCNxUKBBwwGjAMBgorBgEEAYI3WwEBMAoGCCsG
-// SIG // AQUFBwMDMD0GCSsGAQQBgjcVBwQwMC4GJisGAQQBgjcV
-// SIG // CIaQ4w2E1bR4hPGLPoWb3RbOnRKBYIPdzWaGlIwyAgFk
-// SIG // AgEMMIICdgYIKwYBBQUHAQEEggJoMIICZDBiBggrBgEF
-// SIG // BQcwAoZWaHR0cDovL2NybC5taWNyb3NvZnQuY29tL3Br
-// SIG // aWluZnJhL0NlcnRzL0JZMlBLSUNTQ0EwMS5BTUUuR0JM
-// SIG // X0FNRSUyMENTJTIwQ0ElMjAwMSgyKS5jcnQwUgYIKwYB
-// SIG // BQUHMAKGRmh0dHA6Ly9jcmwxLmFtZS5nYmwvYWlhL0JZ
-// SIG // MlBLSUNTQ0EwMS5BTUUuR0JMX0FNRSUyMENTJTIwQ0El
-// SIG // MjAwMSgyKS5jcnQwUgYIKwYBBQUHMAKGRmh0dHA6Ly9j
-// SIG // cmwyLmFtZS5nYmwvYWlhL0JZMlBLSUNTQ0EwMS5BTUUu
-// SIG // R0JMX0FNRSUyMENTJTIwQ0ElMjAwMSgyKS5jcnQwUgYI
-// SIG // KwYBBQUHMAKGRmh0dHA6Ly9jcmwzLmFtZS5nYmwvYWlh
-// SIG // L0JZMlBLSUNTQ0EwMS5BTUUuR0JMX0FNRSUyMENTJTIw
-// SIG // Q0ElMjAwMSgyKS5jcnQwUgYIKwYBBQUHMAKGRmh0dHA6
-// SIG // Ly9jcmw0LmFtZS5nYmwvYWlhL0JZMlBLSUNTQ0EwMS5B
-// SIG // TUUuR0JMX0FNRSUyMENTJTIwQ0ElMjAwMSgyKS5jcnQw
-// SIG // ga0GCCsGAQUFBzAChoGgbGRhcDovLy9DTj1BTUUlMjBD
-// SIG // UyUyMENBJTIwMDEsQ049QUlBLENOPVB1YmxpYyUyMEtl
-// SIG // eSUyMFNlcnZpY2VzLENOPVNlcnZpY2VzLENOPUNvbmZp
-// SIG // Z3VyYXRpb24sREM9QU1FLERDPUdCTD9jQUNlcnRpZmlj
-// SIG // YXRlP2Jhc2U/b2JqZWN0Q2xhc3M9Y2VydGlmaWNhdGlv
-// SIG // bkF1dGhvcml0eTAdBgNVHQ4EFgQUskGhjtP5WCMqHOBI
-// SIG // YEqYPR0vFkMwDgYDVR0PAQH/BAQDAgeAMEUGA1UdEQQ+
-// SIG // MDykOjA4MR4wHAYDVQQLExVNaWNyb3NvZnQgQ29ycG9y
-// SIG // YXRpb24xFjAUBgNVBAUTDTIzNjE2Nys1MDAzNjAwggHm
-// SIG // BgNVHR8EggHdMIIB2TCCAdWgggHRoIIBzYY/aHR0cDov
-// SIG // L2NybC5taWNyb3NvZnQuY29tL3BraWluZnJhL0NSTC9B
-// SIG // TUUlMjBDUyUyMENBJTIwMDEoMikuY3JshjFodHRwOi8v
-// SIG // Y3JsMS5hbWUuZ2JsL2NybC9BTUUlMjBDUyUyMENBJTIw
-// SIG // MDEoMikuY3JshjFodHRwOi8vY3JsMi5hbWUuZ2JsL2Ny
-// SIG // bC9BTUUlMjBDUyUyMENBJTIwMDEoMikuY3JshjFodHRw
-// SIG // Oi8vY3JsMy5hbWUuZ2JsL2NybC9BTUUlMjBDUyUyMENB
-// SIG // JTIwMDEoMikuY3JshjFodHRwOi8vY3JsNC5hbWUuZ2Js
-// SIG // L2NybC9BTUUlMjBDUyUyMENBJTIwMDEoMikuY3JshoG9
-// SIG // bGRhcDovLy9DTj1BTUUlMjBDUyUyMENBJTIwMDEoMiks
-// SIG // Q049QlkyUEtJQ1NDQTAxLENOPUNEUCxDTj1QdWJsaWMl
-// SIG // MjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1D
-// SIG // b25maWd1cmF0aW9uLERDPUFNRSxEQz1HQkw/Y2VydGlm
-// SIG // aWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlP29iamVjdENs
-// SIG // YXNzPWNSTERpc3RyaWJ1dGlvblBvaW50MB8GA1UdIwQY
-// SIG // MBaAFJZRhOBrb3v+2Aarw/KF5imuavnUMB8GA1UdJQQY
-// SIG // MBYGCisGAQQBgjdbAQEGCCsGAQUFBwMDMA0GCSqGSIb3
-// SIG // DQEBCwUAA4IBAQDG1533NPfZ4bL0nuae9PWCGH0ZmNci
-// SIG // CejMn71r/igTKxx635KmcI38lYY/vhbu++jhMlN3V3Ke
-// SIG // AJEmuUdbTxtaXlhhJwWW/3i4GfQGjFIot6N3F9OuXURf
-// SIG // 8jc4LypadrWJV1l1bmZ/G75FiqMoEDF7DYjyYJ9BNUU3
-// SIG // alOgYyXygBJJjSfJR/8Vgd8hYCExm9DJgXDlSuKZ7ZeD
-// SIG // ailP2EGIO5+m0QGI1tyMKdc/YgPrJUw7NI9wmx8ET/J5
-// SIG // fxrrh21fdowYoGCYnphYtGhGBvnqDdaHXbVECC3gzbU+
-// SIG // nLfeFF30rr/jHxoXWzKfFcYCj5Xnw52bu5mDZB8jF/dH
-// SIG // vhlPMIII6DCCBtCgAwIBAgITHwAAAFHqj/accwyoOwAA
-// SIG // AAAAUTANBgkqhkiG9w0BAQsFADA8MRMwEQYKCZImiZPy
-// SIG // LGQBGRYDR0JMMRMwEQYKCZImiZPyLGQBGRYDQU1FMRAw
-// SIG // DgYDVQQDEwdhbWVyb290MB4XDTIxMDUyMTE4NDQxNFoX
-// SIG // DTI2MDUyMTE4NTQxNFowQTETMBEGCgmSJomT8ixkARkW
-// SIG // A0dCTDETMBEGCgmSJomT8ixkARkWA0FNRTEVMBMGA1UE
-// SIG // AxMMQU1FIENTIENBIDAxMIIBIjANBgkqhkiG9w0BAQEF
-// SIG // AAOCAQ8AMIIBCgKCAQEAyZpSCX0Bno1W1yqXMhT6BUlJ
-// SIG // ZWpa4p3xFeiTHO4vm2Q6C/azR5xwxnyYHrkSGDtS2P9X
-// SIG // +KDE64V20mmEQkubxnPNeOVnE2RvdPGxgwlq+BhS3ONd
-// SIG // VsQPj79q7XgHM9HhzB9+qk0PC9KN1zm9p/seyiRS6JF1
-// SIG // dbOqRf1pUl7FAVxmgiCFgV8hHIb/rDPXig7FDi3S0yEx
-// SIG // 2CUDVpIq8jEhG8anUFE1WYxM+ni0S5KHwwKPKV4qyGDo
-// SIG // DO+9AmDoma3Chyu5WDlW5cdtqXTWsGPE3umtnX6Amlld
-// SIG // UFLms4OVR4guKf+n5LIBCC6bTiocfXPomqYjYTKx7AGM
-// SIG // faVLaaXmhQIDAQABo4IE3DCCBNgwEgYJKwYBBAGCNxUB
-// SIG // BAUCAwIAAjAjBgkrBgEEAYI3FQIEFgQUEmgkQiFHy9Rr
-// SIG // vjHPIKTACyN/P0cwHQYDVR0OBBYEFJZRhOBrb3v+2Aar
-// SIG // w/KF5imuavnUMIIBBAYDVR0lBIH8MIH5BgcrBgEFAgMF
-// SIG // BggrBgEFBQcDAQYIKwYBBQUHAwIGCisGAQQBgjcUAgEG
-// SIG // CSsGAQQBgjcVBgYKKwYBBAGCNwoDDAYJKwYBBAGCNxUG
-// SIG // BggrBgEFBQcDCQYIKwYBBQUIAgIGCisGAQQBgjdAAQEG
-// SIG // CysGAQQBgjcKAwQBBgorBgEEAYI3CgMEBgkrBgEEAYI3
-// SIG // FQUGCisGAQQBgjcUAgIGCisGAQQBgjcUAgMGCCsGAQUF
-// SIG // BwMDBgorBgEEAYI3WwEBBgorBgEEAYI3WwIBBgorBgEE
-// SIG // AYI3WwMBBgorBgEEAYI3WwUBBgorBgEEAYI3WwQBBgor
-// SIG // BgEEAYI3WwQCMBkGCSsGAQQBgjcUAgQMHgoAUwB1AGIA
-// SIG // QwBBMAsGA1UdDwQEAwIBhjASBgNVHRMBAf8ECDAGAQH/
-// SIG // AgEAMB8GA1UdIwQYMBaAFCleUV5krjS566ycDaeMdQHR
-// SIG // CQsoMIIBaAYDVR0fBIIBXzCCAVswggFXoIIBU6CCAU+G
-// SIG // MWh0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS9wa2lpbmZy
-// SIG // YS9jcmwvYW1lcm9vdC5jcmyGI2h0dHA6Ly9jcmwyLmFt
-// SIG // ZS5nYmwvY3JsL2FtZXJvb3QuY3JshiNodHRwOi8vY3Js
-// SIG // My5hbWUuZ2JsL2NybC9hbWVyb290LmNybIYjaHR0cDov
-// SIG // L2NybDEuYW1lLmdibC9jcmwvYW1lcm9vdC5jcmyGgaps
-// SIG // ZGFwOi8vL0NOPWFtZXJvb3QsQ049QU1FUm9vdCxDTj1D
-// SIG // RFAsQ049UHVibGljJTIwS2V5JTIwU2VydmljZXMsQ049
-// SIG // U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1BTUUs
-// SIG // REM9R0JMP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/
-// SIG // YmFzZT9vYmplY3RDbGFzcz1jUkxEaXN0cmlidXRpb25Q
-// SIG // b2ludDCCAasGCCsGAQUFBwEBBIIBnTCCAZkwRwYIKwYB
-// SIG // BQUHMAKGO2h0dHA6Ly9jcmwubWljcm9zb2Z0LmNvbS9w
-// SIG // a2lpbmZyYS9jZXJ0cy9BTUVSb290X2FtZXJvb3QuY3J0
-// SIG // MDcGCCsGAQUFBzAChitodHRwOi8vY3JsMi5hbWUuZ2Js
-// SIG // L2FpYS9BTUVSb290X2FtZXJvb3QuY3J0MDcGCCsGAQUF
-// SIG // BzAChitodHRwOi8vY3JsMy5hbWUuZ2JsL2FpYS9BTUVS
-// SIG // b290X2FtZXJvb3QuY3J0MDcGCCsGAQUFBzAChitodHRw
-// SIG // Oi8vY3JsMS5hbWUuZ2JsL2FpYS9BTUVSb290X2FtZXJv
-// SIG // b3QuY3J0MIGiBggrBgEFBQcwAoaBlWxkYXA6Ly8vQ049
-// SIG // YW1lcm9vdCxDTj1BSUEsQ049UHVibGljJTIwS2V5JTIw
-// SIG // U2VydmljZXMsQ049U2VydmljZXMsQ049Q29uZmlndXJh
-// SIG // dGlvbixEQz1BTUUsREM9R0JMP2NBQ2VydGlmaWNhdGU/
-// SIG // YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZpY2F0aW9uQXV0
-// SIG // aG9yaXR5MA0GCSqGSIb3DQEBCwUAA4ICAQBQECO3Tw/o
-// SIG // 317Rrd7yadqcswPx1LvIYymkaTN6KcmuRt6HKa0Xe73U
-// SIG // x2/AQ30TfgA9GBJngweRykKBusRzyOU17iIubJvy3gA2
-// SIG // 1dwtqtB0DsoEv1U/ptVu2v++doTCJ/i+GbssVXkgaX8H
-// SIG // +6EOGEmT4evp4GbwR4HwWlc+Dvf8HH8PdUA2Z04CvcwI
-// SIG // fckSipbNm84jxJ8XjmTFTWscldL9edj2NsY6iGnyJFIy
-// SIG // ur2PS7VRYyV3p1VAJp91gj1jRQtWEyCB8P5g9nE3z8u0
-// SIG // ANaU/hjwEQCrdGyravWgnf2JtG+bT26YAokbc8m+32zU
-// SIG // tXRO+NK3tAjhOu2FdsG3qNrF4sc7y37R/C+7Pcb/cFfh
-// SIG // ttqsirepZii4xStcjMODYuXzGm3IJs0b0owHG6oKd7ZO
-// SIG // GvHpmmh9K8/DLriD/sq8bURD10qi/wuW8zM7IpLg1vcR
-// SIG // 9dIK2mc0pj44pc6UX0XbttP/VEJgu3lT2eI9VjWtaKjx
-// SIG // 38xE9woSMyekPRtzTwgfuysF9DkJisr+yA4po/FPxpbB
-// SIG // w9c/hBf32DH/GFxteS2pmjgKIbMP8sDukmEq3lVvuWNJ
-// SIG // sybrZwQvQpvaM49fv+JKpLK5YWYEfwksYRR9wU8Hh/ID
-// SIG // 9hRCEkbUoQ2W7mMpsp2Nbp/kcn4ivfolUy3Q9Yf0scsQ
-// SIG // 6WTLYpm+AoCUJTGCGcwwghnIAgEBMFgwQTETMBEGCgmS
-// SIG // JomT8ixkARkWA0dCTDETMBEGCgmSJomT8ixkARkWA0FN
-// SIG // RTEVMBMGA1UEAxMMQU1FIENTIENBIDAxAhM2AAAByGSC
-// SIG // ADC0I4J4AAIAAAHIMA0GCWCGSAFlAwQCAQUAoIGuMBkG
-// SIG // CSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQB
-// SIG // gjcCAQsxDjAMBgorBgEEAYI3AgEVMC8GCSqGSIb3DQEJ
-// SIG // BDEiBCDVsRlmuqGGWLZSefk2CBRUhBuBOD+bHy0Gwl8T
-// SIG // 0JKkqjBCBgorBgEEAYI3AgEMMTQwMqAUgBIATQBpAGMA
-// SIG // cgBvAHMAbwBmAHShGoAYaHR0cDovL3d3dy5taWNyb3Nv
-// SIG // ZnQuY29tMA0GCSqGSIb3DQEBAQUABIIBADFsQE1+4mJA
-// SIG // S6P65AMT7BcL1WNe0RUuA0Bt+CuVtbwa1zq+ZGDtexdb
-// SIG // CWxBr5U4oZF6mHY6AyKf+NTFgvZczY3QqYh19SMKGujp
-// SIG // FgxBvG0aQ/dVQDtKC5Le2cce15l4X6SAsYk+8q0xMjti
-// SIG // QgSfBIEkJZ8FtDwtFaHO5GN/OkEt8M7NEzQOZQcfvSgb
-// SIG // lMV8hY3Lf0dAPg4jyay3bQcPjOLsPs5G4GmTDM4qdPYM
-// SIG // w5+IzUudbU8mNTmPppT3u2A2xGoQ8Ky5/mava+b11bSM
-// SIG // GaJ1QFVCATVph88Fw/958W9et3okjG8TffdVb9J/KW09
-// SIG // +oUXuBUjmljUn2ExNxJUxGyhgheUMIIXkAYKKwYBBAGC
-// SIG // NwMDATGCF4Awghd8BgkqhkiG9w0BBwKgghdtMIIXaQIB
-// SIG // AzEPMA0GCWCGSAFlAwQCAQUAMIIBUgYLKoZIhvcNAQkQ
-// SIG // AQSgggFBBIIBPTCCATkCAQEGCisGAQQBhFkKAwEwMTAN
-// SIG // BglghkgBZQMEAgEFAAQgVH8KNp+SiwyXjVpLA60gPo3S
-// SIG // 9GbqNxZ81BNBirXMZRMCBmVWyBjWNBgTMjAyMzExMjkx
-// SIG // MDA3MTguNDMyWjAEgAIB9KCB0aSBzjCByzELMAkGA1UE
-// SIG // BhMCVVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNV
-// SIG // BAcTB1JlZG1vbmQxHjAcBgNVBAoTFU1pY3Jvc29mdCBD
-// SIG // b3Jwb3JhdGlvbjElMCMGA1UECxMcTWljcm9zb2Z0IEFt
-// SIG // ZXJpY2EgT3BlcmF0aW9uczEnMCUGA1UECxMeblNoaWVs
-// SIG // ZCBUU1MgRVNOOkEwMDAtMDVFMC1EOTQ3MSUwIwYDVQQD
-// SIG // ExxNaWNyb3NvZnQgVGltZS1TdGFtcCBTZXJ2aWNloIIR
-// SIG // 6jCCByAwggUIoAMCAQICEzMAAAHQdwiq76MXxt0AAQAA
-// SIG // AdAwDQYJKoZIhvcNAQELBQAwfDELMAkGA1UEBhMCVVMx
-// SIG // EzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1Jl
-// SIG // ZG1vbmQxHjAcBgNVBAoTFU1pY3Jvc29mdCBDb3Jwb3Jh
-// SIG // dGlvbjEmMCQGA1UEAxMdTWljcm9zb2Z0IFRpbWUtU3Rh
-// SIG // bXAgUENBIDIwMTAwHhcNMjMwNTI1MTkxMjE0WhcNMjQw
-// SIG // MjAxMTkxMjE0WjCByzELMAkGA1UEBhMCVVMxEzARBgNV
-// SIG // BAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1JlZG1vbmQx
-// SIG // HjAcBgNVBAoTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEl
-// SIG // MCMGA1UECxMcTWljcm9zb2Z0IEFtZXJpY2EgT3BlcmF0
-// SIG // aW9uczEnMCUGA1UECxMeblNoaWVsZCBUU1MgRVNOOkEw
-// SIG // MDAtMDVFMC1EOTQ3MSUwIwYDVQQDExxNaWNyb3NvZnQg
-// SIG // VGltZS1TdGFtcCBTZXJ2aWNlMIICIjANBgkqhkiG9w0B
-// SIG // AQEFAAOCAg8AMIICCgKCAgEA3zJX59+X7zNFwFEpiOao
-// SIG // htFMT4tuR5EsgYM5N86WDt9dXdThBBc9EKQCtt7NXSRa
-// SIG // 4weYA/kjMOc+hMMQuAq11PSmkOFjR6h64Vn7aYKNzJCX
-// SIG // sfX65jvTJXVH41BuerCFumFRemI1/va09SQ3Qgx26OZ2
-// SIG // YmrDIoBimsBm9h6g+/5I0Ueu0b1Ye0OJ2rQFbuOmX+TC
-// SIG // 74kdMTeXDRttMcAcILbWmBJOV5VC2gR+Tp189nlqCMfk
-// SIG // owzuwbeQbgAVmPEr5kUHwck9nKaRM047f37NMaeAdXAB
-// SIG // 1Q8JRsGbr/UX3N53XcYBaygPDFh2yRdPmllFGCAUfBct
-// SIG // oLhVR6B3js3uyLG8r0a2sf//N4GKqPHOWf9f7u5Iy3E4
-// SIG // IqYsmfFxEbCxBAieaMdQQS2OgI5m4AMw3TZdi3no/qiG
-// SIG // 3Qa/0lLyhAvl8OMYxTDk1FVilnprdpIcJ3VHwTUezc7t
-// SIG // c/S9Fr+0wGP7/r+qTYQHqITzAhSXPmpOrjA/Eyks1hY8
-// SIG // OWgA5Jg/ZhrgvOsr0ipCCODGss6FHbHk9J35PGNHz47X
-// SIG // cNlp3o5esyx7mF8HA2rtjtQzLqInnTVY0xd+1BJmE/qM
-// SIG // QvzhV1BjwxELfbc4G0fYPBy7VHxHljrDhA+cYG+a8Mn7
-// SIG // yLLOx/3HRxXCIiHM80IGJ7C8hBnqaGQ5CoUjEeXggein
-// SIG // L/0CAwEAAaOCAUkwggFFMB0GA1UdDgQWBBQz4QGFktKA
-// SIG // PpTrSE34ybcpdJJ0UTAfBgNVHSMEGDAWgBSfpxVdAF5i
-// SIG // XYP05dJlpxtTNRnpcjBfBgNVHR8EWDBWMFSgUqBQhk5o
-// SIG // dHRwOi8vd3d3Lm1pY3Jvc29mdC5jb20vcGtpb3BzL2Ny
-// SIG // bC9NaWNyb3NvZnQlMjBUaW1lLVN0YW1wJTIwUENBJTIw
-// SIG // MjAxMCgxKS5jcmwwbAYIKwYBBQUHAQEEYDBeMFwGCCsG
-// SIG // AQUFBzAChlBodHRwOi8vd3d3Lm1pY3Jvc29mdC5jb20v
-// SIG // cGtpb3BzL2NlcnRzL01pY3Jvc29mdCUyMFRpbWUtU3Rh
-// SIG // bXAlMjBQQ0ElMjAyMDEwKDEpLmNydDAMBgNVHRMBAf8E
-// SIG // AjAAMBYGA1UdJQEB/wQMMAoGCCsGAQUFBwMIMA4GA1Ud
-// SIG // DwEB/wQEAwIHgDANBgkqhkiG9w0BAQsFAAOCAgEAl4fn
-// SIG // JApGWgNOkjVvqsbUvYB0KeMexvoHYpJ4CiLRK/KLZFyK
-// SIG // 5lj2K2q0VgZWPdZahoopR8iJWd4jQVG2jRJmigBjGeWH
-// SIG // EuyGVCj2qtY1NJrMpfvKINLfQv2duvmrcd77IR6xULko
-// SIG // MEx2Vac7+5PAmJwWKMXYSNbhoah+feZqi77TLMRDf9bK
-// SIG // O1Pm91Oiwq8ubsMHM+fo/Do9BlF92/omYPgLNMUzek9E
-// SIG // GvATXnPy8HMqmDRGjJFtlQCq5ob1h/Dgg03F4DjZ5wAU
-// SIG // BwX1yv3ywGxxRktVzTra+tv4mhwRgJKwhpegYvD38LOn
-// SIG // 7PsPrBPa94V/VYNILETKB0bjGol7KxphrLmJy59wME4L
-// SIG // jGrcPUfFObybVkpbtQhTuT9CxL0EIjGddrEErEAJDQ07
-// SIG // Pa041TY4yFIKGelzzMZXDyA3I8cPG33m+MuMAMTNkUaF
-// SIG // nMaZMfuiCH9i/m+4Cx7QcVwlieWzFu1sFAti5bW7q1MA
-// SIG // b9EoI6Q7WxKsP7g4FgXqwk/mbctzXPeu4hmkI8mEB+h/
-// SIG // 4fV3PLJptp+lY8kkcdrMJ1t4a+kMet1P8WPRy+hTYaxo
-// SIG // hRA+2USq58L717zFUFCBJAexlBHjeoXmPIBy7dIy1d8s
-// SIG // w4kAPEfKeWBoBgFbfTBMIACTWNYh7x//L84SUmRTZB/L
-// SIG // L0c7Tv4t07yq42/GccIwggdxMIIFWaADAgECAhMzAAAA
-// SIG // FcXna54Cm0mZAAAAAAAVMA0GCSqGSIb3DQEBCwUAMIGI
-// SIG // MQswCQYDVQQGEwJVUzETMBEGA1UECBMKV2FzaGluZ3Rv
-// SIG // bjEQMA4GA1UEBxMHUmVkbW9uZDEeMBwGA1UEChMVTWlj
-// SIG // cm9zb2Z0IENvcnBvcmF0aW9uMTIwMAYDVQQDEylNaWNy
-// SIG // b3NvZnQgUm9vdCBDZXJ0aWZpY2F0ZSBBdXRob3JpdHkg
-// SIG // MjAxMDAeFw0yMTA5MzAxODIyMjVaFw0zMDA5MzAxODMy
-// SIG // MjVaMHwxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpXYXNo
-// SIG // aW5ndG9uMRAwDgYDVQQHEwdSZWRtb25kMR4wHAYDVQQK
-// SIG // ExVNaWNyb3NvZnQgQ29ycG9yYXRpb24xJjAkBgNVBAMT
-// SIG // HU1pY3Jvc29mdCBUaW1lLVN0YW1wIFBDQSAyMDEwMIIC
-// SIG // IjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA5OGm
-// SIG // TOe0ciELeaLL1yR5vQ7VgtP97pwHB9KpbE51yMo1V/YB
-// SIG // f2xK4OK9uT4XYDP/XE/HZveVU3Fa4n5KWv64NmeFRiMM
-// SIG // tY0Tz3cywBAY6GB9alKDRLemjkZrBxTzxXb1hlDcwUTI
-// SIG // cVxRMTegCjhuje3XD9gmU3w5YQJ6xKr9cmmvHaus9ja+
-// SIG // NSZk2pg7uhp7M62AW36MEBydUv626GIl3GoPz130/o5T
-// SIG // z9bshVZN7928jaTjkY+yOSxRnOlwaQ3KNi1wjjHINSi9
-// SIG // 47SHJMPgyY9+tVSP3PoFVZhtaDuaRr3tpK56KTesy+uD
-// SIG // RedGbsoy1cCGMFxPLOJiss254o2I5JasAUq7vnGpF1tn
-// SIG // YN74kpEeHT39IM9zfUGaRnXNxF803RKJ1v2lIH1+/Nme
-// SIG // Rd+2ci/bfV+AutuqfjbsNkz2K26oElHovwUDo9Fzpk03
-// SIG // dJQcNIIP8BDyt0cY7afomXw/TNuvXsLz1dhzPUNOwTM5
-// SIG // TI4CvEJoLhDqhFFG4tG9ahhaYQFzymeiXtcodgLiMxhy
-// SIG // 16cg8ML6EgrXY28MyTZki1ugpoMhXV8wdJGUlNi5UPkL
-// SIG // iWHzNgY1GIRH29wb0f2y1BzFa/ZcUlFdEtsluq9QBXps
-// SIG // xREdcu+N+VLEhReTwDwV2xo3xwgVGD94q0W29R6HXtqP
-// SIG // nhZyacaue7e3PmriLq0CAwEAAaOCAd0wggHZMBIGCSsG
-// SIG // AQQBgjcVAQQFAgMBAAEwIwYJKwYBBAGCNxUCBBYEFCqn
-// SIG // Uv5kxJq+gpE8RjUpzxD/LwTuMB0GA1UdDgQWBBSfpxVd
-// SIG // AF5iXYP05dJlpxtTNRnpcjBcBgNVHSAEVTBTMFEGDCsG
-// SIG // AQQBgjdMg30BATBBMD8GCCsGAQUFBwIBFjNodHRwOi8v
-// SIG // d3d3Lm1pY3Jvc29mdC5jb20vcGtpb3BzL0RvY3MvUmVw
-// SIG // b3NpdG9yeS5odG0wEwYDVR0lBAwwCgYIKwYBBQUHAwgw
-// SIG // GQYJKwYBBAGCNxQCBAweCgBTAHUAYgBDAEEwCwYDVR0P
-// SIG // BAQDAgGGMA8GA1UdEwEB/wQFMAMBAf8wHwYDVR0jBBgw
-// SIG // FoAU1fZWy4/oolxiaNE9lJBb186aGMQwVgYDVR0fBE8w
-// SIG // TTBLoEmgR4ZFaHR0cDovL2NybC5taWNyb3NvZnQuY29t
-// SIG // L3BraS9jcmwvcHJvZHVjdHMvTWljUm9vQ2VyQXV0XzIw
-// SIG // MTAtMDYtMjMuY3JsMFoGCCsGAQUFBwEBBE4wTDBKBggr
-// SIG // BgEFBQcwAoY+aHR0cDovL3d3dy5taWNyb3NvZnQuY29t
-// SIG // L3BraS9jZXJ0cy9NaWNSb29DZXJBdXRfMjAxMC0wNi0y
-// SIG // My5jcnQwDQYJKoZIhvcNAQELBQADggIBAJ1VffwqreEs
-// SIG // H2cBMSRb4Z5yS/ypb+pcFLY+TkdkeLEGk5c9MTO1OdfC
-// SIG // cTY/2mRsfNB1OW27DzHkwo/7bNGhlBgi7ulmZzpTTd2Y
-// SIG // urYeeNg2LpypglYAA7AFvonoaeC6Ce5732pvvinLbtg/
-// SIG // SHUB2RjebYIM9W0jVOR4U3UkV7ndn/OOPcbzaN9l9qRW
-// SIG // qveVtihVJ9AkvUCgvxm2EhIRXT0n4ECWOKz3+SmJw7wX
-// SIG // sFSFQrP8DJ6LGYnn8AtqgcKBGUIZUnWKNsIdw2FzLixr
-// SIG // e24/LAl4FOmRsqlb30mjdAy87JGA0j3mSj5mO0+7hvoy
-// SIG // GtmW9I/2kQH2zsZ0/fZMcm8Qq3UwxTSwethQ/gpY3UA8
-// SIG // x1RtnWN0SCyxTkctwRQEcb9k+SS+c23Kjgm9swFXSVRk
-// SIG // 2XPXfx5bRAGOWhmRaw2fpCjcZxkoJLo4S5pu+yFUa2pF
-// SIG // EUep8beuyOiJXk+d0tBMdrVXVAmxaQFEfnyhYWxz/gq7
-// SIG // 7EFmPWn9y8FBSX5+k77L+DvktxW/tM4+pTFRhLy/AsGC
-// SIG // onsXHRWJjXD+57XQKBqJC4822rpM+Zv/Cuk0+CQ1Zyvg
-// SIG // DbjmjJnW4SLq8CdCPSWU5nR0W2rRnj7tfqAxM328y+l7
-// SIG // vzhwRNGQ8cirOoo6CGJ/2XBjU02N7oJtpQUQwXEGahC0
-// SIG // HVUzWLOhcGbyoYIDTTCCAjUCAQEwgfmhgdGkgc4wgcsx
-// SIG // CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9u
-// SIG // MRAwDgYDVQQHEwdSZWRtb25kMR4wHAYDVQQKExVNaWNy
-// SIG // b3NvZnQgQ29ycG9yYXRpb24xJTAjBgNVBAsTHE1pY3Jv
-// SIG // c29mdCBBbWVyaWNhIE9wZXJhdGlvbnMxJzAlBgNVBAsT
-// SIG // Hm5TaGllbGQgVFNTIEVTTjpBMDAwLTA1RTAtRDk0NzEl
-// SIG // MCMGA1UEAxMcTWljcm9zb2Z0IFRpbWUtU3RhbXAgU2Vy
-// SIG // dmljZaIjCgEBMAcGBSsOAwIaAxUAvLfIU/CilF/dZVOR
-// SIG // akT/Qn7vTImggYMwgYCkfjB8MQswCQYDVQQGEwJVUzET
-// SIG // MBEGA1UECBMKV2FzaGluZ3RvbjEQMA4GA1UEBxMHUmVk
-// SIG // bW9uZDEeMBwGA1UEChMVTWljcm9zb2Z0IENvcnBvcmF0
-// SIG // aW9uMSYwJAYDVQQDEx1NaWNyb3NvZnQgVGltZS1TdGFt
-// SIG // cCBQQ0EgMjAxMDANBgkqhkiG9w0BAQsFAAIFAOkRFtcw
-// SIG // IhgPMjAyMzExMjkwMTQ4MDdaGA8yMDIzMTEzMDAxNDgw
-// SIG // N1owdDA6BgorBgEEAYRZCgQBMSwwKjAKAgUA6REW1wIB
-// SIG // ADAHAgEAAgIVNTAHAgEAAgITvDAKAgUA6RJoVwIBADA2
-// SIG // BgorBgEEAYRZCgQCMSgwJjAMBgorBgEEAYRZCgMCoAow
-// SIG // CAIBAAIDB6EgoQowCAIBAAIDAYagMA0GCSqGSIb3DQEB
-// SIG // CwUAA4IBAQBDRkay9YCY6kJnV49gl7qHdAW9dEHIdQJ7
-// SIG // 8yScGB6ENXSC13GxUFyytoxGBQuLs+Do9DZQSOP/HfOq
-// SIG // w2K4SIOd4ewrz11vl9nl2lgufCXAWW81VM4r0tFNbjA0
-// SIG // yD7gRQRBuEGiAqS/Vfa7ECvQFT3fRsQzK5X4u755LI0e
-// SIG // +XskhL+1sOYwu5DPyUzbMKWilqtTRJBmQr/o7Cy5WqQj
-// SIG // kLyW2jR4B8HEoKwozp/j8/RViWSSjRpwa6JVyglX6eVR
-// SIG // Qwd9K9+7ry7q6q+UEB89aV7eZw+BtGsnJXK8QMpXhOm9
-// SIG // 2ksvWCSb6T56pCKmyOh5qljtvtwH0Vcl3zqxoGLk3YPG
-// SIG // MYIEDTCCBAkCAQEwgZMwfDELMAkGA1UEBhMCVVMxEzAR
-// SIG // BgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1JlZG1v
-// SIG // bmQxHjAcBgNVBAoTFU1pY3Jvc29mdCBDb3Jwb3JhdGlv
-// SIG // bjEmMCQGA1UEAxMdTWljcm9zb2Z0IFRpbWUtU3RhbXAg
-// SIG // UENBIDIwMTACEzMAAAHQdwiq76MXxt0AAQAAAdAwDQYJ
-// SIG // YIZIAWUDBAIBBQCgggFKMBoGCSqGSIb3DQEJAzENBgsq
-// SIG // hkiG9w0BCRABBDAvBgkqhkiG9w0BCQQxIgQgsygGDo1N
-// SIG // QTgwixwnk3X7lr4fEQUSawZLdl+M2Eq4GN4wgfoGCyqG
-// SIG // SIb3DQEJEAIvMYHqMIHnMIHkMIG9BCAIlUAGX7TT/zHd
-// SIG // RNmMPnwV2vcOn45k2eVgHq600j8J1zCBmDCBgKR+MHwx
-// SIG // CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9u
-// SIG // MRAwDgYDVQQHEwdSZWRtb25kMR4wHAYDVQQKExVNaWNy
-// SIG // b3NvZnQgQ29ycG9yYXRpb24xJjAkBgNVBAMTHU1pY3Jv
-// SIG // c29mdCBUaW1lLVN0YW1wIFBDQSAyMDEwAhMzAAAB0HcI
-// SIG // qu+jF8bdAAEAAAHQMCIEIJIeQdfA4XjI5/3kM0OGSarc
-// SIG // drYw3rRohew8uLY7gBZSMA0GCSqGSIb3DQEBCwUABIIC
-// SIG // AEB1eCPx7oSkWVD/gJDRN3f6QS/1B4Cg6YJ3wuB6H3si
-// SIG // 0G6esnx2UWYfPxhqmvqnebeRPY9yHvAuMNhEqOa0z1xP
-// SIG // /ezMKbdyZZ1KSnpf+G30pg7OvBkxoBT+y0w4TuXct76M
-// SIG // R8AhK40oE6Lcom5sbvRvimzKlh3vgQkZWknZ5zqUsidp
-// SIG // O8+TBvf9vQG1StTehatPSf2sH/bAwcw20gRij6ozBD2D
-// SIG // l7oi0W5UhaO5GrsdLe14Y8POi2aqY+fPZlRtM5ocAJ2a
-// SIG // nfyCChsYbzcM1+lgBEJMu2qSsERBeq9lbVFCJ7NMwH/N
-// SIG // a/ztGKzpDIJz81dhqX/GgGmFzEGc1/1jMkLLbWYoKgaa
-// SIG // e6ZIAbgkmW4ezZ6hU2GZhcetbId1rJMmtaZw/yos3goK
-// SIG // Shrmfk/OBTUMs9wh2NqrSVDD8YHPPKO9Uh9igKw8TXXD
-// SIG // Ld2LM20WU7t52keJNmptgb6//7mOc2f4jhX6gpQTYAmb
-// SIG // iBco7ZsIPLnBEXeo3tqZY3x/9eJ3yWiXwOreceKo0xMN
-// SIG // Om+ijo4ghC9Ud0aY8hTLm6NrmmbwR5KjtFBMRs0+jNIP
-// SIG // Asg7HDJ2NpLpA08AG+1XOSKghGxm+UQMbuNFMeLlK+QX
-// SIG // 55chb2/UprBeGk83G+GHOM7Hr4fuUN1JAUM3zwt3GpXo
-// SIG // 0BNZKjbAXaYgx1eeh6dNirnW
-// SIG // End signature block
-
 
 /***/ },
 
@@ -6032,17 +5792,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.matcher = matcher;
 	      this.delegate = delegate;
 	    }
-	
+
 	    $$route$recognizer$dsl$$Target.prototype = {
 	      to: function(target, callback) {
 	        var delegate = this.delegate;
-	
+
 	        if (delegate && delegate.willAddRoute) {
 	          target = delegate.willAddRoute(this.matcher.target, target);
 	        }
-	
+
 	        this.matcher.add(this.path, target);
-	
+
 	        if (callback) {
 	          if (callback.length === 0) { throw new Error("You must have an argument in the function passed to `to`"); }
 	          this.matcher.addChild(this.path, target, callback, this.delegate);
@@ -6050,36 +5810,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this;
 	      }
 	    };
-	
+
 	    function $$route$recognizer$dsl$$Matcher(target) {
 	      this.routes = {};
 	      this.children = {};
 	      this.target = target;
 	    }
-	
+
 	    $$route$recognizer$dsl$$Matcher.prototype = {
 	      add: function(path, handler) {
 	        this.routes[path] = handler;
 	      },
-	
+
 	      addChild: function(path, target, callback, delegate) {
 	        var matcher = new $$route$recognizer$dsl$$Matcher(target);
 	        this.children[path] = matcher;
-	
+
 	        var match = $$route$recognizer$dsl$$generateMatch(path, matcher, delegate);
-	
+
 	        if (delegate && delegate.contextEntered) {
 	          delegate.contextEntered(target, match);
 	        }
-	
+
 	        callback(match);
 	      }
 	    };
-	
+
 	    function $$route$recognizer$dsl$$generateMatch(startingPath, matcher, delegate) {
 	      return function(path, nestedCallback) {
 	        var fullPath = startingPath + path;
-	
+
 	        if (nestedCallback) {
 	          nestedCallback($$route$recognizer$dsl$$generateMatch(fullPath, matcher, delegate));
 	        } else {
@@ -6087,26 +5847,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      };
 	    }
-	
+
 	    function $$route$recognizer$dsl$$addRoute(routeArray, path, handler) {
 	      var len = 0;
 	      for (var i=0; i<routeArray.length; i++) {
 	        len += routeArray[i].path.length;
 	      }
-	
+
 	      path = path.substr(len);
 	      var route = { path: path, handler: handler };
 	      routeArray.push(route);
 	    }
-	
+
 	    function $$route$recognizer$dsl$$eachRoute(baseRoute, matcher, callback, binding) {
 	      var routes = matcher.routes;
-	
+
 	      for (var path in routes) {
 	        if (routes.hasOwnProperty(path)) {
 	          var routeArray = baseRoute.slice();
 	          $$route$recognizer$dsl$$addRoute(routeArray, path, routes[path]);
-	
+
 	          if (matcher.children[path]) {
 	            $$route$recognizer$dsl$$eachRoute(routeArray, matcher.children[path], callback, binding);
 	          } else {
@@ -6115,29 +5875,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 	    }
-	
+
 	    var $$route$recognizer$dsl$$default = function(callback, addRouteCallback) {
 	      var matcher = new $$route$recognizer$dsl$$Matcher();
-	
+
 	      callback($$route$recognizer$dsl$$generateMatch("", matcher, this.delegate));
-	
+
 	      $$route$recognizer$dsl$$eachRoute([], matcher, function(route) {
 	        if (addRouteCallback) { addRouteCallback(this, route); }
 	        else { this.add(route); }
 	      }, this);
 	    };
-	
+
 	    var $$route$recognizer$$specials = [
 	      '/', '.', '*', '+', '?', '|',
 	      '(', ')', '[', ']', '{', '}', '\\'
 	    ];
-	
+
 	    var $$route$recognizer$$escapeRegex = new RegExp('(\\' + $$route$recognizer$$specials.join('|\\') + ')', 'g');
-	
+
 	    function $$route$recognizer$$isArray(test) {
 	      return Object.prototype.toString.call(test) === "[object Array]";
 	    }
-	
+
 	    // A Segment represents a segment in the original route description.
 	    // Each Segment type provides an `eachChar` and `regex` method.
 	    //
@@ -6154,59 +5914,59 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // * `validChars`: a String with a list of all valid characters, or
 	    // * `invalidChars`: a String with a list of all invalid characters
 	    // * `repeat`: true if the character specification can repeat
-	
+
 	    function $$route$recognizer$$StaticSegment(string) { this.string = string; }
 	    $$route$recognizer$$StaticSegment.prototype = {
 	      eachChar: function(currentState) {
 	        var string = this.string, ch;
-	
+
 	        for (var i=0; i<string.length; i++) {
 	          ch = string.charAt(i);
 	          currentState = currentState.put({ invalidChars: undefined, repeat: false, validChars: ch });
 	        }
-	
+
 	        return currentState;
 	      },
-	
+
 	      regex: function() {
 	        return this.string.replace($$route$recognizer$$escapeRegex, '\\$1');
 	      },
-	
+
 	      generate: function() {
 	        return this.string;
 	      }
 	    };
-	
+
 	    function $$route$recognizer$$DynamicSegment(name) { this.name = name; }
 	    $$route$recognizer$$DynamicSegment.prototype = {
 	      eachChar: function(currentState) {
 	        return currentState.put({ invalidChars: "/", repeat: true, validChars: undefined });
 	      },
-	
+
 	      regex: function() {
 	        return "([^/]+)";
 	      },
-	
+
 	      generate: function(params) {
 	        return params[this.name];
 	      }
 	    };
-	
+
 	    function $$route$recognizer$$StarSegment(name) { this.name = name; }
 	    $$route$recognizer$$StarSegment.prototype = {
 	      eachChar: function(currentState) {
 	        return currentState.put({ invalidChars: "", repeat: true, validChars: undefined });
 	      },
-	
+
 	      regex: function() {
 	        return "(.+)";
 	      },
-	
+
 	      generate: function(params) {
 	        return params[this.name];
 	      }
 	    };
-	
+
 	    function $$route$recognizer$$EpsilonSegment() {}
 	    $$route$recognizer$$EpsilonSegment.prototype = {
 	      eachChar: function(currentState) {
@@ -6215,15 +5975,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      regex: function() { return ""; },
 	      generate: function() { return ""; }
 	    };
-	
+
 	    function $$route$recognizer$$parse(route, names, specificity) {
 	      // normalize route as not starting with a "/". Recognition will
 	      // also normalize.
 	      if (route.charAt(0) === "/") { route = route.substr(1); }
-	
+
 	      var segments = route.split("/");
 	      var results = new Array(segments.length);
-	
+
 	      // A routes has specificity determined by the order that its different segments
 	      // appear in. This system mirrors how the magnitude of numbers written as strings
 	      // works.
@@ -6244,10 +6004,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // together, from left to right. After we have looped through all of the segments,
 	      // we convert the string to a number.
 	      specificity.val = '';
-	
+
 	      for (var i=0; i<segments.length; i++) {
 	        var segment = segments[i], match;
-	
+
 	        if (match = segment.match(/^:([^\/]+)$/)) {
 	          results[i] = new $$route$recognizer$$DynamicSegment(match[1]);
 	          names.push(match[1]);
@@ -6264,12 +6024,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          specificity.val += '4';
 	        }
 	      }
-	
+
 	      specificity.val = +specificity.val;
-	
+
 	      return results;
 	    }
-	
+
 	    // A State has a character specification and (`charSpec`) and a list of possible
 	    // subsequent states (`nextStates`).
 	    //
@@ -6286,7 +6046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Currently, State is implemented naively by looping over `nextStates` and
 	    // comparing a character specification against a character. A more efficient
 	    // implementation would use a hash of keys pointing at one or more next states.
-	
+
 	    function $$route$recognizer$$State(charSpec) {
 	      this.charSpec = charSpec;
 	      this.nextStates = [];
@@ -6295,100 +6055,100 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.handlers = undefined;
 	      this.specificity = undefined;
 	    }
-	
+
 	    $$route$recognizer$$State.prototype = {
 	      get: function(charSpec) {
 	        if (this.charSpecs[charSpec.validChars]) {
 	          return this.charSpecs[charSpec.validChars];
 	        }
-	
+
 	        var nextStates = this.nextStates;
-	
+
 	        for (var i=0; i<nextStates.length; i++) {
 	          var child = nextStates[i];
-	
+
 	          var isEqual = child.charSpec.validChars === charSpec.validChars;
 	          isEqual = isEqual && child.charSpec.invalidChars === charSpec.invalidChars;
-	
+
 	          if (isEqual) {
 	            this.charSpecs[charSpec.validChars] = child;
 	            return child;
 	          }
 	        }
 	      },
-	
+
 	      put: function(charSpec) {
 	        var state;
-	
+
 	        // If the character specification already exists in a child of the current
 	        // state, just return that state.
 	        if (state = this.get(charSpec)) { return state; }
-	
+
 	        // Make a new state for the character spec
 	        state = new $$route$recognizer$$State(charSpec);
-	
+
 	        // Insert the new state as a child of the current state
 	        this.nextStates.push(state);
-	
+
 	        // If this character specification repeats, insert the new state as a child
 	        // of itself. Note that this will not trigger an infinite loop because each
 	        // transition during recognition consumes a character.
 	        if (charSpec.repeat) {
 	          state.nextStates.push(state);
 	        }
-	
+
 	        // Return the new state
 	        return state;
 	      },
-	
+
 	      // Find a list of child states matching the next character
 	      match: function(ch) {
 	        var nextStates = this.nextStates,
 	            child, charSpec, chars;
-	
+
 	        var returned = [];
-	
+
 	        for (var i=0; i<nextStates.length; i++) {
 	          child = nextStates[i];
-	
+
 	          charSpec = child.charSpec;
-	
+
 	          if (typeof (chars = charSpec.validChars) !== 'undefined') {
 	            if (chars.indexOf(ch) !== -1) { returned.push(child); }
 	          } else if (typeof (chars = charSpec.invalidChars) !== 'undefined') {
 	            if (chars.indexOf(ch) === -1) { returned.push(child); }
 	          }
 	        }
-	
+
 	        return returned;
 	      }
 	    };
-	
+
 	    // Sort the routes by specificity
 	    function $$route$recognizer$$sortSolutions(states) {
 	      return states.sort(function(a, b) {
 	        return b.specificity.val - a.specificity.val;
 	      });
 	    }
-	
+
 	    function $$route$recognizer$$recognizeChar(states, ch) {
 	      var nextStates = [];
-	
+
 	      for (var i=0, l=states.length; i<l; i++) {
 	        var state = states[i];
-	
+
 	        nextStates = nextStates.concat(state.match(ch));
 	      }
-	
+
 	      return nextStates;
 	    }
-	
+
 	    var $$route$recognizer$$oCreate = Object.create || function(proto) {
 	      function F() {}
 	      F.prototype = proto;
 	      return new F();
 	    };
-	
+
 	    function $$route$recognizer$$RecognizeResults(queryParams) {
 	      this.queryParams = queryParams || {};
 	    }
@@ -6399,27 +6159,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	      length: 0,
 	      queryParams: null
 	    });
-	
+
 	    function $$route$recognizer$$findHandler(state, path, queryParams) {
 	      var handlers = state.handlers, regex = state.regex;
 	      var captures = path.match(regex), currentCapture = 1;
 	      var result = new $$route$recognizer$$RecognizeResults(queryParams);
-	
+
 	      result.length = handlers.length;
-	
+
 	      for (var i=0; i<handlers.length; i++) {
 	        var handler = handlers[i], names = handler.names, params = {};
-	
+
 	        for (var j=0; j<names.length; j++) {
 	          params[names[j]] = captures[currentCapture++];
 	        }
-	
+
 	        result[i] = { handler: handler.handler, params: params, isDynamic: !!names.length };
 	      }
-	
+
 	      return result;
 	    }
-	
+
 	    function $$route$recognizer$$decodeQueryParamPart(part) {
 	      // http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1
 	      part = part.replace(/\+/gm, '%20');
@@ -6429,41 +6189,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } catch(error) {result = '';}
 	      return result;
 	    }
-	
+
 	    // The main interface
-	
+
 	    var $$route$recognizer$$RouteRecognizer = function() {
 	      this.rootState = new $$route$recognizer$$State();
 	      this.names = {};
 	    };
-	
-	
+
+
 	    $$route$recognizer$$RouteRecognizer.prototype = {
 	      add: function(routes, options) {
 	        var currentState = this.rootState, regex = "^",
 	            specificity = {},
 	            handlers = new Array(routes.length), allSegments = [], name;
-	
+
 	        var isEmpty = true;
-	
+
 	        for (var i=0; i<routes.length; i++) {
 	          var route = routes[i], names = [];
-	
+
 	          var segments = $$route$recognizer$$parse(route.path, names, specificity);
-	
+
 	          allSegments = allSegments.concat(segments);
-	
+
 	          for (var j=0; j<segments.length; j++) {
 	            var segment = segments[j];
-	
+
 	            if (segment instanceof $$route$recognizer$$EpsilonSegment) { continue; }
-	
+
 	            isEmpty = false;
-	
+
 	            // Add a "/" for the new segment
 	            currentState = currentState.put({ invalidChars: undefined, repeat: false, validChars: "/" });
 	            regex += "/";
-	
+
 	            // Add a representation of the segment to the NFA and regex
 	            currentState = segment.eachChar(currentState);
 	            regex += segment.regex();
@@ -6471,16 +6231,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var handler = { handler: route.handler, names: names };
 	          handlers[i] = handler;
 	        }
-	
+
 	        if (isEmpty) {
 	          currentState = currentState.put({ invalidChars: undefined, repeat: false, validChars: "/" });
 	          regex += "/";
 	        }
-	
+
 	        currentState.handlers = handlers;
 	        currentState.regex = new RegExp(regex + "$");
 	        currentState.specificity = specificity;
-	
+
 	        if (name = options && options.as) {
 	          this.names[name] = {
 	            segments: allSegments,
@@ -6488,49 +6248,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	          };
 	        }
 	      },
-	
+
 	      handlersFor: function(name) {
 	        var route = this.names[name];
-	
+
 	        if (!route) { throw new Error("There is no route named " + name); }
-	
+
 	        var result = new Array(route.handlers.length);
-	
+
 	        for (var i=0; i<route.handlers.length; i++) {
 	          result[i] = route.handlers[i];
 	        }
-	
+
 	        return result;
 	      },
-	
+
 	      hasRoute: function(name) {
 	        return !!this.names[name];
 	      },
-	
+
 	      generate: function(name, params) {
 	        var route = this.names[name], output = "";
 	        if (!route) { throw new Error("There is no route named " + name); }
-	
+
 	        var segments = route.segments;
-	
+
 	        for (var i=0; i<segments.length; i++) {
 	          var segment = segments[i];
-	
+
 	          if (segment instanceof $$route$recognizer$$EpsilonSegment) { continue; }
-	
+
 	          output += "/";
 	          output += segment.generate(params);
 	        }
-	
+
 	        if (output.charAt(0) !== '/') { output = '/' + output; }
-	
+
 	        if (params && params.queryParams) {
 	          output += this.generateQueryString(params.queryParams, route.handlers);
 	        }
-	
+
 	        return output;
 	      },
-	
+
 	      generateQueryString: function(params, handlers) {
 	        var pairs = [];
 	        var keys = [];
@@ -6557,12 +6317,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            pairs.push(pair);
 	          }
 	        }
-	
+
 	        if (pairs.length === 0) { return ''; }
-	
+
 	        return "?" + pairs.join("&");
 	      },
-	
+
 	      parseQueryString: function(queryString) {
 	        var pairs = queryString.split("&"), queryParams = {};
 	        for(var i=0; i < pairs.length; i++) {
@@ -6592,43 +6352,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return queryParams;
 	      },
-	
+
 	      recognize: function(path) {
 	        var states = [ this.rootState ],
 	            pathLen, i, l, queryStart, queryParams = {},
 	            isSlashDropped = false;
-	
+
 	        queryStart = path.indexOf('?');
 	        if (queryStart !== -1) {
 	          var queryString = path.substr(queryStart + 1, path.length);
 	          path = path.substr(0, queryStart);
 	          queryParams = this.parseQueryString(queryString);
 	        }
-	
+
 	        path = decodeURI(path);
-	
+
 	        if (path.charAt(0) !== "/") { path = "/" + path; }
-	
+
 	        pathLen = path.length;
 	        if (pathLen > 1 && path.charAt(pathLen - 1) === "/") {
 	          path = path.substr(0, pathLen - 1);
 	          isSlashDropped = true;
 	        }
-	
+
 	        for (i=0; i<path.length; i++) {
 	          states = $$route$recognizer$$recognizeChar(states, path.charAt(i));
 	          if (!states.length) { break; }
 	        }
-	
+
 	        var solutions = [];
 	        for (i=0; i<states.length; i++) {
 	          if (states[i].handlers) { solutions.push(states[i]); }
 	        }
-	
+
 	        states = $$route$recognizer$$sortSolutions(solutions);
-	
+
 	        var state = solutions[0];
-	
+
 	        if (state && state.handlers) {
 	          // if a trailing slash was dropped and a star segment is the last segment
 	          // specified, put the trailing slash back
@@ -6639,13 +6399,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 	    };
-	
+
 	    $$route$recognizer$$RouteRecognizer.prototype.map = $$route$recognizer$dsl$$default;
-	
+
 	    $$route$recognizer$$RouteRecognizer.VERSION = '0.1.11';
-	
+
 	    var $$route$recognizer$$default = $$route$recognizer$$RouteRecognizer;
-	
+
 	    /* global define:true module:true window: true */
 	    if ( true && __nested_webpack_require_6218__(3)['amd']) {
 	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return $$route$recognizer$$default; }.call(exports, __nested_webpack_require_6218__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -6655,7 +6415,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this['RouteRecognizer'] = $$route$recognizer$$default;
 	    }
 	}).call(this);
-	
+
 	//# sourceMappingURL=route-recognizer.js.map
 	/* WEBPACK VAR INJECTION */}.call(exports, __nested_webpack_require_6218__(2)(module)))
 
@@ -7665,7 +7425,7 @@ exports.BookmarksManager = BookmarksManager;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 /** @ignore */ /** */
 var config = {
-    version: '2.23.10',
+    version: '2.25.0',
     type: 'js'
 };
 exports["default"] = config;
@@ -7696,6 +7456,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7737,6 +7508,9 @@ exports.Create = void 0;
 var powerbi_models_1 = __webpack_require__(/*! powerbi-models */ "./node_modules/powerbi-models/dist/models.js");
 var embed_1 = __webpack_require__(/*! ./embed */ "./src/embed.ts");
 var utils = __webpack_require__(/*! ./util */ "./src/util.ts");
+function isReportCreateFromDefinitionConfiguration(config) {
+    return "reportDefinition" in config;
+}
 /**
  * A Power BI Report creator component
  *
@@ -7768,7 +7542,9 @@ var Create = /** @class */ (function (_super) {
      * Validate create report configuration.
      */
     Create.prototype.validate = function (config) {
-        return (0, powerbi_models_1.validateCreateReport)(config);
+        return isReportCreateFromDefinitionConfiguration(config)
+            ? (0, powerbi_models_1.validateCreateReportFromDefinition)(config)
+            : (0, powerbi_models_1.validateCreateReport)(config);
     };
     /**
      * Handle config changes.
@@ -7781,7 +7557,7 @@ var Create = /** @class */ (function (_super) {
             return;
         }
         var config = this.config;
-        this.createConfig = {
+        var createConfig = {
             accessToken: config.accessToken,
             datasetId: config.datasetId || this.getId(),
             groupId: config.groupId,
@@ -7789,6 +7565,8 @@ var Create = /** @class */ (function (_super) {
             tokenType: config.tokenType,
             theme: config.theme
         };
+        this.createConfig = isReportCreateFromDefinitionConfiguration(this.config)
+            ? __assign(__assign({}, createConfig), { reportDefinition: this.config.reportDefinition }) : createConfig;
     };
     /**
      * @hidden
@@ -10883,7 +10661,7 @@ var Report = /** @class */ (function (_super) {
             var visualLayout, newSettings;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: 
+                    case 0:
                     // Check if page name and visual name are valid
                     return [4 /*yield*/, this.validateVisual(pageName, visualName)];
                     case 1:
@@ -10919,7 +10697,7 @@ var Report = /** @class */ (function (_super) {
             var visualLayout, newSettings;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: 
+                    case 0:
                     // Check if page name and visual name are valid
                     return [4 /*yield*/, this.validateVisual(pageName, visualName)];
                     case 1:
@@ -10987,7 +10765,7 @@ var Report = /** @class */ (function (_super) {
             var visualLayout, newSettings;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: 
+                    case 0:
                     // Check if page name and visual name are valid
                     return [4 /*yield*/, this.validateVisual(pageName, visualName)];
                     case 1:
@@ -13155,14 +12933,14 @@ exports.VisualDescriptor = VisualDescriptor;
 
 /***/ },
 
-/***/ "../window-post-message-proxy/dist/windowPostMessageProxy.js":
-/*!*******************************************************************!*\
-  !*** ../window-post-message-proxy/dist/windowPostMessageProxy.js ***!
-  \*******************************************************************/
-/***/ ((module) => {
+/***/ "./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js"
+/*!*******************************************************************************!*\
+  !*** ./node_modules/window-post-message-proxy/dist/windowPostMessageProxy.js ***!
+  \*******************************************************************************/
+(module) {
 
 /*! For license information please see windowPostMessageProxy.js.LICENSE.txt */
-!function(e,r){ true?module.exports=r():0}(self,(()=>(()=>{"use strict";var e={};return(()=>{var r=e;Object.defineProperty(r,"__esModule",{value:!0}),r.WindowPostMessageProxy=void 0;var s=function(){function e(r){void 0===r&&(r={processTrackingProperties:{addTrackingProperties:e.defaultAddTrackingProperties,getTrackingProperties:e.defaultGetTrackingProperties},isErrorMessage:e.defaultIsErrorMessage,receiveWindow:window,name:e.createRandomString()});var s=this;this.pendingRequestPromises={},this.addTrackingProperties=r.processTrackingProperties&&r.processTrackingProperties.addTrackingProperties||e.defaultAddTrackingProperties,this.getTrackingProperties=r.processTrackingProperties&&r.processTrackingProperties.getTrackingProperties||e.defaultGetTrackingProperties,this.isErrorMessage=r.isErrorMessage||e.defaultIsErrorMessage,this.receiveWindow=r.receiveWindow||window,this.name=r.name||e.createRandomString(),this.logMessages=r.logMessages||!1,this.eventSourceOverrideWindow=r.eventSourceOverrideWindow,this.suppressWarnings=r.suppressWarnings||!1,this.logMessages&&console.log("new WindowPostMessageProxy created with name: ".concat(this.name," receiving on window: ").concat(this.receiveWindow.document.title)),this.handlers=[],this.windowMessageHandler=function(e){return s.onMessageReceived(e)},this.start()}return e.defaultAddTrackingProperties=function(r,s){return r[e.messagePropertyName]=s,r},e.defaultGetTrackingProperties=function(r){return r[e.messagePropertyName]},e.defaultIsErrorMessage=function(e){return!!e.error},e.createDeferred=function(){var e={resolve:null,reject:null,promise:null},r=new Promise((function(r,s){e.resolve=r,e.reject=s}));return e.promise=r,e},e.createRandomString=function(){var e=window.crypto||window.msCrypto,r=new Uint32Array(1);return e.getRandomValues(r),r[0].toString(36).substring(1)},e.prototype.addHandler=function(e){this.handlers.push(e)},e.prototype.removeHandler=function(e){var r=this.handlers.indexOf(e);if(-1===r)throw new Error("You attempted to remove a handler but no matching handler was found.");this.handlers.splice(r,1)},e.prototype.start=function(){this.receiveWindow.addEventListener("message",this.windowMessageHandler)},e.prototype.stop=function(){this.receiveWindow.removeEventListener("message",this.windowMessageHandler)},e.prototype.postMessage=function(r,s,n){var o={id:e.createRandomString()};this.addTrackingProperties(s,o),console.log("".concat(this.name," Posting message:")),console.log(JSON.stringify(s,null,"  ")),console.log("target origin: ".concat(n)),r.postMessage(s,null!=n?n:"*");var t=e.createDeferred();return this.pendingRequestPromises[o.id]=t,t.promise},e.prototype.sendResponse=function(e,r,s,n){this.addTrackingProperties(r,s),this.logMessages&&(console.log("".concat(this.name," Sending response:")),console.log(JSON.stringify(r,null,"  "))),e.postMessage(r,null!=n?n:"*")},e.prototype.onMessageReceived=function(e){var r=this;this.logMessages&&(console.log("".concat(this.name," Received message:")),console.log("type: ".concat(e.type)),console.log(JSON.stringify(e.data,null,"  ")));var s=this.eventSourceOverrideWindow||e.source;if(s){var n=e.data;if("object"==typeof n){var o,t;try{o=this.getTrackingProperties(n)}catch(e){this.suppressWarnings||console.warn("Proxy(".concat(this.name,"): Error occurred when attempting to get tracking properties from incoming message:"),JSON.stringify(n,null,"  "),"Error: ",e)}if(o&&(t=this.pendingRequestPromises[o.id]),t){var i=!0;try{i=this.isErrorMessage(n)}catch(e){console.warn("Proxy(".concat(this.name,") Error occurred when trying to determine if message is consider an error response. Message: "),JSON.stringify(n,null,""),"Error: ",e)}i?t.reject(n):t.resolve(n),delete this.pendingRequestPromises[o.id]}else this.handlers.some((function(e){var t=!1;try{t=e.test(n)}catch(e){r.suppressWarnings||console.warn("Proxy(".concat(r.name,"): Error occurred when handler was testing incoming message:"),JSON.stringify(n,null,"  "),"Error: ",e)}if(t){var i=void 0;try{i=Promise.resolve(e.handle(n))}catch(e){r.suppressWarnings||console.warn("Proxy(".concat(r.name,"): Error occurred when handler was processing incoming message:"),JSON.stringify(n,null,"  "),"Error: ",e),i=Promise.resolve()}return i.then((function(e){if(!e){var t="Handler for message: ".concat(JSON.stringify(n,null,"  ")," did not return a response message. The default response message will be returned instead.");r.suppressWarnings||console.warn("Proxy(".concat(r.name,"): ").concat(t)),e={warning:t}}r.sendResponse(s,e,o)})),!0}}))||this.suppressWarnings||console.warn("Proxy(".concat(this.name,") did not handle message. Handlers: ").concat(this.handlers.length,"  Message: ").concat(JSON.stringify(n,null,""),"."))}else this.suppressWarnings||console.warn("Proxy(".concat(this.name,"): Received message that was not an object. Discarding message"))}},e.messagePropertyName="windowPostMessageProxy",e}();r.WindowPostMessageProxy=s})(),e})()));
+!function(e,s){ true?module.exports=s():0}(self,()=>(()=>{"use strict";var e={};return(()=>{var s=e;Object.defineProperty(s,"__esModule",{value:!0}),s.WindowPostMessageProxy=void 0;var r=function(){function e(s){void 0===s&&(s={processTrackingProperties:{addTrackingProperties:e.defaultAddTrackingProperties,getTrackingProperties:e.defaultGetTrackingProperties},isErrorMessage:e.defaultIsErrorMessage,receiveWindow:window,name:e.createRandomString()});var r=this;this.pendingRequestPromises={},this.addTrackingProperties=s.processTrackingProperties&&s.processTrackingProperties.addTrackingProperties||e.defaultAddTrackingProperties,this.getTrackingProperties=s.processTrackingProperties&&s.processTrackingProperties.getTrackingProperties||e.defaultGetTrackingProperties,this.isErrorMessage=s.isErrorMessage||e.defaultIsErrorMessage,this.receiveWindow=s.receiveWindow||window,this.name=s.name||e.createRandomString(),this.logMessages=s.logMessages||!1,this.eventSourceOverrideWindow=s.eventSourceOverrideWindow,this.eventOriginOverride=s.eventOriginOverride,this.suppressWarnings=s.suppressWarnings||!1,this.receivedMessageValidation=s.receivedMessageValidation,this.logMessages&&console.log("new WindowPostMessageProxy created with name: ".concat(this.name," receiving on window: ").concat(this.receiveWindow.document.title)),this.handlers=[],this.windowMessageHandler=function(e){return r.onMessageReceived(e)},this.start()}return e.defaultAddTrackingProperties=function(s,r){return s[e.messagePropertyName]=r,s},e.defaultGetTrackingProperties=function(s){return s[e.messagePropertyName]},e.defaultIsErrorMessage=function(e){return!!e.error},e.createDeferred=function(){var e={resolve:null,reject:null,promise:null},s=new Promise(function(s,r){e.resolve=s,e.reject=r});return e.promise=s,e},e.createRandomString=function(){var e=window.crypto||window.msCrypto,s=new Uint32Array(1);return e.getRandomValues(s),s[0].toString(36).substring(1)},e.prototype.addHandler=function(e){this.handlers.push(e)},e.prototype.removeHandler=function(e){var s=this.handlers.indexOf(e);if(-1===s)throw new Error("You attempted to remove a handler but no matching handler was found.");this.handlers.splice(s,1)},e.prototype.start=function(){var e=this;this.receiveWindow.addEventListener("message",function(s){e.isReceivedMessageValid(s)&&e.windowMessageHandler(s)})},e.prototype.stop=function(){this.receiveWindow.removeEventListener("message",this.windowMessageHandler)},e.prototype.postMessage=function(s,r,n){void 0===n&&(n="*");var i={id:e.createRandomString()};this.addTrackingProperties(r,i),this.logMessages&&(console.log("".concat(this.name," Posting message:")),console.log(JSON.stringify(r,null,"  "))),s.postMessage(r,n);var t=e.createDeferred();return this.pendingRequestPromises[i.id]=t,t.promise},e.prototype.sendResponse=function(e,s,r,n){void 0===n&&(n="*"),this.addTrackingProperties(s,r),this.logMessages&&(console.log("".concat(this.name," Sending response:")),console.log(JSON.stringify(s,null,"  "))),e.postMessage(s,n)},e.prototype.isReceivedMessageValid=function(e){if(this.receivedMessageValidation){var s=this.receivedMessageValidation.expectedMessageSource,r=this.receivedMessageValidation.expectedMessageOrigin;if(s&&e.source!==s)return this.suppressWarnings||console.warn("Proxy(".concat(this.name,"): Received message event from an unexpected source. The message will be discarded."),e),!1;if(r&&e.origin!==r)return this.suppressWarnings||console.warn("Proxy(".concat(this.name,"): Received message event from an unexpected origin. The message will be discarded."),e),!1}return!0},e.prototype.onMessageReceived=function(e){var s=this;this.logMessages&&(console.log("".concat(this.name," Received message:")),console.log("type: ".concat(e.type)),console.log(JSON.stringify(e.data,null,"  ")));var r=this.eventSourceOverrideWindow||e.source,n=this.eventOriginOverride||e.origin||"*";if(r){var i=e.data;if("object"==typeof i){var t,o;try{t=this.getTrackingProperties(i)}catch(e){this.suppressWarnings||console.warn("Proxy(".concat(this.name,"): Error occurred when attempting to get tracking properties from incoming message:"),JSON.stringify(i,null,"  "),"Error: ",e)}if(t&&(o=this.pendingRequestPromises[t.id]),o){var a=!0;try{a=this.isErrorMessage(i)}catch(e){console.warn("Proxy(".concat(this.name,") Error occurred when trying to determine if message is consider an error response. Message: "),JSON.stringify(i,null,""),"Error: ",e)}a?o.reject(i):o.resolve(i),delete this.pendingRequestPromises[t.id]}else this.handlers.some(function(e){var o=!1;try{o=e.test(i)}catch(e){s.suppressWarnings||console.warn("Proxy(".concat(s.name,"): Error occurred when handler was testing incoming message:"),JSON.stringify(i,null,"  "),"Error: ",e)}if(o){var a=void 0;try{a=Promise.resolve(e.handle(i))}catch(e){s.suppressWarnings||console.warn("Proxy(".concat(s.name,"): Error occurred when handler was processing incoming message:"),JSON.stringify(i,null,"  "),"Error: ",e),a=Promise.resolve()}return a.then(function(e){if(!e){var o="Handler for message: ".concat(JSON.stringify(i,null,"  ")," did not return a response message. The default response message will be returned instead.");s.suppressWarnings||console.warn("Proxy(".concat(s.name,"): ").concat(o)),e={warning:o}}s.sendResponse(r,e,t,n)}),!0}})||this.suppressWarnings||console.warn("Proxy(".concat(this.name,") did not handle message. Handlers: ").concat(this.handlers.length,"  Message: ").concat(JSON.stringify(i,null,""),"."))}else this.suppressWarnings||console.warn("Proxy(".concat(this.name,"): Received message that was not an object. Discarding message"))}},e.messagePropertyName="windowPostMessageProxy",e}();s.WindowPostMessageProxy=r})(),e})());
 //# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ }
@@ -13170,40 +12948,40 @@ exports.VisualDescriptor = VisualDescriptor;
 /******/ 	});
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/ 	const __webpack_module_cache__ = {};
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+let __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
-var exports = __webpack_exports__;
+let exports = __webpack_exports__;
 /*!*******************************!*\
   !*** ./src/powerbi-client.ts ***!
   \*******************************/

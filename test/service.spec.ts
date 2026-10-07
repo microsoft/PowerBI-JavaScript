@@ -698,6 +698,40 @@ describe('service', function () {
         // Assert
         expect(report.createConfig.theme).toBeUndefined();
       });
+
+      it('reportDefinition should be in create config if exists in embedConfig', function () {
+        // Arrange
+        const testDatasetId = "ABC123";
+        const accessToken = 'ABC123';
+        const reportDefinition = { definition: '{"version":"2.0.0"}' };
+        const embedUrl = `https://app.powerbi.com/reportEmbed?datasetId=${testDatasetId}`;
+        const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}"</div>`)
+          .appendTo('#powerbi-fixture');
+
+        // Act
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken, datasetId: testDatasetId, reportDefinition: reportDefinition }) as create.Create;
+
+        // Assert
+        expect("reportDefinition" in report.createConfig).toBe(true);
+        if ("reportDefinition" in report.createConfig) {
+          expect(report.createConfig.reportDefinition).toEqual(reportDefinition);
+        }
+      });
+
+      it('reportDefinition should be undefined in create config if not exists in embedConfig', function () {
+        // Arrange
+        const testDatasetId = "ABC123";
+        const accessToken = 'ABC123';
+        const embedUrl = `https://app.powerbi.com/reportEmbed?datasetId=${testDatasetId}`;
+        const $reportContainer = $(`<div powerbi-embed-url="${embedUrl}"</div>`)
+          .appendTo('#powerbi-fixture');
+
+        // Act
+        const report = powerbi.createReport($reportContainer[0], { embedUrl: embedUrl, accessToken: accessToken }) as create.Create;
+
+        // Assert
+        expect("reportDefinition" in report.createConfig).toBe(false);
+      });
     });
 
     describe('reports', function () {
