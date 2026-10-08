@@ -1,0 +1,23 @@
+name: Power BI scheduled refresh
+
+on:
+  schedule:
+    - cron: '0 * * * *' # every hour
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Power BI dataset refresh
+        env:
+          POWERBI_TENANT_ID: ${{ secrets.POWERBI_TENANT_ID }}
+          POWERBI_CLIENT_ID: ${{ secrets.POWERBI_CLIENT_ID }}
+          POWERBI_CLIENT_SECRET: ${{ secrets.POWERBI_CLIENT_SECRET }}
+          POWERBI_GROUP_ID: ${{ secrets.POWERBI_GROUP_ID }}
+          POWERBI_DATASET_ID: ${{ secrets.POWERBI_DATASET_ID }}
+          POWERBI_NOTIFY_WEBHOOK: ${{ secrets.POWERBI_NOTIFY_WEBHOOK }}
+        run: pwsh -NoLogo -NoProfile -File scripts\powerbi-refresh.ps1
